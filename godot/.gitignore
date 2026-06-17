@@ -2,8 +2,8 @@
 .godot/
 .import/
 export.cfg
-export_presets.cfg
 *.translation
+# Nota: export_presets.cfg è versionato apposta (serve alla CI di export Web)
 
 # Build / export
 build/
