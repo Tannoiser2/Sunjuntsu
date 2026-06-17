@@ -1,0 +1,41 @@
+; Configurazione motore — Senjutsu: Battle for Japan (versione digitale 3D)
+; Godot 4.6 — uso personale
+;
+; Struttura:
+;   engine/  -> logica di gioco pura (nessun nodo 3D, testabile headless)
+;   scenes/  -> presentazione (mappa esagonale 3D, pedine, camera, HUD)
+;   data/    -> cataloghi carte/guerrieri/mappe in JSON
+
+config_version=5
+
+[application]
+
+config/name="Senjutsu: Battle for Japan"
+config/description="Reimplementazione digitale 3D di Senjutsu (Lucky Duck Games) — uso personale. Pedine 3D su mappa esagonale, modalità solo e 1v1."
+config/version="0.1.0"
+run/main_scene="res://scenes/Menu.tscn"
+config/features=PackedStringArray("4.6", "Forward Plus")
+config/icon="res://icon.svg"
+
+[autoload]
+
+Domain="*res://engine/Domain.gd"
+CardDB="*res://engine/CardDB.gd"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+
+[rendering]
+
+environment/defaults/default_clear_color=Color(0.08, 0.09, 0.11, 1)
+anti_aliasing/quality/msaa_3d=2
+
+[input]
+
+cam_rotate={
+"deadzone": 0.5,
+"events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"button_index":2,"pressed":null)]
+}

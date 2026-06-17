@@ -1,0 +1,4165 @@
+{
+ "source": "Generato da Tabelle_Materiali/Senjutsu/Tabelle/Senjutsu_Deckbuilding_1.1.xlsx (foglio 'Card Pool')",
+ "ranks": [
+  "Wood",
+  "Steel",
+  "Gold",
+  "Jade"
+ ],
+ "count": 303,
+ "characters": [
+  "Ashigaru",
+  "Ashigaru/Hachiko",
+  "Assassin",
+  "Gen. Ability",
+  "Hachiko",
+  "Kojiro",
+  "Kojiro/Weapon",
+  "Master",
+  "Monk",
+  "Musashi",
+  "Ninja",
+  "Ninja/Weapon",
+  "Onna-Bugeisha",
+  "Ronin",
+  "Sailor",
+  "Sailor/Weapon",
+  "Student",
+  "Wakou",
+  "Warrior",
+  "Weapon",
+  "Yasuke",
+  "Yasuke/Weapon",
+  "Yojimbo",
+  "Yojimbo/Weapon"
+ ],
+ "cards": [
+  {
+   "id": 153,
+   "name": "Advantage",
+   "char": "Gen. Ability",
+   "amount": 6,
+   "rank": "Wood",
+   "initiative": "=",
+   "focus": 0,
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 304,
+   "name": "Ankle Biter",
+   "char": "Onna-Bugeisha",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "3",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 33,
+   "name": "Ankle Biter",
+   "char": "Ronin",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "3",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 250,
+   "name": "Ankle Rip/Menacing Growl",
+   "char": "Hachiko",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "6/7",
+   "focus": 0,
+   "keywords": [
+    "Attack/Defence",
+    "Range2"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 185,
+   "name": "Arrogance",
+   "char": "Kojiro",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "-",
+   "focus": 0,
+   "keywords": [
+    "Meditation",
+    "Instant"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 203,
+   "name": "Arrogance",
+   "char": "Musashi",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "-",
+   "focus": 0,
+   "keywords": [
+    "Meditation",
+    "Instant"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 236,
+   "name": "Ashigaru Core Card",
+   "char": "Ashigaru",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "0",
+   "focus": 0,
+   "keywords": [
+    "Core"
+   ],
+   "type": "core"
+  },
+  {
+   "id": 234,
+   "name": "Ashigaru/Hachiko Core Deck",
+   "char": "Ashigaru/Hachiko",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "0",
+   "focus": 0,
+   "keywords": [
+    "Core"
+   ],
+   "type": "core"
+  },
+  {
+   "id": 218,
+   "name": "Assassin Core Card",
+   "char": "Assassin",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "0",
+   "focus": 0,
+   "keywords": [
+    "Core"
+   ],
+   "type": "core"
+  },
+  {
+   "id": 215,
+   "name": "Assassin Core Deck Card",
+   "char": "Assassin",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "0",
+   "focus": 0,
+   "keywords": [
+    "Core"
+   ],
+   "type": "core"
+  },
+  {
+   "id": 251,
+   "name": "Attack/Heel",
+   "char": "Hachiko",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "7/5",
+   "focus": 0,
+   "keywords": [
+    "Attack/Defence"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 140,
+   "name": "Backhand Slash",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 82,
+   "name": "Benevolence",
+   "char": "Gen. Ability",
+   "amount": 2,
+   "rank": "Gold",
+   "initiative": "-",
+   "focus": 0,
+   "keywords": [
+    "Meditation",
+    "Instant",
+    "Bushido"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 297,
+   "name": "Biting Heaven",
+   "char": "Onna-Bugeisha",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "8",
+   "focus": 2,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 189,
+   "name": "Biting Remark",
+   "char": "Kojiro",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "6",
+   "focus": 1,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 11,
+   "name": "Bladed Echo",
+   "char": "Master",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "=",
+   "focus": 1,
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 41,
+   "name": "Blazing Insight",
+   "char": "Student",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "3",
+   "focus": 1,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 54,
+   "name": "Blazing Roar",
+   "char": "Warrior",
+   "amount": 1,
+   "rank": "Jade",
+   "initiative": "=",
+   "focus": 2,
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 154,
+   "name": "Bleeding Slice",
+   "char": "Gen. Ability",
+   "amount": 6,
+   "rank": "Wood",
+   "initiative": "4",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 56,
+   "name": "Blind Spot",
+   "char": "Warrior",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "=",
+   "focus": 0,
+   "keywords": [
+    "Meditation",
+    "Instant Additional",
+    "Prepared"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 78,
+   "name": "Blood Fury Cut",
+   "char": "Gen. Ability",
+   "amount": 2,
+   "rank": "Jade",
+   "initiative": "6",
+   "focus": 3,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 66,
+   "name": "Bo Staff Block",
+   "char": "Weapon",
+   "amount": 2,
+   "rank": "-",
+   "initiative": "5,4,3",
+   "focus": 0,
+   "keywords": [
+    "Bo",
+    "Core",
+    "Defence",
+    "Weapon"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 67,
+   "name": "Bo Staff Thrust",
+   "char": "Weapon",
+   "amount": 2,
+   "rank": "-",
+   "initiative": "3",
+   "focus": 0,
+   "keywords": [
+    "Bo",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 200,
+   "name": "Bokken Smash",
+   "char": "Musashi",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "=",
+   "focus": 0,
+   "keywords": [
+    "Bokken",
+    "Core",
+    "Weapon",
+    "Instant Additional"
+   ],
+   "type": "core"
+  },
+  {
+   "id": 83,
+   "name": "Broad Block",
+   "char": "Gen. Ability",
+   "amount": 2,
+   "rank": "Gold",
+   "initiative": "=",
+   "focus": 1,
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 334,
+   "name": "Broadside Slam",
+   "char": "Wakou",
+   "amount": 1,
+   "rank": "Jade",
+   "initiative": "6",
+   "focus": 2,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 320,
+   "name": "Brutal Strike",
+   "char": "Yojimbo",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 26,
+   "name": "Bull Rush",
+   "char": "Ronin",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "7",
+   "focus": 2,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 57,
+   "name": "Burning Instinct",
+   "char": "Warrior",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "9",
+   "focus": 1,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 84,
+   "name": "Calm Composure",
+   "char": "Gen. Ability",
+   "amount": 2,
+   "rank": "Gold",
+   "initiative": "=",
+   "focus": 0,
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 121,
+   "name": "Calm Defence",
+   "char": "Gen. Ability",
+   "amount": 6,
+   "rank": "Wood",
+   "initiative": "6,5,4,3,2",
+   "focus": 0,
+   "keywords": [
+    "Defence",
+    "Prepared"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 141,
+   "name": "Calm Parry",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "5,4,3,2",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 142,
+   "name": "Calming Purpose",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "=",
+   "focus": 0,
+   "keywords": [
+    "Meditation",
+    "Instant Additional",
+    "Prepared"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 170,
+   "name": "Caltrop Scatter",
+   "char": "Ninja",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "3",
+   "focus": 0,
+   "keywords": [
+    "Meditation",
+    "Prepared"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 277,
+   "name": "Carrack Blacksword",
+   "char": "Sailor/Weapon",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "4",
+   "focus": 0,
+   "keywords": [
+    "Carrack",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 288,
+   "name": "Carrack Plow",
+   "char": "Sailor",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 171,
+   "name": "Chain Hook",
+   "char": "Ninja",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 353,
+   "name": "Charging Pride",
+   "char": "Yasuke",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "3",
+   "focus": 1,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 99,
+   "name": "Circling Defence",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "7,6,5,4,3",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 266,
+   "name": "Clarity of Purpose",
+   "char": "Monk",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "8",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 267,
+   "name": "Clear Mind",
+   "char": "Monk",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 48,
+   "name": "Cleaving Waterfall",
+   "char": "Student",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 190,
+   "name": "Close In",
+   "char": "Kojiro",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "1",
+   "focus": 0,
+   "keywords": [
+    "Meditation",
+    "Instant Replacement"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 356,
+   "name": "Close the Gap",
+   "char": "Yasuke",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "3",
+   "focus": 0,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 155,
+   "name": "Counter Attack",
+   "char": "Gen. Ability",
+   "amount": 6,
+   "rank": "Wood",
+   "initiative": "2",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 193,
+   "name": "Counter Return",
+   "char": "Kojiro",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "=",
+   "focus": 0,
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 85,
+   "name": "Courage",
+   "char": "Gen. Ability",
+   "amount": 2,
+   "rank": "Gold",
+   "initiative": "-",
+   "focus": 1,
+   "keywords": [
+    "Meditation",
+    "Instant",
+    "Bushido"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 204,
+   "name": "Crescent Slash",
+   "char": "Musashi",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "6",
+   "focus": 1,
+   "keywords": [
+    "Attack",
+    "Instant Replacement"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 270,
+   "name": "Cresting Wave",
+   "char": "Monk",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 24,
+   "name": "Crimson Whirlwind",
+   "char": "Ronin",
+   "amount": 1,
+   "rank": "Jade",
+   "initiative": "8",
+   "focus": 3,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 143,
+   "name": "Cross Kick",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "7",
+   "focus": 1,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 186,
+   "name": "Cutting Retort",
+   "char": "Kojiro",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Attack",
+    "Instant Replacement"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 281,
+   "name": "Dagger Throw",
+   "char": "Sailor",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Attack",
+    "Range3"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 207,
+   "name": "Dancing Fire Slash",
+   "char": "Musashi",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "6",
+   "focus": 1,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 327,
+   "name": "Dark Aura",
+   "char": "Yojimbo",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "2",
+   "focus": 0,
+   "keywords": [
+    "Meditation",
+    "Range3"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 14,
+   "name": "Dark Bargain",
+   "char": "Master",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "1",
+   "focus": 1,
+   "keywords": [
+    "Meditation",
+    "Range3"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 12,
+   "name": "Dark Insight",
+   "char": "Master",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "7",
+   "focus": 1,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 201,
+   "name": "Dark Void Blade",
+   "char": "Musashi",
+   "amount": 1,
+   "rank": "Jade",
+   "initiative": "8",
+   "focus": 3,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 86,
+   "name": "Dashdown Strike",
+   "char": "Gen. Ability",
+   "amount": 2,
+   "rank": "Gold",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 122,
+   "name": "Deep Meditation",
+   "char": "Gen. Ability",
+   "amount": 6,
+   "rank": "Wood",
+   "initiative": "1",
+   "focus": 0,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 144,
+   "name": "Determination",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "=",
+   "focus": 0,
+   "keywords": [
+    "Meditation",
+    "Instant Additional",
+    "Prepared"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 354,
+   "name": "Devoted Soul",
+   "char": "Yasuke",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "8,7,6",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 100,
+   "name": "Diagonal Slash",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 87,
+   "name": "Dirt Throw",
+   "char": "Gen. Ability",
+   "amount": 2,
+   "rank": "Gold",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Attack",
+    "Instant Replacement"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 228,
+   "name": "Disarming Grace",
+   "char": "Assassin",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "=",
+   "focus": 0,
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 145,
+   "name": "Disorientating Blow",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "3",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 79,
+   "name": "Divine Inspiration",
+   "char": "Gen. Ability",
+   "amount": 2,
+   "rank": "Jade",
+   "initiative": "=",
+   "focus": 3,
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 357,
+   "name": "Double Strike",
+   "char": "Yasuke",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "4",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 254,
+   "name": "Drag Prey/Good Boy",
+   "char": "Hachiko",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "7/9",
+   "focus": 0,
+   "keywords": [
+    "Attack/Defence"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 9,
+   "name": "Dragon Reflection",
+   "char": "Master",
+   "amount": 1,
+   "rank": "Jade",
+   "initiative": "9",
+   "focus": 0,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 15,
+   "name": "Dragon Tail",
+   "char": "Master",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Attack",
+    "Instant Replacement"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 39,
+   "name": "Drawn Breath",
+   "char": "Student",
+   "amount": 1,
+   "rank": "Jade",
+   "initiative": "8",
+   "focus": 2,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 279,
+   "name": "Dreaded Black Shot",
+   "char": "Sailor",
+   "amount": 1,
+   "rank": "Jade",
+   "initiative": "4",
+   "focus": 1,
+   "keywords": [
+    "Attack",
+    "Range6"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 360,
+   "name": "Dual Blade Defence",
+   "char": "Yasuke",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "8,7/5,4",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 68,
+   "name": "Dual Sai Cross",
+   "char": "Weapon",
+   "amount": 2,
+   "rank": "-",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Sai",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 289,
+   "name": "Duelling Advance",
+   "char": "Sailor",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 88,
+   "name": "Duty",
+   "char": "Gen. Ability",
+   "amount": 2,
+   "rank": "Gold",
+   "initiative": "-",
+   "focus": 1,
+   "keywords": [
+    "Meditation",
+    "Instant",
+    "Bushido"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 358,
+   "name": "Eagle's Talons",
+   "char": "Yasuke",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 187,
+   "name": "Elegant Claw",
+   "char": "Kojiro",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "8",
+   "focus": 2,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 355,
+   "name": "Elephant Slam",
+   "char": "Yasuke",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "=",
+   "focus": 0,
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 63,
+   "name": "Ember Block",
+   "char": "Warrior",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "9,8,7,6",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 89,
+   "name": "Emergency Block",
+   "char": "Gen. Ability",
+   "amount": 2,
+   "rank": "Gold",
+   "initiative": "9,8,7,6,5,4,3,2",
+   "focus": 1,
+   "keywords": [
+    "Defence",
+    "Instant Replacement"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 243,
+   "name": "Encircle",
+   "char": "Ashigaru",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "3",
+   "focus": 0,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 263,
+   "name": "Enlightened Body",
+   "char": "Monk",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "-",
+   "focus": 2,
+   "keywords": [
+    "Meditation",
+    "Instant"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 264,
+   "name": "Enlightened Mind",
+   "char": "Monk",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "-",
+   "focus": 0,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 265,
+   "name": "Enlightened Soul",
+   "char": "Monk",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "8",
+   "focus": 2,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 219,
+   "name": "Envenom Blades",
+   "char": "Assassin",
+   "amount": 1,
+   "rank": "Jade",
+   "initiative": "8",
+   "focus": 1,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 90,
+   "name": "Evasive Step",
+   "char": "Gen. Ability",
+   "amount": 2,
+   "rank": "Gold",
+   "initiative": "9,8,7,6",
+   "focus": 0,
+   "keywords": [
+    "Defence",
+    "Instant Replacement"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 13,
+   "name": "Eye of the Dragon",
+   "char": "Master",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "=",
+   "focus": 1,
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 174,
+   "name": "Fading Shadow",
+   "char": "Ninja",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "=",
+   "focus": 0,
+   "keywords": [
+    "Meditation",
+    "Instant Additional",
+    "Prepared"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 300,
+   "name": "Falling Arc",
+   "char": "Onna-Bugeisha",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "4",
+   "focus": 0,
+   "keywords": [
+    "Attack",
+    "Instant Replacement"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 34,
+   "name": "Falling Restraint",
+   "char": "Ronin",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "3",
+   "focus": 0,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 335,
+   "name": "Falling Tsunami",
+   "char": "Wakou",
+   "amount": 1,
+   "rank": "Jade",
+   "initiative": "8",
+   "focus": 2,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 321,
+   "name": "Fearsome Reputation",
+   "char": "Yojimbo",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "5",
+   "focus": 1,
+   "keywords": [
+    "Mediation",
+    "Range1"
+   ],
+   "type": "other"
+  },
+  {
+   "id": 101,
+   "name": "Feint Cut",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Attack",
+    "Instant Replacement"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 123,
+   "name": "Fend",
+   "char": "Gen. Ability",
+   "amount": 5,
+   "rank": "Wood",
+   "initiative": "5,4,3,2",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 29,
+   "name": "Feral Sweep",
+   "char": "Ronin",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 124,
+   "name": "Field Bandages",
+   "char": "Gen. Ability",
+   "amount": 6,
+   "rank": "Wood",
+   "initiative": "1",
+   "focus": 0,
+   "keywords": [
+    "Defence",
+    "Prepared"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 102,
+   "name": "Firm Mind",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "3",
+   "focus": 0,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 55,
+   "name": "Flaming Phoenix Arc",
+   "char": "Warrior",
+   "amount": 1,
+   "rank": "Jade",
+   "initiative": "6",
+   "focus": 3,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 156,
+   "name": "Focused Exertion",
+   "char": "Gen. Ability",
+   "amount": 6,
+   "rank": "Wood",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Mediation",
+    "Prepared"
+   ],
+   "type": "other"
+  },
+  {
+   "id": 146,
+   "name": "Focused Guard",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "7,6,5,4",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 211,
+   "name": "Focused Recovery",
+   "char": "Musashi",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "4",
+   "focus": 0,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 284,
+   "name": "Fool's Counter",
+   "char": "Sailor",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "=",
+   "focus": 2,
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 238,
+   "name": "For the Daimyo",
+   "char": "Ashigaru",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "7",
+   "focus": 1,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 147,
+   "name": "Forest Step",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 194,
+   "name": "Forward Uppercut",
+   "char": "Kojiro",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "4",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 167,
+   "name": "Fukiya Dart Pipe",
+   "char": "Ninja",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "4",
+   "focus": 0,
+   "keywords": [
+    "Attack",
+    "Range4",
+    "Prepared"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 298,
+   "name": "Furious Instinct",
+   "char": "Onna-Bugeisha",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "4",
+   "focus": 1,
+   "keywords": [
+    "Meditation",
+    "Instant Replacement"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 191,
+   "name": "Ganryu Block",
+   "char": "Kojiro",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "8,7,6,5",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 165,
+   "name": "Ghost Moon Step",
+   "char": "Ninja",
+   "amount": 1,
+   "rank": "Jade",
+   "initiative": "8,7,6,5,4,3,2",
+   "focus": 1,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 103,
+   "name": "Graceful Step",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "8",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 80,
+   "name": "Guardian's Defence",
+   "char": "Gen. Ability",
+   "amount": 2,
+   "rank": "Jade",
+   "initiative": "8,7,6,5,4,3",
+   "focus": 3,
+   "keywords": [
+    "Defence",
+    "Instant Replacement"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 148,
+   "name": "Hail Strike",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "3",
+   "focus": 1,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 343,
+   "name": "Headbutt",
+   "char": "Wakou",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "4",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 64,
+   "name": "Headbutt",
+   "char": "Warrior",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "4",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 295,
+   "name": "Heart of the Oni",
+   "char": "Onna-Bugeisha",
+   "amount": 1,
+   "rank": "Jade",
+   "initiative": "=",
+   "focus": 0,
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 237,
+   "name": "Heaven's Castle",
+   "char": "Ashigaru",
+   "amount": 1,
+   "rank": "Jade",
+   "initiative": "9,8,7,6,5,4,3,2",
+   "focus": 1,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 25,
+   "name": "Heavy Armour",
+   "char": "Ronin",
+   "amount": 1,
+   "rank": "Jade",
+   "initiative": "=",
+   "focus": 1,
+   "keywords": [
+    "Defence",
+    "Instant Additional",
+    "Prepared"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 282,
+   "name": "Heavy Slash",
+   "char": "Sailor",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "4",
+   "focus": 1,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 10,
+   "name": "Hidden Viper Fang",
+   "char": "Master",
+   "amount": 1,
+   "rank": "Jade",
+   "initiative": "8",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 205,
+   "name": "Hidden Void Block",
+   "char": "Musashi",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "7,6,5,4",
+   "focus": 1,
+   "keywords": [
+    "Defence",
+    "Instant Replacement"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 328,
+   "name": "Hired Killer",
+   "char": "Yojimbo",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "-",
+   "focus": 0,
+   "keywords": [
+    "Meditation",
+    "Instant",
+    "Prepared"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 104,
+   "name": "Hobbling Blow",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "=",
+   "focus": 0,
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 91,
+   "name": "Honesty",
+   "char": "Gen. Ability",
+   "amount": 2,
+   "rank": "Gold",
+   "initiative": "-",
+   "focus": 2,
+   "keywords": [
+    "Meditation",
+    "Instant",
+    "Bushido"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 92,
+   "name": "Honour",
+   "char": "Gen. Ability",
+   "amount": 2,
+   "rank": "Gold",
+   "initiative": "-",
+   "focus": 2,
+   "keywords": [
+    "Meditation",
+    "Instant",
+    "Bushido"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 105,
+   "name": "Horizontal Cut",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 125,
+   "name": "Horse Kick",
+   "char": "Gen. Ability",
+   "amount": 6,
+   "rank": "Wood",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 240,
+   "name": "Horse Trip",
+   "char": "Ashigaru",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "=",
+   "focus": 0,
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 301,
+   "name": "Horse Trip",
+   "char": "Onna-Bugeisha",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "=",
+   "focus": 0,
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 302,
+   "name": "Hurricane Dodge",
+   "char": "Onna-Bugeisha",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "8",
+   "focus": 1,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 18,
+   "name": "Idle Strike",
+   "char": "Master",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "3",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 339,
+   "name": "Inebriated Fumble",
+   "char": "Wakou",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "1",
+   "focus": 0,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 44,
+   "name": "Insightful Blow",
+   "char": "Student",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Attack",
+    "Prepared"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 323,
+   "name": "Iron Guard",
+   "char": "Yojimbo",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "7,6,5",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 106,
+   "name": "Iron Will",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "7",
+   "focus": 2,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 336,
+   "name": "Jug Smash",
+   "char": "Wakou",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Attack",
+    "Range2"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 133,
+   "name": "Jumonji Yari Pierce",
+   "char": "Weapon",
+   "amount": 2,
+   "rank": "-",
+   "initiative": "2",
+   "focus": 0,
+   "keywords": [
+    "Yari",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 255,
+   "name": "Jump/Down",
+   "char": "Hachiko",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "7/6",
+   "focus": 0,
+   "keywords": [
+    "Attack/Defence"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 69,
+   "name": "Kama Hook",
+   "char": "Weapon",
+   "amount": 2,
+   "rank": "-",
+   "initiative": "4",
+   "focus": 0,
+   "keywords": [
+    "Kama",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 175,
+   "name": "Kama Slash",
+   "char": "Ninja",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 134,
+   "name": "Kanabo Smash",
+   "char": "Weapon",
+   "amount": 2,
+   "rank": "-",
+   "initiative": "4",
+   "focus": 0,
+   "keywords": [
+    "Kanabo",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 135,
+   "name": "Katana Cut",
+   "char": "Weapon",
+   "amount": 2,
+   "rank": "-",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Katana",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 136,
+   "name": "Katana Slash",
+   "char": "Weapon",
+   "amount": 2,
+   "rank": "-",
+   "initiative": "4",
+   "focus": 0,
+   "keywords": [
+    "Katana",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 70,
+   "name": "Katana Swing",
+   "char": "Weapon",
+   "amount": 2,
+   "rank": "-",
+   "initiative": "4",
+   "focus": 0,
+   "keywords": [
+    "Katana",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 180,
+   "name": "Kojiro Core Card",
+   "char": "Kojiro",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "0",
+   "focus": 0,
+   "keywords": [
+    "Core"
+   ],
+   "type": "core"
+  },
+  {
+   "id": 164,
+   "name": "Kusarigama Strike",
+   "char": "Ninja/Weapon",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "4",
+   "focus": 0,
+   "keywords": [
+    "Kusarigama",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 329,
+   "name": "Leg Breaker",
+   "char": "Yojimbo",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 81,
+   "name": "Legendary Fortitude",
+   "char": "Gen. Ability",
+   "amount": 2,
+   "rank": "Jade",
+   "initiative": "3",
+   "focus": 3,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 40,
+   "name": "Lightning Tail",
+   "char": "Student",
+   "amount": 1,
+   "rank": "Jade",
+   "initiative": "9",
+   "focus": 2,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 361,
+   "name": "Lion's Bite",
+   "char": "Yasuke",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 359,
+   "name": "Lion's Fangs",
+   "char": "Yasuke",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "5",
+   "focus": 1,
+   "keywords": [
+    "Attack",
+    "Instant Replacement"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 351,
+   "name": "Lion's Honour",
+   "char": "Yasuke",
+   "amount": 1,
+   "rank": "Jade",
+   "initiative": "9,8,7,6",
+   "focus": 0,
+   "keywords": [
+    "Defence",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 285,
+   "name": "Longpoint Thrust",
+   "char": "Sailor",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 166,
+   "name": "Lunar Sniper Trap",
+   "char": "Ninja",
+   "amount": 1,
+   "rank": "Jade",
+   "initiative": "4",
+   "focus": 1,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 241,
+   "name": "Lunging Pierce",
+   "char": "Ashigaru",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 107,
+   "name": "Lunging Thrust",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "3",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 242,
+   "name": "Man's Best Friend",
+   "char": "Ashigaru",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "=",
+   "focus": 0,
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 8,
+   "name": "Master Core Card",
+   "char": "Master",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "0",
+   "focus": 0,
+   "keywords": [
+    "Core"
+   ],
+   "type": "core"
+  },
+  {
+   "id": 19,
+   "name": "Masterful Cut",
+   "char": "Master",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 168,
+   "name": "Metsubushi Pipe",
+   "char": "Ninja",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "6",
+   "focus": 1,
+   "keywords": [
+    "Attack",
+    "Prepared"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 208,
+   "name": "Mindful Calm",
+   "char": "Musashi",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 108,
+   "name": "Misdirection",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "8",
+   "focus": 1,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 260,
+   "name": "Monk Core Card",
+   "char": "Monk",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "0",
+   "focus": 0,
+   "keywords": [
+    "Core"
+   ],
+   "type": "core"
+  },
+  {
+   "id": 303,
+   "name": "Mountain Carve",
+   "char": "Onna-Bugeisha",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 49,
+   "name": "Mountain Switch",
+   "char": "Student",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 344,
+   "name": "Mule Kick",
+   "char": "Wakou",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 199,
+   "name": "Musashi Core Card",
+   "char": "Musashi",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "0",
+   "focus": 0,
+   "keywords": [
+    "Core"
+   ],
+   "type": "core"
+  },
+  {
+   "id": 197,
+   "name": "Musashi Core Deck Card",
+   "char": "Musashi",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "0",
+   "focus": 0,
+   "keywords": [
+    "Core"
+   ],
+   "type": "core"
+  },
+  {
+   "id": 317,
+   "name": "Nagamaki Thrust",
+   "char": "Yojimbo/Weapon",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "4",
+   "focus": 0,
+   "keywords": [
+    "Nagamaki",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 137,
+   "name": "Naginata Carve",
+   "char": "Weapon",
+   "amount": 2,
+   "rank": "-",
+   "initiative": "4",
+   "focus": 0,
+   "keywords": [
+    "Naginata",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 71,
+   "name": "Naginata Sweep",
+   "char": "Weapon",
+   "amount": 2,
+   "rank": "-",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Naginata",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 163,
+   "name": "Ninja Core Card",
+   "char": "Ninja",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "0",
+   "focus": 0,
+   "keywords": [
+    "Core"
+   ],
+   "type": "core"
+  },
+  {
+   "id": 72,
+   "name": "Nodachi Slash",
+   "char": "Weapon",
+   "amount": 2,
+   "rank": "-",
+   "initiative": "4",
+   "focus": 0,
+   "keywords": [
+    "Nodachi",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 73,
+   "name": "Nodachi Thrust",
+   "char": "Weapon",
+   "amount": 2,
+   "rank": "-",
+   "initiative": "4",
+   "focus": 0,
+   "keywords": [
+    "Nodachi",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 45,
+   "name": "Obedience",
+   "char": "Student",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "7,6,5,4,3",
+   "focus": 0,
+   "keywords": [
+    "Defence",
+    "Prepared"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 362,
+   "name": "Off Balance",
+   "char": "Yasuke",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "1",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 350,
+   "name": "Off-Hand Cut",
+   "char": "Yasuke/Weapon",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "1",
+   "focus": 0,
+   "keywords": [
+    "Wakizashi",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 294,
+   "name": "Onna-Bugeisha Core Card",
+   "char": "Onna-Bugeisha",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "0",
+   "focus": 0,
+   "keywords": [
+    "Core"
+   ],
+   "type": "core"
+  },
+  {
+   "id": 109,
+   "name": "Open Mind",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "4",
+   "focus": 0,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 149,
+   "name": "Overhead Carve",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "4",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 290,
+   "name": "Ox Guard",
+   "char": "Sailor",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "7,6,5",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 35,
+   "name": "Oxen Barge",
+   "char": "Ronin",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 271,
+   "name": "Palm Strike",
+   "char": "Monk",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Attack",
+    "Instant Replacement"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 278,
+   "name": "Pistol Whip",
+   "char": "Sailor/Weapon",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "4",
+   "focus": 0,
+   "keywords": [
+    "Pistol",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 126,
+   "name": "Pommel Smash",
+   "char": "Gen. Ability",
+   "amount": 6,
+   "rank": "Wood",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 157,
+   "name": "Practiced Strike",
+   "char": "Gen. Ability",
+   "amount": 6,
+   "rank": "Wood",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 280,
+   "name": "Precise Shot",
+   "char": "Sailor",
+   "amount": 1,
+   "rank": "Jade",
+   "initiative": "5",
+   "focus": 2,
+   "keywords": [
+    "Attack",
+    "Range6"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 127,
+   "name": "Push Back",
+   "char": "Gen. Ability",
+   "amount": 6,
+   "rank": "Wood",
+   "initiative": "4",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 252,
+   "name": "Quick Bite/Feral Howl",
+   "char": "Hachiko",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "7/6",
+   "focus": 0,
+   "keywords": [
+    "Attack/Defence",
+    "Range2"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 110,
+   "name": "Quick Dodge",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "8",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 128,
+   "name": "Quick Stab",
+   "char": "Gen. Ability",
+   "amount": 6,
+   "rank": "Wood",
+   "initiative": "8",
+   "focus": 1,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 299,
+   "name": "Rage Guard",
+   "char": "Onna-Bugeisha",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "8,7,6,5,4,3,2",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 337,
+   "name": "Ramming Bukan",
+   "char": "Wakou",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "5",
+   "focus": 1,
+   "keywords": [
+    "Attack",
+    "Instant Replacement"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 42,
+   "name": "Reflection Pool",
+   "char": "Student",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "8",
+   "focus": 0,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 59,
+   "name": "Refocused Mind",
+   "char": "Warrior",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 20,
+   "name": "Reposition",
+   "char": "Master",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 272,
+   "name": "Resolute Block",
+   "char": "Monk",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "8,7,6,5,4",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 93,
+   "name": "Respect",
+   "char": "Gen. Ability",
+   "amount": 2,
+   "rank": "Gold",
+   "initiative": "-",
+   "focus": 2,
+   "keywords": [
+    "Meditation",
+    "Instant",
+    "Bushido"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 27,
+   "name": "Reverse Carved Fang",
+   "char": "Ronin",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "7",
+   "focus": 1,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 352,
+   "name": "Righteous Fury",
+   "char": "Yasuke",
+   "amount": 1,
+   "rank": "Jade",
+   "initiative": "6",
+   "focus": 3,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 94,
+   "name": "Righteousness",
+   "char": "Gen. Ability",
+   "amount": 2,
+   "rank": "Gold",
+   "initiative": "-",
+   "focus": 1,
+   "keywords": [
+    "Meditation",
+    "Instant",
+    "Bushido"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 30,
+   "name": "Ripping Claws",
+   "char": "Ronin",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "=",
+   "focus": 0,
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 150,
+   "name": "Rising Fury",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "=",
+   "focus": 0,
+   "keywords": [
+    "Meditation",
+    "Instant Additional",
+    "Prepared"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 111,
+   "name": "River Block",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "7,6,5,4",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 46,
+   "name": "Rock Strike",
+   "char": "Student",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "3",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 112,
+   "name": "Rolling Slash",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 23,
+   "name": "Ronin Core Card",
+   "char": "Ronin",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "0",
+   "focus": 0,
+   "keywords": [
+    "Core"
+   ],
+   "type": "core"
+  },
+  {
+   "id": 283,
+   "name": "Roof Guard",
+   "char": "Sailor",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "8,7,6,5,4",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 209,
+   "name": "Rushing Water Slice",
+   "char": "Musashi",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 276,
+   "name": "Sailor Core Card",
+   "char": "Sailor",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "0",
+   "focus": 0,
+   "keywords": [
+    "Core"
+   ],
+   "type": "core"
+  },
+  {
+   "id": 286,
+   "name": "Salvage",
+   "char": "Sailor",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "3",
+   "focus": 0,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 268,
+   "name": "Satori Smite",
+   "char": "Monk",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "4",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 248,
+   "name": "Savage Maul/Leap Aside",
+   "char": "Hachiko",
+   "amount": 1,
+   "rank": "Jade",
+   "initiative": "8/9",
+   "focus": 1,
+   "keywords": [
+    "Attack/Defence"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 195,
+   "name": "Scornful Jab",
+   "char": "Kojiro",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "3",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 324,
+   "name": "Scorpion Sting",
+   "char": "Yojimbo",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "6",
+   "focus": 1,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 305,
+   "name": "Screaming Mind",
+   "char": "Onna-Bugeisha",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "4",
+   "focus": 0,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 244,
+   "name": "Scything Cleave",
+   "char": "Ashigaru",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "4",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 58,
+   "name": "Scything Feint",
+   "char": "Warrior",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 60,
+   "name": "Scything Uppercut",
+   "char": "Warrior",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 338,
+   "name": "Sea Legs",
+   "char": "Wakou",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "9",
+   "focus": 0,
+   "keywords": [
+    "Meditation",
+    "Instant Replacement"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 95,
+   "name": "Self-control",
+   "char": "Gen. Ability",
+   "amount": 2,
+   "rank": "Gold",
+   "initiative": "-",
+   "focus": 1,
+   "keywords": [
+    "Meditation",
+    "Instant",
+    "Bushido"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 325,
+   "name": "Senbon Throw",
+   "char": "Yojimbo",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "4",
+   "focus": 0,
+   "keywords": [
+    "Attack",
+    "Range2"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 239,
+   "name": "Setting Sun",
+   "char": "Ashigaru",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 229,
+   "name": "Sever Artery",
+   "char": "Assassin",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 113,
+   "name": "Severing Cut",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 221,
+   "name": "Shadow Step",
+   "char": "Assassin",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 220,
+   "name": "Shadow Sting",
+   "char": "Assassin",
+   "amount": 1,
+   "rank": "Jade",
+   "initiative": "6",
+   "focus": 3,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 74,
+   "name": "Shikomizue Parry",
+   "char": "Weapon",
+   "amount": 2,
+   "rank": "-",
+   "initiative": "5,4,3",
+   "focus": 0,
+   "keywords": [
+    "Shikomizue",
+    "Core",
+    "Defence",
+    "Weapon"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 61,
+   "name": "Short Strike",
+   "char": "Warrior",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Attack",
+    "Instant Replacement"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 169,
+   "name": "Shuriken Throw",
+   "char": "Ninja",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "4",
+   "focus": 1,
+   "keywords": [
+    "Attack",
+    "Range4",
+    "Prepared"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 296,
+   "name": "Silent Embrace",
+   "char": "Onna-Bugeisha",
+   "amount": 1,
+   "rank": "Jade",
+   "initiative": "7",
+   "focus": 3,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 181,
+   "name": "Silver Frost",
+   "char": "Kojiro/Weapon",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Silver Frost",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 16,
+   "name": "Sixth Sense",
+   "char": "Master",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "9,8,7,6,5,4",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 245,
+   "name": "Skewer",
+   "char": "Ashigaru",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 326,
+   "name": "Skull Cutter",
+   "char": "Yojimbo",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "4",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 224,
+   "name": "Smoke Bomb",
+   "char": "Assassin",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "7",
+   "focus": 1,
+   "keywords": [
+    "Defence",
+    "Prepared"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 172,
+   "name": "Smoke Bomb",
+   "char": "Ninja",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "7",
+   "focus": 1,
+   "keywords": [
+    "Defence",
+    "Prepared"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 340,
+   "name": "Sobering Hulk",
+   "char": "Wakou",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 222,
+   "name": "Spider's Kiss",
+   "char": "Assassin",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "1",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 65,
+   "name": "Spiralling Flames",
+   "char": "Warrior",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 96,
+   "name": "Splitting Strike",
+   "char": "Gen. Ability",
+   "amount": 2,
+   "rank": "Gold",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 269,
+   "name": "Stag Rush",
+   "char": "Monk",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 341,
+   "name": "Staggering Blow",
+   "char": "Wakou",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "=",
+   "focus": 1,
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 43,
+   "name": "Stalking Tiger Paw",
+   "char": "Student",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "=",
+   "focus": 1,
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 210,
+   "name": "Standing Earth",
+   "char": "Musashi",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "9,8,7,6",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 31,
+   "name": "Steel Block",
+   "char": "Ronin",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "7,6,5,4,3",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 223,
+   "name": "Steel Rain",
+   "char": "Assassin",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 114,
+   "name": "Stone Block",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "6,5,4,3,2",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 151,
+   "name": "Storm Block",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "8,7,6,5",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 318,
+   "name": "Stubborn Resolve",
+   "char": "Yojimbo",
+   "amount": 1,
+   "rank": "Jade",
+   "initiative": "-",
+   "focus": 2,
+   "keywords": [
+    "Meditation",
+    "Instant"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 38,
+   "name": "Student Core Card",
+   "char": "Student",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "0",
+   "focus": 0,
+   "keywords": [
+    "Core"
+   ],
+   "type": "core"
+  },
+  {
+   "id": 152,
+   "name": "Stunning Blow",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "=",
+   "focus": 2,
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 306,
+   "name": "Surging River",
+   "char": "Onna-Bugeisha",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 192,
+   "name": "Swagger",
+   "char": "Kojiro",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "3",
+   "focus": 0,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 115,
+   "name": "Swift Block",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "8,7,6",
+   "focus": 0,
+   "keywords": [
+    "Defence",
+    "Instant Replacement"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 116,
+   "name": "Swift Mind",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 256,
+   "name": "Swipe/Prowl",
+   "char": "Hachiko",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "6/3",
+   "focus": 0,
+   "keywords": [
+    "Attack/Defence"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 75,
+   "name": "Tachi Cut",
+   "char": "Weapon",
+   "amount": 2,
+   "rank": "-",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Tachi",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 17,
+   "name": "Tainted Wisdom",
+   "char": "Master",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "=",
+   "focus": 0,
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 138,
+   "name": "Tanto Slice",
+   "char": "Weapon",
+   "amount": 2,
+   "rank": "-",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Tanto",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 97,
+   "name": "Taunt",
+   "char": "Gen. Ability",
+   "amount": 2,
+   "rank": "Gold",
+   "initiative": "=",
+   "focus": 0,
+   "keywords": [
+    "Meditation",
+    "Instant Additional",
+    "Range5"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 212,
+   "name": "Taunting Blow",
+   "char": "Musashi",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "=",
+   "focus": 0,
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 182,
+   "name": "Tessen Deflection",
+   "char": "Kojiro/Weapon",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "9,8,7",
+   "focus": 0,
+   "keywords": [
+    "Tessen",
+    "Core",
+    "Defence",
+    "Weapon"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 202,
+   "name": "The Five Rings",
+   "char": "Musashi",
+   "amount": 1,
+   "rank": "Jade",
+   "initiative": "5",
+   "focus": 2,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 322,
+   "name": "The Job is Done",
+   "char": "Yojimbo",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 28,
+   "name": "The Terror",
+   "char": "Ronin",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "5",
+   "focus": 2,
+   "keywords": [
+    "Meditation",
+    "Range3"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 253,
+   "name": "Throat Tear/Cornered",
+   "char": "Hachiko",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "5/7",
+   "focus": 0,
+   "keywords": [
+    "Attack/Defence"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 76,
+   "name": "Tonfa Block",
+   "char": "Weapon",
+   "amount": 2,
+   "rank": "-",
+   "initiative": "5,4,3",
+   "focus": 0,
+   "keywords": [
+    "Tonfa",
+    "Core",
+    "Defence",
+    "Weapon"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 287,
+   "name": "Towering Strike",
+   "char": "Sailor",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "7",
+   "focus": 1,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 117,
+   "name": "Trained Mind",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "2",
+   "focus": 0,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 50,
+   "name": "Tranquil Mind",
+   "char": "Student",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "3",
+   "focus": 0,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 261,
+   "name": "True Enlightenment",
+   "char": "Monk",
+   "amount": 1,
+   "rank": "Jade",
+   "initiative": "1",
+   "focus": 0,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 188,
+   "name": "Tsukami Guard",
+   "char": "Kojiro",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "8,7,6,5,4,3",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 47,
+   "name": "Turning Slash",
+   "char": "Student",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Attack",
+    "Instant Replacement"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 183,
+   "name": "Turning Swallow Cut",
+   "char": "Kojiro",
+   "amount": 1,
+   "rank": "Jade",
+   "initiative": "9",
+   "focus": 3,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 225,
+   "name": "Twist the Knife",
+   "char": "Assassin",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "=",
+   "focus": 0,
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 206,
+   "name": "Two Heavens Cut",
+   "char": "Musashi",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "5",
+   "focus": 1,
+   "keywords": [
+    "Attack",
+    "Instant Replacement"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 226,
+   "name": "Umbra Vault",
+   "char": "Assassin",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "8",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 230,
+   "name": "Venomous Slice",
+   "char": "Assassin",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 184,
+   "name": "Vicious Mockery",
+   "char": "Kojiro",
+   "amount": 1,
+   "rank": "Jade",
+   "initiative": "3",
+   "focus": 3,
+   "keywords": [
+    "Meditation",
+    "Range3"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 227,
+   "name": "Viper Strike",
+   "char": "Assassin",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 77,
+   "name": "Wakizashi Slice",
+   "char": "Weapon",
+   "amount": 2,
+   "rank": "-",
+   "initiative": "4",
+   "focus": 0,
+   "keywords": [
+    "Wakizashi",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 333,
+   "name": "Wakou Core Card",
+   "char": "Wakou",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "0",
+   "focus": 0,
+   "keywords": [
+    "Core"
+   ],
+   "type": "core"
+  },
+  {
+   "id": 342,
+   "name": "Walk it Off",
+   "char": "Wakou",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 345,
+   "name": "Wandering Star",
+   "char": "Wakou",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "3",
+   "focus": 0,
+   "keywords": [
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 98,
+   "name": "War Cry",
+   "char": "Gen. Ability",
+   "amount": 2,
+   "rank": "Gold",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Meditation",
+    "Range5"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 62,
+   "name": "Warding Arc",
+   "char": "Warrior",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 53,
+   "name": "Warrior Core Card",
+   "char": "Warrior",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "0",
+   "focus": 0,
+   "keywords": [
+    "Core"
+   ],
+   "type": "core"
+  },
+  {
+   "id": 158,
+   "name": "Wheel Strike",
+   "char": "Gen. Ability",
+   "amount": 6,
+   "rank": "Wood",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 173,
+   "name": "Whipping Flail",
+   "char": "Ninja",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 249,
+   "name": "Wild Bite/Lick Wounds",
+   "char": "Hachiko",
+   "amount": 1,
+   "rank": "Gold",
+   "initiative": "7/1",
+   "focus": 0,
+   "keywords": [
+    "Attack/Defence"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 118,
+   "name": "Wild Block",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "9,8,7,6,5,4,3",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 119,
+   "name": "Wild Swing",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "7",
+   "focus": 1,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 120,
+   "name": "Wind Block",
+   "char": "Gen. Ability",
+   "amount": 4,
+   "rank": "Steel",
+   "initiative": "8,7,6,5",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 213,
+   "name": "Wind Slash",
+   "char": "Musashi",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 176,
+   "name": "Withdraw",
+   "char": "Ninja",
+   "amount": 3,
+   "rank": "Wood",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 32,
+   "name": "Wolf Pounce",
+   "char": "Ronin",
+   "amount": 2,
+   "rank": "Steel",
+   "initiative": "7",
+   "focus": 1,
+   "keywords": [
+    "Attack",
+    "Instant Replacement"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 139,
+   "name": "Yari Impale",
+   "char": "Weapon",
+   "amount": 2,
+   "rank": "-",
+   "initiative": "1",
+   "focus": 0,
+   "keywords": [
+    "Yari",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 349,
+   "name": "Yasuke Core Card",
+   "char": "Yasuke",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "0",
+   "focus": 0,
+   "keywords": [
+    "Core"
+   ],
+   "type": "core"
+  },
+  {
+   "id": 316,
+   "name": "Yojimbo Core Card",
+   "char": "Yojimbo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "0",
+   "focus": 0,
+   "keywords": [
+    "Core"
+   ],
+   "type": "core"
+  },
+  {
+   "id": 319,
+   "name": "Zanmato",
+   "char": "Yojimbo",
+   "amount": 1,
+   "rank": "Jade",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 262,
+   "name": "Zen Wave Slash",
+   "char": "Monk",
+   "amount": 1,
+   "rank": "Jade",
+   "initiative": "6",
+   "focus": 2,
+   "keywords": [
+    "Attack"
+   ],
+   "type": "attack"
+  }
+ ]
+}
