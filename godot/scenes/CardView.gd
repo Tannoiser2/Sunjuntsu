@@ -34,6 +34,21 @@ func setup(path: String, data: Dictionary) -> void:
 	_tex_rect.texture = _load_texture(path)
 	add_child(_tex_rect)
 
+	# Etichetta dati (visibile solo se la carta è collegata al pool).
+	if data.has("name"):
+		var tip := Label.new()
+		tip.text = "%s\n%s · ini %s" % [
+			data.get("name", ""),
+			Domain.CARD_TYPE_LABELS.get(Domain.parse_card_type(data.get("type", "")), "?"),
+			str(data.get("initiative", "-"))]
+		tip.add_theme_font_size_override("font_size", 11)
+		tip.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		tip.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+		tip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		tip.add_theme_color_override("font_outline_color", Color.BLACK)
+		tip.add_theme_constant_override("outline_size", 4)
+		add_child(tip)
+
 	mouse_entered.connect(_on_hover.bind(true))
 	mouse_exited.connect(_on_hover.bind(false))
 	gui_input.connect(_on_gui_input)

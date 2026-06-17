@@ -15,7 +15,10 @@ const MANIFEST := "res://assets/cards/cards_manifest.json"
 
 func _ready() -> void:
 	hand.card_played.connect(func(d):
-		info.text = "Carta giocata: %s" % d.get("file", "?")
+		var label: String = d.get("name", d.get("file", "?"))
+		if d.has("initiative"):
+			label += " (ini %s)" % str(d.get("initiative"))
+		info.text = "Carta giocata: %s" % label
 		card_played.emit(d))
 
 
