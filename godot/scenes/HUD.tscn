@@ -1,0 +1,35 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scenes/HUD.gd" id="1"]
+[ext_resource type="Script" path="res://scenes/Hand.gd" id="2"]
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1")
+
+[node name="Hand" type="Control" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 1
+script = ExtResource("2")
+
+[node name="Top" type="PanelContainer" parent="."]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 40.0
+
+[node name="Info" type="Label" parent="Top"]
+layout_mode = 2
+text = "Senjutsu — mano del giocatore"
+
+[node name="Bottom" type="MarginContainer" parent="."]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -34.0
+theme_override_constants/margin_left = 12
+
+[node name="Hint" type="Label" parent="Bottom"]
+layout_mode = 2
+text = "Passa il mouse per ingrandire · click per selezionare · secondo click per giocare la carta"

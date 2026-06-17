@@ -1,0 +1,673 @@
+{
+ "dpi": 180,
+ "card_px": [
+  463,
+  645
+ ],
+ "cards": [
+  {
+   "deck": "warrior",
+   "index": 1,
+   "page": 0,
+   "row": 0,
+   "col": 0,
+   "file": "warrior/warrior_01.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 2,
+   "page": 0,
+   "row": 0,
+   "col": 1,
+   "file": "warrior/warrior_02.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 3,
+   "page": 0,
+   "row": 0,
+   "col": 2,
+   "file": "warrior/warrior_03.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 4,
+   "page": 0,
+   "row": 1,
+   "col": 0,
+   "file": "warrior/warrior_04.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 5,
+   "page": 0,
+   "row": 1,
+   "col": 1,
+   "file": "warrior/warrior_05.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 6,
+   "page": 0,
+   "row": 1,
+   "col": 2,
+   "file": "warrior/warrior_06.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 7,
+   "page": 0,
+   "row": 2,
+   "col": 0,
+   "file": "warrior/warrior_07.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 8,
+   "page": 0,
+   "row": 2,
+   "col": 1,
+   "file": "warrior/warrior_08.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 9,
+   "page": 0,
+   "row": 2,
+   "col": 2,
+   "file": "warrior/warrior_09.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 10,
+   "page": 1,
+   "row": 0,
+   "col": 0,
+   "file": "warrior/warrior_10.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 11,
+   "page": 1,
+   "row": 0,
+   "col": 1,
+   "file": "warrior/warrior_11.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 12,
+   "page": 1,
+   "row": 0,
+   "col": 2,
+   "file": "warrior/warrior_12.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 13,
+   "page": 1,
+   "row": 1,
+   "col": 0,
+   "file": "warrior/warrior_13.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 14,
+   "page": 1,
+   "row": 1,
+   "col": 1,
+   "file": "warrior/warrior_14.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 15,
+   "page": 1,
+   "row": 1,
+   "col": 2,
+   "file": "warrior/warrior_15.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 16,
+   "page": 1,
+   "row": 2,
+   "col": 0,
+   "file": "warrior/warrior_16.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 17,
+   "page": 1,
+   "row": 2,
+   "col": 1,
+   "file": "warrior/warrior_17.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 18,
+   "page": 1,
+   "row": 2,
+   "col": 2,
+   "file": "warrior/warrior_18.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 19,
+   "page": 2,
+   "row": 0,
+   "col": 0,
+   "file": "warrior/warrior_19.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 20,
+   "page": 2,
+   "row": 0,
+   "col": 1,
+   "file": "warrior/warrior_20.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 21,
+   "page": 2,
+   "row": 0,
+   "col": 2,
+   "file": "warrior/warrior_21.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 22,
+   "page": 2,
+   "row": 1,
+   "col": 0,
+   "file": "warrior/warrior_22.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 23,
+   "page": 2,
+   "row": 1,
+   "col": 1,
+   "file": "warrior/warrior_23.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 24,
+   "page": 2,
+   "row": 1,
+   "col": 2,
+   "file": "warrior/warrior_24.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 25,
+   "page": 2,
+   "row": 2,
+   "col": 0,
+   "file": "warrior/warrior_25.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 26,
+   "page": 2,
+   "row": 2,
+   "col": 1,
+   "file": "warrior/warrior_26.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 27,
+   "page": 2,
+   "row": 2,
+   "col": 2,
+   "file": "warrior/warrior_27.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 28,
+   "page": 3,
+   "row": 0,
+   "col": 0,
+   "file": "warrior/warrior_28.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 29,
+   "page": 3,
+   "row": 0,
+   "col": 1,
+   "file": "warrior/warrior_29.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 30,
+   "page": 3,
+   "row": 0,
+   "col": 2,
+   "file": "warrior/warrior_30.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 31,
+   "page": 3,
+   "row": 1,
+   "col": 0,
+   "file": "warrior/warrior_31.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 32,
+   "page": 3,
+   "row": 1,
+   "col": 1,
+   "file": "warrior/warrior_32.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 33,
+   "page": 3,
+   "row": 1,
+   "col": 2,
+   "file": "warrior/warrior_33.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 34,
+   "page": 3,
+   "row": 2,
+   "col": 0,
+   "file": "warrior/warrior_34.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 35,
+   "page": 3,
+   "row": 2,
+   "col": 1,
+   "file": "warrior/warrior_35.webp"
+  },
+  {
+   "deck": "warrior",
+   "index": 36,
+   "page": 3,
+   "row": 2,
+   "col": 2,
+   "file": "warrior/warrior_36.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 1,
+   "page": 0,
+   "row": 0,
+   "col": 0,
+   "file": "ronin/ronin_01.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 2,
+   "page": 0,
+   "row": 0,
+   "col": 1,
+   "file": "ronin/ronin_02.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 3,
+   "page": 0,
+   "row": 0,
+   "col": 2,
+   "file": "ronin/ronin_03.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 4,
+   "page": 0,
+   "row": 1,
+   "col": 0,
+   "file": "ronin/ronin_04.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 5,
+   "page": 0,
+   "row": 1,
+   "col": 1,
+   "file": "ronin/ronin_05.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 6,
+   "page": 0,
+   "row": 1,
+   "col": 2,
+   "file": "ronin/ronin_06.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 7,
+   "page": 0,
+   "row": 2,
+   "col": 0,
+   "file": "ronin/ronin_07.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 8,
+   "page": 0,
+   "row": 2,
+   "col": 1,
+   "file": "ronin/ronin_08.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 9,
+   "page": 0,
+   "row": 2,
+   "col": 2,
+   "file": "ronin/ronin_09.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 10,
+   "page": 1,
+   "row": 0,
+   "col": 0,
+   "file": "ronin/ronin_10.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 11,
+   "page": 1,
+   "row": 0,
+   "col": 1,
+   "file": "ronin/ronin_11.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 12,
+   "page": 1,
+   "row": 0,
+   "col": 2,
+   "file": "ronin/ronin_12.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 13,
+   "page": 1,
+   "row": 1,
+   "col": 0,
+   "file": "ronin/ronin_13.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 14,
+   "page": 1,
+   "row": 1,
+   "col": 1,
+   "file": "ronin/ronin_14.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 15,
+   "page": 1,
+   "row": 1,
+   "col": 2,
+   "file": "ronin/ronin_15.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 16,
+   "page": 1,
+   "row": 2,
+   "col": 0,
+   "file": "ronin/ronin_16.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 17,
+   "page": 1,
+   "row": 2,
+   "col": 1,
+   "file": "ronin/ronin_17.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 18,
+   "page": 1,
+   "row": 2,
+   "col": 2,
+   "file": "ronin/ronin_18.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 19,
+   "page": 2,
+   "row": 0,
+   "col": 0,
+   "file": "ronin/ronin_19.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 20,
+   "page": 2,
+   "row": 0,
+   "col": 1,
+   "file": "ronin/ronin_20.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 21,
+   "page": 2,
+   "row": 0,
+   "col": 2,
+   "file": "ronin/ronin_21.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 22,
+   "page": 2,
+   "row": 1,
+   "col": 0,
+   "file": "ronin/ronin_22.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 23,
+   "page": 2,
+   "row": 1,
+   "col": 1,
+   "file": "ronin/ronin_23.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 24,
+   "page": 2,
+   "row": 1,
+   "col": 2,
+   "file": "ronin/ronin_24.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 25,
+   "page": 2,
+   "row": 2,
+   "col": 0,
+   "file": "ronin/ronin_25.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 26,
+   "page": 2,
+   "row": 2,
+   "col": 1,
+   "file": "ronin/ronin_26.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 27,
+   "page": 2,
+   "row": 2,
+   "col": 2,
+   "file": "ronin/ronin_27.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 28,
+   "page": 3,
+   "row": 0,
+   "col": 0,
+   "file": "ronin/ronin_28.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 29,
+   "page": 3,
+   "row": 0,
+   "col": 1,
+   "file": "ronin/ronin_29.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 30,
+   "page": 3,
+   "row": 0,
+   "col": 2,
+   "file": "ronin/ronin_30.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 31,
+   "page": 3,
+   "row": 1,
+   "col": 0,
+   "file": "ronin/ronin_31.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 32,
+   "page": 3,
+   "row": 1,
+   "col": 1,
+   "file": "ronin/ronin_32.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 33,
+   "page": 3,
+   "row": 1,
+   "col": 2,
+   "file": "ronin/ronin_33.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 34,
+   "page": 3,
+   "row": 2,
+   "col": 0,
+   "file": "ronin/ronin_34.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 35,
+   "page": 3,
+   "row": 2,
+   "col": 1,
+   "file": "ronin/ronin_35.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 36,
+   "page": 3,
+   "row": 2,
+   "col": 2,
+   "file": "ronin/ronin_36.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 37,
+   "page": 4,
+   "row": 0,
+   "col": 0,
+   "file": "ronin/ronin_37.webp"
+  },
+  {
+   "deck": "ronin",
+   "index": 38,
+   "page": 4,
+   "row": 0,
+   "col": 1,
+   "file": "ronin/ronin_38.webp"
+  },
+  {
+   "deck": "ferite",
+   "index": 1,
+   "page": 0,
+   "row": 0,
+   "col": 0,
+   "file": "ferite/ferite_01.webp"
+  },
+  {
+   "deck": "ferite",
+   "index": 2,
+   "page": 0,
+   "row": 0,
+   "col": 1,
+   "file": "ferite/ferite_02.webp"
+  },
+  {
+   "deck": "ferite",
+   "index": 3,
+   "page": 0,
+   "row": 0,
+   "col": 2,
+   "file": "ferite/ferite_03.webp"
+  },
+  {
+   "deck": "ferite",
+   "index": 4,
+   "page": 0,
+   "row": 1,
+   "col": 0,
+   "file": "ferite/ferite_04.webp"
+  },
+  {
+   "deck": "ferite",
+   "index": 5,
+   "page": 0,
+   "row": 1,
+   "col": 1,
+   "file": "ferite/ferite_05.webp"
+  },
+  {
+   "deck": "ferite",
+   "index": 6,
+   "page": 0,
+   "row": 1,
+   "col": 2,
+   "file": "ferite/ferite_06.webp"
+  },
+  {
+   "deck": "ferite",
+   "index": 7,
+   "page": 0,
+   "row": 2,
+   "col": 0,
+   "file": "ferite/ferite_07.webp"
+  },
+  {
+   "deck": "ferite",
+   "index": 8,
+   "page": 0,
+   "row": 2,
+   "col": 1,
+   "file": "ferite/ferite_08.webp"
+  },
+  {
+   "deck": "ferite",
+   "index": 9,
+   "page": 0,
+   "row": 2,
+   "col": 2,
+   "file": "ferite/ferite_09.webp"
+  }
+ ]
+}

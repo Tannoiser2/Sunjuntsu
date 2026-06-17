@@ -83,7 +83,11 @@ carte.
    custom Jin Sakai, mazzo Ferite.
 3. **Risoluzione combattimento**: attacchi per zona, difese, ferite, vittoria
    (basata su regolamento 1.5 + Reference Sheet).
-4. **HUD carte**: mano in basso, selezione/programmazione, ritagli carte dai PDF.
+4. **[fatto] HUD carte**: mano a ventaglio in basso con i ritagli delle carte
+   (estratti dai PDF, griglia 3x3 → `assets/cards/`, vedi
+   `tools/extract_card_images.py`), hover per ingrandire, click per
+   selezionare/giocare. Da fare: collegare ogni immagine ai dati di
+   `card_pool.json` (le carte stampate sono in italiano, il pool in inglese).
 5. **IA solo**: euristica di scelta carta.
 6. **Multiplayer 1v1**: lobby + sincronizzazione.
 7. **Asset reali**: miniature `.obj` come pedine, mappe PNG come texture arena.

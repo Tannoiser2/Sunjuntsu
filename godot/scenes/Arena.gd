@@ -26,6 +26,8 @@ var _cam_pitch: float = 0.9
 var _cam_dist: float = 16.0
 var _dragging := false
 
+var _hud: CanvasLayer
+
 
 func _ready() -> void:
 	state = GameState.new()
@@ -34,6 +36,21 @@ func _ready() -> void:
 	_build_map()
 	_spawn_pawns()
 	_select_pawn(0)
+	_build_hud()
+
+
+func _build_hud() -> void:
+	_hud = preload("res://scenes/HUD.tscn").instantiate()
+	add_child(_hud)
+	# Mano del giocatore attivo: mazzo del personaggio della pedina 0.
+	_hud.deal_hand(state.fighters[0].character.to_lower(), 6)
+	_hud.card_played.connect(_on_card_played)
+
+
+func _on_card_played(card_data: Dictionary) -> void:
+	# Per ora: giocare una carta evidenzia il movimento disponibile della pedina.
+	_hud.set_info("Giocata %s — muovi la pedina" % card_data.get("file", "?"))
+	_select_pawn(_active_pawn)
 
 
 # ─── Costruzione scena ───────────────────────────────────────────────────────
