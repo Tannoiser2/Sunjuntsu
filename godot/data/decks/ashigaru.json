@@ -1,0 +1,242 @@
+{
+ "deck": "Ashigaru",
+ "total": 32,
+ "source": "Custom Decks (Senjutsu_Deckbuilding_1.1.xlsx)",
+ "cards": [
+  {
+   "id": 236,
+   "amount": 1,
+   "name": "Ashigaru Core Card",
+   "rank": "-",
+   "type": "core",
+   "keywords": [
+    "Core"
+   ],
+   "initiative": "0",
+   "focus": 0
+  },
+  {
+   "id": 139,
+   "amount": 1,
+   "name": "Yari Impale",
+   "rank": "-",
+   "type": "attack",
+   "keywords": [
+    "Yari",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "initiative": "1",
+   "focus": 0
+  },
+  {
+   "id": 237,
+   "amount": 1,
+   "name": "Heaven's Castle",
+   "rank": "Jade",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "9,8,7,6,5,4,3,2",
+   "focus": 1
+  },
+  {
+   "id": 238,
+   "amount": 1,
+   "name": "For the Daimyo",
+   "rank": "Gold",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "7",
+   "focus": 1
+  },
+  {
+   "id": 239,
+   "amount": 1,
+   "name": "Setting Sun",
+   "rank": "Gold",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "7",
+   "focus": 0
+  },
+  {
+   "id": 240,
+   "amount": 2,
+   "name": "Horse Trip",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "initiative": "=",
+   "focus": 0
+  },
+  {
+   "id": 241,
+   "amount": 2,
+   "name": "Lunging Pierce",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "5",
+   "focus": 0
+  },
+  {
+   "id": 243,
+   "amount": 3,
+   "name": "Encircle",
+   "rank": "Wood",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "3",
+   "focus": 0
+  },
+  {
+   "id": 244,
+   "amount": 3,
+   "name": "Scything Cleave",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "4",
+   "focus": 0
+  },
+  {
+   "id": 245,
+   "amount": 3,
+   "name": "Skewer",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 0
+  },
+  {
+   "id": 101,
+   "amount": 1,
+   "name": "Feint Cut",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack",
+    "Instant Replacement"
+   ],
+   "initiative": "6",
+   "focus": 0
+  },
+  {
+   "id": 102,
+   "amount": 1,
+   "name": "Firm Mind",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "3",
+   "focus": 0
+  },
+  {
+   "id": 106,
+   "amount": 1,
+   "name": "Iron Will",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "7",
+   "focus": 2
+  },
+  {
+   "id": 107,
+   "amount": 2,
+   "name": "Lunging Thrust",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "3",
+   "focus": 0
+  },
+  {
+   "id": 118,
+   "amount": 2,
+   "name": "Wild Block",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "9,8,7,6,5,4,3",
+   "focus": 0
+  },
+  {
+   "id": 121,
+   "amount": 2,
+   "name": "Calm Defence",
+   "rank": "Wood",
+   "type": "defence",
+   "keywords": [
+    "Defence",
+    "Prepared"
+   ],
+   "initiative": "6,5,4,3,2",
+   "focus": 0
+  },
+  {
+   "id": 123,
+   "amount": 2,
+   "name": "Fend",
+   "rank": "Wood",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "5,4,3,2",
+   "focus": 0
+  },
+  {
+   "id": 124,
+   "amount": 1,
+   "name": "Field Bandages",
+   "rank": "Wood",
+   "type": "defence",
+   "keywords": [
+    "Defence",
+    "Prepared"
+   ],
+   "initiative": "1",
+   "focus": 0
+  },
+  {
+   "id": 125,
+   "amount": 2,
+   "name": "Horse Kick",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 0
+  }
+ ]
+}

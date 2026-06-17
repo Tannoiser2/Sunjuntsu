@@ -86,8 +86,18 @@ carte.
 4. **[fatto] HUD carte**: mano a ventaglio in basso con i ritagli delle carte
    (estratti dai PDF, griglia 3x3 → `assets/cards/`, vedi
    `tools/extract_card_images.py`), hover per ingrandire, click per
-   selezionare/giocare. Da fare: collegare ogni immagine ai dati di
-   `card_pool.json` (le carte stampate sono in italiano, il pool in inglese).
+   selezionare/giocare. Le statistiche sono leggibili sulla **faccia** della
+   carta stessa.
+5. **[fatto] Mazzi autorevoli**: `data/decks/*.json` (16 mazzi) generati dal
+   foglio *Custom Decks* dell'Excel (`tools/generate_decks.py`) — Card ID,
+   copie e statistiche esatte. L'arena costruisce il mazzo di pesca da qui.
+
+   > Nota: collegare ogni *immagine* al suo Card ID tramite il numero stampato
+   > si è rivelato **inaffidabile** (sia OCR sia lettura a vista sbagliano sulle
+   > cifre piccole e simili: 125/126/127, 031/034…). Verificato confrontando il
+   > multiset letto con la composizione autorevole del mazzo. Per i **dati di
+   > gioco** si usano quindi i mazzi di `data/decks/`; le immagini restano per
+   > la visualizzazione (la faccia mostra già tutte le statistiche).
 5. **IA solo**: euristica di scelta carta.
 6. **Multiplayer 1v1**: lobby + sincronizzazione.
 7. **Asset reali**: miniature `.obj` come pedine, mappe PNG come texture arena.

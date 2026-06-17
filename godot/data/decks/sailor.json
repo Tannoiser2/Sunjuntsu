@@ -1,0 +1,244 @@
+{
+ "deck": "Sailor",
+ "total": 33,
+ "source": "Custom Decks (Senjutsu_Deckbuilding_1.1.xlsx)",
+ "cards": [
+  {
+   "id": 276,
+   "amount": 1,
+   "name": "Sailor Core Card",
+   "rank": "-",
+   "type": "core",
+   "keywords": [
+    "Core"
+   ],
+   "initiative": "0",
+   "focus": 0
+  },
+  {
+   "id": 277,
+   "amount": 1,
+   "name": "Carrack Blacksword",
+   "rank": "-",
+   "type": "attack",
+   "keywords": [
+    "Carrack",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "initiative": "4",
+   "focus": 0
+  },
+  {
+   "id": 278,
+   "amount": 1,
+   "name": "Pistol Whip",
+   "rank": "-",
+   "type": "attack",
+   "keywords": [
+    "Pistol",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "initiative": "4",
+   "focus": 0
+  },
+  {
+   "id": 279,
+   "amount": 1,
+   "name": "Dreaded Black Shot",
+   "rank": "Jade",
+   "type": "attack",
+   "keywords": [
+    "Attack",
+    "Range6"
+   ],
+   "initiative": "4",
+   "focus": 1
+  },
+  {
+   "id": 281,
+   "amount": 1,
+   "name": "Dagger Throw",
+   "rank": "Gold",
+   "type": "attack",
+   "keywords": [
+    "Attack",
+    "Range3"
+   ],
+   "initiative": "5",
+   "focus": 0
+  },
+  {
+   "id": 282,
+   "amount": 1,
+   "name": "Heavy Slash",
+   "rank": "Gold",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "4",
+   "focus": 1
+  },
+  {
+   "id": 283,
+   "amount": 1,
+   "name": "Roof Guard",
+   "rank": "Gold",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "8,7,6,5,4",
+   "focus": 0
+  },
+  {
+   "id": 284,
+   "amount": 2,
+   "name": "Fool's Counter",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "initiative": "=",
+   "focus": 2
+  },
+  {
+   "id": 285,
+   "amount": 2,
+   "name": "Longpoint Thrust",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "5",
+   "focus": 0
+  },
+  {
+   "id": 286,
+   "amount": 2,
+   "name": "Salvage",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "3",
+   "focus": 0
+  },
+  {
+   "id": 287,
+   "amount": 2,
+   "name": "Towering Strike",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "7",
+   "focus": 1
+  },
+  {
+   "id": 288,
+   "amount": 3,
+   "name": "Carrack Plow",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 0
+  },
+  {
+   "id": 289,
+   "amount": 3,
+   "name": "Duelling Advance",
+   "rank": "Wood",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "5",
+   "focus": 0
+  },
+  {
+   "id": 290,
+   "amount": 3,
+   "name": "Ox Guard",
+   "rank": "Wood",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "7,6,5",
+   "focus": 0
+  },
+  {
+   "id": 100,
+   "amount": 1,
+   "name": "Diagonal Slash",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "5",
+   "focus": 0
+  },
+  {
+   "id": 111,
+   "amount": 1,
+   "name": "River Block",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "7,6,5,4",
+   "focus": 0
+  },
+  {
+   "id": 141,
+   "amount": 2,
+   "name": "Calm Parry",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "5,4,3,2",
+   "focus": 0
+  },
+  {
+   "id": 146,
+   "amount": 2,
+   "name": "Focused Guard",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "7,6,5,4",
+   "focus": 0
+  },
+  {
+   "id": 157,
+   "amount": 3,
+   "name": "Practiced Strike",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 0
+  }
+ ]
+}

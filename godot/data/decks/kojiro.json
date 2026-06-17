@@ -1,0 +1,245 @@
+{
+ "deck": "Kojiro",
+ "total": 33,
+ "source": "Custom Decks (Senjutsu_Deckbuilding_1.1.xlsx)",
+ "cards": [
+  {
+   "id": 180,
+   "amount": 1,
+   "name": "Kojiro Core Card",
+   "rank": "-",
+   "type": "core",
+   "keywords": [
+    "Core"
+   ],
+   "initiative": "0",
+   "focus": 0
+  },
+  {
+   "id": 181,
+   "amount": 1,
+   "name": "Silver Frost",
+   "rank": "-",
+   "type": "attack",
+   "keywords": [
+    "Silver Frost",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "initiative": "5",
+   "focus": 0
+  },
+  {
+   "id": 182,
+   "amount": 1,
+   "name": "Tessen Deflection",
+   "rank": "-",
+   "type": "defence",
+   "keywords": [
+    "Tessen",
+    "Core",
+    "Defence",
+    "Weapon"
+   ],
+   "initiative": "9,8,7",
+   "focus": 0
+  },
+  {
+   "id": 183,
+   "amount": 1,
+   "name": "Turning Swallow Cut",
+   "rank": "Jade",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "9",
+   "focus": 3
+  },
+  {
+   "id": 185,
+   "amount": 1,
+   "name": "Arrogance",
+   "rank": "Gold",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant"
+   ],
+   "initiative": "-",
+   "focus": 0
+  },
+  {
+   "id": 186,
+   "amount": 1,
+   "name": "Cutting Retort",
+   "rank": "Gold",
+   "type": "attack",
+   "keywords": [
+    "Attack",
+    "Instant Replacement"
+   ],
+   "initiative": "6",
+   "focus": 0
+  },
+  {
+   "id": 187,
+   "amount": 1,
+   "name": "Elegant Claw",
+   "rank": "Gold",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "8",
+   "focus": 2
+  },
+  {
+   "id": 188,
+   "amount": 1,
+   "name": "Tsukami Guard",
+   "rank": "Gold",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "8,7,6,5,4,3",
+   "focus": 0
+  },
+  {
+   "id": 189,
+   "amount": 2,
+   "name": "Biting Remark",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 1
+  },
+  {
+   "id": 190,
+   "amount": 2,
+   "name": "Close In",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant Replacement"
+   ],
+   "initiative": "1",
+   "focus": 0
+  },
+  {
+   "id": 191,
+   "amount": 2,
+   "name": "Ganryu Block",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "8,7,6,5",
+   "focus": 0
+  },
+  {
+   "id": 192,
+   "amount": 2,
+   "name": "Swagger",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "3",
+   "focus": 0
+  },
+  {
+   "id": 193,
+   "amount": 3,
+   "name": "Counter Return",
+   "rank": "Wood",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "initiative": "=",
+   "focus": 0
+  },
+  {
+   "id": 194,
+   "amount": 3,
+   "name": "Forward Uppercut",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "4",
+   "focus": 0
+  },
+  {
+   "id": 195,
+   "amount": 3,
+   "name": "Scornful Jab",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "3",
+   "focus": 0
+  },
+  {
+   "id": 146,
+   "amount": 2,
+   "name": "Focused Guard",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "7,6,5,4",
+   "focus": 0
+  },
+  {
+   "id": 149,
+   "amount": 2,
+   "name": "Overhead Carve",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "4",
+   "focus": 0
+  },
+  {
+   "id": 123,
+   "amount": 1,
+   "name": "Fend",
+   "rank": "Wood",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "5,4,3,2",
+   "focus": 0
+  },
+  {
+   "id": 158,
+   "amount": 3,
+   "name": "Wheel Strike",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "5",
+   "focus": 0
+  }
+ ]
+}

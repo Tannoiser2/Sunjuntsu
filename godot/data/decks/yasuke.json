@@ -1,0 +1,246 @@
+{
+ "deck": "Yasuke",
+ "total": 33,
+ "source": "Custom Decks (Senjutsu_Deckbuilding_1.1.xlsx)",
+ "cards": [
+  {
+   "id": 349,
+   "amount": 1,
+   "name": "Yasuke Core Card",
+   "rank": "-",
+   "type": "core",
+   "keywords": [
+    "Core"
+   ],
+   "initiative": "0",
+   "focus": 0
+  },
+  {
+   "id": 350,
+   "amount": 1,
+   "name": "Off-Hand Cut",
+   "rank": "-",
+   "type": "attack",
+   "keywords": [
+    "Wakizashi",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "initiative": "1",
+   "focus": 0
+  },
+  {
+   "id": 136,
+   "amount": 1,
+   "name": "Katana Slash",
+   "rank": "-",
+   "type": "attack",
+   "keywords": [
+    "Katana",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "initiative": "4",
+   "focus": 0
+  },
+  {
+   "id": 352,
+   "amount": 1,
+   "name": "Righteous Fury",
+   "rank": "Jade",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 3
+  },
+  {
+   "id": 353,
+   "amount": 1,
+   "name": "Charging Pride",
+   "rank": "Gold",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "3",
+   "focus": 1
+  },
+  {
+   "id": 354,
+   "amount": 1,
+   "name": "Devoted Soul",
+   "rank": "Gold",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "8,7,6",
+   "focus": 0
+  },
+  {
+   "id": 355,
+   "amount": 1,
+   "name": "Elephant Slam",
+   "rank": "Gold",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "initiative": "=",
+   "focus": 0
+  },
+  {
+   "id": 356,
+   "amount": 2,
+   "name": "Close the Gap",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "3",
+   "focus": 0
+  },
+  {
+   "id": 357,
+   "amount": 2,
+   "name": "Double Strike",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "4",
+   "focus": 0
+  },
+  {
+   "id": 358,
+   "amount": 2,
+   "name": "Eagle's Talons",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "7",
+   "focus": 0
+  },
+  {
+   "id": 359,
+   "amount": 2,
+   "name": "Lion's Fangs",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack",
+    "Instant Replacement"
+   ],
+   "initiative": "5",
+   "focus": 1
+  },
+  {
+   "id": 360,
+   "amount": 3,
+   "name": "Dual Blade Defence",
+   "rank": "Wood",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "8,7/5,4",
+   "focus": 0
+  },
+  {
+   "id": 361,
+   "amount": 3,
+   "name": "Lion's Bite",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 0
+  },
+  {
+   "id": 362,
+   "amount": 3,
+   "name": "Off Balance",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "1",
+   "focus": 0
+  },
+  {
+   "id": 114,
+   "amount": 1,
+   "name": "Stone Block",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "6,5,4,3,2",
+   "focus": 0
+  },
+  {
+   "id": 144,
+   "amount": 2,
+   "name": "Determination",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant Additional",
+    "Prepared"
+   ],
+   "initiative": "=",
+   "focus": 0
+  },
+  {
+   "id": 145,
+   "amount": 2,
+   "name": "Disorientating Blow",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "3",
+   "focus": 0
+  },
+  {
+   "id": 147,
+   "amount": 2,
+   "name": "Forest Step",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "7",
+   "focus": 0
+  },
+  {
+   "id": 121,
+   "amount": 2,
+   "name": "Calm Defence",
+   "rank": "Wood",
+   "type": "defence",
+   "keywords": [
+    "Defence",
+    "Prepared"
+   ],
+   "initiative": "6,5,4,3,2",
+   "focus": 0
+  }
+ ]
+}

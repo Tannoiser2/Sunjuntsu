@@ -1,0 +1,283 @@
+{
+ "deck": "Student",
+ "total": 32,
+ "source": "Custom Decks (Senjutsu_Deckbuilding_1.1.xlsx)",
+ "cards": [
+  {
+   "id": 38,
+   "amount": 1,
+   "name": "Student Core Card",
+   "rank": "-",
+   "type": "core",
+   "keywords": [
+    "Core"
+   ],
+   "initiative": "0",
+   "focus": 0
+  },
+  {
+   "id": 70,
+   "amount": 1,
+   "name": "Katana Swing",
+   "rank": "-",
+   "type": "attack",
+   "keywords": [
+    "Katana",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "initiative": "4",
+   "focus": 0
+  },
+  {
+   "id": 40,
+   "amount": 1,
+   "name": "Lightning Tail",
+   "rank": "Jade",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "9",
+   "focus": 2
+  },
+  {
+   "id": 42,
+   "amount": 1,
+   "name": "Reflection Pool",
+   "rank": "Gold",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "8",
+   "focus": 0
+  },
+  {
+   "id": 43,
+   "amount": 1,
+   "name": "Stalking Tiger Paw",
+   "rank": "Gold",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "initiative": "=",
+   "focus": 1
+  },
+  {
+   "id": 44,
+   "amount": 2,
+   "name": "Insightful Blow",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack",
+    "Prepared"
+   ],
+   "initiative": "5",
+   "focus": 0
+  },
+  {
+   "id": 45,
+   "amount": 2,
+   "name": "Obedience",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence",
+    "Prepared"
+   ],
+   "initiative": "7,6,5,4,3",
+   "focus": 0
+  },
+  {
+   "id": 46,
+   "amount": 2,
+   "name": "Rock Strike",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "3",
+   "focus": 0
+  },
+  {
+   "id": 47,
+   "amount": 2,
+   "name": "Turning Slash",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack",
+    "Instant Replacement"
+   ],
+   "initiative": "6",
+   "focus": 0
+  },
+  {
+   "id": 48,
+   "amount": 3,
+   "name": "Cleaving Waterfall",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "7",
+   "focus": 0
+  },
+  {
+   "id": 49,
+   "amount": 2,
+   "name": "Mountain Switch",
+   "rank": "Wood",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "7",
+   "focus": 0
+  },
+  {
+   "id": 50,
+   "amount": 2,
+   "name": "Tranquil Mind",
+   "rank": "Wood",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "3",
+   "focus": 0
+  },
+  {
+   "id": 84,
+   "amount": 1,
+   "name": "Calm Composure",
+   "rank": "Gold",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "initiative": "=",
+   "focus": 0
+  },
+  {
+   "id": 90,
+   "amount": 1,
+   "name": "Evasive Step",
+   "rank": "Gold",
+   "type": "defence",
+   "keywords": [
+    "Defence",
+    "Instant Replacement"
+   ],
+   "initiative": "9,8,7,6",
+   "focus": 0
+  },
+  {
+   "id": 99,
+   "amount": 2,
+   "name": "Circling Defence",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "7,6,5,4,3",
+   "focus": 0
+  },
+  {
+   "id": 100,
+   "amount": 1,
+   "name": "Diagonal Slash",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "5",
+   "focus": 0
+  },
+  {
+   "id": 105,
+   "amount": 2,
+   "name": "Horizontal Cut",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 0
+  },
+  {
+   "id": 115,
+   "amount": 1,
+   "name": "Swift Block",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence",
+    "Instant Replacement"
+   ],
+   "initiative": "8,7,6",
+   "focus": 0
+  },
+  {
+   "id": 117,
+   "amount": 1,
+   "name": "Trained Mind",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "2",
+   "focus": 0
+  },
+  {
+   "id": 121,
+   "amount": 1,
+   "name": "Calm Defence",
+   "rank": "Wood",
+   "type": "defence",
+   "keywords": [
+    "Defence",
+    "Prepared"
+   ],
+   "initiative": "6,5,4,3,2",
+   "focus": 0
+  },
+  {
+   "id": 122,
+   "amount": 1,
+   "name": "Deep Meditation",
+   "rank": "Wood",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "1",
+   "focus": 0
+  },
+  {
+   "id": 124,
+   "amount": 1,
+   "name": "Field Bandages",
+   "rank": "Wood",
+   "type": "defence",
+   "keywords": [
+    "Defence",
+    "Prepared"
+   ],
+   "initiative": "1",
+   "focus": 0
+  }
+ ]
+}

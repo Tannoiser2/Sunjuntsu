@@ -1,0 +1,100 @@
+{
+ "decks": [
+  {
+   "deck": "Ronin",
+   "slug": "ronin",
+   "unique": 22,
+   "total": 32
+  },
+  {
+   "deck": "Master",
+   "slug": "master",
+   "unique": 20,
+   "total": 32
+  },
+  {
+   "deck": "Warrior",
+   "slug": "warrior",
+   "unique": 22,
+   "total": 32
+  },
+  {
+   "deck": "Student",
+   "slug": "student",
+   "unique": 22,
+   "total": 32
+  },
+  {
+   "deck": "Assassin",
+   "slug": "assassin",
+   "unique": 19,
+   "total": 31
+  },
+  {
+   "deck": "Wakou",
+   "slug": "wakou",
+   "unique": 19,
+   "total": 33
+  },
+  {
+   "deck": "Ninja",
+   "slug": "ninja",
+   "unique": 19,
+   "total": 32
+  },
+  {
+   "deck": "Ashigaru",
+   "slug": "ashigaru",
+   "unique": 19,
+   "total": 32
+  },
+  {
+   "deck": "Hachikō",
+   "slug": "hachik",
+   "unique": 7,
+   "total": 10
+  },
+  {
+   "deck": "Yasuke",
+   "slug": "yasuke",
+   "unique": 19,
+   "total": 33
+  },
+  {
+   "deck": "Yojimbo",
+   "slug": "yojimbo",
+   "unique": 19,
+   "total": 33
+  },
+  {
+   "deck": "Onna-Bugeisha",
+   "slug": "onna_bugeisha",
+   "unique": 18,
+   "total": 32
+  },
+  {
+   "deck": "Musashi",
+   "slug": "musashi",
+   "unique": 19,
+   "total": 33
+  },
+  {
+   "deck": "Monk",
+   "slug": "monk",
+   "unique": 19,
+   "total": 32
+  },
+  {
+   "deck": "Sailor",
+   "slug": "sailor",
+   "unique": 19,
+   "total": 33
+  },
+  {
+   "deck": "Kojiro",
+   "slug": "kojiro",
+   "unique": 19,
+   "total": 33
+  }
+ ]
+}

@@ -1,0 +1,279 @@
+{
+ "deck": "Warrior",
+ "total": 32,
+ "source": "Custom Decks (Senjutsu_Deckbuilding_1.1.xlsx)",
+ "cards": [
+  {
+   "id": 53,
+   "amount": 1,
+   "name": "Warrior Core Card",
+   "rank": "-",
+   "type": "core",
+   "keywords": [
+    "Core"
+   ],
+   "initiative": "0",
+   "focus": 0
+  },
+  {
+   "id": 72,
+   "amount": 1,
+   "name": "Nodachi Slash",
+   "rank": "-",
+   "type": "attack",
+   "keywords": [
+    "Nodachi",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "initiative": "4",
+   "focus": 0
+  },
+  {
+   "id": 55,
+   "amount": 1,
+   "name": "Flaming Phoenix Arc",
+   "rank": "Jade",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 3
+  },
+  {
+   "id": 56,
+   "amount": 1,
+   "name": "Blind Spot",
+   "rank": "Gold",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant Additional",
+    "Prepared"
+   ],
+   "initiative": "=",
+   "focus": 0
+  },
+  {
+   "id": 58,
+   "amount": 1,
+   "name": "Scything Feint",
+   "rank": "Gold",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 0
+  },
+  {
+   "id": 59,
+   "amount": 2,
+   "name": "Refocused Mind",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "5",
+   "focus": 0
+  },
+  {
+   "id": 60,
+   "amount": 2,
+   "name": "Scything Uppercut",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "5",
+   "focus": 0
+  },
+  {
+   "id": 61,
+   "amount": 2,
+   "name": "Short Strike",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack",
+    "Instant Replacement"
+   ],
+   "initiative": "5",
+   "focus": 0
+  },
+  {
+   "id": 62,
+   "amount": 2,
+   "name": "Warding Arc",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "7",
+   "focus": 0
+  },
+  {
+   "id": 63,
+   "amount": 2,
+   "name": "Ember Block",
+   "rank": "Wood",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "9,8,7,6",
+   "focus": 0
+  },
+  {
+   "id": 64,
+   "amount": 2,
+   "name": "Headbutt",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "4",
+   "focus": 0
+  },
+  {
+   "id": 65,
+   "amount": 2,
+   "name": "Spiralling Flames",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 0
+  },
+  {
+   "id": 83,
+   "amount": 1,
+   "name": "Broad Block",
+   "rank": "Gold",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "initiative": "=",
+   "focus": 1
+  },
+  {
+   "id": 86,
+   "amount": 1,
+   "name": "Dashdown Strike",
+   "rank": "Gold",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 0
+  },
+  {
+   "id": 87,
+   "amount": 1,
+   "name": "Dirt Throw",
+   "rank": "Gold",
+   "type": "attack",
+   "keywords": [
+    "Attack",
+    "Instant Replacement"
+   ],
+   "initiative": "5",
+   "focus": 0
+  },
+  {
+   "id": 103,
+   "amount": 2,
+   "name": "Graceful Step",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "8",
+   "focus": 0
+  },
+  {
+   "id": 107,
+   "amount": 1,
+   "name": "Lunging Thrust",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "3",
+   "focus": 0
+  },
+  {
+   "id": 113,
+   "amount": 1,
+   "name": "Severing Cut",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "5",
+   "focus": 0
+  },
+  {
+   "id": 116,
+   "amount": 2,
+   "name": "Swift Mind",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "6",
+   "focus": 0
+  },
+  {
+   "id": 118,
+   "amount": 1,
+   "name": "Wild Block",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "9,8,7,6,5,4,3",
+   "focus": 0
+  },
+  {
+   "id": 119,
+   "amount": 1,
+   "name": "Wild Swing",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "7",
+   "focus": 1
+  },
+  {
+   "id": 123,
+   "amount": 2,
+   "name": "Fend",
+   "rank": "Wood",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "5,4,3,2",
+   "focus": 0
+  }
+ ]
+}

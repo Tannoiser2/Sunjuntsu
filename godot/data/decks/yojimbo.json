@@ -1,0 +1,245 @@
+{
+ "deck": "Yojimbo",
+ "total": 33,
+ "source": "Custom Decks (Senjutsu_Deckbuilding_1.1.xlsx)",
+ "cards": [
+  {
+   "id": 316,
+   "amount": 1,
+   "name": "Yojimbo Core Card",
+   "rank": "-",
+   "type": "core",
+   "keywords": [
+    "Core"
+   ],
+   "initiative": "0",
+   "focus": 0
+  },
+  {
+   "id": 317,
+   "amount": 1,
+   "name": "Nagamaki Thrust",
+   "rank": "-",
+   "type": "attack",
+   "keywords": [
+    "Nagamaki",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "initiative": "4",
+   "focus": 0
+  },
+  {
+   "id": 319,
+   "amount": 1,
+   "name": "Zanmato",
+   "rank": "Jade",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "5",
+   "focus": 0
+  },
+  {
+   "id": 320,
+   "amount": 1,
+   "name": "Brutal Strike",
+   "rank": "Gold",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "5",
+   "focus": 0
+  },
+  {
+   "id": 321,
+   "amount": 1,
+   "name": "Fearsome Reputation",
+   "rank": "Gold",
+   "type": "other",
+   "keywords": [
+    "Mediation",
+    "Range1"
+   ],
+   "initiative": "5",
+   "focus": 1
+  },
+  {
+   "id": 322,
+   "amount": 1,
+   "name": "The Job is Done",
+   "rank": "Gold",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "6",
+   "focus": 0
+  },
+  {
+   "id": 323,
+   "amount": 2,
+   "name": "Iron Guard",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "7,6,5",
+   "focus": 0
+  },
+  {
+   "id": 324,
+   "amount": 2,
+   "name": "Scorpion Sting",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 1
+  },
+  {
+   "id": 325,
+   "amount": 2,
+   "name": "Senbon Throw",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack",
+    "Range2"
+   ],
+   "initiative": "4",
+   "focus": 0
+  },
+  {
+   "id": 326,
+   "amount": 2,
+   "name": "Skull Cutter",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "4",
+   "focus": 0
+  },
+  {
+   "id": 327,
+   "amount": 3,
+   "name": "Dark Aura",
+   "rank": "Wood",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Range3"
+   ],
+   "initiative": "2",
+   "focus": 0
+  },
+  {
+   "id": 328,
+   "amount": 3,
+   "name": "Hired Killer",
+   "rank": "Wood",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant",
+    "Prepared"
+   ],
+   "initiative": "-",
+   "focus": 0
+  },
+  {
+   "id": 329,
+   "amount": 3,
+   "name": "Leg Breaker",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "7",
+   "focus": 0
+  },
+  {
+   "id": 96,
+   "amount": 1,
+   "name": "Splitting Strike",
+   "rank": "Gold",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 0
+  },
+  {
+   "id": 98,
+   "amount": 1,
+   "name": "War Cry",
+   "rank": "Gold",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Range5"
+   ],
+   "initiative": "7",
+   "focus": 0
+  },
+  {
+   "id": 107,
+   "amount": 1,
+   "name": "Lunging Thrust",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "3",
+   "focus": 0
+  },
+  {
+   "id": 115,
+   "amount": 1,
+   "name": "Swift Block",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence",
+    "Instant Replacement"
+   ],
+   "initiative": "8,7,6",
+   "focus": 0
+  },
+  {
+   "id": 154,
+   "amount": 3,
+   "name": "Bleeding Slice",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "4",
+   "focus": 0
+  },
+  {
+   "id": 155,
+   "amount": 3,
+   "name": "Counter Attack",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "2",
+   "focus": 0
+  }
+ ]
+}

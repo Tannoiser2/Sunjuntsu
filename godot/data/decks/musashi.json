@@ -1,0 +1,246 @@
+{
+ "deck": "Musashi",
+ "total": 33,
+ "source": "Custom Decks (Senjutsu_Deckbuilding_1.1.xlsx)",
+ "cards": [
+  {
+   "id": 199,
+   "amount": 1,
+   "name": "Musashi Core Card",
+   "rank": "-",
+   "type": "core",
+   "keywords": [
+    "Core"
+   ],
+   "initiative": "0",
+   "focus": 0
+  },
+  {
+   "id": 200,
+   "amount": 1,
+   "name": "Bokken Smash",
+   "rank": "-",
+   "type": "core",
+   "keywords": [
+    "Bokken",
+    "Core",
+    "Weapon",
+    "Instant Additional"
+   ],
+   "initiative": "=",
+   "focus": 0
+  },
+  {
+   "id": 136,
+   "amount": 1,
+   "name": "Katana Slash",
+   "rank": "-",
+   "type": "attack",
+   "keywords": [
+    "Katana",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "initiative": "4",
+   "focus": 0
+  },
+  {
+   "id": 201,
+   "amount": 1,
+   "name": "Dark Void Blade",
+   "rank": "Jade",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "8",
+   "focus": 3
+  },
+  {
+   "id": 203,
+   "amount": 1,
+   "name": "Arrogance",
+   "rank": "Gold",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant"
+   ],
+   "initiative": "-",
+   "focus": 0
+  },
+  {
+   "id": 204,
+   "amount": 1,
+   "name": "Crescent Slash",
+   "rank": "Gold",
+   "type": "attack",
+   "keywords": [
+    "Attack",
+    "Instant Replacement"
+   ],
+   "initiative": "6",
+   "focus": 1
+  },
+  {
+   "id": 205,
+   "amount": 1,
+   "name": "Hidden Void Block",
+   "rank": "Gold",
+   "type": "defence",
+   "keywords": [
+    "Defence",
+    "Instant Replacement"
+   ],
+   "initiative": "7,6,5,4",
+   "focus": 1
+  },
+  {
+   "id": 206,
+   "amount": 1,
+   "name": "Two Heavens Cut",
+   "rank": "Gold",
+   "type": "attack",
+   "keywords": [
+    "Attack",
+    "Instant Replacement"
+   ],
+   "initiative": "5",
+   "focus": 1
+  },
+  {
+   "id": 207,
+   "amount": 2,
+   "name": "Dancing Fire Slash",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 1
+  },
+  {
+   "id": 208,
+   "amount": 2,
+   "name": "Mindful Calm",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "5",
+   "focus": 0
+  },
+  {
+   "id": 209,
+   "amount": 2,
+   "name": "Rushing Water Slice",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "7",
+   "focus": 0
+  },
+  {
+   "id": 210,
+   "amount": 2,
+   "name": "Standing Earth",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "9,8,7,6",
+   "focus": 0
+  },
+  {
+   "id": 211,
+   "amount": 3,
+   "name": "Focused Recovery",
+   "rank": "Wood",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "4",
+   "focus": 0
+  },
+  {
+   "id": 212,
+   "amount": 3,
+   "name": "Taunting Blow",
+   "rank": "Wood",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "initiative": "=",
+   "focus": 0
+  },
+  {
+   "id": 213,
+   "amount": 3,
+   "name": "Wind Slash",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 0
+  },
+  {
+   "id": 109,
+   "amount": 2,
+   "name": "Open Mind",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "4",
+   "focus": 0
+  },
+  {
+   "id": 114,
+   "amount": 1,
+   "name": "Stone Block",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "6,5,4,3,2",
+   "focus": 0
+  },
+  {
+   "id": 141,
+   "amount": 2,
+   "name": "Calm Parry",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "5,4,3,2",
+   "focus": 0
+  },
+  {
+   "id": 157,
+   "amount": 3,
+   "name": "Practiced Strike",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 0
+  }
+ ]
+}

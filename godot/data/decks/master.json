@@ -1,0 +1,256 @@
+{
+ "deck": "Master",
+ "total": 32,
+ "source": "Custom Decks (Senjutsu_Deckbuilding_1.1.xlsx)",
+ "cards": [
+  {
+   "id": 8,
+   "amount": 1,
+   "name": "Master Core Card",
+   "rank": "-",
+   "type": "core",
+   "keywords": [
+    "Core"
+   ],
+   "initiative": "0",
+   "focus": 0
+  },
+  {
+   "id": 75,
+   "amount": 1,
+   "name": "Tachi Cut",
+   "rank": "-",
+   "type": "attack",
+   "keywords": [
+    "Tachi",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "initiative": "5",
+   "focus": 0
+  },
+  {
+   "id": 10,
+   "amount": 1,
+   "name": "Hidden Viper Fang",
+   "rank": "Jade",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "8",
+   "focus": 0
+  },
+  {
+   "id": 12,
+   "amount": 1,
+   "name": "Dark Insight",
+   "rank": "Gold",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "7",
+   "focus": 1
+  },
+  {
+   "id": 13,
+   "amount": 1,
+   "name": "Eye of the Dragon",
+   "rank": "Gold",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "initiative": "=",
+   "focus": 1
+  },
+  {
+   "id": 14,
+   "amount": 2,
+   "name": "Dark Bargain",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Range3"
+   ],
+   "initiative": "1",
+   "focus": 1
+  },
+  {
+   "id": 15,
+   "amount": 2,
+   "name": "Dragon Tail",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack",
+    "Instant Replacement"
+   ],
+   "initiative": "6",
+   "focus": 0
+  },
+  {
+   "id": 16,
+   "amount": 1,
+   "name": "Sixth Sense",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "9,8,7,6,5,4",
+   "focus": 0
+  },
+  {
+   "id": 17,
+   "amount": 1,
+   "name": "Tainted Wisdom",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "initiative": "=",
+   "focus": 0
+  },
+  {
+   "id": 18,
+   "amount": 3,
+   "name": "Idle Strike",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "3",
+   "focus": 0
+  },
+  {
+   "id": 19,
+   "amount": 3,
+   "name": "Masterful Cut",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 0
+  },
+  {
+   "id": 20,
+   "amount": 3,
+   "name": "Reposition",
+   "rank": "Wood",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "7",
+   "focus": 0
+  },
+  {
+   "id": 96,
+   "amount": 1,
+   "name": "Splitting Strike",
+   "rank": "Gold",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 0
+  },
+  {
+   "id": 97,
+   "amount": 1,
+   "name": "Taunt",
+   "rank": "Gold",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant Additional",
+    "Range5"
+   ],
+   "initiative": "=",
+   "focus": 0
+  },
+  {
+   "id": 102,
+   "amount": 1,
+   "name": "Firm Mind",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "3",
+   "focus": 0
+  },
+  {
+   "id": 111,
+   "amount": 2,
+   "name": "River Block",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "7,6,5,4",
+   "focus": 0
+  },
+  {
+   "id": 112,
+   "amount": 2,
+   "name": "Rolling Slash",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 0
+  },
+  {
+   "id": 117,
+   "amount": 1,
+   "name": "Trained Mind",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "2",
+   "focus": 0
+  },
+  {
+   "id": 120,
+   "amount": 2,
+   "name": "Wind Block",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "8,7,6,5",
+   "focus": 0
+  },
+  {
+   "id": 128,
+   "amount": 2,
+   "name": "Quick Stab",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "8",
+   "focus": 1
+  }
+ ]
+}

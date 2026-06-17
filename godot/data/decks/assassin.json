@@ -1,0 +1,243 @@
+{
+ "deck": "Assassin",
+ "total": 31,
+ "source": "Custom Decks (Senjutsu_Deckbuilding_1.1.xlsx)",
+ "cards": [
+  {
+   "id": 218,
+   "amount": 1,
+   "name": "Assassin Core Card",
+   "rank": "-",
+   "type": "core",
+   "keywords": [
+    "Core"
+   ],
+   "initiative": "0",
+   "focus": 0
+  },
+  {
+   "id": 138,
+   "amount": 1,
+   "name": "Tanto Slice",
+   "rank": "-",
+   "type": "attack",
+   "keywords": [
+    "Tanto",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "initiative": "5",
+   "focus": 0
+  },
+  {
+   "id": 220,
+   "amount": 1,
+   "name": "Shadow Sting",
+   "rank": "Jade",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 3
+  },
+  {
+   "id": 221,
+   "amount": 1,
+   "name": "Shadow Step",
+   "rank": "Gold",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "7",
+   "focus": 0
+  },
+  {
+   "id": 222,
+   "amount": 1,
+   "name": "Spider's Kiss",
+   "rank": "Gold",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "1",
+   "focus": 0
+  },
+  {
+   "id": 223,
+   "amount": 1,
+   "name": "Steel Rain",
+   "rank": "Gold",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "7",
+   "focus": 0
+  },
+  {
+   "id": 224,
+   "amount": 2,
+   "name": "Smoke Bomb",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence",
+    "Prepared"
+   ],
+   "initiative": "7",
+   "focus": 1
+  },
+  {
+   "id": 225,
+   "amount": 2,
+   "name": "Twist the Knife",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "initiative": "=",
+   "focus": 0
+  },
+  {
+   "id": 226,
+   "amount": 2,
+   "name": "Umbra Vault",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "8",
+   "focus": 0
+  },
+  {
+   "id": 227,
+   "amount": 2,
+   "name": "Viper Strike",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "5",
+   "focus": 0
+  },
+  {
+   "id": 228,
+   "amount": 2,
+   "name": "Disarming Grace",
+   "rank": "Wood",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "initiative": "=",
+   "focus": 0
+  },
+  {
+   "id": 229,
+   "amount": 3,
+   "name": "Sever Artery",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "5",
+   "focus": 0
+  },
+  {
+   "id": 230,
+   "amount": 3,
+   "name": "Venomous Slice",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 0
+  },
+  {
+   "id": 103,
+   "amount": 2,
+   "name": "Graceful Step",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "8",
+   "focus": 0
+  },
+  {
+   "id": 108,
+   "amount": 1,
+   "name": "Misdirection",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "8",
+   "focus": 1
+  },
+  {
+   "id": 110,
+   "amount": 2,
+   "name": "Quick Dodge",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "8",
+   "focus": 0
+  },
+  {
+   "id": 117,
+   "amount": 1,
+   "name": "Trained Mind",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "2",
+   "focus": 0
+  },
+  {
+   "id": 150,
+   "amount": 1,
+   "name": "Rising Fury",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant Additional",
+    "Prepared"
+   ],
+   "initiative": "=",
+   "focus": 0
+  },
+  {
+   "id": 154,
+   "amount": 2,
+   "name": "Bleeding Slice",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "4",
+   "focus": 0
+  }
+ ]
+}

@@ -1,0 +1,282 @@
+{
+ "deck": "Ronin",
+ "total": 32,
+ "source": "Custom Decks (Senjutsu_Deckbuilding_1.1.xlsx)",
+ "cards": [
+  {
+   "id": 23,
+   "amount": 1,
+   "name": "Ronin Core Card",
+   "rank": "-",
+   "type": "core",
+   "keywords": [
+    "Core"
+   ],
+   "initiative": "0",
+   "focus": 0
+  },
+  {
+   "id": 71,
+   "amount": 1,
+   "name": "Naginata Sweep",
+   "rank": "-",
+   "type": "attack",
+   "keywords": [
+    "Naginata",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "initiative": "5",
+   "focus": 0
+  },
+  {
+   "id": 25,
+   "amount": 1,
+   "name": "Heavy Armour",
+   "rank": "Jade",
+   "type": "defence",
+   "keywords": [
+    "Defence",
+    "Instant Additional",
+    "Prepared"
+   ],
+   "initiative": "=",
+   "focus": 1
+  },
+  {
+   "id": 26,
+   "amount": 1,
+   "name": "Bull Rush",
+   "rank": "Gold",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "7",
+   "focus": 2
+  },
+  {
+   "id": 27,
+   "amount": 1,
+   "name": "Reverse Carved Fang",
+   "rank": "Gold",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "7",
+   "focus": 1
+  },
+  {
+   "id": 28,
+   "amount": 1,
+   "name": "The Terror",
+   "rank": "Gold",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Range3"
+   ],
+   "initiative": "5",
+   "focus": 2
+  },
+  {
+   "id": 29,
+   "amount": 2,
+   "name": "Feral Sweep",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 0
+  },
+  {
+   "id": 30,
+   "amount": 1,
+   "name": "Ripping Claws",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "initiative": "=",
+   "focus": 0
+  },
+  {
+   "id": 31,
+   "amount": 2,
+   "name": "Steel Block",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "7,6,5,4,3",
+   "focus": 0
+  },
+  {
+   "id": 32,
+   "amount": 1,
+   "name": "Wolf Pounce",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack",
+    "Instant Replacement"
+   ],
+   "initiative": "7",
+   "focus": 1
+  },
+  {
+   "id": 33,
+   "amount": 2,
+   "name": "Ankle Biter",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "3",
+   "focus": 0
+  },
+  {
+   "id": 34,
+   "amount": 2,
+   "name": "Falling Restraint",
+   "rank": "Wood",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "3",
+   "focus": 0
+  },
+  {
+   "id": 35,
+   "amount": 3,
+   "name": "Oxen Barge",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "5",
+   "focus": 0
+  },
+  {
+   "id": 89,
+   "amount": 1,
+   "name": "Emergency Block",
+   "rank": "Gold",
+   "type": "defence",
+   "keywords": [
+    "Defence",
+    "Instant Replacement"
+   ],
+   "initiative": "9,8,7,6,5,4,3,2",
+   "focus": 1
+  },
+  {
+   "id": 98,
+   "amount": 1,
+   "name": "War Cry",
+   "rank": "Gold",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Range5"
+   ],
+   "initiative": "7",
+   "focus": 0
+  },
+  {
+   "id": 102,
+   "amount": 1,
+   "name": "Firm Mind",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "3",
+   "focus": 0
+  },
+  {
+   "id": 104,
+   "amount": 1,
+   "name": "Hobbling Blow",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "initiative": "=",
+   "focus": 0
+  },
+  {
+   "id": 107,
+   "amount": 1,
+   "name": "Lunging Thrust",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "3",
+   "focus": 0
+  },
+  {
+   "id": 110,
+   "amount": 1,
+   "name": "Quick Dodge",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "8",
+   "focus": 0
+  },
+  {
+   "id": 125,
+   "amount": 2,
+   "name": "Horse Kick",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 0
+  },
+  {
+   "id": 126,
+   "amount": 2,
+   "name": "Pommel Smash",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "5",
+   "focus": 0
+  },
+  {
+   "id": 127,
+   "amount": 3,
+   "name": "Push Back",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "4",
+   "focus": 0
+  }
+ ]
+}

@@ -1,0 +1,249 @@
+{
+ "deck": "Ninja",
+ "total": 32,
+ "source": "Custom Decks (Senjutsu_Deckbuilding_1.1.xlsx)",
+ "cards": [
+  {
+   "id": 163,
+   "amount": 1,
+   "name": "Ninja Core Card",
+   "rank": "-",
+   "type": "core",
+   "keywords": [
+    "Core"
+   ],
+   "initiative": "0",
+   "focus": 0
+  },
+  {
+   "id": 164,
+   "amount": 1,
+   "name": "Kusarigama Strike",
+   "rank": "-",
+   "type": "attack",
+   "keywords": [
+    "Kusarigama",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "initiative": "4",
+   "focus": 0
+  },
+  {
+   "id": 166,
+   "amount": 1,
+   "name": "Lunar Sniper Trap",
+   "rank": "Jade",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "4",
+   "focus": 1
+  },
+  {
+   "id": 167,
+   "amount": 1,
+   "name": "Fukiya Dart Pipe",
+   "rank": "Gold",
+   "type": "attack",
+   "keywords": [
+    "Attack",
+    "Range4",
+    "Prepared"
+   ],
+   "initiative": "4",
+   "focus": 0
+  },
+  {
+   "id": 168,
+   "amount": 1,
+   "name": "Metsubushi Pipe",
+   "rank": "Gold",
+   "type": "attack",
+   "keywords": [
+    "Attack",
+    "Prepared"
+   ],
+   "initiative": "6",
+   "focus": 1
+  },
+  {
+   "id": 169,
+   "amount": 1,
+   "name": "Shuriken Throw",
+   "rank": "Gold",
+   "type": "attack",
+   "keywords": [
+    "Attack",
+    "Range4",
+    "Prepared"
+   ],
+   "initiative": "4",
+   "focus": 1
+  },
+  {
+   "id": 170,
+   "amount": 1,
+   "name": "Caltrop Scatter",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Prepared"
+   ],
+   "initiative": "3",
+   "focus": 0
+  },
+  {
+   "id": 171,
+   "amount": 2,
+   "name": "Chain Hook",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "5",
+   "focus": 0
+  },
+  {
+   "id": 172,
+   "amount": 2,
+   "name": "Smoke Bomb",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence",
+    "Prepared"
+   ],
+   "initiative": "7",
+   "focus": 1
+  },
+  {
+   "id": 173,
+   "amount": 2,
+   "name": "Whipping Flail",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 0
+  },
+  {
+   "id": 174,
+   "amount": 3,
+   "name": "Fading Shadow",
+   "rank": "Wood",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant Additional",
+    "Prepared"
+   ],
+   "initiative": "=",
+   "focus": 0
+  },
+  {
+   "id": 175,
+   "amount": 3,
+   "name": "Kama Slash",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "5",
+   "focus": 0
+  },
+  {
+   "id": 176,
+   "amount": 3,
+   "name": "Withdraw",
+   "rank": "Wood",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "6",
+   "focus": 0
+  },
+  {
+   "id": 100,
+   "amount": 2,
+   "name": "Diagonal Slash",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "5",
+   "focus": 0
+  },
+  {
+   "id": 103,
+   "amount": 1,
+   "name": "Graceful Step",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "8",
+   "focus": 0
+  },
+  {
+   "id": 105,
+   "amount": 1,
+   "name": "Horizontal Cut",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 0
+  },
+  {
+   "id": 110,
+   "amount": 2,
+   "name": "Quick Dodge",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "8",
+   "focus": 0
+  },
+  {
+   "id": 142,
+   "amount": 2,
+   "name": "Calming Purpose",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant Additional",
+    "Prepared"
+   ],
+   "initiative": "=",
+   "focus": 0
+  },
+  {
+   "id": 147,
+   "amount": 2,
+   "name": "Forest Step",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "7",
+   "focus": 0
+  }
+ ]
+}

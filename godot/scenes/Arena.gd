@@ -122,6 +122,9 @@ func _spawn_pawns() -> void:
 	var colors := [Color(0.85, 0.2, 0.2), Color(0.2, 0.4, 0.9)]
 	for i in range(2):
 		var f := state.add_fighter(chars[i], starts[i])
+		# Mazzo di pesca dai dati autorevoli (foglio Custom Decks).
+		f.draw_pile = CardDB.draw_pile_for(chars[i].to_lower())
+		f.draw_pile.shuffle()
 		var pawn: Node3D = Pawn.new()
 		pawn.set("tint", colors[i])
 		add_child(pawn)

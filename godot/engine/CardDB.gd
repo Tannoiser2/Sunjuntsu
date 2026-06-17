@@ -9,15 +9,46 @@ extends Node
 
 const POOL_PATH := "res://data/cards/card_pool.json"
 
+const DECK_DIR := "res://data/decks/"
+
 var cards: Array = []                 ## tutte le carte (Array[Dictionary])
 var by_id: Dictionary = {}            ## id (int) -> carta
 var by_char: Dictionary = {}          ## personaggio (String) -> Array[carta]
 var characters: Array = []            ## elenco personaggi
+var decks: Dictionary = {}            ## slug (String) -> Array[carta del mazzo]
 
 
 func _ready() -> void:
 	_load_pool()
-	print("[CardDB] %d carte, %d personaggi" % [cards.size(), characters.size()])
+	_load_decks()
+	print("[CardDB] %d carte, %d personaggi, %d mazzi" % [
+		cards.size(), characters.size(), decks.size()])
+
+
+func _load_decks() -> void:
+	# Liste mazzo autorevoli (foglio Custom Decks). Chiave = slug, es. "warrior".
+	var idx_path := DECK_DIR + "index.json"
+	if not FileAccess.file_exists(idx_path):
+		return
+	var idx = JSON.parse_string(FileAccess.get_file_as_string(idx_path))
+	if typeof(idx) != TYPE_DICTIONARY:
+		return
+	for entry in idx.get("decks", []):
+		var slug: String = entry.get("slug", "")
+		var path := DECK_DIR + slug + ".json"
+		if FileAccess.file_exists(path):
+			var d = JSON.parse_string(FileAccess.get_file_as_string(path))
+			if typeof(d) == TYPE_DICTIONARY:
+				decks[slug] = d.get("cards", [])
+
+
+## Mazzo autorevole per slug (es. "warrior", "ronin"). Espande le copie (amount).
+func draw_pile_for(slug: String) -> Array:
+	var pile: Array = []
+	for c in decks.get(slug, []):
+		for _i in range(int(c.get("amount", 1))):
+			pile.append(int(c.get("id", -1)))
+	return pile
 
 
 func _load_pool() -> void:

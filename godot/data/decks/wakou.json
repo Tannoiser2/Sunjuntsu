@@ -1,0 +1,243 @@
+{
+ "deck": "Wakou",
+ "total": 33,
+ "source": "Custom Decks (Senjutsu_Deckbuilding_1.1.xlsx)",
+ "cards": [
+  {
+   "id": 333,
+   "amount": 1,
+   "name": "Wakou Core Card",
+   "rank": "-",
+   "type": "core",
+   "keywords": [
+    "Core"
+   ],
+   "initiative": "0",
+   "focus": 0
+  },
+  {
+   "id": 134,
+   "amount": 1,
+   "name": "Kanabo Smash",
+   "rank": "-",
+   "type": "attack",
+   "keywords": [
+    "Kanabo",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "initiative": "4",
+   "focus": 0
+  },
+  {
+   "id": 334,
+   "amount": 1,
+   "name": "Broadside Slam",
+   "rank": "Jade",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 2
+  },
+  {
+   "id": 336,
+   "amount": 1,
+   "name": "Jug Smash",
+   "rank": "Gold",
+   "type": "attack",
+   "keywords": [
+    "Attack",
+    "Range2"
+   ],
+   "initiative": "5",
+   "focus": 0
+  },
+  {
+   "id": 337,
+   "amount": 1,
+   "name": "Ramming Bukan",
+   "rank": "Gold",
+   "type": "attack",
+   "keywords": [
+    "Attack",
+    "Instant Replacement"
+   ],
+   "initiative": "5",
+   "focus": 1
+  },
+  {
+   "id": 338,
+   "amount": 1,
+   "name": "Sea Legs",
+   "rank": "Gold",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant Replacement"
+   ],
+   "initiative": "9",
+   "focus": 0
+  },
+  {
+   "id": 339,
+   "amount": 2,
+   "name": "Inebriated Fumble",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "1",
+   "focus": 0
+  },
+  {
+   "id": 340,
+   "amount": 2,
+   "name": "Sobering Hulk",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "7",
+   "focus": 0
+  },
+  {
+   "id": 341,
+   "amount": 2,
+   "name": "Staggering Blow",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "initiative": "=",
+   "focus": 1
+  },
+  {
+   "id": 342,
+   "amount": 2,
+   "name": "Walk it Off",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "7",
+   "focus": 0
+  },
+  {
+   "id": 343,
+   "amount": 3,
+   "name": "Headbutt",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "4",
+   "focus": 0
+  },
+  {
+   "id": 344,
+   "amount": 3,
+   "name": "Mule Kick",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "5",
+   "focus": 0
+  },
+  {
+   "id": 345,
+   "amount": 3,
+   "name": "Wandering Star",
+   "rank": "Wood",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "3",
+   "focus": 0
+  },
+  {
+   "id": 86,
+   "amount": 1,
+   "name": "Dashdown Strike",
+   "rank": "Gold",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 0
+  },
+  {
+   "id": 103,
+   "amount": 1,
+   "name": "Graceful Step",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "8",
+   "focus": 0
+  },
+  {
+   "id": 108,
+   "amount": 2,
+   "name": "Misdirection",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "8",
+   "focus": 1
+  },
+  {
+   "id": 152,
+   "amount": 2,
+   "name": "Stunning Blow",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "initiative": "=",
+   "focus": 2
+  },
+  {
+   "id": 125,
+   "amount": 2,
+   "name": "Horse Kick",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 0
+  },
+  {
+   "id": 155,
+   "amount": 2,
+   "name": "Counter Attack",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "2",
+   "focus": 0
+  }
+ ]
+}

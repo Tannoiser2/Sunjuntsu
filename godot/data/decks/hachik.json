@@ -1,0 +1,93 @@
+{
+ "deck": "Hachikō",
+ "total": 10,
+ "source": "Custom Decks (Senjutsu_Deckbuilding_1.1.xlsx)",
+ "cards": [
+  {
+   "id": 249,
+   "amount": 1,
+   "name": "Wild Bite/Lick Wounds",
+   "rank": "Gold",
+   "type": "attack",
+   "keywords": [
+    "Attack/Defence"
+   ],
+   "initiative": "7/1",
+   "focus": 0
+  },
+  {
+   "id": 250,
+   "amount": 1,
+   "name": "Ankle Rip/Menacing Growl",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack/Defence",
+    "Range2"
+   ],
+   "initiative": "6/7",
+   "focus": 0
+  },
+  {
+   "id": 251,
+   "amount": 1,
+   "name": "Attack/Heel",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack/Defence"
+   ],
+   "initiative": "7/5",
+   "focus": 0
+  },
+  {
+   "id": 252,
+   "amount": 1,
+   "name": "Quick Bite/Feral Howl",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack/Defence",
+    "Range2"
+   ],
+   "initiative": "7/6",
+   "focus": 0
+  },
+  {
+   "id": 253,
+   "amount": 1,
+   "name": "Throat Tear/Cornered",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack/Defence"
+   ],
+   "initiative": "5/7",
+   "focus": 0
+  },
+  {
+   "id": 254,
+   "amount": 3,
+   "name": "Drag Prey/Good Boy",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack/Defence"
+   ],
+   "initiative": "7/9",
+   "focus": 0
+  },
+  {
+   "id": 256,
+   "amount": 2,
+   "name": "Swipe/Prowl",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack/Defence"
+   ],
+   "initiative": "6/3",
+   "focus": 0
+  }
+ ]
+}

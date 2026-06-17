@@ -1,0 +1,230 @@
+{
+ "deck": "Onna-Bugeisha",
+ "total": 32,
+ "source": "Custom Decks (Senjutsu_Deckbuilding_1.1.xlsx)",
+ "cards": [
+  {
+   "id": 294,
+   "amount": 1,
+   "name": "Onna-Bugeisha Core Card",
+   "rank": "-",
+   "type": "core",
+   "keywords": [
+    "Core"
+   ],
+   "initiative": "0",
+   "focus": 0
+  },
+  {
+   "id": 137,
+   "amount": 1,
+   "name": "Naginata Carve",
+   "rank": "-",
+   "type": "attack",
+   "keywords": [
+    "Naginata",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "initiative": "4",
+   "focus": 0
+  },
+  {
+   "id": 296,
+   "amount": 1,
+   "name": "Silent Embrace",
+   "rank": "Jade",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "7",
+   "focus": 3
+  },
+  {
+   "id": 297,
+   "amount": 1,
+   "name": "Biting Heaven",
+   "rank": "Gold",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "8",
+   "focus": 2
+  },
+  {
+   "id": 298,
+   "amount": 1,
+   "name": "Furious Instinct",
+   "rank": "Gold",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant Replacement"
+   ],
+   "initiative": "4",
+   "focus": 1
+  },
+  {
+   "id": 299,
+   "amount": 1,
+   "name": "Rage Guard",
+   "rank": "Gold",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "8,7,6,5,4,3,2",
+   "focus": 0
+  },
+  {
+   "id": 300,
+   "amount": 2,
+   "name": "Falling Arc",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack",
+    "Instant Replacement"
+   ],
+   "initiative": "4",
+   "focus": 0
+  },
+  {
+   "id": 301,
+   "amount": 2,
+   "name": "Horse Trip",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "initiative": "=",
+   "focus": 0
+  },
+  {
+   "id": 302,
+   "amount": 2,
+   "name": "Hurricane Dodge",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "8",
+   "focus": 1
+  },
+  {
+   "id": 303,
+   "amount": 2,
+   "name": "Mountain Carve",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 0
+  },
+  {
+   "id": 304,
+   "amount": 3,
+   "name": "Ankle Biter",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "3",
+   "focus": 0
+  },
+  {
+   "id": 305,
+   "amount": 3,
+   "name": "Screaming Mind",
+   "rank": "Wood",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "4",
+   "focus": 0
+  },
+  {
+   "id": 306,
+   "amount": 3,
+   "name": "Surging River",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 0
+  },
+  {
+   "id": 118,
+   "amount": 1,
+   "name": "Wild Block",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "9,8,7,6,5,4,3",
+   "focus": 0
+  },
+  {
+   "id": 143,
+   "amount": 2,
+   "name": "Cross Kick",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "7",
+   "focus": 1
+  },
+  {
+   "id": 145,
+   "amount": 2,
+   "name": "Disorientating Blow",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "3",
+   "focus": 0
+  },
+  {
+   "id": 151,
+   "amount": 2,
+   "name": "Storm Block",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "8,7,6,5",
+   "focus": 0
+  },
+  {
+   "id": 152,
+   "amount": 2,
+   "name": "Stunning Blow",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant Additional"
+   ],
+   "initiative": "=",
+   "focus": 2
+  }
+ ]
+}

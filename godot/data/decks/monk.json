@@ -1,0 +1,244 @@
+{
+ "deck": "Monk",
+ "total": 32,
+ "source": "Custom Decks (Senjutsu_Deckbuilding_1.1.xlsx)",
+ "cards": [
+  {
+   "id": 260,
+   "amount": 1,
+   "name": "Monk Core Card",
+   "rank": "-",
+   "type": "core",
+   "keywords": [
+    "Core"
+   ],
+   "initiative": "0",
+   "focus": 0
+  },
+  {
+   "id": 133,
+   "amount": 1,
+   "name": "Jumonji Yari Pierce",
+   "rank": "-",
+   "type": "attack",
+   "keywords": [
+    "Yari",
+    "Core",
+    "Attack",
+    "Weapon"
+   ],
+   "initiative": "2",
+   "focus": 0
+  },
+  {
+   "id": 262,
+   "amount": 1,
+   "name": "Zen Wave Slash",
+   "rank": "Jade",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 2
+  },
+  {
+   "id": 263,
+   "amount": 1,
+   "name": "Enlightened Body",
+   "rank": "Gold",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant"
+   ],
+   "initiative": "-",
+   "focus": 2
+  },
+  {
+   "id": 264,
+   "amount": 1,
+   "name": "Enlightened Mind",
+   "rank": "Gold",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "-",
+   "focus": 0
+  },
+  {
+   "id": 265,
+   "amount": 1,
+   "name": "Enlightened Soul",
+   "rank": "Gold",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "8",
+   "focus": 2
+  },
+  {
+   "id": 266,
+   "amount": 2,
+   "name": "Clarity of Purpose",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "8",
+   "focus": 0
+  },
+  {
+   "id": 267,
+   "amount": 2,
+   "name": "Clear Mind",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation"
+   ],
+   "initiative": "6",
+   "focus": 0
+  },
+  {
+   "id": 268,
+   "amount": 2,
+   "name": "Satori Smite",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "4",
+   "focus": 0
+  },
+  {
+   "id": 269,
+   "amount": 2,
+   "name": "Stag Rush",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 0
+  },
+  {
+   "id": 270,
+   "amount": 3,
+   "name": "Cresting Wave",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "7",
+   "focus": 0
+  },
+  {
+   "id": 271,
+   "amount": 3,
+   "name": "Palm Strike",
+   "rank": "Wood",
+   "type": "attack",
+   "keywords": [
+    "Attack",
+    "Instant Replacement"
+   ],
+   "initiative": "5",
+   "focus": 0
+  },
+  {
+   "id": 272,
+   "amount": 3,
+   "name": "Resolute Block",
+   "rank": "Wood",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "8,7,6,5,4",
+   "focus": 0
+  },
+  {
+   "id": 99,
+   "amount": 1,
+   "name": "Circling Defence",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "7,6,5,4,3",
+   "focus": 0
+  },
+  {
+   "id": 140,
+   "amount": 2,
+   "name": "Backhand Slash",
+   "rank": "Steel",
+   "type": "attack",
+   "keywords": [
+    "Attack"
+   ],
+   "initiative": "6",
+   "focus": 0
+  },
+  {
+   "id": 142,
+   "amount": 2,
+   "name": "Calming Purpose",
+   "rank": "Steel",
+   "type": "meditation",
+   "keywords": [
+    "Meditation",
+    "Instant Additional",
+    "Prepared"
+   ],
+   "initiative": "=",
+   "focus": 0
+  },
+  {
+   "id": 151,
+   "amount": 2,
+   "name": "Storm Block",
+   "rank": "Steel",
+   "type": "defence",
+   "keywords": [
+    "Defence"
+   ],
+   "initiative": "8,7,6,5",
+   "focus": 0
+  },
+  {
+   "id": 121,
+   "amount": 1,
+   "name": "Calm Defence",
+   "rank": "Wood",
+   "type": "defence",
+   "keywords": [
+    "Defence",
+    "Prepared"
+   ],
+   "initiative": "6,5,4,3,2",
+   "focus": 0
+  },
+  {
+   "id": 124,
+   "amount": 1,
+   "name": "Field Bandages",
+   "rank": "Wood",
+   "type": "defence",
+   "keywords": [
+    "Defence",
+    "Prepared"
+   ],
+   "initiative": "1",
+   "focus": 0
+  }
+ ]
+}
