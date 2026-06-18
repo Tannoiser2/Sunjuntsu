@@ -168,11 +168,8 @@ func _run_ai_resolution(i: int) -> void:
 func _confirm_resolution() -> void:
 	if _phase_mode != "resolving" or _resolving_index != 0:
 		return
-	# Commit To Hit (regolamento p.10): se la carta attacco può colpire muovendoti
-	# ma ora manca il bersaglio, devi prima provare a posizionarti per colpire.
-	if not _duel.attack_hits_now(0) and not _move_used and _duel.attack_can_hit(0):
-		_hud.set_hint("⚔ Commit to Hit: muoviti/ruota per colpire il bersaglio (esagoni rossi)")
-		return
+	# Commit To Hit (regolamento p.10): è solo un PROMEMORIA non bloccante — non deve
+	# mai impedire di concludere il turno (altrimenti la risoluzione si inceppa).
 	_phase_mode = "wait"
 	_clear_overlays()
 	_hud.hide_kamae()
