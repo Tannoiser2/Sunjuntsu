@@ -85,6 +85,10 @@ func _on_card_played(card_data: Dictionary) -> void:
 			Domain.STANCE_NAMES.get(Domain.STANCE_FROM_SLUG.get(req, -1), req),
 			Domain.STANCE_NAMES[f.stance]])
 		return   # la carta resta in mano
+	var cost: int = int(CardDB.card(id).get("focus", 0))
+	if f.focus < cost:
+		_hud.set_hint("◈ Focus insufficiente: servono %d, ne hai %d" % [cost, f.focus])
+		return   # la carta resta in mano
 	_selected_card = {}
 	_move_used = false
 	_kamae_used = false
@@ -336,22 +340,44 @@ func _refresh_overlays() -> void:
 					move_cells.append(cell)
 		elif int(g.get("steps", 0)) > 0:
 			move_cells = HexGrid.reachable(f.cell, int(g.get("steps", 0)), state.is_blocked)
+	var cost: int = int(CardDB.card(id).get("focus", 0))
+	var sfx := (" · costo ◈%d (hai %d)" % [cost, f.focus]) if cost > 0 else ""
+	sfx += _gated_note(g)
 	if not move_cells.is_empty():
 		# FASE 1 — movimento (giallo). SPAZIO per non muovere.
 		for cell in move_cells:
 			_highlighted.append(cell)
 			if _tiles.has(cell):
 				(_tiles[cell] as MeshInstance3D).material_override = _tile_mat(cell, "move")
-		_hud.set_hint("Muovi come da carta (giallo) · Q/E ruota · SPAZIO = non muovere · poi appaiono i bersagli")
+		_hud.set_hint("Muovi (giallo) · Q/E ruota · SPAZIO = non muovere · poi i bersagli" + sfx)
 	elif _selected_card.get("type", "") == "attack":
 		# FASE 2 — bersagli attaccabili (rosso).
 		for cell in Duel.attack_cells(f.cell, f.facing, g, 1):
 			if _tiles.has(cell):
 				_attack_preview.append(cell)
 				(_tiles[cell] as MeshInstance3D).material_override = _tile_mat(cell, "attack")
-		_hud.set_hint("Bersagli attaccabili (rosso) · Q/E ruota · 2° click sulla carta per giocarla")
+		_hud.set_hint("Bersagli (rosso) · Q/E ruota · 2° click = gioca" + sfx)
 	else:
-		_hud.set_hint("2° click sulla carta per giocarla · Q/E ruota")
+		_hud.set_hint("2° click = gioca · Q/E ruota" + sfx)
+
+
+## Indica quali Kamae sbloccherebbero ulteriori movimenti della carta selezionata.
+func _gated_note(g: Dictionary) -> String:
+	if not g.has("move"):
+		return ""
+	var cur: String = Domain.STANCE_SLUG[state.fighters[0].stance]
+	var locked := {}
+	for opt in g["move"].get("opts", []):
+		for a in opt.get("atoms", []):
+			var k: String = a.get("kamae", "")
+			if k != "" and k != cur:
+				locked[k] = true
+	if locked.is_empty():
+		return ""
+	var names: Array = []
+	for k in locked:
+		names.append(Domain.STANCE_NAMES[Domain.STANCE_FROM_SLUG[k]])
+	return " · altri movimenti in: " + ", ".join(names)
 
 
 # ─── Orientamento (facing) ───────────────────────────────────────────────────
