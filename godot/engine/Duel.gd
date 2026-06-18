@@ -112,7 +112,9 @@ func _resolve_turn() -> void:
 		if f.planned == -1:
 			continue
 		var c := CardDB.card(f.planned)
-		var cost := int(c.get("focus", 0))
+		var g := CardDB.geometry(f.planned)
+		var pc: Dictionary = g.get("play_cost", {})
+		var cost := int(c.get("focus", 0)) + int(pc.get("focus", 0))
 		if cost > 0:
 			if f.focus >= cost:
 				f.focus -= cost
@@ -120,6 +122,13 @@ func _resolve_turn() -> void:
 				fizzled[i] = true
 				log.append("%s: focus insufficiente per %s — la carta svanisce" % [
 					f.character, c.get("name", "?")])
+				continue
+		# Costo "scarta N carte" (pagato dalla mano).
+		var disc := int(pc.get("discard", 0))
+		for _k in range(disc):
+			if f.hand.is_empty():
+				break
+			f.discard.append(f.hand.pop_back())
 
 	# Velocità d'iniziativa scelte: prima i non-difensori (valore alto), poi le
 	# difese che agganciano la velocità dell'attacco avversario.
@@ -260,7 +269,7 @@ func _resolve_card(i: int, block_ready: Dictionary, log: Array) -> void:
 			if foe_idx == -1:
 				return
 			var foe := state.fighters[foe_idx]
-			var cells := attack_cells(f.cell, f.facing, g, _card_range(c))
+			var cells := attack_v2_cells(f.cell, f.facing, g, _card_range(c))
 			if not cells.has(foe.cell):
 				var dist := HexGrid.distance(f.cell, foe.cell)
 				log.append("%s usa %s ma il bersaglio è fuori arco/portata (dist %d)" % [f.character, name, dist])
@@ -273,28 +282,35 @@ func _resolve_card(i: int, block_ready: Dictionary, log: Array) -> void:
 				log.append("%s attacca con %s a velocità %d — %s PARA!" % [
 					f.character, name, atk_speed, foe.character])
 				return
-			var n: int = int(g.get("wounds", 1))
+			# Ferite della cella colpita (schema v2) o globali (vecchio).
+			var n: int = int(cells.get(foe.cell, g.get("wounds", 1)))
 			var kind: String = g.get("wound_kind", "normal")
 			if kind == "exec":
 				foe.wounds.append("exec"); foe.wounds.resize(foe.wound_limit)
-			else:
+			elif n > 0:
 				var tag := "bleed" if kind == "bleed" else "wound"
-				for _w in range(maxi(1, n)):
+				for _w in range(n):
 					foe.wounds.append(tag)
 			_apply_if_success(i, foe_idx, g, log)
+			_apply_effects(i, foe_idx, g, "on_hit", log)
 			fighter_updated.emit(foe_idx)
 			log.append("%s colpisce %s con %s — %d ferita/e (%d/%d)" % [
-				f.character, foe.character, name, maxi(1, n), foe.wounds.size(), foe.wound_limit])
+				f.character, foe.character, name, n, foe.wounds.size(), foe.wound_limit])
 		"defence":
+			_apply_effects(i, _opponent_index(i), g, "always", log)
 			log.append("%s si mette in guardia (%s)" % [f.character, name])
 		"meditation":
-			var fg: int = int(g.get("focus_gain", 1))
-			var dr: int = int(g.get("draw", 1))
-			f.gain_focus(fg)
-			for _d in range(maxi(0, dr)):
-				f.draw_one()
-			fighter_updated.emit(i)
-			log.append("%s medita (%s): +%d focus, pesca %d" % [f.character, name, fg, maxi(0, dr)])
+			if g.has("effects"):
+				_apply_effects(i, _opponent_index(i), g, "always", log)
+				log.append("%s medita (%s)" % [f.character, name])
+			else:
+				var fg: int = int(g.get("focus_gain", 1))
+				var dr: int = int(g.get("draw", 1))
+				f.gain_focus(fg)
+				for _d in range(maxi(0, dr)):
+					f.draw_one()
+				fighter_updated.emit(i)
+				log.append("%s medita (%s): +%d focus, pesca %d" % [f.character, name, fg, maxi(0, dr)])
 		_:
 			log.append("%s gioca %s" % [f.character, name])
 	# "Passa a [Kamae]" — switch diretto (eventualmente gated dalla Kamae).
@@ -325,6 +341,97 @@ func _apply_if_success(att_idx: int, foe_idx: int, g: Dictionary, log: Array) ->
 			var amt := 1 if s == "hobble" else int(s.substr(7))
 			foe.hobble += maxi(1, amt)
 			fighter_updated.emit(foe_idx)
+
+
+## ─── Schema v2: celle d'attacco e lista effetti ────────────────────────────────
+
+## Celle bersaglio (cella → ferite) dalla geometria v2 `attack.cells`
+## (ogni cella: d=direzione relativa 0..5, k=anello 1.., w=ferite). Se assente,
+## ripiega sullo schema vecchio (dirs+range, ferite uniformi).
+static func attack_v2_cells(origin: Vector2i, facing: int, geom: Dictionary, fallback_range: int) -> Dictionary:
+	var out := {}
+	var atk = geom.get("attack", null)
+	if atk != null and not (atk.get("cells", []) as Array).is_empty():
+		for cell_def in atk.get("cells", []):
+			var d: int = int(cell_def.get("d", 0))
+			var k: int = int(cell_def.get("k", 1))
+			var ad: int = (facing + d) % 6
+			var cell: Vector2i = origin + HexGrid.DIRS[ad] * maxi(1, k)
+			out[cell] = int(cell_def.get("w", 1))
+		return out
+	# fallback schema vecchio
+	for cell in attack_cells(origin, facing, geom, fallback_range):
+		out[cell] = int(geom.get("wounds", 1))
+	return out
+
+
+## Celle difese (cella → valore di blocco) dalla geometria v2 `defence.cells`.
+static func defence_v2_cells(origin: Vector2i, facing: int, geom: Dictionary) -> Dictionary:
+	var out := {}
+	var dfn = geom.get("defence", null)
+	if dfn != null:
+		for cell_def in dfn.get("cells", []):
+			var d: int = int(cell_def.get("d", 0))
+			var k: int = int(cell_def.get("k", 1))
+			var ad: int = (facing + d) % 6
+			out[origin + HexGrid.DIRS[ad] * maxi(1, k)] = int(cell_def.get("v", 0))
+	return out
+
+
+## Applica la lista `effects` v2 per la finestra `when` ("always" / "on_hit").
+## Gli effetti gated da Kamae si applicano solo nella posizione giusta; gli
+## effetti opzionali a costo di focus (focus_cost>0) vengono saltati
+## nell'auto-risoluzione (sono facoltativi); quelli non ancora simulati sono
+## registrati nel log.
+func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: Array) -> void:
+	var effs = geom.get("effects", null)
+	if effs == null:
+		return
+	var f := state.fighters[i]
+	var foe: GameState.Fighter = state.fighters[foe_idx] if foe_idx != -1 else null
+	var done_alt := {}
+	for e in effs:
+		if str(e.get("when", "always")) != when:
+			continue
+		var gate: String = e.get("kamae", "")
+		if gate != "" and gate != Domain.STANCE_SLUG[f.stance]:
+			continue
+		if int(e.get("focus_cost", 0)) > 0:
+			continue   # bonus opzionale a pagamento: saltato in auto-risoluzione
+		# Gruppi "OPPURE": applica solo la prima alternativa valida.
+		var alt = e.get("alt", null)
+		if alt != null:
+			if done_alt.has(alt):
+				continue
+			done_alt[alt] = true
+		match str(e.get("do", "")):
+			"push":
+				if foe != null: _push(i, foe_idx, int(e.get("n", 1)))
+			"bleed":
+				if foe != null: foe.wounds.append("bleed")
+			"replace_wound_bleed":
+				if foe != null and not foe.wounds.is_empty():
+					foe.wounds[foe.wounds.size() - 1] = "bleed"
+			"focus":
+				f.gain_focus(int(e.get("n", 1)))
+			"hobble":
+				if foe != null: foe.hobble += maxi(1, int(e.get("n", 1)))
+			"rotate_target":
+				if foe != null: foe.facing = (foe.facing + int(e.get("n", 1))) % 6
+			"draw":
+				for _d in range(maxi(0, int(e.get("n", 1)))): f.draw_one()
+			"search_draw":
+				for _d in range(maxi(0, int(e.get("n", 1)))): f.draw_one()
+			"switch_kamae":
+				var to: int = Domain.STANCE_FROM_SLUG.get(e.get("to", ""), -1)
+				if to != -1: f.stance = to
+			"change_kamae":
+				pass   # scelta interattiva del giocatore; non auto-applicata
+			"spend_focus", "reduce_damage", "cancel_movement", "block_initiative":
+				log.append("  (effetto «%s» non ancora simulato)" % str(e.get("do", "")))
+		if foe != null:
+			fighter_updated.emit(foe_idx)
+	fighter_updated.emit(i)
 
 
 ## Spinge `foe` di `n` esagoni lontano da `att`, se le celle sono libere.
