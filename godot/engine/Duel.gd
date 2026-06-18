@@ -144,6 +144,7 @@ func _speed_of(i: int) -> int:
 func _resolve_card(i: int, block_ready: Dictionary, log: Array) -> void:
 	var f := state.fighters[i]
 	var c := CardDB.card(f.planned)
+	var g := CardDB.geometry(f.planned)   ## geometria/effetti trascritti (può essere vuota)
 	var name: String = c.get("name", "?")
 	match c.get("type", ""):
 		"attack":
@@ -152,26 +153,71 @@ func _resolve_card(i: int, block_ready: Dictionary, log: Array) -> void:
 				return
 			var foe := state.fighters[foe_idx]
 			var dist := HexGrid.distance(f.cell, foe.cell)
-			if dist > _card_range(c):
-				log.append("%s usa %s ma il bersaglio è troppo lontano (%d)" % [f.character, name, dist])
+			var reach: int = int(g.get("range", _card_range(c)))
+			if dist > reach:
+				log.append("%s usa %s ma il bersaglio è troppo lontano (%d>%d)" % [f.character, name, dist, reach])
 				return
 			if block_ready.get(foe_idx, false):
 				block_ready[foe_idx] = false
 				log.append("%s attacca con %s — %s PARA!" % [f.character, name, foe.character])
 				return
-			foe.wounds.append("wound")
+			var n: int = int(g.get("wounds", 1))
+			var kind: String = g.get("wound_kind", "normal")
+			if kind == "exec":
+				foe.wounds.append("exec"); foe.wounds.resize(foe.wound_limit)
+			else:
+				var tag := "bleed" if kind == "bleed" else "wound"
+				for _w in range(maxi(1, n)):
+					foe.wounds.append(tag)
+			_apply_if_success(i, foe_idx, g, log)
 			fighter_updated.emit(foe_idx)
-			log.append("%s colpisce %s con %s — ferita! (%d/%d)" % [
-				f.character, foe.character, name, foe.wounds.size(), foe.wound_limit])
+			log.append("%s colpisce %s con %s — %d ferita/e (%d/%d)" % [
+				f.character, foe.character, name, maxi(1, n), foe.wounds.size(), foe.wound_limit])
 		"defence":
 			log.append("%s si mette in guardia (%s)" % [f.character, name])
 		"meditation":
-			f.gain_focus(1)
-			f.draw_one()
+			var fg: int = int(g.get("focus_gain", 1))
+			var dr: int = int(g.get("draw", 1))
+			f.gain_focus(fg)
+			for _d in range(maxi(0, dr)):
+				f.draw_one()
 			fighter_updated.emit(i)
-			log.append("%s medita (%s): +1 focus, pesca una carta" % [f.character, name])
+			log.append("%s medita (%s): +%d focus, pesca %d" % [f.character, name, fg, maxi(0, dr)])
 		_:
 			log.append("%s gioca %s" % [f.character, name])
+
+
+## Applica gli effetti "se riuscito" trascritti (push, focus, bleed).
+func _apply_if_success(att_idx: int, foe_idx: int, g: Dictionary, log: Array) -> void:
+	var att := state.fighters[att_idx]
+	var foe := state.fighters[foe_idx]
+	for eff in g.get("if_success", []):
+		var s := str(eff)
+		if s.begins_with("focus:"):
+			att.gain_focus(int(s.substr(6)))
+		elif s.begins_with("push:"):
+			_push(att_idx, foe_idx, int(s.substr(5)))
+		elif s == "bleed":
+			foe.wounds.append("bleed")
+
+
+## Spinge `foe` di `n` esagoni lontano da `att`, se le celle sono libere.
+func _push(att_idx: int, foe_idx: int, n: int) -> void:
+	var att := state.fighters[att_idx]
+	var foe := state.fighters[foe_idx]
+	for _k in range(n):
+		var best := foe.cell
+		var best_d := HexGrid.distance(att.cell, foe.cell)
+		for nb in HexGrid.neighbors(foe.cell):
+			if state.is_blocked(nb):
+				continue
+			if HexGrid.distance(att.cell, nb) > best_d:
+				best_d = HexGrid.distance(att.cell, nb)
+				best = nb
+		if best == foe.cell:
+			break
+		foe.cell = best
+	fighter_updated.emit(foe_idx)
 
 
 func _cleanup(log: Array) -> void:

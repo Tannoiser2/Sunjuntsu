@@ -104,11 +104,13 @@ carte.
    → ferite → controllo sconfitta (limite ferite, esecuzione, stun) → riordino.
    Testato headless (partita completa fino al vincitore).
 
-   > **Approssimazione dichiarata**: la *geometria* degli attacchi (quali esagoni
-   > del corpo colpisce ogni carta) è stampata solo sulle carte e non è nei dati,
-   > quindi un attacco a segno infligge 1 ferita e una difesa rivelata para il
-   > primo attacco del turno. Counter, zone e step verranno raffinati con i dati
-   > geometrici.
+   > La *geometria/effetti* delle carte (portata/reach, n. ferite, sanguinante/
+   > esecuzione, passi, rotazioni, focus, push, blocco) è stampata solo sulle
+   > carte: viene **trascritta** in `data/cards/geometry.json` (vedi
+   > `GEOMETRY_SCHEMA.md`) e usata dal motore quando presente, con fallback
+   > all'astrazione (1 ferita / portata da keyword). **Trascrizione in corso**:
+   > prima passata sul mazzo Guerriero. Counter e offset esatti dell'arco
+   > restano da raffinare.
 7. **[fatto] IA solo** (`engine/AI.gd`): euristica per portata e tipo di carta
    (attacca se a tiro, difende se minacciata, medita altrimenti) + movimento di
    avvicinamento. Ispirata a `solo_AI_tables_v1.xlsx`; il "mazzo IA" ufficiale

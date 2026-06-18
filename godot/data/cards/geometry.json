@@ -1,0 +1,52 @@
+{
+  "source": "Trascrizione manuale dalle immagini in Tabelle_Materiali/Senjutsu/CARTE/ (verificata col numero stampato = Card ID). Vedi GEOMETRY_SCHEMA.md.",
+  "convention": "dir 0 = fronte (direzione di facing), senso orario; range = raggio max colpito",
+  "coverage": "Prima passata: mazzo Guerriero (Warrior) — in corso.",
+  "cards": {
+    "53": {
+      "name": "Carta Speciale Guerriero",
+      "discard": 1, "rotates": 2, "draw": 2, "focus_gain": 1, "change_kamae": true,
+      "note": "Core: pesca 2 OPPURE prendi arma+focus OPPURE cambia kamae"
+    },
+    "54": {
+      "name": "Ruggito Ardente",
+      "if_success": ["push:1", "bleed"],
+      "note": "Meditazione/Aggiunta istantanea: si gioca se l'attacco e' riuscito"
+    },
+    "59": {
+      "name": "Concentrazione Ritrovata",
+      "rotates": 1, "focus_gain": 1, "change_kamae": true,
+      "note": "Meditazione: in alternativa ✱2/↻2"
+    },
+    "60": {
+      "name": "Falciata Montante",
+      "range": 1, "wounds": 1, "wound_kind": "normal", "dirs": [5, 0, 1],
+      "steps": 1, "change_kamae": true,
+      "if_success": ["bleed"],
+      "note": "Attacco ad arco frontale ampio; puo' sostituire ! con sanguinante"
+    },
+    "63": {
+      "name": "Blocco Cinereo",
+      "block": true, "block_value": 8, "change_kamae": true,
+      "if_success": ["push:1"],
+      "note": "Difesa: blocca esagoni frontali/sinistri"
+    },
+    "64": {
+      "name": "Testata",
+      "range": 1, "wounds": 1, "dirs": [0], "steps": 1, "rotates": 1,
+      "if_success": ["push:1", "focus:1"],
+      "note": "Attacco a singolo esagono frontale"
+    },
+    "72": {
+      "name": "Squarcio di Nodachi",
+      "range": 2, "wounds": 1, "dirs": [0, 1], "discard": 1,
+      "steps": 1, "rotates": 1, "alt_step_rotate": true,
+      "note": "Arma Nodachi, reach (raggio 2); passo OPPURE rotazione"
+    },
+    "116": {
+      "name": "Mente Rapida",
+      "draw": 2, "steps": 1, "rotates": 1, "change_kamae": true,
+      "note": "Meditazione (abilita' generale)"
+    }
+  }
+}

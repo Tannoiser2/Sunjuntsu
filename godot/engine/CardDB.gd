@@ -8,6 +8,7 @@
 extends Node
 
 const POOL_PATH := "res://data/cards/card_pool.json"
+const GEOMETRY_PATH := "res://data/cards/geometry.json"
 
 const DECK_DIR := "res://data/decks/"
 
@@ -16,13 +17,30 @@ var by_id: Dictionary = {}            ## id (int) -> carta
 var by_char: Dictionary = {}          ## personaggio (String) -> Array[carta]
 var characters: Array = []            ## elenco personaggi
 var decks: Dictionary = {}            ## slug (String) -> Array[carta del mazzo]
+var geom: Dictionary = {}             ## id (int) -> geometria/effetti (GEOMETRY_SCHEMA.md)
 
 
 func _ready() -> void:
 	_load_pool()
 	_load_decks()
-	print("[CardDB] %d carte, %d personaggi, %d mazzi" % [
-		cards.size(), characters.size(), decks.size()])
+	_load_geometry()
+	print("[CardDB] %d carte, %d personaggi, %d mazzi, %d geometrie" % [
+		cards.size(), characters.size(), decks.size(), geom.size()])
+
+
+func _load_geometry() -> void:
+	if not FileAccess.file_exists(GEOMETRY_PATH):
+		return
+	var parsed = JSON.parse_string(FileAccess.get_file_as_string(GEOMETRY_PATH))
+	if typeof(parsed) != TYPE_DICTIONARY:
+		return
+	for k in parsed.get("cards", {}).keys():
+		geom[int(k)] = parsed["cards"][k]
+
+
+## Geometria/effetti trascritti per una carta (vuoto se non ancora trascritta).
+func geometry(id: int) -> Dictionary:
+	return geom.get(id, {})
 
 
 func _load_decks() -> void:
