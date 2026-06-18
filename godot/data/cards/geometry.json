@@ -1,1290 +1,2012 @@
 {
-  "source": "Trascrizione manuale dalle immagini in Tabelle_Materiali/Senjutsu/CARTE/ (Guerriero.pdf, Ronin .pdf), verificata col numero stampato = Card ID. Vedi GEOMETRY_SCHEMA.md.",
-  "convention": "dir 0 = fronte (direzione di facing), senso orario (1=fronte-dx,2=dietro-dx,3=dietro,4=dietro-sx,5=fronte-sx); range = raggio max colpito",
-  "coverage": "Mazzi Guerriero e Ronin completi. Prossimo: Ferite / Jin Sakai (se richiesto).",
-  "cards": {
-    "53": {
-      "name": "Carta Speciale Guerriero",
-      "type": "core",
-      "discard": 1,
-      "rotates": 2,
-      "draw": 2,
-      "focus_gain": 1,
-      "change_kamae": true,
-      "note": "Pesca 2 / arma+focus / cambia kamae",
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "rot",
-                "n": 2,
-                "opt": false
-              }
-            ]
-          }
-        ]
-      }
+ "note": "Schema v2: trascrizione fedele (best-effort) da Guerriero.pdf/Ronin.pdf. attack/defence.cells: d=direzione relativa 0-5 (0=fronte,orario), k=anello, w=ferite, v=valore blocco. effects: lista ordinata con when(on_hit/always), gate kamae, focus_cost (bonus opzionali). Le carte con 'note ... DA VERIFICARE' e i diagrammi anello-2 vanno controllati sul gioco fisico.",
+ "cards": {
+  "53": {
+   "name": "Carta Speciale Guerriero",
+   "type": "core",
+   "play_cost": {
+    "discard": 1
+   },
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": -1,
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 2
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "draw",
+     "n": 2,
+     "alt": "a"
     },
-    "54": {
-      "name": "Ruggito Ardente",
-      "type": "meditation",
-      "if_success": [
-        "push:1",
-        "bleed"
-      ],
-      "note": "Aggiunta istantanea su attacco riuscito"
+    {
+     "do": "search_draw",
+     "n": 1,
+     "alt": "b"
     },
-    "55": {
-      "name": "Colpo della Fenice Fiammante",
-      "type": "attack",
-      "range": 1,
-      "wounds": 2,
-      "dirs": [
-        5,
-        0,
-        1
-      ],
-      "steps": 1,
-      "note": "Doppia ferita; un esagono ESECUZIONE (non modellata)",
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "step",
-                "dir": 1,
-                "n": 1,
-                "opt": false
-              }
-            ]
-          }
-        ]
-      },
-      "kamae_req": "aggression"
+    {
+     "do": "focus",
+     "n": 1,
+     "alt": "b"
     },
-    "56": {
-      "name": "Punto Cieco",
-      "type": "meditation",
-      "rotates": 1,
-      "change_kamae": true,
-      "note": "Aggiunta istantanea: cerca+prendi arma/terreno/focus",
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "rot",
-                "n": 1,
-                "opt": false
-              }
-            ]
-          }
-        ]
-      }
-    },
-    "57": {
-      "name": "Istinto Bruciante",
-      "type": "meditation",
-      "draw": 5,
-      "steps": 1,
-      "rotates": 2,
-      "note": "Rimescola le non-difesa, poi pesca 5",
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "step",
-                "dir": 0,
-                "n": 1,
-                "opt": false,
-                "kamae": "aggression"
-              },
-              {
-                "t": "step",
-                "dir": 0,
-                "n": 1,
-                "opt": false,
-                "kamae": "determination"
-              },
-              {
-                "t": "rot",
-                "n": 2,
-                "opt": false,
-                "kamae": "balance"
-              }
-            ]
-          }
-        ]
-      }
-    },
-    "58": {
-      "name": "Finta Falciante",
-      "type": "attack",
-      "range": 1,
-      "wounds": 1,
-      "dirs": [
-        5,
-        0,
-        1,
-        4
-      ],
-      "steps": 1,
-      "if_success": [
-        "focus:1"
-      ],
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "step",
-                "dir": 3,
-                "n": 1,
-                "opt": false
-              }
-            ]
-          },
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "step",
-                "dir": 0,
-                "n": 1,
-                "opt": true,
-                "kamae": "balance"
-              }
-            ]
-          }
-        ]
-      }
-    },
-    "59": {
-      "name": "Concentrazione Ritrovata",
-      "type": "meditation",
-      "rotates": 1,
-      "focus_gain": 1,
-      "change_kamae": true,
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "rot",
-                "n": 1,
-                "opt": false
-              }
-            ]
-          },
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "rot",
-                "n": 2,
-                "opt": false,
-                "kamae": "balance"
-              }
-            ]
-          }
-        ]
-      },
-      "kamae_switch": {
-        "to": "aggression"
-      }
-    },
-    "60": {
-      "name": "Falciata Montante",
-      "type": "attack",
-      "range": 1,
-      "wounds": 1,
-      "dirs": [
-        5,
-        0,
-        1
-      ],
-      "steps": 1,
-      "change_kamae": true,
-      "if_success": [
-        "bleed"
-      ],
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "step",
-                "dir": 3,
-                "n": 1,
-                "opt": false
-              }
-            ]
-          },
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "step",
-                "dir": 0,
-                "n": 1,
-                "opt": true,
-                "kamae": "balance"
-              }
-            ]
-          }
-        ]
-      },
-      "kamae_switch": {
-        "to": "aggression"
-      }
-    },
-    "61": {
-      "name": "Colpo Corto",
-      "type": "attack",
-      "range": 1,
-      "wounds": 1,
-      "dirs": [
-        0
-      ],
-      "steps": 1,
-      "if_success": [
-        "focus:1"
-      ],
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "step",
-                "dir": 0,
-                "n": 1,
-                "opt": true
-              }
-            ]
-          }
-        ]
-      },
-      "kamae_req": "aggression"
-    },
-    "62": {
-      "name": "Arco Respingente",
-      "type": "attack",
-      "range": 1,
-      "wounds": 1,
-      "dirs": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5
-      ],
-      "discard": 1,
-      "change_kamae": true,
-      "if_success": [
-        "push:1"
-      ],
-      "kamae_switch": {
-        "to": "aggression"
-      }
-    },
-    "63": {
-      "name": "Blocco Cinereo",
-      "type": "defence",
-      "block": true,
-      "block_value": 8,
-      "change_kamae": true,
-      "if_success": [
-        "push:1"
-      ],
-      "kamae_switch": {
-        "to": "aggression",
-        "gate": "determination"
-      }
-    },
-    "64": {
-      "name": "Testata",
-      "type": "attack",
-      "range": 1,
-      "wounds": 1,
-      "dirs": [
-        0
-      ],
-      "if_success": [
-        "hobble",
-        "focus:1"
-      ],
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "step",
-                "dirs": [
-                  5,
-                  0,
-                  1
-                ],
-                "n": 1,
-                "opt": true
-              },
-              {
-                "t": "rot",
-                "n": 1,
-                "opt": true,
-                "kamae": "aggression"
-              }
-            ]
-          }
-        ]
-      }
-    },
-    "65": {
-      "name": "Spirale di Fiamme",
-      "type": "attack",
-      "range": 1,
-      "wounds": 1,
-      "dirs": [
-        0,
-        1
-      ],
-      "steps": 1,
-      "rotates": 1,
-      "if_success": [
-        "rotate:2"
-      ],
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "rot",
-                "n": 1,
-                "opt": false,
-                "kamae": "balance"
-              },
-              {
-                "t": "step",
-                "dir": 0,
-                "n": 1,
-                "opt": false,
-                "kamae": "determination"
-              },
-              {
-                "t": "rot",
-                "n": 1,
-                "opt": false,
-                "kamae": "determination"
-              }
-            ]
-          }
-        ]
-      }
-    },
-    "72": {
-      "name": "Squarcio di Nodachi",
-      "type": "attack",
-      "range": 2,
-      "wounds": 1,
-      "dirs": [
-        0,
-        1
-      ],
-      "discard": 1,
-      "steps": 1,
-      "rotates": 1,
-      "alt_step_rotate": true,
-      "note": "Arma Nodachi (reach)",
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "step",
-                "dir": 0,
-                "n": 1,
-                "opt": false
-              }
-            ]
-          },
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "rot",
-                "n": 1,
-                "opt": false
-              }
-            ]
-          }
-        ]
-      }
-    },
-    "83": {
-      "name": "Blocco Ampio",
-      "type": "meditation",
-      "note": "Aggiunta a un blocco: +1 intervallo iniziativa del blocco"
-    },
-    "86": {
-      "name": "Colpo in Affondo",
-      "type": "attack",
-      "range": 1,
-      "wounds": 1,
-      "dirs": [
-        0
-      ],
-      "steps": 1,
-      "rotates": 1,
-      "draw": 1,
-      "change_kamae": true,
-      "block_value": 7,
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "step",
-                "dir": 0,
-                "n": 1,
-                "opt": true
-              },
-              {
-                "t": "rot",
-                "n": 1,
-                "opt": false,
-                "kamae": "balance"
-              }
-            ]
-          }
-        ]
-      },
-      "kamae_switch": {
-        "to": "balance"
-      }
-    },
-    "87": {
-      "name": "Sabbia negli Occhi",
-      "type": "attack",
-      "range": 1,
-      "wounds": 1,
-      "dirs": [
-        5,
-        0,
-        1
-      ],
-      "unblockable": true,
-      "discard": 2,
-      "focus_gain": 1,
-      "change_kamae": true,
-      "kamae_switch": {
-        "to": "neutral"
-      }
-    },
-    "113": {
-      "name": "Taglio Troncante",
-      "type": "attack",
-      "range": 1,
-      "wounds": 1,
-      "wound_kind": "bleed",
-      "dirs": [
-        0
-      ],
-      "steps": 1,
-      "rotates": 1,
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "rot",
-                "n": 1,
-                "opt": false
-              },
-              {
-                "t": "step",
-                "dir": 3,
-                "n": 1,
-                "opt": false,
-                "kamae": "determination"
-              }
-            ]
-          }
-        ]
-      }
-    },
-    "116": {
-      "name": "Mente Rapida",
-      "type": "meditation",
-      "draw": 2,
-      "steps": 1,
-      "rotates": 1,
-      "change_kamae": true,
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "step",
-                "dir": 0,
-                "n": 1,
-                "opt": true,
-                "kamae": "aggression"
-              },
-              {
-                "t": "rot",
-                "n": 1,
-                "opt": true,
-                "kamae": "balance"
-              }
-            ]
-          }
-        ]
-      },
-      "change_kamae_gate": "determination"
-    },
-    "118": {
-      "name": "Blocco Selvaggio",
-      "type": "defence",
-      "block": true,
-      "block_value": "7/6",
-      "discard": 2,
-      "change_kamae": true,
-      "note": "Blocco ampio",
-      "kamae_switch": {
-        "to": "neutral"
-      }
-    },
-    "119": {
-      "name": "Fendente Selvaggio",
-      "type": "attack",
-      "range": 1,
-      "wounds": 2,
-      "dirs": [
-        5,
-        1
-      ],
-      "discard": 2,
-      "change_kamae": true
-    },
-    "123": {
-      "name": "Respinta",
-      "type": "defence",
-      "block": true,
-      "rotates": 1,
-      "dirs": [
-        5,
-        0,
-        1
-      ],
-      "steps": 1,
-      "if_success": [
-        "push:1"
-      ],
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "rot",
-                "n": 1,
-                "opt": false
-              },
-              {
-                "t": "step",
-                "dir": 0,
-                "n": 1,
-                "opt": true
-              }
-            ]
-          }
-        ]
-      }
-    },
-    "23": {
-      "name": "Carta Speciale Ronin",
-      "type": "core",
-      "discard": 1,
-      "rotates": 2,
-      "draw": 2,
-      "change_kamae": true,
-      "note": "Pesca 2 / arma+kamae / cambia kamae",
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "rot",
-                "n": 2,
-                "opt": false
-              }
-            ]
-          }
-        ]
-      }
-    },
-    "24": {
-      "name": "Vortice Cremisi",
-      "type": "attack",
-      "range": 2,
-      "wounds": 2,
-      "dirs": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5
-      ],
-      "steps": 1,
-      "note": "Grande AoE, doppia ferita su molti esagoni",
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "step",
-                "dir": 0,
-                "n": 1,
-                "opt": false
-              }
-            ]
-          }
-        ]
-      },
-      "kamae_req": "aggression"
-    },
-    "25": {
-      "name": "Armatura Pesante",
-      "type": "defence",
-      "persistent": true,
-      "reduce_damage": 1,
-      "note": "Resta in gioco: riduce di 1 il danno subito (min 1); a ogni riduzione focus/arma"
-    },
-    "26": {
-      "name": "Carica del Toro",
-      "type": "attack",
-      "range": 1,
-      "wounds": 2,
-      "dirs": [
-        5,
-        0,
-        1
-      ],
-      "steps": 1,
-      "note": "Doppia ferita; variante ✱5 a singola ferita",
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "step",
-                "dir": 0,
-                "n": 1,
-                "opt": false
-              }
-            ]
-          }
-        ]
-      },
-      "kamae_req": "aggression"
-    },
-    "27": {
-      "name": "Affondo Invertito di Zanna",
-      "type": "attack",
-      "range": 1,
-      "wounds": 2,
-      "dirs": [
-        5,
-        0,
-        1
-      ],
-      "steps": 1,
-      "if_success": [
-        "push:1"
-      ],
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "step",
-                "dir": 0,
-                "n": 1,
-                "opt": true
-              }
-            ]
-          }
-        ]
-      }
-    },
-    "28": {
-      "name": "Il Terrore",
-      "type": "meditation",
-      "range": 3,
-      "rotates": 2,
-      "note": "A distanza: annulla le carte abilita' attive del nemico",
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "rot",
-                "n": 2,
-                "opt": false
-              }
-            ]
-          }
-        ]
-      }
-    },
-    "29": {
-      "name": "Spazzata Feroce",
-      "type": "attack",
-      "range": 1,
-      "wounds": 1,
-      "dirs": [
-        5,
-        0,
-        1,
-        4
-      ],
-      "steps": 1,
-      "change_kamae": true,
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "step",
-                "dir": 0,
-                "n": 1,
-                "opt": true
-              }
-            ]
-          }
-        ]
-      },
-      "kamae_switch": {
-        "to": "aggression"
-      }
-    },
-    "30": {
-      "name": "Artigli Laceranti",
-      "type": "meditation",
-      "if_success": [
-        "bleed"
-      ],
-      "note": "Aggiunta su attacco riuscito: sostituisci ferita con sanguinante"
-    },
-    "31": {
-      "name": "Difesa d'Acciaio",
-      "type": "defence",
-      "block": true,
-      "block_value": "6/5/4",
-      "dirs": [
-        5,
-        0,
-        1
-      ],
-      "rotates": 1,
-      "steps": 1,
-      "change_kamae": true,
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "step",
-                "dir": 0,
-                "n": 1,
-                "opt": false,
-                "kamae": "determination"
-              },
-              {
-                "t": "rot",
-                "n": 1,
-                "opt": false,
-                "kamae": "determination"
-              }
-            ]
-          }
-        ]
-      },
-      "change_kamae_gate": "determination",
-      "kamae_change": 2
-    },
-    "32": {
-      "name": "Balzo del Lupo",
-      "type": "attack",
-      "range": 1,
-      "wounds": 1,
-      "wound_kind": "bleed",
-      "dirs": [
-        0
-      ],
-      "steps": 1,
-      "note": "Sostituzione istantanea",
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "step",
-                "dir": 0,
-                "n": 1,
-                "opt": false
-              }
-            ]
-          }
-        ]
-      }
-    },
-    "33": {
-      "name": "Colpo alle Caviglie",
-      "type": "attack",
-      "range": 1,
-      "wounds": 1,
-      "dirs": [
-        0,
-        1
-      ],
-      "steps": 1,
-      "rotates": 1,
-      "draw": 1,
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "step",
-                "dir": 0,
-                "n": 1,
-                "opt": true
-              },
-              {
-                "t": "rot",
-                "n": 1,
-                "opt": false
-              }
-            ]
-          }
-        ]
-      }
-    },
-    "34": {
-      "name": "Ritirata Composta",
-      "type": "meditation",
-      "rotates": 1,
-      "focus_gain": 1,
-      "draw": 3,
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "step",
-                "dir": 0,
-                "n": 1,
-                "opt": false
-              },
-              {
-                "t": "rot",
-                "n": 1,
-                "opt": false
-              }
-            ]
-          },
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "rot",
-                "n": 2,
-                "opt": false,
-                "kamae": "balance"
-              }
-            ]
-          }
-        ]
-      }
-    },
-    "35": {
-      "name": "Chiatta di Buoi",
-      "type": "attack",
-      "range": 1,
-      "wounds": 1,
-      "dirs": [
-        0
-      ],
-      "unblockable": true,
-      "steps": 2,
-      "rotates": 1,
-      "change_kamae": true,
-      "if_success": [
-        "push:1"
-      ],
-      "move": {
-        "opts": [
-          {
-            "ordered": true,
-            "atoms": [
-              {
-                "t": "step",
-                "dir": 0,
-                "n": 1,
-                "opt": false
-              },
-              {
-                "t": "step",
-                "dir": 0,
-                "n": 1,
-                "opt": false
-              }
-            ]
-          },
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "rot",
-                "n": 1,
-                "opt": false
-              }
-            ]
-          }
-        ]
-      },
-      "kamae_switch": {
-        "to": "aggression"
-      }
-    },
-    "71": {
-      "name": "Spazzata di Naginata",
-      "type": "attack",
-      "range": 2,
-      "wounds": 1,
-      "dirs": [
-        5,
-        0,
-        1
-      ],
-      "discard": 1,
-      "rotates": 1,
-      "note": "Arma Naginata (reach)",
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "rot",
-                "n": 1,
-                "opt": false
-              }
-            ]
-          }
-        ]
-      }
-    },
-    "89": {
-      "name": "Blocco d'Emergenza",
-      "type": "defence",
-      "block": true,
-      "dirs": [
-        5,
-        0,
-        1
-      ],
-      "rotates": 2,
-      "change_kamae": true,
-      "note": "Sostituzione istantanea",
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "rot",
-                "n": 1,
-                "opt": false
-              }
-            ]
-          },
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "rot",
-                "n": 2,
-                "opt": false
-              }
-            ]
-          }
-        ]
-      },
-      "kamae_switch": {
-        "to": "neutral"
-      }
-    },
-    "98": {
-      "name": "Grido di Guerra",
-      "type": "meditation",
-      "range": 5,
-      "steps": 2,
-      "rotates": 1,
-      "draw": 2,
-      "change_kamae": true,
-      "note": "A distanza: annulla il movimento attivo del nemico",
-      "move": {
-        "opts": [
-          {
-            "ordered": true,
-            "atoms": [
-              {
-                "t": "step",
-                "dir": 0,
-                "n": 1,
-                "opt": false
-              },
-              {
-                "t": "step",
-                "dir": 0,
-                "n": 1,
-                "opt": false
-              }
-            ]
-          },
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "rot",
-                "n": 1,
-                "opt": false,
-                "kamae": "balance"
-              }
-            ]
-          }
-        ]
-      },
-      "kamae_switch": {
-        "to": "aggression"
-      }
-    },
-    "102": {
-      "name": "Mente Risoluta",
-      "type": "meditation",
-      "rotates": 1,
-      "draw": 3,
-      "change_kamae": true,
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "rot",
-                "n": 1,
-                "opt": false
-              }
-            ]
-          }
-        ]
-      }
-    },
-    "104": {
-      "name": "Colpo Azzoppante",
-      "type": "meditation",
-      "if_success": [
-        "push:1"
-      ],
-      "steps": 1,
-      "note": "Aggiunta su attacco riuscito (hobble)"
-    },
-    "107": {
-      "name": "Affondo in Spinta",
-      "type": "attack",
-      "range": 1,
-      "wounds": 2,
-      "dirs": [
-        0,
-        1
-      ],
-      "steps": 1,
-      "rotates": 1,
-      "change_kamae": true,
-      "block_value": 6,
-      "if_success": [
-        "push:1"
-      ],
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "step",
-                "dir": 0,
-                "n": 1,
-                "opt": false
-              },
-              {
-                "t": "rot",
-                "n": 1,
-                "opt": false,
-                "kamae": "determination"
-              }
-            ]
-          }
-        ]
-      },
-      "kamae_switch": {
-        "to": "aggression"
-      }
-    },
-    "125": {
-      "name": "Calcio del Cavallo",
-      "type": "attack",
-      "range": 1,
-      "wounds": 1,
-      "dirs": [
-        0
-      ],
-      "steps": 1,
-      "if_success": [
-        "push:2"
-      ],
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "step",
-                "dir": 0,
-                "n": 1,
-                "opt": false
-              }
-            ]
-          }
-        ]
-      }
-    },
-    "126": {
-      "name": "Colpo d'Elsa",
-      "type": "attack",
-      "range": 1,
-      "wounds": 1,
-      "dirs": [
-        0
-      ],
-      "steps": 1,
-      "rotates": 1,
-      "focus_gain": 1,
-      "if_success": [
-        "push:1"
-      ],
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "step",
-                "dir": 0,
-                "n": 1,
-                "opt": true
-              },
-              {
-                "t": "rot",
-                "n": 1,
-                "opt": false,
-                "kamae": "balance"
-              }
-            ]
-          }
-        ]
-      }
-    },
-    "127": {
-      "name": "Spinta Indietro",
-      "type": "attack",
-      "range": 1,
-      "wounds": 1,
-      "dirs": [
-        0
-      ],
-      "rotates": 1,
-      "if_success": [
-        "push:2"
-      ],
-      "move": {
-        "opts": [
-          {
-            "ordered": false,
-            "atoms": [
-              {
-                "t": "rot",
-                "n": 1,
-                "opt": false
-              }
-            ]
-          }
-        ]
-      }
+    {
+     "do": "change_kamae",
+     "n": 1,
+     "alt": "c"
     }
+   ]
   },
-  "characters": {
-    "Warrior": {
-      "card_id": 51,
-      "name": "Vendetta Sorta dal Fuoco",
-      "wound_limit": 5,
-      "hand_limit": 5,
-      "weapons": [
-        "Kanabo",
-        "Naginata",
-        "Nodachi",
-        "Yari"
-      ]
+  "54": {
+   "name": "Ruggito Ardente",
+   "type": "meditation",
+   "timing": "instant_additional",
+   "effects": [
+    {
+     "do": "push",
+     "n": 1,
+     "when": "on_hit",
+     "kamae": "aggression",
+     "alt": "a"
     },
-    "Ronin": {
-      "card_id": 21,
-      "name": "Un Lupo Solitario senza Padrone",
-      "wound_limit": 5,
-      "hand_limit": 5,
-      "weapons": [
-        "Kanabo",
-        "Naginata",
-        "Nodachi",
-        "Yari"
-      ]
+    {
+     "do": "rotate_target",
+     "n": 1,
+     "when": "on_hit",
+     "focus_cost": 1,
+     "alt": "b"
+    },
+    {
+     "do": "replace_wound_bleed",
+     "n": 1,
+     "when": "on_hit",
+     "focus_cost": 1,
+     "alt": "c"
     }
+   ],
+   "note": "GIOCA SE L'ATTACCO E RIUSCITO; barra rossa=aggression"
+  },
+  "55": {
+   "name": "Colpo della Fenice Fiammante",
+   "type": "attack",
+   "kamae_req": "aggression",
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dirs": [
+         5,
+         0,
+         1
+        ],
+        "n": 1,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 2,
+      "w": 2
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 2,
+      "w": 1,
+      "tag": "char"
+     }
+    ]
+   },
+   "note": "diagramma a 8 esagoni; esagono oni/char sul bordo d0/d1 anello2 (DA VERIFICARE)"
+  },
+  "56": {
+   "name": "Punto Cieco",
+   "type": "meditation",
+   "timing": "instant_additional",
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "search_draw",
+     "n": 1,
+     "alt": "a"
+    },
+    {
+     "do": "search_draw",
+     "n": 1,
+     "focus_cost": 1,
+     "alt": "b"
+    },
+    {
+     "do": "switch_kamae",
+     "to": "determination"
+    }
+   ],
+   "note": "DOPO AVER RISOLTO LA TUA CARTA"
+  },
+  "57": {
+   "name": "Istinto Bruciante",
+   "type": "meditation",
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dirs": [
+         0,
+         3
+        ],
+        "n": 1,
+        "opt": true,
+        "kamae": "aggression"
+       },
+       {
+        "t": "step",
+        "dirs": [
+         0,
+         3
+        ],
+        "n": 1,
+        "opt": true,
+        "kamae": "determination"
+       },
+       {
+        "t": "rot",
+        "n": 2,
+        "kamae": "balance"
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "draw",
+     "n": 5
+    }
+   ],
+   "note": "mischia le carte abilita non-meditazione nel mazzo, poi PESCA 5"
+  },
+  "58": {
+   "name": "Finta Falciante",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 3,
+        "n": 1,
+        "opt": true
+       }
+      ]
+     },
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dirs": [
+         0,
+         3
+        ],
+        "n": 1,
+        "opt": true,
+        "kamae": "balance"
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 5,
+      "k": 2,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "spend_focus",
+     "n": 2,
+     "when": "on_hit"
+    }
+   ]
+  },
+  "59": {
+   "name": "Concentrazione Ritrovata",
+   "type": "meditation",
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": -1,
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 1
+       }
+      ]
+     },
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": -1,
+        "n": 2,
+        "opt": true,
+        "kamae": "balance"
+       },
+       {
+        "t": "rot",
+        "n": 2,
+        "kamae": "balance"
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "focus",
+     "n": 1
+    },
+    {
+     "do": "switch_kamae",
+     "to": "aggression"
+    }
+   ]
+  },
+  "60": {
+   "name": "Falciata Montante",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 3,
+        "n": 1,
+        "opt": true
+       }
+      ]
+     },
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dirs": [
+         0,
+         3
+        ],
+        "n": 1,
+        "opt": true,
+        "kamae": "balance"
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 5,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 2,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "replace_wound_bleed",
+     "n": 1,
+     "focus_cost": 1
+    },
+    {
+     "do": "switch_kamae",
+     "to": "aggression"
+    }
+   ]
+  },
+  "61": {
+   "name": "Colpo Corto",
+   "type": "attack",
+   "timing": "instant_replacement",
+   "kamae_req": "aggression",
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dirs": [
+         0,
+         3
+        ],
+        "n": 1,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "spend_focus",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ]
+  },
+  "62": {
+   "name": "Arco Respingente",
+   "type": "attack",
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 2,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 2,
+      "w": 1
+     },
+     {
+      "d": 5,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 5,
+      "k": 2,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "push",
+     "n": 1,
+     "when": "on_hit"
+    },
+    {
+     "do": "spend_focus",
+     "n": 1,
+     "when": "on_hit"
+    },
+    {
+     "do": "switch_kamae",
+     "to": "aggression"
+    }
+   ]
+  },
+  "63": {
+   "name": "Blocco Cinereo",
+   "type": "defence",
+   "defence": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "v": 8
+     },
+     {
+      "d": 5,
+      "k": 1,
+      "v": 8
+     },
+     {
+      "d": 4,
+      "k": 1,
+      "v": 8
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "push",
+     "n": 1,
+     "when": "on_hit",
+     "alt": "a"
+    },
+    {
+     "do": "switch_kamae",
+     "to": "determination",
+     "alt": "b"
+    }
+   ]
+  },
+  "64": {
+   "name": "Testata",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dirs": [
+         5,
+         0,
+         1
+        ],
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": true,
+        "kamae": "aggression"
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "hobble",
+     "when": "on_hit"
+    },
+    {
+     "do": "focus",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
+   "note": "confermata dall'utente"
+  },
+  "65": {
+   "name": "Spirale di Fiamme",
+   "type": "attack",
+   "attack": {
+    "cells": [
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 2,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": -1,
+        "n": 1,
+        "opt": true,
+        "kamae": "balance"
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "kamae": "balance"
+       }
+      ]
+     },
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dirs": [
+         5,
+         0,
+         1
+        ],
+        "n": 1,
+        "opt": true,
+        "kamae": "determination"
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "kamae": "determination"
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "rotate_target",
+     "n": 2,
+     "when": "on_hit"
+    }
+   ]
+  },
+  "72": {
+   "name": "Squarcio di Nodachi",
+   "type": "attack",
+   "play_cost": {
+    "discard": 1
+   },
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false,
+        "focus_cost": 1
+       }
+      ]
+     },
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "focus_cost": 1
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 0,
+      "k": 2,
+      "w": 1
+     }
+    ]
+   },
+   "note": "direzioni esagoni attacco DA VERIFICARE"
+  },
+  "83": {
+   "name": "Blocco Ampio",
+   "type": "meditation",
+   "timing": "instant_additional",
+   "effects": [
+    {
+     "do": "block_initiative",
+     "n": 1
+    }
+   ],
+   "note": "gioca prima di scegliere l'iniziativa in un blocco; +1 all'intervallo"
+  },
+  "86": {
+   "name": "Colpo in Affondo",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dirs": [
+         5,
+         0,
+         1
+        ],
+        "n": 1,
+        "opt": true
+       }
+      ]
+     },
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "kamae": "balance"
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "switch_kamae",
+     "to": "balance"
+    },
+    {
+     "do": "draw",
+     "n": 1
+    }
+   ],
+   "note": "bersaglio switch_kamae DA VERIFICARE (balance/neutral)"
+  },
+  "87": {
+   "name": "Sabbia negli Occhi",
+   "type": "attack",
+   "timing": "instant_replacement",
+   "non_blockable": true,
+   "attack": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 0
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "w": 0
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 0
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "spend_focus",
+     "n": 2
+    },
+    {
+     "do": "switch_kamae",
+     "to": "neutral",
+     "when": "on_hit"
+    },
+    {
+     "do": "change_kamae",
+     "n": 1
+    }
+   ]
+  },
+  "113": {
+   "name": "Taglio Troncante",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "kamae": "determination"
+       },
+       {
+        "t": "step",
+        "dir": 3,
+        "n": 1,
+        "opt": true,
+        "kamae": "determination"
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1,
+      "tag": "bleed"
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "focus",
+     "n": 1,
+     "kamae": "aggression"
+    }
+   ],
+   "note": "esagono frontale con goccia (sanguinamento) DA VERIFICARE"
+  },
+  "116": {
+   "name": "Mente Rapida",
+   "type": "meditation",
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": -1,
+        "n": 2,
+        "opt": true
+       }
+      ]
+     },
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false,
+        "kamae": "aggression"
+       }
+      ]
+     },
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "kamae": "balance"
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "draw",
+     "n": 2
+    },
+    {
+     "do": "change_kamae",
+     "n": 1,
+     "kamae": "determination"
+    }
+   ]
+  },
+  "118": {
+   "name": "Blocco Selvaggio",
+   "type": "defence",
+   "play_cost": {
+    "discard": 2
+   },
+   "defence": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "v": 6
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "v": 5
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "v": 6
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "spend_focus",
+     "all": true,
+     "alt": "a"
+    },
+    {
+     "do": "spend_focus",
+     "all_but": 1,
+     "kamae": "balance",
+     "alt": "a"
+    },
+    {
+     "do": "switch_kamae",
+     "to": "neutral"
+    }
+   ],
+   "note": "valori di blocco e direzioni DA VERIFICARE"
+  },
+  "119": {
+   "name": "Fendente Selvaggio",
+   "type": "attack",
+   "play_cost": {
+    "discard": 2
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 2
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 2
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "spend_focus",
+     "all": true
+    },
+    {
+     "do": "switch_kamae",
+     "to": "neutral"
+    }
+   ]
+  },
+  "123": {
+   "name": "Respinta",
+   "type": "defence",
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1
+       }
+      ]
+     }
+    ]
+   },
+   "defence": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1
+     },
+     {
+      "d": 0,
+      "k": 1
+     },
+     {
+      "d": 1,
+      "k": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "push",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ]
+  },
+  "23": {
+   "name": "Carta Speciale Ronin",
+   "type": "core",
+   "play_cost": {
+    "discard": 1
+   },
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": -1,
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 2
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "draw",
+     "n": 2,
+     "alt": "a"
+    },
+    {
+     "do": "focus",
+     "n": 1,
+     "alt": "b"
+    },
+    {
+     "do": "switch_kamae",
+     "to": "any",
+     "alt": "b"
+    },
+    {
+     "do": "change_kamae",
+     "n": 1,
+     "alt": "c"
+    }
+   ]
+  },
+  "24": {
+   "name": "Vortice Cremisi",
+   "type": "attack",
+   "kamae_req": "aggression",
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 2,
+      "w": 2
+     },
+     {
+      "d": 1,
+      "k": 2,
+      "w": 2
+     },
+     {
+      "d": 2,
+      "k": 2,
+      "w": 2
+     },
+     {
+      "d": 3,
+      "k": 2,
+      "w": 2
+     },
+     {
+      "d": 4,
+      "k": 2,
+      "w": 2
+     },
+     {
+      "d": 5,
+      "k": 2,
+      "w": 2
+     }
+    ]
+   },
+   "move": {
+    "opts": [
+     {
+      "ordered": true,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "note": "attacco ad area anello-2 (anche i 6 esagoni intermedi sono colpiti); seconda sezione kamae non modellata"
+  },
+  "25": {
+   "name": "Armatura Pesante",
+   "type": "defence",
+   "timing": "persistent",
+   "effects": [
+    {
+     "do": "reduce_damage",
+     "n": 1,
+     "min": 1
+    },
+    {
+     "do": "focus",
+     "n": 1,
+     "when": "on_damage_reduced",
+     "kamae": "determination"
+    }
+   ],
+   "note": "RIMANE IN GIOCO; riga 'PRENDI 1' aggiuntiva DA VERIFICARE"
+  },
+  "26": {
+   "name": "Carica del Toro",
+   "type": "attack",
+   "kamae_req": "aggression",
+   "move": {
+    "opts": [
+     {
+      "ordered": true,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 2
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 2
+     }
+    ]
+   },
+   "note": "seconda sezione kamae (passo+attacco d0/d5 w1) non modellata"
+  },
+  "27": {
+   "name": "Affondo Invertito di Zanna",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": true
+       }
+      ]
+     },
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 3,
+        "n": 1,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 2,
+      "w": 2
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "push",
+     "n": 1,
+     "when": "on_hit",
+     "kamae": "aggression"
+    }
+   ]
+  },
+  "28": {
+   "name": "Il Terrore",
+   "type": "meditation",
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": -1,
+        "n": 2,
+        "opt": true,
+        "kamae": "aggression"
+       },
+       {
+        "t": "rot",
+        "n": 2,
+        "kamae": "aggression"
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "cancel_movement"
+    },
+    {
+     "do": "rotate_target",
+     "n": 1
+    }
+   ],
+   "note": "DISTANZA; effetti 'per ogni samurai' DA VERIFICARE"
+  },
+  "29": {
+   "name": "Spazzata Feroce",
+   "type": "attack",
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 2,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 2,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dirs": [
+         5,
+         0,
+         1
+        ],
+        "n": 1,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "switch_kamae",
+     "to": "aggression",
+     "kamae": "determination"
+    }
+   ]
+  },
+  "30": {
+   "name": "Artigli Laceranti",
+   "type": "meditation",
+   "timing": "instant_additional",
+   "effects": [
+    {
+     "do": "replace_wound_bleed",
+     "n": 1,
+     "when": "on_hit",
+     "kamae": "aggression"
+    }
+   ]
+  },
+  "31": {
+   "name": "Difesa d'Acciaio",
+   "type": "defence",
+   "defence": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "v": 6
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "v": 5
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "v": 4
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "rotate_target",
+     "n": 1,
+     "when": "on_hit"
+    },
+    {
+     "do": "change_kamae",
+     "n": 2,
+     "kamae": "determination"
+    }
+   ],
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false,
+        "kamae": "determination"
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "kamae": "determination"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "32": {
+   "name": "Balzo del Lupo",
+   "type": "attack",
+   "timing": "instant_replacement",
+   "move": {
+    "opts": [
+     {
+      "ordered": true,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1,
+      "tag": "bleed"
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "rotate_target",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
+   "note": "esagono frontale=goccia; effetto SE RIUSCITO DA VERIFICARE"
+  },
+  "33": {
+   "name": "Colpo alle Caviglie",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 1
+       }
+      ]
+     },
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 3,
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 1
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 2,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "rotate_target",
+     "n": 1
+    },
+    {
+     "do": "draw",
+     "n": 1,
+     "alt": "a"
+    },
+    {
+     "do": "draw",
+     "n": 2,
+     "alt": "a",
+     "kamae": "balance"
+    }
+   ]
+  },
+  "34": {
+   "name": "Ritirata Composta",
+   "type": "meditation",
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dirs": [
+         5,
+         0,
+         1
+        ],
+        "n": 1,
+        "opt": true,
+        "kamae": "aggression"
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "kamae": "aggression"
+       }
+      ]
+     },
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": -1,
+        "n": 1,
+        "opt": true,
+        "kamae": "balance"
+       },
+       {
+        "t": "rot",
+        "n": 2,
+        "kamae": "balance"
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "focus",
+     "n": 1
+    },
+    {
+     "do": "draw",
+     "n": 3
+    }
+   ]
+  },
+  "35": {
+   "name": "Chiatta di Buoi",
+   "type": "attack",
+   "non_blockable": true,
+   "move": {
+    "opts": [
+     {
+      "ordered": true,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "focus_cost": 1
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 0
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "rotate_target",
+     "n": 1,
+     "when": "on_hit"
+    },
+    {
+     "do": "push",
+     "n": 1,
+     "when": "on_hit"
+    },
+    {
+     "do": "switch_kamae",
+     "to": "aggression"
+    }
+   ],
+   "note": "carica: nessuna ferita stampata, colpisce il fronte e spinge"
+  },
+  "71": {
+   "name": "Spazzata di Naginata",
+   "type": "attack",
+   "play_cost": {
+    "discard": 1
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 2,
+      "w": 1
+     },
+     {
+      "d": 5,
+      "k": 2,
+      "w": 1
+     },
+     {
+      "d": 5,
+      "k": 1,
+      "w": 0,
+      "tag": "char"
+     }
+    ]
+   },
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": -1,
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 1
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "spend_focus",
+     "n": 1,
+     "note": "*! aggiunge una ferita all'esagono char"
+    }
+   ]
+  },
+  "89": {
+   "name": "Blocco d'Emergenza",
+   "type": "defence",
+   "timing": "instant_replacement",
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "kamae": "balance"
+       }
+      ]
+     },
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 2,
+        "kamae": "determination"
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "switch_kamae",
+     "to": "neutral"
+    }
+   ],
+   "note": "blocco via rotazione, nessun diagramma esagoni"
+  },
+  "98": {
+   "name": "Grido di Guerra",
+   "type": "meditation",
+   "move": {
+    "opts": [
+     {
+      "ordered": true,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "kamae": "balance"
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "cancel_movement"
+    },
+    {
+     "do": "draw",
+     "n": 2,
+     "kamae": "determination"
+    },
+    {
+     "do": "switch_kamae",
+     "to": "aggression"
+    }
+   ]
+  },
+  "102": {
+   "name": "Mente Risoluta",
+   "type": "meditation",
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": -1,
+        "n": 2,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 2
+       }
+      ]
+     },
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "kamae": "determination"
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "change_kamae",
+     "n": 1
+    },
+    {
+     "do": "draw",
+     "n": 2,
+     "alt": "a"
+    },
+    {
+     "do": "draw",
+     "n": 3,
+     "alt": "a",
+     "kamae": "balance"
+    }
+   ]
+  },
+  "104": {
+   "name": "Colpo Azzoppante",
+   "type": "meditation",
+   "timing": "instant_additional",
+   "effects": [
+    {
+     "do": "push",
+     "n": 1,
+     "when": "on_hit",
+     "kamae": "aggression"
+    }
+   ],
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 3,
+        "n": 1,
+        "opt": true,
+        "kamae": "determination"
+       }
+      ]
+     }
+    ]
+   },
+   "note": "GIOCA SE L'ATTACCO E RIUSCITO; icona azzoppa nel trigger"
+  },
+  "107": {
+   "name": "Affondo in Spinta",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false,
+        "kamae": "aggression"
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "kamae": "determination"
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 2,
+      "w": 2
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "rotate_target",
+     "n": 1,
+     "when": "on_hit"
+    },
+    {
+     "do": "switch_kamae",
+     "to": "aggression"
+    }
+   ]
+  },
+  "125": {
+   "name": "Calcio del Cavallo",
+   "type": "attack",
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 0,
+      "tag": "char"
+     },
+     {
+      "d": 5,
+      "k": 1,
+      "w": 0
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 0
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "push",
+     "n": 1,
+     "when": "on_hit",
+     "alt": "a"
+    },
+    {
+     "do": "push",
+     "n": 2,
+     "when": "on_hit",
+     "alt": "a",
+     "kamae": "determination"
+    }
+   ],
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": true
+       }
+      ]
+     },
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": -1,
+        "n": 1,
+        "opt": true,
+        "kamae": "balance"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "126": {
+   "name": "Colpo d'Elsa",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dirs": [
+         5,
+         0,
+         1
+        ],
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "kamae": "balance"
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "rotate_target",
+     "n": 1,
+     "when": "on_hit"
+    },
+    {
+     "do": "spend_focus",
+     "n": 1,
+     "kamae": "determination"
+    },
+    {
+     "do": "focus",
+     "n": 1,
+     "kamae": "aggression"
+    }
+   ]
+  },
+  "127": {
+   "name": "Spinta Indietro",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 0,
+      "tag": "char"
+     },
+     {
+      "d": 5,
+      "k": 1,
+      "w": 0
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 0
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "push",
+     "n": 2,
+     "when": "on_hit"
+    }
+   ]
   }
+ },
+ "characters": {
+  "Warrior": {
+   "card_id": 51,
+   "name": "Vendetta Sorta dal Fuoco",
+   "wound_limit": 5,
+   "hand_limit": 5,
+   "weapons": [
+    "Kanabo",
+    "Naginata",
+    "Nodachi",
+    "Yari"
+   ]
+  },
+  "Ronin": {
+   "card_id": 21,
+   "name": "Un Lupo Solitario senza Padrone",
+   "wound_limit": 5,
+   "hand_limit": 5,
+   "weapons": [
+    "Kanabo",
+    "Naginata",
+    "Nodachi",
+    "Yari"
+   ]
+  }
+ }
 }

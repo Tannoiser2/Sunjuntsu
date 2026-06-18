@@ -351,8 +351,8 @@ func _refresh_overlays() -> void:
 				(_tiles[cell] as MeshInstance3D).material_override = _tile_mat(cell, "move")
 		_hud.set_hint("Muovi (giallo) · Q/E ruota · SPAZIO = non muovere · poi i bersagli" + sfx)
 	elif _selected_card.get("type", "") == "attack":
-		# FASE 2 — bersagli attaccabili (rosso).
-		for cell in Duel.attack_cells(f.cell, f.facing, g, 1):
+		# FASE 2 — bersagli attaccabili (rosso). Schema v2 (celle per-esagono).
+		for cell in Duel.attack_v2_cells(f.cell, f.facing, g, 1):
 			if _tiles.has(cell):
 				_attack_preview.append(cell)
 				(_tiles[cell] as MeshInstance3D).material_override = _tile_mat(cell, "attack")

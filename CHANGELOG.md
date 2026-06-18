@@ -3,6 +3,16 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.10.0] — 2026-06-18
+### Aggiunto (re-trascrizione fedele delle carte + meccaniche — punto "rework")
+- **Schema dati v2** (`data/cards/geometry.json`): attacchi/difese descritti **esagono per esagono** (`cells`: direzione relativa, anello, ferite / valore di blocco) invece di `dirs`+ferite uniformi; lista **`effects`** ordinata con finestra (`on_hit`/`always`), gate Kamae per riga e **costo focus opzionale**; `play_cost` (focus + "scarta N carte"); `timing` per le carte istantanee/persistenti.
+- **Re-trascrizione di tutte le 44 carte** Guerriero+Ronin rilette dalle scansioni ad alta risoluzione dei PDF, dopo che la verifica aveva trovato errori diffusi (vedi report): archi d'attacco, componenti di movimento mancanti, gate Kamae, e soprattutto i **costi in focus** (prima letti come guadagni).
+- **Motore aggiornato** (`Duel`): risoluzione per celle d'attacco con ferite per-esagono; interprete effetti (spinta, sanguinamento, sostituisci-ferita, focus, azzoppa, ruota-bersaglio, pesca, cambia/passa Kamae) con gate e alternative "OPPURE"; effetti esotici (riduci danno, annulla movimento, intervallo blocco) registrati come "non ancora simulati".
+- **Overlay arena** dei bersagli allineato alle celle v2.
+- Test deterministici (`tests/test_duel_smoke.tscn`).
+
+> **DA VERIFICARE sul gioco fisico** (segnati con `note` nei dati): alcuni diagrammi a 2 anelli e valori di blocco (#55 Fenice, #24 Vortice, #63/#118 difese, #71 Naginata) — le scansioni non distinguono sempre esagoni "bordo" da "angolo". La Testata (#64) è confermata dall'utente.
+
 ## [0.9.0] — 2026-06-18
 ### Aggiunto (blocchi / iniziativa variabile — punto 3)
 - **Blocco fedele per aggancio di velocità**: una difesa rivelata para l'attacco avversario solo se la sua velocità d'iniziativa **scelta combacia** con quella dell'attacco (non più "para il primo attacco" a caso).
