@@ -1785,8 +1785,7 @@
         "t": "step",
         "dir": 0,
         "n": 1,
-        "opt": false,
-        "kamae": "aggression"
+        "opt": false
        },
        {
         "t": "rot",
@@ -1816,7 +1815,8 @@
      "do": "switch_kamae",
      "to": "aggression"
     }
-   ]
+   ],
+   "note": "passo avanti = riga libera (corretto su feedback utente); rotazione gated determination"
   },
   "125": {
    "name": "Calcio del Cavallo",
