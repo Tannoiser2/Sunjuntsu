@@ -20,7 +20,8 @@
        },
        {
         "t": "rot",
-        "n": 2
+        "n": 2,
+        "opt": true
        }
       ]
      }
@@ -134,7 +135,8 @@
       "atoms": [
        {
         "t": "rot",
-        "n": 1
+        "n": 1,
+        "opt": true
        }
       ]
      }
@@ -190,7 +192,8 @@
        {
         "t": "rot",
         "n": 2,
-        "kamae": "balance"
+        "kamae": "balance",
+        "opt": true
        }
       ]
      }
@@ -280,7 +283,8 @@
        },
        {
         "t": "rot",
-        "n": 1
+        "n": 1,
+        "opt": true
        }
       ]
      },
@@ -297,7 +301,8 @@
        {
         "t": "rot",
         "n": 2,
-        "kamae": "balance"
+        "kamae": "balance",
+        "opt": true
        }
       ]
      }
@@ -585,7 +590,8 @@
        {
         "t": "rot",
         "n": 1,
-        "kamae": "balance"
+        "kamae": "balance",
+        "opt": true
        }
       ]
      },
@@ -606,7 +612,8 @@
        {
         "t": "rot",
         "n": 1,
-        "kamae": "determination"
+        "kamae": "determination",
+        "opt": true
        }
       ]
      }
@@ -635,7 +642,7 @@
         "t": "step",
         "dir": 0,
         "n": 1,
-        "opt": false,
+        "opt": true,
         "focus_cost": 1
        }
       ]
@@ -646,7 +653,7 @@
        {
         "t": "rot",
         "n": 1,
-        "focus_cost": 1
+        "opt": true
        }
       ]
      }
@@ -706,7 +713,8 @@
        {
         "t": "rot",
         "n": 1,
-        "kamae": "balance"
+        "kamae": "balance",
+        "opt": true
        }
       ]
      }
@@ -784,7 +792,7 @@
        {
         "t": "rot",
         "n": 1,
-        "kamae": "determination"
+        "opt": true
        },
        {
         "t": "step",
@@ -839,7 +847,7 @@
         "t": "step",
         "dir": 0,
         "n": 1,
-        "opt": false,
+        "opt": true,
         "kamae": "aggression"
        }
       ]
@@ -850,7 +858,8 @@
        {
         "t": "rot",
         "n": 1,
-        "kamae": "balance"
+        "kamae": "balance",
+        "opt": true
        }
       ]
      }
@@ -953,7 +962,8 @@
       "atoms": [
        {
         "t": "rot",
-        "n": 1
+        "n": 1,
+        "opt": true
        }
       ]
      }
@@ -1002,7 +1012,8 @@
        },
        {
         "t": "rot",
-        "n": 2
+        "n": 2,
+        "opt": true
        }
       ]
      }
@@ -1078,7 +1089,7 @@
         "t": "step",
         "dir": 0,
         "n": 1,
-        "opt": false
+        "opt": true
        }
       ]
      }
@@ -1118,7 +1129,7 @@
         "t": "step",
         "dir": 0,
         "n": 1,
-        "opt": false
+        "opt": true
        }
       ]
      }
@@ -1205,7 +1216,8 @@
        {
         "t": "rot",
         "n": 2,
-        "kamae": "aggression"
+        "kamae": "aggression",
+        "opt": true
        }
       ]
      }
@@ -1327,13 +1339,14 @@
         "t": "step",
         "dir": 0,
         "n": 1,
-        "opt": false,
+        "opt": true,
         "kamae": "determination"
        },
        {
         "t": "rot",
         "n": 1,
-        "kamae": "determination"
+        "kamae": "determination",
+        "opt": true
        }
       ]
      }
@@ -1353,7 +1366,7 @@
         "t": "step",
         "dir": 0,
         "n": 1,
-        "opt": false
+        "opt": true
        }
       ]
      }
@@ -1394,7 +1407,8 @@
        },
        {
         "t": "rot",
-        "n": 1
+        "n": 1,
+        "opt": true
        }
       ]
      },
@@ -1409,7 +1423,8 @@
        },
        {
         "t": "rot",
-        "n": 1
+        "n": 1,
+        "opt": true
        }
       ]
      }
@@ -1463,13 +1478,12 @@
          1
         ],
         "n": 1,
-        "opt": true,
-        "kamae": "aggression"
+        "opt": true
        },
        {
         "t": "rot",
         "n": 1,
-        "kamae": "aggression"
+        "opt": true
        }
       ]
      },
@@ -1486,7 +1500,8 @@
        {
         "t": "rot",
         "n": 2,
-        "kamae": "balance"
+        "kamae": "balance",
+        "opt": true
        }
       ]
      }
@@ -1516,7 +1531,7 @@
         "t": "step",
         "dir": 0,
         "n": 1,
-        "opt": false
+        "opt": true
        },
        {
         "t": "step",
@@ -1527,7 +1542,8 @@
        {
         "t": "rot",
         "n": 1,
-        "focus_cost": 1
+        "focus_cost": 1,
+        "opt": true
        }
       ]
      }
@@ -1599,7 +1615,8 @@
        },
        {
         "t": "rot",
-        "n": 1
+        "n": 1,
+        "opt": true
        }
       ]
      }
@@ -1625,7 +1642,8 @@
        {
         "t": "rot",
         "n": 1,
-        "kamae": "balance"
+        "kamae": "balance",
+        "opt": true
        }
       ]
      },
@@ -1635,7 +1653,8 @@
        {
         "t": "rot",
         "n": 2,
-        "kamae": "determination"
+        "kamae": "determination",
+        "opt": true
        }
       ]
      }
@@ -1661,7 +1680,7 @@
         "t": "step",
         "dir": 0,
         "n": 1,
-        "opt": false
+        "opt": true
        },
        {
         "t": "step",
@@ -1672,7 +1691,8 @@
        {
         "t": "rot",
         "n": 1,
-        "kamae": "balance"
+        "kamae": "balance",
+        "opt": true
        }
       ]
      }
@@ -1709,7 +1729,8 @@
        },
        {
         "t": "rot",
-        "n": 2
+        "n": 2,
+        "opt": true
        }
       ]
      },
@@ -1719,7 +1740,8 @@
        {
         "t": "rot",
         "n": 1,
-        "kamae": "determination"
+        "kamae": "determination",
+        "opt": true
        }
       ]
      }
@@ -1785,12 +1807,13 @@
         "t": "step",
         "dir": 0,
         "n": 1,
-        "opt": false
+        "opt": true
        },
        {
         "t": "rot",
         "n": 1,
-        "kamae": "determination"
+        "kamae": "determination",
+        "opt": true
        }
       ]
      }
@@ -1905,7 +1928,8 @@
        {
         "t": "rot",
         "n": 1,
-        "kamae": "balance"
+        "kamae": "balance",
+        "opt": true
        }
       ]
      }
@@ -1948,7 +1972,8 @@
       "atoms": [
        {
         "t": "rot",
-        "n": 1
+        "n": 1,
+        "opt": true
        }
       ]
      }

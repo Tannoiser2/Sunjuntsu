@@ -39,6 +39,11 @@ var _move_states: Dictionary = {}  ## cella -> Array[int] facing legali (dalla c
 var _kamae_used: bool = false      ## cambio kamae della carta corrente già fatto
 var _ground: MeshInstance3D
 
+## Fase dell'interazione: "planning" (programmi una carta) o "resolving"
+## (tocca a te risolvere: muovi + attacca nell'ordine d'iniziativa).
+var _phase_mode: String = "planning"
+var _resolving_index: int = -1     ## chi sta risolvendo ora (-1 = nessuno)
+
 
 func _ready() -> void:
 	state = GameState.new()
@@ -58,6 +63,9 @@ func _build_hud() -> void:
 
 func _start_duel() -> void:
 	_duel = Duel.new(state)
+	_duel.interactive = true
+	_duel.cards_revealed.connect(_on_cards_revealed)
+	_duel.await_resolution.connect(_on_await_resolution)
 	_duel.turn_resolved.connect(_on_turn_resolved)
 	_duel.fighter_updated.connect(_on_fighter_updated)
 	_duel.duel_over.connect(_on_duel_over)
@@ -71,10 +79,15 @@ func _start_duel() -> void:
 	_refresh_hand()
 	_refresh_status()
 	_apply_pawn_facing(0); _apply_pawn_facing(1)
-	_hud.set_hint("Seleziona una carta → giallo = passi consentiti, rosso = arco. Click su giallo = muovi · Q/E ruota · 2°click carta = gioca · CALIBRA +/- frecce R")
+	_hud.set_info("Pianificazione — scegli e programma una carta")
+	_hud.set_hint("PIANIFICAZIONE: 1° click anteprima · 2° click PROGRAMMA. Poi rivelazione e risoluzione per iniziativa (muovi/attacca al tuo turno).")
 
 
+## 2° click su una carta = PROGRAMMA la carta coperta (fase di pianificazione).
+## Il movimento NON avviene ora: si farà in risoluzione, nell'ordine d'iniziativa.
 func _on_card_played(card_data: Dictionary) -> void:
+	if _phase_mode != "planning":
+		return   # durante la risoluzione la mano è bloccata
 	var id := int(card_data.get("id", -1))
 	if id == -1:
 		return
@@ -90,11 +103,10 @@ func _on_card_played(card_data: Dictionary) -> void:
 		_hud.set_hint("◈ Focus insufficiente: servono %d, ne hai %d" % [cost, f.focus])
 		return   # la carta resta in mano
 	_selected_card = {}
-	_move_used = false
-	_kamae_used = false
 	_clear_overlays()
 	_hud.hide_kamae()
-	_duel.plan_card(0, id)
+	_hud.set_info("Carta programmata (coperta). Rivelazione…")
+	_duel.plan_card(0, id)   # → quando entrambi pronti parte begin_resolution()
 	_refresh_hand()
 
 
@@ -103,12 +115,77 @@ func _on_fighter_updated(_i: int) -> void:
 	_refresh_status()
 
 
+## Entrambe le carte rivelate: mostra cosa ha giocato l'avversario.
+func _on_cards_revealed(planned: Dictionary) -> void:
+	var mine := int(planned.get(0, -1))
+	var theirs := int(planned.get(1, -1))
+	var my_name: String = CardDB.card(mine).get("name", "—")
+	var their_name: String = CardDB.card(theirs).get("name", "—")
+	_hud.set_info("Rivelazione — Tu: %s · Avversario: %s" % [my_name, their_name])
+
+
+## Tocca a `i` risolvere (ordine d'iniziativa). Se sei tu, muovi e attacca;
+## se è l'IA, agisce da sola.
+func _on_await_resolution(i: int) -> void:
+	_resolving_index = i
+	if i == 0:
+		_phase_mode = "resolving"
+		_move_used = false
+		_kamae_used = false
+		_selected_card = CardDB.card(state.fighters[0].planned).duplicate()
+		_selected_card["id"] = state.fighters[0].planned
+		_refresh_overlays()
+		_refresh_kamae_chooser()
+		_hud.set_info("⚔ Tua risoluzione: %s" % _selected_card.get("name", "?"))
+	else:
+		_phase_mode = "ai"
+		_clear_overlays()
+		_hud.hide_kamae()
+		_hud.set_info("L'avversario agisce…")
+		_run_ai_resolution(i)
+
+
+## L'IA muove verso il bersaglio, si orienta e poi risolve la sua carta.
+func _run_ai_resolution(i: int) -> void:
+	var f := state.fighters[i]
+	var foe := state.opponent_of(f)
+	if foe != null:
+		var g := CardDB.geometry(f.planned)
+		if g.has("move"):
+			var dest := AI.move_target(state, f)
+			if dest != f.cell and not state.is_blocked(dest):
+				f.cell = dest
+			f.facing = AI.facing_toward(f.cell, foe.cell)
+			_sync_pawns(); _apply_pawn_facing(i)
+	# Piccola pausa per leggibilità, poi applica la carta.
+	var t := get_tree().create_timer(0.6)
+	t.timeout.connect(func():
+		if is_instance_valid(self) and _duel != null:
+			_duel.resolve_current())
+
+
+## Conferma la risoluzione della carta del giocatore (movimento già fatto).
+func _confirm_resolution() -> void:
+	if _phase_mode != "resolving" or _resolving_index != 0:
+		return
+	_phase_mode = "wait"
+	_clear_overlays()
+	_hud.hide_kamae()
+	_selected_card = {}
+	_duel.resolve_current()
+
+
 func _on_turn_resolved(log: Array) -> void:
+	_phase_mode = "planning"
+	_resolving_index = -1
+	_selected_card = {}
+	_clear_overlays()
+	_hud.hide_kamae()
 	_sync_pawns()
 	_refresh_hand()
 	_refresh_status()
 	if not log.is_empty():
-		_hud.set_hint(String("\n").join(log).left(220))
+		_hud.set_hint(String("\n").join(log).left(220) + "\n— Programma la prossima carta —")
 
 
 func _on_duel_over(winner: int) -> void:
@@ -349,16 +426,16 @@ func _refresh_overlays() -> void:
 			_highlighted.append(cell)
 			if _tiles.has(cell):
 				(_tiles[cell] as MeshInstance3D).material_override = _tile_mat(cell, "move")
-		_hud.set_hint("Muovi (giallo) · Q/E ruota · SPAZIO = non muovere · poi i bersagli" + sfx)
+		_hud.set_hint("Muovi (giallo) · Q/E ruota · SPAZIO = non muovere · INVIO = risolvi" + sfx)
 	elif _selected_card.get("type", "") == "attack":
 		# FASE 2 — bersagli attaccabili (rosso). Schema v2 (celle per-esagono).
 		for cell in Duel.attack_v2_cells(f.cell, f.facing, g, 1):
 			if _tiles.has(cell):
 				_attack_preview.append(cell)
 				(_tiles[cell] as MeshInstance3D).material_override = _tile_mat(cell, "attack")
-		_hud.set_hint("Bersagli (rosso) · Q/E ruota · 2° click = gioca" + sfx)
+		_hud.set_hint("Bersagli (rosso) · Q/E ruota · INVIO = attacca/risolvi" + sfx)
 	else:
-		_hud.set_hint("2° click = gioca · Q/E ruota" + sfx)
+		_hud.set_hint("INVIO = risolvi · Q/E ruota" + sfx)
 
 
 ## Indica quali Kamae sbloccherebbero ulteriori movimenti della carta selezionata.
@@ -392,11 +469,14 @@ func _facing_angle(cell: Vector2i, facing: int) -> float:
 
 ## Selezione di una carta: mostra i passi consentiti e l'arco d'attacco.
 func _on_card_selected(card_data: Dictionary) -> void:
+	if _phase_mode != "planning":
+		return   # durante la risoluzione la mano non cambia l'anteprima
 	_selected_card = card_data
 	_move_used = false
 	_kamae_used = false
-	_refresh_overlays()
-	_refresh_kamae_chooser()
+	_refresh_overlays()   # anteprima informativa (il movimento avverrà in risoluzione)
+	_hud.hide_kamae()
+	_hud.set_hint("Anteprima: giallo = mosse della carta, rosso = arco. 2° click = PROGRAMMA (coperta).")
 
 
 ## Mostra il selettore Kamae se la carta consente di cambiare posizione.
@@ -501,6 +581,9 @@ func _update_calib_hint() -> void:
 
 
 func _move_active_to(cell: Vector2i) -> void:
+	# Il movimento è possibile solo durante la TUA risoluzione.
+	if _phase_mode != "resolving" or _resolving_index != 0:
+		return
 	# Muovi solo verso le celle consentite dalla carta selezionata.
 	if _move_used or not _highlighted.has(cell):
 		return
@@ -538,13 +621,22 @@ func _unhandled_input(event: InputEvent) -> void:
 			_set_hex_size(hex_size + 0.05); return
 		if event.unicode == 45:  # '-'
 			_set_hex_size(hex_size - 0.05); return
+		var my_turn := _phase_mode == "resolving" and _resolving_index == 0
 		match event.keycode:
-			KEY_Q: _rotate_player(-1); return
-			KEY_E: _rotate_player(1); return
+			KEY_Q:
+				if my_turn: _rotate_player(-1)
+				return
+			KEY_E:
+				if my_turn: _rotate_player(1)
+				return
 			KEY_SPACE:   # non muovere: passa alla fase bersagli
-				if not _selected_card.is_empty() and not _move_used:
+				if my_turn and not _move_used:
 					_move_used = true
 					_refresh_overlays()
+				return
+			KEY_ENTER, KEY_KP_ENTER:   # conferma: applica attacco/effetti
+				if my_turn:
+					_confirm_resolution()
 				return
 			# ── Calibrazione griglia↔mappa ──
 			KEY_KP_ADD: _set_hex_size(hex_size + 0.05); return

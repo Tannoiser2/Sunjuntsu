@@ -20,8 +20,22 @@ signal phase_changed(phase: int)
 signal turn_resolved(log: Array)          ## righe testuali di cosa è successo
 signal fighter_updated(index: int)        ## stato cambiato (ferite/focus/mano)
 signal duel_over(winner_index: int)
+signal cards_revealed(planned: Dictionary)   ## fi → card_id (fase rivelazione)
+signal await_resolution(index: int)          ## tocca a `index` risolvere (mossa interattiva)
 
 var state: GameState
+
+## Modalità interattiva: la risoluzione avviene a passi guidati dalla scena
+## (programma → rivela → risolvi in ordine d'iniziativa). Se false, la
+## risoluzione è sincrona (usata dai test headless).
+var interactive: bool = false
+
+## Stato della risoluzione interattiva in corso.
+var _order: Array = []
+var _order_idx: int = -1
+var _block_ready: Dictionary = {}
+var _fizzled: Dictionary = {}
+var _res_log: Array = []
 
 ## Velocità d'iniziativa scelta da ogni combattente per il turno corrente
 ## (indice → valore). Le difese a iniziativa variabile scelgono il valore che
@@ -62,7 +76,10 @@ func plan_card(fighter_index: int, card_id: int) -> bool:
 	f.hand.erase(card_id)
 	_autoplan_ai()
 	if _all_planned():
-		_resolve_turn()
+		if interactive:
+			begin_resolution()
+		else:
+			_resolve_turn()
 	return true
 
 
@@ -77,15 +94,16 @@ func _autoplan_ai() -> void:
 	for i in range(state.fighters.size()):
 		var f := state.fighters[i]
 		if f.is_ai and f.planned == -1 and not f.hand.is_empty():
-			# Movimento posizionale dell'IA prima di rivelare.
-			var dest := AI.move_target(state, f)
-			if dest != f.cell:
-				f.cell = dest
-			# L'IA si orienta verso l'avversario.
-			var foe := state.opponent_of(f)
-			if foe != null:
-				f.facing = AI.facing_toward(f.cell, foe.cell)
-			fighter_updated.emit(i)
+			# In modalità interattiva l'IA si muove durante la sua risoluzione
+			# (non prima della rivelazione). Qui sceglie solo la carta.
+			if not interactive:
+				var dest := AI.move_target(state, f)
+				if dest != f.cell:
+					f.cell = dest
+				var foe := state.opponent_of(f)
+				if foe != null:
+					f.facing = AI.facing_toward(f.cell, foe.cell)
+				fighter_updated.emit(i)
 			var pick := AI.choose_card(state, f)
 			if pick != -1:
 				f.planned = pick
@@ -101,12 +119,13 @@ func _all_planned() -> bool:
 
 # ─── Risoluzione del turno ───────────────────────────────────────────────────
 
-func _resolve_turn() -> void:
+## Prepara la risoluzione: paga i costi, calcola velocità scelte, blocchi e
+## ordine d'iniziativa. Popola _fizzled, _block_ready, _order, _res_log.
+func _setup_resolution() -> void:
 	_set_phase(Domain.Phase.RESOLUTION)
-	var log: Array = []
-
+	_res_log = []
+	_fizzled = {}
 	# Paga i costi di focus obbligatori; se non basta, la carta "svanisce".
-	var fizzled := {}
 	for i in range(state.fighters.size()):
 		var f := state.fighters[i]
 		if f.planned == -1:
@@ -119,43 +138,90 @@ func _resolve_turn() -> void:
 			if f.focus >= cost:
 				f.focus -= cost
 			else:
-				fizzled[i] = true
-				log.append("%s: focus insufficiente per %s — la carta svanisce" % [
+				_fizzled[i] = true
+				_res_log.append("%s: focus insufficiente per %s — la carta svanisce" % [
 					f.character, c.get("name", "?")])
 				continue
-		# Costo "scarta N carte" (pagato dalla mano).
 		var disc := int(pc.get("discard", 0))
 		for _k in range(disc):
 			if f.hand.is_empty():
 				break
 			f.discard.append(f.hand.pop_back())
 
-	# Velocità d'iniziativa scelte: prima i non-difensori (valore alto), poi le
-	# difese che agganciano la velocità dell'attacco avversario.
-	_resolve_chosen_speeds(fizzled)
+	_resolve_chosen_speeds(_fizzled)
 
-	# Difese rivelate (non svanite): blocco disponibile alla loro velocità scelta.
-	# block_ready[i] = velocità a cui i para (un solo attacco per difesa).
-	var block_ready := {}
+	_block_ready = {}
 	for i in range(state.fighters.size()):
 		var f := state.fighters[i]
-		if f.planned != -1 and not fizzled.has(i):
+		if f.planned != -1 and not _fizzled.has(i):
 			if CardDB.card(f.planned).get("type", "") == "defence":
-				block_ready[i] = _chosen.get(i, -1)
+				_block_ready[i] = _chosen.get(i, -1)
 
-	# Ordine di iniziativa (più alta agisce prima).
-	for i in _initiative_order():
+	_order = _initiative_order()
+
+
+## Risoluzione sincrona (test headless / modalità non interattiva).
+func _resolve_turn() -> void:
+	_setup_resolution()
+	for i in _order:
 		if state.fighters[i].is_defeated():
 			continue
-		if state.fighters[i].planned == -1 or fizzled.has(i):
+		if state.fighters[i].planned == -1 or _fizzled.has(i):
 			continue
-		_resolve_card(i, block_ready, log)
+		_resolve_card(i, _block_ready, _res_log)
 		var w := _check_winner()
 		if w != -2:
-			_finish(log, w)
+			_finish(_res_log, w)
 			return
+	_cleanup(_res_log)
 
-	_cleanup(log)
+
+# ─── Risoluzione interattiva (programma → rivela → risolvi per iniziativa) ─────
+
+## Avvia la risoluzione interattiva: rivela le carte ed emette `await_resolution`
+## per il primo combattente nell'ordine d'iniziativa. La scena guida il
+## movimento/attacco e poi chiama `resolve_current()`.
+func begin_resolution() -> void:
+	_setup_resolution()
+	_order_idx = -1
+	var planned := {}
+	for i in range(state.fighters.size()):
+		planned[i] = state.fighters[i].planned
+	cards_revealed.emit(planned)
+	_advance_resolution()
+
+
+func _advance_resolution() -> void:
+	_order_idx += 1
+	while _order_idx < _order.size():
+		var i: int = _order[_order_idx]
+		if state.fighters[i].is_defeated() or state.fighters[i].planned == -1 or _fizzled.has(i):
+			_order_idx += 1
+			continue
+		await_resolution.emit(i)
+		return
+	_cleanup(_res_log)
+
+
+## Indice del combattente che deve risolvere ora (-1 se nessuno).
+func current_resolver() -> int:
+	if _order_idx < 0 or _order_idx >= _order.size():
+		return -1
+	return _order[_order_idx]
+
+
+## La scena ha completato la mossa del combattente corrente: applica la carta e
+## prosegui nell'ordine d'iniziativa (o termina/riordina).
+func resolve_current() -> void:
+	var i := current_resolver()
+	if i == -1:
+		return
+	_resolve_card(i, _block_ready, _res_log)
+	var w := _check_winner()
+	if w != -2:
+		_finish(_res_log, w)
+		return
+	_advance_resolution()
 
 
 ## Calcola la velocità d'iniziativa scelta da ogni combattente per il turno.

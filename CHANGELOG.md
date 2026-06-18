@@ -3,6 +3,14 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.11.0] — 2026-06-18
+### Cambiato (sequenza di turno fedele + correzioni movimento)
+- **Sequenza di turno fedele al regolamento**: ora **programmi una carta coperta** (1° click anteprima, 2° click programma), poi **rivelazione** simultanea, poi **risoluzione nell'ordine d'iniziativa**. Al tuo turno di risoluzione **muovi** (esagoni gialli, Q/E ruota) e poi **INVIO** per attaccare/risolvere. L'IA agisce al suo turno. Niente più movimento/risoluzione immediati durante la sola selezione.
+  - `Duel`: risoluzione a passi (`begin_resolution`/`await_resolution`/`resolve_current`) con segnale di rivelazione; percorso sincrono mantenuto per i test.
+  - `Arena`: macchina a fasi (pianificazione/risoluzione); il movimento sulla board è abilitato solo durante la tua risoluzione.
+- **Correzioni ai movimenti** (audit carta-per-carta sulle scansioni): le **rotazioni sono opzionali** (non obbligatorie), e alcune righe-movimento "libere" erano state gate-ate per errore — corretti i gate di **#34, #72, #113** e il passo avanti di **#107** (segnalato dall'utente).
+- Test del flusso interattivo (`tests/test_interactive.tscn`).
+
 ## [0.10.0] — 2026-06-18
 ### Aggiunto (re-trascrizione fedele delle carte + meccaniche — punto "rework")
 - **Schema dati v2** (`data/cards/geometry.json`): attacchi/difese descritti **esagono per esagono** (`cells`: direzione relativa, anello, ferite / valore di blocco) invece di `dirs`+ferite uniformi; lista **`effects`** ordinata con finestra (`on_hit`/`always`), gate Kamae per riga e **costo focus opzionale**; `play_cost` (focus + "scarta N carte"); `timing` per le carte istantanee/persistenti.
