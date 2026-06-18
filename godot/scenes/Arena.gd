@@ -12,7 +12,6 @@ extends Node3D
 const TILE_GROUP := "hex_tile"
 
 @export var map_radius: int = 3    ## esagono di raggio 3 = 37 celle (colonne 4,5,6,7,6,5,4)
-@export var move_budget: int = 3   ## passi consentiti per dimostrare il movimento
 # ─── Calibrazione mappa↔griglia (regolabili nell'editor) ─────────────────────
 @export var hex_size: float = 3.0          ## raggio esagono in unità mondo
 @export var map_world_size: float = 44.0   ## lato del piano-mappa (la board occupa la parte centrale)
@@ -35,6 +34,7 @@ var _hud: CanvasLayer
 var _duel: Duel
 var _attack_preview: Array[Vector2i] = []
 var _selected_card: Dictionary = {}
+var _move_used: bool = false       ## movimento della carta corrente già speso
 var _ground: MeshInstance3D
 
 
@@ -44,7 +44,6 @@ func _ready() -> void:
 	_build_environment()
 	_build_map()
 	_spawn_pawns()
-	_select_pawn(0)
 	_build_hud()
 	_start_duel()
 
@@ -60,20 +59,21 @@ func _start_duel() -> void:
 	_duel.turn_resolved.connect(_on_turn_resolved)
 	_duel.fighter_updated.connect(_on_fighter_updated)
 	_duel.duel_over.connect(_on_duel_over)
-	_hud.card_selected.connect(func(d): _selected_card = d; _on_card_selected(d))
+	_hud.card_selected.connect(_on_card_selected)
 	_duel.start()
 	_refresh_hand()
 	_refresh_status()
 	_apply_pawn_facing(0); _apply_pawn_facing(1)
-	_hud.set_hint("Carta: 1°click seleziona, 2°gioca · Q/E ruota · click esagono = muovi · CALIBRA: +/- scala, frecce sposta mappa, R reset cam")
+	_hud.set_hint("Seleziona una carta → giallo = passi consentiti, rosso = arco. Click su giallo = muovi · Q/E ruota · 2°click carta = gioca · CALIBRA +/- frecce R")
 
 
 func _on_card_played(card_data: Dictionary) -> void:
 	var id := int(card_data.get("id", -1))
 	if id == -1:
 		return
-	_clear_attack_preview()
 	_selected_card = {}
+	_move_used = false
+	_clear_overlays()
 	if _duel.plan_card(0, id):
 		_refresh_hand()
 
@@ -95,7 +95,7 @@ func _on_duel_over(winner: int) -> void:
 	var who := "Pareggio" if winner < 0 else "%s vince!" % state.fighters[winner].character
 	_hud.set_info("⚔ Duello terminato — %s" % who)
 	_hud.show_hand([])
-	_clear_highlight()
+	_clear_overlays()
 
 
 ## Costruisce la mano del giocatore (pedina 0) come schede dati.
@@ -128,8 +128,7 @@ func _sync_pawns() -> void:
 			var tw := create_tween()
 			tw.tween_property(_pawns[i], "position", dest, 0.25).set_trans(Tween.TRANS_SINE)
 		_apply_pawn_facing(i)
-	if _active_pawn == 0:
-		_select_pawn(0)
+	_refresh_overlays()
 
 
 # ─── Costruzione scena ───────────────────────────────────────────────────────
@@ -274,24 +273,39 @@ func _spawn_pawns() -> void:
 
 # ─── Selezione e movimento ───────────────────────────────────────────────────
 
-func _select_pawn(index: int) -> void:
-	_active_pawn = index
-	_clear_highlight()
-	var f := state.fighters[index]
-	_highlighted = HexGrid.reachable(f.cell, move_budget, state.is_blocked)
-	for cell in _highlighted:
-		if _tiles.has(cell):
-			(_tiles[cell] as MeshInstance3D).material_override = _tile_mat(cell, "move")
-
-
-func _clear_highlight() -> void:
+func _clear_overlays() -> void:
 	for cell in _highlighted:
 		if _tiles.has(cell):
 			(_tiles[cell] as MeshInstance3D).material_override = _tile_mat(cell, "none")
+	for cell in _attack_preview:
+		if _tiles.has(cell):
+			(_tiles[cell] as MeshInstance3D).material_override = _tile_mat(cell, "none")
 	_highlighted.clear()
+	_attack_preview.clear()
 
 
-# ─── Orientamento (facing) e anteprima arco d'attacco ────────────────────────
+## Evidenzia il movimento consentito (i passi della carta scelta) in giallo e
+## l'arco d'attacco in rosso. Senza carta selezionata non si può muovere.
+func _refresh_overlays() -> void:
+	_clear_overlays()
+	if _selected_card.is_empty():
+		return
+	var f := state.fighters[0]
+	var g := CardDB.geometry(int(_selected_card.get("id", -1)))
+	var steps: int = int(g.get("steps", 0))
+	if steps > 0 and not _move_used:
+		_highlighted = HexGrid.reachable(f.cell, steps, state.is_blocked)
+		for cell in _highlighted:
+			if _tiles.has(cell):
+				(_tiles[cell] as MeshInstance3D).material_override = _tile_mat(cell, "move")
+	if _selected_card.get("type", "") == "attack":
+		for cell in Duel.attack_cells(f.cell, f.facing, g, 1):
+			if _tiles.has(cell) and not _highlighted.has(cell):
+				_attack_preview.append(cell)
+				(_tiles[cell] as MeshInstance3D).material_override = _tile_mat(cell, "attack")
+
+
+# ─── Orientamento (facing) ───────────────────────────────────────────────────
 
 ## Angolo mondo (attorno a Y) per orientare la pedina nella direzione `facing`.
 func _facing_angle(cell: Vector2i, facing: int) -> float:
@@ -301,38 +315,19 @@ func _facing_angle(cell: Vector2i, facing: int) -> float:
 	return atan2(d.x, d.z)
 
 
-func _clear_attack_preview() -> void:
-	for cell in _attack_preview:
-		if _tiles.has(cell):
-			(_tiles[cell] as MeshInstance3D).material_override = _tile_mat(cell, "none")
-	_attack_preview.clear()
-
-
-## Mostra in rosso gli esagoni colpiti dalla carta selezionata (se attacco).
+## Selezione di una carta: mostra i passi consentiti e l'arco d'attacco.
 func _on_card_selected(card_data: Dictionary) -> void:
-	_clear_attack_preview()
-	if card_data.get("type", "") != "attack":
-		return
-	var g := CardDB.geometry(int(card_data.get("id", -1)))
-	var f := state.fighters[0]
-	var cells := Duel.attack_cells(f.cell, f.facing, g, 1)
-	for cell in cells:
-		if _tiles.has(cell) and not _highlighted.has(cell):
-			_attack_preview.append(cell)
-			(_tiles[cell] as MeshInstance3D).material_override = _tile_mat(cell, "attack")
+	_selected_card = card_data
+	_move_used = false
+	_refresh_overlays()
 
 
-## Ruota il giocatore di `delta` passi e aggiorna pedina e anteprima.
+## Ruota il giocatore di `delta` passi e aggiorna pedina e anteprima arco.
 func _rotate_player(delta: int) -> void:
 	var f := state.fighters[0]
 	f.facing = (f.facing + delta + 6) % 6
 	_apply_pawn_facing(0)
-	if not _attack_preview.is_empty() or _selected_card_is_attack():
-		_on_card_selected(_selected_card)
-
-
-func _selected_card_is_attack() -> bool:
-	return _selected_card.get("type", "") == "attack"
+	_refresh_overlays()
 
 
 func _apply_pawn_facing(i: int) -> void:
@@ -365,7 +360,7 @@ func _rebuild_grid() -> void:
 		_pawns[i].position = HexGrid.hex_to_world(state.fighters[i].cell, hex_size)
 		_pawns[i].call("rescale", hex_size)
 		_apply_pawn_facing(i)
-	_select_pawn(0)
+	_refresh_overlays()
 
 
 func _update_calib_hint() -> void:
@@ -374,9 +369,9 @@ func _update_calib_hint() -> void:
 
 
 func _move_active_to(cell: Vector2i) -> void:
+	# Muovi solo verso le celle consentite dai passi della carta selezionata.
 	if not _highlighted.has(cell):
 		return
-	# Il giocatore riposiziona la propria pedina (pedina 0) e si orienta verso la cella.
 	var f := state.fighters[0]
 	f.facing = AI.facing_toward(f.cell, cell)
 	f.cell = cell
@@ -384,10 +379,9 @@ func _move_active_to(cell: Vector2i) -> void:
 	var dest := HexGrid.hex_to_world(cell, hex_size)
 	var tw := create_tween()
 	tw.tween_property(pawn, "position", dest, 0.25).set_trans(Tween.TRANS_SINE)
+	_move_used = true            # movimento della carta speso
 	_apply_pawn_facing(0)
-	_select_pawn(0)
-	if _selected_card_is_attack():
-		_on_card_selected(_selected_card)
+	_refresh_overlays()          # mostra ora solo l'arco d'attacco aggiornato
 
 
 # ─── Input: camera orbitale + picking ────────────────────────────────────────
