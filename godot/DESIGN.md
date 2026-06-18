@@ -108,9 +108,10 @@ carte.
    > esecuzione, passi, rotazioni, focus, push, blocco) è stampata solo sulle
    > carte: viene **trascritta** in `data/cards/geometry.json` (vedi
    > `GEOMETRY_SCHEMA.md`) e usata dal motore quando presente, con fallback
-   > all'astrazione (1 ferita / portata da keyword). **Trascrizione**: mazzo
-   > **Guerriero completo** (22 carte + carta personaggio: limite ferite/mano,
-   > armi). Prossimo: Ronin. Counter e offset esatti dell'arco da raffinare.
+   > all'astrazione (1 ferita / portata da keyword). **Trascrizione**: mazzi
+   > **Guerriero e Ronin completi** (44 carte + carte personaggio: limite ferite/
+   > mano, armi). Prossimo (se richiesto): Ferite / Jin Sakai. Counter, icona
+   > esecuzione e offset esatti dell'arco restano da raffinare.
 7. **[fatto] IA solo** (`engine/AI.gd`): euristica per portata e tipo di carta
    (attacca se a tiro, difende se minacciata, medita altrimenti) + movimento di
    avvicinamento. Ispirata a `solo_AI_tables_v1.xlsx`; il "mazzo IA" ufficiale
