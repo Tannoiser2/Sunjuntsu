@@ -1,6 +1,7 @@
 ## Singola carta nell'HUD — Senjutsu
 ##
-## Control che mostra l'immagine ritagliata di una carta, con animazione di
+## Mostra una carta come immagine ritagliata dal PDF (se l'entry ha "file")
+## oppure come scheda generata dai dati del mazzo (se ha "name"). Animazione di
 ## sollevamento al passaggio del mouse e selezione al click.
 extends Control
 
@@ -9,52 +10,84 @@ signal clicked(card_view)
 const CARD_H := 200.0
 const CARD_RATIO := 463.0 / 646.0   ## w/h dei ritagli (180 dpi)
 
-var card_data: Dictionary = {}      ## {file, deck, index, ...} dal manifest
-var texture_path: String = ""
-var base_pos := Vector2.ZERO        ## posizione "a riposo" nel ventaglio
+var card_data: Dictionary = {}
+var base_pos := Vector2.ZERO
 var base_rot := 0.0
 var selected := false
 
-var _tex_rect: TextureRect
 
-
-func setup(path: String, data: Dictionary) -> void:
-	texture_path = path
-	card_data = data
+func setup(entry: Dictionary) -> void:
+	card_data = entry
 	custom_minimum_size = Vector2(CARD_H * CARD_RATIO, CARD_H)
 	size = custom_minimum_size
 	pivot_offset = size * 0.5
 	mouse_filter = Control.MOUSE_FILTER_STOP
-
-	_tex_rect = TextureRect.new()
-	_tex_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_tex_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_tex_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	_tex_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_tex_rect.texture = _load_texture(path)
-	add_child(_tex_rect)
-
-	# Etichetta dati (visibile solo se la carta è collegata al pool).
-	if data.has("name"):
-		var tip := Label.new()
-		tip.text = "%s\n%s · ini %s" % [
-			data.get("name", ""),
-			Domain.CARD_TYPE_LABELS.get(Domain.parse_card_type(data.get("type", "")), "?"),
-			str(data.get("initiative", "-"))]
-		tip.add_theme_font_size_override("font_size", 11)
-		tip.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		tip.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
-		tip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		tip.add_theme_color_override("font_outline_color", Color.BLACK)
-		tip.add_theme_constant_override("outline_size", 4)
-		add_child(tip)
-
+	if entry.has("file"):
+		_build_image(entry["file"])
+	else:
+		_build_data_card(entry)
 	mouse_entered.connect(_on_hover.bind(true))
 	mouse_exited.connect(_on_hover.bind(false))
 	gui_input.connect(_on_gui_input)
 
 
-## Carica la texture anche se la risorsa non è ancora stata importata in editor.
+func _build_image(file: String) -> void:
+	var tr := TextureRect.new()
+	tr.set_anchors_preset(Control.PRESET_FULL_RECT)
+	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tr.texture = _load_texture("res://assets/cards/" + file)
+	add_child(tr)
+
+
+func _build_data_card(d: Dictionary) -> void:
+	var rank := Domain.parse_rank(str(d.get("rank", "-")))
+	var accent: Color = Domain.RANK_COLORS.get(rank, Color.GRAY)
+
+	var panel := Panel.new()
+	panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.13, 0.13, 0.16)
+	sb.set_border_width_all(4)
+	sb.border_color = accent
+	sb.set_corner_radius_all(8)
+	sb.content_margin_left = 8; sb.content_margin_right = 8
+	sb.content_margin_top = 6; sb.content_margin_bottom = 6
+	panel.add_theme_stylebox_override("panel", sb)
+	add_child(panel)
+
+	var vb := VBoxContainer.new()
+	vb.set_anchors_preset(Control.PRESET_FULL_RECT)
+	vb.offset_left = 8; vb.offset_top = 6; vb.offset_right = -8; vb.offset_bottom = -6
+	vb.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(vb)
+
+	var top := Label.new()
+	top.text = "◈%s   ⚡%s" % [str(d.get("focus", 0)), str(d.get("initiative", "-"))]
+	top.add_theme_font_size_override("font_size", 14)
+	vb.add_child(top)
+
+	var nm := Label.new()
+	nm.text = str(d.get("name", "?"))
+	nm.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	nm.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	nm.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	nm.add_theme_font_size_override("font_size", 16)
+	vb.add_child(nm)
+
+	var typ: int = Domain.parse_card_type(str(d.get("type", "")))
+	var bottom := Label.new()
+	bottom.text = "%s · %s" % [
+		Domain.CARD_TYPE_LABELS.get(typ, "?"), Domain.RANK_LABELS.get(rank, "—")]
+	bottom.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	bottom.add_theme_font_size_override("font_size", 12)
+	bottom.add_theme_color_override("font_color", accent)
+	vb.add_child(bottom)
+
+
+## Carica una texture anche se la risorsa non è ancora stata importata in editor.
 static func _load_texture(path: String) -> Texture2D:
 	if ResourceLoader.exists(path):
 		return load(path)

@@ -98,9 +98,24 @@ carte.
    > multiset letto con la composizione autorevole del mazzo. Per i **dati di
    > gioco** si usano quindi i mazzi di `data/decks/`; le immagini restano per
    > la visualizzazione (la faccia mostra già tutte le statistiche).
-5. **IA solo**: euristica di scelta carta.
-6. **Multiplayer 1v1**: lobby + sincronizzazione.
-7. **Asset reali**: miniature `.obj` come pedine, mappe PNG come texture arena.
+6. **[fatto] Risoluzione del combattimento** (`engine/Duel.gd`): sequenza del
+   turno del regolamento 1.5 — pesca → scelta faccia in giù → rivelazione →
+   pagamento focus (max 3) → ordine per iniziativa → attacco/blocco/meditazione
+   → ferite → controllo sconfitta (limite ferite, esecuzione, stun) → riordino.
+   Testato headless (partita completa fino al vincitore).
+
+   > **Approssimazione dichiarata**: la *geometria* degli attacchi (quali esagoni
+   > del corpo colpisce ogni carta) è stampata solo sulle carte e non è nei dati,
+   > quindi un attacco a segno infligge 1 ferita e una difesa rivelata para il
+   > primo attacco del turno. Counter, zone e step verranno raffinati con i dati
+   > geometrici.
+7. **[fatto] IA solo** (`engine/AI.gd`): euristica per portata e tipo di carta
+   (attacca se a tiro, difende se minacciata, medita altrimenti) + movimento di
+   avvicinamento. Ispirata a `solo_AI_tables_v1.xlsx`; il "mazzo IA" ufficiale
+   (gruppi I–VIII) è lavoro futuro.
+8. **Multiplayer 1v1**: lobby + sincronizzazione (la logica in `Duel`/`GameState`
+   è già deterministica e separata dalla grafica).
+9. **Asset reali**: miniature `.obj` come pedine, mappe PNG come texture arena.
 
 ## 8. Come eseguire
 Apri `godot/project.godot` con Godot **4.6**, premi Play. Dal menu scegli una

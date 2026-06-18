@@ -40,12 +40,12 @@ static func _to_cube(c: Vector2i) -> Vector3i:
 
 static func _from_cube(cube: Vector3) -> Vector2i:
 	# Arrotondamento cubico per la conversione da mondo.
-	var rx := round(cube.x)
-	var ry := round(cube.y)
-	var rz := round(cube.z)
-	var dx := abs(rx - cube.x)
-	var dy := abs(ry - cube.y)
-	var dz := abs(rz - cube.z)
+	var rx: float = roundf(cube.x)
+	var ry: float = roundf(cube.y)
+	var rz: float = roundf(cube.z)
+	var dx: float = absf(rx - cube.x)
+	var dy: float = absf(ry - cube.y)
+	var dz: float = absf(rz - cube.z)
 	if dx > dy and dx > dz:
 		rx = -ry - rz
 	elif dy > dz:

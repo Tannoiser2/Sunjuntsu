@@ -22,6 +22,10 @@ config/icon="res://icon.svg"
 Domain="*res://engine/Domain.gd"
 CardDB="*res://engine/CardDB.gd"
 
+[debug]
+
+gdscript/warnings/treat_warnings_as_errors=false
+
 [display]
 
 window/size/viewport_width=1280

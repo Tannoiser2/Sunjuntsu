@@ -1,19 +1,24 @@
 ## Motore del duello — Senjutsu
 ##
-## Orchestrazione delle fasi del turno su un GameState. Logica pura (testabile
-## headless): emette segnali che la scena 3D ascolta per animare.
+## Implementa la sequenza del turno del regolamento 1.5 su un GameState:
+##   pesca → scelta (faccia in giù) → rivelazione simultanea → paga focus →
+##   ordine per iniziativa → risoluzione (attacco / blocco / meditazione) →
+##   ferite → controllo sconfitta → riordino.
 ##
-## NOTA: la risoluzione dettagliata (iniziativa, colpi per zona, difese, ferite)
-## è ancora uno scheletro. Va completata sui dati reali delle carte — vedi
-## DESIGN.md sezione "Risoluzione del combattimento".
+## Logica pura (testabile headless): emette segnali che la scena 3D ascolta.
+##
+## ── Approssimazioni dichiarate ───────────────────────────────────────────────
+## La GEOMETRIA degli attacchi (quali esagoni del corpo colpisce ogni carta) è
+## stampata solo sulla faccia delle carte e NON è disponibile in forma dati:
+## qui un attacco a segno infligge 1 ferita e una difesa rivelata blocca il primo
+## attacco del turno. Contro/zone/step verranno raffinati quando avremo i dati
+## geometrici. Vedi DESIGN.md.
 class_name Duel
 extends RefCounted
 
 signal phase_changed(phase: int)
-signal card_planned(fighter_index: int, card_id: int)
-signal cards_revealed(plans: Array)
-signal fighter_moved(fighter_index: int, to: Vector2i)
-signal wound_applied(fighter_index: int, zone: int)
+signal turn_resolved(log: Array)          ## righe testuali di cosa è successo
+signal fighter_updated(index: int)        ## stato cambiato (ferite/focus/mano)
 signal duel_over(winner_index: int)
 
 var state: GameState
@@ -24,7 +29,12 @@ func _init(initial_state: GameState) -> void:
 
 
 func start() -> void:
+	for f in state.fighters:
+		while f.hand.size() < f.hand_limit:
+			if f.draw_one() == -1:
+				break
 	_set_phase(Domain.Phase.PLANNING)
+	_autoplan_ai()
 
 
 func _set_phase(p: int) -> void:
@@ -32,89 +42,188 @@ func _set_phase(p: int) -> void:
 	phase_changed.emit(p)
 
 
-## Un giocatore programma la carta da giocare questo turno.
-func plan_card(fighter_index: int, card_id: int) -> void:
+# ─── Programmazione ──────────────────────────────────────────────────────────
+
+## Il giocatore (umano) programma una carta dalla propria mano.
+func plan_card(fighter_index: int, card_id: int) -> bool:
 	if state.phase != Domain.Phase.PLANNING:
-		return
+		return false
 	var f := state.fighters[fighter_index]
+	if not f.hand.has(card_id):
+		return false
 	f.planned = card_id
-	card_planned.emit(fighter_index, card_id)
+	f.hand.erase(card_id)
+	_autoplan_ai()
 	if _all_planned():
-		_reveal()
+		_resolve_turn()
+	return true
+
+
+func _autoplan_ai() -> void:
+	for i in range(state.fighters.size()):
+		var f := state.fighters[i]
+		if f.is_ai and f.planned == -1 and not f.hand.is_empty():
+			# Movimento posizionale dell'IA prima di rivelare.
+			var dest := AI.move_target(state, f)
+			if dest != f.cell:
+				f.cell = dest
+				fighter_updated.emit(i)
+			var pick := AI.choose_card(state, f)
+			if pick != -1:
+				f.planned = pick
+				f.hand.erase(pick)
 
 
 func _all_planned() -> bool:
 	for f in state.fighters:
-		if f.planned == -1:
+		if f.planned == -1 and not f.hand.is_empty():
 			return false
 	return true
 
 
-func _reveal() -> void:
-	_set_phase(Domain.Phase.REVEAL)
-	var plans: Array = []
-	for f in state.fighters:
-		plans.append(f.planned)
-	cards_revealed.emit(plans)
-	_resolve()
+# ─── Risoluzione del turno ───────────────────────────────────────────────────
 
-
-## Scheletro di risoluzione: ordina per iniziativa e applica gli effetti.
-func _resolve() -> void:
+func _resolve_turn() -> void:
 	_set_phase(Domain.Phase.RESOLUTION)
-	var order := _initiative_order()
-	for idx in order:
-		var f := state.fighters[idx]
-		var card := CardDB.card(f.planned)
-		if card.is_empty():
+	var log: Array = []
+
+	# Paga i costi di focus obbligatori; se non basta, la carta "svanisce".
+	var fizzled := {}
+	for i in range(state.fighters.size()):
+		var f := state.fighters[i]
+		if f.planned == -1:
 			continue
-		_apply_card(idx, card)
-		if _check_winner() != -1:
+		var c := CardDB.card(f.planned)
+		var cost := int(c.get("focus", 0))
+		if cost > 0:
+			if f.focus >= cost:
+				f.focus -= cost
+			else:
+				fizzled[i] = true
+				log.append("%s: focus insufficiente per %s — la carta svanisce" % [
+					f.character, c.get("name", "?")])
+
+	# Difese rivelate (non svanite): blocco disponibile per il turno.
+	var block_ready := {}
+	for i in range(state.fighters.size()):
+		var f := state.fighters[i]
+		if f.planned != -1 and not fizzled.has(i):
+			if CardDB.card(f.planned).get("type", "") == "defence":
+				block_ready[i] = true
+
+	# Ordine di iniziativa (più alta agisce prima).
+	for i in _initiative_order():
+		if state.fighters[i].is_defeated():
+			continue
+		if state.fighters[i].planned == -1 or fizzled.has(i):
+			continue
+		_resolve_card(i, block_ready, log)
+		var w := _check_winner()
+		if w != -2:
+			_finish(log, w)
 			return
-	_cleanup()
+
+	_cleanup(log)
 
 
-## Indici dei combattenti ordinati per iniziativa decrescente (più veloce prima).
 func _initiative_order() -> Array:
-	var idx := range(state.fighters.size())
 	var arr: Array = []
-	for i in idx:
+	for i in range(state.fighters.size()):
 		arr.append(i)
-	arr.sort_custom(func(a, b):
-		return _speed_of(a) > _speed_of(b))
+	arr.sort_custom(func(a, b): return _speed_of(a) > _speed_of(b))
 	return arr
 
 
-func _speed_of(fighter_index: int) -> int:
-	var card := CardDB.card(state.fighters[fighter_index].planned)
-	return Domain.initiative_value(str(card.get("initiative", "")))
+func _speed_of(i: int) -> int:
+	var f := state.fighters[i]
+	if f.planned == -1:
+		return -999
+	return Domain.initiative_value(str(CardDB.card(f.planned).get("initiative", "")))
 
 
-## Applica gli effetti base di una carta (movimento incluso). Da estendere.
-func _apply_card(fighter_index: int, card: Dictionary) -> void:
-	var move: int = int(card.get("move", 0))
-	if move > 0:
-		# Il movimento effettivo (scelta cella) sarà guidato dall'input/IA;
-		# qui resta da collegare. Vedi DESIGN.md.
-		pass
-	# Attacco/difesa/ferite: TODO sui dati reali.
+func _resolve_card(i: int, block_ready: Dictionary, log: Array) -> void:
+	var f := state.fighters[i]
+	var c := CardDB.card(f.planned)
+	var name: String = c.get("name", "?")
+	match c.get("type", ""):
+		"attack":
+			var foe_idx := _opponent_index(i)
+			if foe_idx == -1:
+				return
+			var foe := state.fighters[foe_idx]
+			var dist := HexGrid.distance(f.cell, foe.cell)
+			if dist > _card_range(c):
+				log.append("%s usa %s ma il bersaglio è troppo lontano (%d)" % [f.character, name, dist])
+				return
+			if block_ready.get(foe_idx, false):
+				block_ready[foe_idx] = false
+				log.append("%s attacca con %s — %s PARA!" % [f.character, name, foe.character])
+				return
+			foe.wounds.append("wound")
+			fighter_updated.emit(foe_idx)
+			log.append("%s colpisce %s con %s — ferita! (%d/%d)" % [
+				f.character, foe.character, name, foe.wounds.size(), foe.wound_limit])
+		"defence":
+			log.append("%s si mette in guardia (%s)" % [f.character, name])
+		"meditation":
+			f.gain_focus(1)
+			f.draw_one()
+			fighter_updated.emit(i)
+			log.append("%s medita (%s): +1 focus, pesca una carta" % [f.character, name])
+		_:
+			log.append("%s gioca %s" % [f.character, name])
 
 
-func _check_winner() -> int:
-	for i in range(state.fighters.size()):
-		if state.fighters[i].is_defeated():
-			var winner := 1 - i if state.fighters.size() == 2 else -1
-			_set_phase(Domain.Phase.GAME_OVER)
-			duel_over.emit(winner)
-			return winner
-	return -1
-
-
-func _cleanup() -> void:
+func _cleanup(log: Array) -> void:
 	_set_phase(Domain.Phase.CLEANUP)
 	for f in state.fighters:
 		if f.planned != -1:
 			f.discard.append(f.planned)
 			f.planned = -1
+		if f.hand.size() < f.hand_limit:
+			f.draw_one()
 	state.round_num += 1
+	turn_resolved.emit(log)
 	_set_phase(Domain.Phase.PLANNING)
+	_autoplan_ai()
+
+
+func _finish(log: Array, winner: int) -> void:
+	_set_phase(Domain.Phase.GAME_OVER)
+	turn_resolved.emit(log)
+	duel_over.emit(winner)
+
+
+# ─── Utility ─────────────────────────────────────────────────────────────────
+
+func _opponent_index(i: int) -> int:
+	for j in range(state.fighters.size()):
+		if j != i:
+			return j
+	return -1
+
+
+## -2 = nessun vincitore ancora; altrimenti indice del vincitore (o -1 = pari).
+func _check_winner() -> int:
+	var alive: Array = []
+	for i in range(state.fighters.size()):
+		if not state.fighters[i].is_defeated():
+			alive.append(i)
+	if alive.size() == state.fighters.size():
+		return -2
+	if alive.size() == 1:
+		return alive[0]
+	return -1
+
+
+static func _card_range(c: Dictionary) -> int:
+	for kw in c.get("keywords", []):
+		var s := str(kw).to_lower()
+		if s.begins_with("range"):
+			var digits := ""
+			for ch in s:
+				if ch.is_valid_int():
+					digits += ch
+			if digits != "":
+				return int(digits)
+	return 1

@@ -12,15 +12,45 @@ class Fighter:
 	var cell: Vector2i = Vector2i.ZERO        ## posizione sulla mappa esagonale
 	var facing: int = 0                        ## direzione (0..5), indice in HexGrid.DIRS
 	var kamae: int = Domain.Rank.STEEL         ## ramo kamae corrente
+	var focus: int = 0                         ## gettoni focus (max 3, vedi regolamento)
 	var hand: Array = []                       ## carte in mano (id int)
 	var draw_pile: Array = []                  ## mazzo da pescare (id int)
 	var discard: Array = []                    ## scarti (id int)
-	var wounds: Array = []                     ## ferite subite (zone/carte ferita)
-	var planned: int = -1                      ## carta programmata questo turno (id int, -1 = nessuna)
+	var wounds: Array = []                     ## ferite subite (stringhe: "wound"/"bleed")
+	var stun: int = 0                          ## carte stordimento accumulate
+	var wound_limit: int = 6                   ## limite ferite (dalla carta personaggio)
+	var hand_limit: int = 5                    ## limite carte in mano
+	var advantage: bool = false                ## possiede il segnalino vantaggio
+	var planned: int = -1                      ## carta programmata (id int, -1 = nessuna)
+	var is_ai: bool = false
+
+	const MAX_FOCUS := 3
+
+	func gain_focus(n: int) -> void:
+		focus = clampi(focus + n, 0, MAX_FOCUS)
+
+	func remaining_wounds() -> int:
+		return wound_limit - wounds.size()
+
+	## Pesca una carta dal mazzo; rimescola gli scarti se vuoto.
+	func draw_one() -> int:
+		if draw_pile.is_empty():
+			draw_pile = discard.duplicate()
+			discard.clear()
+			draw_pile.shuffle()
+		if draw_pile.is_empty():
+			return -1
+		var id: int = draw_pile.pop_back()
+		hand.append(id)
+		return id
 
 	func is_defeated() -> bool:
-		# Soglia da definire sui dati reali; segnaposto.
-		return wounds.size() >= 6
+		# Sconfitta: ferite (incl. sanguinanti) al limite, oppure stun >= ferite rimaste.
+		if wounds.size() >= wound_limit:
+			return true
+		if stun > 0 and stun >= remaining_wounds():
+			return true
+		return false
 
 
 var fighters: Array[Fighter] = []

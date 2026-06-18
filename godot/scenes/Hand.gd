@@ -14,7 +14,7 @@ var _cards: Array = []       ## CardView
 var _selected: Object = null
 
 
-func set_hand(entries: Array, deck_dir: String) -> void:
+func set_hand(entries: Array) -> void:
 	for c in _cards:
 		c.queue_free()
 	_cards.clear()
@@ -22,8 +22,7 @@ func set_hand(entries: Array, deck_dir: String) -> void:
 	for e in entries:
 		var cv = CardView.new()
 		add_child(cv)
-		var path := "res://assets/cards/" + e.get("file", "")
-		cv.setup(path, e)
+		cv.setup(e)
 		cv.clicked.connect(_on_card_clicked)
 		_cards.append(cv)
 	_layout()
@@ -34,14 +33,15 @@ func _layout() -> void:
 	if n == 0:
 		return
 	await get_tree().process_frame
-	var center_x := size.x * 0.5
-	var base_y := size.y - 150.0
+	var center_x: float = size.x * 0.5
+	var base_y: float = size.y - 150.0
 	for i in range(n):
 		var cv = _cards[i]
-		var off := i - (n - 1) * 0.5
-		var x := center_x + off * CARD_GAP - cv.size.x * 0.5
-		var rot := off * FAN_SPREAD / max(1.0, (n - 1) * 0.5)
-		var y := base_y + abs(off) * 8.0    ## leggera curvatura del ventaglio
+		var off: float = i - (n - 1) * 0.5
+		var cw: float = cv.size.x
+		var x: float = center_x + off * CARD_GAP - cw * 0.5
+		var rot: float = off * FAN_SPREAD / max(1.0, (n - 1) * 0.5)
+		var y: float = base_y + abs(off) * 8.0    ## leggera curvatura del ventaglio
 		cv.place(Vector2(x, y), rot)
 		cv.z_index = i
 

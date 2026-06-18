@@ -27,6 +27,7 @@ var _cam_dist: float = 16.0
 var _dragging := false
 
 var _hud: CanvasLayer
+var _duel: Duel
 
 
 func _ready() -> void:
@@ -37,20 +38,81 @@ func _ready() -> void:
 	_spawn_pawns()
 	_select_pawn(0)
 	_build_hud()
+	_start_duel()
 
 
 func _build_hud() -> void:
 	_hud = preload("res://scenes/HUD.tscn").instantiate()
 	add_child(_hud)
-	# Mano del giocatore attivo: mazzo del personaggio della pedina 0.
-	_hud.deal_hand(state.fighters[0].character.to_lower(), 6)
 	_hud.card_played.connect(_on_card_played)
 
 
+func _start_duel() -> void:
+	_duel = Duel.new(state)
+	_duel.turn_resolved.connect(_on_turn_resolved)
+	_duel.fighter_updated.connect(_on_fighter_updated)
+	_duel.duel_over.connect(_on_duel_over)
+	_duel.start()
+	_refresh_hand()
+	_refresh_status()
+	_hud.set_hint("Click su una carta = selezionala · secondo click = giocala · click su esagono illuminato = muovi")
+
+
 func _on_card_played(card_data: Dictionary) -> void:
-	# Per ora: giocare una carta evidenzia il movimento disponibile della pedina.
-	_hud.set_info("Giocata %s — muovi la pedina" % card_data.get("file", "?"))
-	_select_pawn(_active_pawn)
+	var id := int(card_data.get("id", -1))
+	if id == -1:
+		return
+	if _duel.plan_card(0, id):
+		_refresh_hand()
+
+
+func _on_fighter_updated(_i: int) -> void:
+	_sync_pawns()
+	_refresh_status()
+
+
+func _on_turn_resolved(log: Array) -> void:
+	_sync_pawns()
+	_refresh_hand()
+	_refresh_status()
+	if not log.is_empty():
+		_hud.set_hint(String("\n").join(log).left(220))
+
+
+func _on_duel_over(winner: int) -> void:
+	var who := "Pareggio" if winner < 0 else "%s vince!" % state.fighters[winner].character
+	_hud.set_info("⚔ Duello terminato — %s" % who)
+	_hud.show_hand([])
+	_clear_highlight()
+
+
+## Costruisce la mano del giocatore (pedina 0) come schede dati.
+func _refresh_hand() -> void:
+	var entries: Array = []
+	for id in state.fighters[0].hand:
+		var c := CardDB.card(id)
+		if not c.is_empty():
+			entries.append(c)
+	_hud.show_hand(entries)
+
+
+func _refresh_status() -> void:
+	var p := state.fighters[0]
+	var e := state.fighters[1]
+	_hud.set_info("Round %d   |   TU %s: ❤%d/%d ◈%d   —   IA %s: ❤%d/%d ◈%d" % [
+		state.round_num,
+		p.character, p.remaining_wounds(), p.wound_limit, p.focus,
+		e.character, e.remaining_wounds(), e.wound_limit, e.focus])
+
+
+func _sync_pawns() -> void:
+	for i in range(state.fighters.size()):
+		var dest := HexGrid.hex_to_world(state.fighters[i].cell, Domain.HEX_SIZE)
+		if _pawns[i].position.distance_to(dest) > 0.01:
+			var tw := create_tween()
+			tw.tween_property(_pawns[i], "position", dest, 0.25).set_trans(Tween.TRANS_SINE)
+	if _active_pawn == 0:
+		_select_pawn(0)
 
 
 # ─── Costruzione scena ───────────────────────────────────────────────────────
@@ -125,6 +187,7 @@ func _spawn_pawns() -> void:
 		# Mazzo di pesca dai dati autorevoli (foglio Custom Decks).
 		f.draw_pile = CardDB.draw_pile_for(chars[i].to_lower())
 		f.draw_pile.shuffle()
+		f.is_ai = (i == 1)   # pedina 0 = giocatore, pedina 1 = IA solo
 		var pawn: Node3D = Pawn.new()
 		pawn.set("tint", colors[i])
 		add_child(pawn)
@@ -166,14 +229,13 @@ func _clear_highlight() -> void:
 func _move_active_to(cell: Vector2i) -> void:
 	if not _highlighted.has(cell):
 		return
-	var f := state.fighters[_active_pawn]
-	f.cell = cell
-	var pawn := _pawns[_active_pawn]
+	# Il giocatore riposiziona la propria pedina (pedina 0).
+	state.fighters[0].cell = cell
+	var pawn := _pawns[0]
 	var dest := HexGrid.hex_to_world(cell, Domain.HEX_SIZE)
 	var tw := create_tween()
 	tw.tween_property(pawn, "position", dest, 0.25).set_trans(Tween.TRANS_SINE)
-	# Passa all'altra pedina (alternanza dimostrativa).
-	_select_pawn(1 - _active_pawn)
+	_select_pawn(0)
 
 
 # ─── Input: camera orbitale + picking ────────────────────────────────────────
