@@ -35,6 +35,7 @@ var _duel: Duel
 var _attack_preview: Array[Vector2i] = []
 var _selected_card: Dictionary = {}
 var _move_used: bool = false       ## movimento della carta corrente già speso
+var _move_states: Dictionary = {}  ## cella -> Array[int] facing legali (dalla carta)
 var _ground: MeshInstance3D
 
 
@@ -284,18 +285,27 @@ func _clear_overlays() -> void:
 	_attack_preview.clear()
 
 
-## Evidenzia il movimento consentito (i passi della carta scelta) in giallo e
-## l'arco d'attacco in rosso. Senza carta selezionata non si può muovere.
+## Evidenzia il movimento consentito dalla carta (passi+rotazioni, motore Move)
+## in giallo e l'arco d'attacco in rosso. Senza carta selezionata non ci si muove.
 func _refresh_overlays() -> void:
 	_clear_overlays()
 	if _selected_card.is_empty():
 		return
 	var f := state.fighters[0]
 	var g := CardDB.geometry(int(_selected_card.get("id", -1)))
-	var steps: int = int(g.get("steps", 0))
-	if steps > 0 and not _move_used:
-		_highlighted = HexGrid.reachable(f.cell, steps, state.is_blocked)
-		for cell in _highlighted:
+	if not _move_used:
+		# Stati legali (cella+facing) dalla specifica di movimento della carta.
+		_move_states = {}
+		var move_cells: Array = []
+		if g.has("move"):
+			_move_states = Move.reachable_by_cell(f.cell, f.facing, g["move"], state.is_blocked)
+			for cell in _move_states.keys():
+				if cell != f.cell:
+					move_cells.append(cell)
+		elif int(g.get("steps", 0)) > 0:
+			move_cells = HexGrid.reachable(f.cell, int(g.get("steps", 0)), state.is_blocked)
+		for cell in move_cells:
+			_highlighted.append(cell)
 			if _tiles.has(cell):
 				(_tiles[cell] as MeshInstance3D).material_override = _tile_mat(cell, "move")
 	if _selected_card.get("type", "") == "attack":
@@ -322,10 +332,25 @@ func _on_card_selected(card_data: Dictionary) -> void:
 	_refresh_overlays()
 
 
-## Ruota il giocatore di `delta` passi e aggiorna pedina e anteprima arco.
+## Ruota il giocatore solo tra i facing consentiti dalla carta selezionata.
 func _rotate_player(delta: int) -> void:
+	if _selected_card.is_empty():
+		return
 	var f := state.fighters[0]
-	f.facing = (f.facing + delta + 6) % 6
+	var facings: Array = (_move_states.get(f.cell, []) as Array).duplicate()
+	if facings.is_empty():
+		# Carta senza specifica `move` ma con rotazioni: rotazione libera (legacy).
+		var g := CardDB.geometry(int(_selected_card.get("id", -1)))
+		if not g.has("move") and int(g.get("rotates", 0)) > 0:
+			f.facing = (f.facing + delta + 6) % 6
+			_apply_pawn_facing(0)
+			_refresh_overlays()
+		return
+	facings.sort()
+	var idx: int = facings.find(f.facing)
+	if idx == -1:
+		idx = 0
+	f.facing = int(facings[(idx + delta + facings.size()) % facings.size()])
 	_apply_pawn_facing(0)
 	_refresh_overlays()
 
@@ -369,19 +394,32 @@ func _update_calib_hint() -> void:
 
 
 func _move_active_to(cell: Vector2i) -> void:
-	# Muovi solo verso le celle consentite dai passi della carta selezionata.
-	if not _highlighted.has(cell):
+	# Muovi solo verso le celle consentite dalla carta selezionata.
+	if _move_used or not _highlighted.has(cell):
 		return
 	var f := state.fighters[0]
-	f.facing = AI.facing_toward(f.cell, cell)
 	f.cell = cell
+	# Facing alla destinazione: tra quelli legali, il più vicino al "verso nemico".
+	var facings: Array = _move_states.get(cell, [])
+	var want: int = AI.facing_toward(cell, state.fighters[1].cell)
+	if facings.is_empty():
+		f.facing = want
+	else:
+		var best: int = int(facings[0])
+		var best_d: int = 99
+		for fc in facings:
+			var dd: int = mini((int(fc) - want + 6) % 6, (want - int(fc) + 6) % 6)
+			if dd < best_d:
+				best_d = dd
+				best = int(fc)
+		f.facing = best
 	var pawn := _pawns[0]
 	var dest := HexGrid.hex_to_world(cell, hex_size)
 	var tw := create_tween()
 	tw.tween_property(pawn, "position", dest, 0.25).set_trans(Tween.TRANS_SINE)
 	_move_used = true            # movimento della carta speso
 	_apply_pawn_facing(0)
-	_refresh_overlays()          # mostra ora solo l'arco d'attacco aggiornato
+	_refresh_overlays()          # ora mostra solo l'arco d'attacco aggiornato
 
 
 # ─── Input: camera orbitale + picking ────────────────────────────────────────
