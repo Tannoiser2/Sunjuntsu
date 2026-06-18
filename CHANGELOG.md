@@ -3,6 +3,16 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.14.0] — 2026-06-18
+### IA solo fedele al regolamento (top-of-deck)
+- L'avversario singolo ora segue le **regole solo ufficiali**: **non pesca e non
+  sceglie**, **rivela la cima del proprio mazzo** ogni turno (rimescolando gli scarti se
+  vuoto), **niente mano e niente focus** (costi focus/scarto ignorati), salta il passo
+  Draw. La carta rivelata finisce negli scarti a fine turno.
+- Semplificazioni note: il **movimento** dell'IA usa ancora un'euristica (non le tabelle
+  di priorità ufficiali); l'IA usa il **mazzo normale** del personaggio (non le carte
+  "solo"/nightmare dedicate). Vedi REGOLAMENTO_FEDELTA.md §10. Versione 0.14.0.
+
 ## [0.13.0] — 2026-06-18
 ### Blocchi fedeli al regolamento 1.5 (p.11)
 - **Blocco geometrico 1:1**: un attacco alla stessa iniziativa è parato se (1) c'è un

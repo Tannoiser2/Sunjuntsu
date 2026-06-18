@@ -114,13 +114,17 @@ Stato:
 
 ## 10. Solo (rulebook p.20–23 + Path of the Ronin)
 
-L'attuale "IA" usa un modello con mano + euristiche proprie. Il regolamento solo è
-diverso e molto più preciso:
-- ❌ Gli avversari **non pescano e non scelgono**: rivelano la **cima del mazzo**
-   (rimescolano gli scarti se vuoto). Niente focus, niente mano.
-- ❌ Carte solo con struttura "attacco OR movimento", scelta secondo Commit To Hit.
+- ✅ Gli avversari **non pescano e non scelgono**: rivelano la **cima del mazzo**
+   (rimescolano gli scarti se vuoto). **Niente mano, niente focus** (costi focus/scarto
+   ignorati). Saltano il passo Draw. La carta rivelata va negli scarti a fine turno.
+- ⚠️ **Movimento IA**: durante la risoluzione l'IA si muove con un'euristica
+   (`AI.move_target` + orientamento), **non** ancora con le tabelle di priorità ufficiali.
+- ❌ **Mazzo solo dedicato**: l'IA usa per ora il mazzo normale del personaggio, non le
+   77 carte "solo" + nightmare con struttura "attacco OR movimento" (non trascritte).
 - ❌ **Priorità di movimento** (tabelle p.23) per stance offensiva/difensiva, range
    preferito, approccio, facing. Tabelle in `Tabelle/solo_AI_tables_v1.xlsx`.
+- ❌ **Stun solo**: rimescolato nel mazzo; carta stun rivelata = salta il turno;
+   sconfitta se stun ≥ ferite rimaste (modello diverso dall'attuale contatore).
 
 ---
 

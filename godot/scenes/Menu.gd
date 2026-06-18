@@ -9,7 +9,7 @@ func _ready() -> void:
 
 	var version: String = str(ProjectSettings.get_setting("application/config/version", "?"))
 	$Version.text = "v%s" % version
-	$Changes.text = "Novità v%s:\n• Acquisito il regolamento ufficiale 1.5 → vedi REGOLAMENTO_FEDELTA.md\n• Turno fedele: pesca 1 a inizio turno, sanguinamento, mazzo vuoto=ferita, limite mano\n• Movimento 1:1: obbligatorio vs opzionale ripristinato dalle carte\nVedi CHANGELOG.md" % version
+	$Changes.text = "Novità v%s:\n• Blocchi fedeli 1.5: percorso più breve + terreno + copertura attaccante\n• IA solo 1:1: rivela la cima del mazzo (niente mano/focus)\n• Turno fedele e movimento obbligatorio/opzionale dalle carte\nVedi REGOLAMENTO_FEDELTA.md e CHANGELOG.md" % version
 
 
 func _on_solo() -> void:

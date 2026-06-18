@@ -48,8 +48,11 @@ func _init(initial_state: GameState) -> void:
 
 
 func start() -> void:
-	# Setup (passo 13 del regolamento): pesca fino al limite di mano.
+	# Setup (passo 13): pesca fino al limite di mano. Gli avversari solo NON hanno
+	# mano: il loro mazzo resta intero e rivelano la cima ogni turno.
 	for f in state.fighters:
+		if f.is_ai:
+			continue
 		while f.hand.size() < f.hand_limit:
 			if f.draw_one() == -1:
 				break
@@ -63,8 +66,8 @@ func start() -> void:
 ## vuoto ⇒ ferita). Restituisce true se il duello continua.
 func _begin_turn() -> bool:
 	for f in state.fighters:
-		if f.is_defeated():
-			continue
+		if f.is_defeated() or f.is_ai:
+			continue   # gli avversari solo saltano il passo Draw (e il sanguinamento conta come ferita)
 		if f.has_bleed() and not f.draw_pile.is_empty():
 			f.discard.append(f.draw_pile.pop_back())
 		f.draw_one()
@@ -109,24 +112,30 @@ static func playable(f: GameState.Fighter, card_id: int) -> bool:
 	return req == "" or req == Domain.STANCE_SLUG[f.stance]
 
 
+## Regole solo (rulebook p.20–22): gli avversari NON pescano, NON scelgono e NON
+## usano focus. Rivelano la cima del proprio mazzo (rimescolando gli scarti se
+## vuoto). Niente mano. Il movimento è gestito durante la risoluzione.
 func _autoplan_ai() -> void:
 	for i in range(state.fighters.size()):
 		var f := state.fighters[i]
-		if f.is_ai and f.planned == -1 and not f.hand.is_empty():
-			# In modalità interattiva l'IA si muove durante la sua risoluzione
-			# (non prima della rivelazione). Qui sceglie solo la carta.
-			if not interactive:
-				var dest := AI.move_target(state, f)
-				if dest != f.cell:
-					f.cell = dest
-				var foe := state.opponent_of(f)
-				if foe != null:
-					f.facing = AI.facing_toward(f.cell, foe.cell)
-				fighter_updated.emit(i)
-			var pick := AI.choose_card(state, f)
-			if pick != -1:
-				f.planned = pick
-				f.hand.erase(pick)
+		if not f.is_ai or f.planned != -1 or f.is_defeated():
+			continue
+		if f.draw_pile.is_empty():
+			f.draw_pile = f.discard.duplicate()
+			f.discard.clear()
+			f.draw_pile.shuffle()
+		if f.draw_pile.is_empty():
+			continue
+		f.planned = f.draw_pile.pop_back()   # rivela la cima del mazzo
+		# In modalità non interattiva (test) muovi subito; in interattiva lo fa la scena.
+		if not interactive:
+			var dest := AI.move_target(state, f)
+			if dest != f.cell and not state.is_blocked(dest):
+				f.cell = dest
+			var foe := state.opponent_of(f)
+			if foe != null:
+				f.facing = AI.facing_toward(f.cell, foe.cell)
+			fighter_updated.emit(i)
 
 
 func _all_planned() -> bool:
@@ -149,6 +158,8 @@ func _setup_resolution() -> void:
 		var f := state.fighters[i]
 		if f.planned == -1:
 			continue
+		if f.is_ai:
+			continue   # gli avversari solo ignorano i costi di focus/scarto
 		var c := CardDB.card(f.planned)
 		var g := CardDB.geometry(f.planned)
 		var pc: Dictionary = g.get("play_cost", {})
