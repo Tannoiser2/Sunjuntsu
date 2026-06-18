@@ -46,6 +46,8 @@ func _load_images() -> void:
 
 ## Percorso dell'immagine reale della carta (relativo a assets/cards/), o "".
 func image_for(id: int) -> String:
+	if Status.is_status(id):
+		return Status.image_for(id)
 	return images.get(id, "")
 
 
@@ -146,8 +148,11 @@ func deck_for(character: String) -> Array:
 	return by_char.get(character, [])
 
 
-## Carta per id univoco (int).
+## Carta per id univoco (int). Gli id NEGATIVI sono carte di STATO
+## (ferite/stordimento/azzoppamenti/veleni), vedi engine/Status.gd.
 func card(id: int) -> Dictionary:
+	if Status.is_status(id):
+		return Status.card(id)
 	return by_id.get(id, {})
 
 

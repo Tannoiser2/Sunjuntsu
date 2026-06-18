@@ -47,6 +47,7 @@ func _ready() -> void:
 	_build_played_slot()
 	_build_confirm_button()
 	_build_option_chooser()
+	_build_status_strip()
 
 
 ## Riquadro "carta giocata": mostra la carta programmata finché non è scartata a
@@ -285,6 +286,63 @@ func hide_kamae() -> void:
 ## Mostra in mano le carte indicate (array di dizionari carta).
 func show_hand(entries: Array) -> void:
 	hand.set_hand(entries)
+
+
+## ── Carte di STATO (ferite/stordimento/azzoppamenti/veleni) ──────────────────
+## Striscia verticale sul lato destro: mostra come CARTE (con la loro arte reale)
+## le ferite e gli altri stati attivi del combattente di turno.
+var _status_panel: VBoxContainer
+var _status_title: Label
+
+
+func _build_status_strip() -> void:
+	_status_panel = VBoxContainer.new()
+	_status_panel.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	_status_panel.anchor_left = 1.0
+	_status_panel.anchor_right = 1.0
+	_status_panel.offset_left = -118
+	_status_panel.offset_right = -6
+	_status_panel.offset_top = 46
+	_status_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_status_panel)
+	_status_title = Label.new()
+	_status_title.text = "Ferite / stati"
+	_status_title.add_theme_font_size_override("font_size", 12)
+	_status_panel.add_child(_status_title)
+	_status_panel.visible = false
+
+
+## entries: Array di {file:String, name:String, count:int}. Vuoto = nascondi.
+func set_status_cards(entries: Array) -> void:
+	# Rimuove le miniature precedenti (tiene il titolo).
+	for c in _status_panel.get_children():
+		if c != _status_title:
+			c.queue_free()
+	if entries.is_empty():
+		_status_panel.visible = false
+		return
+	_status_panel.visible = true
+	for e in entries:
+		var row := HBoxContainer.new()
+		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var tr := TextureRect.new()
+		tr.custom_minimum_size = Vector2(64, 88)
+		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+		tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		tr.tooltip_text = String(e.get("name", ""))
+		var tex := _load_tex("res://assets/cards/" + String(e.get("file", "")))
+		if tex != null:
+			tr.texture = tex
+		row.add_child(tr)
+		var cnt := int(e.get("count", 1))
+		if cnt > 1:
+			var lbl := Label.new()
+			lbl.text = "×%d" % cnt
+			lbl.add_theme_font_size_override("font_size", 16)
+			lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			row.add_child(lbl)
+		_status_panel.add_child(row)
 
 
 func set_info(text: String) -> void:

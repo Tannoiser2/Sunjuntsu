@@ -66,6 +66,13 @@ func _noncore_in_hand(f: GameState.Fighter) -> int:
 	return n
 
 
+## Slot di mano OCCUPATI verso il limite: carte abilità non-core + carte
+## Stordimento (anch'esse "incidono sul limite di carte in mano", regolamento).
+## Le carte di stordimento riducono quindi quante carte abilità puoi pescare/tenere.
+func _hand_used(f: GameState.Fighter) -> int:
+	return _noncore_in_hand(f) + f.stun
+
+
 ## Scarta UNA carta non-core dalla mano (le core non si scartano). True se riuscito.
 func _discard_one_noncore(f: GameState.Fighter) -> bool:
 	for k in range(f.hand.size() - 1, -1, -1):
@@ -90,7 +97,7 @@ func start() -> void:
 			else:
 				rest.append(cid)
 		f.draw_pile = rest
-		while _noncore_in_hand(f) < f.hand_limit:
+		while _hand_used(f) < f.hand_limit:
 			if f.draw_one() == -1:
 				break
 	_begin_turn()   # passo Draw del 1° turno
@@ -1040,8 +1047,9 @@ func _cleanup(log: Array) -> void:
 			else:
 				f.discard.append(f.planned)
 			f.planned = -1
-		# Se le carte NON-core superano il limite, scartane (le core non contano).
-		while _noncore_in_hand(f) > f.hand_limit:
+		# Se gli slot di mano usati (abilità + stordimenti) superano il limite, scarta
+		# carte abilità (lo stordimento non si scarta mai dalla mano).
+		while _hand_used(f) > f.hand_limit:
 			if not _discard_one_noncore(f):
 				break
 			log.append("%s scarta in eccesso (limite mano %d)" % [f.character, f.hand_limit])
