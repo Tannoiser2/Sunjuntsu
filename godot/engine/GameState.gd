@@ -84,6 +84,16 @@ func fighter_at(cell: Vector2i) -> Fighter:
 	return null
 
 
+## Tipo di terreno nella cella ("" se non c'è terreno). I valori in blocked_cells
+## possono essere stringhe-tipo ("obstacle"/"bamboo"/"burning"/"torii"); per
+## retrocompatibilità un valore non-stringa è trattato come "obstacle".
+func terrain_at(cell: Vector2i) -> String:
+	if not blocked_cells.has(cell):
+		return ""
+	var v = blocked_cells[cell]
+	return v if v is String else "obstacle"
+
+
 ## True se la cella è fuori arena, occupata o ostacolo.
 func is_blocked(cell: Vector2i) -> bool:
 	if HexGrid.distance(cell, Vector2i.ZERO) > map_radius:

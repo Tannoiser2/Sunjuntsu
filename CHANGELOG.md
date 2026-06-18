@@ -3,6 +3,17 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.15.0] — 2026-06-18
+### Collisioni + Commit To Hit (regolamento 1.5 p.9–10)
+- **Collisioni** per push/pull: bersaglio spinto fuori arena → +1 stordimento; contro un
+  personaggio → scarta 1 carta dalla mano ed entrambi +1 stordimento; contro terreno →
+  effetto del terreno (ostacolo=ferita; bambù=ferita+stordimento e rimosso; carri in
+  fiamme=ferita+sanguinante; torii=ferita). Il bersaglio resta nella cella d'origine.
+  Push/pull possono colpire i pericoli di proposito. Aggiunto anche il supporto **pull**.
+- **Commit To Hit**: se la carta attacco può colpire muovendoti, la conferma del turno è
+  bloccata finché non ti posizioni per colpire (helper `attack_can_hit`/`attack_hits_now`).
+- Nuovo test `test_combat2` (collisioni + commit-to-hit). Versione 0.15.0.
+
 ## [0.14.0] — 2026-06-18
 ### IA solo fedele al regolamento (top-of-deck)
 - L'avversario singolo ora segue le **regole solo ufficiali**: **non pesca e non

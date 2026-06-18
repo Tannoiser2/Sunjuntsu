@@ -434,13 +434,57 @@ func _apply_if_success(att_idx: int, foe_idx: int, g: Dictionary, log: Array) ->
 		if s.begins_with("focus:"):
 			att.gain_focus(int(s.substr(6)))
 		elif s.begins_with("push:"):
-			_push(att_idx, foe_idx, int(s.substr(5)))
+			_push(att_idx, foe_idx, int(s.substr(5)), log)
+		elif s.begins_with("pull:"):
+			_pull(att_idx, foe_idx, int(s.substr(5)), log)
 		elif s == "bleed":
 			foe.wounds.append("bleed")
 		elif s == "hobble" or s.begins_with("hobble:"):
 			var amt := 1 if s == "hobble" else int(s.substr(7))
 			foe.hobble += maxi(1, amt)
 			fighter_updated.emit(foe_idx)
+
+
+# ─── Commit To Hit (regolamento 1.5 p.10) ────────────────────────────────────
+
+## L'attacco programmato di `i` colpisce il bersaglio dalla posizione ATTUALE?
+func attack_hits_now(i: int) -> bool:
+	var f := state.fighters[i]
+	if f.planned == -1:
+		return false
+	var c := CardDB.card(f.planned)
+	if c.get("type", "") != "attack":
+		return false
+	var fo := _opponent_index(i)
+	if fo == -1:
+		return false
+	return attack_v2_cells(f.cell, f.facing, CardDB.geometry(f.planned), _card_range(c)).has(state.fighters[fo].cell)
+
+
+## Esiste una posizione raggiungibile con le mosse della carta da cui l'attacco
+## colpirebbe il bersaglio? (Commit To Hit: se sì, devi colpire.)
+func attack_can_hit(i: int) -> bool:
+	var f := state.fighters[i]
+	if f.planned == -1:
+		return false
+	var c := CardDB.card(f.planned)
+	if c.get("type", "") != "attack":
+		return false
+	var fo := _opponent_index(i)
+	if fo == -1:
+		return false
+	var foe_cell: Vector2i = state.fighters[fo].cell
+	var g := CardDB.geometry(f.planned)
+	if attack_v2_cells(f.cell, f.facing, g, _card_range(c)).has(foe_cell):
+		return true
+	if not g.has("move"):
+		return false
+	var reach := Move.reachable_by_cell(f.cell, f.facing, g["move"], state.is_blocked, Domain.STANCE_SLUG[f.stance])
+	for cell in reach.keys():
+		for fc in reach[cell]:
+			if attack_v2_cells(cell, fc, g, 1).has(foe_cell):
+				return true
+	return false
 
 
 # ─── Blocchi (regolamento 1.5 p.11) ──────────────────────────────────────────
@@ -594,7 +638,9 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 			done_alt[alt] = true
 		match str(e.get("do", "")):
 			"push":
-				if foe != null: _push(i, foe_idx, int(e.get("n", 1)))
+				if foe != null: _push(i, foe_idx, int(e.get("n", 1)), log)
+			"pull":
+				if foe != null: _pull(i, foe_idx, int(e.get("n", 1)), log)
 			"bleed":
 				if foe != null: foe.wounds.append("bleed")
 			"replace_wound_bleed":
@@ -623,22 +669,70 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 
 
 ## Spinge `foe` di `n` esagoni lontano da `att`, se le celle sono libere.
-func _push(att_idx: int, foe_idx: int, n: int) -> void:
+func _push(att_idx: int, foe_idx: int, n: int, log: Array = []) -> void:
+	_forced_move(att_idx, foe_idx, n, false, log)
+
+
+func _pull(att_idx: int, foe_idx: int, n: int, log: Array = []) -> void:
+	_forced_move(att_idx, foe_idx, n, true, log)
+
+
+## Spinta (push) / trazione (pull) del bersaglio di `n` esagoni, direttamente
+## lontano da / verso l'attaccante (regolamento p.15). Se il bersaglio finirebbe
+## su terreno, un altro personaggio o fuori dall'arena, si risolve una COLLISIONE
+## (p.9) e il movimento si ferma. Push/pull possono spingere deliberatamente nei
+## pericoli.
+func _forced_move(att_idx: int, victim_idx: int, n: int, pull: bool, log: Array) -> void:
 	var att := state.fighters[att_idx]
-	var foe := state.fighters[foe_idx]
-	for _k in range(n):
-		var best := foe.cell
-		var best_d := HexGrid.distance(att.cell, foe.cell)
-		for nb in HexGrid.neighbors(foe.cell):
-			if state.is_blocked(nb):
-				continue
-			if HexGrid.distance(att.cell, nb) > best_d:
-				best_d = HexGrid.distance(att.cell, nb)
-				best = nb
-		if best == foe.cell:
-			break
-		foe.cell = best
-	fighter_updated.emit(foe_idx)
+	var v := state.fighters[victim_idx]
+	for _k in range(maxi(0, n)):
+		# Esagono "direttamente lontano/verso": vicino con distanza max/min dall'attaccante.
+		var dest := v.cell
+		var best_d := HexGrid.distance(att.cell, v.cell)
+		for nb in HexGrid.neighbors(v.cell):
+			var dd := HexGrid.distance(att.cell, nb)
+			if (pull and dd < best_d) or (not pull and dd > best_d):
+				best_d = dd
+				dest = nb
+		if dest == v.cell:
+			break   # nessuna direzione utile
+		# Collisione? (fuori arena / altro personaggio / terreno)
+		if HexGrid.distance(dest, Vector2i.ZERO) > state.map_radius \
+				or state.fighter_at(dest) != null or state.terrain_at(dest) != "":
+			_resolve_collision(victim_idx, dest, log)
+			return
+		v.cell = dest
+	fighter_updated.emit(victim_idx)
+
+
+## Risolve una collisione del personaggio `victim_idx` che sarebbe finito su `dest`
+## (regolamento p.9 + effetti terreno p.16). Il personaggio resta dov'è.
+func _resolve_collision(victim_idx: int, dest: Vector2i, log: Array) -> void:
+	var v := state.fighters[victim_idx]
+	if HexGrid.distance(dest, Vector2i.ZERO) > state.map_radius:
+		v.stun += 1
+		log.append("%s spinto fuori dall'arena: +1 stordimento" % v.character)
+	elif state.fighter_at(dest) != null:
+		var other := state.fighter_at(dest)
+		if not v.is_ai and not v.hand.is_empty():
+			v.discard.append(v.hand.pop_back())   # scarta 1 dalla mano
+		v.stun += 1
+		other.stun += 1
+		fighter_updated.emit(state.fighters.find(other))
+		log.append("%s collide con %s: scarta 1, entrambi +1 stordimento" % [v.character, other.character])
+	else:
+		match state.terrain_at(dest):
+			"bamboo":
+				v.wounds.append("wound"); v.stun += 1
+				state.blocked_cells.erase(dest)
+				log.append("%s urta il bambù: +1 ferita e +1 stordimento (bambù rimosso)" % v.character)
+			"burning":
+				v.wounds.append("wound"); v.wounds.append("bleed")
+				log.append("%s urta i carri in fiamme: +1 ferita e +1 sanguinante" % v.character)
+			_:
+				v.wounds.append("wound")
+				log.append("%s urta un ostacolo: +1 ferita" % v.character)
+	fighter_updated.emit(victim_idx)
 
 
 func _cleanup(log: Array) -> void:

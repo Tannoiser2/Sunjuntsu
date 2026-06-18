@@ -12,7 +12,7 @@ config_version=5
 
 config/name="Senjutsu: Battle for Japan"
 config/description="Reimplementazione digitale 3D di Senjutsu (Lucky Duck Games) — uso personale. Pedine 3D su mappa esagonale, modalità solo e 1v1."
-config/version="0.14.0"
+config/version="0.15.0"
 run/main_scene="res://scenes/Menu.tscn"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"

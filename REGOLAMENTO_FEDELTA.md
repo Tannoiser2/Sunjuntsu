@@ -47,12 +47,15 @@ Stato:
    carta con audit sulle scansioni. `!` nei dati = obbligatorio.
 - ✅ Righe gate-ate da Kamae (la mossa è disponibile solo in quella posizione).
 - ✅ "then" = sequenza ordinata; stessa riga = ordine/combinazione libera.
-- ⚠️ **Collisioni**: il movimento è bloccato dalle celle occupate, ma mancano gli
-   effetti regolamentari: contro personaggio (scarta 1, entrambi +1 stun), fuori
-   campo (+1 stun), contro terreno (effetto del terreno). E "le mosse obbligatorie
-   devono scegliere l'opzione che evita la collisione".
-- ⚠️ Mosse obbligatorie non ancora **forzate** nella UI (il giocatore può saltarle).
-- ❌ Commit To Hit (se puoi colpire muovendoti/pagando focus, **devi**).
+- ✅ **Collisioni** (p.9) per push/pull: fuori campo (+1 stun), contro personaggio
+   (scarta 1 dalla mano, entrambi +1 stun), contro terreno (effetto del terreno). Il
+   bersaglio resta nella cella originale. Push/pull possono colpire i pericoli di proposito.
+- ⚠️ Collisione da **mossa propria obbligatoria** senza alternativa: non ancora gestita
+   (il movimento interattivo offre solo celle valide). Mosse obbligatorie non ancora
+   **forzate** nella UI.
+- ✅ **Commit To Hit** (p.10): se l'attacco può colpire muovendoti, la conferma è
+   bloccata finché non ti posizioni (helper `attack_can_hit`/`attack_hits_now`).
+   ⚠️ Manca la parte "pagare focus opzionale obbligatorio se abilita il colpo".
 - ❌ Casi struttura carta da rivedere a mano: **#26** (2° passo avanti), **#27**
    (un solo passo bidirezionale obbligatorio), **#33** (passo+rot obbligatori + 2ª rot
    opzionale), **#23** (probabile assenza di movimento).
@@ -62,7 +65,7 @@ Stato:
 - ✅ Bersaglio per griglia esagonale relativa a posizione/facing (schema v2).
 - ✅ Effetti: ferita, 2 ferite, sanguinante, esecuzione, effetto asterisco.
 - ⚠️ "If Successful" e effetti asterisco: parziali.
-- ❌ **Commit To Hit** (regola d'oro).
+- ✅ **Commit To Hit** (regola d'oro): vedi §2.
 - ❌ Attacchi a distanza (Range) + Linea di Vista (LoS dai 2 angoli frontali).
 
 ## 4. Difese / Blocchi / Contrattacchi (rulebook p.11)
@@ -109,8 +112,10 @@ Stato:
 ## 9. Terreno (rulebook p.16)
 
 - ⚠️ Le celle ostacolo bloccano il movimento e contano per il percorso del blocco.
-- ❌ Effetti collisione per tipo (rocce/bambù/carri in fiamme/torii/ciliegio) e regole
-   speciali (Torii attraversabile, bambù rimosso se colpito).
+- ✅ Effetti collisione per tipo implementati (`_resolve_collision`): ostacolo → ferita;
+   bambù → ferita + stordimento (+rimosso); carri in fiamme → ferita + sanguinante;
+   torii → ferita. ⚠️ La **mappa non assegna ancora i tipi** di terreno (tutto "obstacle")
+   né le regole speciali (Torii attraversabile, bambù rimosso se colpito da attacco).
 
 ## 10. Solo (rulebook p.20–23 + Path of the Ronin)
 
