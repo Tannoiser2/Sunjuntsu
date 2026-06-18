@@ -69,6 +69,7 @@ func _start_duel() -> void:
 	_duel.turn_resolved.connect(_on_turn_resolved)
 	_duel.fighter_updated.connect(_on_fighter_updated)
 	_duel.duel_over.connect(_on_duel_over)
+	_duel.phase_changed.connect(_on_phase_changed)
 	_hud.card_selected.connect(_on_card_selected)
 	_hud.kamae_chosen.connect(_on_kamae_chosen)
 	_duel.start()
@@ -81,6 +82,25 @@ func _start_duel() -> void:
 	_apply_pawn_facing(0); _apply_pawn_facing(1)
 	_hud.set_info("Pianificazione — scegli e programma una carta")
 	_hud.set_hint("PIANIFICAZIONE: 1° click anteprima · 2° click PROGRAMMA. Poi rivelazione e risoluzione per iniziativa (muovi/attacca al tuo turno).")
+
+
+## Inizio di un nuovo turno: la fase del MOTORE torna a PLANNING (dopo la pesca).
+## Allinea la UI allo stato reale e rinfresca la mano (così la carta pescata appare).
+func _on_phase_changed(p: int) -> void:
+	if p != Domain.Phase.PLANNING:
+		return
+	_phase_mode = "planning"
+	_resolving_index = -1
+	_selected_card = {}
+	_move_used = false
+	_kamae_used = false
+	_clear_overlays()
+	_hud.hide_kamae()
+	_hud.hide_played_card()
+	_sync_pawns()
+	_refresh_hand()
+	_refresh_status()
+	_hud.set_info("Pianificazione — scegli e programma una carta")
 
 
 ## 2° click su una carta = PROGRAMMA la carta coperta (fase di pianificazione).
@@ -102,11 +122,16 @@ func _on_card_played(card_data: Dictionary) -> void:
 	if f.focus < cost:
 		_hud.set_hint("◈ Focus insufficiente: servono %d, ne hai %d" % [cost, f.focus])
 		return   # la carta resta in mano
+	if not _duel.plan_card(0, id):   # → quando entrambi pronti parte begin_resolution()
+		_hud.set_hint("⛔ Impossibile programmare la carta ora (riprova).")
+		_refresh_hand()
+		return
+	# Programmata con successo: mostra la carta giocata e pulisci la selezione.
 	_selected_card = {}
 	_clear_overlays()
 	_hud.hide_kamae()
+	_hud.show_played_card(String(card_data.get("file", "")), String(card_data.get("name", "?")))
 	_hud.set_info("Carta programmata (coperta). Rivelazione…")
-	_duel.plan_card(0, id)   # → quando entrambi pronti parte begin_resolution()
 	_refresh_hand()
 
 
