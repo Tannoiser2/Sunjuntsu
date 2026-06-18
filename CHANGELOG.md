@@ -3,6 +3,20 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.33.0] — 2026-06-18
+### Le ferite (e gli altri stati) sono CARTE
+- Le **ferite**, lo **stordimento**, gli **azzoppamenti** e i **veleni** sono ora modellati
+  come vere **carte di stato** (con la loro **arte reale** ritagliata da `CARTE/Ferite.pdf`):
+  Stordimento, Azzoppato, Ferita, Ferita Sanguinante, Veleno Virulento/Debilitante, Nebbia
+  di Confusione, Tossina Paralizzante/Emorragica. Hanno nome e testo del regolamento
+  (`engine/Status.gd`, ID negativi per non collidere con le carte abilità).
+- **Visibili in partita**: nuova striscia laterale che mostra come **carte** le ferite/stati
+  del combattente di turno, con contatore per tipo.
+- **Stordimento fedele**: occupa il limite di carte in mano (riduce quante carte abilità
+  puoi pescare/tenere) e **non si scarta mai**; sconfitta quando riempie la mano.
+- Test `test_status` esteso (catalogo carte, mappa ferite→carte, stordimento che occupa la
+  mano). Versione 0.33.0.
+
 ## [0.32.0] — 2026-06-18
 ### 1v1 locale (hot-seat) con tutta la logica + suggerimento leggibile
 - **Modalità 1v1 locale (hot-seat)**: il pulsante *Versus* ora avvia un vero duello tra

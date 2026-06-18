@@ -64,6 +64,22 @@ class Fighter:
 				keep.append(no)
 		hobbles = keep
 
+	## Carte di STATO attualmente "in possesso" del combattente, come ID carta
+	## (negativi, vedi Status.gd), espanse una per copia: ferite (normali e
+	## sanguinanti), azzoppamenti, stordimenti, veleni. Servono a mostrarle come
+	## CARTE nell'HUD (il gioco fisico le tiene come cartoncini, non segnalini).
+	func status_card_ids() -> Array:
+		var out: Array = []
+		for tag in wounds:
+			out.append(Status.wound_card_id(str(tag)))
+		for _h in hobbles:
+			out.append(Status.HOBBLE)
+		for _s in range(stun):
+			out.append(Status.STUN)
+		for _p in range(poison):
+			out.append(Status.POISON_VIRULENT)
+		return out
+
 	## Limite ferite effettivo (ridotto dai veleni virulenti, minimo 1).
 	func effective_wound_limit() -> int:
 		return maxi(1, wound_limit - poison)

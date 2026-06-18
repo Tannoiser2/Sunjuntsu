@@ -9,7 +9,7 @@ func _ready() -> void:
 
 	var version: String = str(ProjectSettings.get_setting("application/config/version", "?"))
 	$Version.text = "v%s" % version
-	$Changes.text = "Novità v%s:\n• 1v1 LOCALE (hot-seat): due giocatori, tutta la logica, si passano il dispositivo\n• Suggerimento in basso leggibile (barra sopra le carte)\n• Solo vs IA invariato; Kamae+focus, blocchi 1.5, collisioni, Commit To Hit\nVedi REGOLAMENTO_FEDELTA.md e CHANGELOG.md" % version
+	$Changes.text = "Novità v%s:\n• Le FERITE sono carte (arte reale): ferite, stordimento, azzoppamenti, veleni\n• Stordimento occupa la mano e non si scarta; striscia stati visibile in partita\n• 1v1 LOCALE (hot-seat); suggerimento leggibile; Solo vs IA invariato\nVedi REGOLAMENTO_FEDELTA.md e CHANGELOG.md" % version
 
 
 func _on_solo() -> void:

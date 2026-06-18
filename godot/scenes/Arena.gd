@@ -393,6 +393,21 @@ func _refresh_status() -> void:
 		_who(0), p.character, p.remaining_wounds(), p.wound_limit, p.focus, Domain.STANCE_NAMES[p.stance], _status_badges(p), p.draw_pile.size(), p.discard.size(),
 		_who(1), e.character, e.remaining_wounds(), e.wound_limit, e.focus, Domain.STANCE_NAMES[e.stance], _status_badges(e), e.draw_pile.size(), _ai_posture(e)])
 	_hud.set_kamae_marker(Domain.STANCE_SLUG[state.fighters[_kamae_shown].stance])
+	_refresh_status_cards()
+
+
+## Mostra come CARTE (arte reale) le ferite/stordimenti/azzoppamenti/veleni del
+## combattente di turno, raggruppate per tipo con un contatore.
+func _refresh_status_cards() -> void:
+	var i := _active()
+	var counts: Dictionary = {}      ## id stato → numero
+	for sid in state.fighters[i].status_card_ids():
+		counts[sid] = int(counts.get(sid, 0)) + 1
+	var entries: Array = []
+	for sid in counts:
+		var c := CardDB.card(sid)
+		entries.append({"file": c.get("file", ""), "name": c.get("name", "?"), "count": counts[sid]})
+	_hud.set_status_cards(entries)
 
 
 func _sync_pawns() -> void:
