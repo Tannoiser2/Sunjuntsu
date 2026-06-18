@@ -20,13 +20,61 @@ func _ready() -> void:
 	mat.albedo_color = tint
 	mat.roughness = 0.7
 
-	var mesh: Mesh = _load_mesh(mesh_path)
-	if mesh != null:
-		_add_model(mesh, mat)
+	# Modelli .glb/.gltf: mantengono i PROPRI materiali/texture (miniature a colori).
+	var scene_node := _load_model_scene(mesh_path)
+	if scene_node != null:
+		_add_scene_model(scene_node)
 	else:
-		_add_placeholder(mat)
+		var mesh: Mesh = _load_mesh(mesh_path)
+		if mesh != null:
+			_add_model(mesh, mat)   # .obj senza texture: tinta piatta
+		else:
+			_add_placeholder(mat)
 	_add_base()
 	_add_facing_indicator()
+
+
+## Carica un modello con materiali propri (PackedScene da .glb/.gltf). null se non c'è.
+func _load_model_scene(path: String) -> Node3D:
+	if path == "" or not ResourceLoader.exists(path):
+		return null
+	var res = load(path)
+	if res is PackedScene:
+		var inst = res.instantiate()
+		if inst is Node3D:
+			return inst
+		inst.queue_free()
+	return null
+
+
+## Aggiunge il modello texturizzato, normalizzato sull'altezza dell'esagono, base a y=0.
+func _add_scene_model(node: Node3D) -> void:
+	add_child(node)
+	var aabb := _scene_aabb(node, Transform3D.IDENTITY)
+	var h: float = maxf(0.001, aabb.size.y)
+	var s: float = (cell_size * height_ratio) / h
+	node.scale = Vector3(s, s, s)
+	# Centra in X/Z e appoggia la base a terra (y=0).
+	var center := aabb.position + aabb.size * 0.5
+	node.position = Vector3(-center.x * s, -aabb.position.y * s, -center.z * s)
+
+
+## AABB combinata di tutte le MeshInstance3D nel sottoalbero (spazio locale del modello).
+func _scene_aabb(node: Node, xform: Transform3D) -> AABB:
+	var out := AABB()
+	var have := false
+	var t: Transform3D = xform
+	if node is Node3D:
+		t = xform * (node as Node3D).transform
+	if node is MeshInstance3D and (node as MeshInstance3D).mesh != null:
+		out = t * (node as MeshInstance3D).mesh.get_aabb()
+		have = true
+	for c in node.get_children():
+		var sub := _scene_aabb(c, t)
+		if sub.size != Vector3.ZERO:
+			out = sub if not have else out.merge(sub)
+			have = true
+	return out
 
 
 ## Ruota la pedina (attorno a Y) verso l'angolo mondo indicato.

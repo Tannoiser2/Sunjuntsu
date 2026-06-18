@@ -460,7 +460,10 @@ func _spawn_pawns() -> void:
 			f.hand_limit = int(cs.get("hand_limit", f.hand_limit))
 		var pawn: Node3D = Pawn.new()
 		pawn.set("tint", colors[i])
-		pawn.set("mesh_path", "res://assets/miniatures/%s.obj" % chars[i].to_lower())
+		# Miniatura a colori (.glb con texture) se presente, altrimenti il vecchio .obj.
+		var slug: String = String(chars[i]).to_lower()
+		var glb: String = "res://assets/miniatures/%s.glb" % slug
+		pawn.set("mesh_path", glb if ResourceLoader.exists(glb) else "res://assets/miniatures/%s.obj" % slug)
 		pawn.set("cell_size", hex_size)
 		add_child(pawn)
 		pawn.position = HexGrid.hex_to_world(f.cell, hex_size)

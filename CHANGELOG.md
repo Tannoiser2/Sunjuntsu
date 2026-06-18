@@ -3,6 +3,16 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.30.0] — 2026-06-18
+### Miniature 3D a colori (Guerriero e Ronin)
+- Le pedine ora usano i **modelli .glb texturizzati** caricati (Guerriero/Ronin) con i
+  **colori/texture propri**, invece della tinta piatta. La base resta colorata per
+  squadra (rosso = tu, blu = IA) + indicatore di facing.
+- I modelli originali erano enormi (~55 e ~45 MB, scansioni ad alta densità): li ho
+  **ottimizzati** (semplificazione mesh + texture WebP 1024) a **~1.4 e ~2 MB**, così il
+  gioco web resta leggero. `Pawn.gd` istanzia il modello mantenendone i materiali.
+- Rimossi i vecchi `.obj` senza texture. Versione 0.30.0.
+
 ## [0.29.0] — 2026-06-18
 ### Rotazione miniatura: feedback chiaro (perché Q/E a volte non gira)
 - La rotazione (Q/E) è **per-carta e per-Kamae**: molte carte permettono di ruotare solo
