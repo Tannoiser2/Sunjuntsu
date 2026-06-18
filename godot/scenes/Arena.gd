@@ -14,11 +14,10 @@ const TILE_GROUP := "hex_tile"
 @export var map_radius: int = 3    ## esagono di raggio 3 = 37 celle (colonne 4,5,6,7,6,5,4)
 @export var move_budget: int = 3   ## passi consentiti per dimostrare il movimento
 # ─── Calibrazione mappa↔griglia (regolabili nell'editor) ─────────────────────
-@export var hex_size: float = 3.2          ## raggio esagono in unità mondo
+@export var hex_size: float = 3.0          ## raggio esagono in unità mondo
 @export var map_world_size: float = 44.0   ## lato del piano-mappa (la board occupa la parte centrale)
-@export var map_offset: Vector2 = Vector2.ZERO  ## scostamento mappa (x,z) per centrare gli esagoni
+@export var map_offset: Vector2 = Vector2(0.0, 0.5)  ## scostamento mappa (x,z) per centrare gli esagoni
 @export var map_y_rotation: float = 0.0    ## rotazione mappa attorno a Y (gradi)
-@export var mini_scale: float = 0.85       ## altezza miniatura come frazione di hex_size
 
 var state: GameState
 var _tiles: Dictionary = {}        ## Vector2i -> MeshInstance3D
@@ -263,7 +262,7 @@ func _spawn_pawns() -> void:
 		var pawn: Node3D = Pawn.new()
 		pawn.set("tint", colors[i])
 		pawn.set("mesh_path", "res://assets/miniatures/%s.obj" % chars[i].to_lower())
-		pawn.set("target_height", hex_size * mini_scale)
+		pawn.set("cell_size", hex_size)
 		add_child(pawn)
 		pawn.position = HexGrid.hex_to_world(f.cell, hex_size)
 		pawn.set_meta("fighter_index", i)
@@ -364,10 +363,7 @@ func _rebuild_grid() -> void:
 	_build_tiles()
 	for i in range(_pawns.size()):
 		_pawns[i].position = HexGrid.hex_to_world(state.fighters[i].cell, hex_size)
-		var base_h: float = float(_pawns[i].get("target_height"))
-		if base_h > 0.0:
-			var k: float = (hex_size * mini_scale) / base_h
-			_pawns[i].scale = Vector3(k, k, k)
+		_pawns[i].call("rescale", hex_size)
 		_apply_pawn_facing(i)
 	_select_pawn(0)
 
@@ -398,16 +394,21 @@ func _move_active_to(cell: Vector2i) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
+		# "+"/"-" via unicode (indipendente dal layout di tastiera).
+		if event.unicode == 43:  # '+'
+			_set_hex_size(hex_size + 0.05); return
+		if event.unicode == 45:  # '-'
+			_set_hex_size(hex_size - 0.05); return
 		match event.keycode:
 			KEY_Q: _rotate_player(-1); return
 			KEY_E: _rotate_player(1); return
 			# ── Calibrazione griglia↔mappa ──
-			KEY_EQUAL, KEY_KP_ADD: _set_hex_size(hex_size + 0.1); return
-			KEY_MINUS, KEY_KP_SUBTRACT: _set_hex_size(hex_size - 0.1); return
-			KEY_LEFT: _nudge_map(Vector2(-0.5, 0)); return
-			KEY_RIGHT: _nudge_map(Vector2(0.5, 0)); return
-			KEY_UP: _nudge_map(Vector2(0, -0.5)); return
-			KEY_DOWN: _nudge_map(Vector2(0, 0.5)); return
+			KEY_KP_ADD: _set_hex_size(hex_size + 0.05); return
+			KEY_KP_SUBTRACT: _set_hex_size(hex_size - 0.05); return
+			KEY_LEFT: _nudge_map(Vector2(-0.25, 0)); return
+			KEY_RIGHT: _nudge_map(Vector2(0.25, 0)); return
+			KEY_UP: _nudge_map(Vector2(0, -0.25)); return
+			KEY_DOWN: _nudge_map(Vector2(0, 0.25)); return
 			KEY_R: _cam_yaw = 0.0; _cam_pitch = 0.62; _cam_dist = 34.0; _update_camera(); return
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_RIGHT:
