@@ -9,7 +9,7 @@ extends Node3D
 @export var tint: Color = Color(0.8, 0.2, 0.2)
 @export var mesh_path: String = ""        ## es. "res://assets/miniatures/warrior.obj"
 @export var cell_size: float = 3.0        ## raggio esagono: dimensiona la pedina
-@export var height_ratio: float = 1.45    ## altezza modello = cell_size * height_ratio
+@export var height_ratio: float = 2.4    ## altezza modello = cell_size * height_ratio (pedina grande ~ esagono)
 
 var _built_size: float = 0.0
 
@@ -140,8 +140,8 @@ func _add_placeholder(mat: StandardMaterial3D) -> void:
 func _add_base() -> void:
 	var base := MeshInstance3D.new()
 	var disc := CylinderMesh.new()
-	disc.top_radius = cell_size * 0.78
-	disc.bottom_radius = cell_size * 0.82
+	disc.top_radius = cell_size * 0.88
+	disc.bottom_radius = cell_size * 0.92
 	disc.height = cell_size * 0.05
 	base.mesh = disc
 	var base_mat := StandardMaterial3D.new()

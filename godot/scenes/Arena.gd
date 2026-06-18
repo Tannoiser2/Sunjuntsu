@@ -45,8 +45,15 @@ var _phase_mode: String = "planning"
 var _resolving_index: int = -1     ## chi sta risolvendo ora (-1 = nessuno)
 var _split_stage: bool = false     ## true = stai risolvendo la PARTE BASSA (iniziativa divisa)
 
+## 1v1 locale (hot-seat): entrambe le pedine sono umane e si passano il
+## dispositivo. `_planning_player` è il giocatore umano che sta programmando ora.
+var _versus: bool = false
+var _planning_player: int = 0
+var _kamae_shown: int = 0    ## quale combattente è mostrato ora nella carta Kamae dell'HUD
+
 
 func _ready() -> void:
+	_versus = (Domain.game_mode == "versus")
 	state = GameState.new()
 	state.map_radius = map_radius
 	_build_environment()
@@ -77,15 +84,42 @@ func _start_duel() -> void:
 	_hud.kamae_chosen.connect(_on_kamae_chosen)
 	_hud.option_chosen.connect(_on_option_chosen)
 	_duel.start()
-	# Carta Kamae del giocatore + segnalino della posizione.
-	var tree := CardDB.kamae_tree_for(state.fighters[0].character.to_lower())
-	if tree.has("card"):
-		_hud.setup_kamae_tree(tree["card"], tree.get("nodes", {}))
+	_planning_player = 0
+	# Carta Kamae del giocatore attivo + segnalino della posizione.
+	_setup_kamae_for(0)
 	_refresh_hand()
 	_refresh_status()
 	_apply_pawn_facing(0); _apply_pawn_facing(1)
-	_hud.set_info("Pianificazione — scegli e programma una carta")
-	_hud.set_hint("PIANIFICAZIONE: 1° click anteprima · 2° click PROGRAMMA. Poi rivelazione e risoluzione per iniziativa (muovi/attacca al tuo turno).")
+	if _versus:
+		_hud.set_info("1v1 locale — Giocatore 1: programma una carta")
+		_hud.set_hint("HOT-SEAT: il Giocatore 1 programma (coperta), poi passa il dispositivo al Giocatore 2. Rivelazione e risoluzione per iniziativa.")
+	else:
+		_hud.set_info("Pianificazione — scegli e programma una carta")
+		_hud.set_hint("PIANIFICAZIONE: 1° click anteprima · 2° click PROGRAMMA. Poi rivelazione e risoluzione per iniziativa (muovi/attacca al tuo turno).")
+
+
+## Indice del combattente umano attivo ORA: chi risolve (in risoluzione) oppure
+## chi programma (in pianificazione). Sostituisce il vecchio "sempre pedina 0".
+func _active() -> int:
+	if _resolving_index >= 0:
+		return _resolving_index
+	return _planning_player
+
+
+## Etichetta del combattente: in 1v1 "Giocatore N", in solo "TU"/"IA".
+func _who(i: int) -> String:
+	if _versus:
+		return "Giocatore %d" % (i + 1)
+	return "TU" if i == 0 else "IA"
+
+
+## Carica nell'HUD la carta Kamae del combattente `i` e posiziona il segnalino.
+func _setup_kamae_for(i: int) -> void:
+	_kamae_shown = i
+	var tree := CardDB.kamae_tree_for(state.fighters[i].character.to_lower())
+	if tree.has("card"):
+		_hud.setup_kamae_tree(tree["card"], tree.get("nodes", {}))
+	_hud.set_kamae_marker(Domain.STANCE_SLUG[state.fighters[i].stance])
 
 
 ## Inizio di un nuovo turno: la fase del MOTORE torna a PLANNING (dopo la pesca).
@@ -96,6 +130,7 @@ func _on_phase_changed(p: int) -> void:
 	_phase_mode = "planning"
 	_resolving_index = -1
 	_split_stage = false
+	_planning_player = 0
 	_selected_card = {}
 	_move_used = false
 	_kamae_used = false
@@ -105,20 +140,25 @@ func _on_phase_changed(p: int) -> void:
 	_hud.hide_options()
 	_hud.hide_played_card()
 	_sync_pawns()
+	_setup_kamae_for(0)
 	_refresh_hand()
 	_refresh_status()
-	_hud.set_info("Pianificazione — scegli e programma una carta")
+	if _versus:
+		_hud.set_info("Giocatore 1: programma una carta")
+	else:
+		_hud.set_info("Pianificazione — scegli e programma una carta")
 
 
 ## 2° click su una carta = PROGRAMMA la carta coperta (fase di pianificazione).
 ## Il movimento NON avviene ora: si farà in risoluzione, nell'ordine d'iniziativa.
 func _on_card_played(card_data: Dictionary) -> void:
 	if _phase_mode != "planning":
-		return   # durante la risoluzione la mano è bloccata
+		return   # durante la risoluzione/handoff la mano è bloccata
 	var id := int(card_data.get("id", -1))
 	if id == -1:
 		return
-	var f := state.fighters[0]
+	var pi := _planning_player
+	var f := state.fighters[pi]
 	if not Duel.playable(f, id):
 		var req: String = CardDB.geometry(id).get("kamae_req", "")
 		_hud.set_hint("⛔ Non giocabile: richiede Kamae %s (sei in %s)" % [
@@ -129,17 +169,36 @@ func _on_card_played(card_data: Dictionary) -> void:
 	if f.focus < cost:
 		_hud.set_hint("◈ Focus insufficiente: servono %d, ne hai %d" % [cost, f.focus])
 		return   # la carta resta in mano
-	if not _duel.plan_card(0, id):   # → quando entrambi pronti parte begin_resolution()
+	if not _duel.plan_card(pi, id):   # → quando entrambi pronti parte begin_resolution()
 		_hud.set_hint("⛔ Impossibile programmare la carta ora (riprova).")
 		_refresh_hand()
 		return
-	# Programmata con successo: mostra la carta giocata e pulisci la selezione.
+	# Programmata con successo: pulisci la selezione.
 	_selected_card = {}
 	_clear_overlays()
 	_hud.hide_kamae()
-	_hud.show_played_card(String(card_data.get("file", "")), String(card_data.get("name", "?")))
+	# 1v1: se l'altro umano deve ancora programmare, passa il dispositivo.
+	if _versus and state.phase == Domain.Phase.PLANNING:
+		_enter_handoff()
+		return
+	if not _versus:
+		_hud.show_played_card(String(card_data.get("file", "")), String(card_data.get("name", "?")))
 	_hud.set_info("Carta programmata (coperta). Rivelazione…")
 	_refresh_hand()
+
+
+## 1v1 hot-seat: il giocatore corrente ha programmato; chiede di passare il
+## dispositivo all'altro umano (che non deve vedere la carta scelta).
+func _enter_handoff() -> void:
+	_phase_mode = "handoff"
+	var other := 1 - _planning_player
+	_hud.show_hand([])              # nasconde la mano: l'altro non deve vederla ancora
+	_hud.hide_kamae()
+	_hud.hide_played_card()
+	_clear_overlays()
+	_hud.show_confirm("Giocatore %d: tocca a te ▶" % (other + 1))
+	_hud.set_info("Giocatore %d ha programmato (coperta)." % (_planning_player + 1))
+	_hud.set_hint("Passa il dispositivo al Giocatore %d, poi premi Conferma per programmare la tua carta." % (other + 1))
 
 
 func _on_fighter_updated(_i: int) -> void:
@@ -160,17 +219,21 @@ func _on_cards_revealed(planned: Dictionary) -> void:
 ## se è l'IA, agisce da sola.
 func _on_await_resolution(i: int) -> void:
 	_resolving_index = i
-	if i == 0:
+	if not state.fighters[i].is_ai:
+		# Umano (giocatore solo, oppure entrambi in 1v1): risoluzione interattiva.
 		_phase_mode = "resolving"
 		_move_used = false
 		_kamae_used = false
-		_selected_card = CardDB.card(state.fighters[0].planned).duplicate()
-		_selected_card["id"] = state.fighters[0].planned
+		_selected_card = CardDB.card(state.fighters[i].planned).duplicate()
+		_selected_card["id"] = state.fighters[i].planned
+		_setup_kamae_for(i)
 		_refresh_overlays()
 		_refresh_kamae_chooser()
 		_refresh_option_chooser()
+		_refresh_status()
 		_hud.show_confirm()
-		_hud.set_info("⚔ Tua risoluzione: %s" % _selected_card.get("name", "?"))
+		var pre := "⚔ %s — risoluzione: %s" if _versus else "⚔ Tua risoluzione: %s"
+		_hud.set_info((pre % [_who(i), _selected_card.get("name", "?")]) if _versus else (pre % _selected_card.get("name", "?")))
 	else:
 		_phase_mode = "ai"
 		_clear_overlays()
@@ -203,7 +266,24 @@ func _run_ai_resolution(i: int) -> void:
 
 ## Conferma la risoluzione della carta del giocatore (movimento già fatto).
 func _confirm_resolution() -> void:
-	if _phase_mode != "resolving" or _resolving_index != 0:
+	# 1v1: conferma del passaggio dispositivo → l'altro umano programma.
+	if _phase_mode == "handoff":
+		_planning_player = 1 - _planning_player
+		_phase_mode = "planning"
+		_resolving_index = -1
+		_selected_card = {}
+		_move_used = false
+		_kamae_used = false
+		_hud.hide_confirm()
+		_setup_kamae_for(_planning_player)
+		_refresh_hand()
+		_refresh_status()
+		_hud.set_info("Giocatore %d: programma una carta" % (_planning_player + 1))
+		_hud.set_hint("Giocatore %d — 1° click anteprima · 2° click PROGRAMMA (coperta)." % (_planning_player + 1))
+		return
+	if _phase_mode != "resolving":
+		return
+	if _resolving_index >= 0 and state.fighters[_resolving_index].is_ai:
 		return
 	if _split_stage:
 		# Conferma della PARTE BASSA (iniziativa divisa): risolvi dall'attuale posizione.
@@ -232,7 +312,7 @@ func _confirm_resolution() -> void:
 func _enter_split_stage() -> void:
 	_split_stage = true
 	_phase_mode = "resolving"
-	_resolving_index = 0
+	# _resolving_index resta quello del combattente che ha appena risolto la parte alta.
 	_move_used = false
 	_kamae_used = true   # niente cambio Kamae nella parte bassa
 	_hud.hide_kamae()
@@ -249,6 +329,7 @@ func _on_turn_resolved(log: Array) -> void:
 	_phase_mode = "planning"
 	_resolving_index = -1
 	_split_stage = false
+	_planning_player = 0
 	_selected_card = {}
 	_clear_overlays()
 	_hud.hide_kamae()
@@ -274,7 +355,7 @@ func _on_duel_over(winner: int) -> void:
 ## Costruisce la mano del giocatore (pedina 0) come schede dati.
 func _refresh_hand() -> void:
 	var entries: Array = []
-	for id in state.fighters[0].hand:
+	for id in state.fighters[_planning_player].hand:
 		var c := CardDB.card(id).duplicate()
 		if c.is_empty():
 			continue
@@ -307,11 +388,11 @@ func _ai_posture(f: GameState.Fighter) -> String:
 func _refresh_status() -> void:
 	var p := state.fighters[0]
 	var e := state.fighters[1]
-	_hud.set_info("Round %d  |  TU %s ❤%d/%d ◈%d [%s]%s mazzo%d scarti%d  —  IA %s ❤%d/%d ◈%d [%s]%s mazzo%d%s" % [
+	_hud.set_info("Round %d  |  %s %s ❤%d/%d ◈%d [%s]%s mazzo%d scarti%d  —  %s %s ❤%d/%d ◈%d [%s]%s mazzo%d%s" % [
 		state.round_num,
-		p.character, p.remaining_wounds(), p.wound_limit, p.focus, Domain.STANCE_NAMES[p.stance], _status_badges(p), p.draw_pile.size(), p.discard.size(),
-		e.character, e.remaining_wounds(), e.wound_limit, e.focus, Domain.STANCE_NAMES[e.stance], _status_badges(e), e.draw_pile.size(), _ai_posture(e)])
-	_hud.set_kamae_marker(Domain.STANCE_SLUG[p.stance])
+		_who(0), p.character, p.remaining_wounds(), p.wound_limit, p.focus, Domain.STANCE_NAMES[p.stance], _status_badges(p), p.draw_pile.size(), p.discard.size(),
+		_who(1), e.character, e.remaining_wounds(), e.wound_limit, e.focus, Domain.STANCE_NAMES[e.stance], _status_badges(e), e.draw_pile.size(), _ai_posture(e)])
+	_hud.set_kamae_marker(Domain.STANCE_SLUG[state.fighters[_kamae_shown].stance])
 
 
 func _sync_pawns() -> void:
@@ -442,7 +523,8 @@ func _spawn_pawns() -> void:
 	var colors := [Color(0.85, 0.2, 0.2), Color(0.2, 0.4, 0.9)]
 	for i in range(2):
 		var f := state.add_fighter(chars[i], starts[i])
-		f.is_ai = (i == 1)   # pedina 0 = giocatore, pedina 1 = IA solo
+		# Solo: pedina 0 = giocatore, pedina 1 = IA. 1v1: entrambe umane.
+		f.is_ai = (i == 1) and not _versus
 		if f.is_ai:
 			# Mazzo SOLO dell'avversario (sottoinsieme curato) + parametri IA.
 			f.draw_pile = CardDB.solo_deck_for(chars[i].to_lower())
@@ -508,7 +590,7 @@ func _draw_overlays_for(card: Dictionary, move_used: bool) -> void:
 	_clear_overlays()
 	if card.is_empty():
 		return
-	var f := state.fighters[0]
+	var f := state.fighters[_active()]
 	var id := int(card.get("id", -1))
 	# La parte bassa (iniziativa divisa) porta la sua geometria esplicita.
 	var g: Dictionary = card.get("geom_override", CardDB.geometry(id))
@@ -556,7 +638,7 @@ func _draw_overlays_for(card: Dictionary, move_used: bool) -> void:
 func _gated_note(g: Dictionary) -> String:
 	if not g.has("move"):
 		return ""
-	var cur: String = Domain.STANCE_SLUG[state.fighters[0].stance]
+	var cur: String = Domain.STANCE_SLUG[state.fighters[_active()].stance]
 	var locked := {}
 	for opt in g["move"].get("opts", []):
 		for a in opt.get("atoms", []):
@@ -626,7 +708,7 @@ func _refresh_kamae_chooser() -> void:
 	if params.is_empty():
 		_hud.hide_kamae()
 		return
-	var f := state.fighters[0]
+	var f := state.fighters[_active()]
 	# Il "cambia kamae" di alcune carte vale solo in una certa Kamae.
 	var gate: String = params.get("gate", "")
 	if gate != "" and gate != Domain.STANCE_SLUG[f.stance]:
@@ -641,16 +723,17 @@ func _refresh_kamae_chooser() -> void:
 ## Mostra il selettore "OPPURE" se la carta in risoluzione ha opzioni alternative.
 ## Pre-seleziona la prima (così c'è sempre un default applicato).
 func _refresh_option_chooser() -> void:
-	var keys: Array = _duel.option_keys(_resolving_index)
+	var ri := _resolving_index
+	var keys: Array = _duel.option_keys(ri)
 	if keys.is_empty():
 		_hud.hide_options()
 		return
-	var g := CardDB.geometry(state.fighters[0].planned)
+	var g := CardDB.geometry(state.fighters[ri].planned)
 	var opts: Array = []
 	for k in keys:
 		opts.append({"alt": k, "label": _option_label(g, k)})
 	_hud.show_options(opts)
-	_duel.set_option_choice(0, keys[0])
+	_duel.set_option_choice(ri, keys[0])
 	_hud.mark_option(String(keys[0]))
 
 
@@ -690,9 +773,9 @@ func _effect_phrase(e: Dictionary) -> String:
 
 
 func _on_option_chosen(alt: String) -> void:
-	if _phase_mode != "resolving" or _resolving_index != 0:
+	if _phase_mode != "resolving" or _resolving_index < 0 or state.fighters[_resolving_index].is_ai:
 		return
-	_duel.set_option_choice(0, alt)
+	_duel.set_option_choice(_resolving_index, alt)
 	_hud.mark_option(alt)
 
 
@@ -700,7 +783,7 @@ func _on_option_chosen(alt: String) -> void:
 func _on_kamae_chosen(slug: String) -> void:
 	if _kamae_used or _selected_card.is_empty():
 		return
-	var f := state.fighters[0]
+	var f := state.fighters[_active()]
 	var g := CardDB.geometry(int(_selected_card.get("id", -1)))
 	var params := _change_kamae_params(g)
 	if params.is_empty():
@@ -722,7 +805,8 @@ func _on_kamae_chosen(slug: String) -> void:
 func _rotate_player(delta: int) -> void:
 	if _selected_card.is_empty():
 		return
-	var f := state.fighters[0]
+	var idx_f := _active()
+	var f := state.fighters[idx_f]
 	var g: Dictionary = _selected_card.get("geom_override", CardDB.geometry(int(_selected_card.get("id", -1))))
 	var facings: Array = (_move_states.get(f.cell, []) as Array).duplicate()
 	# Includi anche il facing attuale tra le scelte (se la rotazione è opzionale lo è già;
@@ -731,7 +815,7 @@ func _rotate_player(delta: int) -> void:
 		# Rotazione libera legacy (carte senza spec move ma con 'rotates').
 		if not g.has("move") and int(g.get("rotates", 0)) > 0:
 			f.facing = (f.facing + delta + 6) % 6
-			_apply_pawn_facing(0)
+			_apply_pawn_facing(idx_f)
 			_refresh_overlays()
 			return
 		# Nessuna rotazione disponibile: spiega perché.
@@ -742,7 +826,7 @@ func _rotate_player(delta: int) -> void:
 	if idx == -1:
 		idx = 0
 	f.facing = int(facings[(idx + delta + facings.size()) % facings.size()])
-	_apply_pawn_facing(0)
+	_apply_pawn_facing(idx_f)
 	_refresh_overlays()
 
 
@@ -750,7 +834,7 @@ func _rotate_player(delta: int) -> void:
 func _rotation_gate_hint(g: Dictionary) -> String:
 	if not g.has("move"):
 		return ""
-	var cur: String = Domain.STANCE_SLUG[state.fighters[0].stance]
+	var cur: String = Domain.STANCE_SLUG[state.fighters[_active()].stance]
 	var gates := {}
 	for opt in g["move"].get("opts", []):
 		for a in opt.get("atoms", []):
@@ -805,16 +889,17 @@ func _update_calib_hint() -> void:
 
 
 func _move_active_to(cell: Vector2i) -> void:
-	# Il movimento è possibile solo durante la TUA risoluzione.
-	if _phase_mode != "resolving" or _resolving_index != 0:
+	# Il movimento è possibile solo durante la risoluzione del combattente umano attivo.
+	if _phase_mode != "resolving" or _resolving_index < 0 or state.fighters[_resolving_index].is_ai:
 		return
-	if state.fighters[0].movement_cancelled:
+	var idx_f := _resolving_index
+	if state.fighters[idx_f].movement_cancelled:
 		_hud.set_hint("⛔ Movimento annullato dall'avversario questo turno")
 		return
 	# Muovi solo verso le celle consentite dalla carta selezionata.
 	if _move_used or not _highlighted.has(cell):
 		return
-	var f := state.fighters[0]
+	var f := state.fighters[idx_f]
 	f.cell = cell
 	# Facing alla destinazione: MANTIENI l'orientamento attuale (niente auto-mira al
 	# nemico). Se non è tra quelli legali della carta, prendi il legale più vicino a
@@ -830,12 +915,12 @@ func _move_active_to(cell: Vector2i) -> void:
 				best_d = dd
 				best = int(fc)
 		f.facing = best
-	var pawn := _pawns[0]
+	var pawn := _pawns[idx_f]
 	var dest := HexGrid.hex_to_world(cell, hex_size)
 	var tw := create_tween()
 	tw.tween_property(pawn, "position", dest, 0.25).set_trans(Tween.TRANS_SINE)
 	_move_used = true            # movimento della carta speso
-	_apply_pawn_facing(0)
+	_apply_pawn_facing(idx_f)
 	_refresh_overlays()          # ora mostra solo l'arco d'attacco aggiornato
 
 
@@ -848,7 +933,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			_set_hex_size(hex_size + 0.05); return
 		if event.unicode == 45:  # '-'
 			_set_hex_size(hex_size - 0.05); return
-		var my_turn := _phase_mode == "resolving" and _resolving_index == 0
+		var my_turn := _phase_mode == "resolving" and _resolving_index >= 0 and not state.fighters[_resolving_index].is_ai
 		match event.keycode:
 			KEY_Q:
 				if my_turn: _rotate_player(-1)
@@ -915,7 +1000,8 @@ func _try_pick(screen_pos: Vector2) -> void:
 ##  · cella gialla (movimento) → muovi lì;
 ##  · cella rossa (bersaglio)  → conferma l'attacco (chiude il turno).
 func _click_cell(cell: Vector2i) -> void:
-	if _phase_mode == "resolving" and _resolving_index == 0 and _attack_preview.has(cell):
+	if _phase_mode == "resolving" and _resolving_index >= 0 \
+			and not state.fighters[_resolving_index].is_ai and _attack_preview.has(cell):
 		_confirm_resolution()
 		return
 	_move_active_to(cell)

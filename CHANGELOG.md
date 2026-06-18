@@ -3,6 +3,31 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.32.0] — 2026-06-18
+### 1v1 locale (hot-seat) con tutta la logica + suggerimento leggibile
+- **Modalità 1v1 locale (hot-seat)**: il pulsante *Versus* ora avvia un vero duello tra
+  **due giocatori umani** sullo stesso dispositivo, usando **tutta** la logica del gioco
+  (programmazione coperta a turno, rivelazione simultanea, risoluzione per iniziativa,
+  Kamae/focus, blocchi, contrattacchi, spinte/collisioni, ecc.). I giocatori **si passano
+  il dispositivo**: dopo che il Giocatore 1 ha programmato (coperta), compare *"Passa il
+  dispositivo al Giocatore 2"*; poi entrambi risolvono la propria carta nell'ordine
+  d'iniziativa, ciascuno muovendo/orientando la **propria** pedina.
+- L'Arena non è più cablata su "pedina 0 = umano": un indice di **combattente attivo**
+  guida overlay, movimento, rotazione (Q/E), scelta Kamae e *OPPURE* per il giocatore di
+  turno (in solo o in 1v1). La carta **Kamae mostrata** segue il combattente attivo.
+- La modalità **Solo** (vs IA) resta invariata.
+- **Suggerimento in basso leggibile**: la scritta dei controlli ora sta in una **barra con
+  sfondo** ancorata in fondo e disegnata **sopra** le carte (z-index alto), così non viene
+  più coperta/illeggibile quando le carte si alzano.
+- Nuovo test headless `test_versus` per il flusso del motore a due umani. Versione 0.32.0.
+
+## [0.31.0] — 2026-06-18
+### Miniature più grandi
+- Le pedine sono ora **più grandi** (altezza ~2.4× il raggio esagono, base che riempie
+  quasi l'esagono) per leggerle meglio sulla mappa.
+- Le **ferite** restano tracciate e mostrate nella barra di stato (❤ rimaste/limite);
+  segnalini-ferita visivi sulla pedina: possibile lavoro futuro. Versione 0.31.0.
+
 ## [0.30.0] — 2026-06-18
 ### Miniature 3D a colori (Guerriero e Ronin)
 - Le pedine ora usano i **modelli .glb texturizzati** caricati (Guerriero/Ronin) con i

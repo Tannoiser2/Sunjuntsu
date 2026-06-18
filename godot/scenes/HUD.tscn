@@ -1,7 +1,14 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scenes/HUD.gd" id="1"]
 [ext_resource type="Script" path="res://scenes/Hand.gd" id="2"]
+
+[sub_resource type="StyleBoxFlat" id="hintbg"]
+bg_color = Color(0.05, 0.06, 0.08, 0.88)
+content_margin_left = 12.0
+content_margin_right = 12.0
+content_margin_top = 5.0
+content_margin_bottom = 5.0
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1")
@@ -22,14 +29,18 @@ offset_bottom = 40.0
 layout_mode = 2
 text = "Senjutsu — mano del giocatore"
 
-[node name="Bottom" type="MarginContainer" parent="."]
+[node name="Bottom" type="PanelContainer" parent="."]
+z_index = 200
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -34.0
-theme_override_constants/margin_left = 12
+offset_top = -40.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("hintbg")
 
 [node name="Hint" type="Label" parent="Bottom"]
 layout_mode = 2
+mouse_filter = 2
+autowrap_mode = 3
 text = "Passa il mouse per ingrandire · click per selezionare · secondo click per giocare la carta"
