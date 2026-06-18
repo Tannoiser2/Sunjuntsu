@@ -14,10 +14,11 @@ const TILE_GROUP := "hex_tile"
 @export var map_radius: int = 3    ## esagono di raggio 3 = 37 celle (colonne 4,5,6,7,6,5,4)
 @export var move_budget: int = 3   ## passi consentiti per dimostrare il movimento
 # ─── Calibrazione mappa↔griglia (regolabili nell'editor) ─────────────────────
-@export var hex_size: float = 2.4          ## raggio esagono in unità mondo
+@export var hex_size: float = 3.2          ## raggio esagono in unità mondo
 @export var map_world_size: float = 44.0   ## lato del piano-mappa (la board occupa la parte centrale)
 @export var map_offset: Vector2 = Vector2.ZERO  ## scostamento mappa (x,z) per centrare gli esagoni
 @export var map_y_rotation: float = 0.0    ## rotazione mappa attorno a Y (gradi)
+@export var mini_scale: float = 0.85       ## altezza miniatura come frazione di hex_size
 
 var state: GameState
 var _tiles: Dictionary = {}        ## Vector2i -> MeshInstance3D
@@ -35,6 +36,7 @@ var _hud: CanvasLayer
 var _duel: Duel
 var _attack_preview: Array[Vector2i] = []
 var _selected_card: Dictionary = {}
+var _ground: MeshInstance3D
 
 
 func _ready() -> void:
@@ -64,7 +66,7 @@ func _start_duel() -> void:
 	_refresh_hand()
 	_refresh_status()
 	_apply_pawn_facing(0); _apply_pawn_facing(1)
-	_hud.set_hint("Carta: 1° click seleziona, 2° gioca · Q/E ruota · click su esagono = muovi/orienta")
+	_hud.set_hint("Carta: 1°click seleziona, 2°gioca · Q/E ruota · click esagono = muovi · CALIBRA: +/- scala, frecce sposta mappa, R reset cam")
 
 
 func _on_card_played(card_data: Dictionary) -> void:
@@ -160,6 +162,10 @@ func _build_environment() -> void:
 
 func _build_map() -> void:
 	_build_ground()
+	_build_tiles()
+
+
+func _build_tiles() -> void:
 	for cell in HexGrid.hexes_in_range(Vector2i.ZERO, map_radius):
 		var tile := MeshInstance3D.new()
 		var mesh := CylinderMesh.new()
@@ -207,6 +213,7 @@ func _build_ground() -> void:
 	ground.position = Vector3(map_offset.x, -0.01, map_offset.y)
 	ground.rotation_degrees.y = map_y_rotation
 	add_child(ground)
+	_ground = ground
 
 
 ## Materiale semi-trasparente della tessera. mode: "none" | "move" | "attack".
@@ -256,6 +263,7 @@ func _spawn_pawns() -> void:
 		var pawn: Node3D = Pawn.new()
 		pawn.set("tint", colors[i])
 		pawn.set("mesh_path", "res://assets/miniatures/%s.obj" % chars[i].to_lower())
+		pawn.set("target_height", hex_size * mini_scale)
 		add_child(pawn)
 		pawn.position = HexGrid.hex_to_world(f.cell, hex_size)
 		pawn.set_meta("fighter_index", i)
@@ -332,6 +340,43 @@ func _apply_pawn_facing(i: int) -> void:
 	_pawns[i].call("face", _facing_angle(state.fighters[i].cell, state.fighters[i].facing))
 
 
+# ─── Calibrazione live griglia↔mappa ─────────────────────────────────────────
+
+func _set_hex_size(v: float) -> void:
+	hex_size = clampf(v, 1.0, 8.0)
+	_rebuild_grid()
+	_update_calib_hint()
+
+
+func _nudge_map(d: Vector2) -> void:
+	map_offset += d
+	if _ground:
+		_ground.position = Vector3(map_offset.x, -0.01, map_offset.y)
+	_update_calib_hint()
+
+
+func _rebuild_grid() -> void:
+	for t in _tiles.values():
+		t.queue_free()
+	_tiles.clear()
+	_highlighted.clear()
+	_attack_preview.clear()
+	_build_tiles()
+	for i in range(_pawns.size()):
+		_pawns[i].position = HexGrid.hex_to_world(state.fighters[i].cell, hex_size)
+		var base_h: float = float(_pawns[i].get("target_height"))
+		if base_h > 0.0:
+			var k: float = (hex_size * mini_scale) / base_h
+			_pawns[i].scale = Vector3(k, k, k)
+		_apply_pawn_facing(i)
+	_select_pawn(0)
+
+
+func _update_calib_hint() -> void:
+	_hud.set_hint("Calibrazione: hex_size=%.1f  offset=(%.1f, %.1f)  ·  +/- scala · frecce sposta mappa · R reset camera" % [
+		hex_size, map_offset.x, map_offset.y])
+
+
 func _move_active_to(cell: Vector2i) -> void:
 	if not _highlighted.has(cell):
 		return
@@ -353,10 +398,17 @@ func _move_active_to(cell: Vector2i) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
-		if event.keycode == KEY_Q:
-			_rotate_player(-1); return
-		elif event.keycode == KEY_E:
-			_rotate_player(1); return
+		match event.keycode:
+			KEY_Q: _rotate_player(-1); return
+			KEY_E: _rotate_player(1); return
+			# ── Calibrazione griglia↔mappa ──
+			KEY_EQUAL, KEY_KP_ADD: _set_hex_size(hex_size + 0.1); return
+			KEY_MINUS, KEY_KP_SUBTRACT: _set_hex_size(hex_size - 0.1); return
+			KEY_LEFT: _nudge_map(Vector2(-0.5, 0)); return
+			KEY_RIGHT: _nudge_map(Vector2(0.5, 0)); return
+			KEY_UP: _nudge_map(Vector2(0, -0.5)); return
+			KEY_DOWN: _nudge_map(Vector2(0, 0.5)); return
+			KEY_R: _cam_yaw = 0.0; _cam_pitch = 0.62; _cam_dist = 34.0; _update_camera(); return
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_RIGHT:
 			_dragging = event.pressed
