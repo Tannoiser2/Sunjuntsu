@@ -25,6 +25,10 @@ var _tree_rect: TextureRect
 var _tree_marker: Panel
 var _tree_nodes: Dictionary = {}
 
+var _played_panel: Control
+var _played_rect: TextureRect
+var _played_label: Label
+
 
 func _ready() -> void:
 	hand.card_played.connect(func(d):
@@ -36,6 +40,42 @@ func _ready() -> void:
 	hand.card_selected.connect(func(d): card_selected.emit(d))
 	_build_kamae_chooser()
 	_build_kamae_tree()
+	_build_played_slot()
+
+
+## Riquadro "carta giocata": mostra la carta programmata finché non è scartata a
+## fine turno (sotto l'albero Kamae).
+func _build_played_slot() -> void:
+	_played_panel = Control.new()
+	_played_panel.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	_played_panel.position = Vector2(12, 300)
+	_played_panel.custom_minimum_size = Vector2(110, 160)
+	_played_panel.size = Vector2(110, 160)
+	_played_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_played_panel)
+	_played_label = Label.new()
+	_played_label.text = "Giocata"
+	_played_label.position = Vector2(0, -20)
+	_played_panel.add_child(_played_label)
+	_played_rect = TextureRect.new()
+	_played_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_played_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_played_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+	_played_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_played_panel.add_child(_played_rect)
+	_played_panel.visible = false
+
+
+## Mostra la carta giocata (immagine o, in mancanza, testo).
+func show_played_card(file: String, name: String) -> void:
+	_played_label.text = "Giocata: " + name
+	var tex := _load_tex("res://assets/cards/" + file) if file != "" else null
+	_played_rect.texture = tex
+	_played_panel.visible = true
+
+
+func hide_played_card() -> void:
+	_played_panel.visible = false
 
 
 func _build_kamae_tree() -> void:

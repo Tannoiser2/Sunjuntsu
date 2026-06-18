@@ -36,6 +36,7 @@ var _order_idx: int = -1
 var _block_ready: Dictionary = {}
 var _fizzled: Dictionary = {}
 var _res_log: Array = []
+var _opt_choice: Dictionary = {}   ## scelta "OPPURE" del giocatore (indice → chiave alt)
 
 ## Velocità d'iniziativa scelta da ogni combattente per il turno corrente
 ## (indice → valore). Le difese a iniziativa variabile scelgono il valore che
@@ -153,6 +154,7 @@ func _setup_resolution() -> void:
 	_set_phase(Domain.Phase.RESOLUTION)
 	_res_log = []
 	_fizzled = {}
+	_opt_choice = {}   # le scelte "OPPURE" si impostano durante la risoluzione
 	# Paga i costi di focus obbligatori; se non basta, la carta "svanisce".
 	for i in range(state.fighters.size()):
 		var f := state.fighters[i]
@@ -360,6 +362,7 @@ func _resolve_card(i: int, block_ready: Dictionary, log: Array) -> void:
 	var c := CardDB.card(f.planned)
 	var g := CardDB.geometry(f.planned)   ## geometria/effetti trascritti (può essere vuota)
 	var name: String = c.get("name", "?")
+	var chosen_alt = _resolve_option(i, g)   ## "OPPURE": opzione scelta (una sola)
 	match c.get("type", ""):
 		"attack":
 			var foe_idx := _opponent_index(i)
@@ -393,17 +396,17 @@ func _resolve_card(i: int, block_ready: Dictionary, log: Array) -> void:
 				for _w in range(n):
 					foe.wounds.append(tag)
 			_apply_if_success(i, foe_idx, g, log)
-			_apply_effects(i, foe_idx, g, "on_hit", log)
+			_apply_effects(i, foe_idx, g, "on_hit", log, chosen_alt)
 			fighter_updated.emit(foe_idx)
 			log.append("%s colpisce %s con %s — %d ferita/e (%d/%d)" % [
 				f.character, foe.character, name, n, foe.wounds.size(), foe.wound_limit])
 		"defence":
-			_apply_effects(i, _opponent_index(i), g, "always", log)
+			_apply_effects(i, _opponent_index(i), g, "always", log, chosen_alt)
 			log.append("%s si mette in guardia (%s)" % [f.character, name])
-		"meditation":
+		"meditation", "core":
 			if g.has("effects"):
-				_apply_effects(i, _opponent_index(i), g, "always", log)
-				log.append("%s medita (%s)" % [f.character, name])
+				_apply_effects(i, _opponent_index(i), g, "always", log, chosen_alt)
+				log.append("%s usa %s" % [f.character, name])
 			else:
 				var fg: int = int(g.get("focus_gain", 1))
 				var dr: int = int(g.get("draw", 1))
@@ -616,13 +619,57 @@ static func defence_v2_cells(origin: Vector2i, facing: int, geom: Dictionary) ->
 ## effetti opzionali a costo di focus (focus_cost>0) vengono saltati
 ## nell'auto-risoluzione (sono facoltativi); quelli non ancora simulati sono
 ## registrati nel log.
-func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: Array) -> void:
+## Imposta la scelta "OPPURE" del giocatore per il combattente `i` (chiave alt).
+func set_option_choice(i: int, alt) -> void:
+	_opt_choice[i] = alt
+
+
+## Opzioni "OPPURE" disponibili per il combattente `i` (chiavi alt in ordine), o [].
+func option_keys(i: int) -> Array:
+	var keys := []
+	for e in CardDB.geometry(state.fighters[i].planned).get("effects", []):
+		var ak = e.get("alt", null)
+		if ak != null and not keys.has(ak):
+			keys.append(ak)
+	return keys
+
+
+## Determina l'unica opzione "OPPURE" da applicare: la scelta del giocatore se
+## impostata, altrimenti la prima opzione applicabile (gate Kamae ok, senza costo
+## focus non pagato). Restituisce null se la carta non ha alternative.
+func _resolve_option(i: int, geom: Dictionary):
+	var effs = geom.get("effects", null)
+	if effs == null:
+		return null
+	var keys := []
+	for e in effs:
+		var ak = e.get("alt", null)
+		if ak != null and not keys.has(ak):
+			keys.append(ak)
+	if keys.is_empty():
+		return null
+	if _opt_choice.has(i) and keys.has(_opt_choice[i]):
+		return _opt_choice[i]
+	var f := state.fighters[i]
+	for ak in keys:
+		for e in effs:
+			if e.get("alt", null) != ak:
+				continue
+			var gate := str(e.get("kamae", ""))
+			if gate != "" and gate != Domain.STANCE_SLUG[f.stance]:
+				continue
+			if int(e.get("focus_cost", 0)) > 0:
+				continue
+			return ak
+	return keys[0]
+
+
+func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: Array, chosen_alt = null) -> void:
 	var effs = geom.get("effects", null)
 	if effs == null:
 		return
 	var f := state.fighters[i]
 	var foe: GameState.Fighter = state.fighters[foe_idx] if foe_idx != -1 else null
-	var done_alt := {}
 	for e in effs:
 		if str(e.get("when", "always")) != when:
 			continue
@@ -631,12 +678,11 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 			continue
 		if int(e.get("focus_cost", 0)) > 0:
 			continue   # bonus opzionale a pagamento: saltato in auto-risoluzione
-		# Gruppi "OPPURE": applica solo la prima alternativa valida.
+		# Gruppi "OPPURE": applica solo gli effetti dell'opzione scelta (chosen_alt).
+		# Gli effetti senza 'alt' valgono sempre.
 		var alt = e.get("alt", null)
-		if alt != null:
-			if done_alt.has(alt):
-				continue
-			done_alt[alt] = true
+		if alt != null and alt != chosen_alt:
+			continue
 		match str(e.get("do", "")):
 			"push":
 				if foe != null: _push(i, foe_idx, int(e.get("n", 1)), log)
@@ -657,6 +703,12 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 				for _d in range(maxi(0, int(e.get("n", 1)))): f.draw_one()
 			"search_draw":
 				for _d in range(maxi(0, int(e.get("n", 1)))): f.draw_one()
+			"stun_self":
+				f.stun += maxi(1, int(e.get("n", 1)))   # "PRENDI 1 stordito"
+				log.append("%s subisce %d stordimento" % [f.character, maxi(1, int(e.get("n", 1)))])
+			"discard_self":
+				for _d in range(maxi(1, int(e.get("n", 1)))):
+					if not f.hand.is_empty(): f.discard.append(f.hand.pop_back())
 			"switch_kamae":
 				# "Passa a Y": spostamento diretto (nessun ramo, nessun focus).
 				var to_slug := str(e.get("to", ""))
