@@ -10,6 +10,7 @@ signal card_selected(card_data: Dictionary)
 signal card_hovered(card_data: Dictionary, entered: bool)
 signal kamae_chosen(slug: String)
 signal confirm_pressed()
+signal option_chosen(alt: String)
 
 @onready var hand: Control = $Hand
 @onready var info: Label = $Top/Info
@@ -45,6 +46,7 @@ func _ready() -> void:
 	_build_kamae_tree()
 	_build_played_slot()
 	_build_confirm_button()
+	_build_option_chooser()
 
 
 ## Riquadro "carta giocata": mostra la carta programmata finché non è scartata a
@@ -87,6 +89,60 @@ var _confirm_btn: Button
 
 ## Pulsante "Conferma azione" mostrato durante la TUA risoluzione: rende esplicita
 ## la chiusura del turno (equivale a INVIO / click sul bersaglio rosso).
+var _opt_box: HBoxContainer
+var _opt_btns: Dictionary = {}
+
+
+## Selettore "OPPURE": una riga di pulsanti, uno per alternativa, mostrato durante
+## la TUA risoluzione quando la carta ha opzioni mutuamente esclusive.
+func _build_option_chooser() -> void:
+	var wrap := VBoxContainer.new()
+	wrap.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	wrap.anchor_left = 0.5; wrap.anchor_right = 0.5
+	wrap.offset_left = -320; wrap.offset_right = 320; wrap.offset_top = 120
+	add_child(wrap)
+	var lbl := Label.new()
+	lbl.text = "Scegli un'opzione (OPPURE):"
+	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	wrap.add_child(lbl)
+	_opt_box = HBoxContainer.new()
+	_opt_box.alignment = BoxContainer.ALIGNMENT_CENTER
+	wrap.add_child(_opt_box)
+	wrap.visible = false
+	_opt_box.set_meta("wrap", wrap)
+
+
+## options: Array di {alt:String, label:String}. Vuoto = nascondi.
+func show_options(options: Array) -> void:
+	for c in _opt_box.get_children():
+		c.queue_free()
+	_opt_btns.clear()
+	var wrap: Control = _opt_box.get_meta("wrap")
+	if options.is_empty():
+		wrap.visible = false
+		return
+	for opt in options:
+		var a := String(opt.get("alt", ""))
+		var b := Button.new()
+		b.custom_minimum_size = Vector2(190, 46)
+		b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		b.text = String(opt.get("label", a))
+		b.pressed.connect(func(): option_chosen.emit(a))
+		_opt_box.add_child(b)
+		_opt_btns[a] = b
+	wrap.visible = true
+
+
+func mark_option(alt: String) -> void:
+	for a in _opt_btns:
+		var b: Button = _opt_btns[a]
+		b.modulate = Color(1.3, 1.2, 0.5) if a == alt else Color.WHITE
+
+
+func hide_options() -> void:
+	(_opt_box.get_meta("wrap") as Control).visible = false
+
+
 func _build_confirm_button() -> void:
 	_confirm_btn = Button.new()
 	_confirm_btn.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)

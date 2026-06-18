@@ -43,6 +43,7 @@ var _ground: MeshInstance3D
 ## (tocca a te risolvere: muovi + attacca nell'ordine d'iniziativa).
 var _phase_mode: String = "planning"
 var _resolving_index: int = -1     ## chi sta risolvendo ora (-1 = nessuno)
+var _split_stage: bool = false     ## true = stai risolvendo la PARTE BASSA (iniziativa divisa)
 
 
 func _ready() -> void:
@@ -74,6 +75,7 @@ func _start_duel() -> void:
 	_hud.card_hovered.connect(_on_card_hovered)
 	_hud.confirm_pressed.connect(_confirm_resolution)
 	_hud.kamae_chosen.connect(_on_kamae_chosen)
+	_hud.option_chosen.connect(_on_option_chosen)
 	_duel.start()
 	# Carta Kamae del giocatore + segnalino della posizione.
 	var tree := CardDB.kamae_tree_for(state.fighters[0].character.to_lower())
@@ -93,12 +95,14 @@ func _on_phase_changed(p: int) -> void:
 		return
 	_phase_mode = "planning"
 	_resolving_index = -1
+	_split_stage = false
 	_selected_card = {}
 	_move_used = false
 	_kamae_used = false
 	_clear_overlays()
 	_hud.hide_kamae()
 	_hud.hide_confirm()
+	_hud.hide_options()
 	_hud.hide_played_card()
 	_sync_pawns()
 	_refresh_hand()
@@ -164,12 +168,14 @@ func _on_await_resolution(i: int) -> void:
 		_selected_card["id"] = state.fighters[0].planned
 		_refresh_overlays()
 		_refresh_kamae_chooser()
+		_refresh_option_chooser()
 		_hud.show_confirm()
 		_hud.set_info("⚔ Tua risoluzione: %s" % _selected_card.get("name", "?"))
 	else:
 		_phase_mode = "ai"
 		_clear_overlays()
 		_hud.hide_kamae()
+		_hud.hide_options()
 		_hud.hide_confirm()
 		_hud.set_info("L'avversario agisce…")
 		_run_ai_resolution(i)
@@ -181,7 +187,7 @@ func _run_ai_resolution(i: int) -> void:
 	var foe := state.opponent_of(f)
 	if foe != null:
 		var g := CardDB.geometry(f.planned)
-		if g.has("move"):
+		if g.has("move") and not f.movement_cancelled:
 			var dest := AI.move_target(state, f)
 			if dest != f.cell and not state.is_blocked(dest):
 				f.cell = dest
@@ -198,23 +204,55 @@ func _run_ai_resolution(i: int) -> void:
 func _confirm_resolution() -> void:
 	if _phase_mode != "resolving" or _resolving_index != 0:
 		return
+	if _split_stage:
+		# Conferma della PARTE BASSA (iniziativa divisa): risolvi dall'attuale posizione.
+		_split_stage = false
+		_phase_mode = "wait"
+		_clear_overlays()
+		_hud.hide_confirm()
+		_selected_card = {}
+		_duel.resolve_split_now()
+		return
 	# Commit To Hit (regolamento p.10): è solo un PROMEMORIA non bloccante — non deve
 	# mai impedire di concludere il turno (altrimenti la risoluzione si inceppa).
 	_phase_mode = "wait"
 	_clear_overlays()
 	_hud.hide_kamae()
 	_hud.hide_confirm()
+	_hud.hide_options()
 	_selected_card = {}
 	_duel.resolve_current()
+	if _duel.has_pending_split():
+		_enter_split_stage()
+
+
+## Entra nella seconda fase di una carta a iniziativa divisa: il giocatore
+## posiziona e attacca con la PARTE BASSA, poi Conferma.
+func _enter_split_stage() -> void:
+	_split_stage = true
+	_phase_mode = "resolving"
+	_resolving_index = 0
+	_move_used = false
+	_kamae_used = true   # niente cambio Kamae nella parte bassa
+	_hud.hide_kamae()
+	_hud.hide_options()
+	var g := _duel.pending_split_geom()
+	_selected_card = {"id": -1, "type": "attack", "name": "Parte bassa", "geom_override": g}
+	_refresh_overlays()
+	_hud.show_confirm("Conferma parte bassa ▶")
+	var sp_ini := _duel.pending_split_initiative()
+	_hud.set_info("⚔ Parte bassa (iniziativa %d): muovi e attacca" % sp_ini)
 
 
 func _on_turn_resolved(log: Array) -> void:
 	_phase_mode = "planning"
 	_resolving_index = -1
+	_split_stage = false
 	_selected_card = {}
 	_clear_overlays()
 	_hud.hide_kamae()
 	_hud.hide_confirm()
+	_hud.hide_options()
 	_sync_pawns()
 	_refresh_hand()
 	_refresh_status()
@@ -229,6 +267,7 @@ func _on_duel_over(winner: int) -> void:
 	_clear_overlays()
 	_hud.hide_kamae()
 	_hud.hide_confirm()
+	_hud.hide_options()
 
 
 ## Costruisce la mano del giocatore (pedina 0) come schede dati.
@@ -450,7 +489,8 @@ func _draw_overlays_for(card: Dictionary, move_used: bool) -> void:
 		return
 	var f := state.fighters[0]
 	var id := int(card.get("id", -1))
-	var g := CardDB.geometry(id)
+	# La parte bassa (iniziativa divisa) porta la sua geometria esplicita.
+	var g: Dictionary = card.get("geom_override", CardDB.geometry(id))
 	# Carta non giocabile nella Kamae attuale: nessun overlay.
 	if not Duel.playable(f, id):
 		var req: String = g.get("kamae_req", "")
@@ -577,6 +617,64 @@ func _refresh_kamae_chooser() -> void:
 	_hud.show_kamae(cur, targets)
 
 
+## Mostra il selettore "OPPURE" se la carta in risoluzione ha opzioni alternative.
+## Pre-seleziona la prima (così c'è sempre un default applicato).
+func _refresh_option_chooser() -> void:
+	var keys: Array = _duel.option_keys(_resolving_index)
+	if keys.is_empty():
+		_hud.hide_options()
+		return
+	var g := CardDB.geometry(state.fighters[0].planned)
+	var opts: Array = []
+	for k in keys:
+		opts.append({"alt": k, "label": _option_label(g, k)})
+	_hud.show_options(opts)
+	_duel.set_option_choice(0, keys[0])
+	_hud.mark_option(String(keys[0]))
+
+
+## Etichetta leggibile di un'opzione OPPURE: concatena le frasi dei suoi effetti.
+func _option_label(g: Dictionary, alt) -> String:
+	var parts: Array = []
+	for e in g.get("effects", []):
+		if str(e.get("alt", "")) != str(alt):
+			continue
+		parts.append(_effect_phrase(e))
+	return " + ".join(parts) if not parts.is_empty() else str(alt)
+
+
+func _effect_phrase(e: Dictionary) -> String:
+	var n := int(e.get("n", 1))
+	var s := ""
+	match str(e.get("do", "")):
+		"draw": s = "Pesca %d" % n
+		"search_draw": s = "Cerca+pesca %d" % n
+		"focus": s = "+%d focus" % n
+		"change_kamae": s = "Cambia Kamae %d" % n
+		"switch_kamae": s = "Passa a %s" % Domain.STANCE_NAMES.get(Domain.STANCE_FROM_SLUG.get(str(e.get("to","")), -1), str(e.get("to","")))
+		"discard_self": s = "Scarta %d" % n
+		"stun_self": s = "Prendi %d stordito" % n
+		"push": s = "Spingi %d" % n
+		"pull": s = "Tira %d" % n
+		"rotate_target": s = "Ruota avv. %d" % n
+		"foe_lose_focus": s = "Avv. −%d focus" % n
+		"foe_discard": s = "Avv. scarta %d" % n
+		"spend_focus": s = "Spendi focus"
+		"replace_wound_bleed": s = "Ferita→sanguinante"
+		"bleed": s = "Sanguinante"
+		_: s = str(e.get("do", "?"))
+	if int(e.get("focus_cost", 0)) > 0:
+		s += " (◈%d)" % int(e.get("focus_cost", 0))
+	return s
+
+
+func _on_option_chosen(alt: String) -> void:
+	if _phase_mode != "resolving" or _resolving_index != 0:
+		return
+	_duel.set_option_choice(0, alt)
+	_hud.mark_option(alt)
+
+
 ## Il giocatore sceglie la nuova posizione Kamae (con focus dai rami rosa).
 func _on_kamae_chosen(slug: String) -> void:
 	if _kamae_used or _selected_card.is_empty():
@@ -605,7 +703,7 @@ func _rotate_player(delta: int) -> void:
 	var facings: Array = (_move_states.get(f.cell, []) as Array).duplicate()
 	if facings.is_empty():
 		# Carta senza specifica `move` ma con rotazioni: rotazione libera (legacy).
-		var g := CardDB.geometry(int(_selected_card.get("id", -1)))
+		var g: Dictionary = _selected_card.get("geom_override", CardDB.geometry(int(_selected_card.get("id", -1))))
 		if not g.has("move") and int(g.get("rotates", 0)) > 0:
 			f.facing = (f.facing + delta + 6) % 6
 			_apply_pawn_facing(0)
@@ -662,21 +760,24 @@ func _move_active_to(cell: Vector2i) -> void:
 	# Il movimento è possibile solo durante la TUA risoluzione.
 	if _phase_mode != "resolving" or _resolving_index != 0:
 		return
+	if state.fighters[0].movement_cancelled:
+		_hud.set_hint("⛔ Movimento annullato dall'avversario questo turno")
+		return
 	# Muovi solo verso le celle consentite dalla carta selezionata.
 	if _move_used or not _highlighted.has(cell):
 		return
 	var f := state.fighters[0]
 	f.cell = cell
-	# Facing alla destinazione: tra quelli legali, il più vicino al "verso nemico".
+	# Facing alla destinazione: MANTIENI l'orientamento attuale (niente auto-mira al
+	# nemico). Se non è tra quelli legali della carta, prendi il legale più vicino a
+	# quello corrente. La rotazione resta una SCELTA del giocatore (Q/E).
 	var facings: Array = _move_states.get(cell, [])
-	var want: int = AI.facing_toward(cell, state.fighters[1].cell)
-	if facings.is_empty():
-		f.facing = want
-	else:
+	if not facings.is_empty() and not facings.has(f.facing):
+		var cur: int = f.facing
 		var best: int = int(facings[0])
 		var best_d: int = 99
 		for fc in facings:
-			var dd: int = mini((int(fc) - want + 6) % 6, (want - int(fc) + 6) % 6)
+			var dd: int = mini((int(fc) - cur + 6) % 6, (cur - int(fc) + 6) % 6)
 			if dd < best_d:
 				best_d = dd
 				best = int(fc)

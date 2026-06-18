@@ -37,6 +37,7 @@ var _block_ready: Dictionary = {}
 var _fizzled: Dictionary = {}
 var _res_log: Array = []
 var _opt_choice: Dictionary = {}   ## scelta "OPPURE" del giocatore (indice → chiave alt)
+var _pending_split: Dictionary = {}   ## parte bassa (iniziativa divisa) del giocatore in attesa
 
 ## Velocità d'iniziativa scelta da ogni combattente per il turno corrente
 ## (indice → valore). Le difese a iniziativa variabile scelgono il valore che
@@ -48,13 +49,48 @@ func _init(initial_state: GameState) -> void:
 	state = initial_state
 
 
+## Una carta è "core" (Speciale o Arma core): inizia in mano, non conta verso il
+## limite di mano e non può MAI essere scartata (regolamento p.10). Comprende sia la
+## carta abilità core (type "core") sia la carta arma core (keyword "Core").
+static func is_core(cid: int) -> bool:
+	var c := CardDB.card(cid)
+	return str(c.get("type", "")) == "core" or ("Core" in c.get("keywords", []))
+
+
+## Carte non-core in mano (le core non contano verso il limite).
+func _noncore_in_hand(f: GameState.Fighter) -> int:
+	var n := 0
+	for cid in f.hand:
+		if not is_core(cid):
+			n += 1
+	return n
+
+
+## Scarta UNA carta non-core dalla mano (le core non si scartano). True se riuscito.
+func _discard_one_noncore(f: GameState.Fighter) -> bool:
+	for k in range(f.hand.size() - 1, -1, -1):
+		if not is_core(f.hand[k]):
+			f.discard.append(f.hand[k]); f.hand.remove_at(k)
+			return true
+	return false
+
+
 func start() -> void:
-	# Setup (passo 13): pesca fino al limite di mano. Gli avversari solo NON hanno
-	# mano: il loro mazzo resta intero e rivelano la cima ogni turno.
+	# Setup (regolamento p.4): le carte CORE partono in mano; le altre si rimescolano
+	# nel mazzo. Le core non contano verso il limite e non rientrano mai nel mazzo.
+	# Gli avversari solo NON hanno mano: rivelano la cima del mazzo ogni turno.
 	for f in state.fighters:
 		if f.is_ai:
 			continue
-		while f.hand.size() < f.hand_limit:
+		var rest: Array = []
+		for cid in f.draw_pile:
+			if is_core(cid):
+				if not f.hand.has(cid):
+					f.hand.append(cid)
+			else:
+				rest.append(cid)
+		f.draw_pile = rest
+		while _noncore_in_hand(f) < f.hand_limit:
 			if f.draw_one() == -1:
 				break
 	_begin_turn()   # passo Draw del 1° turno
@@ -66,6 +102,10 @@ func start() -> void:
 ## una ferita sanguinante scarta 1 carta dal mazzo, poi pesca 1 carta (mazzo
 ## vuoto ⇒ ferita). Restituisce true se il duello continua.
 func _begin_turn() -> bool:
+	# Azzera gli stati "una tantum" del turno (la riduzione danno persistente NO).
+	for f in state.fighters:
+		f.movement_cancelled = false
+		f.block_initiative_bonus = 0
 	for f in state.fighters:
 		if f.is_defeated() or f.is_ai:
 			continue   # gli avversari solo saltano il passo Draw (e il sanguinamento conta come ferita)
@@ -155,6 +195,7 @@ func _setup_resolution() -> void:
 	_res_log = []
 	_fizzled = {}
 	_opt_choice = {}   # le scelte "OPPURE" si impostano durante la risoluzione
+	_pending_split = {}
 	# Paga i costi di focus obbligatori; se non basta, la carta "svanisce".
 	for i in range(state.fighters.size()):
 		var f := state.fighters[i]
@@ -176,9 +217,8 @@ func _setup_resolution() -> void:
 				continue
 		var disc := int(pc.get("discard", 0))
 		for _k in range(disc):
-			if f.hand.is_empty():
-				break
-			f.discard.append(f.hand.pop_back())
+			if not _discard_one_noncore(f):
+				break   # niente non-core da scartare (le core non si scartano)
 
 	_resolve_chosen_speeds(_fizzled)
 
@@ -249,6 +289,49 @@ func resolve_current() -> void:
 	if i == -1:
 		return
 	_resolve_card(i, _block_ready, _res_log)
+	if not _pending_split.is_empty():
+		return   # in pausa: il giocatore deve risolvere la parte bassa (resolve_split_now)
+	var w := _check_winner()
+	if w != -2:
+		_finish(_res_log, w)
+		return
+	_advance_resolution()
+
+
+## True se la parte bassa (iniziativa divisa) del giocatore attende la risoluzione.
+func has_pending_split() -> bool:
+	return not _pending_split.is_empty()
+
+
+## Geometria della parte bassa (per overlay/movimento nella scena).
+func pending_split_geom() -> Dictionary:
+	if _pending_split.is_empty():
+		return {}
+	var sp: Dictionary = _pending_split["split"]
+	var g := {"type": "attack"}
+	if sp.has("move"): g["move"] = sp["move"]
+	if sp.has("attack"): g["attack"] = sp["attack"]
+	if sp.has("wound_kind"): g["wound_kind"] = sp["wound_kind"]
+	return g
+
+
+## Iniziativa (velocità) della parte bassa in attesa, per l'etichetta UI.
+func pending_split_initiative() -> int:
+	if _pending_split.is_empty():
+		return -1
+	return int((_pending_split["split"] as Dictionary).get("initiative", -1))
+
+
+## La scena ha posizionato la pedina per la parte bassa: applica l'attacco della
+## parte bassa dalla posizione CORRENTE (niente auto-mossa) e prosegui l'ordine.
+func resolve_split_now() -> void:
+	if _pending_split.is_empty():
+		return
+	var i: int = _pending_split["i"]
+	var split: Dictionary = _pending_split["split"]
+	var name: String = _pending_split["name"]
+	_pending_split = {}
+	_resolve_split_bottom(i, split, name, _res_log, false)   # do_move=false: usa la posizione scelta
 	var w := _check_winner()
 	if w != -2:
 		_finish(_res_log, w)
@@ -367,7 +450,12 @@ func _resolve_card(i: int, block_ready: Dictionary, log: Array) -> void:
 		"attack":
 			_resolve_attack_top(i, g, name, log, chosen_alt)
 			if g.has("split"):
-				_resolve_split_bottom(i, g["split"], name, log)
+				# Per il giocatore (interattivo) la parte bassa la guida la scena
+				# (muovi/attacca + Conferma); per IA/headless si auto-risolve.
+				if interactive and not f.is_ai:
+					_pending_split = {"i": i, "split": g["split"], "name": name}
+				else:
+					_resolve_split_bottom(i, g["split"], name, log)
 		"defence":
 			_apply_effects(i, _opponent_index(i), g, "always", log, chosen_alt)
 			log.append("%s si mette in guardia (%s)" % [f.character, name])
@@ -422,6 +510,8 @@ func _resolve_attack_top(i: int, g: Dictionary, name: String, log: Array, chosen
 	if kind == "exec":
 		foe.wounds.append("exec"); foe.wounds.resize(foe.wound_limit)
 	elif n > 0:
+		if foe.damage_reduction > 0:
+			n = maxi(1, n - foe.damage_reduction)   # riduzione persistente (min 1)
 		var tag := "bleed" if kind == "bleed" else "wound"
 		for _w in range(n):
 			foe.wounds.append(tag)
@@ -436,13 +526,13 @@ func _resolve_attack_top(i: int, g: Dictionary, name: String, log: Array, chosen
 ## La parte sotto è mandatoria: per il giocatore si auto-risolve (mossa obbligatoria
 ## verso il facing) subito dopo la parte sopra; il suo attacco usa l'iniziativa
 ## della parte sotto (così il blocco si differenzia per velocità).
-func _resolve_split_bottom(i: int, split: Dictionary, name: String, log: Array) -> void:
+func _resolve_split_bottom(i: int, split: Dictionary, name: String, log: Array, do_move: bool = true) -> void:
 	var f := state.fighters[i]
 	var foe_idx := _opponent_index(i)
 	if foe_idx == -1:
 		return
 	var foe := state.fighters[foe_idx]
-	if split.has("move"):
+	if do_move and split.has("move"):
 		_auto_move_mandatory(i, split["move"])
 		fighter_updated.emit(i)
 	var bspeed := _hobbled(i, int(split.get("initiative", _speed_of(i))))
@@ -462,6 +552,8 @@ func _resolve_split_bottom(i: int, split: Dictionary, name: String, log: Array) 
 				if kind == "exec":
 					foe.wounds.append("exec"); foe.wounds.resize(foe.wound_limit)
 				else:
+					if foe.damage_reduction > 0:
+						n = maxi(1, n - foe.damage_reduction)
 					var tag := "bleed" if kind == "bleed" else "wound"
 					for _w in range(n):
 						foe.wounds.append(tag)
@@ -569,8 +661,12 @@ func _collect_block_hexes(def_idx: int, atk_speed: int) -> Dictionary:
 		blocks[cell] = true   # terreno = blocco a tutte le iniziative (cond. 2)
 	var from_def := false
 	var dfn := state.fighters[def_idx]
+	# Il blocco è efficace alla velocità scelta, allargata da Blocco Ampio (±bonus).
+	var bonus: int = dfn.block_initiative_bonus
+	var ready_sp: int = int(_block_ready.get(def_idx, -1))
+	var matches: bool = ready_sp != -1 and absi(ready_sp - atk_speed) <= bonus
 	if dfn.planned != -1 and not _fizzled.has(def_idx) \
-			and int(_block_ready.get(def_idx, -1)) == atk_speed \
+			and matches \
 			and CardDB.card(dfn.planned).get("type", "") == "defence":
 		for cell in defence_v2_cells(dfn.cell, dfn.facing, CardDB.geometry(dfn.planned)).keys():
 			blocks[cell] = true
@@ -775,7 +871,7 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 				log.append("%s subisce %d stordimento" % [f.character, maxi(1, int(e.get("n", 1)))])
 			"discard_self":
 				for _d in range(maxi(1, int(e.get("n", 1)))):
-					if not f.hand.is_empty(): f.discard.append(f.hand.pop_back())
+					if not _discard_one_noncore(f): break
 			"switch_kamae":
 				# "Passa a Y": spostamento diretto (nessun ramo, nessun focus).
 				var to_slug := str(e.get("to", ""))
@@ -796,11 +892,58 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 							f.stance = Domain.STANCE_FROM_SLUG[pref]
 							log.append("%s cambia Kamae in %s" % [f.character, Domain.STANCE_NAMES[f.stance]])
 							break
-			"spend_focus", "reduce_damage", "cancel_movement", "block_initiative":
-				log.append("  (effetto «%s» non ancora simulato)" % str(e.get("do", "")))
+			"spend_focus":
+				# Spende i propri focus: tutti, tutti-tranne-N, o un numero fisso.
+				if bool(e.get("all", false)):
+					f.focus = 0
+				elif e.has("all_but"):
+					f.focus = mini(f.focus, int(e.get("all_but", 0)))
+				else:
+					f.focus = maxi(0, f.focus - int(e.get("n", 1)))
+			"foe_lose_focus":
+				if foe != null: foe.focus = maxi(0, foe.focus - int(e.get("n", 1)))
+			"foe_discard":
+				if foe != null:
+					for _d in range(maxi(1, int(e.get("n", 1)))):
+						if not foe.hand.is_empty(): foe.discard.append(foe.hand.pop_back())
+			"reduce_damage":
+				# Persistente (carta "rimane in gioco"): riduce ogni attacco subito.
+				f.damage_reduction += maxi(1, int(e.get("n", 1)))
+				log.append("%s: riduzione danno +%d (persistente)" % [f.character, maxi(1, int(e.get("n", 1)))])
+			"reset_deck":
+				# Rimescola nel mazzo le carte abilità NON-meditazione (mano + scarti) e rimescola.
+				_reset_deck(f, log)
+			"cancel_movement":
+				if foe != null:
+					foe.movement_cancelled = true
+					log.append("%s annulla il movimento di %s" % [f.character, foe.character])
+			"cancel_abilities":
+				if foe != null and (foe.damage_reduction > 0 or foe.block_initiative_bonus > 0):
+					foe.damage_reduction = 0
+					foe.block_initiative_bonus = 0
+					log.append("%s annulla le abilità attive di %s" % [f.character, foe.character])
+			"block_initiative":
+				f.block_initiative_bonus += maxi(1, int(e.get("n", 1)))
+				log.append("%s: intervallo blocco +%d" % [f.character, maxi(1, int(e.get("n", 1)))])
 		if foe != null:
 			fighter_updated.emit(foe_idx)
 	fighter_updated.emit(i)
+
+
+## "Reset Deck" (es. Istinto Bruciante): rimescola nel mazzo tutte le carte abilità
+## NON-meditazione presenti in mano e negli scarti, poi rimescola il mazzo.
+func _reset_deck(f: GameState.Fighter, log: Array) -> void:
+	var moved := 0
+	for src in [f.hand, f.discard]:
+		var keep := []
+		for cid in src:
+			if str(CardDB.card(cid).get("type", "")) == "meditation" or is_core(cid):
+				keep.append(cid)
+			else:
+				f.draw_pile.append(cid); moved += 1
+		src.assign(keep)
+	f.draw_pile.shuffle()
+	log.append("%s rimescola nel mazzo %d carte non-meditazione" % [f.character, moved])
 
 
 ## Spinge `foe` di `n` esagoni lontano da `att`, se le celle sono libere.
@@ -872,14 +1015,20 @@ func _resolve_collision(victim_idx: int, dest: Vector2i, log: Array) -> void:
 
 func _cleanup(log: Array) -> void:
 	_set_phase(Domain.Phase.CLEANUP)
-	# Passo "Discard": scarta la carta giocata e rientra nel limite di mano.
+	# Passo "Discard": la carta giocata va negli scarti, MA le core tornano in mano
+	# (non si scartano mai, regolamento p.10). Poi rientra nel limite di mano.
 	for f in state.fighters:
 		if f.planned != -1:
-			f.discard.append(f.planned)
+			if is_core(f.planned) and not f.is_ai:
+				if not f.hand.has(f.planned):
+					f.hand.append(f.planned)   # la core torna in mano
+			else:
+				f.discard.append(f.planned)
 			f.planned = -1
-		# Se la mano supera il limite, scarta a faccia in giù fino al limite.
-		while f.hand.size() > f.hand_limit:
-			f.discard.append(f.hand.pop_back())
+		# Se le carte NON-core superano il limite, scartane (le core non contano).
+		while _noncore_in_hand(f) > f.hand_limit:
+			if not _discard_one_noncore(f):
+				break
 			log.append("%s scarta in eccesso (limite mano %d)" % [f.character, f.hand_limit])
 		# Effetti di fine turno: gli azzoppamenti ruotano (e scadono).
 		f.tick_hobbles()

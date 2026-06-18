@@ -3,6 +3,89 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.25.0] — 2026-06-18
+### Carte CORE (Speciale + Arma) e setup iniziale corretti
+- **Setup iniziale fedele** (regolamento p.4): le carte **core** (la carta Speciale e la
+  carta **Arma** core) partono **in mano** e il resto si rimescola nel mazzo; prima erano
+  erroneamente mescolate nel mazzo e pescate a caso.
+- **Le core non si scartano mai** (p.10): la carta core giocata **torna in mano** invece
+  di finire negli scarti; non vengono toccate da scarto-per-limite, costi di gioco
+  (`SCARTA 1 CARTA`), `discard_self` né dal `reset_deck`.
+- **Non contano verso il limite di mano**: il limite (5) si applica solo alle carte
+  non-core, quindi tieni 5 non-core + Speciale + Arma.
+- `is_core` riconosce sia il tipo "core" sia la keyword "Core" (carte arma: Nodachi #72,
+  Naginata #71). Nuovo test `test_core`; suite completa verde (11). Versione 0.25.0.
+
+## [0.24.0] — 2026-06-18
+### Iniziativa divisa interattiva + verbi di timing
+- **Parte bassa (iniziativa divisa) interattiva**: quando giochi una carta a iniziativa
+  divisa, prima risolvi la parte sopra (muovi/attacca/Conferma), poi entri in una seconda
+  fase per la **parte bassa** — riposizioni la pedina secondo la sua mossa e attacchi, con
+  il pulsante "Conferma parte bassa". Per l'IA/headless resta automatica. Nuovi metodi
+  motore `has_pending_split`/`pending_split_geom`/`resolve_split_now` e overlay con
+  geometria esplicita (`geom_override`).
+- **Verbi di timing implementati** (prima stub):
+  - `cancel_movement` — annulla il movimento dell'avversario per il turno (rispettato sia
+    dall'IA che dal giocatore se chi annulla risolve prima).
+  - `cancel_abilities` — azzera gli effetti persistenti dell'avversario (es. Armatura Pesante).
+  - `block_initiative` — allarga di N l'intervallo d'iniziativa a cui il blocco è efficace
+    (Blocco Ampio): il blocco ferma anche attacchi a ±N dalla velocità scelta.
+  - Stati per-turno azzerati a inizio turno (`movement_cancelled`, `block_initiative_bonus`).
+- Test estesi: `test_effects` (cancel_movement/abilities, block_initiative) e `test_split`
+  (flusso interattivo della parte bassa). Suite completa verde (10). Versione 0.24.0.
+
+## [0.23.0] — 2026-06-18
+### Scelta OPPURE interattiva + nuovi verbi effetto
+- **OPPURE interattivo**: durante la tua risoluzione, se la carta ha opzioni mutuamente
+  esclusive, compare un selettore a pulsanti con l'etichetta di ciascuna opzione; la prima
+  è pre-selezionata. La scelta guida quale effetto si applica (`set_option_choice`).
+- **Gruppi `alt` rigenerati** dai marcatori "OPPURE" su tutte le carte ri-trascritte di
+  Guerriero e Ronin (le core #23/#53 mantengono la struttura hand-crafted verificata).
+- **Nuovi verbi effetto** nel motore: `spend_focus` (tutto / tutto-tranne-N / N),
+  `foe_lose_focus`, `foe_discard`, `reduce_damage` (persistente, es. Armatura Pesante:
+  riduce ogni attacco subito, min 1), `reset_deck` (rimescola le abilità non-meditazione).
+  Restano stub dichiarati: `cancel_movement`, `cancel_abilities`, `block_initiative`
+  (richiedono timing tra le carte). Nuovo campo `damage_reduction` sul combattente.
+- Nuovo test `test_effects` (verbi + presenza gruppi OPPURE). Suite completa verde (10).
+  Versione 0.23.0.
+
+## [0.22.0] — 2026-06-18
+### Ri-trascrizione completa delle carte del Ronin (dalle immagini)
+- **22 carte uniche del Ronin ri-lette dalle immagini** (6 agenti di visione) e riscritte
+  in `geometry.json`, stessa legenda icone del Guerriero. Aggiunte molte **iniziative
+  divise** (split: parte sopra/sotto a velocità diverse) trascritte fedelmente, **counter**
+  (Difesa d'Acciaio ▼6/5/4), **NON BLOCCABILE** (Chiatta di Buoi), `kamae_req` Aggressività
+  (Carica del Toro, Vortice Cremisi), asterischi e costi.
+- Personaggio Ronin (Ferite 5 · Mano 5 · Mazzo 27) e albero Kamae letti.
+- Corretto un errore storico: **Carica del Toro (#26)** colpisce Fronte-Sx/Fronte-Dx (non
+  il fronte) e **richiede Aggressività**; aggiornati i test di regressione `test_split`
+  (ora usa #24 Vortice Cremisi per lo split a doppio attacco) e `test_combat2`.
+- Carta core #23 mantenuta nella struttura OPPURE verificata (le opzioni OPPURE di alcune
+  altre carte restano un'approssimazione, annotata: il motore applica tutte le righe).
+- Excel `Ronin_carte.xlsx` rigenerato (22 carte + personaggio + Kamae, colonna "Iniz.
+  divisa" e "DA VERIFICARE"). Suite test tutta verde. Versione 0.22.0.
+
+## [0.21.0] — 2026-06-18
+### Ri-trascrizione completa delle carte del Guerriero (dalle immagini)
+- **Tutte le 22 carte uniche del Guerriero ri-lette dalle immagini ad alta risoluzione**
+  (5 agenti di visione, legenda icone corretta) e riscritte in `geometry.json`. Corretti
+  errori sistematici della vecchia trascrizione a mano:
+  - **Aggressività (crisantemo rosso)** vs **costo Focus (4 quadretti arancioni)**: prima
+    confusi di continuo, ora distinti.
+  - **Kabuto = l'avversario** (es. "Spingi [avversario] 1"), non un'icona generica.
+  - **Asterisco** = effetto sul bersaglio (prima letto come "0 ferite").
+  - Aggiunti flag **NON BLOCCABILE**, carte **istantanee** (addizione/sostituzione),
+    **counter** sulle difese (Blocco Cinereo ▼8), `kamae_req` (Fenice Fiammante = Aggr.),
+    costi di gioco (scarti).
+- Excel di revisione `Guerriero_carte.xlsx` rigenerato (22 carte + personaggio + Kamae),
+  con colonna "DA VERIFICARE" sui punti incerti.
+- Importate le carte inglesi (`Tabelle_Materiali/Senjutsu/Carte INGLESE/`) come controprova.
+- **Rotazione manuale**: dopo il movimento la pedina del giocatore **mantiene
+  l'orientamento** invece di auto-mirare al nemico; la rotazione torna una scelta con
+  Q/E (prima ruotava da sola).
+- Test invariati e verdi (allcards 44, turnflow, split, multi, combat2, blocks). Alcuni
+  effetti senza verbo nel motore restano inerti (annotati). Versione 0.21.0.
+
 ## [0.20.0] — 2026-06-18
 ### Risoluzione sbloccata + anteprima azione al passaggio del mouse
 - **Fine dello "stallo" in risoluzione**: dopo aver mosso e visto i bersagli rossi, ora

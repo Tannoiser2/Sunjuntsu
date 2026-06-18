@@ -48,8 +48,10 @@ func _ready() -> void:
 	var s3 := GameState.new()
 	var a3 := _mk("Ronin"); var foe := _mk("Warrior")
 	a3.cell = Vector2i(0,0); a3.facing = 0
-	foe.cell = HexGrid.DIRS[0] * 2     # due esagoni avanti: ora fuori arco
-	a3.planned = 26                    # Carica del Toro: passo avanti + attacco frontale
+	# #26 colpisce Fronte-Sx/Fronte-Dx (non il fronte): col passo avanti il bersaglio
+	# a (avanti + fronte-sx) entra nell'arco; fermi non è colpibile.
+	foe.cell = HexGrid.DIRS[0] + HexGrid.DIRS[5]
+	a3.planned = 26                    # Carica del Toro: passo avanti + attacco diagonale
 	s3.fighters = [a3, foe]
 	var duel3 := Duel.new(s3)
 	if duel3.attack_hits_now(0):
@@ -60,9 +62,9 @@ func _ready() -> void:
 		print("FAIL: Commit To Hit non rileva che potrebbe colpire muovendosi"); ok = false
 	else:
 		print("OK: Commit To Hit rileva colpo possibile dopo il passo avanti")
-	foe.cell = HexGrid.DIRS[0]          # ora davanti
+	foe.cell = HexGrid.DIRS[5]          # ora a Fronte-Sx (nell'arco di #26)
 	if not duel3.attack_hits_now(0):
-		print("FAIL: bersaglio davanti ma attack_hits_now=false"); ok = false
+		print("FAIL: bersaglio nell'arco ma attack_hits_now=false"); ok = false
 	else:
 		print("OK: bersaglio nell'arco → colpisce subito")
 
