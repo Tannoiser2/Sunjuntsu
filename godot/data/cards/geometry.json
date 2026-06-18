@@ -55,14 +55,15 @@
       "atoms": [
        {
         "t": "step",
-        "dir": 0,
+        "dir": 1,
         "n": 1,
         "opt": false
        }
       ]
      }
     ]
-   }
+   },
+   "kamae_req": "aggression"
   },
   "56": {
    "name": "Punto Cieco",
@@ -101,12 +102,21 @@
         "t": "step",
         "dir": 0,
         "n": 1,
-        "opt": false
+        "opt": false,
+        "kamae": "aggression"
+       },
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false,
+        "kamae": "determination"
        },
        {
         "t": "rot",
         "n": 2,
-        "opt": true
+        "opt": false,
+        "kamae": "balance"
        }
       ]
      }
@@ -148,7 +158,8 @@
         "t": "step",
         "dir": 0,
         "n": 1,
-        "opt": true
+        "opt": true,
+        "kamae": "balance"
        }
       ]
      }
@@ -168,12 +179,26 @@
       "atoms": [
        {
         "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     },
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "rot",
         "n": 2,
-        "opt": true
+        "opt": false,
+        "kamae": "balance"
        }
       ]
      }
     ]
+   },
+   "kamae_switch": {
+    "to": "aggression"
    }
   },
   "60": {
@@ -211,7 +236,8 @@
         "t": "step",
         "dir": 0,
         "n": 1,
-        "opt": true
+        "opt": true,
+        "kamae": "balance"
        }
       ]
      }
@@ -247,7 +273,8 @@
       ]
      }
     ]
-   }
+   },
+   "kamae_req": "aggression"
   },
   "62": {
    "name": "Arco Respingente",
@@ -308,12 +335,13 @@
         "t": "step",
         "dir": 0,
         "n": 1,
-        "opt": false
+        "opt": true
        },
        {
         "t": "rot",
         "n": 1,
-        "opt": true
+        "opt": false,
+        "kamae": "aggression"
        }
       ]
      }
@@ -340,15 +368,23 @@
       "ordered": false,
       "atoms": [
        {
+        "t": "rot",
+        "n": 1,
+        "opt": false,
+        "kamae": "balance"
+       },
+       {
         "t": "step",
         "dir": 0,
         "n": 1,
-        "opt": true
+        "opt": false,
+        "kamae": "determination"
        },
        {
         "t": "rot",
         "n": 1,
-        "opt": true
+        "opt": false,
+        "kamae": "determination"
        }
       ]
      }
@@ -427,7 +463,8 @@
        {
         "t": "rot",
         "n": 1,
-        "opt": true
+        "opt": false,
+        "kamae": "balance"
        }
       ]
      }
@@ -472,15 +509,16 @@
       "ordered": false,
       "atoms": [
        {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       },
+       {
         "t": "step",
         "dir": 3,
         "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": true
+        "opt": false,
+        "kamae": "determination"
        }
       ]
      }
@@ -503,17 +541,20 @@
         "t": "step",
         "dir": 0,
         "n": 1,
-        "opt": true
+        "opt": true,
+        "kamae": "aggression"
        },
        {
         "t": "rot",
         "n": 1,
-        "opt": true
+        "opt": true,
+        "kamae": "balance"
        }
       ]
      }
     ]
-   }
+   },
+   "change_kamae_gate": "determination"
   },
   "118": {
    "name": "Blocco Selvaggio",
@@ -559,13 +600,13 @@
       "ordered": false,
       "atoms": [
        {
-        "t": "step",
-        "dir": 0,
+        "t": "rot",
         "n": 1,
-        "opt": true
+        "opt": false
        },
        {
-        "t": "rot",
+        "t": "step",
+        "dir": 0,
         "n": 1,
         "opt": true
        }

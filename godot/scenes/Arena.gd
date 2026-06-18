@@ -354,6 +354,11 @@ func _refresh_kamae_chooser() -> void:
 		_hud.hide_kamae()
 		return
 	var f := state.fighters[0]
+	# Il "cambia kamae" di alcune carte vale solo in una certa Kamae.
+	var cg: String = g.get("change_kamae_gate", "")
+	if cg != "" and cg != Domain.STANCE_SLUG[f.stance]:
+		_hud.hide_kamae()
+		return
 	var tree := CardDB.kamae_tree_for(f.character.to_lower())
 	var n: int = int(g.get("kamae_change", 1))   # "cambia fino a N rami" (default 1)
 	var cur: String = Domain.STANCE_SLUG[f.stance]
