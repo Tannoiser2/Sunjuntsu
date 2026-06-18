@@ -21,6 +21,7 @@ class Fighter:
 	var wounds: Array = []                     ## ferite subite (stringhe: "wound"/"bleed")
 	var stun: int = 0                          ## carte stordimento accumulate
 	var poison: int = 0                        ## veleni virulenti attivi (riducono il limite)
+	var damage_reduction: int = 0              ## riduzione danno persistente (es. Armatura Pesante)
 	var wound_limit: int = 6                   ## limite ferite (dalla carta personaggio)
 	var hand_limit: int = 5                    ## limite carte in mano
 	var advantage: bool = false                ## possiede il segnalino vantaggio

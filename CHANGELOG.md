@@ -3,6 +3,21 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.23.0] — 2026-06-18
+### Scelta OPPURE interattiva + nuovi verbi effetto
+- **OPPURE interattivo**: durante la tua risoluzione, se la carta ha opzioni mutuamente
+  esclusive, compare un selettore a pulsanti con l'etichetta di ciascuna opzione; la prima
+  è pre-selezionata. La scelta guida quale effetto si applica (`set_option_choice`).
+- **Gruppi `alt` rigenerati** dai marcatori "OPPURE" su tutte le carte ri-trascritte di
+  Guerriero e Ronin (le core #23/#53 mantengono la struttura hand-crafted verificata).
+- **Nuovi verbi effetto** nel motore: `spend_focus` (tutto / tutto-tranne-N / N),
+  `foe_lose_focus`, `foe_discard`, `reduce_damage` (persistente, es. Armatura Pesante:
+  riduce ogni attacco subito, min 1), `reset_deck` (rimescola le abilità non-meditazione).
+  Restano stub dichiarati: `cancel_movement`, `cancel_abilities`, `block_initiative`
+  (richiedono timing tra le carte). Nuovo campo `damage_reduction` sul combattente.
+- Nuovo test `test_effects` (verbi + presenza gruppi OPPURE). Suite completa verde (10).
+  Versione 0.23.0.
+
 ## [0.22.0] — 2026-06-18
 ### Ri-trascrizione completa delle carte del Ronin (dalle immagini)
 - **22 carte uniche del Ronin ri-lette dalle immagini** (6 agenti di visione) e riscritte

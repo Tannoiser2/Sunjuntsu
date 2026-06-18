@@ -422,6 +422,8 @@ func _resolve_attack_top(i: int, g: Dictionary, name: String, log: Array, chosen
 	if kind == "exec":
 		foe.wounds.append("exec"); foe.wounds.resize(foe.wound_limit)
 	elif n > 0:
+		if foe.damage_reduction > 0:
+			n = maxi(1, n - foe.damage_reduction)   # riduzione persistente (min 1)
 		var tag := "bleed" if kind == "bleed" else "wound"
 		for _w in range(n):
 			foe.wounds.append(tag)
@@ -462,6 +464,8 @@ func _resolve_split_bottom(i: int, split: Dictionary, name: String, log: Array) 
 				if kind == "exec":
 					foe.wounds.append("exec"); foe.wounds.resize(foe.wound_limit)
 				else:
+					if foe.damage_reduction > 0:
+						n = maxi(1, n - foe.damage_reduction)
 					var tag := "bleed" if kind == "bleed" else "wound"
 					for _w in range(n):
 						foe.wounds.append(tag)
@@ -796,11 +800,48 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 							f.stance = Domain.STANCE_FROM_SLUG[pref]
 							log.append("%s cambia Kamae in %s" % [f.character, Domain.STANCE_NAMES[f.stance]])
 							break
-			"spend_focus", "reduce_damage", "cancel_movement", "block_initiative":
+			"spend_focus":
+				# Spende i propri focus: tutti, tutti-tranne-N, o un numero fisso.
+				if bool(e.get("all", false)):
+					f.focus = 0
+				elif e.has("all_but"):
+					f.focus = mini(f.focus, int(e.get("all_but", 0)))
+				else:
+					f.focus = maxi(0, f.focus - int(e.get("n", 1)))
+			"foe_lose_focus":
+				if foe != null: foe.focus = maxi(0, foe.focus - int(e.get("n", 1)))
+			"foe_discard":
+				if foe != null:
+					for _d in range(maxi(1, int(e.get("n", 1)))):
+						if not foe.hand.is_empty(): foe.discard.append(foe.hand.pop_back())
+			"reduce_damage":
+				# Persistente (carta "rimane in gioco"): riduce ogni attacco subito.
+				f.damage_reduction += maxi(1, int(e.get("n", 1)))
+				log.append("%s: riduzione danno +%d (persistente)" % [f.character, maxi(1, int(e.get("n", 1)))])
+			"reset_deck":
+				# Rimescola nel mazzo le carte abilità NON-meditazione (mano + scarti) e rimescola.
+				_reset_deck(f, log)
+			"cancel_movement", "cancel_abilities", "block_initiative":
 				log.append("  (effetto «%s» non ancora simulato)" % str(e.get("do", "")))
 		if foe != null:
 			fighter_updated.emit(foe_idx)
 	fighter_updated.emit(i)
+
+
+## "Reset Deck" (es. Istinto Bruciante): rimescola nel mazzo tutte le carte abilità
+## NON-meditazione presenti in mano e negli scarti, poi rimescola il mazzo.
+func _reset_deck(f: GameState.Fighter, log: Array) -> void:
+	var moved := 0
+	for src in [f.hand, f.discard]:
+		var keep := []
+		for cid in src:
+			if str(CardDB.card(cid).get("type", "")) == "meditation":
+				keep.append(cid)
+			else:
+				f.draw_pile.append(cid); moved += 1
+		src.assign(keep)
+	f.draw_pile.shuffle()
+	log.append("%s rimescola nel mazzo %d carte non-meditazione" % [f.character, moved])
 
 
 ## Spinge `foe` di `n` esagoni lontano da `att`, se le celle sono libere.

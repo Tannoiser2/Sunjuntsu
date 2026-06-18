@@ -74,6 +74,7 @@ func _start_duel() -> void:
 	_hud.card_hovered.connect(_on_card_hovered)
 	_hud.confirm_pressed.connect(_confirm_resolution)
 	_hud.kamae_chosen.connect(_on_kamae_chosen)
+	_hud.option_chosen.connect(_on_option_chosen)
 	_duel.start()
 	# Carta Kamae del giocatore + segnalino della posizione.
 	var tree := CardDB.kamae_tree_for(state.fighters[0].character.to_lower())
@@ -99,6 +100,7 @@ func _on_phase_changed(p: int) -> void:
 	_clear_overlays()
 	_hud.hide_kamae()
 	_hud.hide_confirm()
+	_hud.hide_options()
 	_hud.hide_played_card()
 	_sync_pawns()
 	_refresh_hand()
@@ -164,12 +166,14 @@ func _on_await_resolution(i: int) -> void:
 		_selected_card["id"] = state.fighters[0].planned
 		_refresh_overlays()
 		_refresh_kamae_chooser()
+		_refresh_option_chooser()
 		_hud.show_confirm()
 		_hud.set_info("⚔ Tua risoluzione: %s" % _selected_card.get("name", "?"))
 	else:
 		_phase_mode = "ai"
 		_clear_overlays()
 		_hud.hide_kamae()
+		_hud.hide_options()
 		_hud.hide_confirm()
 		_hud.set_info("L'avversario agisce…")
 		_run_ai_resolution(i)
@@ -204,6 +208,7 @@ func _confirm_resolution() -> void:
 	_clear_overlays()
 	_hud.hide_kamae()
 	_hud.hide_confirm()
+	_hud.hide_options()
 	_selected_card = {}
 	_duel.resolve_current()
 
@@ -215,6 +220,7 @@ func _on_turn_resolved(log: Array) -> void:
 	_clear_overlays()
 	_hud.hide_kamae()
 	_hud.hide_confirm()
+	_hud.hide_options()
 	_sync_pawns()
 	_refresh_hand()
 	_refresh_status()
@@ -229,6 +235,7 @@ func _on_duel_over(winner: int) -> void:
 	_clear_overlays()
 	_hud.hide_kamae()
 	_hud.hide_confirm()
+	_hud.hide_options()
 
 
 ## Costruisce la mano del giocatore (pedina 0) come schede dati.
@@ -575,6 +582,64 @@ func _refresh_kamae_chooser() -> void:
 	var cur: String = Domain.STANCE_SLUG[f.stance]
 	var targets := Kamae.change_targets(tree, cur, int(params.get("n", 1)))
 	_hud.show_kamae(cur, targets)
+
+
+## Mostra il selettore "OPPURE" se la carta in risoluzione ha opzioni alternative.
+## Pre-seleziona la prima (così c'è sempre un default applicato).
+func _refresh_option_chooser() -> void:
+	var keys: Array = _duel.option_keys(_resolving_index)
+	if keys.is_empty():
+		_hud.hide_options()
+		return
+	var g := CardDB.geometry(state.fighters[0].planned)
+	var opts: Array = []
+	for k in keys:
+		opts.append({"alt": k, "label": _option_label(g, k)})
+	_hud.show_options(opts)
+	_duel.set_option_choice(0, keys[0])
+	_hud.mark_option(String(keys[0]))
+
+
+## Etichetta leggibile di un'opzione OPPURE: concatena le frasi dei suoi effetti.
+func _option_label(g: Dictionary, alt) -> String:
+	var parts: Array = []
+	for e in g.get("effects", []):
+		if str(e.get("alt", "")) != str(alt):
+			continue
+		parts.append(_effect_phrase(e))
+	return " + ".join(parts) if not parts.is_empty() else str(alt)
+
+
+func _effect_phrase(e: Dictionary) -> String:
+	var n := int(e.get("n", 1))
+	var s := ""
+	match str(e.get("do", "")):
+		"draw": s = "Pesca %d" % n
+		"search_draw": s = "Cerca+pesca %d" % n
+		"focus": s = "+%d focus" % n
+		"change_kamae": s = "Cambia Kamae %d" % n
+		"switch_kamae": s = "Passa a %s" % Domain.STANCE_NAMES.get(Domain.STANCE_FROM_SLUG.get(str(e.get("to","")), -1), str(e.get("to","")))
+		"discard_self": s = "Scarta %d" % n
+		"stun_self": s = "Prendi %d stordito" % n
+		"push": s = "Spingi %d" % n
+		"pull": s = "Tira %d" % n
+		"rotate_target": s = "Ruota avv. %d" % n
+		"foe_lose_focus": s = "Avv. −%d focus" % n
+		"foe_discard": s = "Avv. scarta %d" % n
+		"spend_focus": s = "Spendi focus"
+		"replace_wound_bleed": s = "Ferita→sanguinante"
+		"bleed": s = "Sanguinante"
+		_: s = str(e.get("do", "?"))
+	if int(e.get("focus_cost", 0)) > 0:
+		s += " (◈%d)" % int(e.get("focus_cost", 0))
+	return s
+
+
+func _on_option_chosen(alt: String) -> void:
+	if _phase_mode != "resolving" or _resolving_index != 0:
+		return
+	_duel.set_option_choice(0, alt)
+	_hud.mark_option(alt)
 
 
 ## Il giocatore sceglie la nuova posizione Kamae (con focus dai rami rosa).

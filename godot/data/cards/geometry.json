@@ -2,8 +2,11 @@
  "note": "Schema v2: trascrizione fedele (best-effort) da Guerriero.pdf/Ronin.pdf. attack/defence.cells: d=direzione relativa 0-5 (0=fronte,orario), k=anello, w=ferite, v=valore blocco. effects: lista ordinata con when(on_hit/always), gate kamae, focus_cost (bonus opzionali). Le carte con 'note ... DA VERIFICARE' e i diagrammi anello-2 vanno controllati sul gioco fisico.",
  "cards": {
   "53": {
-   "name": "CARTA SPECIALE GUERRIERO",
+   "name": "Carta Speciale Guerriero",
    "type": "core",
+   "play_cost": {
+    "discard": 1
+   },
    "move": {
     "opts": [
      {
@@ -26,19 +29,26 @@
    },
    "effects": [
     {
-     "do": "discard_self",
-     "n": 1
+     "do": "draw",
+     "n": 2,
+     "alt": "a"
     },
     {
-     "do": "draw",
-     "n": 2
+     "do": "search_draw",
+     "n": 1,
+     "alt": "b"
+    },
+    {
+     "do": "focus",
+     "n": 1,
+     "alt": "b"
     },
     {
      "do": "change_kamae",
-     "n": 1
+     "n": 1,
+     "alt": "c"
     }
-   ],
-   "note": "Carta core. Tre opzioni OPPURE."
+   ]
   },
   "54": {
    "name": "RUGGITO ARDENTE",
@@ -47,12 +57,21 @@
     {
      "do": "push",
      "n": 1,
-     "when": "on_hit"
+     "when": "on_hit",
+     "alt": "a"
+    },
+    {
+     "do": "rotate_target",
+     "n": 1,
+     "when": "on_hit",
+     "kamae": "balance",
+     "alt": "b"
     },
     {
      "do": "replace_wound_bleed",
      "when": "on_hit",
-     "kamae": "balance"
+     "kamae": "balance",
+     "alt": "c"
     }
    ],
    "note": "Carta reazione istantanea giocata se l'attacco va a segno. DA VERIFICARE."
@@ -60,6 +79,7 @@
   "55": {
    "name": "COLPO DELLA FENICE FIAMMANTE",
    "type": "attack",
+   "kamae_req": "aggression",
    "attack": {
     "cells": [
      {
@@ -100,7 +120,6 @@
      }
     ]
    },
-   "kamae_req": "aggression",
    "note": "Costo 3 focus, richiede Aggressività. Fronte 2 ferite; Fronte-Dx ESECUZIONE(?); 1 ferita ai lati. Icona exec/kabuto ambigua, DA VERIFICARE."
   },
   "56": {
@@ -120,6 +139,19 @@
      }
     ]
    },
+   "effects": [
+    {
+     "do": "search_draw",
+     "n": 1,
+     "alt": "a"
+    },
+    {
+     "do": "search_draw",
+     "n": 1,
+     "kamae": "balance",
+     "alt": "b"
+    }
+   ],
    "note": "Istantanea. Cerca e prendi 1 attacco (o difesa in Equilibrio). DA VERIFICARE ultima riga."
   },
   "57": {
@@ -154,6 +186,9 @@
     ]
    },
    "effects": [
+    {
+     "do": "reset_deck"
+    },
     {
      "do": "draw",
      "n": 5
@@ -205,6 +240,13 @@
      }
     ]
    },
+   "effects": [
+    {
+     "do": "foe_lose_focus",
+     "n": 2,
+     "when": "on_hit"
+    }
+   ],
    "note": "3 esagoni frontali 1 ferita. Passo avanti obblig OPPURE (Determ) passo qualsiasi."
   },
   "59": {
@@ -339,6 +381,13 @@
      }
     ]
    },
+   "effects": [
+    {
+     "do": "foe_lose_focus",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
    "note": "Sostituzione istantanea. Passo qualsiasi 1 (Aggr)."
   },
   "62": {
@@ -375,6 +424,13 @@
      "when": "on_hit"
     },
     {
+     "do": "foe_lose_focus",
+     "n": 1,
+     "when": "on_hit",
+     "kamae": "determination",
+     "focus_cost": 1
+    },
+    {
      "do": "switch_kamae",
      "to": "aggression",
      "when": "on_hit"
@@ -408,12 +464,14 @@
     {
      "do": "push",
      "n": 1,
-     "when": "on_hit"
+     "when": "on_hit",
+     "alt": "a"
     },
     {
      "do": "push",
      "n": 1,
-     "when": "on_hit"
+     "when": "on_hit",
+     "alt": "b"
     },
     {
      "do": "switch_kamae",
@@ -528,6 +586,9 @@
   "72": {
    "name": "SQUARCIO DI NODACHI",
    "type": "attack",
+   "play_cost": {
+    "discard": 1
+   },
    "attack": {
     "cells": [
      {
@@ -565,14 +626,17 @@
      "n": 1
     }
    ],
-   "play_cost": {
-    "discard": 1
-   },
    "note": "Costo di gioco: scarta 1 carta. Mossa (Equilibrio): passo qualsiasi 1 OPPURE rotazione 1. 1 ferita sul fronte."
   },
   "83": {
    "name": "BLOCCO AMPIO",
    "type": "meditation",
+   "effects": [
+    {
+     "do": "block_initiative",
+     "n": 1
+    }
+   ],
    "note": "Carta istantanea: +1 all'intervallo d'iniziativa del blocco."
   },
   "86": {
@@ -644,6 +708,11 @@
     ]
    },
    "effects": [
+    {
+     "do": "foe_lose_focus",
+     "n": 2,
+     "when": "on_hit"
+    },
     {
      "do": "switch_kamae",
      "to": "neutral",
@@ -744,6 +813,9 @@
   "118": {
    "name": "BLOCCO SELVAGGIO",
    "type": "defence",
+   "play_cost": {
+    "discard": 2
+   },
    "defence": {
     "cells": [
      {
@@ -780,21 +852,20 @@
     },
     {
      "do": "discard_self",
-     "n": 1
+     "n": 1,
+     "alt": "a"
     },
     {
      "do": "discard_self",
      "n": 1,
-     "kamae": "determination"
+     "kamae": "determination",
+     "alt": "b"
     },
     {
      "do": "switch_kamae",
      "to": "neutral"
     }
    ],
-   "play_cost": {
-    "discard": 2
-   },
    "note": "Counter ▼7/▼6 nella banda Aggressione. Griglia blocco a 5 esagoni. DA VERIFICARE costo/effetto del counter (scarta 2?)."
   },
   "119": {
@@ -1008,6 +1079,17 @@
   "25": {
    "name": "ARMATURA PESANTE",
    "type": "defence",
+   "effects": [
+    {
+     "do": "reduce_damage",
+     "n": 1
+    },
+    {
+     "do": "focus",
+     "n": 1,
+     "focus_cost": 1
+    }
+   ],
    "note": "Carta persistente (rimane in gioco): riduzione danno. Verbo 'reduce_damage' non ancora nel motore (inerte)."
   },
   "26": {
@@ -1130,6 +1212,11 @@
      ]
     }
    },
+   "effects": [
+    {
+     "do": "cancel_abilities"
+    }
+   ],
    "note": "DISTANZA. Iniziativa divisa (sotto vel.3). Icone parzialmente ambigue. DA VERIFICARE."
   },
   "29": {
@@ -1459,6 +1546,11 @@
    },
    "effects": [
     {
+     "do": "rotate_target",
+     "n": 1,
+     "when": "on_hit"
+    },
+    {
      "do": "push",
      "n": 1,
      "when": "on_hit"
@@ -1597,6 +1689,9 @@
    },
    "effects": [
     {
+     "do": "cancel_movement"
+    },
+    {
      "do": "draw",
      "n": 2,
      "focus_cost": 1
@@ -1638,12 +1733,14 @@
     },
     {
      "do": "draw",
-     "n": 2
+     "n": 2,
+     "alt": "a"
     },
     {
      "do": "draw",
      "n": 3,
-     "kamae": "determination"
+     "kamae": "determination",
+     "alt": "b"
     }
    ],
    "note": "Movimento passo-qualsiasi2+rot2."
@@ -1743,13 +1840,15 @@
     {
      "do": "push",
      "n": 1,
-     "when": "on_hit"
+     "when": "on_hit",
+     "alt": "a"
     },
     {
      "do": "push",
      "n": 2,
      "when": "on_hit",
-     "kamae": "aggression"
+     "kamae": "aggression",
+     "alt": "b"
     }
    ],
    "note": "Asterisco a dist2 fronte. Iniziativa divisa (sotto vel.5)."
@@ -1794,6 +1893,12 @@
      "when": "on_hit"
     },
     {
+     "do": "foe_lose_focus",
+     "n": 1,
+     "when": "on_hit",
+     "focus_cost": 1
+    },
+    {
      "do": "focus",
      "n": 1,
      "when": "on_hit",
@@ -1831,7 +1936,8 @@
    "effects": [
     {
      "do": "push",
-     "n": 2
+     "n": 2,
+     "when": "on_hit"
     }
    ],
    "note": "Attacco ad asterisco: spinge l'avversario di 2. DA VERIFICARE esagoni vicini."
