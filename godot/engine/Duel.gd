@@ -927,6 +927,11 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 			"block_initiative":
 				f.block_initiative_bonus += maxi(1, int(e.get("n", 1)))
 				log.append("%s: intervallo blocco +%d" % [f.character, maxi(1, int(e.get("n", 1)))])
+			"change_ai_behaviour":
+				# Carta solo: l'IA cambia atteggiamento (offensivo <-> difensivo).
+				if f.is_ai:
+					f.ai_stance = "defensive" if f.ai_stance == "offensive" else "offensive"
+					log.append("%s cambia atteggiamento IA → %s" % [f.character, f.ai_stance])
 		if foe != null:
 			fighter_updated.emit(foe_idx)
 	fighter_updated.emit(i)

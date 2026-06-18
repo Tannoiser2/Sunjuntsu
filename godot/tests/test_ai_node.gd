@@ -48,5 +48,29 @@ func _ready() -> void:
 	else:
 		print("OK: IA difensiva → si sposta fuori dalla minaccia del giocatore")
 
+	# ── Mazzo solo dell'avversario Ronin: sottoinsieme curato, carte valide ──
+	var deck := CardDB.solo_deck_for("ronin")
+	if deck.size() < 6:
+		print("FAIL: mazzo solo Ronin troppo piccolo (%d)" % deck.size()); ok = false
+	else:
+		var allvalid := true
+		for cid in deck:
+			if CardDB.card(cid).is_empty(): allvalid = false
+		if not allvalid:
+			print("FAIL: il mazzo solo contiene carte inesistenti"); ok = false
+		else:
+			print("OK: mazzo solo Ronin = %d carte valide" % deck.size())
+
+	# ── CHANGE AI BEHAVIOUR: l'IA inverte l'atteggiamento ──
+	var s3 := GameState.new()
+	var ai3 := _mk("Ronin"); ai3.is_ai = true; ai3.ai_stance = "offensive"
+	s3.fighters = [_mk("Warrior"), ai3]
+	var d3 := Duel.new(s3)
+	d3._apply_effects(1, 0, {"effects": [{"do": "change_ai_behaviour"}]}, "always", [])
+	if ai3.ai_stance != "defensive":
+		print("FAIL: change_ai_behaviour non ha invertito l'atteggiamento (%s)" % ai3.ai_stance); ok = false
+	else:
+		print("OK: change_ai_behaviour inverte l'atteggiamento dell'IA")
+
 	print("RISULTATO: ", "PASS" if ok else "FAIL")
 	get_tree().quit(0 if ok else 1)

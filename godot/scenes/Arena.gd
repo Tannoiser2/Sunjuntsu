@@ -432,15 +432,17 @@ func _spawn_pawns() -> void:
 	var colors := [Color(0.85, 0.2, 0.2), Color(0.2, 0.4, 0.9)]
 	for i in range(2):
 		var f := state.add_fighter(chars[i], starts[i])
-		# Mazzo di pesca dai dati autorevoli (foglio Custom Decks).
-		f.draw_pile = CardDB.draw_pile_for(chars[i].to_lower())
-		f.draw_pile.shuffle()
 		f.is_ai = (i == 1)   # pedina 0 = giocatore, pedina 1 = IA solo
 		if f.is_ai:
-			# Parametri IA solitaria (regolamento p.20): atteggiamento, portata, approccio.
+			# Mazzo SOLO dell'avversario (sottoinsieme curato) + parametri IA.
+			f.draw_pile = CardDB.solo_deck_for(chars[i].to_lower())
 			f.ai_stance = "offensive"
 			f.ai_preferred_range = 1
 			f.ai_approach = "front"
+		else:
+			# Mazzo del giocatore dai dati autorevoli (foglio Custom Decks).
+			f.draw_pile = CardDB.draw_pile_for(chars[i].to_lower())
+		f.draw_pile.shuffle()
 		# Limiti dalla carta personaggio (se trascritta).
 		var cs := CardDB.character_stats(chars[i])
 		if not cs.is_empty():
