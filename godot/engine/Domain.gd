@@ -133,6 +133,10 @@ static func initiative_options(raw: String) -> Array:
 
 const PLAYABLE := ["Warrior", "Ronin"]   ## "Jin Sakai" da aggiungere (carte JPG custom)
 
+## Modalità scelta dal menu: "solo" (vs IA) o "versus" (1v1 locale hot-seat).
+## L'Arena la legge all'avvio per configurare le pedine e il flusso del turno.
+var game_mode: String = "solo"
+
 
 # ─── Zone del corpo / ferite ─────────────────────────────────────────────────
 # Gli attacchi indicano le caselle del corpo colpite; le difese le proteggono.

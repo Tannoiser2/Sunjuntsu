@@ -9,14 +9,18 @@ func _ready() -> void:
 
 	var version: String = str(ProjectSettings.get_setting("application/config/version", "?"))
 	$Version.text = "v%s" % version
-	$Changes.text = "Novità v%s:\n• Azzoppamento fedele: scade (ruota), non vale nel turno in cui lo subisci\n• Albero Kamae + focus; collisioni + Commit To Hit; blocchi 1.5\n• IA solo che rivela la cima del mazzo; turno fedele\nVedi REGOLAMENTO_FEDELTA.md e CHANGELOG.md" % version
+	$Changes.text = "Novità v%s:\n• 1v1 LOCALE (hot-seat): due giocatori, tutta la logica, si passano il dispositivo\n• Suggerimento in basso leggibile (barra sopra le carte)\n• Solo vs IA invariato; Kamae+focus, blocchi 1.5, collisioni, Commit To Hit\nVedi REGOLAMENTO_FEDELTA.md e CHANGELOG.md" % version
 
 
 func _on_solo() -> void:
-	# Per ora entrambe le modalità aprono la stessa arena scaffold.
+	# Solo: giocatore (pedina 0) contro l'IA solitaria (pedina 1).
+	Domain.game_mode = "solo"
 	get_tree().change_scene_to_file("res://scenes/Arena.tscn")
 
 
 func _on_versus() -> void:
-	# Multiplayer 1v1: da implementare (vedi DESIGN.md, sezione Rete).
+	# 1v1 locale (hot-seat): due giocatori umani sullo stesso dispositivo, con
+	# TUTTA la logica del duello (programmazione coperta a turno, rivelazione,
+	# risoluzione per iniziativa). Si passano il dispositivo tra le fasi.
+	Domain.game_mode = "versus"
 	get_tree().change_scene_to_file("res://scenes/Arena.tscn")
