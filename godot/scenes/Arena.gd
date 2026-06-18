@@ -215,13 +215,22 @@ func _refresh_hand() -> void:
 	_hud.show_hand(entries)
 
 
+func _status_badges(f: GameState.Fighter) -> String:
+	var s := ""
+	if f.hobbles.size() > 0:
+		s += " ⊘%d" % f.hobbles.size()   # azzoppamenti
+	if f.stun > 0:
+		s += " ✦%d" % f.stun             # stordimenti
+	return s
+
+
 func _refresh_status() -> void:
 	var p := state.fighters[0]
 	var e := state.fighters[1]
-	_hud.set_info("Round %d  |  TU %s ❤%d/%d ◈%d [%s] mazzo%d scarti%d  —  IA %s ❤%d/%d ◈%d [%s]" % [
+	_hud.set_info("Round %d  |  TU %s ❤%d/%d ◈%d [%s]%s mazzo%d scarti%d  —  IA %s ❤%d/%d ◈%d [%s]%s mazzo%d" % [
 		state.round_num,
-		p.character, p.remaining_wounds(), p.wound_limit, p.focus, Domain.STANCE_NAMES[p.stance], p.draw_pile.size(), p.discard.size(),
-		e.character, e.remaining_wounds(), e.wound_limit, e.focus, Domain.STANCE_NAMES[e.stance]])
+		p.character, p.remaining_wounds(), p.wound_limit, p.focus, Domain.STANCE_NAMES[p.stance], _status_badges(p), p.draw_pile.size(), p.discard.size(),
+		e.character, e.remaining_wounds(), e.wound_limit, e.focus, Domain.STANCE_NAMES[e.stance], _status_badges(e), e.draw_pile.size()])
 	_hud.set_kamae_marker(Domain.STANCE_SLUG[p.stance])
 
 
