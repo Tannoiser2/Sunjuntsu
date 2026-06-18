@@ -49,13 +49,48 @@ func _init(initial_state: GameState) -> void:
 	state = initial_state
 
 
+## Una carta è "core" (Speciale o Arma core): inizia in mano, non conta verso il
+## limite di mano e non può MAI essere scartata (regolamento p.10). Comprende sia la
+## carta abilità core (type "core") sia la carta arma core (keyword "Core").
+static func is_core(cid: int) -> bool:
+	var c := CardDB.card(cid)
+	return str(c.get("type", "")) == "core" or ("Core" in c.get("keywords", []))
+
+
+## Carte non-core in mano (le core non contano verso il limite).
+func _noncore_in_hand(f: GameState.Fighter) -> int:
+	var n := 0
+	for cid in f.hand:
+		if not is_core(cid):
+			n += 1
+	return n
+
+
+## Scarta UNA carta non-core dalla mano (le core non si scartano). True se riuscito.
+func _discard_one_noncore(f: GameState.Fighter) -> bool:
+	for k in range(f.hand.size() - 1, -1, -1):
+		if not is_core(f.hand[k]):
+			f.discard.append(f.hand[k]); f.hand.remove_at(k)
+			return true
+	return false
+
+
 func start() -> void:
-	# Setup (passo 13): pesca fino al limite di mano. Gli avversari solo NON hanno
-	# mano: il loro mazzo resta intero e rivelano la cima ogni turno.
+	# Setup (regolamento p.4): le carte CORE partono in mano; le altre si rimescolano
+	# nel mazzo. Le core non contano verso il limite e non rientrano mai nel mazzo.
+	# Gli avversari solo NON hanno mano: rivelano la cima del mazzo ogni turno.
 	for f in state.fighters:
 		if f.is_ai:
 			continue
-		while f.hand.size() < f.hand_limit:
+		var rest: Array = []
+		for cid in f.draw_pile:
+			if is_core(cid):
+				if not f.hand.has(cid):
+					f.hand.append(cid)
+			else:
+				rest.append(cid)
+		f.draw_pile = rest
+		while _noncore_in_hand(f) < f.hand_limit:
 			if f.draw_one() == -1:
 				break
 	_begin_turn()   # passo Draw del 1° turno
@@ -182,9 +217,8 @@ func _setup_resolution() -> void:
 				continue
 		var disc := int(pc.get("discard", 0))
 		for _k in range(disc):
-			if f.hand.is_empty():
-				break
-			f.discard.append(f.hand.pop_back())
+			if not _discard_one_noncore(f):
+				break   # niente non-core da scartare (le core non si scartano)
 
 	_resolve_chosen_speeds(_fizzled)
 
@@ -837,7 +871,7 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 				log.append("%s subisce %d stordimento" % [f.character, maxi(1, int(e.get("n", 1)))])
 			"discard_self":
 				for _d in range(maxi(1, int(e.get("n", 1)))):
-					if not f.hand.is_empty(): f.discard.append(f.hand.pop_back())
+					if not _discard_one_noncore(f): break
 			"switch_kamae":
 				# "Passa a Y": spostamento diretto (nessun ramo, nessun focus).
 				var to_slug := str(e.get("to", ""))
@@ -903,7 +937,7 @@ func _reset_deck(f: GameState.Fighter, log: Array) -> void:
 	for src in [f.hand, f.discard]:
 		var keep := []
 		for cid in src:
-			if str(CardDB.card(cid).get("type", "")) == "meditation":
+			if str(CardDB.card(cid).get("type", "")) == "meditation" or is_core(cid):
 				keep.append(cid)
 			else:
 				f.draw_pile.append(cid); moved += 1
@@ -981,14 +1015,20 @@ func _resolve_collision(victim_idx: int, dest: Vector2i, log: Array) -> void:
 
 func _cleanup(log: Array) -> void:
 	_set_phase(Domain.Phase.CLEANUP)
-	# Passo "Discard": scarta la carta giocata e rientra nel limite di mano.
+	# Passo "Discard": la carta giocata va negli scarti, MA le core tornano in mano
+	# (non si scartano mai, regolamento p.10). Poi rientra nel limite di mano.
 	for f in state.fighters:
 		if f.planned != -1:
-			f.discard.append(f.planned)
+			if is_core(f.planned) and not f.is_ai:
+				if not f.hand.has(f.planned):
+					f.hand.append(f.planned)   # la core torna in mano
+			else:
+				f.discard.append(f.planned)
 			f.planned = -1
-		# Se la mano supera il limite, scarta a faccia in giù fino al limite.
-		while f.hand.size() > f.hand_limit:
-			f.discard.append(f.hand.pop_back())
+		# Se le carte NON-core superano il limite, scartane (le core non contano).
+		while _noncore_in_hand(f) > f.hand_limit:
+			if not _discard_one_noncore(f):
+				break
 			log.append("%s scarta in eccesso (limite mano %d)" % [f.character, f.hand_limit])
 		# Effetti di fine turno: gli azzoppamenti ruotano (e scadono).
 		f.tick_hobbles()

@@ -3,6 +3,19 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.25.0] — 2026-06-18
+### Carte CORE (Speciale + Arma) e setup iniziale corretti
+- **Setup iniziale fedele** (regolamento p.4): le carte **core** (la carta Speciale e la
+  carta **Arma** core) partono **in mano** e il resto si rimescola nel mazzo; prima erano
+  erroneamente mescolate nel mazzo e pescate a caso.
+- **Le core non si scartano mai** (p.10): la carta core giocata **torna in mano** invece
+  di finire negli scarti; non vengono toccate da scarto-per-limite, costi di gioco
+  (`SCARTA 1 CARTA`), `discard_self` né dal `reset_deck`.
+- **Non contano verso il limite di mano**: il limite (5) si applica solo alle carte
+  non-core, quindi tieni 5 non-core + Speciale + Arma.
+- `is_core` riconosce sia il tipo "core" sia la keyword "Core" (carte arma: Nodachi #72,
+  Naginata #71). Nuovo test `test_core`; suite completa verde (11). Versione 0.25.0.
+
 ## [0.24.0] — 2026-06-18
 ### Iniziativa divisa interattiva + verbi di timing
 - **Parte bassa (iniziativa divisa) interattiva**: quando giochi una carta a iniziativa

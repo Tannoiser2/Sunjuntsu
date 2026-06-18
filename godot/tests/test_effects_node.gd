@@ -45,8 +45,8 @@ func _ready() -> void:
 
 	# reset_deck: sposta nel mazzo le carte NON-meditazione di mano/scarti
 	var f2 := _mk("Warrior")
-	# 64=Testata (attacco), 116=Mente Rapida (meditazione)
-	f2.hand = [64, 116]; f2.discard = [72]; f2.draw_pile = []
+	# 64=Testata (attacco non-core), 116=Mente Rapida (meditazione), 60=attacco non-core
+	f2.hand = [64, 116]; f2.discard = [60]; f2.draw_pile = []
 	var s2 := GameState.new(); s2.fighters = [f2, _mk("Ronin")]
 	var duel2 := Duel.new(s2)
 	duel2._apply_effects(0, 1, {"effects": [{"do": "reset_deck"}]}, "always", [])
