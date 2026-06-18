@@ -42,13 +42,11 @@ class Fighter:
 	func has_bleed() -> bool:
 		return wounds.has("bleed")
 
-	## Pesca una carta dal mazzo; rimescola gli scarti se vuoto.
+	## Pesca una carta dal mazzo. Regola 1.5: se il mazzo è vuoto, invece di
+	## pescare subisci una ferita (nessun rimescolo degli scarti).
 	func draw_one() -> int:
 		if draw_pile.is_empty():
-			draw_pile = discard.duplicate()
-			discard.clear()
-			draw_pile.shuffle()
-		if draw_pile.is_empty():
+			wounds.append("deck")   # "decking out": ferita invece di pescare
 			return -1
 		var id: int = draw_pile.pop_back()
 		hand.append(id)

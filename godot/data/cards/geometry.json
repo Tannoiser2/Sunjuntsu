@@ -96,7 +96,7 @@
          1
         ],
         "n": 1,
-        "opt": true
+        "opt": false
        }
       ]
      }
@@ -136,7 +136,7 @@
        {
         "t": "rot",
         "n": 1,
-        "opt": true
+        "opt": false
        }
       ]
      }
@@ -529,7 +529,7 @@
        {
         "t": "rot",
         "n": 1,
-        "opt": true,
+        "opt": false,
         "kamae": "aggression"
        }
       ]
@@ -584,7 +584,7 @@
         "t": "step",
         "dir": -1,
         "n": 1,
-        "opt": true,
+        "opt": false,
         "kamae": "balance"
        },
        {
@@ -606,7 +606,7 @@
          1
         ],
         "n": 1,
-        "opt": true,
+        "opt": false,
         "kamae": "determination"
        },
        {
@@ -642,7 +642,7 @@
         "t": "step",
         "dir": 0,
         "n": 1,
-        "opt": true,
+        "opt": false,
         "focus_cost": 1
        }
       ]
@@ -703,7 +703,7 @@
          1
         ],
         "n": 1,
-        "opt": true
+        "opt": false
        }
       ]
      },
@@ -847,7 +847,7 @@
         "t": "step",
         "dir": 0,
         "n": 1,
-        "opt": true,
+        "opt": false,
         "kamae": "aggression"
        }
       ]
@@ -1089,7 +1089,7 @@
         "t": "step",
         "dir": 0,
         "n": 1,
-        "opt": true
+        "opt": false
        }
       ]
      }
@@ -1129,7 +1129,7 @@
         "t": "step",
         "dir": 0,
         "n": 1,
-        "opt": true
+        "opt": false
        }
       ]
      }
@@ -1163,7 +1163,7 @@
         "t": "step",
         "dir": 0,
         "n": 1,
-        "opt": true
+        "opt": false
        }
       ]
      },
@@ -1174,7 +1174,7 @@
         "t": "step",
         "dir": 3,
         "n": 1,
-        "opt": true
+        "opt": false
        }
       ]
      }
@@ -1339,7 +1339,7 @@
         "t": "step",
         "dir": 0,
         "n": 1,
-        "opt": true,
+        "opt": false,
         "kamae": "determination"
        },
        {
@@ -1366,7 +1366,7 @@
         "t": "step",
         "dir": 0,
         "n": 1,
-        "opt": true
+        "opt": false
        }
       ]
      }
@@ -1403,12 +1403,12 @@
         "t": "step",
         "dir": 0,
         "n": 1,
-        "opt": true
+        "opt": false
        },
        {
         "t": "rot",
         "n": 1,
-        "opt": true
+        "opt": false
        }
       ]
      },
@@ -1419,12 +1419,12 @@
         "t": "step",
         "dir": 3,
         "n": 1,
-        "opt": true
+        "opt": false
        },
        {
         "t": "rot",
         "n": 1,
-        "opt": true
+        "opt": false
        }
       ]
      }
@@ -1531,7 +1531,7 @@
         "t": "step",
         "dir": 0,
         "n": 1,
-        "opt": true
+        "opt": false
        },
        {
         "t": "step",
@@ -1611,7 +1611,7 @@
         "t": "step",
         "dir": -1,
         "n": 1,
-        "opt": true
+        "opt": false
        },
        {
         "t": "rot",
@@ -1680,7 +1680,7 @@
         "t": "step",
         "dir": 0,
         "n": 1,
-        "opt": true
+        "opt": false
        },
        {
         "t": "step",
@@ -1725,7 +1725,7 @@
         "t": "step",
         "dir": -1,
         "n": 2,
-        "opt": true
+        "opt": false
        },
        {
         "t": "rot",
@@ -1899,7 +1899,7 @@
         "t": "step",
         "dir": -1,
         "n": 1,
-        "opt": true,
+        "opt": false,
         "kamae": "balance"
        }
       ]

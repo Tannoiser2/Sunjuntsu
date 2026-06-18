@@ -48,12 +48,31 @@ func _init(initial_state: GameState) -> void:
 
 
 func start() -> void:
+	# Setup (passo 13 del regolamento): pesca fino al limite di mano.
 	for f in state.fighters:
 		while f.hand.size() < f.hand_limit:
 			if f.draw_one() == -1:
 				break
+	_begin_turn()   # passo Draw del 1° turno
 	_set_phase(Domain.Phase.PLANNING)
 	_autoplan_ai()
+
+
+## Passo "Draw" del turno (regolamento 1.5): per ogni combattente, se ha almeno
+## una ferita sanguinante scarta 1 carta dal mazzo, poi pesca 1 carta (mazzo
+## vuoto ⇒ ferita). Restituisce true se il duello continua.
+func _begin_turn() -> bool:
+	for f in state.fighters:
+		if f.is_defeated():
+			continue
+		if f.has_bleed() and not f.draw_pile.is_empty():
+			f.discard.append(f.draw_pile.pop_back())
+		f.draw_one()
+	var w := _check_winner()
+	if w != -2:
+		_finish([], w)
+		return false
+	return true
 
 
 func _set_phase(p: int) -> void:
@@ -521,18 +540,20 @@ func _push(att_idx: int, foe_idx: int, n: int) -> void:
 
 func _cleanup(log: Array) -> void:
 	_set_phase(Domain.Phase.CLEANUP)
+	# Passo "Discard": scarta la carta giocata e rientra nel limite di mano.
 	for f in state.fighters:
 		if f.planned != -1:
 			f.discard.append(f.planned)
 			f.planned = -1
-		# Sanguinamento: a inizio turno scarti la prima carta del mazzo (max 1).
-		if f.has_bleed() and not f.draw_pile.is_empty():
-			f.discard.append(f.draw_pile.pop_back())
-			log.append("%s sanguina: scarta una carta dal mazzo" % f.character)
-		if f.hand.size() < f.hand_limit:
-			f.draw_one()
+		# Se la mano supera il limite, scarta a faccia in giù fino al limite.
+		while f.hand.size() > f.hand_limit:
+			f.discard.append(f.hand.pop_back())
+			log.append("%s scarta in eccesso (limite mano %d)" % [f.character, f.hand_limit])
 	state.round_num += 1
 	turn_resolved.emit(log)
+	# Passo "Draw" del turno successivo (sanguinamento + pesca 1).
+	if not _begin_turn():
+		return
 	_set_phase(Domain.Phase.PLANNING)
 	_autoplan_ai()
 

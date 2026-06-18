@@ -39,7 +39,8 @@ func _ready():
 	else: print("OK: turno completato (cleanup)")
 	if a.discard.size() <= disc_before: print("FAIL: nessuno scarto"); ok=false
 	else: print("OK: carta scartata (scarti ", a.discard.size(), ")")
-	if a.hand.size() != a.hand_limit: print("FAIL: mano non ripescata =", a.hand.size()); ok=false
-	else: print("OK: mano ripescata a ", a.hand.size())
+	# Regola 1.5: si pesca 1 carta a inizio turno (mano = limite+1 prima di scegliere).
+	if a.hand.size() != a.hand_limit + 1: print("FAIL: pesca inizio turno errata =", a.hand.size(), " atteso ", a.hand_limit+1); ok=false
+	else: print("OK: pescata 1 a inizio turno, mano =", a.hand.size())
 	print("RISULTATO: ", "PASS" if ok else "FAIL")
 	get_tree().quit(0 if ok else 1)

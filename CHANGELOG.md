@@ -3,6 +3,21 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.12.0] — 2026-06-18
+### Verso il regolamento 1:1 (regolamento ufficiale 1.5 acquisito)
+- **Fonte regole**: trascritto il **Senjutsu 1.5 Rulebook** (gennaio 2026) + Reference
+  Sheet + regole solo dal repo `Tabelle_Materiali/Senjutsu/`. Aggiunto
+  `REGOLAMENTO_FEDELTA.md`: spec autorevole del turno/combattimento + analisi degli
+  scostamenti (✅/⚠️/❌) e roadmap verso il 1:1.
+- **Struttura di turno fedele (1.5)**: si **pesca 1 carta a inizio turno** (non si
+  riempie la mano); il **sanguinamento** scarta 1 carta al passo Draw; **mazzo vuoto ⇒
+  ferita** (niente rimescolo); il **limite di mano** si applica a fine turno (scarto in
+  eccesso). Pareggi d'iniziativa risolti per **tipo** (difesa→attacco→meditazione→core).
+- **Movimento 1:1 con le carte**: ripristinata la distinzione **obbligatorio (icona
+  piena) vs opzionale (icona vuota)** carta per carta dagli audit sulle scansioni
+  (prima erroneamente "tutto opzionale"). Restano da rivedere a mano #26/#27/#33/#23.
+- Test aggiornati (pesca a inizio turno).
+
 ## [0.11.0] — 2026-06-18
 ### Cambiato (sequenza di turno fedele + correzioni movimento)
 - **Sequenza di turno fedele al regolamento**: ora **programmi una carta coperta** (1° click anteprima, 2° click programma), poi **rivelazione** simultanea, poi **risoluzione nell'ordine d'iniziativa**. Al tuo turno di risoluzione **muovi** (esagoni gialli, Q/E ruota) e poi **INVIO** per attaccare/risolvere. L'IA agisce al suo turno. Niente più movimento/risoluzione immediati durante la sola selezione.

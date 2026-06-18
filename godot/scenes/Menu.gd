@@ -9,7 +9,7 @@ func _ready() -> void:
 
 	var version: String = str(ProjectSettings.get_setting("application/config/version", "?"))
 	$Version.text = "v%s" % version
-	$Changes.text = "Novità v%s:\n• Sequenza fedele: programma (coperta) → rivela → risolvi per iniziativa\n• Al tuo turno muovi (giallo) e attacchi (INVIO); poi scarto + pesca\n• Movimenti corretti: rotazioni opzionali, gate Kamae riallineati\nVedi CHANGELOG.md" % version
+	$Changes.text = "Novità v%s:\n• Acquisito il regolamento ufficiale 1.5 → vedi REGOLAMENTO_FEDELTA.md\n• Turno fedele: pesca 1 a inizio turno, sanguinamento, mazzo vuoto=ferita, limite mano\n• Movimento 1:1: obbligatorio vs opzionale ripristinato dalle carte\nVedi CHANGELOG.md" % version
 
 
 func _on_solo() -> void:
