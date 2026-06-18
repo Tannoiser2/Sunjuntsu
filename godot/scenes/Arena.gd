@@ -714,18 +714,25 @@ func _on_kamae_chosen(slug: String) -> void:
 
 
 ## Ruota il giocatore solo tra i facing consentiti dalla carta selezionata.
+## La maggior parte delle carte permette di ruotare solo in una certa Kamae: se non
+## è possibile, lo spieghiamo (così si capisce perché Q/E non gira la miniatura).
 func _rotate_player(delta: int) -> void:
 	if _selected_card.is_empty():
 		return
 	var f := state.fighters[0]
+	var g: Dictionary = _selected_card.get("geom_override", CardDB.geometry(int(_selected_card.get("id", -1))))
 	var facings: Array = (_move_states.get(f.cell, []) as Array).duplicate()
-	if facings.is_empty():
-		# Carta senza specifica `move` ma con rotazioni: rotazione libera (legacy).
-		var g: Dictionary = _selected_card.get("geom_override", CardDB.geometry(int(_selected_card.get("id", -1))))
+	# Includi anche il facing attuale tra le scelte (se la rotazione è opzionale lo è già;
+	# se è obbligatoria resta escluso). Serve a ciclare correttamente con un solo valore.
+	if facings.size() <= 1:
+		# Rotazione libera legacy (carte senza spec move ma con 'rotates').
 		if not g.has("move") and int(g.get("rotates", 0)) > 0:
 			f.facing = (f.facing + delta + 6) % 6
 			_apply_pawn_facing(0)
 			_refresh_overlays()
+			return
+		# Nessuna rotazione disponibile: spiega perché.
+		_hud.set_hint("⟳ Rotazione non disponibile con questa carta" + _rotation_gate_hint(g))
 		return
 	facings.sort()
 	var idx: int = facings.find(f.facing)
@@ -734,6 +741,26 @@ func _rotate_player(delta: int) -> void:
 	f.facing = int(facings[(idx + delta + facings.size()) % facings.size()])
 	_apply_pawn_facing(0)
 	_refresh_overlays()
+
+
+## Quali Kamae sbloccherebbero la rotazione della carta selezionata (per il suggerimento).
+func _rotation_gate_hint(g: Dictionary) -> String:
+	if not g.has("move"):
+		return ""
+	var cur: String = Domain.STANCE_SLUG[state.fighters[0].stance]
+	var gates := {}
+	for opt in g["move"].get("opts", []):
+		for a in opt.get("atoms", []):
+			if a.get("t", "") == "rot":
+				var k: String = a.get("kamae", "")
+				if k != "" and k != cur:
+					gates[k] = true
+	if gates.is_empty():
+		return ""
+	var names: Array = []
+	for k in gates:
+		names.append(Domain.STANCE_NAMES[Domain.STANCE_FROM_SLUG[k]])
+	return " — ruota solo in Kamae: " + ", ".join(names)
 
 
 func _apply_pawn_facing(i: int) -> void:

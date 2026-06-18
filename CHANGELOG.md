@@ -3,6 +3,18 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.29.0] — 2026-06-18
+### Rotazione miniatura: feedback chiaro (perché Q/E a volte non gira)
+- La rotazione (Q/E) è **per-carta e per-Kamae**: molte carte permettono di ruotare solo
+  in una certa Kamae. Finché il cambio Kamae era rotto (corretto in 0.27) e restavi sempre
+  Neutro, quelle rotazioni non erano mai accessibili → sembrava che la miniatura non
+  girasse mai.
+- Ora, se premi Q/E e la rotazione non è disponibile, l'HUD lo spiega:
+  *"⟳ Rotazione non disponibile con questa carta — ruota solo in Kamae: …"*, così sai che
+  devi prima cambiare Kamae (col selettore, ora funzionante).
+- Le rotazioni non vincolate e quelle nella Kamae giusta funzionano regolarmente.
+  Versione 0.29.0.
+
 ## [0.28.0] — 2026-06-18
 ### Postura IA visibile + approccio dinamico
 - **Postura IA visibile in partita**: la barra di stato mostra ora `IA: ⚔ Offensiva / 🛡
