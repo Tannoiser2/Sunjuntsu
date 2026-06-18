@@ -994,11 +994,8 @@
    ]
   },
   "23": {
-   "name": "Carta Speciale Ronin",
+   "name": "Carta Core del Ronin",
    "type": "core",
-   "play_cost": {
-    "discard": 1
-   },
    "move": {
     "opts": [
      {
@@ -1021,12 +1018,17 @@
    },
    "effects": [
     {
+     "do": "discard_self",
+     "n": 1,
+     "alt": "a"
+    },
+    {
      "do": "draw",
      "n": 2,
      "alt": "a"
     },
     {
-     "do": "focus",
+     "do": "stun_self",
      "n": 1,
      "alt": "b"
     },
@@ -1040,7 +1042,8 @@
      "n": 1,
      "alt": "c"
     }
-   ]
+   ],
+   "note": "OPPURE: A=scarta1+muovi/ruota+pesca2 | B=stordito1+passa a kamae qualsiasi | C=cambia kamae 1. Move dell opzione A (limite: applicata anche se scegli B/C)."
   },
   "24": {
    "name": "Vortice Cremisi",
