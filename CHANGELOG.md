@@ -3,6 +3,22 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.22.0] — 2026-06-18
+### Ri-trascrizione completa delle carte del Ronin (dalle immagini)
+- **22 carte uniche del Ronin ri-lette dalle immagini** (6 agenti di visione) e riscritte
+  in `geometry.json`, stessa legenda icone del Guerriero. Aggiunte molte **iniziative
+  divise** (split: parte sopra/sotto a velocità diverse) trascritte fedelmente, **counter**
+  (Difesa d'Acciaio ▼6/5/4), **NON BLOCCABILE** (Chiatta di Buoi), `kamae_req` Aggressività
+  (Carica del Toro, Vortice Cremisi), asterischi e costi.
+- Personaggio Ronin (Ferite 5 · Mano 5 · Mazzo 27) e albero Kamae letti.
+- Corretto un errore storico: **Carica del Toro (#26)** colpisce Fronte-Sx/Fronte-Dx (non
+  il fronte) e **richiede Aggressività**; aggiornati i test di regressione `test_split`
+  (ora usa #24 Vortice Cremisi per lo split a doppio attacco) e `test_combat2`.
+- Carta core #23 mantenuta nella struttura OPPURE verificata (le opzioni OPPURE di alcune
+  altre carte restano un'approssimazione, annotata: il motore applica tutte le righe).
+- Excel `Ronin_carte.xlsx` rigenerato (22 carte + personaggio + Kamae, colonna "Iniz.
+  divisa" e "DA VERIFICARE"). Suite test tutta verde. Versione 0.22.0.
+
 ## [0.21.0] — 2026-06-18
 ### Ri-trascrizione completa delle carte del Guerriero (dalle immagini)
 - **Tutte le 22 carte uniche del Guerriero ri-lette dalle immagini ad alta risoluzione**

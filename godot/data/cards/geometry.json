@@ -939,23 +939,33 @@
    "note": "OPPURE: A=scarta1+muovi/ruota+pesca2 | B=stordito1+passa a kamae qualsiasi | C=cambia kamae 1. Move dell opzione A (limite: applicata anche se scegli B/C)."
   },
   "24": {
-   "name": "Vortice Cremisi",
+   "name": "VORTICE CREMISI",
    "type": "attack",
    "kamae_req": "aggression",
    "attack": {
     "cells": [
      {
-      "d": 0,
-      "k": 2,
+      "d": 5,
+      "k": 1,
       "w": 2
      },
      {
       "d": 1,
-      "k": 2,
+      "k": 1,
+      "w": 2
+     },
+     {
+      "d": 4,
+      "k": 1,
       "w": 2
      },
      {
       "d": 2,
+      "k": 1,
+      "w": 2
+     },
+     {
+      "d": 0,
       "k": 2,
       "w": 2
      },
@@ -963,89 +973,9 @@
       "d": 3,
       "k": 2,
       "w": 2
-     },
-     {
-      "d": 4,
-      "k": 2,
-      "w": 2
-     },
-     {
-      "d": 5,
-      "k": 2,
-      "w": 2
      }
     ]
    },
-   "move": {
-    "opts": [
-     {
-      "ordered": true,
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
-   },
-   "note": "attacco ad area anello-2 (anche i 6 esagoni intermedi sono colpiti); seconda sezione kamae non modellata"
-  },
-  "25": {
-   "name": "Armatura Pesante",
-   "type": "defence",
-   "timing": "persistent",
-   "effects": [
-    {
-     "do": "reduce_damage",
-     "n": 1,
-     "min": 1
-    },
-    {
-     "do": "focus",
-     "n": 1,
-     "when": "on_damage_reduced",
-     "kamae": "determination"
-    }
-   ],
-   "note": "RIMANE IN GIOCO; riga 'PRENDI 1' aggiuntiva DA VERIFICARE"
-  },
-  "26": {
-   "name": "Carica del Toro",
-   "type": "attack",
-   "kamae_req": "aggression",
-   "move": {
-    "opts": [
-     {
-      "ordered": true,
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
-   },
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 2
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 2
-     }
-    ]
-   },
-   "note": "Iniziativa divisa: sopra init7 (passo avanti + attacco 2 ferite fronte/fronte-dx, richiede Aggressivita); sotto init5 (passo avanti + attacco 1 ferita fronte/fronte-sx).",
    "split": {
     "initiative": 5,
     "move": {
@@ -1068,20 +998,36 @@
       {
        "d": 0,
        "k": 1,
-       "w": 1
-      },
-      {
-       "d": 5,
-       "k": 1,
-       "w": 1
+       "w": 2
       }
      ]
     }
-   }
+   },
+   "note": "Costo 3 focus. Attacco ad area (anello di esagoni da 2 ferite). Iniziativa divisa (sotto vel.5, 2 ferite fronte). DA VERIFICARE esagoni esatti."
   },
-  "27": {
-   "name": "Affondo Invertito di Zanna",
+  "25": {
+   "name": "ARMATURA PESANTE",
+   "type": "defence",
+   "note": "Carta persistente (rimane in gioco): riduzione danno. Verbo 'reduce_damage' non ancora nel motore (inerte)."
+  },
+  "26": {
+   "name": "CARICA DEL TORO",
    "type": "attack",
+   "kamae_req": "aggression",
+   "attack": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 2
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 2
+     }
+    ]
+   },
    "move": {
     "opts": [
      {
@@ -1089,11 +1035,7 @@
       "atoms": [
        {
         "t": "step",
-        "dirs": [
-         2,
-         3,
-         4
-        ],
+        "dir": 0,
         "n": 1,
         "opt": false
        }
@@ -1101,12 +1043,59 @@
      }
     ]
    },
+   "split": {
+    "initiative": 5,
+    "move": {
+     "opts": [
+      {
+       "ordered": false,
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    },
+    "attack": {
+     "cells": [
+      {
+       "d": 5,
+       "k": 1,
+       "w": 1
+      }
+     ]
+    }
+   },
+   "note": "Iniziativa divisa: sopra vel.7 (2+2 ferite ai lati), sotto vel.5 (1 ferita). Passo avanti obblig. DA VERIFICARE."
+  },
+  "27": {
+   "name": "AFFONDO INVERTITO DI ZANNA",
+   "type": "attack",
    "attack": {
     "cells": [
      {
       "d": 0,
-      "k": 2,
+      "k": 1,
       "w": 2
+     }
+    ]
+   },
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": -1,
+        "n": 1,
+        "opt": true
+       }
+      ]
      }
     ]
    },
@@ -1117,52 +1106,45 @@
      "when": "on_hit",
      "kamae": "aggression"
     }
-   ]
+   ],
+   "note": "2 ferite sul fronte. DA VERIFICARE: 'Reverse' suggerisce passo all'indietro (un agente vede passo qualsiasi)."
   },
   "28": {
-   "name": "Il Terrore",
+   "name": "IL TERRORE",
    "type": "meditation",
-   "move": {
-    "opts": [
-     {
-      "ordered": false,
-      "atoms": [
-       {
-        "t": "step",
-        "dir": -1,
-        "n": 2,
-        "opt": true,
-        "kamae": "aggression"
-       },
-       {
-        "t": "rot",
-        "n": 2,
-        "kamae": "aggression",
-        "opt": true
-       }
-      ]
-     }
-    ]
-   },
-   "effects": [
-    {
-     "do": "cancel_movement"
-    },
-    {
-     "do": "rotate_target",
-     "n": 1
+   "split": {
+    "initiative": 3,
+    "move": {
+     "opts": [
+      {
+       "ordered": false,
+       "atoms": [
+        {
+         "t": "rot",
+         "n": 2,
+         "opt": false,
+         "kamae": "aggression"
+        }
+       ]
+      }
+     ]
     }
-   ],
-   "note": "DISTANZA; effetti 'per ogni samurai' DA VERIFICARE"
+   },
+   "note": "DISTANZA. Iniziativa divisa (sotto vel.3). Icone parzialmente ambigue. DA VERIFICARE."
   },
   "29": {
-   "name": "Spazzata Feroce",
+   "name": "SPAZZATA FEROCE",
    "type": "attack",
    "attack": {
     "cells": [
      {
+      "d": 5,
+      "k": 1,
+      "w": 1
+     },
+     {
       "d": 0,
-      "k": 2,
+      "k": 1,
       "w": 1
      },
      {
@@ -1184,72 +1166,75 @@
       "atoms": [
        {
         "t": "step",
-        "dirs": [
-         5,
-         0,
-         1
-        ],
+        "dir": -1,
         "n": 1,
-        "opt": true
+        "opt": false
        }
       ]
      }
     ]
    },
+   "split": {
+    "initiative": 1,
+    "move": {
+     "opts": [
+      {
+       "ordered": false,
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
    "effects": [
     {
      "do": "switch_kamae",
      "to": "aggression",
-     "kamae": "determination"
+     "focus_cost": 1
     }
-   ]
+   ],
+   "note": "4 esagoni 1 ferita attorno. Iniziativa divisa (sotto vel.1). DA VERIFICARE esagoni esatti."
   },
   "30": {
-   "name": "Artigli Laceranti",
+   "name": "ARTIGLI LACERANTI",
    "type": "meditation",
-   "timing": "instant_additional",
    "effects": [
     {
      "do": "replace_wound_bleed",
-     "n": 1,
-     "when": "on_hit",
-     "kamae": "aggression"
+     "when": "on_hit"
     }
-   ]
+   ],
+   "note": "Reazione istantanea: trasforma una ferita in sanguinante."
   },
   "31": {
-   "name": "Difesa d'Acciaio",
+   "name": "DIFESA D'ACCIAIO",
    "type": "defence",
    "defence": {
     "cells": [
      {
       "d": 5,
-      "k": 1,
-      "v": 6
+      "k": 1
      },
      {
       "d": 0,
-      "k": 1,
-      "v": 5
+      "k": 1
      },
      {
       "d": 1,
-      "k": 1,
-      "v": 4
+      "k": 1
      }
     ]
    },
-   "effects": [
-    {
-     "do": "rotate_target",
-     "n": 1,
-     "when": "on_hit"
-    },
-    {
-     "do": "change_kamae",
-     "n": 2,
-     "kamae": "determination"
-    }
+   "counter": [
+    6,
+    5,
+    4
    ],
    "move": {
     "opts": [
@@ -1266,40 +1251,10 @@
        {
         "t": "rot",
         "n": 1,
-        "kamae": "determination",
-        "opt": true
+        "opt": false,
+        "kamae": "determination"
        }
       ]
-     }
-    ]
-   }
-  },
-  "32": {
-   "name": "Balzo del Lupo",
-   "type": "attack",
-   "timing": "instant_replacement",
-   "move": {
-    "opts": [
-     {
-      "ordered": true,
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
-   },
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1,
-      "tag": "bleed"
      }
     ]
    },
@@ -1308,13 +1263,28 @@
      "do": "rotate_target",
      "n": 1,
      "when": "on_hit"
+    },
+    {
+     "do": "change_kamae",
+     "n": 2,
+     "focus_cost": 1
     }
    ],
-   "note": "esagono frontale=goccia; effetto SE RIUSCITO DA VERIFICARE"
+   "note": "Counter ▼6/▼5/▼4. Griglia blocco 3 esagoni frontali."
   },
-  "33": {
-   "name": "Colpo alle Caviglie",
+  "32": {
+   "name": "BALZO DEL LUPO",
    "type": "attack",
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "wound_kind": "bleed",
    "move": {
     "opts": [
      {
@@ -1322,11 +1292,41 @@
       "atoms": [
        {
         "t": "step",
-        "dirs": [
-         5,
-         0,
-         1
-        ],
+        "dir": -1,
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "note": "Sostituzione istantanea. Ferita sanguinante sul fronte."
+  },
+  "33": {
+   "name": "COLPO ALLE CAVIGLIE",
+   "type": "attack",
+   "attack": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": -1,
         "n": 1,
         "opt": false
        },
@@ -1339,40 +1339,38 @@
      }
     ]
    },
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 1
-     }
-    ]
+   "split": {
+    "initiative": 2,
+    "move": {
+     "opts": [
+      {
+       "ordered": false,
+       "atoms": [
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
    },
    "effects": [
     {
-     "do": "rotate_target",
+     "do": "draw",
      "n": 1
     },
     {
      "do": "draw",
-     "n": 1,
-     "alt": "a"
-    },
-    {
-     "do": "draw",
      "n": 2,
-     "alt": "a",
-     "kamae": "balance"
+     "kamae": "determination"
     }
-   ]
+   ],
+   "note": "DA VERIFICARE esagoni feriti (Fronte-Sx+Fronte vs Fronte-Sx+Fronte-Dx). Iniziativa divisa (sotto vel.2)."
   },
   "34": {
-   "name": "Ritirata Composta",
+   "name": "RITIRATA COMPOSTA",
    "type": "meditation",
    "move": {
     "opts": [
@@ -1381,36 +1379,27 @@
       "atoms": [
        {
         "t": "step",
-        "dirs": [
-         5,
-         0,
-         1
-        ],
+        "dir": 0,
         "n": 1,
-        "opt": true
+        "opt": false
        },
        {
         "t": "rot",
         "n": 1,
-        "opt": true
-       }
-      ]
-     },
-     {
-      "ordered": false,
-      "atoms": [
+        "opt": false
+       },
        {
         "t": "step",
         "dir": -1,
         "n": 1,
-        "opt": true,
-        "kamae": "balance"
+        "opt": false,
+        "kamae": "determination"
        },
        {
         "t": "rot",
         "n": 2,
-        "kamae": "balance",
-        "opt": true
+        "opt": false,
+        "kamae": "determination"
        }
       ]
      }
@@ -1425,16 +1414,26 @@
      "do": "draw",
      "n": 3
     }
-   ]
+   ],
+   "note": "Movimento base passo1+rot1 OPPURE (Determ) passo-qualsiasi1+rot2. Banda Aggr con [5] = iniziativa alternativa? DA VERIFICARE."
   },
   "35": {
-   "name": "Chiatta di Buoi",
+   "name": "CHIATTA DI BUOI",
    "type": "attack",
    "non_blockable": true,
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 2,
+      "w": 0
+     }
+    ]
+   },
    "move": {
     "opts": [
      {
-      "ordered": true,
+      "ordered": false,
       "atoms": [
        {
         "t": "step",
@@ -1451,28 +1450,14 @@
        {
         "t": "rot",
         "n": 1,
-        "focus_cost": 1,
-        "opt": true
+        "opt": false,
+        "kamae": "balance"
        }
       ]
      }
     ]
    },
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 0
-     }
-    ]
-   },
    "effects": [
-    {
-     "do": "rotate_target",
-     "n": 1,
-     "when": "on_hit"
-    },
     {
      "do": "push",
      "n": 1,
@@ -1480,13 +1465,14 @@
     },
     {
      "do": "switch_kamae",
-     "to": "aggression"
+     "to": "aggression",
+     "when": "on_hit"
     }
    ],
-   "note": "carica: nessuna ferita stampata, colpisce il fronte e spinge"
+   "note": "NON BLOCCABILE. Asterisco a dist2 fronte. Passo avanti obblig POI passo opz; rotazione (Equilibrio)."
   },
   "71": {
-   "name": "Spazzata di Naginata",
+   "name": "SPAZZATA DI NAGINATA",
    "type": "attack",
    "play_cost": {
     "discard": 1
@@ -1494,55 +1480,63 @@
    "attack": {
     "cells": [
      {
-      "d": 0,
-      "k": 2,
-      "w": 1
-     },
-     {
-      "d": 5,
-      "k": 2,
-      "w": 1
-     },
-     {
       "d": 5,
       "k": 1,
-      "w": 0,
-      "tag": "char"
+      "w": 1
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
      }
     ]
    },
-   "move": {
-    "opts": [
-     {
-      "ordered": false,
-      "atoms": [
-       {
-        "t": "step",
-        "dir": -1,
-        "n": 1,
-        "opt": false
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
+   "split": {
+    "initiative": 2,
+    "move": {
+     "opts": [
+      {
+       "ordered": false,
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
    },
    "effects": [
     {
-     "do": "spend_focus",
-     "n": 1,
-     "note": "*! aggiunge una ferita all'esagono char"
+     "do": "discard_self",
+     "n": 1
     }
-   ]
+   ],
+   "note": "Arma. DA VERIFICARE: un agente vede un asterisco a Retro-Sx e una riga '*!' (Equilibrio). Costo: scarta 1."
   },
   "89": {
-   "name": "Blocco d'Emergenza",
+   "name": "BLOCCO D'EMERGENZA",
    "type": "defence",
-   "timing": "instant_replacement",
+   "defence": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1
+     },
+     {
+      "d": 5,
+      "k": 1
+     }
+    ]
+   },
    "move": {
     "opts": [
      {
@@ -1551,19 +1545,13 @@
        {
         "t": "rot",
         "n": 1,
-        "kamae": "balance",
-        "opt": true
-       }
-      ]
-     },
-     {
-      "ordered": false,
-      "atoms": [
+        "opt": false,
+        "kamae": "determination"
+       },
        {
         "t": "rot",
         "n": 2,
-        "kamae": "determination",
-        "opt": true
+        "opt": false
        }
       ]
      }
@@ -1575,15 +1563,15 @@
      "to": "neutral"
     }
    ],
-   "note": "blocco via rotazione, nessun diagramma esagoni"
+   "note": "Sostituzione istantanea. Rotazione 1 (Determ) / 2 (focus). Griglia blocco DA VERIFICARE."
   },
   "98": {
-   "name": "Grido di Guerra",
+   "name": "GRIDO DI GUERRA",
    "type": "meditation",
    "move": {
     "opts": [
      {
-      "ordered": true,
+      "ordered": false,
       "atoms": [
        {
         "t": "step",
@@ -1600,8 +1588,8 @@
        {
         "t": "rot",
         "n": 1,
-        "kamae": "balance",
-        "opt": true
+        "opt": false,
+        "kamae": "determination"
        }
       ]
      }
@@ -1609,21 +1597,19 @@
    },
    "effects": [
     {
-     "do": "cancel_movement"
-    },
-    {
      "do": "draw",
      "n": 2,
-     "kamae": "determination"
+     "focus_cost": 1
     },
     {
      "do": "switch_kamae",
      "to": "aggression"
     }
-   ]
+   ],
+   "note": "DISTANZA. Passo avanti obblig POI passo opz; rotazione (Determ)."
   },
   "102": {
-   "name": "Mente Risoluta",
+   "name": "MENTE RISOLUTA",
    "type": "meditation",
    "move": {
     "opts": [
@@ -1639,18 +1625,7 @@
        {
         "t": "rot",
         "n": 2,
-        "opt": true
-       }
-      ]
-     },
-     {
-      "ordered": false,
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 1,
-        "kamae": "determination",
-        "opt": true
+        "opt": false
        }
       ]
      }
@@ -1663,21 +1638,19 @@
     },
     {
      "do": "draw",
-     "n": 2,
-     "alt": "a"
+     "n": 2
     },
     {
      "do": "draw",
      "n": 3,
-     "alt": "a",
-     "kamae": "balance"
+     "kamae": "determination"
     }
-   ]
+   ],
+   "note": "Movimento passo-qualsiasi2+rot2."
   },
   "104": {
-   "name": "Colpo Azzoppante",
+   "name": "COLPO AZZOPPANTE",
    "type": "meditation",
-   "timing": "instant_additional",
    "effects": [
     {
      "do": "push",
@@ -1686,27 +1659,20 @@
      "kamae": "aggression"
     }
    ],
-   "move": {
-    "opts": [
+   "note": "Reazione istantanea giocata se l'attacco va a segno. DA VERIFICARE icone."
+  },
+  "107": {
+   "name": "AFFONDO IN SPINTA",
+   "type": "attack",
+   "attack": {
+    "cells": [
      {
-      "ordered": false,
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 3,
-        "n": 1,
-        "opt": true,
-        "kamae": "determination"
-       }
-      ]
+      "d": 0,
+      "k": 1,
+      "w": 2
      }
     ]
    },
-   "note": "GIOCA SE L'ATTACCO E RIUSCITO; icona azzoppa nel trigger"
-  },
-  "107": {
-   "name": "Affondo in Spinta",
-   "type": "attack",
    "move": {
     "opts": [
      {
@@ -1721,129 +1687,76 @@
        {
         "t": "rot",
         "n": 1,
-        "kamae": "determination",
-        "opt": true
+        "opt": false
        }
       ]
      }
     ]
    },
+   "effects": [
+    {
+     "do": "switch_kamae",
+     "to": "aggression",
+     "when": "on_hit"
+    }
+   ],
+   "note": "2 ferite sul fronte. Rotazione a costo focus. DA VERIFICARE."
+  },
+  "125": {
+   "name": "CALCIO DEL CAVALLO",
+   "type": "attack",
    "attack": {
     "cells": [
      {
       "d": 0,
       "k": 2,
-      "w": 2
+      "w": 0
      }
     ]
    },
-   "effects": [
-    {
-     "do": "rotate_target",
-     "n": 1,
-     "when": "on_hit"
-    },
-    {
-     "do": "switch_kamae",
-     "to": "aggression"
+   "split": {
+    "initiative": 5,
+    "move": {
+     "opts": [
+      {
+       "ordered": false,
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1,
+         "opt": true,
+         "kamae": "determination"
+        }
+       ]
+      }
+     ]
     }
-   ],
-   "note": "passo avanti = riga libera (corretto su feedback utente); rotazione gated determination"
-  },
-  "125": {
-   "name": "Calcio del Cavallo",
-   "type": "attack",
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 0,
-      "tag": "char"
-     },
-     {
-      "d": 5,
-      "k": 1,
-      "w": 0
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 0
-     }
-    ]
    },
    "effects": [
     {
      "do": "push",
      "n": 1,
-     "when": "on_hit",
-     "alt": "a"
+     "when": "on_hit"
     },
     {
      "do": "push",
      "n": 2,
      "when": "on_hit",
-     "alt": "a",
-     "kamae": "determination"
+     "kamae": "aggression"
     }
    ],
-   "move": {
-    "opts": [
-     {
-      "ordered": false,
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": true
-       }
-      ]
-     },
-     {
-      "ordered": false,
-      "atoms": [
-       {
-        "t": "step",
-        "dir": -1,
-        "n": 1,
-        "opt": false,
-        "kamae": "balance"
-       }
-      ]
-     }
-    ]
-   }
+   "note": "Asterisco a dist2 fronte. Iniziativa divisa (sotto vel.5)."
   },
   "126": {
-   "name": "Colpo d'Elsa",
+   "name": "COLPO D'ELSA",
    "type": "attack",
-   "move": {
-    "opts": [
-     {
-      "ordered": false,
-      "atoms": [
-       {
-        "t": "step",
-        "dirs": [
-         5,
-         0,
-         1
-        ],
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "kamae": "balance",
-        "opt": true
-       }
-      ]
-     }
-    ]
-   },
    "attack": {
     "cells": [
      {
@@ -1853,6 +1766,27 @@
      }
     ]
    },
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": -1,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false,
+        "kamae": "determination"
+       }
+      ]
+     }
+    ]
+   },
    "effects": [
     {
      "do": "rotate_target",
@@ -1860,20 +1794,26 @@
      "when": "on_hit"
     },
     {
-     "do": "spend_focus",
-     "n": 1,
-     "kamae": "determination"
-    },
-    {
      "do": "focus",
      "n": 1,
+     "when": "on_hit",
      "kamae": "aggression"
     }
-   ]
+   ],
+   "note": "1 ferita sul fronte. DA VERIFICARE riga scarta focus avversario."
   },
   "127": {
-   "name": "Spinta Indietro",
+   "name": "SPINTA INDIETRO",
    "type": "attack",
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 0
+     }
+    ]
+   },
    "move": {
     "opts": [
      {
@@ -1882,39 +1822,19 @@
        {
         "t": "rot",
         "n": 1,
-        "opt": true
+        "opt": false
        }
       ]
-     }
-    ]
-   },
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 0,
-      "tag": "char"
-     },
-     {
-      "d": 5,
-      "k": 1,
-      "w": 0
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 0
      }
     ]
    },
    "effects": [
     {
      "do": "push",
-     "n": 2,
-     "when": "on_hit"
+     "n": 2
     }
-   ]
+   ],
+   "note": "Attacco ad asterisco: spinge l'avversario di 2. DA VERIFICARE esagoni vicini."
   }
  },
  "characters": {
