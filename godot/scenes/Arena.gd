@@ -484,25 +484,34 @@ func _on_card_selected(card_data: Dictionary) -> void:
 	_hud.set_hint("Anteprima: giallo = mosse della carta, rosso = arco. 2° click = PROGRAMMA (coperta).")
 
 
+## Parametri dell'effetto "change_kamae" della carta (dentro `effects`):
+## {n, gate} oppure {} se assente o non applicabile nella Kamae attuale.
+func _change_kamae_params(g: Dictionary) -> Dictionary:
+	for e in g.get("effects", []):
+		if str(e.get("do", "")) == "change_kamae":
+			return {"n": int(e.get("n", 1)), "gate": str(e.get("kamae", ""))}
+	return {}
+
+
 ## Mostra il selettore Kamae se la carta consente di cambiare posizione.
 func _refresh_kamae_chooser() -> void:
 	if _selected_card.is_empty() or _kamae_used:
 		_hud.hide_kamae()
 		return
 	var g := CardDB.geometry(int(_selected_card.get("id", -1)))
-	if not bool(g.get("change_kamae", false)):
+	var params := _change_kamae_params(g)
+	if params.is_empty():
 		_hud.hide_kamae()
 		return
 	var f := state.fighters[0]
 	# Il "cambia kamae" di alcune carte vale solo in una certa Kamae.
-	var cg: String = g.get("change_kamae_gate", "")
-	if cg != "" and cg != Domain.STANCE_SLUG[f.stance]:
+	var gate: String = params.get("gate", "")
+	if gate != "" and gate != Domain.STANCE_SLUG[f.stance]:
 		_hud.hide_kamae()
 		return
 	var tree := CardDB.kamae_tree_for(f.character.to_lower())
-	var n: int = int(g.get("kamae_change", 1))   # "cambia fino a N rami" (default 1)
 	var cur: String = Domain.STANCE_SLUG[f.stance]
-	var targets := Kamae.change_targets(tree, cur, n)
+	var targets := Kamae.change_targets(tree, cur, int(params.get("n", 1)))
 	_hud.show_kamae(cur, targets)
 
 
@@ -512,9 +521,11 @@ func _on_kamae_chosen(slug: String) -> void:
 		return
 	var f := state.fighters[0]
 	var g := CardDB.geometry(int(_selected_card.get("id", -1)))
+	var params := _change_kamae_params(g)
+	if params.is_empty():
+		return
 	var tree := CardDB.kamae_tree_for(f.character.to_lower())
-	var n: int = int(g.get("kamae_change", 1))
-	var targets := Kamae.change_targets(tree, Domain.STANCE_SLUG[f.stance], n)
+	var targets := Kamae.change_targets(tree, Domain.STANCE_SLUG[f.stance], int(params.get("n", 1)))
 	if not targets.has(slug):
 		return
 	f.gain_focus(int(targets[slug]))          # focus dai rami rosa

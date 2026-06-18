@@ -657,10 +657,25 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 			"search_draw":
 				for _d in range(maxi(0, int(e.get("n", 1)))): f.draw_one()
 			"switch_kamae":
-				var to: int = Domain.STANCE_FROM_SLUG.get(e.get("to", ""), -1)
-				if to != -1: f.stance = to
+				# "Passa a Y": spostamento diretto (nessun ramo, nessun focus).
+				var to_slug := str(e.get("to", ""))
+				if to_slug == "any":
+					to_slug = "aggression"   # "qualsiasi" (≠ neutral): scelta auto (semplificazione)
+				var to: int = Domain.STANCE_FROM_SLUG.get(to_slug, -1)
+				if to != -1:
+					f.stance = to
+					log.append("%s passa a Kamae %s" % [f.character, Domain.STANCE_NAMES[to]])
 			"change_kamae":
-				pass   # scelta interattiva del giocatore; non auto-applicata
+				# "Cambia Kamae fino a N": il giocatore sceglie nella scena (con focus
+				# dai rami rosa). L'IA traversa l'albero in automatico (ignora il focus).
+				if f.is_ai:
+					var tree := CardDB.kamae_tree_for(f.character.to_lower())
+					var targets := Kamae.change_targets(tree, Domain.STANCE_SLUG[f.stance], int(e.get("n", 1)))
+					for pref in ["aggression", "determination", "balance"]:
+						if targets.has(pref):
+							f.stance = Domain.STANCE_FROM_SLUG[pref]
+							log.append("%s cambia Kamae in %s" % [f.character, Domain.STANCE_NAMES[f.stance]])
+							break
 			"spend_focus", "reduce_damage", "cancel_movement", "block_initiative":
 				log.append("  (effetto «%s» non ancora simulato)" % str(e.get("do", "")))
 		if foe != null:

@@ -3,6 +3,16 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.16.0] — 2026-06-18
+### Albero Kamae & focus (regolamento 1.5 p.12)
+- **Cambio Kamae lungo l'albero**: "Cambia Kamae fino a N" ora funziona davvero — il
+  selettore legge l'effetto `change_kamae` dalle carte (prima cercava una chiave al posto
+  sbagliato e non appariva mai). Il giocatore sceglie la destinazione lungo i rami; i
+  rami **rosa** danno +1 focus (cap 3). L'IA traversa l'albero in automatico.
+- **Switch Kamae** ("Passa a Y") resta diretto senza focus; gestito `to:"any"` (≠ neutral).
+- Nuovo test `test_kamae` (traversal, focus rami rosa, IA, switch any, cap focus).
+  Versione 0.16.0.
+
 ## [0.15.0] — 2026-06-18
 ### Collisioni + Commit To Hit (regolamento 1.5 p.9–10)
 - **Collisioni** per push/pull: bersaglio spinto fuori arena → +1 stordimento; contro un

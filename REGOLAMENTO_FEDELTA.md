@@ -82,17 +82,21 @@ Stato:
 
 - ✅ 4 posizioni: Aggressione, Equilibrio, Determinazione, Neutrale.
 - ✅ Requisito Kamae per giocare una carta (controllato al Choose).
-- ❌ **Albero Kamae** con rami/frecce: "Cambia Kamae su X" scorre lungo i rami; rami
-   **rosa** ⇒ +1 focus; "Switch" va diretto (no focus). Le scansioni sono in
-   `Tabelle_Materiali/Senjutsu/Tabelle/Senjutsu_Kamae_Cards_1.5_Edition.pdf`.
-- ❌ Effetti Kamae mandatori (le righe colorate corrispondenti alla tua posizione).
+- ✅ **Albero Kamae** (grafo nodi/archi in `kamae_trees.json`): "Cambia Kamae fino a N"
+   scorre lungo i rami (`Kamae.change_targets`); i rami **rosa** danno +1 focus; il
+   giocatore sceglie la destinazione nella scena, l'IA traversa in automatico (ignora il
+   focus). "Passa a Y" (switch) va diretto senza focus; `to:"any"` → posizione ≠ neutral.
+- ⚠️ Alberi Kamae trascritti **best-effort** solo per Guerriero/Ronin (DA VERIFICARE
+   sulle scansioni `Senjutsu_Kamae_Cards_1.5_Edition.pdf`); altri personaggi mancano.
+- ✅ Effetti Kamae gated: le righe `kamae` si applicano solo nella posizione giusta.
 
 ## 6. Focus (rulebook p.12–13)
 
 - ✅ Costo focus obbligatorio per giocare; carta "svanisce" se non puoi pagare.
-- ⚠️ Massimo **3** focus: da verificare ovunque (cap).
-- ❌ Focus opzionali su effetti (paghi per attivare la riga).
-- ❌ Focus dai rami rosa dell'albero Kamae.
+- ✅ Massimo **3** focus (`gain_focus` cappa a 3).
+- ✅ Focus dai rami rosa dell'albero Kamae.
+- ⚠️ Focus **opzionali** su effetti (paghi per attivare la riga): in auto-risoluzione
+   vengono saltati; manca la scelta interattiva di pagarli.
 
 ## 7. Status: Ferite, Sanguinamento, Stun, Hobble, Poison (rulebook p.10,13)
 
