@@ -105,6 +105,28 @@ static func pick_initiative(raw: String, prefer_high: bool = true) -> int:
 	return nums[nums.size() - 1] if prefer_high else nums[0]
 
 
+## Tutti i valori d'iniziativa selezionabili (per range "a-b" o lista "7,6,5").
+## "=" e "-" → lista vuota.
+static func initiative_options(raw: String) -> Array:
+	var s := raw.strip_edges()
+	if s == "" or s == "=" or s == "-":
+		return []
+	if "-" in s and not ("," in s):
+		var parts := s.split("-")
+		if parts.size() == 2 and parts[0].strip_edges().is_valid_int() and parts[1].strip_edges().is_valid_int():
+			var a := int(parts[0]); var b := int(parts[1])
+			var out: Array = []
+			for v in range(mini(a, b), maxi(a, b) + 1):
+				out.append(v)
+			return out
+	var nums: Array = []
+	for tok in s.replace("/", ",").split(","):
+		var t := tok.strip_edges()
+		if t.is_valid_int():
+			nums.append(int(t))
+	return nums
+
+
 # ─── Personaggi giocabili (con asset disponibili) ────────────────────────────
 # Il pool completo (24 tipi) è in data/cards/card_pool.json; questi sono i
 # guerrieri di partenza per cui abbiamo carte/miniature.

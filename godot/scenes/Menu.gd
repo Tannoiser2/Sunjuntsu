@@ -9,7 +9,7 @@ func _ready() -> void:
 
 	var version: String = str(ProjectSettings.get_setting("application/config/version", "?"))
 	$Version.text = "v%s" % version
-	$Changes.text = "Novità v%s:\n• Cambio Kamae interattivo (rami rosa = focus)\n• \"Passa a Kamae\" e giocabilità gated da Kamae\n• Movimento/iniziativa fedeli alle carte\nVedi CHANGELOG.md" % version
+	$Changes.text = "Novità v%s:\n• Blocchi fedeli: la difesa aggancia la velocità dell'attacco\n• Iniziativa variabile risolta per il blocco\n• Cambio Kamae interattivo e giocabilità gated da Kamae\nVedi CHANGELOG.md" % version
 
 
 func _on_solo() -> void:

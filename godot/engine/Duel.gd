@@ -23,6 +23,11 @@ signal duel_over(winner_index: int)
 
 var state: GameState
 
+## Velocità d'iniziativa scelta da ogni combattente per il turno corrente
+## (indice → valore). Le difese a iniziativa variabile scelgono il valore che
+## aggancia l'attacco avversario, così il blocco scatta alla stessa velocità.
+var _chosen: Dictionary = {}
+
 
 func _init(initial_state: GameState) -> void:
 	state = initial_state
@@ -116,13 +121,18 @@ func _resolve_turn() -> void:
 				log.append("%s: focus insufficiente per %s — la carta svanisce" % [
 					f.character, c.get("name", "?")])
 
-	# Difese rivelate (non svanite): blocco disponibile per il turno.
+	# Velocità d'iniziativa scelte: prima i non-difensori (valore alto), poi le
+	# difese che agganciano la velocità dell'attacco avversario.
+	_resolve_chosen_speeds(fizzled)
+
+	# Difese rivelate (non svanite): blocco disponibile alla loro velocità scelta.
+	# block_ready[i] = velocità a cui i para (un solo attacco per difesa).
 	var block_ready := {}
 	for i in range(state.fighters.size()):
 		var f := state.fighters[i]
 		if f.planned != -1 and not fizzled.has(i):
 			if CardDB.card(f.planned).get("type", "") == "defence":
-				block_ready[i] = true
+				block_ready[i] = _chosen.get(i, -1)
 
 	# Ordine di iniziativa (più alta agisce prima).
 	for i in _initiative_order():
@@ -137,6 +147,64 @@ func _resolve_turn() -> void:
 			return
 
 	_cleanup(log)
+
+
+## Calcola la velocità d'iniziativa scelta da ogni combattente per il turno.
+## I non-difensori prendono il valore più alto disponibile; le difese con
+## iniziativa variabile scelgono il valore che combacia con la velocità
+## dell'attacco avversario (se nelle opzioni), così il blocco scatta a quella
+## velocità; altrimenti il valore più alto. Tutto al netto degli azzoppamenti.
+func _resolve_chosen_speeds(fizzled: Dictionary) -> void:
+	_chosen.clear()
+	# 1ª passata: chi non è difesa fissa la velocità più alta.
+	for i in range(state.fighters.size()):
+		var f := state.fighters[i]
+		if f.planned == -1 or fizzled.has(i):
+			continue
+		if CardDB.card(f.planned).get("type", "") == "defence":
+			continue
+		_chosen[i] = _hobbled(i, Domain.pick_initiative(_raw_ini(i), true))
+	# 2ª passata: le difese agganciano la velocità dell'attacco avversario.
+	for i in range(state.fighters.size()):
+		var f := state.fighters[i]
+		if f.planned == -1 or fizzled.has(i):
+			continue
+		if CardDB.card(f.planned).get("type", "") != "defence":
+			continue
+		var opts: Array = Domain.initiative_options(_raw_ini(i))
+		if opts.is_empty():
+			# Iniziativa "=" (istantanea) o assente: blocco a velocità massima.
+			_chosen[i] = _hobbled(i, Domain.pick_initiative(_raw_ini(i), true))
+			continue
+		# Velocità dell'attacco avversario (se ne gioca uno).
+		var foe_idx := _opponent_index(i)
+		var target := -1
+		if foe_idx != -1 and _chosen.has(foe_idx):
+			var fc := CardDB.card(state.fighters[foe_idx].planned)
+			if fc.get("type", "") == "attack":
+				target = int(_chosen[foe_idx])
+		var pick := -999
+		if target != -1:
+			# Scegli, fra le opzioni azzoppate, quella che combacia col bersaglio.
+			for v in opts:
+				if _hobbled(i, int(v)) == target:
+					pick = _hobbled(i, int(v))
+					break
+		if pick == -999:
+			# Nessun aggancio: prendi la più alta.
+			pick = _hobbled(i, Domain.pick_initiative(_raw_ini(i), true))
+		_chosen[i] = pick
+
+
+func _raw_ini(i: int) -> String:
+	return str(CardDB.card(state.fighters[i].planned).get("initiative", ""))
+
+
+func _hobbled(i: int, sp: int) -> int:
+	var f := state.fighters[i]
+	if sp >= 0 and f.hobble > 0:
+		return maxi(1, sp - f.hobble)
+	return sp
 
 
 ## Ordine di risoluzione: velocità d'iniziativa decrescente; a parità, ordine di
@@ -164,15 +232,16 @@ func _cmp_initiative(a: int, b: int) -> bool:
 	return ka < kb
 
 
-## Velocità d'iniziativa effettiva: scelta variabile (max) meno gli azzoppamenti.
+## Velocità d'iniziativa effettiva: il valore scelto per il turno (vedi
+## _resolve_chosen_speeds), al netto degli azzoppamenti. Fuori risoluzione,
+## ripiega sul valore più alto.
 func _speed_of(i: int) -> int:
 	var f := state.fighters[i]
 	if f.planned == -1:
 		return -999
-	var sp := Domain.pick_initiative(str(CardDB.card(f.planned).get("initiative", "")), true)
-	if sp >= 0 and f.hobble > 0:
-		sp = maxi(1, sp - f.hobble)
-	return sp
+	if _chosen.has(i):
+		return int(_chosen[i])
+	return _hobbled(i, Domain.pick_initiative(_raw_ini(i), true))
 
 
 func _type_rank(i: int) -> int:
@@ -196,9 +265,13 @@ func _resolve_card(i: int, block_ready: Dictionary, log: Array) -> void:
 				var dist := HexGrid.distance(f.cell, foe.cell)
 				log.append("%s usa %s ma il bersaglio è fuori arco/portata (dist %d)" % [f.character, name, dist])
 				return
-			if block_ready.get(foe_idx, false):
-				block_ready[foe_idx] = false
-				log.append("%s attacca con %s — %s PARA!" % [f.character, name, foe.character])
+			# Blocco: la difesa avversaria para se la velocità scelta combacia
+			# con quella di questo attacco (un solo attacco per difesa).
+			var atk_speed := int(_chosen.get(i, _speed_of(i)))
+			if atk_speed >= 0 and block_ready.has(foe_idx) and int(block_ready[foe_idx]) == atk_speed:
+				block_ready[foe_idx] = -1
+				log.append("%s attacca con %s a velocità %d — %s PARA!" % [
+					f.character, name, atk_speed, foe.character])
 				return
 			var n: int = int(g.get("wounds", 1))
 			var kind: String = g.get("wound_kind", "normal")
@@ -248,6 +321,10 @@ func _apply_if_success(att_idx: int, foe_idx: int, g: Dictionary, log: Array) ->
 			_push(att_idx, foe_idx, int(s.substr(5)))
 		elif s == "bleed":
 			foe.wounds.append("bleed")
+		elif s == "hobble" or s.begins_with("hobble:"):
+			var amt := 1 if s == "hobble" else int(s.substr(7))
+			foe.hobble += maxi(1, amt)
+			fighter_updated.emit(foe_idx)
 
 
 ## Spinge `foe` di `n` esagoni lontano da `att`, se le celle sono libere.

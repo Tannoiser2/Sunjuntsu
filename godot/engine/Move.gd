@@ -86,10 +86,16 @@ static func _apply(atom: Dictionary, state: Vector3i, is_blocked: Callable) -> A
 		return out
 	# step
 	var nn: int = int(atom.get("n", 1))
-	var dir: int = int(atom.get("dir", 0))
-	var dirs: Array = ([dir] if dir >= 0 else [0, 1, 2, 3, 4, 5])
+	# "dirs": elenco esplicito di direzioni relative (es. arco frontale [5,0,1]).
+	# Altrimenti "dir" singola (-1 = qualsiasi direzione).
+	var dirs: Array
+	if atom.has("dirs"):
+		dirs = atom.get("dirs", [])
+	else:
+		var dir: int = int(atom.get("dir", 0))
+		dirs = ([dir] if dir >= 0 else [0, 1, 2, 3, 4, 5])
 	for d in dirs:
-		var ad: int = (state.z + d) % 6
+		var ad: int = (state.z + int(d)) % 6
 		var cur := Vector2i(state.x, state.y)
 		var ok := true
 		for _s in range(nn):
