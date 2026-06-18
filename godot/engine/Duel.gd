@@ -365,41 +365,9 @@ func _resolve_card(i: int, block_ready: Dictionary, log: Array) -> void:
 	var chosen_alt = _resolve_option(i, g)   ## "OPPURE": opzione scelta (una sola)
 	match c.get("type", ""):
 		"attack":
-			var foe_idx := _opponent_index(i)
-			if foe_idx == -1:
-				return
-			var foe := state.fighters[foe_idx]
-			var cells := attack_v2_cells(f.cell, f.facing, g, _card_range(c))
-			if not cells.has(foe.cell):
-				var dist := HexGrid.distance(f.cell, foe.cell)
-				log.append("%s usa %s ma il bersaglio è fuori arco/portata (dist %d)" % [f.character, name, dist])
-				return
-			# Blocco (regolamento 1.5 p.11): blocco nella cella dell'attaccante,
-			# oppure ogni percorso più breve attraversa un blocco. Il terreno
-			# blocca a ogni velocità; la difesa solo alla sua velocità scelta.
-			var atk_speed := int(_chosen.get(i, _speed_of(i)))
-			if _attack_blocked(i, foe_idx, atk_speed, g):
-				# Un solo attacco per difesa: consuma la difesa e valuta il counter.
-				if int(_block_ready.get(foe_idx, -1)) == atk_speed:
-					_block_ready[foe_idx] = -1
-					_try_counter(foe_idx, i, atk_speed, log)
-				log.append("%s attacca con %s a velocità %d — PARATO da %s" % [
-					f.character, name, atk_speed, foe.character])
-				return
-			# Ferite della cella colpita (schema v2) o globali (vecchio).
-			var n: int = int(cells.get(foe.cell, g.get("wounds", 1)))
-			var kind: String = g.get("wound_kind", "normal")
-			if kind == "exec":
-				foe.wounds.append("exec"); foe.wounds.resize(foe.wound_limit)
-			elif n > 0:
-				var tag := "bleed" if kind == "bleed" else "wound"
-				for _w in range(n):
-					foe.wounds.append(tag)
-			_apply_if_success(i, foe_idx, g, log)
-			_apply_effects(i, foe_idx, g, "on_hit", log, chosen_alt)
-			fighter_updated.emit(foe_idx)
-			log.append("%s colpisce %s con %s — %d ferita/e (%d/%d)" % [
-				f.character, foe.character, name, n, foe.wounds.size(), foe.wound_limit])
+			_resolve_attack_top(i, g, name, log, chosen_alt)
+			if g.has("split"):
+				_resolve_split_bottom(i, g["split"], name, log)
 		"defence":
 			_apply_effects(i, _opponent_index(i), g, "always", log, chosen_alt)
 			log.append("%s si mette in guardia (%s)" % [f.character, name])
@@ -427,6 +395,105 @@ func _resolve_card(i: int, block_ready: Dictionary, log: Array) -> void:
 				f.stance = to
 				fighter_updated.emit(i)
 				log.append("%s passa a Kamae %s" % [f.character, Domain.STANCE_NAMES[to]])
+
+
+## Risolve la parte SOPRA di un attacco (eventuale parte SOTTO la gestisce lo split).
+func _resolve_attack_top(i: int, g: Dictionary, name: String, log: Array, chosen_alt) -> void:
+	var f := state.fighters[i]
+	var foe_idx := _opponent_index(i)
+	if foe_idx == -1:
+		return
+	var foe := state.fighters[foe_idx]
+	var cells := attack_v2_cells(f.cell, f.facing, g, _card_range(CardDB.card(f.planned)))
+	if not cells.has(foe.cell):
+		log.append("%s usa %s ma il bersaglio è fuori arco/portata (dist %d)" % [
+			f.character, name, HexGrid.distance(f.cell, foe.cell)])
+		return
+	var atk_speed := int(_chosen.get(i, _speed_of(i)))
+	if _attack_blocked(i, foe_idx, atk_speed, g):
+		if int(_block_ready.get(foe_idx, -1)) == atk_speed:
+			_block_ready[foe_idx] = -1
+			_try_counter(foe_idx, i, atk_speed, log)
+		log.append("%s attacca con %s a velocità %d — PARATO da %s" % [
+			f.character, name, atk_speed, foe.character])
+		return
+	var n: int = int(cells.get(foe.cell, g.get("wounds", 1)))
+	var kind: String = g.get("wound_kind", "normal")
+	if kind == "exec":
+		foe.wounds.append("exec"); foe.wounds.resize(foe.wound_limit)
+	elif n > 0:
+		var tag := "bleed" if kind == "bleed" else "wound"
+		for _w in range(n):
+			foe.wounds.append(tag)
+	_apply_if_success(i, foe_idx, g, log)
+	_apply_effects(i, foe_idx, g, "on_hit", log, chosen_alt)
+	fighter_updated.emit(foe_idx)
+	log.append("%s colpisce %s con %s — %d ferita/e (%d/%d)" % [
+		f.character, foe.character, name, n, foe.wounds.size(), foe.wound_limit])
+
+
+## Risolve la parte SOTTO di una carta a iniziativa divisa (regolamento p.14).
+## La parte sotto è mandatoria: per il giocatore si auto-risolve (mossa obbligatoria
+## verso il facing) subito dopo la parte sopra; il suo attacco usa l'iniziativa
+## della parte sotto (così il blocco si differenzia per velocità).
+func _resolve_split_bottom(i: int, split: Dictionary, name: String, log: Array) -> void:
+	var f := state.fighters[i]
+	var foe_idx := _opponent_index(i)
+	if foe_idx == -1:
+		return
+	var foe := state.fighters[foe_idx]
+	if split.has("move"):
+		_auto_move_mandatory(i, split["move"])
+		fighter_updated.emit(i)
+	var bspeed := _hobbled(i, int(split.get("initiative", _speed_of(i))))
+	if split.has("attack"):
+		var pg := {"attack": split["attack"]}
+		var cells := attack_v2_cells(f.cell, f.facing, pg, 1)
+		if cells.has(foe.cell):
+			if _attack_blocked(i, foe_idx, bspeed, pg):
+				if int(_block_ready.get(foe_idx, -1)) == bspeed:
+					_block_ready[foe_idx] = -1
+					_try_counter(foe_idx, i, bspeed, log)
+				log.append("%s (parte bassa di %s, vel %d) — PARATO da %s" % [
+					f.character, name, bspeed, foe.character])
+			else:
+				var n: int = int(cells.get(foe.cell, 1))
+				var kind: String = split.get("wound_kind", "normal")
+				if kind == "exec":
+					foe.wounds.append("exec"); foe.wounds.resize(foe.wound_limit)
+				else:
+					var tag := "bleed" if kind == "bleed" else "wound"
+					for _w in range(n):
+						foe.wounds.append(tag)
+				fighter_updated.emit(foe_idx)
+				log.append("%s colpisce %s (parte bassa, vel %d) — %d ferita/e (%d/%d)" % [
+					f.character, foe.character, bspeed, n, foe.wounds.size(), foe.wound_limit])
+	if split.has("effects"):
+		_apply_effects(i, foe_idx, {"effects": split["effects"]}, "always", log, null)
+
+
+## Applica automaticamente le mosse OBBLIGATORIE di una specifica (prima opzione),
+## relative al facing del combattente. Usata per la parte bassa degli split.
+func _auto_move_mandatory(i: int, move_spec: Dictionary) -> void:
+	var f := state.fighters[i]
+	var opts: Array = move_spec.get("opts", [])
+	if opts.is_empty():
+		return
+	for a in opts[0].get("atoms", []):
+		if bool(a.get("opt", true)):
+			continue   # solo le mosse obbligatorie
+		if a.get("t", "") == "rot":
+			f.facing = (f.facing + int(a.get("n", 1))) % 6
+		elif a.get("t", "") == "step":
+			var dirs: Array = a.get("dirs", [])
+			if dirs.is_empty():
+				var dd := int(a.get("dir", 0))
+				dirs = [dd if dd >= 0 else 0]
+			for _s in range(int(a.get("n", 1))):
+				var ad: int = (f.facing + int(dirs[0])) % 6
+				var dest: Vector2i = f.cell + HexGrid.DIRS[ad]
+				if not state.is_blocked(dest):
+					f.cell = dest
 
 
 ## Applica gli effetti "se riuscito" trascritti (push, focus, bleed).

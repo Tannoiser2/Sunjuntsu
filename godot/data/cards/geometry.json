@@ -1152,7 +1152,39 @@
      }
     ]
    },
-   "note": "seconda sezione kamae (passo+attacco d0/d5 w1) non modellata"
+   "note": "Iniziativa divisa: sopra init7 (passo avanti + attacco 2 ferite fronte/fronte-dx, richiede Aggressivita); sotto init5 (passo avanti + attacco 1 ferita fronte/fronte-sx).",
+   "split": {
+    "initiative": 5,
+    "move": {
+     "opts": [
+      {
+       "ordered": false,
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    },
+    "attack": {
+     "cells": [
+      {
+       "d": 0,
+       "k": 1,
+       "w": 1
+      },
+      {
+       "d": 5,
+       "k": 1,
+       "w": 1
+      }
+     ]
+    }
+   }
   },
   "27": {
    "name": "Affondo Invertito di Zanna",
