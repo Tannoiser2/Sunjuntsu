@@ -1731,6 +1731,9 @@
    },
    "effects": [
     {
+     "do": "change_approach"
+    },
+    {
      "do": "change_kamae",
      "n": 1
     },

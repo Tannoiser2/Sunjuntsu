@@ -72,5 +72,13 @@ func _ready() -> void:
 	else:
 		print("OK: change_ai_behaviour inverte l'atteggiamento dell'IA")
 
+	# ── CHANGE APPROACH: l'IA ruota il segnalino approccio ──
+	ai3.ai_approach = "front"
+	d3._apply_effects(1, 0, {"effects": [{"do": "change_approach"}]}, "always", [])
+	if ai3.ai_approach != "right":
+		print("FAIL: change_approach non ha ruotato l'approccio (%s)" % ai3.ai_approach); ok = false
+	else:
+		print("OK: change_approach ruota l'approccio dell'IA (fronte→destra)")
+
 	print("RISULTATO: ", "PASS" if ok else "FAIL")
 	get_tree().quit(0 if ok else 1)

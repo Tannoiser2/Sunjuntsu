@@ -932,6 +932,14 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 				if f.is_ai:
 					f.ai_stance = "defensive" if f.ai_stance == "offensive" else "offensive"
 					log.append("%s cambia atteggiamento IA → %s" % [f.character, f.ai_stance])
+			"change_approach":
+				# Carta solo: sposta il segnalino approccio alla posizione successiva
+				# (frecce nere sulla carta avversario): fronte → destra → spalle → sinistra.
+				if f.is_ai:
+					var ring := ["front", "right", "rear", "left"]
+					var idx: int = ring.find(f.ai_approach)
+					f.ai_approach = ring[(idx + 1) % ring.size()] if idx != -1 else "front"
+					log.append("%s sposta l'approccio IA → %s" % [f.character, f.ai_approach])
 		if foe != null:
 			fighter_updated.emit(foe_idx)
 	fighter_updated.emit(i)

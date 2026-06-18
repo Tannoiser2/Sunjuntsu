@@ -3,6 +3,16 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.28.0] — 2026-06-18
+### Postura IA visibile + approccio dinamico
+- **Postura IA visibile in partita**: la barra di stato mostra ora `IA: ⚔ Offensiva / 🛡
+  Difensiva · approccio fronte/destra/spalle/sinistra`, aggiornata in tempo reale.
+- **Approccio dinamico**: nuovo effetto `change_approach` che sposta il segnalino approccio
+  alla posizione successiva (fronte → destra → spalle → sinistra), come le frecce nere
+  sulla carta avversario. Attaccato a *Mente Risoluta* (#102) nel mazzo IA; cambia quindi
+  l'angolo da cui l'IA cerca di posizionarsi rispetto al tuo facing.
+- Test `test_ai` esteso (rotazione approccio). Suite verde (12). Versione 0.28.0.
+
 ## [0.27.0] — 2026-06-18
 ### Avversario Ronin "solitario": mazzo IA dedicato + cambio atteggiamento
 - L'IA ora usa un **mazzo solitario dedicato** (sottoinsieme curato di carte Ronin
