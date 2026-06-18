@@ -3,6 +3,24 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.21.0] — 2026-06-18
+### Ri-trascrizione completa delle carte del Guerriero (dalle immagini)
+- **Tutte le 22 carte uniche del Guerriero ri-lette dalle immagini ad alta risoluzione**
+  (5 agenti di visione, legenda icone corretta) e riscritte in `geometry.json`. Corretti
+  errori sistematici della vecchia trascrizione a mano:
+  - **Aggressività (crisantemo rosso)** vs **costo Focus (4 quadretti arancioni)**: prima
+    confusi di continuo, ora distinti.
+  - **Kabuto = l'avversario** (es. "Spingi [avversario] 1"), non un'icona generica.
+  - **Asterisco** = effetto sul bersaglio (prima letto come "0 ferite").
+  - Aggiunti flag **NON BLOCCABILE**, carte **istantanee** (addizione/sostituzione),
+    **counter** sulle difese (Blocco Cinereo ▼8), `kamae_req` (Fenice Fiammante = Aggr.),
+    costi di gioco (scarti).
+- Excel di revisione `Guerriero_carte.xlsx` rigenerato (22 carte + personaggio + Kamae),
+  con colonna "DA VERIFICARE" sui punti incerti.
+- Importate le carte inglesi (`Tabelle_Materiali/Senjutsu/Carte INGLESE/`) come controprova.
+- Test invariati e verdi (allcards 44, turnflow, split, multi, combat2, blocks). Alcuni
+  effetti senza verbo nel motore restano inerti (annotati). Versione 0.21.0.
+
 ## [0.20.0] — 2026-06-18
 ### Risoluzione sbloccata + anteprima azione al passaggio del mouse
 - **Fine dello "stallo" in risoluzione**: dopo aver mosso e visto i bersagli rossi, ora
