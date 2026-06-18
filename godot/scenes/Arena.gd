@@ -188,6 +188,11 @@ func _spawn_pawns() -> void:
 		f.draw_pile = CardDB.draw_pile_for(chars[i].to_lower())
 		f.draw_pile.shuffle()
 		f.is_ai = (i == 1)   # pedina 0 = giocatore, pedina 1 = IA solo
+		# Limiti dalla carta personaggio (se trascritta).
+		var cs := CardDB.character_stats(chars[i])
+		if not cs.is_empty():
+			f.wound_limit = int(cs.get("wound_limit", f.wound_limit))
+			f.hand_limit = int(cs.get("hand_limit", f.hand_limit))
 		var pawn: Node3D = Pawn.new()
 		pawn.set("tint", colors[i])
 		add_child(pawn)

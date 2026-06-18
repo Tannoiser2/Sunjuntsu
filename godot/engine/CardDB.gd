@@ -18,6 +18,7 @@ var by_char: Dictionary = {}          ## personaggio (String) -> Array[carta]
 var characters: Array = []            ## elenco personaggi
 var decks: Dictionary = {}            ## slug (String) -> Array[carta del mazzo]
 var geom: Dictionary = {}             ## id (int) -> geometria/effetti (GEOMETRY_SCHEMA.md)
+var char_stats: Dictionary = {}       ## personaggio (String) -> {wound_limit, hand_limit, weapons}
 
 
 func _ready() -> void:
@@ -36,11 +37,17 @@ func _load_geometry() -> void:
 		return
 	for k in parsed.get("cards", {}).keys():
 		geom[int(k)] = parsed["cards"][k]
+	char_stats = parsed.get("characters", {})
 
 
 ## Geometria/effetti trascritti per una carta (vuoto se non ancora trascritta).
 func geometry(id: int) -> Dictionary:
 	return geom.get(id, {})
+
+
+## Statistiche del personaggio (limite ferite/mano, armi) o {} se assente.
+func character_stats(character: String) -> Dictionary:
+	return char_stats.get(character, {})
 
 
 func _load_decks() -> void:

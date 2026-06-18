@@ -1,52 +1,127 @@
 {
-  "source": "Trascrizione manuale dalle immagini in Tabelle_Materiali/Senjutsu/CARTE/ (verificata col numero stampato = Card ID). Vedi GEOMETRY_SCHEMA.md.",
-  "convention": "dir 0 = fronte (direzione di facing), senso orario; range = raggio max colpito",
-  "coverage": "Prima passata: mazzo Guerriero (Warrior) — in corso.",
+  "source": "Trascrizione manuale dalle immagini in Tabelle_Materiali/Senjutsu/CARTE/Guerriero.pdf (verificata col numero stampato = Card ID). Vedi GEOMETRY_SCHEMA.md.",
+  "convention": "dir 0 = fronte (direzione di facing), senso orario (1=fronte-dx,2=dietro-dx,3=dietro,4=dietro-sx,5=fronte-sx); range = raggio max colpito",
+  "coverage": "Mazzo Guerriero (Warrior) completo: 24 carte uniche. Prossimo: Ronin.",
   "cards": {
     "53": {
-      "name": "Carta Speciale Guerriero",
+      "name": "Carta Speciale Guerriero", "type": "core",
       "discard": 1, "rotates": 2, "draw": 2, "focus_gain": 1, "change_kamae": true,
-      "note": "Core: pesca 2 OPPURE prendi arma+focus OPPURE cambia kamae"
+      "note": "Pesca 2 OPPURE prendi arma+focus OPPURE cambia kamae"
     },
     "54": {
-      "name": "Ruggito Ardente",
+      "name": "Ruggito Ardente", "type": "meditation",
       "if_success": ["push:1", "bleed"],
-      "note": "Meditazione/Aggiunta istantanea: si gioca se l'attacco e' riuscito"
+      "note": "Aggiunta istantanea: si gioca se l'attacco e' riuscito"
+    },
+    "55": {
+      "name": "Colpo della Fenice Fiammante", "type": "attack",
+      "range": 1, "wounds": 2, "dirs": [5, 0, 1], "steps": 1,
+      "note": "Doppia ferita; un esagono porta icona ESECUZIONE (non ancora modellata)"
+    },
+    "56": {
+      "name": "Punto Cieco", "type": "meditation",
+      "rotates": 1, "change_kamae": true,
+      "note": "Aggiunta istantanea dopo aver risolto la carta: cerca+prendi arma/terreno/focus"
+    },
+    "57": {
+      "name": "Istinto Bruciante", "type": "meditation",
+      "draw": 5, "steps": 1, "rotates": 2,
+      "note": "Rimescola nel mazzo le carte non-difesa, poi pesca 5"
+    },
+    "58": {
+      "name": "Finta Falciante", "type": "attack",
+      "range": 1, "wounds": 1, "dirs": [5, 0, 1, 4], "steps": 1,
+      "if_success": ["focus:1"], "note": "Arco ampio; scarta 2 per focus"
     },
     "59": {
-      "name": "Concentrazione Ritrovata",
+      "name": "Concentrazione Ritrovata", "type": "meditation",
       "rotates": 1, "focus_gain": 1, "change_kamae": true,
-      "note": "Meditazione: in alternativa ✱2/↻2"
+      "note": "In alternativa ✱2/↻2"
     },
     "60": {
-      "name": "Falciata Montante",
+      "name": "Falciata Montante", "type": "attack",
       "range": 1, "wounds": 1, "wound_kind": "normal", "dirs": [5, 0, 1],
-      "steps": 1, "change_kamae": true,
-      "if_success": ["bleed"],
-      "note": "Attacco ad arco frontale ampio; puo' sostituire ! con sanguinante"
+      "steps": 1, "change_kamae": true, "if_success": ["bleed"],
+      "note": "Arco frontale ampio; puo' sostituire ferita con sanguinante"
+    },
+    "61": {
+      "name": "Colpo Corto", "type": "attack",
+      "range": 1, "wounds": 1, "dirs": [0], "steps": 1,
+      "if_success": ["focus:1"], "note": "Sostituzione istantanea; scarta 1 per focus"
+    },
+    "62": {
+      "name": "Arco Respingente", "type": "attack",
+      "range": 1, "wounds": 1, "dirs": [0, 1, 2, 3, 4, 5],
+      "discard": 1, "change_kamae": true, "if_success": ["push:1"],
+      "note": "Arco completo attorno al personaggio"
     },
     "63": {
-      "name": "Blocco Cinereo",
+      "name": "Blocco Cinereo", "type": "defence",
       "block": true, "block_value": 8, "change_kamae": true,
-      "if_success": ["push:1"],
-      "note": "Difesa: blocca esagoni frontali/sinistri"
+      "if_success": ["push:1"], "note": "Blocca esagoni frontali/sinistri"
     },
     "64": {
-      "name": "Testata",
+      "name": "Testata", "type": "attack",
       "range": 1, "wounds": 1, "dirs": [0], "steps": 1, "rotates": 1,
-      "if_success": ["push:1", "focus:1"],
-      "note": "Attacco a singolo esagono frontale"
+      "if_success": ["push:1", "focus:1"], "note": "Singolo esagono frontale"
+    },
+    "65": {
+      "name": "Spirale di Fiamme", "type": "attack",
+      "range": 1, "wounds": 1, "dirs": [0, 1], "steps": 1, "rotates": 1,
+      "if_success": ["rotate:2"], "note": "In alternativa ✱1/↻1"
     },
     "72": {
-      "name": "Squarcio di Nodachi",
+      "name": "Squarcio di Nodachi", "type": "attack",
       "range": 2, "wounds": 1, "dirs": [0, 1], "discard": 1,
       "steps": 1, "rotates": 1, "alt_step_rotate": true,
       "note": "Arma Nodachi, reach (raggio 2); passo OPPURE rotazione"
     },
+    "83": {
+      "name": "Blocco Ampio", "type": "meditation",
+      "note": "Aggiunta istantanea a un blocco: +1 all'intervallo di iniziativa del blocco"
+    },
+    "86": {
+      "name": "Colpo in Affondo", "type": "attack",
+      "range": 1, "wounds": 1, "dirs": [0], "steps": 1, "rotates": 1,
+      "draw": 1, "change_kamae": true, "block_value": 7,
+      "note": "Ferita con asterisco (condizionale)"
+    },
+    "87": {
+      "name": "Sabbia negli Occhi", "type": "attack",
+      "range": 1, "wounds": 1, "dirs": [5, 0, 1], "unblockable": true,
+      "discard": 2, "focus_gain": 1, "change_kamae": true,
+      "note": "Sostituzione istantanea; NON BLOCCABILE"
+    },
+    "113": {
+      "name": "Taglio Troncante", "type": "attack",
+      "range": 1, "wounds": 1, "wound_kind": "bleed", "dirs": [0],
+      "steps": 1, "rotates": 1, "note": "Ferita sanguinante (asterisco)"
+    },
     "116": {
-      "name": "Mente Rapida",
-      "draw": 2, "steps": 1, "rotates": 1, "change_kamae": true,
-      "note": "Meditazione (abilita' generale)"
+      "name": "Mente Rapida", "type": "meditation",
+      "draw": 2, "steps": 1, "rotates": 1, "change_kamae": true
+    },
+    "118": {
+      "name": "Blocco Selvaggio", "type": "defence",
+      "block": true, "block_value": "7/6", "discard": 2, "change_kamae": true,
+      "note": "Blocco ampio (molti esagoni)"
+    },
+    "119": {
+      "name": "Fendente Selvaggio", "type": "attack",
+      "range": 1, "wounds": 2, "dirs": [5, 1], "discard": 2, "change_kamae": true,
+      "note": "Doppia ferita sugli esagoni laterali frontali"
+    },
+    "123": {
+      "name": "Respinta", "type": "defence",
+      "block": true, "rotates": 1, "dirs": [5, 0, 1], "steps": 1,
+      "if_success": ["push:1"], "note": "Difesa ad arco frontale"
+    }
+  },
+  "characters": {
+    "Warrior": {
+      "card_id": 51, "name": "Vendetta Sorta dal Fuoco",
+      "wound_limit": 5, "hand_limit": 5,
+      "weapons": ["Kanabo", "Naginata", "Nodachi", "Yari"]
     }
   }
 }
