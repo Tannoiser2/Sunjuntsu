@@ -622,7 +622,21 @@
    "rotates": 2,
    "draw": 2,
    "change_kamae": true,
-   "note": "Pesca 2 / arma+kamae / cambia kamae"
+   "note": "Pesca 2 / arma+kamae / cambia kamae",
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 2,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   }
   },
   "24": {
    "name": "Vortice Cremisi",
@@ -638,7 +652,23 @@
     5
    ],
    "steps": 1,
-   "note": "Grande AoE, doppia ferita su molti esagoni"
+   "note": "Grande AoE, doppia ferita su molti esagoni",
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "kamae_req": "aggression"
   },
   "25": {
    "name": "Armatura Pesante",
@@ -658,7 +688,23 @@
     1
    ],
    "steps": 1,
-   "note": "Doppia ferita; variante ✱5 a singola ferita"
+   "note": "Doppia ferita; variante ✱5 a singola ferita",
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "kamae_req": "aggression"
   },
   "27": {
    "name": "Affondo Invertito di Zanna",
@@ -673,14 +719,43 @@
    "steps": 1,
    "if_success": [
     "push:1"
-   ]
+   ],
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   }
   },
   "28": {
    "name": "Il Terrore",
    "type": "meditation",
    "range": 3,
    "rotates": 2,
-   "note": "A distanza: annulla le carte abilita' attive del nemico"
+   "note": "A distanza: annulla le carte abilita' attive del nemico",
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 2,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   }
   },
   "29": {
    "name": "Spazzata Feroce",
@@ -694,7 +769,25 @@
     4
    ],
    "steps": 1,
-   "change_kamae": true
+   "change_kamae": true,
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "kamae_switch": {
+    "to": "aggression"
+   }
   },
   "30": {
    "name": "Artigli Laceranti",
@@ -716,7 +809,31 @@
    ],
    "rotates": 1,
    "steps": 1,
-   "change_kamae": true
+   "change_kamae": true,
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false,
+        "kamae": "determination"
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false,
+        "kamae": "determination"
+       }
+      ]
+     }
+    ]
+   },
+   "change_kamae_gate": "determination",
+   "kamae_change": 2
   },
   "32": {
    "name": "Balzo del Lupo",
@@ -728,7 +845,22 @@
     0
    ],
    "steps": 1,
-   "note": "Sostituzione istantanea"
+   "note": "Sostituzione istantanea",
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   }
   },
   "33": {
    "name": "Colpo alle Caviglie",
@@ -741,14 +873,65 @@
    ],
    "steps": 1,
    "rotates": 1,
-   "draw": 1
+   "draw": 1,
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   }
   },
   "34": {
    "name": "Ritirata Composta",
    "type": "meditation",
    "rotates": 1,
    "focus_gain": 1,
-   "draw": 3
+   "draw": 3,
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     },
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 2,
+        "opt": false,
+        "kamae": "balance"
+       }
+      ]
+     }
+    ]
+   }
   },
   "35": {
    "name": "Chiatta di Buoi",
@@ -764,7 +947,41 @@
    "change_kamae": true,
    "if_success": [
     "push:1"
-   ]
+   ],
+   "move": {
+    "opts": [
+     {
+      "ordered": true,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       }
+      ]
+     },
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "kamae_switch": {
+    "to": "aggression"
+   }
   },
   "71": {
    "name": "Spazzata di Naginata",
@@ -778,7 +995,21 @@
    ],
    "discard": 1,
    "rotates": 1,
-   "note": "Arma Naginata (reach)"
+   "note": "Arma Naginata (reach)",
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   }
   },
   "89": {
    "name": "Blocco d'Emergenza",
@@ -791,7 +1022,34 @@
    ],
    "rotates": 2,
    "change_kamae": true,
-   "note": "Sostituzione istantanea"
+   "note": "Sostituzione istantanea",
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     },
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 2,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "kamae_switch": {
+    "to": "neutral"
+   }
   },
   "98": {
    "name": "Grido di Guerra",
@@ -801,14 +1059,63 @@
    "rotates": 1,
    "draw": 2,
    "change_kamae": true,
-   "note": "A distanza: annulla il movimento attivo del nemico"
+   "note": "A distanza: annulla il movimento attivo del nemico",
+   "move": {
+    "opts": [
+     {
+      "ordered": true,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       }
+      ]
+     },
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false,
+        "kamae": "balance"
+       }
+      ]
+     }
+    ]
+   },
+   "kamae_switch": {
+    "to": "aggression"
+   }
   },
   "102": {
    "name": "Mente Risoluta",
    "type": "meditation",
    "rotates": 1,
    "draw": 3,
-   "change_kamae": true
+   "change_kamae": true,
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   }
   },
   "104": {
    "name": "Colpo Azzoppante",
@@ -834,7 +1141,31 @@
    "block_value": 6,
    "if_success": [
     "push:1"
-   ]
+   ],
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false,
+        "kamae": "determination"
+       }
+      ]
+     }
+    ]
+   },
+   "kamae_switch": {
+    "to": "aggression"
+   }
   },
   "125": {
    "name": "Calcio del Cavallo",
@@ -847,7 +1178,22 @@
    "steps": 1,
    "if_success": [
     "push:2"
-   ]
+   ],
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   }
   },
   "126": {
    "name": "Colpo d'Elsa",
@@ -862,7 +1208,28 @@
    "focus_gain": 1,
    "if_success": [
     "push:1"
-   ]
+   ],
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false,
+        "kamae": "balance"
+       }
+      ]
+     }
+    ]
+   }
   },
   "127": {
    "name": "Spinta Indietro",
@@ -875,7 +1242,21 @@
    "rotates": 1,
    "if_success": [
     "push:2"
-   ]
+   ],
+   "move": {
+    "opts": [
+     {
+      "ordered": false,
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   }
   }
  },
  "characters": {
