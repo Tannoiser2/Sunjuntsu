@@ -9,7 +9,7 @@ func _ready() -> void:
 
 	var version: String = str(ProjectSettings.get_setting("application/config/version", "?"))
 	$Version.text = "v%s" % version
-	$Changes.text = "Novità v%s:\n• Albero Kamae: cambio lungo i rami + focus dai rami rosa (cap 3)\n• Collisioni (spinte) + Commit To Hit; blocchi fedeli 1.5\n• IA solo che rivela la cima del mazzo; turno fedele\nVedi REGOLAMENTO_FEDELTA.md e CHANGELOG.md" % version
+	$Changes.text = "Novità v%s:\n• Azzoppamento fedele: scade (ruota), non vale nel turno in cui lo subisci\n• Albero Kamae + focus; collisioni + Commit To Hit; blocchi 1.5\n• IA solo che rivela la cima del mazzo; turno fedele\nVedi REGOLAMENTO_FEDELTA.md e CHANGELOG.md" % version
 
 
 func _on_solo() -> void:

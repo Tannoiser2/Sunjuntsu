@@ -3,6 +3,15 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.17.0] — 2026-06-18
+### Status: Azzoppamento fedele (Hobble, regolamento 1.5 p.13)
+- L'azzoppamento ora **scade** correttamente: ogni carta ruota di 90° a fine turno e
+  viene scartata quando torna diritta (~3 turni attivi). **Non riduce** l'iniziativa nel
+  turno in cui lo subisci; poi −1 per ogni azzoppamento attivo (minimo 1). Prima era un
+  contatore permanente che valeva anche subito. Modello per-carta (`hobbles`).
+- Stun e Poison restano approssimazioni note (vedi REGOLAMENTO_FEDELTA.md §7).
+- Nuovo test `test_status` (ciclo di vita azzoppamento). Versione 0.17.0.
+
 ## [0.16.0] — 2026-06-18
 ### Albero Kamae & focus (regolamento 1.5 p.12)
 - **Cambio Kamae lungo l'albero**: "Cambia Kamae fino a N" ora funziona davvero — il

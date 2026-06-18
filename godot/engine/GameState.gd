@@ -13,7 +13,7 @@ class Fighter:
 	var facing: int = 0                        ## direzione (0..5), indice in HexGrid.DIRS
 	var kamae: int = Domain.Rank.STEEL         ## ramo kamae (rank) — legacy
 	var stance: int = Domain.Stance.NEUTRAL    ## posizione dell'anello Kamae
-	var hobble: int = 0                        ## carte azzoppato attive (-1 iniziativa cad.)
+	var hobbles: Array = []                    ## azzoppamenti attivi (orientamento 0..3 di ogni carta)
 	var focus: int = 0                         ## gettoni focus (max 3, vedi regolamento)
 	var hand: Array = []                       ## carte in mano (id int)
 	var draw_pile: Array = []                  ## mazzo da pescare (id int)
@@ -31,6 +31,31 @@ class Fighter:
 
 	func gain_focus(n: int) -> void:
 		focus = clampi(focus + n, 0, MAX_FOCUS)
+
+	# ── Azzoppamenti (Hobble, regolamento 1.5 p.13) ──────────────────────────
+	## Ogni carta azzoppato è posata diritta (orientamento 0) nel turno in cui la
+	## subisci e in quel turno NON riduce l'iniziativa. A ogni fine turno ruota di
+	## 90° (orientamento +1); quando tornerebbe diritta (4) viene scartata.
+	func add_hobble(n: int) -> void:
+		for _i in range(maxi(1, n)):
+			hobbles.append(0)
+
+	## Numero di azzoppamenti ATTIVI (già ruotati almeno una volta): −1 iniziativa cad.
+	func hobble_count() -> int:
+		var c := 0
+		for o in hobbles:
+			if int(o) >= 1:
+				c += 1
+		return c
+
+	## Fine turno: ruota tutti gli azzoppamenti; scarta quelli che tornano diritti.
+	func tick_hobbles() -> void:
+		var keep: Array = []
+		for o in hobbles:
+			var no := int(o) + 1
+			if no < 4:
+				keep.append(no)
+		hobbles = keep
 
 	## Limite ferite effettivo (ridotto dai veleni virulenti, minimo 1).
 	func effective_wound_limit() -> int:

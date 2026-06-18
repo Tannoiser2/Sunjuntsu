@@ -23,12 +23,12 @@ func _ready() -> void:
 	duel._resolve_chosen_speeds({})
 	duel._resolve_card(0, {}, log)
 	if b.wounds.size() != 1: print("FAIL Testata ferite=", b.wounds.size()); ok = false
-	if b.hobble != 1: print("FAIL Testata hobble=", b.hobble); ok = false
+	if b.hobbles.size() != 1: print("FAIL Testata hobble=", b.hobbles.size()); ok = false
 	if a.focus != 1: print("FAIL Testata focus=", a.focus); ok = false
 	if ok: print("OK #64 Testata: 1 ferita, azzoppa, +1 focus")
 
 	# 2) Bersaglio fuori arco: Testata non colpisce se il nemico è dietro.
-	b.cell = -HexGrid.DIRS[0]; b.wounds.clear(); b.hobble = 0
+	b.cell = -HexGrid.DIRS[0]; b.wounds.clear(); b.hobbles.clear()
 	var log2: Array = []
 	duel._resolve_card(0, {}, log2)
 	if b.wounds.size() != 0: print("FAIL fuori-arco ferite=", b.wounds.size()); ok = false

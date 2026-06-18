@@ -307,8 +307,9 @@ func _raw_ini(i: int) -> String:
 
 func _hobbled(i: int, sp: int) -> int:
 	var f := state.fighters[i]
-	if sp >= 0 and f.hobble > 0:
-		return maxi(1, sp - f.hobble)
+	var h := f.hobble_count()
+	if sp >= 0 and h > 0:
+		return maxi(1, sp - h)   # ogni azzoppamento attivo: −1 (min 1)
 	return sp
 
 
@@ -441,7 +442,7 @@ func _apply_if_success(att_idx: int, foe_idx: int, g: Dictionary, log: Array) ->
 			foe.wounds.append("bleed")
 		elif s == "hobble" or s.begins_with("hobble:"):
 			var amt := 1 if s == "hobble" else int(s.substr(7))
-			foe.hobble += maxi(1, amt)
+			foe.add_hobble(maxi(1, amt))
 			fighter_updated.emit(foe_idx)
 
 
@@ -649,7 +650,7 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 			"focus":
 				f.gain_focus(int(e.get("n", 1)))
 			"hobble":
-				if foe != null: foe.hobble += maxi(1, int(e.get("n", 1)))
+				if foe != null: foe.add_hobble(maxi(1, int(e.get("n", 1))))
 			"rotate_target":
 				if foe != null: foe.facing = (foe.facing + int(e.get("n", 1))) % 6
 			"draw":
@@ -761,6 +762,8 @@ func _cleanup(log: Array) -> void:
 		while f.hand.size() > f.hand_limit:
 			f.discard.append(f.hand.pop_back())
 			log.append("%s scarta in eccesso (limite mano %d)" % [f.character, f.hand_limit])
+		# Effetti di fine turno: gli azzoppamenti ruotano (e scadono).
+		f.tick_hobbles()
 	state.round_num += 1
 	turn_resolved.emit(log)
 	# Passo "Draw" del turno successivo (sanguinamento + pesca 1).

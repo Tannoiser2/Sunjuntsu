@@ -102,11 +102,13 @@ Stato:
 
 - ✅ Ferite / sanguinanti (contano come ferite); sconfitta a ferite ≥ limite.
 - ✅ Sconfitta per stun in mano ≥ dimensione mano.
-- ⚠️ Stun: presente come contatore; manca "occupa la mano, non scartabile, giocabile
-   al posto di una carta a iniziativa 0".
-- ❌ **Hobble**: −1 iniziativa per Hobble attivo (min 1), ruota 90° a fine turno e poi
-   si scarta; le difese variabili riducono entrambi i valori.
-- ❌ **Poison** (carta 002 Crippling Poison) e altri effetti asterisco.
+- ✅ **Hobble** (p.13): −1 iniziativa per ogni azzoppamento attivo (min 1); NON vale nel
+   turno in cui lo subisci; ruota 90° a ogni fine turno e si scarta quando torna diritto
+   (~3 turni attivi). Modellato per carta (`hobbles`/`add_hobble`/`tick_hobbles`).
+- ⚠️ Stun: contatore; sconfitta se stun ≥ limite mano. Manca "occupa la mano, non
+   scartabile, giocabile al posto di una carta a iniziativa 0" e (solo) rimescolato nel mazzo.
+- ⚠️ **Poison**: modellato come riduzione del limite ferite (approssimazione); manca il
+   testo reale della carta 002 Crippling Poison.
 
 ## 8. Altri keyword (rulebook p.14–15)
 
