@@ -11,12 +11,12 @@ extends Node3D
 
 const TILE_GROUP := "hex_tile"
 
-@export var map_radius: int = 4
+@export var map_radius: int = 3    ## esagono di raggio 3 = 37 celle (colonne 4,5,6,7,6,5,4)
 @export var move_budget: int = 3   ## passi consentiti per dimostrare il movimento
 # ─── Calibrazione mappa↔griglia (regolabili nell'editor) ─────────────────────
-@export var hex_size: float = 2.0          ## raggio esagono in unità mondo
-@export var map_world_size: float = 30.0   ## lato del piano-mappa
-@export var map_offset: Vector2 = Vector2.ZERO  ## scostamento texture mappa (x,z)
+@export var hex_size: float = 2.4          ## raggio esagono in unità mondo
+@export var map_world_size: float = 44.0   ## lato del piano-mappa (la board occupa la parte centrale)
+@export var map_offset: Vector2 = Vector2.ZERO  ## scostamento mappa (x,z) per centrare gli esagoni
 @export var map_y_rotation: float = 0.0    ## rotazione mappa attorno a Y (gradi)
 
 var state: GameState
@@ -28,7 +28,7 @@ var _highlighted: Array[Vector2i] = []
 var _cam_pivot: Node3D
 var _cam_yaw: float = 0.0
 var _cam_pitch: float = 0.62
-var _cam_dist: float = 26.0
+var _cam_dist: float = 34.0
 var _dragging := false
 
 var _hud: CanvasLayer
@@ -224,7 +224,7 @@ func _tile_mat(cell: Vector2i, mode: String) -> StandardMaterial3D:
 		_:
 			m.emission_enabled = false
 			var alt := ((cell.x + cell.y) & 1) != 0
-			m.albedo_color = Color(0.85, 0.9, 1.0, 0.10) if alt else Color(0.6, 0.7, 0.85, 0.08)
+			m.albedo_color = Color(0.85, 0.9, 1.0, 0.18) if alt else Color(0.55, 0.7, 0.9, 0.14)
 	return m
 
 
@@ -363,7 +363,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif event.button_index == MOUSE_BUTTON_WHEEL_UP and event.pressed:
 			_cam_dist = max(6.0, _cam_dist - 1.0); _update_camera()
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN and event.pressed:
-			_cam_dist = min(40.0, _cam_dist + 1.0); _update_camera()
+			_cam_dist = min(55.0, _cam_dist + 1.0); _update_camera()
 		elif event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			_try_pick(event.position)
 	elif event is InputEventMouseMotion and _dragging:
