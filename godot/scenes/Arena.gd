@@ -43,6 +43,7 @@ var _ground: MeshInstance3D
 ## (tocca a te risolvere: muovi + attacca nell'ordine d'iniziativa).
 var _phase_mode: String = "planning"
 var _resolving_index: int = -1     ## chi sta risolvendo ora (-1 = nessuno)
+var _split_stage: bool = false     ## true = stai risolvendo la PARTE BASSA (iniziativa divisa)
 
 
 func _ready() -> void:
@@ -94,6 +95,7 @@ func _on_phase_changed(p: int) -> void:
 		return
 	_phase_mode = "planning"
 	_resolving_index = -1
+	_split_stage = false
 	_selected_card = {}
 	_move_used = false
 	_kamae_used = false
@@ -185,7 +187,7 @@ func _run_ai_resolution(i: int) -> void:
 	var foe := state.opponent_of(f)
 	if foe != null:
 		var g := CardDB.geometry(f.planned)
-		if g.has("move"):
+		if g.has("move") and not f.movement_cancelled:
 			var dest := AI.move_target(state, f)
 			if dest != f.cell and not state.is_blocked(dest):
 				f.cell = dest
@@ -202,6 +204,15 @@ func _run_ai_resolution(i: int) -> void:
 func _confirm_resolution() -> void:
 	if _phase_mode != "resolving" or _resolving_index != 0:
 		return
+	if _split_stage:
+		# Conferma della PARTE BASSA (iniziativa divisa): risolvi dall'attuale posizione.
+		_split_stage = false
+		_phase_mode = "wait"
+		_clear_overlays()
+		_hud.hide_confirm()
+		_selected_card = {}
+		_duel.resolve_split_now()
+		return
 	# Commit To Hit (regolamento p.10): è solo un PROMEMORIA non bloccante — non deve
 	# mai impedire di concludere il turno (altrimenti la risoluzione si inceppa).
 	_phase_mode = "wait"
@@ -211,11 +222,32 @@ func _confirm_resolution() -> void:
 	_hud.hide_options()
 	_selected_card = {}
 	_duel.resolve_current()
+	if _duel.has_pending_split():
+		_enter_split_stage()
+
+
+## Entra nella seconda fase di una carta a iniziativa divisa: il giocatore
+## posiziona e attacca con la PARTE BASSA, poi Conferma.
+func _enter_split_stage() -> void:
+	_split_stage = true
+	_phase_mode = "resolving"
+	_resolving_index = 0
+	_move_used = false
+	_kamae_used = true   # niente cambio Kamae nella parte bassa
+	_hud.hide_kamae()
+	_hud.hide_options()
+	var g := _duel.pending_split_geom()
+	_selected_card = {"id": -1, "type": "attack", "name": "Parte bassa", "geom_override": g}
+	_refresh_overlays()
+	_hud.show_confirm("Conferma parte bassa ▶")
+	var sp_ini := _duel.pending_split_initiative()
+	_hud.set_info("⚔ Parte bassa (iniziativa %d): muovi e attacca" % sp_ini)
 
 
 func _on_turn_resolved(log: Array) -> void:
 	_phase_mode = "planning"
 	_resolving_index = -1
+	_split_stage = false
 	_selected_card = {}
 	_clear_overlays()
 	_hud.hide_kamae()
@@ -457,7 +489,8 @@ func _draw_overlays_for(card: Dictionary, move_used: bool) -> void:
 		return
 	var f := state.fighters[0]
 	var id := int(card.get("id", -1))
-	var g := CardDB.geometry(id)
+	# La parte bassa (iniziativa divisa) porta la sua geometria esplicita.
+	var g: Dictionary = card.get("geom_override", CardDB.geometry(id))
 	# Carta non giocabile nella Kamae attuale: nessun overlay.
 	if not Duel.playable(f, id):
 		var req: String = g.get("kamae_req", "")
@@ -670,7 +703,7 @@ func _rotate_player(delta: int) -> void:
 	var facings: Array = (_move_states.get(f.cell, []) as Array).duplicate()
 	if facings.is_empty():
 		# Carta senza specifica `move` ma con rotazioni: rotazione libera (legacy).
-		var g := CardDB.geometry(int(_selected_card.get("id", -1)))
+		var g: Dictionary = _selected_card.get("geom_override", CardDB.geometry(int(_selected_card.get("id", -1))))
 		if not g.has("move") and int(g.get("rotates", 0)) > 0:
 			f.facing = (f.facing + delta + 6) % 6
 			_apply_pawn_facing(0)
@@ -726,6 +759,9 @@ func _update_calib_hint() -> void:
 func _move_active_to(cell: Vector2i) -> void:
 	# Il movimento è possibile solo durante la TUA risoluzione.
 	if _phase_mode != "resolving" or _resolving_index != 0:
+		return
+	if state.fighters[0].movement_cancelled:
+		_hud.set_hint("⛔ Movimento annullato dall'avversario questo turno")
 		return
 	# Muovi solo verso le celle consentite dalla carta selezionata.
 	if _move_used or not _highlighted.has(cell):

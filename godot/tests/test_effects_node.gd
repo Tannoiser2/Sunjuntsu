@@ -71,5 +71,34 @@ func _ready() -> void:
 		print("FAIL: nessuna carta ri-trascritta espone gruppi OPPURE (alt)"); ok = false
 	else: print("OK: i gruppi OPPURE (alt) sono presenti nelle carte ri-trascritte")
 
+	# cancel_movement: imposta il flag sull'avversario
+	foe.movement_cancelled = false
+	duel._apply_effects(0, 1, {"effects": [{"do": "cancel_movement"}]}, "always", [])
+	if not foe.movement_cancelled:
+		print("FAIL: cancel_movement non ha impostato il flag"); ok = false
+	else: print("OK: cancel_movement annulla il movimento avversario")
+
+	# cancel_abilities: azzera la riduzione danno persistente dell'avversario
+	foe.damage_reduction = 2
+	duel._apply_effects(0, 1, {"effects": [{"do": "cancel_abilities"}]}, "always", [])
+	if foe.damage_reduction != 0:
+		print("FAIL: cancel_abilities non ha azzerato la riduzione danno (%d)" % foe.damage_reduction); ok = false
+	else: print("OK: cancel_abilities annulla gli effetti persistenti")
+
+	# block_initiative: allarga l'intervallo d'iniziativa del blocco (±1)
+	var sb := GameState.new()
+	var att := _mk("Warrior"); att.cell = Vector2i(0, 0); att.facing = 0; att.planned = 119
+	var dfn := _mk("Ronin"); dfn.cell = HexGrid.DIRS[0]; dfn.planned = 31
+	dfn.facing = AI.facing_toward(dfn.cell, Vector2i(0, 0))
+	sb.fighters = [att, dfn]
+	var d := Duel.new(sb)
+	d._block_ready = {1: 5}
+	var blocked_no: bool = d._attack_blocked(0, 1, 6, CardDB.geometry(119))   # vel6 vs blocco5: no
+	dfn.block_initiative_bonus = 1
+	var blocked_yes: bool = d._attack_blocked(0, 1, 6, CardDB.geometry(119))  # con +1: sì
+	if blocked_no or not blocked_yes:
+		print("FAIL: block_initiative (no=%s sì=%s)" % [blocked_no, blocked_yes]); ok = false
+	else: print("OK: block_initiative allarga l'intervallo del blocco (vel6 bloccata con +1)")
+
 	print("RISULTATO: ", "PASS" if ok else "FAIL")
 	get_tree().quit(0 if ok else 1)

@@ -38,5 +38,30 @@ func _ready():
 	else:
 		print("OK: difesa a vel5 ferma la parte sotto, la parte sopra (2 ferite) passa")
 
+	# ── Interattivo: la parte bassa resta IN SOSPESO finché il giocatore non la
+	# risolve (muove e attacca). Sopra colpisce subito (2); poi, dopo la carica
+	# (passo avanti), la parte bassa colpisce a sua volta (2) → totale 4.
+	var s3 := GameState.new()
+	var a3 := _mk("Ronin"); a3.planned = 24; a3.draw_pile = [60, 61]
+	var b3 := _mk("Warrior"); b3.cell = HexGrid.DIRS[0] * 2; b3.facing = 3; b3.draw_pile = [60, 61]
+	s3.fighters.append(a3); s3.fighters.append(b3)
+	var duel3 := Duel.new(s3); duel3.interactive = true
+	duel3._order = [0]; duel3._order_idx = 0; duel3._block_ready = {}; duel3._res_log = []
+	duel3.resolve_current()
+	if not duel3.has_pending_split():
+		print("FAIL: la parte bassa interattiva doveva restare in sospeso"); ok = false
+	elif b3.wounds.size() != 2:
+		print("FAIL: la sola parte sopra doveva infliggere 2 (ottenute %d)" % b3.wounds.size()); ok = false
+	else:
+		print("OK: parte sopra risolta (2 ferite), parte bassa in sospeso")
+	a3.cell = HexGrid.DIRS[0]   # il giocatore carica in avanti
+	duel3.resolve_split_now()
+	if duel3.has_pending_split():
+		print("FAIL: la parte bassa doveva essere risolta"); ok = false
+	elif b3.wounds.size() != 4:
+		print("FAIL: dopo la parte bassa attese 4 ferite (ottenute %d)" % b3.wounds.size()); ok = false
+	else:
+		print("OK: parte bassa risolta dopo la carica → 4 ferite totali")
+
 	print("RISULTATO: ", "PASS" if ok else "FAIL")
 	get_tree().quit(0 if ok else 1)

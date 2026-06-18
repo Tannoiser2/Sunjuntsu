@@ -3,6 +3,24 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.24.0] — 2026-06-18
+### Iniziativa divisa interattiva + verbi di timing
+- **Parte bassa (iniziativa divisa) interattiva**: quando giochi una carta a iniziativa
+  divisa, prima risolvi la parte sopra (muovi/attacca/Conferma), poi entri in una seconda
+  fase per la **parte bassa** — riposizioni la pedina secondo la sua mossa e attacchi, con
+  il pulsante "Conferma parte bassa". Per l'IA/headless resta automatica. Nuovi metodi
+  motore `has_pending_split`/`pending_split_geom`/`resolve_split_now` e overlay con
+  geometria esplicita (`geom_override`).
+- **Verbi di timing implementati** (prima stub):
+  - `cancel_movement` — annulla il movimento dell'avversario per il turno (rispettato sia
+    dall'IA che dal giocatore se chi annulla risolve prima).
+  - `cancel_abilities` — azzera gli effetti persistenti dell'avversario (es. Armatura Pesante).
+  - `block_initiative` — allarga di N l'intervallo d'iniziativa a cui il blocco è efficace
+    (Blocco Ampio): il blocco ferma anche attacchi a ±N dalla velocità scelta.
+  - Stati per-turno azzerati a inizio turno (`movement_cancelled`, `block_initiative_bonus`).
+- Test estesi: `test_effects` (cancel_movement/abilities, block_initiative) e `test_split`
+  (flusso interattivo della parte bassa). Suite completa verde (10). Versione 0.24.0.
+
 ## [0.23.0] — 2026-06-18
 ### Scelta OPPURE interattiva + nuovi verbi effetto
 - **OPPURE interattivo**: durante la tua risoluzione, se la carta ha opzioni mutuamente

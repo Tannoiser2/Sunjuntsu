@@ -37,6 +37,7 @@ var _block_ready: Dictionary = {}
 var _fizzled: Dictionary = {}
 var _res_log: Array = []
 var _opt_choice: Dictionary = {}   ## scelta "OPPURE" del giocatore (indice → chiave alt)
+var _pending_split: Dictionary = {}   ## parte bassa (iniziativa divisa) del giocatore in attesa
 
 ## Velocità d'iniziativa scelta da ogni combattente per il turno corrente
 ## (indice → valore). Le difese a iniziativa variabile scelgono il valore che
@@ -66,6 +67,10 @@ func start() -> void:
 ## una ferita sanguinante scarta 1 carta dal mazzo, poi pesca 1 carta (mazzo
 ## vuoto ⇒ ferita). Restituisce true se il duello continua.
 func _begin_turn() -> bool:
+	# Azzera gli stati "una tantum" del turno (la riduzione danno persistente NO).
+	for f in state.fighters:
+		f.movement_cancelled = false
+		f.block_initiative_bonus = 0
 	for f in state.fighters:
 		if f.is_defeated() or f.is_ai:
 			continue   # gli avversari solo saltano il passo Draw (e il sanguinamento conta come ferita)
@@ -155,6 +160,7 @@ func _setup_resolution() -> void:
 	_res_log = []
 	_fizzled = {}
 	_opt_choice = {}   # le scelte "OPPURE" si impostano durante la risoluzione
+	_pending_split = {}
 	# Paga i costi di focus obbligatori; se non basta, la carta "svanisce".
 	for i in range(state.fighters.size()):
 		var f := state.fighters[i]
@@ -249,6 +255,49 @@ func resolve_current() -> void:
 	if i == -1:
 		return
 	_resolve_card(i, _block_ready, _res_log)
+	if not _pending_split.is_empty():
+		return   # in pausa: il giocatore deve risolvere la parte bassa (resolve_split_now)
+	var w := _check_winner()
+	if w != -2:
+		_finish(_res_log, w)
+		return
+	_advance_resolution()
+
+
+## True se la parte bassa (iniziativa divisa) del giocatore attende la risoluzione.
+func has_pending_split() -> bool:
+	return not _pending_split.is_empty()
+
+
+## Geometria della parte bassa (per overlay/movimento nella scena).
+func pending_split_geom() -> Dictionary:
+	if _pending_split.is_empty():
+		return {}
+	var sp: Dictionary = _pending_split["split"]
+	var g := {"type": "attack"}
+	if sp.has("move"): g["move"] = sp["move"]
+	if sp.has("attack"): g["attack"] = sp["attack"]
+	if sp.has("wound_kind"): g["wound_kind"] = sp["wound_kind"]
+	return g
+
+
+## Iniziativa (velocità) della parte bassa in attesa, per l'etichetta UI.
+func pending_split_initiative() -> int:
+	if _pending_split.is_empty():
+		return -1
+	return int((_pending_split["split"] as Dictionary).get("initiative", -1))
+
+
+## La scena ha posizionato la pedina per la parte bassa: applica l'attacco della
+## parte bassa dalla posizione CORRENTE (niente auto-mossa) e prosegui l'ordine.
+func resolve_split_now() -> void:
+	if _pending_split.is_empty():
+		return
+	var i: int = _pending_split["i"]
+	var split: Dictionary = _pending_split["split"]
+	var name: String = _pending_split["name"]
+	_pending_split = {}
+	_resolve_split_bottom(i, split, name, _res_log, false)   # do_move=false: usa la posizione scelta
 	var w := _check_winner()
 	if w != -2:
 		_finish(_res_log, w)
@@ -367,7 +416,12 @@ func _resolve_card(i: int, block_ready: Dictionary, log: Array) -> void:
 		"attack":
 			_resolve_attack_top(i, g, name, log, chosen_alt)
 			if g.has("split"):
-				_resolve_split_bottom(i, g["split"], name, log)
+				# Per il giocatore (interattivo) la parte bassa la guida la scena
+				# (muovi/attacca + Conferma); per IA/headless si auto-risolve.
+				if interactive and not f.is_ai:
+					_pending_split = {"i": i, "split": g["split"], "name": name}
+				else:
+					_resolve_split_bottom(i, g["split"], name, log)
 		"defence":
 			_apply_effects(i, _opponent_index(i), g, "always", log, chosen_alt)
 			log.append("%s si mette in guardia (%s)" % [f.character, name])
@@ -438,13 +492,13 @@ func _resolve_attack_top(i: int, g: Dictionary, name: String, log: Array, chosen
 ## La parte sotto è mandatoria: per il giocatore si auto-risolve (mossa obbligatoria
 ## verso il facing) subito dopo la parte sopra; il suo attacco usa l'iniziativa
 ## della parte sotto (così il blocco si differenzia per velocità).
-func _resolve_split_bottom(i: int, split: Dictionary, name: String, log: Array) -> void:
+func _resolve_split_bottom(i: int, split: Dictionary, name: String, log: Array, do_move: bool = true) -> void:
 	var f := state.fighters[i]
 	var foe_idx := _opponent_index(i)
 	if foe_idx == -1:
 		return
 	var foe := state.fighters[foe_idx]
-	if split.has("move"):
+	if do_move and split.has("move"):
 		_auto_move_mandatory(i, split["move"])
 		fighter_updated.emit(i)
 	var bspeed := _hobbled(i, int(split.get("initiative", _speed_of(i))))
@@ -573,8 +627,12 @@ func _collect_block_hexes(def_idx: int, atk_speed: int) -> Dictionary:
 		blocks[cell] = true   # terreno = blocco a tutte le iniziative (cond. 2)
 	var from_def := false
 	var dfn := state.fighters[def_idx]
+	# Il blocco è efficace alla velocità scelta, allargata da Blocco Ampio (±bonus).
+	var bonus: int = dfn.block_initiative_bonus
+	var ready_sp: int = int(_block_ready.get(def_idx, -1))
+	var matches: bool = ready_sp != -1 and absi(ready_sp - atk_speed) <= bonus
 	if dfn.planned != -1 and not _fizzled.has(def_idx) \
-			and int(_block_ready.get(def_idx, -1)) == atk_speed \
+			and matches \
 			and CardDB.card(dfn.planned).get("type", "") == "defence":
 		for cell in defence_v2_cells(dfn.cell, dfn.facing, CardDB.geometry(dfn.planned)).keys():
 			blocks[cell] = true
@@ -821,8 +879,18 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 			"reset_deck":
 				# Rimescola nel mazzo le carte abilità NON-meditazione (mano + scarti) e rimescola.
 				_reset_deck(f, log)
-			"cancel_movement", "cancel_abilities", "block_initiative":
-				log.append("  (effetto «%s» non ancora simulato)" % str(e.get("do", "")))
+			"cancel_movement":
+				if foe != null:
+					foe.movement_cancelled = true
+					log.append("%s annulla il movimento di %s" % [f.character, foe.character])
+			"cancel_abilities":
+				if foe != null and (foe.damage_reduction > 0 or foe.block_initiative_bonus > 0):
+					foe.damage_reduction = 0
+					foe.block_initiative_bonus = 0
+					log.append("%s annulla le abilità attive di %s" % [f.character, foe.character])
+			"block_initiative":
+				f.block_initiative_bonus += maxi(1, int(e.get("n", 1)))
+				log.append("%s: intervallo blocco +%d" % [f.character, maxi(1, int(e.get("n", 1)))])
 		if foe != null:
 			fighter_updated.emit(foe_idx)
 	fighter_updated.emit(i)
