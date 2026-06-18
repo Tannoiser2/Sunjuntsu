@@ -294,13 +294,23 @@ func _status_badges(f: GameState.Fighter) -> String:
 	return s
 
 
+## Etichetta leggibile della postura/approccio dell'IA (regolamento solo p.20-22).
+func _ai_posture(f: GameState.Fighter) -> String:
+	if not f.is_ai:
+		return ""
+	var st := "⚔ Offensiva" if f.ai_stance == "offensive" else "🛡 Difensiva"
+	var names := {"front": "fronte", "right": "destra", "rear": "spalle", "left": "sinistra"}
+	var appr: String = names.get(f.ai_approach, f.ai_approach)
+	return "  ·  IA: %s · approccio %s" % [st, appr]
+
+
 func _refresh_status() -> void:
 	var p := state.fighters[0]
 	var e := state.fighters[1]
-	_hud.set_info("Round %d  |  TU %s ❤%d/%d ◈%d [%s]%s mazzo%d scarti%d  —  IA %s ❤%d/%d ◈%d [%s]%s mazzo%d" % [
+	_hud.set_info("Round %d  |  TU %s ❤%d/%d ◈%d [%s]%s mazzo%d scarti%d  —  IA %s ❤%d/%d ◈%d [%s]%s mazzo%d%s" % [
 		state.round_num,
 		p.character, p.remaining_wounds(), p.wound_limit, p.focus, Domain.STANCE_NAMES[p.stance], _status_badges(p), p.draw_pile.size(), p.discard.size(),
-		e.character, e.remaining_wounds(), e.wound_limit, e.focus, Domain.STANCE_NAMES[e.stance], _status_badges(e), e.draw_pile.size()])
+		e.character, e.remaining_wounds(), e.wound_limit, e.focus, Domain.STANCE_NAMES[e.stance], _status_badges(e), e.draw_pile.size(), _ai_posture(e)])
 	_hud.set_kamae_marker(Domain.STANCE_SLUG[p.stance])
 
 
