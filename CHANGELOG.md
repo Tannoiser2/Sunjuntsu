@@ -18,6 +18,9 @@ versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 - Excel di revisione `Guerriero_carte.xlsx` rigenerato (22 carte + personaggio + Kamae),
   con colonna "DA VERIFICARE" sui punti incerti.
 - Importate le carte inglesi (`Tabelle_Materiali/Senjutsu/Carte INGLESE/`) come controprova.
+- **Rotazione manuale**: dopo il movimento la pedina del giocatore **mantiene
+  l'orientamento** invece di auto-mirare al nemico; la rotazione torna una scelta con
+  Q/E (prima ruotava da sola).
 - Test invariati e verdi (allcards 44, turnflow, split, multi, combat2, blocks). Alcuni
   effetti senza verbo nel motore restano inerti (annotati). Versione 0.21.0.
 

@@ -667,16 +667,16 @@ func _move_active_to(cell: Vector2i) -> void:
 		return
 	var f := state.fighters[0]
 	f.cell = cell
-	# Facing alla destinazione: tra quelli legali, il più vicino al "verso nemico".
+	# Facing alla destinazione: MANTIENI l'orientamento attuale (niente auto-mira al
+	# nemico). Se non è tra quelli legali della carta, prendi il legale più vicino a
+	# quello corrente. La rotazione resta una SCELTA del giocatore (Q/E).
 	var facings: Array = _move_states.get(cell, [])
-	var want: int = AI.facing_toward(cell, state.fighters[1].cell)
-	if facings.is_empty():
-		f.facing = want
-	else:
+	if not facings.is_empty() and not facings.has(f.facing):
+		var cur: int = f.facing
 		var best: int = int(facings[0])
 		var best_d: int = 99
 		for fc in facings:
-			var dd: int = mini((int(fc) - want + 6) % 6, (want - int(fc) + 6) % 6)
+			var dd: int = mini((int(fc) - cur + 6) % 6, (cur - int(fc) + 6) % 6)
 			if dd < best_d:
 				best_d = dd
 				best = int(fc)
