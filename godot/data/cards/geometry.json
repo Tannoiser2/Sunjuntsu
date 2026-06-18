@@ -1164,18 +1164,11 @@
       "atoms": [
        {
         "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": false
-       }
-      ]
-     },
-     {
-      "ordered": false,
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 3,
+        "dirs": [
+         2,
+         3,
+         4
+        ],
         "n": 1,
         "opt": false
        }
@@ -1404,23 +1397,11 @@
       "atoms": [
        {
         "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": false
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false
-       }
-      ]
-     },
-     {
-      "ordered": false,
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 3,
+        "dirs": [
+         5,
+         0,
+         1
+        ],
         "n": 1,
         "opt": false
        },
@@ -1437,7 +1418,7 @@
     "cells": [
      {
       "d": 0,
-      "k": 2,
+      "k": 1,
       "w": 1
      },
      {
