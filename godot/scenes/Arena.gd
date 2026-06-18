@@ -64,6 +64,10 @@ func _start_duel() -> void:
 	_hud.card_selected.connect(_on_card_selected)
 	_hud.kamae_chosen.connect(_on_kamae_chosen)
 	_duel.start()
+	# Carta Kamae del giocatore + segnalino della posizione.
+	var tree := CardDB.kamae_tree_for(state.fighters[0].character.to_lower())
+	if tree.has("card"):
+		_hud.setup_kamae_tree(tree["card"], tree.get("nodes", {}))
 	_refresh_hand()
 	_refresh_status()
 	_apply_pawn_facing(0); _apply_pawn_facing(1)
@@ -74,13 +78,20 @@ func _on_card_played(card_data: Dictionary) -> void:
 	var id := int(card_data.get("id", -1))
 	if id == -1:
 		return
+	var f := state.fighters[0]
+	if not Duel.playable(f, id):
+		var req: String = CardDB.geometry(id).get("kamae_req", "")
+		_hud.set_hint("⛔ Non giocabile: richiede Kamae %s (sei in %s)" % [
+			Domain.STANCE_NAMES.get(Domain.STANCE_FROM_SLUG.get(req, -1), req),
+			Domain.STANCE_NAMES[f.stance]])
+		return   # la carta resta in mano
 	_selected_card = {}
 	_move_used = false
 	_kamae_used = false
 	_clear_overlays()
 	_hud.hide_kamae()
-	if _duel.plan_card(0, id):
-		_refresh_hand()
+	_duel.plan_card(0, id)
+	_refresh_hand()
 
 
 func _on_fighter_updated(_i: int) -> void:
@@ -121,10 +132,11 @@ func _refresh_hand() -> void:
 func _refresh_status() -> void:
 	var p := state.fighters[0]
 	var e := state.fighters[1]
-	_hud.set_info("Round %d  |  TU %s: ❤%d/%d ◈%d [%s]  —  IA %s: ❤%d/%d ◈%d [%s]" % [
+	_hud.set_info("Round %d  |  TU %s ❤%d/%d ◈%d [%s] mazzo%d scarti%d  —  IA %s ❤%d/%d ◈%d [%s]" % [
 		state.round_num,
-		p.character, p.remaining_wounds(), p.wound_limit, p.focus, Domain.STANCE_NAMES[p.stance],
+		p.character, p.remaining_wounds(), p.wound_limit, p.focus, Domain.STANCE_NAMES[p.stance], p.draw_pile.size(), p.discard.size(),
 		e.character, e.remaining_wounds(), e.wound_limit, e.focus, Domain.STANCE_NAMES[e.stance]])
+	_hud.set_kamae_marker(Domain.STANCE_SLUG[p.stance])
 
 
 func _sync_pawns() -> void:
@@ -295,18 +307,28 @@ func _clear_overlays() -> void:
 	_attack_preview.clear()
 
 
-## Evidenzia il movimento consentito dalla carta (passi+rotazioni, motore Move)
-## in giallo e l'arco d'attacco in rosso. Senza carta selezionata non ci si muove.
+## Evidenziazione a DUE FASI come sulla carta:
+##  1) prima il MOVIMENTO consentito (giallo) — passi/rotazioni della carta;
+##  2) dopo aver mosso (o se la carta non muove), i BERSAGLI d'attacco (rosso).
 func _refresh_overlays() -> void:
 	_clear_overlays()
 	if _selected_card.is_empty():
 		return
 	var f := state.fighters[0]
-	var g := CardDB.geometry(int(_selected_card.get("id", -1)))
+	var id := int(_selected_card.get("id", -1))
+	var g := CardDB.geometry(id)
+	# Carta non giocabile nella Kamae attuale: nessun overlay.
+	if not Duel.playable(f, id):
+		var req: String = g.get("kamae_req", "")
+		_hud.set_hint("⛔ %s: giocabile solo in Kamae %s (sei in %s)" % [
+			_selected_card.get("name", "?"),
+			Domain.STANCE_NAMES.get(Domain.STANCE_FROM_SLUG.get(req, -1), req),
+			Domain.STANCE_NAMES[f.stance]])
+		return
+	# Celle di movimento (solo se non già mosso).
+	var move_cells: Array = []
 	if not _move_used:
-		# Stati legali (cella+facing) dalla specifica di movimento della carta.
 		_move_states = {}
-		var move_cells: Array = []
 		if g.has("move"):
 			_move_states = Move.reachable_by_cell(f.cell, f.facing, g["move"], state.is_blocked, Domain.STANCE_SLUG[f.stance])
 			for cell in _move_states.keys():
@@ -314,15 +336,22 @@ func _refresh_overlays() -> void:
 					move_cells.append(cell)
 		elif int(g.get("steps", 0)) > 0:
 			move_cells = HexGrid.reachable(f.cell, int(g.get("steps", 0)), state.is_blocked)
+	if not move_cells.is_empty():
+		# FASE 1 — movimento (giallo). SPAZIO per non muovere.
 		for cell in move_cells:
 			_highlighted.append(cell)
 			if _tiles.has(cell):
 				(_tiles[cell] as MeshInstance3D).material_override = _tile_mat(cell, "move")
-	if _selected_card.get("type", "") == "attack":
+		_hud.set_hint("Muovi come da carta (giallo) · Q/E ruota · SPAZIO = non muovere · poi appaiono i bersagli")
+	elif _selected_card.get("type", "") == "attack":
+		# FASE 2 — bersagli attaccabili (rosso).
 		for cell in Duel.attack_cells(f.cell, f.facing, g, 1):
-			if _tiles.has(cell) and not _highlighted.has(cell):
+			if _tiles.has(cell):
 				_attack_preview.append(cell)
 				(_tiles[cell] as MeshInstance3D).material_override = _tile_mat(cell, "attack")
+		_hud.set_hint("Bersagli attaccabili (rosso) · Q/E ruota · 2° click sulla carta per giocarla")
+	else:
+		_hud.set_hint("2° click sulla carta per giocarla · Q/E ruota")
 
 
 # ─── Orientamento (facing) ───────────────────────────────────────────────────
@@ -486,6 +515,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		match event.keycode:
 			KEY_Q: _rotate_player(-1); return
 			KEY_E: _rotate_player(1); return
+			KEY_SPACE:   # non muovere: passa alla fase bersagli
+				if not _selected_card.is_empty() and not _move_used:
+					_move_used = true
+					_refresh_overlays()
+				return
 			# ── Calibrazione griglia↔mappa ──
 			KEY_KP_ADD: _set_hex_size(hex_size + 0.05); return
 			KEY_KP_SUBTRACT: _set_hex_size(hex_size - 0.05); return

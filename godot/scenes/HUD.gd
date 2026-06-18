@@ -20,6 +20,12 @@ var _kamae_box: HBoxContainer
 var _kamae_btns: Dictionary = {}
 
 
+var _tree_panel: Control
+var _tree_rect: TextureRect
+var _tree_marker: Panel
+var _tree_nodes: Dictionary = {}
+
+
 func _ready() -> void:
 	hand.card_played.connect(func(d):
 		var label: String = d.get("name", d.get("file", "?"))
@@ -29,6 +35,65 @@ func _ready() -> void:
 		card_played.emit(d))
 	hand.card_selected.connect(func(d): card_selected.emit(d))
 	_build_kamae_chooser()
+	_build_kamae_tree()
+
+
+func _build_kamae_tree() -> void:
+	_tree_panel = Control.new()
+	_tree_panel.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	_tree_panel.position = Vector2(12, 70)
+	_tree_panel.custom_minimum_size = Vector2(150, 209)
+	_tree_panel.size = Vector2(150, 209)
+	_tree_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_tree_panel)
+	var lbl := Label.new()
+	lbl.text = "Kamae"
+	lbl.position = Vector2(0, -20)
+	_tree_panel.add_child(lbl)
+	_tree_rect = TextureRect.new()
+	_tree_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_tree_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_tree_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+	_tree_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_tree_panel.add_child(_tree_rect)
+	_tree_marker = Panel.new()
+	_tree_marker.size = Vector2(30, 30)
+	_tree_marker.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(1, 0.85, 0.2, 0.25)
+	sb.set_border_width_all(4)
+	sb.border_color = Color(1, 0.85, 0.1)
+	sb.set_corner_radius_all(15)
+	_tree_marker.add_theme_stylebox_override("panel", sb)
+	_tree_panel.add_child(_tree_marker)
+	_tree_panel.visible = false
+
+
+## Imposta l'albero Kamae del personaggio (immagine + posizioni nodi normalizzate).
+func setup_kamae_tree(image_path: String, nodes: Dictionary) -> void:
+	_tree_nodes = nodes
+	var tex := _load_tex("res://assets/cards/" + image_path)
+	if tex != null:
+		_tree_rect.texture = tex
+		_tree_panel.visible = true
+
+
+## Sposta il segnalino sulla posizione Kamae corrente.
+func set_kamae_marker(slug: String) -> void:
+	if not _tree_nodes.has(slug):
+		return
+	var n: Array = _tree_nodes[slug]
+	var pos := Vector2(float(n[0]) * _tree_panel.size.x, float(n[1]) * _tree_panel.size.y)
+	_tree_marker.position = pos - _tree_marker.size * 0.5
+
+
+static func _load_tex(path: String) -> Texture2D:
+	if ResourceLoader.exists(path):
+		return load(path)
+	var img := Image.new()
+	if img.load(path) == OK:
+		return ImageTexture.create_from_image(img)
+	return null
 
 
 func _build_kamae_chooser() -> void:

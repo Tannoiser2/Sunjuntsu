@@ -49,12 +49,10 @@ func _layout() -> void:
 
 func _on_card_clicked(cv) -> void:
 	if _selected == cv:
-		# Secondo click = conferma giocata.
-		card_played.emit(cv.card_data)
-		cv.queue_free()
-		_cards.erase(cv)
+		# Secondo click = conferma giocata. NON rimuovo qui: ci pensa l'arena
+		# (ricostruisce la mano) solo se la carta è davvero giocabile.
 		_selected = null
-		_layout()
+		card_played.emit(cv.card_data)
 		return
 	if _selected:
 		_selected.set_selected(false)
