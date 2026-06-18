@@ -3,6 +3,24 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.26.0] — 2026-06-18
+### Motore comportamentale IA solitaria (priorità di movimento)
+- L'IA non si limita più ad avvicinarsi: `AI.plan_move` valuta tutte le posizioni
+  raggiungibili dalla mossa della carta e sceglie secondo le **priorità del solitario**
+  (regolamento p.22), in base all'**atteggiamento**:
+  - **Offensivo**: colpire → più ferite → vicino alle spalle → restare non colpibile →
+    avvicinarsi alla portata preferita → angolo d'approccio → fronteggiare.
+  - **Difensivo**: restare non colpibile → poi colpire → ferite → portata → spalle →
+    approccio → fronteggiare.
+- Nuovi parametri sul combattente: `ai_stance`, `ai_preferred_range`, `ai_approach`
+  (la pedina IA è offensiva, portata 1, approccio frontale).
+- Il **contrattacco** dell'IA era già regolamentare (para a velocità counter → il
+  giocatore subisce 1 ferita); ora il counter del giocatore scarta un attacco **non-core**.
+- Lo schema deck del solitario (`solo_AI_tables_v1.xlsx`) e le carte solo dedicate
+  restano lavoro futuro: l'IA usa il mazzo del personaggio come segnaposto.
+- Nuovo test `test_ai` (offensivo si posiziona per colpire; difensivo evita la minaccia).
+  Suite completa verde (12). Versione 0.26.0.
+
 ## [0.25.0] — 2026-06-18
 ### Carte CORE (Speciale + Arma) e setup iniziale corretti
 - **Setup iniziale fedele** (regolamento p.4): le carte **core** (la carta Speciale e la
@@ -85,6 +103,20 @@ versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
   Q/E (prima ruotava da sola).
 - Test invariati e verdi (allcards 44, turnflow, split, multi, combat2, blocks). Alcuni
   effetti senza verbo nel motore restano inerti (annotati). Versione 0.21.0.
+
+## [0.19.0] — 2026-06-18
+### Iniziativa divisa + correzioni carte (#26/#27/#33)
+- **Iniziativa divisa (split)**: le carte con due parti a velocità diverse risolvono la
+  parte sopra e la parte sotto come due azioni separate (auto in headless/IA).
+- **#26 Carica del Toro** completata con il requisito Kamae Aggressività.
+- Correzioni a **#27** (passo bidirezionale) e **#33** (passo + rotazione obbligatori).
+
+## [0.18.0] — 2026-06-18
+### Carte core, scelta OPPURE e robustezza multi-turno
+- Prima trascrizione delle **carte core** e gestione della scelta **OPPURE** a opzione
+  singola; **#23** (core Ronin) corretta.
+- Fix del **2° turno** (mano disallineata) e visualizzazione della carta giocata.
+- Nuovo test di regressione su partita multi-turno deterministica (anti-freeze).
 
 ## [0.20.0] — 2026-06-18
 ### Risoluzione sbloccata + anteprima azione al passaggio del mouse

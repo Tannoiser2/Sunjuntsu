@@ -187,11 +187,12 @@ func _run_ai_resolution(i: int) -> void:
 	var foe := state.opponent_of(f)
 	if foe != null:
 		var g := CardDB.geometry(f.planned)
-		if g.has("move") and not f.movement_cancelled:
-			var dest := AI.move_target(state, f)
-			if dest != f.cell and not state.is_blocked(dest):
-				f.cell = dest
-			f.facing = AI.facing_toward(f.cell, foe.cell)
+		if not f.movement_cancelled:
+			if g.has("move"):
+				var plan := AI.plan_move(state, f, g)   # priorità solitario (stance/portata/approccio)
+				f.cell = plan["cell"]; f.facing = plan["facing"]
+			else:
+				f.facing = AI.facing_toward(f.cell, foe.cell)
 			_sync_pawns(); _apply_pawn_facing(i)
 	# Piccola pausa per leggibilità, poi applica la carta.
 	var t := get_tree().create_timer(0.6)
@@ -435,6 +436,11 @@ func _spawn_pawns() -> void:
 		f.draw_pile = CardDB.draw_pile_for(chars[i].to_lower())
 		f.draw_pile.shuffle()
 		f.is_ai = (i == 1)   # pedina 0 = giocatore, pedina 1 = IA solo
+		if f.is_ai:
+			# Parametri IA solitaria (regolamento p.20): atteggiamento, portata, approccio.
+			f.ai_stance = "offensive"
+			f.ai_preferred_range = 1
+			f.ai_approach = "front"
 		# Limiti dalla carta personaggio (se trascritta).
 		var cs := CardDB.character_stats(chars[i])
 		if not cs.is_empty():

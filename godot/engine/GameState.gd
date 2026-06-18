@@ -24,6 +24,10 @@ class Fighter:
 	var damage_reduction: int = 0              ## riduzione danno persistente (es. Armatura Pesante)
 	var movement_cancelled: bool = false       ## il movimento di questo turno è annullato (es. Grido di Guerra)
 	var block_initiative_bonus: int = 0        ## allarga l'intervallo d'iniziativa del blocco (es. Blocco Ampio)
+	# Parametri IA solitaria (regolamento p.20-22): atteggiamento, portata, approccio.
+	var ai_stance: String = "offensive"        ## "offensive" | "defensive"
+	var ai_preferred_range: int = 1            ## distanza che l'IA cerca di mantenere
+	var ai_approach: String = "front"          ## "front" | "left" | "right" | "rear"
 	var wound_limit: int = 6                   ## limite ferite (dalla carta personaggio)
 	var hand_limit: int = 5                    ## limite carte in mano
 	var advantage: bool = false                ## possiede il segnalino vantaggio
