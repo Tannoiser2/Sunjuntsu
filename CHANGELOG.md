@@ -3,6 +3,12 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.6.0] — 2026-06-18
+### Corretto / Aggiunto
+- **Board corretta**: esagono di raggio 3 (37 celle, colonne 4-5-6-7-6-5-4), come il gioco fisico.
+- **Griglia e miniature più grandi**; miniature scalate in proporzione agli esagoni.
+- **Calibrazione live** mappa↔griglia nell'arena: `+`/`−` scala, frecce spostano la mappa, `R` reset camera (valori mostrati nell'HUD).
+
 ## [0.5.0] — 2026-06-18
 ### Aggiunto
 - **Board reale**: esagono di raggio 3 (37 celle, colonne 4-5-6-7-6-5-4) come il gioco fisico.

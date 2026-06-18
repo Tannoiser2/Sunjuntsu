@@ -9,7 +9,7 @@ func _ready() -> void:
 
 	var version: String = str(ProjectSettings.get_setting("application/config/version", "?"))
 	$Version.text = "v%s" % version
-	$Changes.text = "Novità v%s:\n• Board reale (37 esagoni) + mappa e miniature\n• Carte vere in mano + facing/archi d'attacco\n• Mazzo Ferite e condizioni di sconfitta\nVedi CHANGELOG.md" % version
+	$Changes.text = "Novità v%s:\n• Board a esagono raggio 3 (37 celle) corretta\n• Griglia/miniature più grandi + calibrazione mappa live\n• Carte vere in mano + facing/archi d'attacco\nVedi CHANGELOG.md" % version
 
 
 func _on_solo() -> void:
