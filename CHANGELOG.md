@@ -3,6 +3,13 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.31.0] — 2026-06-18
+### Miniature più grandi
+- Le pedine sono ora **più grandi** (altezza ~2.4× il raggio esagono, base che riempie
+  quasi l'esagono) per leggerle meglio sulla mappa.
+- Le **ferite** restano tracciate e mostrate nella barra di stato (❤ rimaste/limite);
+  segnalini-ferita visivi sulla pedina: possibile lavoro futuro. Versione 0.31.0.
+
 ## [0.30.0] — 2026-06-18
 ### Miniature 3D a colori (Guerriero e Ronin)
 - Le pedine ora usano i **modelli .glb texturizzati** caricati (Guerriero/Ronin) con i
