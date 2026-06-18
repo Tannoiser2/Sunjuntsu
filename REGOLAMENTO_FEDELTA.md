@@ -67,13 +67,13 @@ Stato:
 
 ## 4. Difese / Blocchi / Contrattacchi (rulebook p.11)
 
-- ⚠️ Blocco modellato in modo semplificato.
-- ❌ Regola ufficiale del blocco: l'attacco alla **stessa** iniziativa è fermato se
-   (1) c'è un blocco nella cella dell'attaccante, **oppure** (2) il **percorso più
-   breve** dall'attaccante al difensore passa per una cella con blocco. Il terreno
-   aggiunge un blocco a tutte le iniziative.
-- ❌ **Counter**: se un blocco con icona counter ferma un attacco alla velocità
-   indicata, scarti un attacco non-core per infliggere 1 ferita.
+- ✅ Regola ufficiale del blocco (1.5): l'attacco alla **stessa** iniziativa è fermato
+   se (1) c'è un blocco nella cella dell'attaccante, **oppure** (2) **ogni percorso più
+   breve** attaccante→difensore passa per una cella con blocco. Il **terreno** aggiunge
+   un blocco a tutte le iniziative. Rispetta `non_blockable`. Un solo attacco per difesa.
+- ⚠️ **Counter**: meccanica implementata (`_try_counter`: il giocatore scarta un attacco
+   non-core, l'IA infligge la ferita senza scartare) ma **inerte** finché non trascrivo
+   il dato `counter` (velocità) sulle carte difesa.
 
 ## 5. Kamae (rulebook p.12)
 

@@ -359,12 +359,16 @@ func _resolve_card(i: int, block_ready: Dictionary, log: Array) -> void:
 				var dist := HexGrid.distance(f.cell, foe.cell)
 				log.append("%s usa %s ma il bersaglio è fuori arco/portata (dist %d)" % [f.character, name, dist])
 				return
-			# Blocco: la difesa avversaria para se la velocità scelta combacia
-			# con quella di questo attacco (un solo attacco per difesa).
+			# Blocco (regolamento 1.5 p.11): blocco nella cella dell'attaccante,
+			# oppure ogni percorso più breve attraversa un blocco. Il terreno
+			# blocca a ogni velocità; la difesa solo alla sua velocità scelta.
 			var atk_speed := int(_chosen.get(i, _speed_of(i)))
-			if atk_speed >= 0 and block_ready.has(foe_idx) and int(block_ready[foe_idx]) == atk_speed:
-				block_ready[foe_idx] = -1
-				log.append("%s attacca con %s a velocità %d — %s PARA!" % [
+			if _attack_blocked(i, foe_idx, atk_speed, g):
+				# Un solo attacco per difesa: consuma la difesa e valuta il counter.
+				if int(_block_ready.get(foe_idx, -1)) == atk_speed:
+					_block_ready[foe_idx] = -1
+					_try_counter(foe_idx, i, atk_speed, log)
+				log.append("%s attacca con %s a velocità %d — PARATO da %s" % [
 					f.character, name, atk_speed, foe.character])
 				return
 			# Ferite della cella colpita (schema v2) o globali (vecchio).
@@ -426,6 +430,94 @@ func _apply_if_success(att_idx: int, foe_idx: int, g: Dictionary, log: Array) ->
 			var amt := 1 if s == "hobble" else int(s.substr(7))
 			foe.hobble += maxi(1, amt)
 			fighter_updated.emit(foe_idx)
+
+
+# ─── Blocchi (regolamento 1.5 p.11) ──────────────────────────────────────────
+
+## Celle che contano come "blocco" contro un attacco alla velocità `atk_speed`:
+## il terreno blocca a ogni velocità; la difesa del difensore blocca solo se la
+## sua velocità scelta combacia. Ritorna {blocks: Dictionary, from_def: bool}.
+func _collect_block_hexes(def_idx: int, atk_speed: int) -> Dictionary:
+	var blocks := {}
+	for cell in state.blocked_cells.keys():
+		blocks[cell] = true   # terreno = blocco a tutte le iniziative (cond. 2)
+	var from_def := false
+	var dfn := state.fighters[def_idx]
+	if dfn.planned != -1 and not _fizzled.has(def_idx) \
+			and int(_block_ready.get(def_idx, -1)) == atk_speed \
+			and CardDB.card(dfn.planned).get("type", "") == "defence":
+		for cell in defence_v2_cells(dfn.cell, dfn.facing, CardDB.geometry(dfn.planned)).keys():
+			blocks[cell] = true
+		from_def = true
+	return {"blocks": blocks, "from_def": from_def}
+
+
+## Esiste un percorso più breve da `a` a `b` che NON attraversa celle blocco
+## (estremi esclusi)? Se NO, allora tutti i percorsi più brevi sono bloccati.
+func _has_clean_path(a: Vector2i, b: Vector2i, blocks: Dictionary) -> bool:
+	if a == b:
+		return true
+	var stack: Array = [a]
+	var seen := {a: true}
+	while not stack.is_empty():
+		var h: Vector2i = stack.pop_back()
+		var dh := HexGrid.distance(h, b)
+		for dir in HexGrid.DIRS:
+			var n: Vector2i = h + dir
+			if HexGrid.distance(n, b) != dh - 1:
+				continue   # deve avvicinarsi a b (resta sui percorsi minimi)
+			if n == b:
+				return true
+			if blocks.has(n) or seen.has(n):
+				continue
+			seen[n] = true
+			stack.append(n)
+	return false
+
+
+## L'attacco di `att_idx` contro `def_idx` alla velocità `atk_speed` è bloccato?
+## Regola 1.5: bloccato se (1) c'è un blocco nella cella dell'attaccante, oppure
+## (2) ogni percorso più breve attaccante→difensore passa per un blocco.
+func _attack_blocked(att_idx: int, def_idx: int, atk_speed: int, atk_geom: Dictionary) -> bool:
+	if bool(atk_geom.get("non_blockable", false)):
+		return false
+	var info := _collect_block_hexes(def_idx, atk_speed)
+	var blocks: Dictionary = info["blocks"]
+	if blocks.is_empty():
+		return false
+	var att := state.fighters[att_idx]
+	var dfn := state.fighters[def_idx]
+	if blocks.has(att.cell):
+		return true   # cond. 1
+	return not _has_clean_path(att.cell, dfn.cell, blocks)   # cond. 2
+
+
+## Contrattacco (p.11): se la difesa ha un'icona counter e la velocità dell'attacco
+## bloccato combacia, infliggi 1 ferita all'attaccante (il giocatore scarta un
+## attacco non-core; l'avversario solo non scarta).
+func _try_counter(def_idx: int, att_idx: int, atk_speed: int, log: Array) -> void:
+	var dfn := state.fighters[def_idx]
+	var counter = CardDB.geometry(dfn.planned).get("counter", null)
+	if counter == null:
+		return
+	var speeds: Array = counter if typeof(counter) == TYPE_ARRAY else [atk_speed]
+	if not speeds.has(atk_speed):
+		return
+	if not dfn.is_ai:
+		var pick := -1
+		for cid in dfn.hand:
+			if CardDB.card(cid).get("type", "") == "attack":
+				pick = cid
+				break
+		if pick == -1:
+			return   # nessun attacco non-core da scartare: niente counter
+		dfn.hand.erase(pick)
+		dfn.discard.append(pick)
+	var att := state.fighters[att_idx]
+	att.wounds.append("wound")
+	fighter_updated.emit(att_idx)
+	log.append("%s CONTRATTACCA: %s subisce 1 ferita (%d/%d)" % [
+		dfn.character, att.character, att.wounds.size(), att.wound_limit])
 
 
 ## ─── Schema v2: celle d'attacco e lista effetti ────────────────────────────────

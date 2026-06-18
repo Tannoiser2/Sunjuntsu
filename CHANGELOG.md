@@ -3,6 +3,18 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.13.0] — 2026-06-18
+### Blocchi fedeli al regolamento 1.5 (p.11)
+- **Blocco geometrico 1:1**: un attacco alla stessa iniziativa è parato se (1) c'è un
+  blocco nella **cella dell'attaccante**, oppure (2) **ogni percorso più breve**
+  attaccante→difensore passa per una cella con blocco. Il **terreno** è un blocco a
+  tutte le iniziative; rispettato il flag `non_blockable`; un solo attacco per difesa.
+  (Prima: "se la velocità combacia, para tutto" — ignorava la geometria.)
+- **Contrattacco**: meccanica `_try_counter` agganciata (giocatore scarta un attacco
+  non-core; IA infligge la ferita) — inerte finché non trascrivo il dato `counter`.
+- Test blocchi riscritto per validare percorso più breve, terreno e copertura della
+  cella dell'attaccante. Versione 0.13.0.
+
 ## [0.12.0] — 2026-06-18
 ### Verso il regolamento 1:1 (regolamento ufficiale 1.5 acquisito)
 - **Fonte regole**: trascritto il **Senjutsu 1.5 Rulebook** (gennaio 2026) + Reference
