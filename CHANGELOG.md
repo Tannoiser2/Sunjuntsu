@@ -3,6 +3,21 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.20.0] — 2026-06-18
+### Risoluzione sbloccata + anteprima azione al passaggio del mouse
+- **Fine dello "stallo" in risoluzione**: dopo aver mosso e visto i bersagli rossi, ora
+  **basta cliccare un esagono rosso** per portare a segno l'attacco e chiudere il turno
+  (prima il rosso non era cliccabile e si poteva solo premere INVIO, poco scopribile).
+- Nuovo **pulsante "Conferma ▶"** visibile durante la tua risoluzione: rende esplicita la
+  chiusura dell'azione per **tutte** le carte (movimento puro, meditazione, difesa, non
+  solo attacco). Equivale a INVIO / click sul bersaglio.
+- **Anteprima sulla mappa al passaggio del mouse**: passando il mouse su una carta in
+  mano, la carta si alza e la mappa mostra la sua azione contestuale (giallo = movimento,
+  rosso = bersagli); togliendo il mouse, la carta si riabbassa e la mappa torna allo stato
+  precedente (selezione attiva, se c'è, o pulita). Solo in pianificazione.
+- Refactor: estratto `_draw_overlays_for(card, move_used)` riutilizzato da selezione,
+  risoluzione e anteprima hover. Versione 0.20.0.
+
 ## [0.17.0] — 2026-06-18
 ### Status: Azzoppamento fedele (Hobble, regolamento 1.5 p.13)
 - L'azzoppamento ora **scade** correttamente: ogni carta ruota di 90° a fine turno e

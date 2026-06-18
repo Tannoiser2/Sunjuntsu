@@ -6,6 +6,7 @@
 extends Control
 
 signal clicked(card_view)
+signal hover_changed(card_view, entered: bool)
 
 const CARD_H := 200.0
 const CARD_RATIO := 463.0 / 646.0   ## w/h dei ritagli (180 dpi)
@@ -106,6 +107,7 @@ func place(pos: Vector2, rot: float) -> void:
 
 
 func _on_hover(entered: bool) -> void:
+	hover_changed.emit(self, entered)   # l'arena mostra l'azione contestuale sulla mappa
 	if selected:
 		return
 	var tw := create_tween().set_parallel()

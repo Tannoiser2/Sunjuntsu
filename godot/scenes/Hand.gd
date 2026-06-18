@@ -6,6 +6,7 @@ extends Control
 
 signal card_played(card_data: Dictionary)
 signal card_selected(card_data: Dictionary)
+signal card_hovered(card_data: Dictionary, entered: bool)
 
 const CardView := preload("res://scenes/CardView.gd")
 const FAN_SPREAD := 0.10     ## rotazione massima (rad) ai bordi del ventaglio
@@ -25,6 +26,7 @@ func set_hand(entries: Array) -> void:
 		add_child(cv)
 		cv.setup(e)
 		cv.clicked.connect(_on_card_clicked)
+		cv.hover_changed.connect(_on_card_hovered)
 		_cards.append(cv)
 	_layout()
 
@@ -45,6 +47,10 @@ func _layout() -> void:
 		var y: float = base_y + abs(off) * 8.0    ## leggera curvatura del ventaglio
 		cv.place(Vector2(x, y), rot)
 		cv.z_index = i
+
+
+func _on_card_hovered(cv, entered: bool) -> void:
+	card_hovered.emit(cv.card_data, entered)
 
 
 func _on_card_clicked(cv) -> void:
