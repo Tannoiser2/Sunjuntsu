@@ -110,6 +110,19 @@ func draw_pile_for(slug: String) -> Array:
 	return pile
 
 
+## Mazzo dell'AVVERSARIO solitario (sottoinsieme curato secondo solo_AI_tables_v1.xlsx),
+## costruito riusando la geometria già trascritta del personaggio. L'IA rivela la cima
+## ogni turno; niente focus/mano. The Terror (#28) cambia l'atteggiamento dell'IA.
+func solo_deck_for(slug: String) -> Array:
+	match slug:
+		"ronin":
+			# attacchi mischia + 1 difesa (con counter) + 2 meditazioni (una cambia comportamento)
+			return [27, 29, 35, 32, 33, 31, 28, 102]
+		"warrior":
+			return [86, 58, 60, 113, 64, 63, 56, 59]
+	return draw_pile_for(slug)
+
+
 func _load_pool() -> void:
 	if not FileAccess.file_exists(POOL_PATH):
 		push_warning("[CardDB] pool mancante: " + POOL_PATH)

@@ -3,6 +3,23 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.27.0] — 2026-06-18
+### Avversario Ronin "solitario": mazzo IA dedicato + cambio atteggiamento
+- L'IA ora usa un **mazzo solitario dedicato** (sottoinsieme curato di carte Ronin
+  secondo `solo_AI_tables_v1.xlsx`: attacchi mischia + 1 difesa con counter + 2
+  meditazioni), invece dell'intero mazzo del giocatore. `CardDB.solo_deck_for()`.
+- Nuovo effetto **CHANGE AI BEHAVIOUR** (carta solo *Il Terrore* #28): l'IA inverte
+  l'atteggiamento **offensivo ⇄ difensivo**, cambiando le priorità di movimento.
+- L'IA continua a: rivelare la cima del mazzo, ignorare il focus, muoversi per priorità
+  (v0.26), contrattaccare alla velocità counter (il giocatore subisce 1 ferita).
+- Trascritte ~139 carte solo dalle immagini inglesi (2 montaggi) in `Solo_AI_carte.xlsx`
+  come riferimento; il mazzo IA riusa la geometria già verificata delle carte Ronin.
+- **Fix cambio Kamae**: il selettore non cambiava posizione (restavi sempre Neutro)
+  perché tutti i pulsanti emettevano l'ultima stance per un bug di cattura nella lambda;
+  ora ogni pulsante cambia la Kamae giusta.
+- Test `test_ai` esteso (mazzo solo valido + cambio atteggiamento). Suite verde (12).
+  Versione 0.27.0.
+
 ## [0.26.0] — 2026-06-18
 ### Motore comportamentale IA solitaria (priorità di movimento)
 - L'IA non si limita più ad avvicinarsi: `AI.plan_move` valuta tutte le posizioni

@@ -245,9 +245,10 @@ func _build_kamae_chooser() -> void:
 	_kamae_box.alignment = BoxContainer.ALIGNMENT_CENTER
 	wrap.add_child(_kamae_box)
 	for slug in ["aggression", "balance", "determination", "neutral"]:
+		var sl: String = slug   # cattura per-iterazione: senza, tutti i bottoni emetterebbero l'ultimo slug
 		var b := Button.new()
 		b.custom_minimum_size = Vector2(110, 40)
-		b.pressed.connect(func(): kamae_chosen.emit(slug))
+		b.pressed.connect(func(): kamae_chosen.emit(sl))
 		_kamae_box.add_child(b)
 		_kamae_btns[slug] = b
 	wrap.visible = false
