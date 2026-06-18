@@ -1,0 +1,43 @@
+{
+  "source": "Trascrizione dal mazzo Ferite (Tabelle_Materiali/Senjutsu/CARTE/Ferite.pdf). Effetti funzionali; vedi GEOMETRY_SCHEMA.md per le icone.",
+  "note": "Le ferite restano in gioco. Sconfitta: carte ferita (Ferita + Sanguinante) >= limite ferite; oppure carte Stordimento in mano = limite mano. I Veleni riducono il limite ferite o disturbano (riducono mazzo/kamae/focus).",
+  "cards": {
+    "5w": {
+      "name": "Ferita", "kind": "wound", "worth": 1, "persistent": true,
+      "defeat": "carte ferita >= limite ferite"
+    },
+    "5b": {
+      "name": "Ferita Sanguinante", "kind": "bleed", "worth": 1, "persistent": true,
+      "effect": "mill_self_1", "note": "A inizio turno, se hai >=1 sanguinante, scarta la prima carta del mazzo (max 1)"
+    },
+    "4": {
+      "name": "Stordimento", "kind": "stun", "worth": 0, "persistent": true,
+      "effect": "counts_hand_limit", "defeat": "carte stordimento in mano = limite mano",
+      "note": "Non scartabile dalla mano; giocabile come carta abilita'"
+    },
+    "3": {
+      "name": "Azzoppato", "kind": "hobble", "worth": 0, "persistent": true,
+      "effect": "initiative_minus_1", "expires": "ruota 90°/turno, scarta se diritta"
+    },
+    "132": {
+      "name": "Veleno Virulento", "kind": "poison", "worth": 0, "persistent": true,
+      "effect": "wound_limit_minus_1", "expires": "ruota 90°/turno, scarta se diritta"
+    },
+    "130": {
+      "name": "Tossina Emorragica", "kind": "poison", "worth": 0, "persistent": true,
+      "effect": "mill_self_1", "expires": "ruota 90°/turno, scarta se diritta"
+    },
+    "131": {
+      "name": "Tossina Paralizzante", "kind": "poison", "worth": 0, "persistent": true,
+      "effect": "no_kamae_no_focus", "expires": "ruota 180°/turno, scarta se diritta"
+    },
+    "129": {
+      "name": "Nebbia di Confusione", "kind": "poison", "worth": 0, "persistent": true,
+      "effect": "random_card_no_instants", "expires": "ruota 180°/turno, scarta se diritta"
+    },
+    "2": {
+      "name": "Veleno Debilitante", "kind": "poison", "worth": 0,
+      "effect": "shuffle_into_top5_must_play"
+    }
+  }
+}

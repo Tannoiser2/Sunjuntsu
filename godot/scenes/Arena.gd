@@ -143,22 +143,19 @@ func _build_environment() -> void:
 
 
 func _build_map() -> void:
-	var mat := StandardMaterial3D.new()
-	mat.albedo_color = Color(0.20, 0.34, 0.24)
-	var mat_alt := StandardMaterial3D.new()
-	mat_alt.albedo_color = Color(0.24, 0.40, 0.28)
-
+	_build_ground()
 	for cell in HexGrid.hexes_in_range(Vector2i.ZERO, map_radius):
 		var tile := MeshInstance3D.new()
 		var mesh := CylinderMesh.new()
-		mesh.top_radius = Domain.HEX_SIZE * 0.95
-		mesh.bottom_radius = Domain.HEX_SIZE * 0.95
-		mesh.height = Domain.HEX_HEIGHT
+		mesh.top_radius = Domain.HEX_SIZE * 0.92
+		mesh.bottom_radius = Domain.HEX_SIZE * 0.92
+		mesh.height = 0.04
 		mesh.radial_segments = 6
 		tile.mesh = mesh
 		tile.rotation_degrees.y = 30.0   # flat-top
-		tile.material_override = mat_alt if ((cell.x + cell.y) & 1) else mat
+		tile.material_override = _tile_mat(cell, false)
 		tile.position = HexGrid.hex_to_world(cell, Domain.HEX_SIZE)
+		tile.position.y = 0.03            # appena sopra la mappa
 		tile.add_to_group(TILE_GROUP)
 		tile.set_meta("cell", cell)
 
@@ -166,8 +163,8 @@ func _build_map() -> void:
 		var body := StaticBody3D.new()
 		var col := CollisionShape3D.new()
 		var shape := CylinderShape3D.new()
-		shape.radius = Domain.HEX_SIZE * 0.95
-		shape.height = Domain.HEX_HEIGHT
+		shape.radius = Domain.HEX_SIZE * 0.92
+		shape.height = 0.2
 		col.shape = shape
 		body.add_child(col)
 		body.set_meta("cell", cell)
@@ -175,6 +172,47 @@ func _build_map() -> void:
 
 		add_child(tile)
 		_tiles[cell] = tile
+
+
+## Piano con la texture della mappa reale (Tabelle_Materiali/Senjutsu/MAPPE).
+func _build_ground() -> void:
+	var ground := MeshInstance3D.new()
+	var plane := PlaneMesh.new()
+	plane.size = Vector2(36, 36)
+	ground.mesh = plane
+	var gm := StandardMaterial3D.new()
+	var tex := _load_texture("res://assets/maps/arena.webp")
+	if tex != null:
+		gm.albedo_texture = tex
+	else:
+		gm.albedo_color = Color(0.15, 0.16, 0.14)
+	gm.roughness = 1.0
+	ground.material_override = gm
+	ground.position.y = 0.0
+	add_child(ground)
+
+
+## Materiale semi-trasparente della tessera (griglia sovrapposta alla mappa).
+func _tile_mat(cell: Vector2i, highlight: bool) -> StandardMaterial3D:
+	var m := StandardMaterial3D.new()
+	m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	if highlight:
+		m.albedo_color = Color(0.95, 0.82, 0.25, 0.55)
+		m.emission_enabled = true
+		m.emission = Color(0.5, 0.42, 0.1)
+	else:
+		var alt := ((cell.x + cell.y) & 1) != 0
+		m.albedo_color = Color(0.85, 0.9, 1.0, 0.16) if alt else Color(0.6, 0.7, 0.85, 0.13)
+	return m
+
+
+static func _load_texture(path: String) -> Texture2D:
+	if ResourceLoader.exists(path):
+		return load(path)
+	var img := Image.new()
+	if img.load(path) == OK:
+		return ImageTexture.create_from_image(img)
+	return null
 
 
 func _spawn_pawns() -> void:
@@ -195,6 +233,7 @@ func _spawn_pawns() -> void:
 			f.hand_limit = int(cs.get("hand_limit", f.hand_limit))
 		var pawn: Node3D = Pawn.new()
 		pawn.set("tint", colors[i])
+		pawn.set("mesh_path", "res://assets/miniatures/%s.obj" % chars[i].to_lower())
 		add_child(pawn)
 		pawn.position = HexGrid.hex_to_world(f.cell, Domain.HEX_SIZE)
 		pawn.set_meta("fighter_index", i)
@@ -210,24 +249,13 @@ func _select_pawn(index: int) -> void:
 	_highlighted = HexGrid.reachable(f.cell, move_budget, state.is_blocked)
 	for cell in _highlighted:
 		if _tiles.has(cell):
-			(_tiles[cell] as MeshInstance3D).material_override = _highlight_mat()
-
-
-func _highlight_mat() -> StandardMaterial3D:
-	var m := StandardMaterial3D.new()
-	m.albedo_color = Color(0.85, 0.75, 0.3)
-	m.emission_enabled = true
-	m.emission = Color(0.5, 0.42, 0.1)
-	return m
+			(_tiles[cell] as MeshInstance3D).material_override = _tile_mat(cell, true)
 
 
 func _clear_highlight() -> void:
 	for cell in _highlighted:
 		if _tiles.has(cell):
-			var alt := ((cell.x + cell.y) & 1) != 0
-			var m := StandardMaterial3D.new()
-			m.albedo_color = Color(0.24, 0.40, 0.28) if alt else Color(0.20, 0.34, 0.24)
-			(_tiles[cell] as MeshInstance3D).material_override = m
+			(_tiles[cell] as MeshInstance3D).material_override = _tile_mat(cell, false)
 	_highlighted.clear()
 
 

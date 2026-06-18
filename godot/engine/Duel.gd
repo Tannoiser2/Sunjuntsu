@@ -226,6 +226,10 @@ func _cleanup(log: Array) -> void:
 		if f.planned != -1:
 			f.discard.append(f.planned)
 			f.planned = -1
+		# Sanguinamento: a inizio turno scarti la prima carta del mazzo (max 1).
+		if f.has_bleed() and not f.draw_pile.is_empty():
+			f.discard.append(f.draw_pile.pop_back())
+			log.append("%s sanguina: scarta una carta dal mazzo" % f.character)
 		if f.hand.size() < f.hand_limit:
 			f.draw_one()
 	state.round_num += 1

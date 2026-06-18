@@ -18,6 +18,7 @@ class Fighter:
 	var discard: Array = []                    ## scarti (id int)
 	var wounds: Array = []                     ## ferite subite (stringhe: "wound"/"bleed")
 	var stun: int = 0                          ## carte stordimento accumulate
+	var poison: int = 0                        ## veleni virulenti attivi (riducono il limite)
 	var wound_limit: int = 6                   ## limite ferite (dalla carta personaggio)
 	var hand_limit: int = 5                    ## limite carte in mano
 	var advantage: bool = false                ## possiede il segnalino vantaggio
@@ -29,8 +30,15 @@ class Fighter:
 	func gain_focus(n: int) -> void:
 		focus = clampi(focus + n, 0, MAX_FOCUS)
 
+	## Limite ferite effettivo (ridotto dai veleni virulenti, minimo 1).
+	func effective_wound_limit() -> int:
+		return maxi(1, wound_limit - poison)
+
 	func remaining_wounds() -> int:
-		return wound_limit - wounds.size()
+		return effective_wound_limit() - wounds.size()
+
+	func has_bleed() -> bool:
+		return wounds.has("bleed")
 
 	## Pesca una carta dal mazzo; rimescola gli scarti se vuoto.
 	func draw_one() -> int:
@@ -45,10 +53,11 @@ class Fighter:
 		return id
 
 	func is_defeated() -> bool:
-		# Sconfitta: ferite (incl. sanguinanti) al limite, oppure stun >= ferite rimaste.
-		if wounds.size() >= wound_limit:
+		# Sconfitta: ferite (incl. sanguinanti) >= limite effettivo, oppure
+		# carte stordimento in mano = limite mano.
+		if wounds.size() >= effective_wound_limit():
 			return true
-		if stun > 0 and stun >= remaining_wounds():
+		if stun >= hand_limit:
 			return true
 		return false
 

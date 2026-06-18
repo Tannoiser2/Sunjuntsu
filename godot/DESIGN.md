@@ -109,8 +109,11 @@ carte.
    > carte: viene **trascritta** in `data/cards/geometry.json` (vedi
    > `GEOMETRY_SCHEMA.md`) e usata dal motore quando presente, con fallback
    > all'astrazione (1 ferita / portata da keyword). **Trascrizione**: mazzi
-   > **Guerriero e Ronin completi** (44 carte + carte personaggio: limite ferite/
-   > mano, armi). Prossimo (se richiesto): Ferite / Jin Sakai. Counter, icona
+   > **Guerriero e Ronin completi** (44 carte + carte personaggio) e **mazzo
+   > Ferite** (`data/cards/wounds.json`: ferita/sanguinante/stordimento/veleni).
+   > Il motore applica: ferite normali/sanguinanti, sanguinamento (scarto dal
+   > mazzo a inizio turno), limite ferite effettivo ridotto dai veleni, sconfitta
+   > per stordimento. Prossimo (se richiesto): Jin Sakai. Counter, icona
    > esecuzione e offset esatti dell'arco restano da raffinare.
 7. **[fatto] IA solo** (`engine/AI.gd`): euristica per portata e tipo di carta
    (attacca se a tiro, difende se minacciata, medita altrimenti) + movimento di
@@ -118,7 +121,10 @@ carte.
    (gruppi I–VIII) è lavoro futuro.
 8. **Multiplayer 1v1**: lobby + sincronizzazione (la logica in `Duel`/`GameState`
    è già deterministica e separata dalla grafica).
-9. **Asset reali**: miniature `.obj` come pedine, mappe PNG come texture arena.
+9. **[fatto] Asset reali**: mappa reale (`assets/maps/arena.webp`, ridotta da
+   MAPPE/) come piano texturizzato con **griglia esagonale semi-trasparente**
+   sovrapposta; **miniature .obj** (Guerriero/Ronin) come pedine, scalate
+   automaticamente (le .obj non hanno texture → tinta per distinguerle).
 
 ## 8. Come eseguire
 Apri `godot/project.godot` con Godot **4.6**, premi Play. Dal menu scegli una
