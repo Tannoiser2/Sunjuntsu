@@ -216,6 +216,9 @@
       ]
      }
     ]
+   },
+   "kamae_switch": {
+    "to": "aggression"
    }
   },
   "61": {
@@ -263,7 +266,10 @@
    "change_kamae": true,
    "if_success": [
     "push:1"
-   ]
+   ],
+   "kamae_switch": {
+    "to": "aggression"
+   }
   },
   "63": {
    "name": "Blocco Cinereo",
@@ -273,7 +279,11 @@
    "change_kamae": true,
    "if_success": [
     "push:1"
-   ]
+   ],
+   "kamae_switch": {
+    "to": "aggression",
+    "gate": "determination"
+   }
   },
   "64": {
    "name": "Testata",
@@ -422,6 +432,9 @@
       ]
      }
     ]
+   },
+   "kamae_switch": {
+    "to": "balance"
    }
   },
   "87": {
@@ -437,7 +450,10 @@
    "unblockable": true,
    "discard": 2,
    "focus_gain": 1,
-   "change_kamae": true
+   "change_kamae": true,
+   "kamae_switch": {
+    "to": "neutral"
+   }
   },
   "113": {
    "name": "Taglio Troncante",
@@ -506,7 +522,10 @@
    "block_value": "7/6",
    "discard": 2,
    "change_kamae": true,
-   "note": "Blocco ampio"
+   "note": "Blocco ampio",
+   "kamae_switch": {
+    "to": "neutral"
+   }
   },
   "119": {
    "name": "Fendente Selvaggio",

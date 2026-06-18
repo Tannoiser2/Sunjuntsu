@@ -18,23 +18,29 @@ extends RefCounted
 
 
 ## Stati raggiungibili come Array[Vector3i] (x=q, y=r, z=facing 0..5).
-static func reachable_states(cell: Vector2i, facing: int, spec, is_blocked: Callable) -> Array:
+## `stance_slug` filtra gli atomi gated dalla Kamae: un atomo con campo "kamae"
+## si applica solo se uguale alla stance corrente ("" = nessun filtro).
+static func reachable_states(cell: Vector2i, facing: int, spec, is_blocked: Callable, stance_slug: String = "") -> Array:
 	var seen := {}
 	var start := Vector3i(cell.x, cell.y, facing)
 	if spec == null or typeof(spec) != TYPE_DICTIONARY or (spec.get("opts", []) as Array).is_empty():
 		seen[_k(start)] = start
 		return seen.values()
 	for opt in spec.get("opts", []):
-		var atoms: Array = (opt.get("atoms", []) as Array).duplicate()
+		var atoms: Array = []
+		for a in opt.get("atoms", []):
+			var gate: String = a.get("kamae", "")
+			if gate == "" or gate == stance_slug:
+				atoms.append(a)
 		var ordered: bool = opt.get("ordered", false)
 		_enum(start, atoms, ordered, is_blocked, seen)
 	return seen.values()
 
 
 ## Mappa cella → Array[int] dei facing legali ottenibili muovendoci.
-static func reachable_by_cell(cell: Vector2i, facing: int, spec, is_blocked: Callable) -> Dictionary:
+static func reachable_by_cell(cell: Vector2i, facing: int, spec, is_blocked: Callable, stance_slug: String = "") -> Dictionary:
 	var out := {}
-	for s in reachable_states(cell, facing, spec, is_blocked):
+	for s in reachable_states(cell, facing, spec, is_blocked, stance_slug):
 		var c := Vector2i(s.x, s.y)
 		if not out.has(c):
 			out[c] = []

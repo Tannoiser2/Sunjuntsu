@@ -51,12 +51,21 @@ func plan_card(fighter_index: int, card_id: int) -> bool:
 	var f := state.fighters[fighter_index]
 	if not f.hand.has(card_id):
 		return false
+	if not playable(f, card_id):
+		return false   # carta non giocabile nella Kamae attuale
 	f.planned = card_id
 	f.hand.erase(card_id)
 	_autoplan_ai()
 	if _all_planned():
 		_resolve_turn()
 	return true
+
+
+## Una carta è giocabile solo se la sua Kamae richiesta (kamae_req) corrisponde
+## alla posizione attuale del combattente.
+static func playable(f: GameState.Fighter, card_id: int) -> bool:
+	var req: String = CardDB.geometry(card_id).get("kamae_req", "")
+	return req == "" or req == Domain.STANCE_SLUG[f.stance]
 
 
 func _autoplan_ai() -> void:
@@ -215,6 +224,16 @@ func _resolve_card(i: int, block_ready: Dictionary, log: Array) -> void:
 			log.append("%s medita (%s): +%d focus, pesca %d" % [f.character, name, fg, maxi(0, dr)])
 		_:
 			log.append("%s gioca %s" % [f.character, name])
+	# "Passa a [Kamae]" — switch diretto (eventualmente gated dalla Kamae).
+	var sw = g.get("kamae_switch", null)
+	if sw != null:
+		var gate: String = sw.get("gate", "")
+		if gate == "" or gate == Domain.STANCE_SLUG[f.stance]:
+			var to: int = Domain.STANCE_FROM_SLUG.get(sw.get("to", ""), -1)
+			if to != -1:
+				f.stance = to
+				fighter_updated.emit(i)
+				log.append("%s passa a Kamae %s" % [f.character, Domain.STANCE_NAMES[to]])
 
 
 ## Applica gli effetti "se riuscito" trascritti (push, focus, bleed).

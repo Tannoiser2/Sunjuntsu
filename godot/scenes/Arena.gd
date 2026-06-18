@@ -308,7 +308,7 @@ func _refresh_overlays() -> void:
 		_move_states = {}
 		var move_cells: Array = []
 		if g.has("move"):
-			_move_states = Move.reachable_by_cell(f.cell, f.facing, g["move"], state.is_blocked)
+			_move_states = Move.reachable_by_cell(f.cell, f.facing, g["move"], state.is_blocked, Domain.STANCE_SLUG[f.stance])
 			for cell in _move_states.keys():
 				if cell != f.cell:
 					move_cells.append(cell)
