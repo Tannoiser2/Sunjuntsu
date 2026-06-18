@@ -11,8 +11,13 @@ extends Node3D
 
 const TILE_GROUP := "hex_tile"
 
-@export var map_radius: int = 6
+@export var map_radius: int = 4
 @export var move_budget: int = 3   ## passi consentiti per dimostrare il movimento
+# ─── Calibrazione mappa↔griglia (regolabili nell'editor) ─────────────────────
+@export var hex_size: float = 2.0          ## raggio esagono in unità mondo
+@export var map_world_size: float = 30.0   ## lato del piano-mappa
+@export var map_offset: Vector2 = Vector2.ZERO  ## scostamento texture mappa (x,z)
+@export var map_y_rotation: float = 0.0    ## rotazione mappa attorno a Y (gradi)
 
 var state: GameState
 var _tiles: Dictionary = {}        ## Vector2i -> MeshInstance3D
@@ -21,13 +26,15 @@ var _active_pawn: int = 0
 var _highlighted: Array[Vector2i] = []
 
 var _cam_pivot: Node3D
-var _cam_yaw: float = 0.6
-var _cam_pitch: float = 0.9
-var _cam_dist: float = 16.0
+var _cam_yaw: float = 0.0
+var _cam_pitch: float = 0.62
+var _cam_dist: float = 26.0
 var _dragging := false
 
 var _hud: CanvasLayer
 var _duel: Duel
+var _attack_preview: Array[Vector2i] = []
+var _selected_card: Dictionary = {}
 
 
 func _ready() -> void:
@@ -52,16 +59,20 @@ func _start_duel() -> void:
 	_duel.turn_resolved.connect(_on_turn_resolved)
 	_duel.fighter_updated.connect(_on_fighter_updated)
 	_duel.duel_over.connect(_on_duel_over)
+	_hud.card_selected.connect(func(d): _selected_card = d; _on_card_selected(d))
 	_duel.start()
 	_refresh_hand()
 	_refresh_status()
-	_hud.set_hint("Click su una carta = selezionala · secondo click = giocala · click su esagono illuminato = muovi")
+	_apply_pawn_facing(0); _apply_pawn_facing(1)
+	_hud.set_hint("Carta: 1° click seleziona, 2° gioca · Q/E ruota · click su esagono = muovi/orienta")
 
 
 func _on_card_played(card_data: Dictionary) -> void:
 	var id := int(card_data.get("id", -1))
 	if id == -1:
 		return
+	_clear_attack_preview()
+	_selected_card = {}
 	if _duel.plan_card(0, id):
 		_refresh_hand()
 
@@ -90,9 +101,13 @@ func _on_duel_over(winner: int) -> void:
 func _refresh_hand() -> void:
 	var entries: Array = []
 	for id in state.fighters[0].hand:
-		var c := CardDB.card(id)
-		if not c.is_empty():
-			entries.append(c)
+		var c := CardDB.card(id).duplicate()
+		if c.is_empty():
+			continue
+		var img := CardDB.image_for(id)
+		if img != "":
+			c["file"] = img   # mostra l'immagine reale della carta
+		entries.append(c)
 	_hud.show_hand(entries)
 
 
@@ -107,10 +122,11 @@ func _refresh_status() -> void:
 
 func _sync_pawns() -> void:
 	for i in range(state.fighters.size()):
-		var dest := HexGrid.hex_to_world(state.fighters[i].cell, Domain.HEX_SIZE)
+		var dest := HexGrid.hex_to_world(state.fighters[i].cell, hex_size)
 		if _pawns[i].position.distance_to(dest) > 0.01:
 			var tw := create_tween()
 			tw.tween_property(_pawns[i], "position", dest, 0.25).set_trans(Tween.TRANS_SINE)
+		_apply_pawn_facing(i)
 	if _active_pawn == 0:
 		_select_pawn(0)
 
@@ -147,14 +163,14 @@ func _build_map() -> void:
 	for cell in HexGrid.hexes_in_range(Vector2i.ZERO, map_radius):
 		var tile := MeshInstance3D.new()
 		var mesh := CylinderMesh.new()
-		mesh.top_radius = Domain.HEX_SIZE * 0.92
-		mesh.bottom_radius = Domain.HEX_SIZE * 0.92
+		mesh.top_radius = hex_size * 0.92
+		mesh.bottom_radius = hex_size * 0.92
 		mesh.height = 0.04
 		mesh.radial_segments = 6
 		tile.mesh = mesh
 		tile.rotation_degrees.y = 30.0   # flat-top
-		tile.material_override = _tile_mat(cell, false)
-		tile.position = HexGrid.hex_to_world(cell, Domain.HEX_SIZE)
+		tile.material_override = _tile_mat(cell, "none")
+		tile.position = HexGrid.hex_to_world(cell, hex_size)
 		tile.position.y = 0.03            # appena sopra la mappa
 		tile.add_to_group(TILE_GROUP)
 		tile.set_meta("cell", cell)
@@ -163,7 +179,7 @@ func _build_map() -> void:
 		var body := StaticBody3D.new()
 		var col := CollisionShape3D.new()
 		var shape := CylinderShape3D.new()
-		shape.radius = Domain.HEX_SIZE * 0.92
+		shape.radius = hex_size * 0.92
 		shape.height = 0.2
 		col.shape = shape
 		body.add_child(col)
@@ -178,7 +194,7 @@ func _build_map() -> void:
 func _build_ground() -> void:
 	var ground := MeshInstance3D.new()
 	var plane := PlaneMesh.new()
-	plane.size = Vector2(36, 36)
+	plane.size = Vector2(map_world_size, map_world_size)
 	ground.mesh = plane
 	var gm := StandardMaterial3D.new()
 	var tex := _load_texture("res://assets/maps/arena.webp")
@@ -188,21 +204,27 @@ func _build_ground() -> void:
 		gm.albedo_color = Color(0.15, 0.16, 0.14)
 	gm.roughness = 1.0
 	ground.material_override = gm
-	ground.position.y = 0.0
+	ground.position = Vector3(map_offset.x, -0.01, map_offset.y)
+	ground.rotation_degrees.y = map_y_rotation
 	add_child(ground)
 
 
-## Materiale semi-trasparente della tessera (griglia sovrapposta alla mappa).
-func _tile_mat(cell: Vector2i, highlight: bool) -> StandardMaterial3D:
+## Materiale semi-trasparente della tessera. mode: "none" | "move" | "attack".
+func _tile_mat(cell: Vector2i, mode: String) -> StandardMaterial3D:
 	var m := StandardMaterial3D.new()
 	m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	if highlight:
-		m.albedo_color = Color(0.95, 0.82, 0.25, 0.55)
-		m.emission_enabled = true
-		m.emission = Color(0.5, 0.42, 0.1)
-	else:
-		var alt := ((cell.x + cell.y) & 1) != 0
-		m.albedo_color = Color(0.85, 0.9, 1.0, 0.16) if alt else Color(0.6, 0.7, 0.85, 0.13)
+	m.emission_enabled = true
+	match mode:
+		"move":
+			m.albedo_color = Color(0.95, 0.82, 0.25, 0.5)
+			m.emission = Color(0.5, 0.42, 0.1)
+		"attack":
+			m.albedo_color = Color(0.95, 0.25, 0.2, 0.55)
+			m.emission = Color(0.5, 0.1, 0.08)
+		_:
+			m.emission_enabled = false
+			var alt := ((cell.x + cell.y) & 1) != 0
+			m.albedo_color = Color(0.85, 0.9, 1.0, 0.10) if alt else Color(0.6, 0.7, 0.85, 0.08)
 	return m
 
 
@@ -235,9 +257,12 @@ func _spawn_pawns() -> void:
 		pawn.set("tint", colors[i])
 		pawn.set("mesh_path", "res://assets/miniatures/%s.obj" % chars[i].to_lower())
 		add_child(pawn)
-		pawn.position = HexGrid.hex_to_world(f.cell, Domain.HEX_SIZE)
+		pawn.position = HexGrid.hex_to_world(f.cell, hex_size)
 		pawn.set_meta("fighter_index", i)
 		_pawns.append(pawn)
+	# Orientamento iniziale: ciascuno verso l'avversario.
+	state.fighters[0].facing = AI.facing_toward(state.fighters[0].cell, state.fighters[1].cell)
+	state.fighters[1].facing = AI.facing_toward(state.fighters[1].cell, state.fighters[0].cell)
 
 
 # ─── Selezione e movimento ───────────────────────────────────────────────────
@@ -249,31 +274,89 @@ func _select_pawn(index: int) -> void:
 	_highlighted = HexGrid.reachable(f.cell, move_budget, state.is_blocked)
 	for cell in _highlighted:
 		if _tiles.has(cell):
-			(_tiles[cell] as MeshInstance3D).material_override = _tile_mat(cell, true)
+			(_tiles[cell] as MeshInstance3D).material_override = _tile_mat(cell, "move")
 
 
 func _clear_highlight() -> void:
 	for cell in _highlighted:
 		if _tiles.has(cell):
-			(_tiles[cell] as MeshInstance3D).material_override = _tile_mat(cell, false)
+			(_tiles[cell] as MeshInstance3D).material_override = _tile_mat(cell, "none")
 	_highlighted.clear()
+
+
+# ─── Orientamento (facing) e anteprima arco d'attacco ────────────────────────
+
+## Angolo mondo (attorno a Y) per orientare la pedina nella direzione `facing`.
+func _facing_angle(cell: Vector2i, facing: int) -> float:
+	var a := HexGrid.hex_to_world(cell, hex_size)
+	var b := HexGrid.hex_to_world(cell + HexGrid.DIRS[facing % 6], hex_size)
+	var d := b - a
+	return atan2(d.x, d.z)
+
+
+func _clear_attack_preview() -> void:
+	for cell in _attack_preview:
+		if _tiles.has(cell):
+			(_tiles[cell] as MeshInstance3D).material_override = _tile_mat(cell, "none")
+	_attack_preview.clear()
+
+
+## Mostra in rosso gli esagoni colpiti dalla carta selezionata (se attacco).
+func _on_card_selected(card_data: Dictionary) -> void:
+	_clear_attack_preview()
+	if card_data.get("type", "") != "attack":
+		return
+	var g := CardDB.geometry(int(card_data.get("id", -1)))
+	var f := state.fighters[0]
+	var cells := Duel.attack_cells(f.cell, f.facing, g, 1)
+	for cell in cells:
+		if _tiles.has(cell) and not _highlighted.has(cell):
+			_attack_preview.append(cell)
+			(_tiles[cell] as MeshInstance3D).material_override = _tile_mat(cell, "attack")
+
+
+## Ruota il giocatore di `delta` passi e aggiorna pedina e anteprima.
+func _rotate_player(delta: int) -> void:
+	var f := state.fighters[0]
+	f.facing = (f.facing + delta + 6) % 6
+	_apply_pawn_facing(0)
+	if not _attack_preview.is_empty() or _selected_card_is_attack():
+		_on_card_selected(_selected_card)
+
+
+func _selected_card_is_attack() -> bool:
+	return _selected_card.get("type", "") == "attack"
+
+
+func _apply_pawn_facing(i: int) -> void:
+	_pawns[i].call("face", _facing_angle(state.fighters[i].cell, state.fighters[i].facing))
 
 
 func _move_active_to(cell: Vector2i) -> void:
 	if not _highlighted.has(cell):
 		return
-	# Il giocatore riposiziona la propria pedina (pedina 0).
-	state.fighters[0].cell = cell
+	# Il giocatore riposiziona la propria pedina (pedina 0) e si orienta verso la cella.
+	var f := state.fighters[0]
+	f.facing = AI.facing_toward(f.cell, cell)
+	f.cell = cell
 	var pawn := _pawns[0]
-	var dest := HexGrid.hex_to_world(cell, Domain.HEX_SIZE)
+	var dest := HexGrid.hex_to_world(cell, hex_size)
 	var tw := create_tween()
 	tw.tween_property(pawn, "position", dest, 0.25).set_trans(Tween.TRANS_SINE)
+	_apply_pawn_facing(0)
 	_select_pawn(0)
+	if _selected_card_is_attack():
+		_on_card_selected(_selected_card)
 
 
 # ─── Input: camera orbitale + picking ────────────────────────────────────────
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_Q:
+			_rotate_player(-1); return
+		elif event.keycode == KEY_E:
+			_rotate_player(1); return
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_RIGHT:
 			_dragging = event.pressed

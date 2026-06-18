@@ -19,14 +19,32 @@ var characters: Array = []            ## elenco personaggi
 var decks: Dictionary = {}            ## slug (String) -> Array[carta del mazzo]
 var geom: Dictionary = {}             ## id (int) -> geometria/effetti (GEOMETRY_SCHEMA.md)
 var char_stats: Dictionary = {}       ## personaggio (String) -> {wound_limit, hand_limit, weapons}
+var images: Dictionary = {}           ## id (int) -> percorso relativo immagine carta
 
 
 func _ready() -> void:
 	_load_pool()
 	_load_decks()
 	_load_geometry()
-	print("[CardDB] %d carte, %d personaggi, %d mazzi, %d geometrie" % [
-		cards.size(), characters.size(), decks.size(), geom.size()])
+	_load_images()
+	print("[CardDB] %d carte, %d personaggi, %d mazzi, %d geometrie, %d immagini" % [
+		cards.size(), characters.size(), decks.size(), geom.size(), images.size()])
+
+
+func _load_images() -> void:
+	var path := "res://data/cards/card_images.json"
+	if not FileAccess.file_exists(path):
+		return
+	var parsed = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if typeof(parsed) != TYPE_DICTIONARY:
+		return
+	for k in parsed.get("by_id", {}).keys():
+		images[int(k)] = parsed["by_id"][k]
+
+
+## Percorso dell'immagine reale della carta (relativo a assets/cards/), o "".
+func image_for(id: int) -> String:
+	return images.get(id, "")
 
 
 func _load_geometry() -> void:

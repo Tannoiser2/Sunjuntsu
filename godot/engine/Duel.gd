@@ -67,7 +67,11 @@ func _autoplan_ai() -> void:
 			var dest := AI.move_target(state, f)
 			if dest != f.cell:
 				f.cell = dest
-				fighter_updated.emit(i)
+			# L'IA si orienta verso l'avversario.
+			var foe := state.opponent_of(f)
+			if foe != null:
+				f.facing = AI.facing_toward(f.cell, foe.cell)
+			fighter_updated.emit(i)
 			var pick := AI.choose_card(state, f)
 			if pick != -1:
 				f.planned = pick
@@ -152,10 +156,10 @@ func _resolve_card(i: int, block_ready: Dictionary, log: Array) -> void:
 			if foe_idx == -1:
 				return
 			var foe := state.fighters[foe_idx]
-			var dist := HexGrid.distance(f.cell, foe.cell)
-			var reach: int = int(g.get("range", _card_range(c)))
-			if dist > reach:
-				log.append("%s usa %s ma il bersaglio è troppo lontano (%d>%d)" % [f.character, name, dist, reach])
+			var cells := attack_cells(f.cell, f.facing, g, _card_range(c))
+			if not cells.has(foe.cell):
+				var dist := HexGrid.distance(f.cell, foe.cell)
+				log.append("%s usa %s ma il bersaglio è fuori arco/portata (dist %d)" % [f.character, name, dist])
 				return
 			if block_ready.get(foe_idx, false):
 				block_ready[foe_idx] = false
@@ -264,6 +268,27 @@ func _check_winner() -> int:
 	if alive.size() == 1:
 		return alive[0]
 	return -1
+
+
+## Esagoni bersaglio di un attacco, dato origine, direzione (facing) e geometria.
+## Usa gli archi relativi trascritti (`dirs`, 0=fronte orario) estesi fino a
+## `range`. Se la geometria non ha `dirs`, ripiega su "tutti gli esagoni entro
+## la portata" (comportamento astratto).
+static func attack_cells(origin: Vector2i, facing: int, geom: Dictionary, fallback_range: int) -> Array[Vector2i]:
+	var rng: int = int(geom.get("range", fallback_range))
+	rng = maxi(1, rng)
+	var dirs = geom.get("dirs", [])
+	var out: Array[Vector2i] = []
+	if dirs.is_empty():
+		for cell in HexGrid.hexes_in_range(origin, rng):
+			if cell != origin:
+				out.append(cell)
+		return out
+	for d in dirs:
+		var ad: int = (facing + int(d)) % 6
+		for k in range(1, rng + 1):
+			out.append(origin + HexGrid.DIRS[ad] * k)
+	return out
 
 
 static func _card_range(c: Dictionary) -> int:

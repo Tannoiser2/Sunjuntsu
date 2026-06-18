@@ -6,6 +6,7 @@
 extends CanvasLayer
 
 signal card_played(card_data: Dictionary)
+signal card_selected(card_data: Dictionary)
 
 @onready var hand: Control = $Hand
 @onready var info: Label = $Top/Info
@@ -19,6 +20,7 @@ func _ready() -> void:
 			label += " (ini %s)" % str(d.get("initiative"))
 		info.text = "Carta giocata: %s" % label
 		card_played.emit(d))
+	hand.card_selected.connect(func(d): card_selected.emit(d))
 
 
 ## Mostra in mano le carte indicate (array di dizionari carta).

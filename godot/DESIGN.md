@@ -115,6 +115,14 @@ carte.
    > mazzo a inizio turno), limite ferite effettivo ridotto dai veleni, sconfitta
    > per stordimento. Prossimo (se richiesto): Jin Sakai. Counter, icona
    > esecuzione e offset esatti dell'arco restano da raffinare.
+   > **Facing/archi [fatto]**: i combattenti hanno un orientamento (0..5); gli
+   > attacchi colpiscono gli esagoni dell'arco (`dirs`) ruotato secondo il facing,
+   > esteso fino a `range`. Il giocatore ruota con Q/E (o orientandosi al
+   > movimento), l'IA si volge verso l'avversario; anteprima dell'arco in rosso.
+   > **Carte reali in mano**: `data/cards/card_images.json` mappa Card ID →
+   > immagine ritagliata (verificata in trascrizione), mostrata nell'HUD.
+   > **Mappa**: `assets/maps/arena.webp` come piano; allineamento griglia↔mappa
+   > calibrabile (`hex_size`, `map_world_size`, `map_offset`, `map_y_rotation`).
 7. **[fatto] IA solo** (`engine/AI.gd`): euristica per portata e tipo di carta
    (attacca se a tiro, difende se minacciata, medita altrimenti) + movimento di
    avvicinamento. Ispirata a `solo_AI_tables_v1.xlsx`; il "mazzo IA" ufficiale

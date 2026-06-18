@@ -25,6 +25,29 @@ func _ready() -> void:
 	else:
 		_add_placeholder(mat)
 	_add_base()
+	_add_facing_indicator()
+
+
+## Ruota la pedina (attorno a Y) verso l'angolo mondo indicato.
+func face(angle: float) -> void:
+	rotation.y = angle
+
+
+func _add_facing_indicator() -> void:
+	var nose := MeshInstance3D.new()
+	var cone := CylinderMesh.new()
+	cone.top_radius = 0.0
+	cone.bottom_radius = 0.16
+	cone.height = 0.42
+	nose.mesh = cone
+	nose.rotation_degrees = Vector3(90, 0, 0)   # punta verso +Z (avanti)
+	nose.position = Vector3(0, 0.12, 0.55)
+	var m := StandardMaterial3D.new()
+	m.albedo_color = tint.lightened(0.3)
+	m.emission_enabled = true
+	m.emission = tint
+	nose.material_override = m
+	add_child(nose)
 
 
 func _load_mesh(path: String) -> Mesh:

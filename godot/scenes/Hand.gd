@@ -5,6 +5,7 @@
 extends Control
 
 signal card_played(card_data: Dictionary)
+signal card_selected(card_data: Dictionary)
 
 const CardView := preload("res://scenes/CardView.gd")
 const FAN_SPREAD := 0.10     ## rotazione massima (rad) ai bordi del ventaglio
@@ -59,3 +60,4 @@ func _on_card_clicked(cv) -> void:
 		_selected.set_selected(false)
 	_selected = cv
 	cv.set_selected(true)
+	card_selected.emit(cv.card_data)

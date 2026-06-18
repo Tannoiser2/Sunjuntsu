@@ -67,6 +67,19 @@ static func move_target(state: GameState, me: GameState.Fighter) -> Vector2i:
 	return best
 
 
+## Direzione (0..5) che punta meglio dalla cella `from` verso `to`.
+static func facing_toward(from: Vector2i, to: Vector2i) -> int:
+	var best := 0
+	var best_d := 9999
+	for d in range(6):
+		var step := from + HexGrid.DIRS[d]
+		var dist := HexGrid.distance(step, to)
+		if dist < best_d:
+			best_d = dist
+			best = d
+	return best
+
+
 static func _affordable(me: GameState.Fighter, id: int) -> bool:
 	return me.focus >= int(CardDB.card(id).get("focus", 0))
 
