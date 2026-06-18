@@ -36,6 +36,7 @@ var _attack_preview: Array[Vector2i] = []
 var _selected_card: Dictionary = {}
 var _move_used: bool = false       ## movimento della carta corrente già speso
 var _move_states: Dictionary = {}  ## cella -> Array[int] facing legali (dalla carta)
+var _kamae_used: bool = false      ## cambio kamae della carta corrente già fatto
 var _ground: MeshInstance3D
 
 
@@ -61,6 +62,7 @@ func _start_duel() -> void:
 	_duel.fighter_updated.connect(_on_fighter_updated)
 	_duel.duel_over.connect(_on_duel_over)
 	_hud.card_selected.connect(_on_card_selected)
+	_hud.kamae_chosen.connect(_on_kamae_chosen)
 	_duel.start()
 	_refresh_hand()
 	_refresh_status()
@@ -74,7 +76,9 @@ func _on_card_played(card_data: Dictionary) -> void:
 		return
 	_selected_card = {}
 	_move_used = false
+	_kamae_used = false
 	_clear_overlays()
+	_hud.hide_kamae()
 	if _duel.plan_card(0, id):
 		_refresh_hand()
 
@@ -97,6 +101,7 @@ func _on_duel_over(winner: int) -> void:
 	_hud.set_info("⚔ Duello terminato — %s" % who)
 	_hud.show_hand([])
 	_clear_overlays()
+	_hud.hide_kamae()
 
 
 ## Costruisce la mano del giocatore (pedina 0) come schede dati.
@@ -270,6 +275,11 @@ func _spawn_pawns() -> void:
 	# Orientamento iniziale: ciascuno verso l'avversario.
 	state.fighters[0].facing = AI.facing_toward(state.fighters[0].cell, state.fighters[1].cell)
 	state.fighters[1].facing = AI.facing_toward(state.fighters[1].cell, state.fighters[0].cell)
+	# Posizione Kamae iniziale dall'albero del personaggio.
+	for i in range(2):
+		var tree := CardDB.kamae_tree_for(state.fighters[i].character.to_lower())
+		var start_slug: String = tree.get("start", "neutral")
+		state.fighters[i].stance = Domain.STANCE_FROM_SLUG.get(start_slug, Domain.Stance.NEUTRAL)
 
 
 # ─── Selezione e movimento ───────────────────────────────────────────────────
@@ -329,7 +339,44 @@ func _facing_angle(cell: Vector2i, facing: int) -> float:
 func _on_card_selected(card_data: Dictionary) -> void:
 	_selected_card = card_data
 	_move_used = false
+	_kamae_used = false
 	_refresh_overlays()
+	_refresh_kamae_chooser()
+
+
+## Mostra il selettore Kamae se la carta consente di cambiare posizione.
+func _refresh_kamae_chooser() -> void:
+	if _selected_card.is_empty() or _kamae_used:
+		_hud.hide_kamae()
+		return
+	var g := CardDB.geometry(int(_selected_card.get("id", -1)))
+	if not bool(g.get("change_kamae", false)):
+		_hud.hide_kamae()
+		return
+	var f := state.fighters[0]
+	var tree := CardDB.kamae_tree_for(f.character.to_lower())
+	var n: int = int(g.get("kamae_change", 1))   # "cambia fino a N rami" (default 1)
+	var cur: String = Domain.STANCE_SLUG[f.stance]
+	var targets := Kamae.change_targets(tree, cur, n)
+	_hud.show_kamae(cur, targets)
+
+
+## Il giocatore sceglie la nuova posizione Kamae (con focus dai rami rosa).
+func _on_kamae_chosen(slug: String) -> void:
+	if _kamae_used or _selected_card.is_empty():
+		return
+	var f := state.fighters[0]
+	var g := CardDB.geometry(int(_selected_card.get("id", -1)))
+	var tree := CardDB.kamae_tree_for(f.character.to_lower())
+	var n: int = int(g.get("kamae_change", 1))
+	var targets := Kamae.change_targets(tree, Domain.STANCE_SLUG[f.stance], n)
+	if not targets.has(slug):
+		return
+	f.gain_focus(int(targets[slug]))          # focus dai rami rosa
+	f.stance = Domain.STANCE_FROM_SLUG[slug]
+	_kamae_used = true
+	_hud.hide_kamae()
+	_refresh_status()
 
 
 ## Ruota il giocatore solo tra i facing consentiti dalla carta selezionata.

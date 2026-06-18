@@ -20,6 +20,7 @@ var decks: Dictionary = {}            ## slug (String) -> Array[carta del mazzo]
 var geom: Dictionary = {}             ## id (int) -> geometria/effetti (GEOMETRY_SCHEMA.md)
 var char_stats: Dictionary = {}       ## personaggio (String) -> {wound_limit, hand_limit, weapons}
 var images: Dictionary = {}           ## id (int) -> percorso relativo immagine carta
+var kamae_trees: Dictionary = {}      ## slug personaggio -> albero kamae
 
 
 func _ready() -> void:
@@ -27,6 +28,7 @@ func _ready() -> void:
 	_load_decks()
 	_load_geometry()
 	_load_images()
+	_load_kamae_trees()
 	print("[CardDB] %d carte, %d personaggi, %d mazzi, %d geometrie, %d immagini" % [
 		cards.size(), characters.size(), decks.size(), geom.size(), images.size()])
 
@@ -45,6 +47,20 @@ func _load_images() -> void:
 ## Percorso dell'immagine reale della carta (relativo a assets/cards/), o "".
 func image_for(id: int) -> String:
 	return images.get(id, "")
+
+
+func _load_kamae_trees() -> void:
+	var path := "res://data/cards/kamae_trees.json"
+	if not FileAccess.file_exists(path):
+		return
+	var parsed = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if typeof(parsed) == TYPE_DICTIONARY:
+		kamae_trees = parsed.get("trees", {})
+
+
+## Albero Kamae del personaggio (slug, es. "warrior"), o {} se assente.
+func kamae_tree_for(slug: String) -> Dictionary:
+	return kamae_trees.get(slug, {})
 
 
 func _load_geometry() -> void:

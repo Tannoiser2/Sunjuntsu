@@ -50,6 +50,15 @@ const STANCE_FROM_STRING := {
 ## Ordine di spareggio iniziativa a parità di velocità+tipo (dall'asterisco).
 const STANCE_TIE_ORDER := [Stance.AGGRESSION, Stance.BALANCE, Stance.DETERMINATION, Stance.NEUTRAL]
 
+const STANCE_SLUG := {
+	Stance.AGGRESSION: "aggression", Stance.BALANCE: "balance",
+	Stance.DETERMINATION: "determination", Stance.NEUTRAL: "neutral",
+}
+const STANCE_FROM_SLUG := {
+	"aggression": Stance.AGGRESSION, "balance": Stance.BALANCE,
+	"determination": Stance.DETERMINATION, "neutral": Stance.NEUTRAL,
+}
+
 
 # ─── Tipi di carta (dal campo Keywords) ──────────────────────────────────────
 
