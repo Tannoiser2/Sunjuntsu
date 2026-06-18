@@ -170,12 +170,14 @@ func _autoplan_ai() -> void:
 		f.planned = f.draw_pile.pop_back()   # rivela la cima del mazzo
 		# In modalità non interattiva (test) muovi subito; in interattiva lo fa la scena.
 		if not interactive:
-			var dest := AI.move_target(state, f)
-			if dest != f.cell and not state.is_blocked(dest):
-				f.cell = dest
-			var foe := state.opponent_of(f)
-			if foe != null:
-				f.facing = AI.facing_toward(f.cell, foe.cell)
+			var g := CardDB.geometry(f.planned)
+			if g.has("move"):
+				var plan := AI.plan_move(state, f, g)   # priorità solitario
+				f.cell = plan["cell"]; f.facing = plan["facing"]
+			else:
+				var foe := state.opponent_of(f)
+				if foe != null:
+					f.facing = AI.facing_toward(f.cell, foe.cell)
 			fighter_updated.emit(i)
 
 
@@ -728,7 +730,7 @@ func _try_counter(def_idx: int, att_idx: int, atk_speed: int, log: Array) -> voi
 	if not dfn.is_ai:
 		var pick := -1
 		for cid in dfn.hand:
-			if CardDB.card(cid).get("type", "") == "attack":
+			if CardDB.card(cid).get("type", "") == "attack" and not is_core(cid):
 				pick = cid
 				break
 		if pick == -1:
