@@ -7,7 +7,9 @@ extends CanvasLayer
 
 signal card_played(card_data: Dictionary)
 signal card_selected(card_data: Dictionary)
+signal card_hovered(card_data: Dictionary, entered: bool)
 signal kamae_chosen(slug: String)
+signal confirm_pressed()
 
 @onready var hand: Control = $Hand
 @onready var info: Label = $Top/Info
@@ -38,9 +40,11 @@ func _ready() -> void:
 		info.text = "Carta giocata: %s" % label
 		card_played.emit(d))
 	hand.card_selected.connect(func(d): card_selected.emit(d))
+	hand.card_hovered.connect(func(d, e): card_hovered.emit(d, e))
 	_build_kamae_chooser()
 	_build_kamae_tree()
 	_build_played_slot()
+	_build_confirm_button()
 
 
 ## Riquadro "carta giocata": mostra la carta programmata finché non è scartata a
@@ -76,6 +80,38 @@ func show_played_card(file: String, name: String) -> void:
 
 func hide_played_card() -> void:
 	_played_panel.visible = false
+
+
+var _confirm_btn: Button
+
+
+## Pulsante "Conferma azione" mostrato durante la TUA risoluzione: rende esplicita
+## la chiusura del turno (equivale a INVIO / click sul bersaglio rosso).
+func _build_confirm_button() -> void:
+	_confirm_btn = Button.new()
+	_confirm_btn.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	_confirm_btn.anchor_left = 1.0
+	_confirm_btn.anchor_top = 1.0
+	_confirm_btn.anchor_right = 1.0
+	_confirm_btn.anchor_bottom = 1.0
+	_confirm_btn.offset_left = -210
+	_confirm_btn.offset_top = -130
+	_confirm_btn.offset_right = -20
+	_confirm_btn.offset_bottom = -70
+	_confirm_btn.text = "Conferma ▶ (INVIO)"
+	_confirm_btn.add_theme_font_size_override("font_size", 20)
+	_confirm_btn.pressed.connect(func(): confirm_pressed.emit())
+	add_child(_confirm_btn)
+	_confirm_btn.visible = false
+
+
+func show_confirm(label: String = "Conferma ▶ (INVIO)") -> void:
+	_confirm_btn.text = label
+	_confirm_btn.visible = true
+
+
+func hide_confirm() -> void:
+	_confirm_btn.visible = false
 
 
 func _build_kamae_tree() -> void:

@@ -71,6 +71,8 @@ func _start_duel() -> void:
 	_duel.duel_over.connect(_on_duel_over)
 	_duel.phase_changed.connect(_on_phase_changed)
 	_hud.card_selected.connect(_on_card_selected)
+	_hud.card_hovered.connect(_on_card_hovered)
+	_hud.confirm_pressed.connect(_confirm_resolution)
 	_hud.kamae_chosen.connect(_on_kamae_chosen)
 	_duel.start()
 	# Carta Kamae del giocatore + segnalino della posizione.
@@ -96,6 +98,7 @@ func _on_phase_changed(p: int) -> void:
 	_kamae_used = false
 	_clear_overlays()
 	_hud.hide_kamae()
+	_hud.hide_confirm()
 	_hud.hide_played_card()
 	_sync_pawns()
 	_refresh_hand()
@@ -161,11 +164,13 @@ func _on_await_resolution(i: int) -> void:
 		_selected_card["id"] = state.fighters[0].planned
 		_refresh_overlays()
 		_refresh_kamae_chooser()
+		_hud.show_confirm()
 		_hud.set_info("⚔ Tua risoluzione: %s" % _selected_card.get("name", "?"))
 	else:
 		_phase_mode = "ai"
 		_clear_overlays()
 		_hud.hide_kamae()
+		_hud.hide_confirm()
 		_hud.set_info("L'avversario agisce…")
 		_run_ai_resolution(i)
 
@@ -198,6 +203,7 @@ func _confirm_resolution() -> void:
 	_phase_mode = "wait"
 	_clear_overlays()
 	_hud.hide_kamae()
+	_hud.hide_confirm()
 	_selected_card = {}
 	_duel.resolve_current()
 
@@ -208,6 +214,7 @@ func _on_turn_resolved(log: Array) -> void:
 	_selected_card = {}
 	_clear_overlays()
 	_hud.hide_kamae()
+	_hud.hide_confirm()
 	_sync_pawns()
 	_refresh_hand()
 	_refresh_status()
@@ -221,6 +228,7 @@ func _on_duel_over(winner: int) -> void:
 	_hud.show_hand([])
 	_clear_overlays()
 	_hud.hide_kamae()
+	_hud.hide_confirm()
 
 
 ## Costruisce la mano del giocatore (pedina 0) come schede dati.
@@ -428,23 +436,32 @@ func _clear_overlays() -> void:
 ##  1) prima il MOVIMENTO consentito (giallo) — passi/rotazioni della carta;
 ##  2) dopo aver mosso (o se la carta non muove), i BERSAGLI d'attacco (rosso).
 func _refresh_overlays() -> void:
+	_draw_overlays_for(_selected_card, _move_used)
+
+
+## Disegna sulla mappa l'azione contestuale della carta `card`:
+##  giallo = movimento (FASE 1), rosso = bersagli d'attacco (FASE 2).
+## `move_used` = true salta la fase movimento (già mossa o anteprima post-mossa).
+## Usata sia per la carta selezionata/in risoluzione sia per l'anteprima al
+## passaggio del mouse.
+func _draw_overlays_for(card: Dictionary, move_used: bool) -> void:
 	_clear_overlays()
-	if _selected_card.is_empty():
+	if card.is_empty():
 		return
 	var f := state.fighters[0]
-	var id := int(_selected_card.get("id", -1))
+	var id := int(card.get("id", -1))
 	var g := CardDB.geometry(id)
 	# Carta non giocabile nella Kamae attuale: nessun overlay.
 	if not Duel.playable(f, id):
 		var req: String = g.get("kamae_req", "")
 		_hud.set_hint("⛔ %s: giocabile solo in Kamae %s (sei in %s)" % [
-			_selected_card.get("name", "?"),
+			card.get("name", "?"),
 			Domain.STANCE_NAMES.get(Domain.STANCE_FROM_SLUG.get(req, -1), req),
 			Domain.STANCE_NAMES[f.stance]])
 		return
 	# Celle di movimento (solo se non già mosso).
 	var move_cells: Array = []
-	if not _move_used:
+	if not move_used:
 		_move_states = {}
 		if g.has("move"):
 			_move_states = Move.reachable_by_cell(f.cell, f.facing, g["move"], state.is_blocked, Domain.STANCE_SLUG[f.stance])
@@ -463,13 +480,13 @@ func _refresh_overlays() -> void:
 			if _tiles.has(cell):
 				(_tiles[cell] as MeshInstance3D).material_override = _tile_mat(cell, "move")
 		_hud.set_hint("Muovi (giallo) · Q/E ruota · SPAZIO = non muovere · INVIO = risolvi" + sfx)
-	elif _selected_card.get("type", "") == "attack":
+	elif card.get("type", "") == "attack":
 		# FASE 2 — bersagli attaccabili (rosso). Schema v2 (celle per-esagono).
 		for cell in Duel.attack_v2_cells(f.cell, f.facing, g, 1):
 			if _tiles.has(cell):
 				_attack_preview.append(cell)
 				(_tiles[cell] as MeshInstance3D).material_override = _tile_mat(cell, "attack")
-		_hud.set_hint("Bersagli (rosso) · Q/E ruota · INVIO = attacca/risolvi" + sfx)
+		_hud.set_hint("Bersagli (rosso) · click sul rosso o INVIO = attacca · Q/E ruota" + sfx)
 	else:
 		_hud.set_hint("INVIO = risolvi · Q/E ruota" + sfx)
 
@@ -513,6 +530,20 @@ func _on_card_selected(card_data: Dictionary) -> void:
 	_refresh_overlays()   # anteprima informativa (il movimento avverrà in risoluzione)
 	_hud.hide_kamae()
 	_hud.set_hint("Anteprima: giallo = mosse della carta, rosso = arco. 2° click = PROGRAMMA (coperta).")
+
+
+## Passaggio del mouse su una carta in mano: la carta si alza (CardView) e qui
+## mostriamo la sua azione contestuale sulla mappa. Uscendo, la mappa torna allo
+## stato precedente (overlay della carta selezionata, se c'è, altrimenti pulita).
+## Attivo solo in pianificazione: durante la risoluzione gli overlay sono guidati
+## dalla carta in corso e non vanno disturbati.
+func _on_card_hovered(card_data: Dictionary, entered: bool) -> void:
+	if _phase_mode != "planning":
+		return
+	if entered:
+		_draw_overlays_for(card_data, false)   # anteprima: movimento da fermo
+	else:
+		_refresh_overlays()                     # ripristina la selezione (o pulisci)
 
 
 ## Parametri dell'effetto "change_kamae" della carta (dentro `effects`):
@@ -728,4 +759,14 @@ func _try_pick(screen_pos: Vector2) -> void:
 		return
 	var collider = hit["collider"]
 	if collider and collider.has_meta("cell"):
-		_move_active_to(collider.get_meta("cell"))
+		_click_cell(collider.get_meta("cell"))
+
+
+## Click su una cella durante la TUA risoluzione:
+##  · cella gialla (movimento) → muovi lì;
+##  · cella rossa (bersaglio)  → conferma l'attacco (chiude il turno).
+func _click_cell(cell: Vector2i) -> void:
+	if _phase_mode == "resolving" and _resolving_index == 0 and _attack_preview.has(cell):
+		_confirm_resolution()
+		return
+	_move_active_to(cell)
