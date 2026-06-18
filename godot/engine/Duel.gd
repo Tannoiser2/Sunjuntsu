@@ -130,19 +130,45 @@ func _resolve_turn() -> void:
 	_cleanup(log)
 
 
+## Ordine di risoluzione: velocità d'iniziativa decrescente; a parità, ordine di
+## tipo (difesa→attacco→meditazione→base); a ulteriore parità, ordine di Kamae.
 func _initiative_order() -> Array:
 	var arr: Array = []
 	for i in range(state.fighters.size()):
-		arr.append(i)
-	arr.sort_custom(func(a, b): return _speed_of(a) > _speed_of(b))
+		if state.fighters[i].planned != -1:
+			arr.append(i)
+	arr.sort_custom(_cmp_initiative)
 	return arr
 
 
+func _cmp_initiative(a: int, b: int) -> bool:
+	var sa := _speed_of(a)
+	var sb := _speed_of(b)
+	if sa != sb:
+		return sa > sb
+	var ta := _type_rank(a)
+	var tb := _type_rank(b)
+	if ta != tb:
+		return ta < tb
+	var ka := Domain.STANCE_TIE_ORDER.find(state.fighters[a].stance)
+	var kb := Domain.STANCE_TIE_ORDER.find(state.fighters[b].stance)
+	return ka < kb
+
+
+## Velocità d'iniziativa effettiva: scelta variabile (max) meno gli azzoppamenti.
 func _speed_of(i: int) -> int:
 	var f := state.fighters[i]
 	if f.planned == -1:
 		return -999
-	return Domain.initiative_value(str(CardDB.card(f.planned).get("initiative", "")))
+	var sp := Domain.pick_initiative(str(CardDB.card(f.planned).get("initiative", "")), true)
+	if sp >= 0 and f.hobble > 0:
+		sp = maxi(1, sp - f.hobble)
+	return sp
+
+
+func _type_rank(i: int) -> int:
+	var t: String = CardDB.card(state.fighters[i].planned).get("type", "")
+	return int(Domain.TYPE_RESOLVE_ORDER.get(t, 4))
 
 
 func _resolve_card(i: int, block_ready: Dictionary, log: Array) -> void:

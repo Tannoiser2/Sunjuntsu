@@ -29,6 +29,28 @@ const RANK_COLORS := {
 }
 
 
+# ─── Kamae (posizioni di combattimento) ──────────────────────────────────────
+# L'anello scorre sull'albero Kamae. Le 4 posizioni + ordine per spareggio
+# iniziativa (Aggressività, Equilibrio, Determinazione, Neutra).
+
+enum Stance { AGGRESSION, BALANCE, DETERMINATION, NEUTRAL }
+
+const STANCE_NAMES := {
+	Stance.AGGRESSION: "Aggressività",
+	Stance.BALANCE: "Equilibrio",
+	Stance.DETERMINATION: "Determinazione",
+	Stance.NEUTRAL: "Neutra",
+}
+const STANCE_FROM_STRING := {
+	"aggression": Stance.AGGRESSION, "aggressivita": Stance.AGGRESSION,
+	"balance": Stance.BALANCE, "equilibrio": Stance.BALANCE,
+	"determination": Stance.DETERMINATION, "determinazione": Stance.DETERMINATION,
+	"neutral": Stance.NEUTRAL, "neutra": Stance.NEUTRAL,
+}
+## Ordine di spareggio iniziativa a parità di velocità+tipo (dall'asterisco).
+const STANCE_TIE_ORDER := [Stance.AGGRESSION, Stance.BALANCE, Stance.DETERMINATION, Stance.NEUTRAL]
+
+
 # ─── Tipi di carta (dal campo Keywords) ──────────────────────────────────────
 
 enum CardType { ATTACK, DEFENCE, MEDITATION, CORE, OTHER }
@@ -43,6 +65,35 @@ const CARD_TYPE_LABELS := {
 	CardType.MEDITATION: "Meditazione", CardType.CORE: "Base",
 	CardType.OTHER: "Altro",
 }
+
+## Ordine di risoluzione a parità di velocità: prima Difesa, poi Attacco,
+## poi Meditazione, infine Base (regolamento 1.5).
+const TYPE_RESOLVE_ORDER := {
+	"defence": 0, "attack": 1, "meditation": 2, "core": 3, "other": 4,
+}
+
+## Velocità d'iniziativa scelta da un valore grezzo. Per iniziativa variabile
+## (lista "7,6,5,4,3" o range "6-2") restituisce il massimo se prefer_high,
+## altrimenti il minimo. "=" e "-" → -1 (istantanee / nessuna).
+static func pick_initiative(raw: String, prefer_high: bool = true) -> int:
+	var s := raw.strip_edges()
+	if s == "" or s == "=" or s == "-":
+		return -1
+	var nums: Array[int] = []
+	# range "a-b"
+	if "-" in s and not ("," in s):
+		var parts := s.split("-")
+		if parts.size() == 2 and parts[0].strip_edges().is_valid_int() and parts[1].strip_edges().is_valid_int():
+			var a := int(parts[0]); var b := int(parts[1])
+			return maxi(a, b) if prefer_high else mini(a, b)
+	for tok in s.replace("/", ",").split(","):
+		var t := tok.strip_edges()
+		if t.is_valid_int():
+			nums.append(int(t))
+	if nums.is_empty():
+		return -1
+	nums.sort()
+	return nums[nums.size() - 1] if prefer_high else nums[0]
 
 
 # ─── Personaggi giocabili (con asset disponibili) ────────────────────────────

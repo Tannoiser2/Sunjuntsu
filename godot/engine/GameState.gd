@@ -11,7 +11,9 @@ class Fighter:
 	var character: String = "Warrior"          ## personaggio (chiave in CardDB)
 	var cell: Vector2i = Vector2i.ZERO        ## posizione sulla mappa esagonale
 	var facing: int = 0                        ## direzione (0..5), indice in HexGrid.DIRS
-	var kamae: int = Domain.Rank.STEEL         ## ramo kamae corrente
+	var kamae: int = Domain.Rank.STEEL         ## ramo kamae (rank) — legacy
+	var stance: int = Domain.Stance.NEUTRAL    ## posizione dell'anello Kamae
+	var hobble: int = 0                        ## carte azzoppato attive (-1 iniziativa cad.)
 	var focus: int = 0                         ## gettoni focus (max 3, vedi regolamento)
 	var hand: Array = []                       ## carte in mano (id int)
 	var draw_pile: Array = []                  ## mazzo da pescare (id int)

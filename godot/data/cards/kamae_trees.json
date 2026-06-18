@@ -1,0 +1,25 @@
+{
+  "note": "Alberi Kamae trascritti (best-effort) dalle carte #052 Guerriero e #022 Ronin. Nodi: aggression/balance/determination/neutral + focus (loto, ramo rosa = +1 focus quando attraversato). 'start' = posizione iniziale dell'anello. Adiacenze per 'Cambia Kamae fino a X'. DA VERIFICARE sul gioco fisico.",
+  "trees": {
+    "warrior": {
+      "start": "neutral",
+      "edges": [
+        {"a": "balance", "b": "focus", "pink": true},
+        {"a": "focus", "b": "aggression", "pink": true},
+        {"a": "determination", "b": "focus", "pink": true},
+        {"a": "determination", "b": "neutral", "pink": false},
+        {"a": "neutral", "b": "aggression", "pink": false}
+      ]
+    },
+    "ronin": {
+      "start": "neutral",
+      "edges": [
+        {"a": "focus", "b": "aggression", "pink": true},
+        {"a": "neutral", "b": "aggression", "pink": false},
+        {"a": "neutral", "b": "balance", "pink": false},
+        {"a": "balance", "b": "determination", "pink": false},
+        {"a": "determination", "b": "aggression", "pink": false}
+      ]
+    }
+  }
+}

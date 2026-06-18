@@ -116,10 +116,10 @@ func _refresh_hand() -> void:
 func _refresh_status() -> void:
 	var p := state.fighters[0]
 	var e := state.fighters[1]
-	_hud.set_info("Round %d   |   TU %s: ❤%d/%d ◈%d   —   IA %s: ❤%d/%d ◈%d" % [
+	_hud.set_info("Round %d  |  TU %s: ❤%d/%d ◈%d [%s]  —  IA %s: ❤%d/%d ◈%d [%s]" % [
 		state.round_num,
-		p.character, p.remaining_wounds(), p.wound_limit, p.focus,
-		e.character, e.remaining_wounds(), e.wound_limit, e.focus])
+		p.character, p.remaining_wounds(), p.wound_limit, p.focus, Domain.STANCE_NAMES[p.stance],
+		e.character, e.remaining_wounds(), e.wound_limit, e.focus, Domain.STANCE_NAMES[e.stance]])
 
 
 func _sync_pawns() -> void:
