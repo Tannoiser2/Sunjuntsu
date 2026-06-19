@@ -224,8 +224,28 @@ func _resolve_data() -> Dictionary:
 		"targets": targets,
 		"radius": state.map_radius,
 		"kamae": _kamae_reachable(),
+		"kamaeUI": _kamae_ui(),
 		"options": _option_briefs(),
 		"canConfirm": true,
+	}
+
+
+## Dati per la carta Kamae interattiva sul telefono (solo se è possibile cambiarla):
+## immagine carta, coordinate normalizzate dei nodi, posizione attuale e nodi raggiungibili.
+func _kamae_ui() -> Dictionary:
+	var reach := _kamae_reachable()
+	if reach.is_empty() or _rseat == -1:
+		return {}
+	var f := state.fighters[_rseat]
+	var tree := CardDB.kamae_tree_for(f.character.to_lower())
+	if tree.is_empty():
+		return {}
+	return {
+		"card": tree.get("card", ""),
+		"nodes": tree.get("nodes", {}),
+		"edges": tree.get("edges", []),
+		"at": Domain.STANCE_SLUG[f.stance],
+		"reach": reach,
 	}
 
 
