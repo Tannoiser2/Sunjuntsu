@@ -3,6 +3,17 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.53.0] — 2026-06-19
+### Controller telefono: mappa a tutto schermo, comandi grandi centrati, passi separati
+- La **mappa** in risoluzione ora occupa **tutto lo schermo** (più grande); al tocco sul posto
+  il telefono va **a schermo intero** (Fullscreen API).
+- I **comandi/scelte** non sono più piccoli a sinistra ma in un **pannello grande e centrato**
+  in basso (bottoni comodi).
+- **Movimento e rotazione separati** in passi distinti: *Passo 1 Movimento* (caselle gialle) →
+  *Passo 2 Rotazione* (bottoni grandi «Fronte / Fronte-Dx/…», niente più maniglie sulla mappa,
+  così non si rischia di toccare l'esagono sbagliato) → *Passo 3 Azione* (bersaglio rosso o
+  «Fine», più Kamae/OPPURE). Versione 0.53.0.
+
 ## [0.52.0] — 2026-06-19
 ### Tavolo online: setup che collassa a partita iniziata + schermo intero
 - Quando **entrambi i telefoni sono connessi** e la partita inizia, il pannello di
