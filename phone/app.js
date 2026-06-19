@@ -7,7 +7,7 @@ const LS = window.localStorage;
 const SVGNS = "http://www.w3.org/2000/svg";
 
 let ws = null, seat = -1, lastPrompt = null, board = null;
-let IMG_BASE = "";
+let IMG_BASE = "", MAP_BASE = "";
 let intentional = false, attempts = 0, reconnectTimer = null;
 
 // ── Connessione ──────────────────────────────────────────────────────────────
@@ -48,6 +48,7 @@ function connect() {
   const url = $("server").value.trim();
   const code = $("code").value.trim().toUpperCase();
   IMG_BASE = imgBaseFromWs(url);
+  MAP_BASE = IMG_BASE.replace("/cards/", "/maps/");
   setStatus("Connessione…"); setNet("Connessione…");
   try { ws = new WebSocket(url); } catch { scheduleReconnect(); return; }
   ws.onopen = () => { attempts = 0; setNet(""); ws.send(JSON.stringify({ t: "join", code, seat })); };
@@ -198,8 +199,17 @@ function renderResolve(d) {
   let minX = 1e9, minY = 1e9, maxX = -1e9, maxY = -1e9;
   const cells = inRange(R).map(([q, r]) => { const p = ax(q, r); minX = Math.min(minX, p.x); minY = Math.min(minY, p.y); maxX = Math.max(maxX, p.x); maxY = Math.max(maxY, p.y); return { q, r, p }; });
   const pad = S * 2;
-  const vb = `${minX - pad} ${minY - pad} ${(maxX - minX) + 2 * pad} ${(maxY - minY) + 2 * pad}`;
+  const bx = minX - pad, by = minY - pad, bw = (maxX - minX) + 2 * pad, bh = (maxY - minY) + 2 * pad;
+  const vb = `${bx} ${by} ${bw} ${bh}`;
   const root = svg("svg", { class: "map", viewBox: vb, preserveAspectRatio: "xMidYMid meet" });
+
+  // Texture vera della mappa (sotto le tessere), se raggiungibile.
+  if (MAP_BASE) {
+    const bg = svg("image", { x: bx, y: by, width: bw, height: bh, opacity: "0.92",
+      preserveAspectRatio: "xMidYMid slice" });
+    bg.setAttribute("href", MAP_BASE + "arena.webp");
+    root.appendChild(bg);
+  }
 
   // Tessere
   for (const { q, r, p } of cells) {
@@ -234,7 +244,9 @@ function renderResolve(d) {
 
   // Layout: mappa + pannello azioni
   const wrap = el("div", "resolve");
-  const mapWrap = el("div", "map-wrap"); mapWrap.appendChild(root); wrap.appendChild(mapWrap);
+  const mapWrap = el("div", "map-wrap");
+  const tilt = el("div", "map3d"); tilt.appendChild(root); mapWrap.appendChild(tilt);
+  wrap.appendChild(mapWrap);
   const acts = el("div", "acts");
   acts.appendChild(el("h3", null, d.card));
   acts.appendChild(el("div", "hint",
