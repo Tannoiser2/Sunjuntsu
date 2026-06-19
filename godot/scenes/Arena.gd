@@ -187,21 +187,22 @@ func _on_card_played(card_data: Dictionary) -> void:
 	if f.focus < cost:
 		_hud.set_hint("◈ Focus insufficiente: servono %d, ne hai %d" % [cost, f.focus])
 		return   # la carta resta in mano
-	if not _duel.plan_card(pi, id):   # → quando entrambi pronti parte begin_resolution()
-		_hud.set_hint("⛔ Impossibile programmare la carta ora (riprova).")
-		_refresh_hand()
-		return
-	# Programmata con successo: pulisci la selezione.
+	# Pulisci selezione/pulsante PRIMA di programmare: plan_card può avviare subito la
+	# Rivelazione (che mostra il pulsante «Avanti»), quindi non va nascosto dopo.
 	_selected_card = {}
 	_clear_overlays()
 	_hud.hide_kamae()
 	_hud.hide_confirm()
+	if not _duel.plan_card(pi, id):   # → quando entrambi pronti parte begin_resolution()
+		_hud.set_hint("⛔ Impossibile programmare la carta ora (riprova).")
+		_refresh_hand()
+		return
 	# 1v1: se l'altro umano deve ancora programmare, passa il dispositivo.
 	if _versus and state.phase == Domain.Phase.PLANNING:
 		_enter_handoff()
 		return
 	# La carta è bloccata (coperta). La RIVELAZIONE (che nasconde la mano e mostra
-	# l'ordine d'iniziativa) è già stata avviata da _on_cards_revealed durante plan_card.
+	# l'ordine d'iniziativa + «Avanti») è già stata avviata da _on_cards_revealed.
 
 
 ## 1v1 hot-seat: il giocatore corrente ha programmato; chiede di passare il
