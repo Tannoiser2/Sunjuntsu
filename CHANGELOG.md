@@ -3,6 +3,20 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.40.0] — 2026-06-19
+### Multiplayer companion — Tappa 4.1: tavolo 3D online + voce di menu
+- Nuova scena **`TableOnline`**: la vista TAVOLO online. Costruisce la board 3D, si collega
+  al relay, **mostra il codice stanza**, possiede il motore (`MatchHost`) e **disegna lo
+  stato pubblico** (posizioni, ferite/focus/Kamae, animazioni di combattimento) man mano
+  che i due telefoni decidono. Niente mano/HUD di scelta sul tavolo (sono sui telefoni).
+- **Menu**: nuova voce **"Online (tavolo + telefoni)"** che apre il tavolo; i giocatori si
+  collegano dalla pagina `phone/` con il codice mostrato. URL del relay in `Domain.ws_url`
+  (default `ws://127.0.0.1:8080`).
+- Protocollo/host: ora emettono eventi pubblici utili al tavolo — **snapshot board** (a
+  ogni cambiamento) e **"turn_of"** (di chi è il turno e in quale passo).
+- Resta da fare: ospitare il relay su un host sempre acceso (per giocare fuori dalla LAN) e
+  rifinire la UI telefono (immagini carte, riconnessione). Versione 0.40.0.
+
 ## [0.39.0] — 2026-06-19
 ### Multiplayer companion — Tappa 3: rete WebSocket + stanze + telefono
 - **Server relay** (`server/server.js`, Node `ws`): stanze con **codice** e instradamento

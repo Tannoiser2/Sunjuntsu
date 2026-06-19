@@ -137,6 +137,10 @@ const PLAYABLE := ["Warrior", "Ronin"]   ## "Jin Sakai" da aggiungere (carte JPG
 ## L'Arena la legge all'avvio per configurare le pedine e il flusso del turno.
 var game_mode: String = "solo"
 
+## URL del relay WebSocket per il tavolo online (companion). In LAN punta al PC che
+## ospita il server (server/server.js). Default: localhost.
+var ws_url: String = "ws://127.0.0.1:8080"
+
 
 # ─── Zone del corpo / ferite ─────────────────────────────────────────────────
 # Gli attacchi indicano le caselle del corpo colpite; le difese le proteggono.

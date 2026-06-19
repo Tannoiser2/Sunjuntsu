@@ -40,8 +40,25 @@ func _init(initial_state: GameState) -> void:
 	duel.await_resolution.connect(_on_await_resolution)
 	duel.await_instant_play.connect(_on_await_instant_play)
 	duel.combat_event.connect(func(kind, a, t, info): public_event.emit("combat", {"kind": kind, "attacker": a, "target": t, "info": info}))
+	duel.fighter_updated.connect(func(_i): _emit_board())
 	duel.turn_resolved.connect(func(log): public_event.emit("turn", {"log": log}))
 	duel.duel_over.connect(func(w): finished.emit(w))
+
+
+## Istantanea pubblica del campo per il TAVOLO (posizioni/ferite/focus/kamae).
+func _board_data() -> Dictionary:
+	var arr: Array = []
+	for f in state.fighters:
+		arr.append({
+			"name": f.character, "cell": _cell_key(f.cell), "facing": f.facing,
+			"wounds": f.wounds.size(), "limit": f.effective_wound_limit(),
+			"stun": f.stun, "focus": f.focus, "kamae": Domain.STANCE_SLUG[f.stance],
+		})
+	return {"fighters": arr, "round": state.round_num}
+
+
+func _emit_board() -> void:
+	public_event.emit("board", _board_data())
 
 
 func is_human(seat: int) -> bool:
@@ -50,6 +67,7 @@ func is_human(seat: int) -> bool:
 
 func start() -> void:
 	duel.start()   # → phase_changed(PLANNING) → _prompt_planning()
+	_emit_board()
 
 
 # ─── Risposte dal giocatore ──────────────────────────────────────────────────
@@ -197,7 +215,8 @@ func _apply_resolve_action(seat: int, data: Dictionary) -> void:
 		"confirm":
 			_do_confirm()
 			return
-	# Azione non finale: re-invia il prompt aggiornato.
+	# Azione non finale: aggiorna il tavolo e re-invia il prompt.
+	_emit_board()
 	if _rseat != -1:
 		prompt.emit(_rseat, "resolve", _resolve_data())
 
