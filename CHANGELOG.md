@@ -3,6 +3,14 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.60.0] — 2026-06-19
+### Controller telefono: scheda personaggio "a comparsa quando serve"
+- La **scheda personaggio** ora **appare da sola** nei momenti rilevanti — quando **subisci
+  ferite/sanguinanti/veleno** o **cambia il focus** — e si **richiude da sola** dopo poco
+  (resta toccabile a mano in qualsiasi momento).
+- Non disturba mentre devi agire: se è apparsa da sola e arriva il tuo turno, si **chiude**
+  subito per non coprire mappa e bottoni. Versione 0.60.0.
+
 ## [0.59.0] — 2026-06-19
 ### Controller telefono: carta Kamae interattiva (immagine + nodi raggiungibili)
 - Quando una carta permette di **cambiare Kamae**, in risoluzione compare il pulsante
