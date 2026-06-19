@@ -3,6 +3,20 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.46.0] — 2026-06-19
+### Chiarezza: scelte leggibili, movimento/rotazione separati, tavolo informativo
+- **Scelte OPPURE leggibili**: sul telefono le opzioni non sono più "a/b/c" ma la **descrizione**
+  degli effetti (es. "Spingi 1", "Pesca 2", "Passa a Aggressività").
+- **Movimento e rotazione separati**: sul telefono ora sono **due passi** distinti — prima
+  *Passo 1 — Movimento* (caselle gialle o «Non muovere»), poi *Passo 2 — rotazione + azioni +
+  attacco*. Niente più maniglie verdi sovrapposte alle caselle gialle.
+- **Tavolo (computer) più informativo**: mostra la **fase/iniziativa corrente** (chi tocca e
+  cosa fa), le **carte giocate** (immagini alla rivelazione), un **registro pubblico** degli
+  eventi (rivelazione, scelte OPPURE, colpi/parate/contrattacchi, riepilogo turno) e i
+  contatori mano/mazzo per entrambi — tutto visibile a entrambi i giocatori.
+- Protocollo: etichette opzioni, azione **"non muovere"**, evento **choice**, e mano/mazzo/scarti
+  nei dati pubblici. Versione 0.46.0.
+
 ## [0.45.0] — 2026-06-19
 ### Telefono: mappa in stile 3D (texture vera + inclinazione da tavolo)
 - La mini-mappa toccabile del telefono ora mostra la **texture reale della mappa** sotto gli
