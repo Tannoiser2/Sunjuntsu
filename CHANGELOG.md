@@ -3,6 +3,17 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.42.0] — 2026-06-19
+### Tavolo online: indirizzo configurabile + riconnessione automatica
+- Il **tavolo online** non si blocca più su "Connessione al server persa": ora ha un campo
+  **Server** modificabile + pulsante **Connetti**, **riprova da solo** (backoff) e
+  **ricorda** l'ultimo indirizzo (`user://net.cfg`).
+- In riconnessione **mantiene lo stesso codice stanza**, così i telefoni già collegati non
+  devono rifare nulla.
+- Messaggi d'aiuto chiari quando non riesce a connettersi (avvia il relay con
+  `cd server && npm start`; nota che su web in **HTTPS** serve un relay **wss://**, non `ws://`)
+  e suggerimento dell'URL `http://…/` da aprire sul telefono. Versione 0.42.0.
+
 ## [0.41.0] — 2026-06-19
 ### Controller telefono: carte con arte reale, layout touch, riconnessione
 - **Carte con immagine**: il controller mostra le carte con la **loro arte reale** (mano,
