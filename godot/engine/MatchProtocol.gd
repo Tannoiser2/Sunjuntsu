@@ -54,7 +54,7 @@ func _board_data() -> Dictionary:
 			"wounds": f.wounds.size(), "limit": f.effective_wound_limit(),
 			"stun": f.stun, "focus": f.focus, "kamae": Domain.STANCE_SLUG[f.stance],
 		})
-	return {"fighters": arr, "round": state.round_num}
+	return {"fighters": arr, "round": state.round_num, "radius": state.map_radius}
 
 
 func _emit_board() -> void:
@@ -194,6 +194,7 @@ func _resolve_data() -> Dictionary:
 		"cell": _cell_key(f.cell),
 		"foe": _cell_key(foe.cell) if foe != null else "",
 		"targets": targets,
+		"radius": state.map_radius,
 		"kamae": _kamae_reachable(),
 		"options": _option_briefs(),
 		"canConfirm": true,

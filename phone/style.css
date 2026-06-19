@@ -1,46 +1,160 @@
-:root { --bg:#0d0f13; --panel:#171a21; --ink:#eef0f5; --accent:#e9bb55; --line:#39414f; }
-* { box-sizing: border-box; }
-body { margin:0; font-family: system-ui, sans-serif; background: var(--bg); color: var(--ink); -webkit-tap-highlight-color: transparent; }
-.screen { min-height: 100vh; padding: 18px; display: flex; flex-direction: column; gap: 14px; }
-.hidden { display:none; }
-h1 { margin:0; font-size: 34px; letter-spacing:1px; }
-h2 { margin:6px 0; font-size: 20px; }
-.sub { margin:0 0 10px; opacity:.7; }
-label { display:flex; flex-direction:column; gap:6px; font-size:14px; opacity:.85; }
-input { padding:14px; font-size:20px; border-radius:10px; border:1px solid var(--line); background:#10131a; color:var(--ink); text-transform:uppercase; }
-.seats { display:flex; gap:12px; margin-top:8px; }
-.seat { flex:1; }
-button { padding:16px; font-size:18px; border-radius:12px; border:1px solid var(--line); background:var(--panel); color:var(--ink); }
-button:active { background:#222733; }
+/* Senjutsu — controller telefono. Tema "carta di riso & inchiostro", layout orizzontale. */
+:root {
+  --paper:#e9e0cf;       /* washi */
+  --paper2:#ddd2bb;
+  --ink:#241a12;         /* sumi */
+  --ink-soft:#5b4d3c;
+  --seal:#b23a2e;        /* vermiglio (hanko) */
+  --seal-d:#8c2c22;
+  --gold:#b9912f;
+  --line:#b8a888;
+  --panel:#f2ead9;
+  --shadow: 0 2px 6px rgba(40,28,12,.25);
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height:100%; }
+body {
+  margin:0; color:var(--ink); overflow:hidden;
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif;
+  background:
+    radial-gradient(120% 120% at 0% 0%, #efe7d6 0%, #e3d8c1 60%, #d8ccb2 100%);
+}
+.hidden { display:none !important; }
+
+/* ── Suggerimento rotazione (solo in verticale) ── */
+.rotate-hint { display:none; }
+@media (orientation: portrait) {
+  .rotate-hint {
+    display:flex; position:fixed; inset:0; z-index:50;
+    flex-direction:column; align-items:center; justify-content:center; gap:14px;
+    background:var(--paper); color:var(--ink); text-align:center;
+  }
+  .rotate-hint .kanji { font-size:90px; color:var(--seal); opacity:.85; }
+  .rotate-hint p { font-size:20px; }
+  .screen.game { filter: blur(2px); }
+}
+
+/* ── Bottoni stile giapponese ── */
+button {
+  font-family: inherit; color:var(--ink); cursor:pointer;
+  background: linear-gradient(180deg, var(--panel), var(--paper2));
+  border:1px solid var(--line); border-radius:10px; padding:12px 14px; font-size:16px;
+  box-shadow: var(--shadow);
+}
+button:active { transform: translateY(1px); filter:brightness(.97); }
 button:disabled { opacity:.4; }
-button.primary { background:#2a2f3c; border-color: var(--accent); color:#ffe9b0; font-weight:600; }
-.status { opacity:.8; min-height:1.2em; }
-header { display:flex; align-items:center; gap:10px; font-size:14px; opacity:.9; }
-#who { font-weight:600; }
-.pub { flex:1; opacity:.7; }
-button.ghost { padding:8px 12px; font-size:14px; background:transparent; border-color:var(--line); opacity:.85; }
-.net { min-height:1em; margin:0; color:#ffcf7a; font-size:14px; }
-#prompt { display:flex; flex-direction:column; gap:14px; }
-.group { display:flex; flex-direction:column; gap:8px; }
-.group h3 { margin:6px 0 0; font-size:14px; opacity:.7; font-weight:600; text-transform:uppercase; letter-spacing:.5px; }
-.row { display:flex; flex-wrap:wrap; gap:8px; }
-.row button { flex:1 1 44%; min-height:56px; }
-button.wide { width:100%; margin-top:6px; }
+button.jp {
+  position:relative; font-weight:700; letter-spacing:.5px;
+  border-color:var(--seal-d);
+  background: linear-gradient(180deg, #f4ecdb, #e7dcc4);
+}
+button.jp::before {
+  content:""; position:absolute; left:8px; top:50%; width:8px; height:8px;
+  transform:translateY(-50%) rotate(45deg); background:var(--seal); border-radius:1px;
+}
+button.primary {
+  color:#fff; font-weight:700; border-color:var(--seal-d);
+  background: linear-gradient(180deg, var(--seal), var(--seal-d));
+  text-shadow:0 1px 1px rgba(0,0,0,.3);
+}
+button.ghost { padding:6px 10px; font-size:13px; background:transparent; box-shadow:none; }
 
-/* Scelte rapide (movimento/rotazione/Kamae/OPPURE): pillole touch */
-.row.cards { gap:10px; }
-.hex { flex:1 1 30%; min-height:52px; font-size:16px; }
+/* ── Schermata connessione ── */
+.screen { position:absolute; inset:0; }
+.connect {
+  display:flex; flex-direction:column; gap:12px; padding:22px; max-width:520px; margin:0 auto;
+  justify-content:center;
+}
+.connect .seal {
+  align-self:center; width:64px; height:64px; border-radius:10px; display:grid; place-items:center;
+  color:#fff; font-size:34px; background:linear-gradient(180deg,var(--seal),var(--seal-d));
+  box-shadow:var(--shadow);
+}
+h1 { margin:4px 0 0; text-align:center; font-size:36px; letter-spacing:2px; }
+.sub { margin:0 0 6px; text-align:center; color:var(--ink-soft); }
+label { display:flex; flex-direction:column; gap:6px; font-size:14px; color:var(--ink-soft); }
+input {
+  padding:13px; font-size:19px; border-radius:10px; border:1px solid var(--line);
+  background:#fbf6ea; color:var(--ink); text-transform:uppercase;
+}
+.seats { display:flex; gap:12px; margin-top:6px; }
+.seat { flex:1; padding:16px; font-size:18px; }
+.status { min-height:1.2em; color:var(--seal-d); text-align:center; }
 
-/* Carte con arte reale */
-.cards .card { flex:1 1 30%; min-width:96px; }
-.card { text-align:left; padding:10px; }
-.card .nm { font-size:16px; font-weight:600; line-height:1.15; }
-.card .meta { font-size:12px; opacity:.7; }
-.card.hasimg { position:relative; padding:0; aspect-ratio:463/646; border-radius:12px; overflow:hidden; }
-.card.hasimg .art { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
-.card.hasimg .cap { position:absolute; left:0; right:0; bottom:0; padding:6px 8px;
-  background:linear-gradient(transparent, rgba(0,0,0,.82)); }
-.card.hasimg .nm { font-size:14px; text-shadow:0 1px 2px #000; }
-.card.hasimg .meta { font-size:11px; }
+/* ── Schermata gioco (orizzontale) ── */
+.game { display:flex; flex-direction:column; }
+#hud {
+  display:flex; align-items:center; gap:10px; padding:6px 12px;
+  background: linear-gradient(180deg,#efe7d5,#e2d6bd); border-bottom:2px solid var(--seal-d);
+  box-shadow:var(--shadow); flex:0 0 auto;
+}
+.hud-id { display:flex; align-items:center; gap:8px; min-width:0; }
+.who { font-weight:700; font-size:16px; white-space:nowrap; }
+.chip {
+  font-size:13px; padding:3px 9px; border-radius:999px; color:#fff; white-space:nowrap;
+  background:var(--ink-soft);
+}
+.chip.aggression { background:#b23a2e; } .chip.balance { background:#c77da0; }
+.chip.determination { background:#3f8f5e; } .chip.neutral { background:#6b6256; }
+.news { flex:1; text-align:center; color:var(--ink-soft); font-size:14px; min-width:0;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.hud-stats { display:flex; align-items:center; gap:12px; }
+.stat { font-size:15px; white-space:nowrap; }
+.stat.wounds { color:var(--seal-d); font-weight:700; }
+.stat.focus { color:var(--gold); font-weight:700; letter-spacing:1px; }
+.stat.round { color:var(--ink-soft); font-size:13px; }
+.net { margin:0; padding:2px 12px; min-height:0; color:var(--seal-d); font-size:13px; }
+
+#content { flex:1; min-height:0; display:flex; }
+
+/* Vista PLAN / PICK: mano scorrevole orizzontale */
+.cards-strip {
+  display:flex; gap:10px; overflow-x:auto; overflow-y:hidden; padding:12px;
+  align-items:flex-start; width:100%; -webkit-overflow-scrolling:touch; scroll-snap-type:x proximity;
+}
+.cards-strip .card { scroll-snap-align:center; flex:0 0 auto; }
+.pick-wrap { display:flex; flex-direction:column; width:100%; }
+.pick-wrap .foot { padding:10px 12px; border-top:1px solid var(--line); }
+
+/* Carta con arte reale */
+.card {
+  width:118px; border:1px solid var(--line); border-radius:12px; overflow:hidden;
+  background:var(--panel); box-shadow:var(--shadow); padding:0; text-align:left; position:relative;
+}
+.card .art { display:block; width:100%; aspect-ratio:463/646; object-fit:cover; background:#cfc4ab; }
+.card .cap { padding:6px 8px; }
+.card .cap.over { position:absolute; left:0; right:0; bottom:0;
+  background:linear-gradient(transparent, rgba(20,12,4,.82)); color:#fff; }
+.card .nm { font-size:13px; font-weight:700; line-height:1.15; }
+.card .meta { font-size:11px; opacity:.85; }
 .card:disabled { opacity:.45; }
-.waiting { opacity:.6; text-align:center; padding:30px 0; font-size:18px; }
+.card.lg { width:150px; }
+
+/* Vista RESOLVE: mappa + pannello azioni */
+.resolve { display:flex; width:100%; min-height:0; }
+.map-wrap { flex:1; min-width:0; display:flex; align-items:center; justify-content:center; padding:8px; }
+.map { width:100%; height:100%; touch-action:manipulation; }
+.acts {
+  flex:0 0 168px; display:flex; flex-direction:column; gap:8px; padding:10px;
+  border-left:1px solid var(--line); background:linear-gradient(180deg,#efe7d5,#e7dcc4);
+  overflow-y:auto;
+}
+.acts h3 { margin:2px 0; font-size:14px; color:var(--ink-soft); }
+.acts .hint { font-size:12px; color:var(--ink-soft); }
+.acts .grp { display:flex; flex-wrap:wrap; gap:6px; }
+.acts .grp button { flex:1 1 46%; padding:9px; font-size:14px; }
+.acts .confirm { margin-top:auto; padding:14px; font-size:18px; }
+
+/* Mappa: tessere e pedine */
+.hex { fill:#cdbf9f; stroke:#a8966f; stroke-width:1; }
+.hex.move { fill:#e7c75a; cursor:pointer; }
+.hex.target { fill:#d8694f; cursor:pointer; }
+.hex.move:active, .hex.target:active { filter:brightness(1.1); }
+.pawn-me { fill:#b23a2e; stroke:#5a1c16; stroke-width:1.5; }
+.pawn-foe { fill:#2f5fa6; stroke:#173058; stroke-width:1.5; }
+.facing { stroke:#2a1b10; stroke-width:2.5; }
+.rot { fill:#f3ecdb; stroke:#3f8f5e; stroke-width:2; cursor:pointer; }
+.rot:active { fill:#bfe6c9; }
+
+.waiting { margin:auto; text-align:center; color:var(--ink-soft); font-size:20px; padding:30px; }
+.finish { margin:auto; text-align:center; font-size:26px; padding:30px; }

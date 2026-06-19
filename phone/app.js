@@ -1,22 +1,20 @@
-// Controller telefono — Senjutsu.
-// Si collega al relay WebSocket, entra in una stanza su un seat, riceve i prompt del
-// motore (via tavolo) e invia le risposte. Mostra le carte con la loro ARTE reale,
-// layout touch, e si RICONNETTE da solo (riprendendo dal prompt in corso).
+// Controller telefono — Senjutsu. Orizzontale, barra di stato, mano scorrevole e
+// MAPPA 2D toccabile per muovere/ruotare/attaccare. Stessi messaggi del protocollo.
 
 const $ = (id) => document.getElementById(id);
 const qs = new URLSearchParams(location.search);
 const LS = window.localStorage;
+const SVGNS = "http://www.w3.org/2000/svg";
 
-let ws = null, seat = -1, lastPrompt = null;
+let ws = null, seat = -1, lastPrompt = null, board = null;
 let IMG_BASE = "";
 let intentional = false, attempts = 0, reconnectTimer = null;
 
-// Default sensati: se la pagina è servita dal relay, stessa origine; altrimenti :8080.
+// ── Connessione ──────────────────────────────────────────────────────────────
 const sameOrigin = location.protocol.startsWith("http");
 const defServer = sameOrigin
   ? `ws${location.protocol === "https:" ? "s" : ""}://${location.host}`
   : `ws://${location.hostname || "127.0.0.1"}:8080`;
-
 $("server").value = qs.get("server") || LS.getItem("senjutsu.server") || defServer;
 $("code").value = (qs.get("code") || LS.getItem("senjutsu.code") || "").toUpperCase();
 
@@ -24,27 +22,22 @@ document.querySelectorAll(".seat").forEach((b) =>
   b.addEventListener("click", () => startConnect(Number(b.dataset.seat))));
 $("leave").addEventListener("click", leave);
 
-// Riprende automaticamente una sessione salvata (es. refresh pagina o schermo bloccato).
 const savedSeat = LS.getItem("senjutsu.seat");
 if (savedSeat !== null && $("code").value) startConnect(Number(savedSeat));
 
 function setStatus(t) { $("status").textContent = t; }
-function setNet(t) { $("net").textContent = t; }
+function setNet(t) { $("net").textContent = t || ""; }
+function news(t) { $("news").textContent = t || ""; }
 
 function imgBaseFromWs(wsUrl) {
-  try {
-    const u = new URL(wsUrl);
-    const proto = u.protocol === "wss:" ? "https:" : "http:";
-    return `${proto}//${u.host}/cards/`;
-  } catch { return ""; }
+  try { const u = new URL(wsUrl); return `${u.protocol === "wss:" ? "https:" : "http:"}//${u.host}/cards/`; }
+  catch { return ""; }
 }
 
 function startConnect(s) {
   const code = $("code").value.trim().toUpperCase();
   if (!code) { setStatus("Inserisci il codice stanza."); return; }
-  seat = s;
-  intentional = false;
-  attempts = 0;
+  seat = s; intentional = false; attempts = 0;
   LS.setItem("senjutsu.server", $("server").value.trim());
   LS.setItem("senjutsu.code", code);
   LS.setItem("senjutsu.seat", String(s));
@@ -55,8 +48,7 @@ function connect() {
   const url = $("server").value.trim();
   const code = $("code").value.trim().toUpperCase();
   IMG_BASE = imgBaseFromWs(url);
-  setStatus("Connessione…");
-  setNet("Connessione…");
+  setStatus("Connessione…"); setNet("Connessione…");
   try { ws = new WebSocket(url); } catch { scheduleReconnect(); return; }
   ws.onopen = () => { attempts = 0; setNet(""); ws.send(JSON.stringify({ t: "join", code, seat })); };
   ws.onerror = () => setStatus("Errore di connessione.");
@@ -67,39 +59,31 @@ function connect() {
 function scheduleReconnect() {
   if (intentional) return;
   attempts++;
-  const delay = Math.min(1000 * attempts, 5000);
   setNet(`Connessione persa — riprovo… (${attempts})`);
   clearTimeout(reconnectTimer);
-  reconnectTimer = setTimeout(connect, delay);
+  reconnectTimer = setTimeout(connect, Math.min(1000 * attempts, 5000));
 }
 
 function leave() {
-  intentional = true;
-  clearTimeout(reconnectTimer);
+  intentional = true; clearTimeout(reconnectTimer);
   if (ws) ws.close();
   LS.removeItem("senjutsu.seat");
-  $("game").classList.add("hidden");
-  $("connect").classList.remove("hidden");
+  $("game").classList.add("hidden"); $("connect").classList.remove("hidden");
   setStatus("Uscito dalla stanza.");
 }
 
 function onMessage(m) {
   switch (m.t) {
     case "joined":
-      $("connect").classList.add("hidden");
-      $("game").classList.remove("hidden");
-      $("who").textContent = `Giocatore ${seat + 1}`;
+      $("connect").classList.add("hidden"); $("game").classList.remove("hidden");
       setNet("");
-      // Se il tavolo non ha (ancora) un prompt per noi, restiamo in attesa;
-      // alla riconnessione l'host rimanda da solo il prompt corrente.
       if (!lastPrompt) waiting("In attesa del tuo turno…");
+      updateHud();
       break;
     case "error":
       setStatus(m.error === "seat_taken" ? "Posto già occupato." : "Errore: " + m.error);
       break;
-    case "from_host":
-      onPayload(m.payload);
-      break;
+    case "from_host": onPayload(m.payload); break;
   }
 }
 
@@ -111,7 +95,7 @@ function respond(kind, data) {
 function onPayload(p) {
   if (!p) return;
   if (p.t === "event") { onEvent(p.kind, p.data); return; }
-  if (p.t === "finished") { lastPrompt = null; render("Duello terminato", finishedView(p.winner)); return; }
+  if (p.t === "finished") { lastPrompt = null; finished(p.winner); return; }
   if (p.t !== "prompt") return;
   lastPrompt = p;
   switch (p.kind) {
@@ -123,31 +107,46 @@ function onPayload(p) {
 }
 
 function onEvent(kind, data) {
-  if (kind === "turn") $("pubstatus").textContent = "Nuovo turno";
-  else if (kind === "combat") $("pubstatus").textContent = "⚔ " + combatLabel(data.kind);
-  else if (kind === "revealed") $("pubstatus").textContent = "Carte rivelate";
-  else if (kind === "turn_of") $("pubstatus").textContent = data.seat === seat ? "Tocca a te" : "Avversario…";
+  if (kind === "board") { board = data; updateHud(); return; }
+  if (kind === "turn_of") news(data.seat === seat ? "▶ Tocca a te" : "Avversario…");
+  else if (kind === "combat") news("⚔ " + combatLabel(data.kind));
+  else if (kind === "revealed") news("Carte rivelate");
+  else if (kind === "turn") news("Nuovo turno");
 }
 
-// ---- Viste ----
-function el(tag, cls, txt) { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
-function render(title, node) { $("title").textContent = title; const host = $("prompt"); host.innerHTML = ""; host.appendChild(node); }
-function waiting(t) { $("title").textContent = "Attendi"; const h = $("prompt"); h.innerHTML = ""; h.appendChild(el("div", "waiting", t)); }
-function group(title) { const g = el("div", "group"); if (title) g.appendChild(el("h3", null, title)); const r = el("div", "row"); g.appendChild(r); g._row = r; return g; }
+// ── Barra di stato ───────────────────────────────────────────────────────────
+function updateHud() {
+  if (!board || !board.fighters || board.fighters.length <= seat) return;
+  const me = board.fighters[seat];
+  $("who").textContent = `G${seat + 1} · ${me.name}`;
+  const k = $("kamae");
+  k.className = "chip " + (me.kamae || "neutral");
+  k.textContent = kamaeLabel(me.kamae);
+  $("wounds").textContent = `❤ ${me.wounds}/${me.limit}` + (me.stun ? `  ✦${me.stun}` : "");
+  $("focus").textContent = "◈".repeat(me.focus) + "◇".repeat(Math.max(0, 3 - me.focus));
+  $("round").textContent = `Round ${board.round}`;
+}
 
-// Bottone-carta con arte reale (fallback a testo se manca/errore immagine).
-function cardButton(c, onClick, disabled) {
-  const b = el("button", "card");
+// ── Helpers DOM/SVG ──────────────────────────────────────────────────────────
+function el(tag, cls, txt) { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
+function svg(tag, attrs, kids) { const e = document.createElementNS(SVGNS, tag); for (const k in (attrs || {})) e.setAttribute(k, attrs[k]); (kids || []).forEach((c) => e.appendChild(c)); return e; }
+function setContent(node) { const c = $("content"); c.innerHTML = ""; c.appendChild(node); }
+function waiting(t) { setContent(el("div", "waiting", t)); }
+function finished(w) { news(""); setContent(el("div", "finish", w < 0 ? "Pareggio" : (w === seat ? "Hai vinto! 🏯" : "Hai perso."))); }
+
+// Carta con arte reale (fallback a testo).
+function cardEl(c, onClick, disabled, large) {
+  const b = el("button", "card" + (large ? " lg" : ""));
+  let over = false;
   if (c.file && IMG_BASE) {
-    b.classList.add("hasimg");
+    over = true;
     const img = new Image();
-    img.className = "art";
-    img.alt = c.name || "";
+    img.className = "art"; img.alt = c.name || "";
     img.src = IMG_BASE + c.file;
-    img.onerror = () => { b.classList.remove("hasimg"); img.remove(); };
+    img.onerror = () => { over = false; b.classList.remove("withimg"); cap.classList.remove("over"); img.remove(); };
     b.appendChild(img);
   }
-  const cap = el("div", "cap");
+  const cap = el("div", "cap" + (over ? " over" : ""));
   cap.appendChild(el("div", "nm", c.name || "?"));
   cap.appendChild(el("div", "meta", `${typeLabel(c.type)}${c.focus ? " · ◈" + c.focus : ""}`));
   b.appendChild(cap);
@@ -156,86 +155,123 @@ function cardButton(c, onClick, disabled) {
   return b;
 }
 
+// ── Vista: programmazione ────────────────────────────────────────────────────
 function renderPlan(d) {
-  const wrap = el("div");
-  $("pubstatus").textContent = `Focus ◈${d.focus}`;
-  const g = group("La tua mano — scegli una carta");
-  g._row.classList.add("cards");
-  for (const c of d.hand)
-    g._row.appendChild(cardButton(c, () => respond("plan", { card: c.id }), !c.playable));
-  wrap.appendChild(g);
-  render("Programmazione", wrap);
+  news("Scegli una carta da programmare");
+  const strip = el("div", "cards-strip");
+  for (const c of d.hand) strip.appendChild(cardEl(c, () => respond("plan", { card: c.id }), !c.playable, true));
+  setContent(strip);
 }
 
 function renderPick(title, kind, options) {
-  const wrap = el("div");
-  const g = group(null);
-  g._row.classList.add("cards");
-  for (const o of options)
-    g._row.appendChild(cardButton(o, () => respond(kind, { pick: o.id })));
-  wrap.appendChild(g);
-  const skip = el("button", "primary wide", "Tieni / Salta");
+  news(title);
+  const wrap = el("div", "pick-wrap");
+  const strip = el("div", "cards-strip");
+  for (const o of options) strip.appendChild(cardEl(o, () => respond(kind, { pick: o.id }), false, true));
+  wrap.appendChild(strip);
+  const foot = el("div", "foot");
+  const skip = el("button", "primary", "Tieni / Salta");
   skip.onclick = () => respond(kind, { pick: -1 });
-  wrap.appendChild(skip);
-  render(title, wrap);
+  foot.appendChild(skip);
+  wrap.appendChild(foot);
+  setContent(wrap);
 }
+
+// ── Vista: risoluzione (MAPPA toccabile) ─────────────────────────────────────
+const DIRS = [[1, 0], [1, -1], [0, -1], [-1, 0], [-1, 1], [0, 1]];
+const S = 22;
+function ax(q, r) { return { x: S * 1.5 * q, y: S * Math.sqrt(3) * (r + q / 2) }; }
+function hexPts(cx, cy) { let p = []; for (let i = 0; i < 6; i++) { const a = Math.PI / 3 * i; p.push(`${(cx + S * Math.cos(a)).toFixed(1)},${(cy + S * Math.sin(a)).toFixed(1)}`); } return p.join(" "); }
+function inRange(R) { const o = []; for (let q = -R; q <= R; q++) for (let r = Math.max(-R, -q - R); r <= Math.min(R, -q + R); r++) o.push([q, r]); return o; }
+function pk(q, r) { return `${q},${r}`; }
+function parseKey(s) { const a = s.split(","); return [parseInt(a[0]), parseInt(a[1])]; }
 
 function renderResolve(d) {
-  const wrap = el("div");
-  $("pubstatus").textContent = d.foe ? `Tu ${d.cell} · avv. ${d.foe}` : "";
-  const cells = Object.keys(d.legalCells || {});
-  if (!d.move_used && cells.length) {
-    const g = group("Muovi");
-    for (const key of cells) {
-      const b = el("button", "hex", hexLabel(key));
-      b.onclick = () => respond("resolve", { action: "move", cell: key });
-      g._row.appendChild(b);
-    }
-    wrap.appendChild(g);
+  news(`Risoluzione: ${d.card}`);
+  const R = d.radius || 3;
+  const legal = (!d.move_used && d.legalCells) ? d.legalCells : {};
+  const targets = new Set(d.targets || []);
+  const [mq, mr] = parseKey(d.cell);
+  const foe = d.foe ? parseKey(d.foe) : null;
+
+  // Calcola il viewBox dall'estensione degli esagoni.
+  let minX = 1e9, minY = 1e9, maxX = -1e9, maxY = -1e9;
+  const cells = inRange(R).map(([q, r]) => { const p = ax(q, r); minX = Math.min(minX, p.x); minY = Math.min(minY, p.y); maxX = Math.max(maxX, p.x); maxY = Math.max(maxY, p.y); return { q, r, p }; });
+  const pad = S * 2;
+  const vb = `${minX - pad} ${minY - pad} ${(maxX - minX) + 2 * pad} ${(maxY - minY) + 2 * pad}`;
+  const root = svg("svg", { class: "map", viewBox: vb, preserveAspectRatio: "xMidYMid meet" });
+
+  // Tessere
+  for (const { q, r, p } of cells) {
+    let cls = "hex";
+    const key = pk(q, r);
+    const isMove = legal.hasOwnProperty(key);
+    const isTarget = targets.has(key);
+    if (isMove) cls += " move"; else if (isTarget) cls += " target";
+    const poly = svg("polygon", { class: cls, points: hexPts(p.x, p.y) });
+    if (isMove) poly.addEventListener("click", () => respond("resolve", { action: "move", cell: key }));
+    else if (isTarget) poly.addEventListener("click", () => respond("resolve", { action: "confirm" }));
+    root.appendChild(poly);
   }
-  if ((d.legalFacings || []).length) {
-    const g = group("Ruota");
-    for (const f of d.legalFacings) {
-      const b = el("button", "hex", facingLabel(f));
-      b.onclick = () => respond("resolve", { action: "rotate", facing: f });
-      g._row.appendChild(b);
-    }
-    wrap.appendChild(g);
+
+  // Pedina avversaria
+  if (foe) { const fp = ax(foe[0], foe[1]); root.appendChild(svg("circle", { class: "pawn-foe", cx: fp.x, cy: fp.y, r: S * 0.5 })); }
+
+  // Pedina mia + freccia di orientamento
+  const mp = ax(mq, mr);
+  root.appendChild(svg("circle", { class: "pawn-me", cx: mp.x, cy: mp.y, r: S * 0.5 }));
+  const fd = DIRS[((d.facing % 6) + 6) % 6]; const fv = ax(fd[0], fd[1]); const fl = Math.hypot(fv.x, fv.y) || 1;
+  root.appendChild(svg("line", { class: "facing", x1: mp.x, y1: mp.y, x2: mp.x + fv.x / fl * S * 0.9, y2: mp.y + fv.y / fl * S * 0.9 }));
+
+  // Maniglie di rotazione (facing legali)
+  for (const f of (d.legalFacings || [])) {
+    const dd = DIRS[((f % 6) + 6) % 6]; const dv = ax(dd[0], dd[1]); const dl = Math.hypot(dv.x, dv.y) || 1;
+    const hx = mp.x + dv.x / dl * S * 1.7, hy = mp.y + dv.y / dl * S * 1.7;
+    const h = svg("circle", { class: "rot", cx: hx, cy: hy, r: S * 0.32 });
+    h.addEventListener("click", () => respond("resolve", { action: "rotate", facing: f }));
+    root.appendChild(h);
   }
+
+  // Layout: mappa + pannello azioni
+  const wrap = el("div", "resolve");
+  const mapWrap = el("div", "map-wrap"); mapWrap.appendChild(root); wrap.appendChild(mapWrap);
+  const acts = el("div", "acts");
+  acts.appendChild(el("h3", null, d.card));
+  acts.appendChild(el("div", "hint",
+    (Object.keys(legal).length ? "Tocca una casella gialla per muovere. " : "") +
+    ((d.legalFacings || []).length ? "Tocca le pedine verdi per ruotare. " : "") +
+    (targets.size ? "Tocca il rosso per attaccare. " : "") + "Oppure Conferma."));
+
   const kamae = d.kamae || {};
   if (Object.keys(kamae).length) {
-    const g = group("Cambia Kamae");
+    acts.appendChild(el("h3", null, "Cambia Kamae"));
+    const g = el("div", "grp");
     for (const slug of Object.keys(kamae)) {
       const gain = kamae[slug];
-      const b = el("button", "hex", `${kamaeLabel(slug)}${gain > 0 ? " +◈" + gain : ""}`);
+      const b = el("button", "jp", `${kamaeLabel(slug)}${gain > 0 ? " +◈" + gain : ""}`);
       b.onclick = () => respond("resolve", { action: "kamae", slug });
-      g._row.appendChild(b);
+      g.appendChild(b);
     }
-    wrap.appendChild(g);
+    acts.appendChild(g);
   }
   if ((d.options || []).length) {
-    const g = group("Scelta (OPPURE)");
+    acts.appendChild(el("h3", null, "Scelta (OPPURE)"));
+    const g = el("div", "grp");
     for (const o of d.options) {
-      const b = el("button", "hex", String(o.alt));
+      const b = el("button", "jp", String(o.alt));
       b.onclick = () => respond("resolve", { action: "option", alt: o.alt });
-      g._row.appendChild(b);
+      g.appendChild(b);
     }
-    wrap.appendChild(g);
+    acts.appendChild(g);
   }
-  const conf = el("button", "primary wide", "Conferma ▶");
+  const conf = el("button", "primary confirm", "Conferma ▶");
   conf.onclick = () => respond("resolve", { action: "confirm" });
-  wrap.appendChild(conf);
-  render(`Risoluzione: ${d.card}`, wrap);
+  acts.appendChild(conf);
+  wrap.appendChild(acts);
+  setContent(wrap);
 }
 
-function finishedView(winner) {
-  const me = winner === seat;
-  return el("div", "waiting", winner < 0 ? "Pareggio" : (me ? "Hai vinto! 🏯" : "Hai perso."));
-}
-
-// ---- Etichette ----
+// ── Etichette ────────────────────────────────────────────────────────────────
 function typeLabel(t) { return ({ attack: "Attacco", defence: "Difesa", meditation: "Meditazione", core: "Base", status: "Stato" })[t] || t || "—"; }
-function kamaeLabel(s) { return ({ aggression: "Aggressività", balance: "Equilibrio", determination: "Determinazione", neutral: "Neutra" })[s] || s; }
-function facingLabel(f) { return ["fronte", "fronte-dx", "dietro-dx", "dietro", "dietro-sx", "fronte-sx"][((f % 6) + 6) % 6] || ("dir " + f); }
+function kamaeLabel(s) { return ({ aggression: "Aggressività", balance: "Equilibrio", determination: "Determinazione", neutral: "Neutra" })[s] || s || "—"; }
 function combatLabel(k) { return ({ hit: "colpo a segno", blocked: "parato", counter: "contrattacco", collision: "urto" })[k] || (k || ""); }
-function hexLabel(key) { return key; }

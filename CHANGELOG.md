@@ -3,6 +3,23 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.43.0] — 2026-06-19
+### Controller telefono rinnovato: orizzontale, mappa toccabile, stile giapponese
+- **Orizzontale**: layout pensato per il telefono in landscape (con avviso "ruota il telefono"
+  in verticale).
+- **Barra di stato** sempre visibile: giocatore + **Kamae** (pastiglia colorata), **ferite**
+  (❤ e stordimento ✦), **focus** (◈◇), **round** e una riga **notizie** (turno, rivelazione,
+  colpi/parate). Alimentata dagli eventi `board` del tavolo (ora con il raggio mappa).
+- **Mano scorrevole**: le carte (con arte reale) scorrono in orizzontale se sono tante.
+- **Movimento GRAFICO**: in risoluzione compare una **mappa esagonale 2D toccabile** — tocchi
+  la casella **gialla** per muovere, le **pedine verdi** attorno alla tua per **ruotare**, il
+  **rosso** per **attaccare**; la tua pedina mostra l'**orientamento**. Niente più codici
+  tipo "1,-2". Kamae/OPPURE/Conferma restano come pulsanti.
+- **Stile giapponese**: tema carta di riso & inchiostro, accenti vermiglio (hanko), pulsanti
+  più curati.
+- Protocollo: `radius` aggiunto ai dati di board/risoluzione (per disegnare la mappa). Test
+  net + E2E WebSocket verdi. Versione 0.43.0.
+
 ## [0.42.0] — 2026-06-19
 ### Tavolo online: indirizzo configurabile + riconnessione automatica
 - Il **tavolo online** non si blocca più su "Connessione al server persa": ora ha un campo
