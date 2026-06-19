@@ -52,4 +52,8 @@ Pubblico (board/pedine/ferite/narrazione/animazioni) resta sul tavolo.
 4. **Rifinitura UI telefono** (touch, layout, riconnessione).
 
 ## Stato
-- Tappa 1: `engine/MatchProtocol.gd` + `tests/test_protocol` (in corso).
+- ✅ Tappa 1: `engine/MatchProtocol.gd` + `tests/test_protocol`.
+- ✅ Tappa 2: `net/LoopbackChannel.gd` + `net/MatchHost.gd` + `net/MatchClient.gd` +
+  `tests/test_loopback` (host + 2 client via canale, messaggi JSON, partita completa).
+- ⬜ Tappa 3: canale **WebSocket** + server stanze + pagina telefono HTML.
+- ⬜ Tappa 4: rifinitura UI telefono (touch, immagini carte, riconnessione).
