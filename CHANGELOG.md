@@ -3,6 +3,17 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.58.0] — 2026-06-19
+### Controller telefono: scheda personaggio (carta reale + ferite/veleno/focus)
+- **Tocca un ritratto** (il tuo o l'avversario) per aprire la **scheda personaggio**: la
+  **carta reale** del personaggio (Ronin/Guerriero) con sopra lo **stato live** — ferite
+  **normali** (❤), **sanguinanti** (🩸) e caselle libere (♡), **veleno** (☠×n), **stordimento**
+  (✦n) e **focus** (◈/◇).
+- La barra di stato in alto ora mostra anche **sanguinanti** e **veleno**, non solo il totale
+  ferite.
+- Il server serve le carte personaggio da `/cards/` (nuovi asset
+  `ronin/ronin_char.webp`, `warrior/warrior_char.webp`). Versione 0.58.0.
+
 ## [0.57.0] — 2026-06-19
 ### Controller telefono: ora utilizzabile anche in VERTICALE (iPhone in mano)
 - Il controller **non forza più l'orizzontale**: funziona in **entrambi gli orientamenti**.
