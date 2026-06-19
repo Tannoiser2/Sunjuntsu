@@ -37,6 +37,8 @@ function imgBaseFromWs(wsUrl) {
 function startConnect(s) {
   const code = $("code").value.trim().toUpperCase();
   if (!code) { setStatus("Inserisci il codice stanza."); return; }
+  // Schermo intero (richiede un gesto utente: il tocco sul posto va bene).
+  try { (document.documentElement.requestFullscreen || (() => {})).call(document.documentElement); } catch (e) {}
   seat = s; intentional = false; attempts = 0;
   LS.setItem("senjutsu.server", $("server").value.trim());
   LS.setItem("senjutsu.code", code);
@@ -187,87 +189,84 @@ function inRange(R) { const o = []; for (let q = -R; q <= R; q++) for (let r = M
 function pk(q, r) { return `${q},${r}`; }
 function parseKey(s) { const a = s.split(","); return [parseInt(a[0]), parseInt(a[1])]; }
 
+let _curCard = null, _rotDone = false;
+
 function renderResolve(d) {
   news(`Risoluzione: ${d.card}`);
+  // Nuova carta in risoluzione → riparti dal passo movimento.
+  if (d.card !== _curCard) { _curCard = d.card; _rotDone = false; }
   const R = d.radius || 3;
   const legal = (!d.move_used && d.legalCells) ? d.legalCells : {};
   const targets = new Set(d.targets || []);
+  const facings = d.legalFacings || [];
   const [mq, mr] = parseKey(d.cell);
   const foe = d.foe ? parseKey(d.foe) : null;
-  // Passo 1 = MOVIMENTO (caselle gialle); poi passo 2 = ROTAZIONE + AZIONI/ATTACCO.
+  // Passi SEPARATI: 1) Movimento  2) Rotazione  3) Azione/Attacco.
   const moveStep = Object.keys(legal).length > 0;
+  const rotStep = !moveStep && !_rotDone && facings.length > 0;
+  const attackStep = !moveStep && !rotStep;
 
-  // Calcola il viewBox dall'estensione degli esagoni.
+  // Mappa (viewBox dall'estensione esagoni).
   let minX = 1e9, minY = 1e9, maxX = -1e9, maxY = -1e9;
   const cells = inRange(R).map(([q, r]) => { const p = ax(q, r); minX = Math.min(minX, p.x); minY = Math.min(minY, p.y); maxX = Math.max(maxX, p.x); maxY = Math.max(maxY, p.y); return { q, r, p }; });
   const pad = S * 2;
   const bx = minX - pad, by = minY - pad, bw = (maxX - minX) + 2 * pad, bh = (maxY - minY) + 2 * pad;
-  const vb = `${bx} ${by} ${bw} ${bh}`;
-  const root = svg("svg", { class: "map", viewBox: vb, preserveAspectRatio: "xMidYMid meet" });
-
-  // Texture vera della mappa (sotto le tessere), se raggiungibile.
+  const root = svg("svg", { class: "map", viewBox: `${bx} ${by} ${bw} ${bh}`, preserveAspectRatio: "xMidYMid meet" });
   if (MAP_BASE) {
-    const bg = svg("image", { x: bx, y: by, width: bw, height: bh, opacity: "0.92",
-      preserveAspectRatio: "xMidYMid slice" });
+    const bg = svg("image", { x: bx, y: by, width: bw, height: bh, opacity: "0.92", preserveAspectRatio: "xMidYMid slice" });
     bg.setAttribute("href", MAP_BASE + "arena.webp");
     root.appendChild(bg);
   }
-
-  // Tessere — nel passo MOVIMENTO solo le gialle; nel passo AZIONI solo i bersagli rossi.
+  // Tessere: gialle (movimento) solo nel passo 1; rosse (bersaglio) solo nel passo 3.
   for (const { q, r, p } of cells) {
     let cls = "hex";
     const key = pk(q, r);
     const isMove = moveStep && legal.hasOwnProperty(key);
-    const isTarget = !moveStep && targets.has(key);
+    const isTarget = attackStep && targets.has(key);
     if (isMove) cls += " move"; else if (isTarget) cls += " target";
     const poly = svg("polygon", { class: cls, points: hexPts(p.x, p.y) });
     if (isMove) poly.addEventListener("click", () => respond("resolve", { action: "move", cell: key }));
     else if (isTarget) poly.addEventListener("click", () => respond("resolve", { action: "confirm" }));
     root.appendChild(poly);
   }
-
-  // Pedina avversaria
   if (foe) { const fp = ax(foe[0], foe[1]); root.appendChild(svg("circle", { class: "pawn-foe", cx: fp.x, cy: fp.y, r: S * 0.5 })); }
-
-  // Pedina mia + freccia di orientamento
   const mp = ax(mq, mr);
   root.appendChild(svg("circle", { class: "pawn-me", cx: mp.x, cy: mp.y, r: S * 0.5 }));
+  // Freccia di orientamento (niente più "maniglie" toccabili sulla mappa).
   const fd = DIRS[((d.facing % 6) + 6) % 6]; const fv = ax(fd[0], fd[1]); const fl = Math.hypot(fv.x, fv.y) || 1;
-  root.appendChild(svg("line", { class: "facing", x1: mp.x, y1: mp.y, x2: mp.x + fv.x / fl * S * 0.9, y2: mp.y + fv.y / fl * S * 0.9 }));
+  root.appendChild(svg("line", { class: "facing", x1: mp.x, y1: mp.y, x2: mp.x + fv.x / fl * S * 0.95, y2: mp.y + fv.y / fl * S * 0.95 }));
 
-  // Maniglie di rotazione (SOLO nel passo azioni, per non sovrapporsi al movimento)
-  if (!moveStep) {
-    for (const f of (d.legalFacings || [])) {
-      const dd = DIRS[((f % 6) + 6) % 6]; const dv = ax(dd[0], dd[1]); const dl = Math.hypot(dv.x, dv.y) || 1;
-      const hx = mp.x + dv.x / dl * S * 1.7, hy = mp.y + dv.y / dl * S * 1.7;
-      const h = svg("circle", { class: "rot", cx: hx, cy: hy, r: S * 0.32 });
-      h.addEventListener("click", () => respond("resolve", { action: "rotate", facing: f }));
-      root.appendChild(h);
-    }
-  }
-
-  // Layout: mappa + pannello azioni
+  // Mappa a tutto schermo + barra azioni grande e CENTRATA in basso.
   const wrap = el("div", "resolve");
   const mapWrap = el("div", "map-wrap");
   const tilt = el("div", "map3d"); tilt.appendChild(root); mapWrap.appendChild(tilt);
   wrap.appendChild(mapWrap);
   const acts = el("div", "acts");
-  acts.appendChild(el("h3", null, d.card));
 
   if (moveStep) {
-    // PASSO 1 — solo movimento.
-    acts.appendChild(el("div", "hint", "Passo 1 — Movimento: tocca una casella gialla, oppure «Non muovere»."));
-    const skip = el("button", "primary confirm", "Non muovere →");
+    acts.appendChild(el("h3", null, "Passo 1 — Movimento"));
+    acts.appendChild(el("div", "hint", "Tocca una casella gialla per muovere."));
+    const skip = el("button", "primary big", "Non muovere →");
     skip.onclick = () => respond("resolve", { action: "skip_move" });
     acts.appendChild(skip);
+  } else if (rotStep) {
+    acts.appendChild(el("h3", null, "Passo 2 — Rotazione"));
+    acts.appendChild(el("div", "hint", "Scegli dove guardare, poi «Avanti»."));
+    const g = el("div", "grp");
+    for (const f of facings) {
+      const b = el("button", "jp" + (f === d.facing ? " on" : ""), facingLabel(f));
+      b.onclick = () => respond("resolve", { action: "rotate", facing: f });
+      g.appendChild(b);
+    }
+    acts.appendChild(g);
+    const next = el("button", "primary big", "Avanti →");
+    next.onclick = () => { _rotDone = true; renderResolve(d); };
+    acts.appendChild(next);
   } else {
-    // PASSO 2 — rotazione + azioni + attacco.
-    acts.appendChild(el("div", "hint",
-      ((d.legalFacings || []).length ? "Passo 2 — Ruota (pedine verdi), " : "Passo 2 — ") +
-      (targets.size ? "poi tocca il rosso per attaccare, " : "") + "o Conferma."));
+    acts.appendChild(el("h3", null, "Passo 3 — Azione"));
     const kamae = d.kamae || {};
     if (Object.keys(kamae).length) {
-      acts.appendChild(el("h3", null, "Cambia Kamae"));
+      acts.appendChild(el("div", "lbl", "Cambia Kamae"));
       const g = el("div", "grp");
       for (const slug of Object.keys(kamae)) {
         const gain = kamae[slug];
@@ -278,7 +277,7 @@ function renderResolve(d) {
       acts.appendChild(g);
     }
     if ((d.options || []).length) {
-      acts.appendChild(el("h3", null, "Scegli (OPPURE)"));
+      acts.appendChild(el("div", "lbl", "Scegli (OPPURE)"));
       const g = el("div", "grp");
       for (const o of d.options) {
         const b = el("button", "jp", o.label || String(o.alt));
@@ -287,7 +286,8 @@ function renderResolve(d) {
       }
       acts.appendChild(g);
     }
-    const conf = el("button", "primary confirm", "Conferma ▶");
+    acts.appendChild(el("div", "hint", targets.size ? "Tocca il bersaglio rosso per attaccare, o «Fine»." : "Premi «Fine» per risolvere."));
+    const conf = el("button", "primary big", "Fine ▶");
     conf.onclick = () => respond("resolve", { action: "confirm" });
     acts.appendChild(conf);
   }
