@@ -47,7 +47,10 @@ function safeJoin(base, urlPath) {
 async function serveFile(res, path) {
   try {
     const buf = await readFile(path);
-    res.writeHead(200, { "content-type": MIME[extname(path).toLowerCase()] || "application/octet-stream" });
+    res.writeHead(200, {
+      "content-type": MIME[extname(path).toLowerCase()] || "application/octet-stream",
+      "cache-control": "no-cache",   // i telefoni prendono sempre i file aggiornati
+    });
     res.end(buf);
   } catch {
     res.writeHead(404, { "content-type": "text/plain" });
