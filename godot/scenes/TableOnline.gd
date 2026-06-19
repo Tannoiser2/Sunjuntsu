@@ -40,6 +40,7 @@ var _finished := false
 var _played_panel: PanelContainer
 var _played_box: HBoxContainer
 var _played_tex: Array = []
+var _order_lbl: Label
 var _log_lbl: Label
 var _log_lines: Array = []
 
@@ -177,8 +178,19 @@ func _on_public(kind: String, data: Dictionary) -> void:
 				_status_lbl.text = "⚡ Iniziativa — tocca al Giocatore %d: %s" % [who, step]
 		"revealed":
 			_status_lbl.text = "Carte rivelate — risoluzione per iniziativa (alta → bassa)"
-			_show_played(data.get("planned", {}))
-			_log("— Rivelazione —")
+			_show_played(data.get("planned", {}), int(data.get("replaced", -1)))
+			if int(data.get("replaced", -1)) == -1:
+				_log("— Rivelazione —")
+			else:
+				_log("Giocatore %d sostituisce la carta (istantanea)" % (int(data.get("replaced", -1)) + 1))
+		"order":
+			var parts: Array = []
+			var n := 1
+			for o in data.get("order", []):
+				var sp := int(o.get("speed", -1))
+				parts.append("%d) G%d %s%s" % [n, int(o.get("i", 0)) + 1, _short_type(str(o.get("type", ""))), (" ⚡%d" % sp) if sp >= 0 else ""])
+				n += 1
+			_order_lbl.text = ("Ordine iniziativa:  " + "   ".join(parts)) if not parts.is_empty() else ""
 		"choice":
 			_log("Giocatore %d %s" % [int(data.get("seat", 0)) + 1, str(data.get("text", ""))])
 		"combat":
@@ -189,6 +201,7 @@ func _on_public(kind: String, data: Dictionary) -> void:
 			for line in data.get("log", []):
 				_log(str(line))
 			_log("— Nuovo turno —")
+			_order_lbl.text = ""
 			_hide_played()
 
 
@@ -385,6 +398,10 @@ func _build_hud() -> void:
 	_status_lbl = Label.new()
 	_status_lbl.add_theme_font_size_override("font_size", 18)
 	vb.add_child(_status_lbl)
+	_order_lbl = Label.new()
+	_order_lbl.add_theme_font_size_override("font_size", 15)
+	_order_lbl.modulate = Color(1, 0.92, 0.6)
+	vb.add_child(_order_lbl)
 	# Riga connessione: indirizzo del relay modificabile + «Connetti».
 	var row := HBoxContainer.new()
 	vb.add_child(row)
@@ -446,22 +463,57 @@ func _mk_label(t: String, sz: int) -> Label:
 	return l
 
 
-## Mostra le due carte rivelate (immagini reali).
-func _show_played(planned) -> void:
+## Mostra le due carte rivelate (immagini reali) con animazione.
+## `replaced` = seat appena sostituito (flip), oppure -1 = comparsa normale.
+func _show_played(planned, replaced: int = -1) -> void:
 	if _played_panel == null:
 		return
+	_played_panel.modulate.a = 1.0
+	_played_panel.visible = true
 	for i in range(2):
 		var cid: int = -1
 		if typeof(planned) == TYPE_DICTIONARY:
 			cid = int(planned.get(i, planned.get(str(i), -1)))
 		var file: String = CardDB.image_for(cid) if cid != -1 else ""
-		_played_tex[i].texture = (_load_texture("res://assets/cards/" + file) if file != "" else null)
-	_played_panel.visible = true
+		var tex: TextureRect = _played_tex[i]
+		tex.pivot_offset = tex.size * 0.5
+		if not _visuals:
+			tex.texture = (_load_texture("res://assets/cards/" + file) if file != "" else null)
+			continue
+		if replaced == i:
+			# Sostituzione: capovolgi (flip orizzontale) e cambia immagine a metà.
+			var tw := create_tween()
+			tw.tween_property(tex, "scale:x", 0.0, 0.12)
+			tw.tween_callback(func(): tex.texture = (_load_texture("res://assets/cards/" + file) if file != "" else null))
+			tw.tween_property(tex, "scale:x", 1.0, 0.12)
+		elif replaced == -1:
+			# Comparsa: dissolvenza + leggero ingrandimento.
+			tex.texture = (_load_texture("res://assets/cards/" + file) if file != "" else null)
+			tex.modulate.a = 0.0
+			tex.scale = Vector2(0.82, 0.82)
+			var tw := create_tween().set_parallel(true)
+			tw.tween_property(tex, "modulate:a", 1.0, 0.22)
+			tw.tween_property(tex, "scale", Vector2.ONE, 0.22).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 
+## Nasconde le carte giocate a fine turno: animazione di SCARTO (sfuma e scende).
 func _hide_played() -> void:
-	if _played_panel != null:
+	if _played_panel == null or not _played_panel.visible:
+		return
+	if not _visuals:
 		_played_panel.visible = false
+		return
+	var tw := create_tween()
+	tw.tween_property(_played_panel, "modulate:a", 0.0, 0.28)
+	tw.tween_callback(func():
+		_played_panel.visible = false
+		_played_panel.modulate.a = 1.0)
+
+
+## Tipo abbreviato per la riga dell'ordine.
+func _short_type(t: String) -> String:
+	var r: String = {"attack": "Att", "defence": "Dif", "meditation": "Med", "core": "Base"}.get(t, t)
+	return r
 
 
 ## Aggiunge una riga al registro pubblico (tiene le ultime ~10).

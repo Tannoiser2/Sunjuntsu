@@ -31,6 +31,8 @@ signal await_instant_play(index: int, options: Array)
 ## Evento puramente VISIVO per la scena (animazioni di combattimento). Non influenza
 ## la logica. kind: "hit" | "blocked" | "counter" | "collision".
 signal combat_event(kind: String, attacker: int, target: int, info: Dictionary)
+## Ordine di risoluzione per iniziativa, per la UI: Array di {i, speed, type}.
+signal resolution_order(order: Array)
 
 var state: GameState
 
@@ -267,6 +269,13 @@ func _finalize_resolution_setup() -> void:
 				_block_ready[i] = _chosen.get(i, -1)
 
 	_order = _initiative_order()
+	# Ordine di risoluzione per iniziativa (per la UI del tavolo).
+	var ord: Array = []
+	for i in _order:
+		if state.fighters[i].planned == -1 or _fizzled.has(i):
+			continue
+		ord.append({"i": i, "speed": _speed_of(i), "type": str(CardDB.card(state.fighters[i].planned).get("type", ""))})
+	resolution_order.emit(ord)
 
 
 ## Risoluzione sincrona (test headless / modalità non interattiva).
