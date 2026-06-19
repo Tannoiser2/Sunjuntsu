@@ -3,6 +3,14 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.52.0] — 2026-06-19
+### Tavolo online: setup che collassa a partita iniziata + schermo intero
+- Quando **entrambi i telefoni sono connessi** e la partita inizia, il pannello di
+  **setup (codice stanza / connessione)** **collassa e sparisce**, liberando l'area per il
+  tavolo 3D.
+- **Schermo intero**: il tavolo va automaticamente a tutto schermo all'avvio della partita;
+  **F** alterna finestra/schermo intero. Versione 0.52.0.
+
 ## [0.51.0] — 2026-06-19
 ### Fix: turno bloccato dopo aver giocato la carta («Avanti» spariva)
 - Dopo aver bloccato la carta, il pulsante **«Avanti»** della Rivelazione veniva **nascosto

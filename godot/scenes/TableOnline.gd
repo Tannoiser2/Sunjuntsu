@@ -43,6 +43,9 @@ var _played_tex: Array = []
 var _order_lbl: Label
 var _log_lbl: Label
 var _log_lines: Array = []
+var _setup_panel: PanelContainer
+var _title_lbl: Label
+var _conn_row: HBoxContainer
 
 const NET_CFG := "user://net.cfg"
 
@@ -148,6 +151,7 @@ func _on_peer(event: String, seat: int) -> void:
 	if not _started and _joined.has(0) and _joined.has(1):
 		_started = true
 		_status_lbl.text = "Partita iniziata!"
+		_collapse_setup()   # via il pannello codice/connessione → tavolo a pieno schermo
 		host.start()
 
 
@@ -380,16 +384,16 @@ func _spawn_pawns() -> void:
 func _build_hud() -> void:
 	var layer := CanvasLayer.new()
 	add_child(layer)
-	var panel := PanelContainer.new()
-	panel.set_anchors_preset(Control.PRESET_TOP_WIDE)
-	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	layer.add_child(panel)
+	_setup_panel = PanelContainer.new()
+	_setup_panel.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	_setup_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	layer.add_child(_setup_panel)
 	var vb := VBoxContainer.new()
-	panel.add_child(vb)
-	var title := Label.new()
-	title.text = "Tavolo online — i giocatori usano il telefono"
-	title.add_theme_font_size_override("font_size", 16)
-	vb.add_child(title)
+	_setup_panel.add_child(vb)
+	_title_lbl = Label.new()
+	_title_lbl.text = "Tavolo online — i giocatori usano il telefono  ·  F = schermo intero"
+	_title_lbl.add_theme_font_size_override("font_size", 16)
+	vb.add_child(_title_lbl)
 	_code_lbl = Label.new()
 	_code_lbl.add_theme_font_size_override("font_size", 28)
 	vb.add_child(_code_lbl)
@@ -403,19 +407,19 @@ func _build_hud() -> void:
 	_order_lbl.modulate = Color(1, 0.92, 0.6)
 	vb.add_child(_order_lbl)
 	# Riga connessione: indirizzo del relay modificabile + «Connetti».
-	var row := HBoxContainer.new()
-	vb.add_child(row)
+	_conn_row = HBoxContainer.new()
+	vb.add_child(_conn_row)
 	var lab := Label.new(); lab.text = "Server:"
-	row.add_child(lab)
+	_conn_row.add_child(lab)
 	_url_edit = LineEdit.new()
 	_url_edit.text = Domain.ws_url
 	_url_edit.custom_minimum_size = Vector2(320, 0)
 	_url_edit.tooltip_text = "Es. ws://192.168.1.10:8080 (IP del PC con il relay)"
-	row.add_child(_url_edit)
+	_conn_row.add_child(_url_edit)
 	_connect_btn = Button.new()
 	_connect_btn.text = "Connetti"
 	_connect_btn.pressed.connect(_on_connect_pressed)
-	row.add_child(_connect_btn)
+	_conn_row.add_child(_connect_btn)
 	_help_lbl = Label.new()
 	_help_lbl.add_theme_font_size_override("font_size", 13)
 	_help_lbl.modulate = Color(1, 1, 1, 0.75)
@@ -461,6 +465,22 @@ func _build_hud() -> void:
 func _mk_label(t: String, sz: int) -> Label:
 	var l := Label.new(); l.text = t; l.add_theme_font_size_override("font_size", sz)
 	return l
+
+
+## A partita iniziata: collassa il setup (codice/connessione) e va a schermo intero,
+## così il tavolo 3D occupa tutta l'area.
+func _collapse_setup() -> void:
+	_title_lbl.visible = false
+	_code_lbl.visible = false
+	_conn_row.visible = false
+	_help_lbl.visible = false
+	if _visuals:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+
+
+func _toggle_fullscreen() -> void:
+	var fs := DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED if fs else DisplayServer.WINDOW_MODE_FULLSCREEN)
 
 
 ## Mostra le due carte rivelate (immagini reali) con animazione.
@@ -529,6 +549,9 @@ func _log(line: String) -> void:
 # ─── Camera orbitale ─────────────────────────────────────────────────────────
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_F:
+		_toggle_fullscreen()
+		return
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_RIGHT:
 			_dragging = event.pressed
