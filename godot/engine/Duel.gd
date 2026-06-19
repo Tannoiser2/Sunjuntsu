@@ -28,6 +28,9 @@ signal await_instant_replace(index: int, options: Array)
 ## Fase RISOLUZIONE: dopo aver risolto la carta scelta, `index` può giocare 1 carta
 ## istantanea (Aggiuntiva/Istantanea). options = Array[int].
 signal await_instant_play(index: int, options: Array)
+## Evento puramente VISIVO per la scena (animazioni di combattimento). Non influenza
+## la logica. kind: "hit" | "blocked" | "counter" | "collision".
+signal combat_event(kind: String, attacker: int, target: int, info: Dictionary)
 
 var state: GameState
 
@@ -655,6 +658,7 @@ func _resolve_attack_top(i: int, g: Dictionary, name: String, log: Array, chosen
 	var atk_speed := int(_chosen.get(i, _speed_of(i)))
 	if _attack_blocked(i, foe_idx, atk_speed, g):
 		_block_ok[foe_idx] = true   # il blocco del difensore è riuscito (reazioni "se blocco riuscito")
+		combat_event.emit("blocked", i, foe_idx, {})
 		if int(_block_ready.get(foe_idx, -1)) == atk_speed:
 			_block_ready[foe_idx] = -1
 			_try_counter(foe_idx, i, atk_speed, log)
@@ -672,6 +676,7 @@ func _resolve_attack_top(i: int, g: Dictionary, name: String, log: Array, chosen
 		for _w in range(n):
 			foe.wounds.append(tag)
 	_attack_ok[i] = true   # attacco a segno (reazioni "se attacco riuscito")
+	combat_event.emit("hit", i, foe_idx, {"n": n})
 	_apply_if_success(i, foe_idx, g, log)
 	_apply_effects(i, foe_idx, g, "on_hit", log, chosen_alt)
 	fighter_updated.emit(foe_idx)
@@ -698,6 +703,7 @@ func _resolve_split_bottom(i: int, split: Dictionary, name: String, log: Array, 
 		var cells := attack_v2_cells(f.cell, f.facing, pg, 1)
 		if cells.has(foe.cell):
 			if _attack_blocked(i, foe_idx, bspeed, pg):
+				combat_event.emit("blocked", i, foe_idx, {})
 				if int(_block_ready.get(foe_idx, -1)) == bspeed:
 					_block_ready[foe_idx] = -1
 					_try_counter(foe_idx, i, bspeed, log)
@@ -714,6 +720,7 @@ func _resolve_split_bottom(i: int, split: Dictionary, name: String, log: Array, 
 					var tag := "bleed" if kind == "bleed" else "wound"
 					for _w in range(n):
 						foe.wounds.append(tag)
+				combat_event.emit("hit", i, foe_idx, {"n": n})
 				fighter_updated.emit(foe_idx)
 				log.append("%s colpisce %s (parte bassa, vel %d) — %d ferita/e (%d/%d)" % [
 					f.character, foe.character, bspeed, n, foe.wounds.size(), foe.wound_limit])
@@ -894,6 +901,7 @@ func _try_counter(def_idx: int, att_idx: int, atk_speed: int, log: Array) -> voi
 		dfn.discard.append(pick)
 	var att := state.fighters[att_idx]
 	att.wounds.append("wound")
+	combat_event.emit("counter", def_idx, att_idx, {})
 	fighter_updated.emit(att_idx)
 	log.append("%s CONTRATTACCA: %s subisce 1 ferita (%d/%d)" % [
 		dfn.character, att.character, att.wounds.size(), att.wound_limit])
@@ -1157,6 +1165,7 @@ func _forced_move(att_idx: int, victim_idx: int, n: int, pull: bool, log: Array)
 ## (regolamento p.9 + effetti terreno p.16). Il personaggio resta dov'è.
 func _resolve_collision(victim_idx: int, dest: Vector2i, log: Array) -> void:
 	var v := state.fighters[victim_idx]
+	combat_event.emit("collision", victim_idx, victim_idx, {})
 	if HexGrid.distance(dest, Vector2i.ZERO) > state.map_radius:
 		v.stun += 1
 		log.append("%s spinto fuori dall'arena: +1 stordimento" % v.character)

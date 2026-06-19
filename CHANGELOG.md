@@ -3,6 +3,17 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.36.0] — 2026-06-19
+### Animazioni di combattimento
+- Nuovo segnale `combat_event` dal motore (solo presentazione, non tocca le regole) e
+  animazioni nell'arena:
+  - **Colpo a segno**: la pedina **affonda** verso il bersaglio + **lampo d'impatto** rosso
+    sulla cella colpita + leggera **scossa di camera**.
+  - **Parata**: affondo + lampo **azzurro** (più tenue) sul difensore.
+  - **Contrattacco**: lampo arancio sull'attaccante colpito di rimando.
+  - **Collisione** (spinta su terreno/bordo/altro): lampo ampio + scossa più decisa.
+- Disattivate automaticamente in headless (test) per restare leggeri. Versione 0.36.0.
+
 ## [0.35.0] — 2026-06-19
 ### Carte ISTANTANEE: sostituzione + aggiuntive (regolamento 1.5 p.7/13/16)
 - **Istantanea di Sostituzione** (es. #61 Colpo Corto, #32 Balzo del Lupo): nella fase di

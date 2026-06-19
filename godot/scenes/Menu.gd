@@ -9,7 +9,7 @@ func _ready() -> void:
 
 	var version: String = str(ProjectSettings.get_setting("application/config/version", "?"))
 	$Version.text = "v%s" % version
-	$Changes.text = "Novità v%s:\n• Carte ISTANTANEE: sostituzione della carta rivelata + istantanee aggiuntive\n• GUI rinnovata: bottoni in stile, focus visibile (◈), rotazione con frecce ⟲⟳\n• Risoluzione chiara: movimento→rotazione→scelte→conferma; nodi Kamae illuminati\nVedi REGOLAMENTO_FEDELTA.md e CHANGELOG.md" % version
+	$Changes.text = "Novità v%s:\n• Animazioni di combattimento: affondo, impatto, parata, contrattacco, urti\n• Carte ISTANTANEE: sostituzione + aggiuntive; GUI con focus ◈ e frecce ⟲⟳\n• 1v1 locale, ferite come carte, sequenza di risoluzione chiara\nVedi REGOLAMENTO_FEDELTA.md e CHANGELOG.md" % version
 
 
 func _on_solo() -> void:
