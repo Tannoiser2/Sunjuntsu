@@ -20,12 +20,28 @@ var _ws := WebSocketPeer.new()
 var _opened := false
 var _initial: Dictionary = {}
 var _pending: Array = []
+var _url: String = ""
 
 
 ## Apre la connessione al relay e invia l'azione iniziale (create/join) appena pronto.
 func open(url: String, initial: Dictionary) -> void:
+	_url = url
 	_initial = initial
-	var err := _ws.connect_to_url(url)
+	_do_connect()
+
+
+## Riapre la connessione (riconnessione), opzionalmente con una nuova azione iniziale
+## (es. ricreare la STESSA stanza con {"t":"create","code":...}).
+func reopen(initial: Dictionary = {}) -> void:
+	if not initial.is_empty():
+		_initial = initial
+	_do_connect()
+
+
+func _do_connect() -> void:
+	_opened = false
+	_ws = WebSocketPeer.new()   # peer pulito a ogni tentativo
+	var err := _ws.connect_to_url(_url)
 	if err != OK:
 		push_warning("[WebSocketChannel] connect_to_url errore %d" % err)
 	set_process(true)

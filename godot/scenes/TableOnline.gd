@@ -30,10 +30,19 @@ var _dragging := false
 var _code_lbl: Label
 var _status_lbl: Label
 var _players_lbl: Label
+var _help_lbl: Label
+var _url_edit: LineEdit
+var _connect_btn: Button
+var _room_code: String = ""
+var _attempts: int = 0
+var _finished := false
+
+const NET_CFG := "user://net.cfg"
 
 
 func _ready() -> void:
 	_visuals = DisplayServer.get_name() != "headless"
+	_load_ws_url()
 	state = GameState.new()
 	state.map_radius = map_radius
 	_build_world()
@@ -43,6 +52,20 @@ func _ready() -> void:
 	_start_online()
 
 
+## Carica l'ultimo indirizzo relay usato (così non lo ridigiti ogni volta).
+func _load_ws_url() -> void:
+	var cfg := ConfigFile.new()
+	if cfg.load(NET_CFG) == OK:
+		Domain.ws_url = str(cfg.get_value("net", "ws_url", Domain.ws_url))
+
+
+func _save_ws_url(url: String) -> void:
+	var cfg := ConfigFile.new()
+	cfg.load(NET_CFG)
+	cfg.set_value("net", "ws_url", url)
+	cfg.save(NET_CFG)
+
+
 func _start_online() -> void:
 	channel = WebSocketChannel.new()
 	add_child(channel)
@@ -50,16 +73,63 @@ func _start_online() -> void:
 	host.protocol.public_event.connect(_on_public)
 	host.protocol.duel.combat_event.connect(_on_combat)
 	channel.created.connect(func(code):
+		_room_code = code
+		_attempts = 0
 		_code_lbl.text = "Codice stanza:  %s" % code
-		_status_lbl.text = "In attesa dei due giocatori…")
+		_status_lbl.text = "Connesso. In attesa dei due giocatori…"
+		_help_lbl.text = "Sul telefono apri  %s/  e inserisci il codice." % _http_hint())
 	channel.peer.connect(_on_peer)
-	channel.closed.connect(func(): _status_lbl.text = "Connessione al server persa.")
+	channel.closed.connect(_on_channel_closed)
 	host.protocol.finished.connect(func(w):
+		_finished = true
 		var who := "Pareggio" if w < 0 else "%s vince!" % state.fighters[w].character
 		_status_lbl.text = "⚔ Duello terminato — %s" % who)
+	_connect(false)
+
+
+## (Ri)connette al relay all'URL corrente. In riconnessione ricrea la STESSA stanza.
+func _connect(reconnect: bool) -> void:
 	var url: String = Domain.ws_url
-	_code_lbl.text = "Connessione a %s…" % url
-	channel.open(url, {"t": "create"})
+	var initial := {"t": "create"}
+	if _room_code != "":
+		initial["code"] = _room_code   # mantiene lo stesso codice per i telefoni
+	_status_lbl.text = "Connessione a %s…" % url
+	if reconnect:
+		channel.reopen(initial)
+	else:
+		channel.open(url, initial)
+
+
+func _on_channel_closed() -> void:
+	if _finished:
+		return
+	_attempts += 1
+	var delay: float = minf(1.0 * _attempts, 5.0)
+	_status_lbl.text = "Connessione al server persa — riprovo… (%d)" % _attempts
+	_help_lbl.text = "Avvia il relay:  cd server && npm start  · poi premi «Connetti»." \
+		+ ("\n(Su web in HTTPS serve un relay wss://, non ws://)" if OS.has_feature("web") else "")
+	var t := get_tree().create_timer(delay)
+	t.timeout.connect(func():
+		if is_instance_valid(self) and not _finished:
+			_connect(true))
+
+
+## Suggerimento HTTP per il telefono (stesso host del WebSocket).
+func _http_hint() -> String:
+	var u: String = Domain.ws_url
+	u = u.replace("wss://", "https://").replace("ws://", "http://")
+	return u
+
+
+## Premuto «Connetti»: usa l'URL digitato, lo salva e (ri)connette.
+func _on_connect_pressed() -> void:
+	var url := _url_edit.text.strip_edges()
+	if url == "":
+		return
+	Domain.ws_url = url
+	_save_ws_url(url)
+	_attempts = 0
+	_connect(true)
 
 
 func _on_peer(event: String, seat: int) -> void:
@@ -294,6 +364,24 @@ func _build_hud() -> void:
 	_status_lbl = Label.new()
 	_status_lbl.add_theme_font_size_override("font_size", 18)
 	vb.add_child(_status_lbl)
+	# Riga connessione: indirizzo del relay modificabile + «Connetti».
+	var row := HBoxContainer.new()
+	vb.add_child(row)
+	var lab := Label.new(); lab.text = "Server:"
+	row.add_child(lab)
+	_url_edit = LineEdit.new()
+	_url_edit.text = Domain.ws_url
+	_url_edit.custom_minimum_size = Vector2(320, 0)
+	_url_edit.tooltip_text = "Es. ws://192.168.1.10:8080 (IP del PC con il relay)"
+	row.add_child(_url_edit)
+	_connect_btn = Button.new()
+	_connect_btn.text = "Connetti"
+	_connect_btn.pressed.connect(_on_connect_pressed)
+	row.add_child(_connect_btn)
+	_help_lbl = Label.new()
+	_help_lbl.add_theme_font_size_override("font_size", 13)
+	_help_lbl.modulate = Color(1, 1, 1, 0.75)
+	vb.add_child(_help_lbl)
 
 
 # ─── Camera orbitale ─────────────────────────────────────────────────────────

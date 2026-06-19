@@ -10,7 +10,7 @@ func _ready() -> void:
 
 	var version: String = str(ProjectSettings.get_setting("application/config/version", "?"))
 	$Version.text = "v%s" % version
-	$Changes.text = "Novità v%s:\n• Controller telefono: carte con ARTE reale, layout touch, riconnessione automatica\n• Il relay serve anche il controller e le immagini (apri http://<ip>:porta/)\n• ONLINE companion (tavolo 3D + telefoni); animazioni di combattimento; istantanee\nVedi docs/MULTIPLAYER_PLAN.md e CHANGELOG.md" % version
+	$Changes.text = "Novità v%s:\n• Tavolo online: indirizzo server modificabile + riconnessione automatica\n• Controller telefono con arte reale delle carte; il relay serve anche le pagine\n• ONLINE companion (tavolo 3D + telefoni); animazioni; carte istantanee\nVedi docs/MULTIPLAYER_PLAN.md e CHANGELOG.md" % version
 
 
 func _on_solo() -> void:
