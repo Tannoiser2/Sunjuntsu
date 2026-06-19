@@ -55,5 +55,10 @@ Pubblico (board/pedine/ferite/narrazione/animazioni) resta sul tavolo.
 - ✅ Tappa 1: `engine/MatchProtocol.gd` + `tests/test_protocol`.
 - ✅ Tappa 2: `net/LoopbackChannel.gd` + `net/MatchHost.gd` + `net/MatchClient.gd` +
   `tests/test_loopback` (host + 2 client via canale, messaggi JSON, partita completa).
-- ⬜ Tappa 3: canale **WebSocket** + server stanze + pagina telefono HTML.
-- ⬜ Tappa 4: rifinitura UI telefono (touch, immagini carte, riconnessione).
+- ✅ Tappa 3: **server WebSocket + stanze** (`server/server.js`, test `relay.test.mjs`),
+  **canale Godot** (`net/WebSocketChannel.gd`), **pagina telefono** (`phone/`), ed E2E reale
+  (`godot/tests/run_ws_e2e.sh`: relay + tavolo Godot + 2 client via WebSocket → partita
+  completa). **Manca**: integrare il TAVOLO 3D (Arena) come vista host (oggi il tavolo è
+  testato headless) e l'hosting del relay su un host sempre acceso.
+- ⬜ Tappa 4: integrazione tavolo (Arena ← MatchHost) + rifinitura UI telefono
+  (touch, immagini carte, riconnessione) + deploy del relay.

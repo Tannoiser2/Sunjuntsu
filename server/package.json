@@ -1,0 +1,14 @@
+{
+  "name": "senjutsu-relay",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Mini server WebSocket (relay con stanze) per il multiplayer companion di Senjutsu.",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node relay.test.mjs"
+  },
+  "dependencies": {
+    "ws": "^8.21.0"
+  }
+}

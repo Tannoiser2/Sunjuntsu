@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Senjutsu — Controller</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="connect" class="screen">
+    <h1>Senjutsu</h1>
+    <p class="sub">Controller del giocatore</p>
+    <label>Server
+      <input id="server" type="text" placeholder="ws://INDIRIZZO:8123" />
+    </label>
+    <label>Codice stanza
+      <input id="code" type="text" maxlength="6" autocapitalize="characters" placeholder="ABCD" />
+    </label>
+    <div class="seats">
+      <button class="seat" data-seat="0">Giocatore 1</button>
+      <button class="seat" data-seat="1">Giocatore 2</button>
+    </div>
+    <p id="status" class="status"></p>
+  </div>
+
+  <div id="game" class="screen hidden">
+    <header>
+      <span id="who"></span>
+      <span id="pubstatus" class="pub"></span>
+    </header>
+    <h2 id="title">In attesa…</h2>
+    <div id="prompt"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
