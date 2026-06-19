@@ -3,6 +3,14 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.50.0] — 2026-06-19
+### Fix: «Avanti» nascosto e mano sovrapposta in Rivelazione
+- La **mano** ora viene **nascosta** in Rivelazione/Risoluzione (prima restava visibile e
+  interattiva: più carte si alzavano insieme e coprivano lo schermo). Torna in Programmazione.
+- Il pulsante **«Avanti» / «Fine»** ora sta **sopra** le carte (z-index alto): prima era
+  coperto dal ventaglio della mano e non si riusciva a premerlo.
+- Corretto il refresh che ri-mostrava la mano subito dopo aver bloccato la carta. Versione 0.50.0.
+
 ## [0.49.0] — 2026-06-19
 ### Flusso del turno corretto (solo/locale): Programmazione → Rivelazione → Risoluzione
 - **Programmazione**: scegli la carta e premi **«Conferma carta»** per bloccarla (coperta).
