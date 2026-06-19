@@ -3,6 +3,19 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.49.0] — 2026-06-19
+### Flusso del turno corretto (solo/locale): Programmazione → Rivelazione → Risoluzione
+- **Programmazione**: scegli la carta e premi **«Conferma carta»** per bloccarla (coperta).
+  Niente più "muovi e poi conferma": la conferma è solo qui, all'inizio.
+- **Rivelazione**: si vedono le **carte giocate** e l'**ordine d'iniziativa** (alta → bassa);
+  premi **«Avanti»** per iniziare.
+- **Risoluzione per iniziativa**: prima chi ha iniziativa più alta fa *movimento → rotazione →
+  attacco/azioni*, poi il successivo. In risoluzione niente pulsante a metà: muovi (giallo),
+  ruoti, poi tocchi il **bersaglio rosso** per attaccare (o **«Fine»** se la carta non attacca).
+- La barra di stato indica chiaramente l'iniziativa corrente e di chi è il turno.
+- Aggiornati i test pilotati dall'Arena per la nuova fase di Rivelazione. Suite verde (20).
+  Versione 0.49.0.
+
 ## [0.48.0] — 2026-06-19
 ### Tavolo: ordine d'iniziativa + animazioni delle carte
 - **Ordine d'iniziativa** mostrato sul tavolo: "Ordine iniziativa: 1) G1 Att ⚡8 · 2) G2 Dif ⚡5",

@@ -53,6 +53,9 @@ var _kamae_shown: int = 0    ## quale combattente è mostrato ora nella carta Ka
 var _instant_mode: String = ""   ## "replace" (Rivelazione) | "play" (Risoluzione) | ""
 var _instant_index: int = -1     ## combattente a cui è offerta la scelta istantanea
 var _visuals: bool = true        ## animazioni di combattimento attive (disattive in headless)
+var _reveal_order: Array = []    ## ordine d'iniziativa (per il pannello di rivelazione)
+var _reveal_pending: int = -1    ## primo combattente da risolvere, in attesa di «Avanti»
+var _revealed_planned: Dictionary = {}
 
 
 func _ready() -> void:
@@ -85,6 +88,7 @@ func _start_duel() -> void:
 	_duel.await_instant_replace.connect(_on_await_instant_replace)
 	_duel.await_instant_play.connect(_on_await_instant_play)
 	_duel.combat_event.connect(_on_combat_event)
+	_duel.resolution_order.connect(func(o): _reveal_order = o)
 	_hud.instant_chosen.connect(_on_instant_chosen)
 	_hud.card_selected.connect(_on_card_selected)
 	_hud.card_hovered.connect(_on_card_hovered)
@@ -143,6 +147,9 @@ func _on_phase_changed(p: int) -> void:
 	_selected_card = {}
 	_move_used = false
 	_kamae_used = false
+	_reveal_pending = -1
+	_reveal_order = []
+	_revealed_planned = {}
 	_clear_overlays()
 	_hud.hide_kamae()
 	_hud.hide_confirm()
@@ -188,12 +195,12 @@ func _on_card_played(card_data: Dictionary) -> void:
 	_selected_card = {}
 	_clear_overlays()
 	_hud.hide_kamae()
+	_hud.hide_confirm()
 	# 1v1: se l'altro umano deve ancora programmare, passa il dispositivo.
 	if _versus and state.phase == Domain.Phase.PLANNING:
 		_enter_handoff()
 		return
-	if not _versus:
-		_hud.show_played_card(String(card_data.get("file", "")), String(card_data.get("name", "?")))
+	# La carta è bloccata (coperta). La RIVELAZIONE arriva da _on_cards_revealed.
 	_hud.set_info("Carta programmata (coperta). Rivelazione…")
 	_refresh_hand()
 
@@ -217,18 +224,48 @@ func _on_fighter_updated(_i: int) -> void:
 	_refresh_status()
 
 
-## Entrambe le carte rivelate: mostra cosa ha giocato l'avversario.
+## Entrambe le carte rivelate → fase RIVELAZIONE: si fermano le azioni finché il
+## giocatore non preme «Avanti», così vede le carte e l'ordine d'iniziativa.
 func _on_cards_revealed(planned: Dictionary) -> void:
-	var mine := int(planned.get(0, -1))
-	var theirs := int(planned.get(1, -1))
-	var my_name: String = CardDB.card(mine).get("name", "—")
-	var their_name: String = CardDB.card(theirs).get("name", "—")
-	_hud.set_info("Rivelazione — Tu: %s · Avversario: %s" % [my_name, their_name])
+	_revealed_planned = planned
+	_phase_mode = "reveal"
 
 
 ## Tocca a `i` risolvere (ordine d'iniziativa). Se sei tu, muovi e attacca;
 ## se è l'IA, agisce da sola.
 func _on_await_resolution(i: int) -> void:
+	# Fase RIVELAZIONE: il primo a risolvere aspetta che il giocatore prema «Avanti».
+	if _phase_mode == "reveal":
+		_reveal_pending = i
+		_show_reveal_panel()
+		return
+	_drive_resolution(i)
+
+
+## Pannello di rivelazione: carte giocate + ordine d'iniziativa, in attesa di «Avanti».
+func _show_reveal_panel() -> void:
+	var mine := int(_revealed_planned.get(0, -1))
+	var theirs := int(_revealed_planned.get(1, -1))
+	_clear_overlays()
+	_hud.hide_kamae(); _hud.hide_options(); _hud.hide_instant()
+	if not _versus:
+		_hud.show_played_card(CardDB.image_for(mine), CardDB.card(mine).get("name", "?"))
+	_hud.set_info("Rivelazione — %s: %s   ·   %s: %s" % [
+		_who(0), CardDB.card(mine).get("name", "—"), _who(1), CardDB.card(theirs).get("name", "—")])
+	# Ordine d'iniziativa (alta → bassa).
+	var parts: Array = []
+	var n := 1
+	for o in _reveal_order:
+		var sp := int(o.get("speed", -1))
+		parts.append("%d) %s%s" % [n, _who(int(o.get("i", 0))), (" ⚡%d" % sp) if sp >= 0 else ""])
+		n += 1
+	var ordtxt := ("  ·  Ordine: " + " → ".join(parts)) if not parts.is_empty() else ""
+	_hud.set_hint("RIVELAZIONE: si risolve per iniziativa (alta → bassa).%s  ·  Premi «Avanti» per iniziare." % ordtxt)
+	_hud.show_confirm("Avanti ▶ — risolvi")
+
+
+## Avvia la risoluzione interattiva per il combattente `i` (umano o IA).
+func _drive_resolution(i: int) -> void:
 	_resolving_index = i
 	_instant_mode = ""
 	_hud.hide_instant()
@@ -250,11 +287,11 @@ func _on_await_resolution(i: int) -> void:
 			_refresh_overlays()
 			_show_choosers()
 		_refresh_status()
-		_hud.show_confirm()
+		_hud.show_confirm("Fine ▶")
 		var ini := _duel._speed_of(i) if _duel != null else -1
-		var step := "muovi e ruota la pedina" if _movable_cells_exist() else "scegli ed esegui"
-		_hud.set_info("⚔ Risoluzione — %s · iniziativa %s · %s: %s" % [
-			_who(i), (str(ini) if ini >= 0 else "—"), step, _selected_card.get("name", "?")])
+		var step := "muovi (giallo) e ruota, poi tocca il bersaglio rosso o «Fine»" if _movable_cells_exist() else "tocca il bersaglio rosso o «Fine»"
+		_hud.set_info("⚔ Iniziativa %s — %s: %s · %s" % [
+			(str(ini) if ini >= 0 else "—"), _who(i), step, _selected_card.get("name", "?")])
 	else:
 		_phase_mode = "ai"
 		_clear_overlays()
@@ -300,7 +337,20 @@ func _confirm_resolution() -> void:
 		_refresh_hand()
 		_refresh_status()
 		_hud.set_info("Giocatore %d: programma una carta" % (_planning_player + 1))
-		_hud.set_hint("Giocatore %d — 1° click anteprima · 2° click PROGRAMMA (coperta)." % (_planning_player + 1))
+		_hud.set_hint("Giocatore %d — scegli una carta e premi «Conferma carta»." % (_planning_player + 1))
+		return
+	# PROGRAMMAZIONE: «Conferma carta» blocca la carta scelta (coperta).
+	if _phase_mode == "planning":
+		if not _selected_card.is_empty():
+			_on_card_played(_selected_card)
+		return
+	# RIVELAZIONE: «Avanti» avvia la risoluzione per iniziativa.
+	if _phase_mode == "reveal":
+		_phase_mode = "wait"
+		_hud.hide_confirm()
+		var idx := _reveal_pending
+		_reveal_pending = -1
+		_drive_resolution(idx)
 		return
 	if _phase_mode != "resolving":
 		return
@@ -713,7 +763,13 @@ func _on_card_selected(card_data: Dictionary) -> void:
 	_kamae_used = false
 	_refresh_overlays()   # anteprima informativa (il movimento avverrà in risoluzione)
 	_hud.hide_kamae()
-	_hud.set_hint("Anteprima: giallo = mosse della carta, rosso = arco. 2° click = PROGRAMMA (coperta).")
+	# Flusso A: scegli la carta, poi CONFERMA per bloccarla (coperta). Il movimento
+	# e l'attacco avverranno DOPO, in risoluzione, secondo l'ordine d'iniziativa.
+	if Duel.playable(state.fighters[_planning_player], int(card_data.get("id", -1))):
+		_hud.show_confirm("✓ Conferma carta")
+	else:
+		_hud.hide_confirm()
+	_hud.set_hint("Anteprima: giallo = mosse, rosso = arco. Premi «Conferma carta» per programmarla (coperta).")
 
 
 ## Passaggio del mouse su una carta in mano: la carta si alza (CardView) e qui
