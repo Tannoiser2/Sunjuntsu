@@ -54,9 +54,14 @@ func _init(initial_state: GameState) -> void:
 func _board_data() -> Dictionary:
 	var arr: Array = []
 	for f in state.fighters:
+		var bleed := 0
+		for w in f.wounds:
+			if str(w) == "bleed":
+				bleed += 1
 		arr.append({
 			"name": f.character, "cell": _cell_key(f.cell), "facing": f.facing,
 			"wounds": f.wounds.size(), "limit": f.effective_wound_limit(),
+			"bleed": bleed, "poison": f.poison,
 			"stun": f.stun, "focus": f.focus, "kamae": Domain.STANCE_SLUG[f.stance],
 			"hand": f.hand.size(), "deck": f.draw_pile.size(), "discard": f.discard.size(),
 		})

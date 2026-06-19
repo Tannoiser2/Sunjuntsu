@@ -48,10 +48,22 @@
     </header>
     <p id="net" class="net"></p>
     <main id="content"></main>
-    <!-- Ritratti dei due contendenti ai lati dello schermo (chi combatte). -->
+    <!-- Ritratti dei due contendenti ai lati dello schermo (chi combatte). Tocca = scheda. -->
     <div id="fighters" class="fighters">
       <figure id="fLeft" class="fighter left hidden"><img class="pic" alt="" /><figcaption class="nm"></figcaption></figure>
       <figure id="fRight" class="fighter right hidden"><img class="pic" alt="" /><figcaption class="nm"></figcaption></figure>
+    </div>
+    <!-- Scheda personaggio (carta reale + ferite/veleno/focus). -->
+    <div id="charcard" class="charcard hidden">
+      <div class="cc-box">
+        <img class="cc-img" alt="" />
+        <div class="cc-status">
+          <div class="cc-name"></div>
+          <div class="cc-row cc-wounds"></div>
+          <div class="cc-row cc-focus"></div>
+        </div>
+        <button class="cc-close primary">Chiudi ✕</button>
+      </div>
     </div>
   </div>
 

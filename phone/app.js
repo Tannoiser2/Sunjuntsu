@@ -21,6 +21,7 @@ $("code").value = (qs.get("code") || LS.getItem("senjutsu.code") || "").toUpperC
 document.querySelectorAll(".seat").forEach((b) =>
   b.addEventListener("click", () => startConnect(Number(b.dataset.seat))));
 $("leave").addEventListener("click", leave);
+$("charcard").addEventListener("click", (e) => { if (e.target.id === "charcard" || e.target.className === "cc-close primary") closeCharCard(); });
 
 const savedSeat = LS.getItem("senjutsu.seat");
 if (savedSeat !== null && $("code").value) startConnect(Number(savedSeat));
@@ -128,7 +129,9 @@ function updateHud() {
   const k = $("kamae");
   k.className = "chip " + (me.kamae || "neutral");
   k.textContent = kamaeLabel(me.kamae);
-  $("wounds").textContent = `❤ ${me.wounds}/${me.limit}` + (me.stun ? `  ✦${me.stun}` : "");
+  $("wounds").textContent = `❤ ${me.wounds}/${me.limit}`
+    + (me.bleed ? ` 🩸${me.bleed}` : "") + (me.poison ? ` ☠${me.poison}` : "")
+    + (me.stun ? `  ✦${me.stun}` : "");
   $("focus").textContent = "◈".repeat(me.focus) + "◇".repeat(Math.max(0, 3 - me.focus));
   $("round").textContent = `Round ${board.round}`;
   updateFighters();
@@ -149,6 +152,7 @@ function setFighter(fig, idx, role) {
   if (idx < 0 || !board.fighters[idx]) { fig.classList.add("hidden"); return; }
   const f = board.fighters[idx];
   fig.className = "fighter " + (role === "me" ? "left me" : "right foe") + (idx === activeSeat ? " active" : "");
+  fig.onclick = () => openCharCard(idx);
   const pic = fig.querySelector(".pic");
   const file = portraitFile(f.name);
   if (file && PORTRAIT_BASE) {
@@ -158,6 +162,29 @@ function setFighter(fig, idx, role) {
   } else { pic.style.visibility = "hidden"; }
   fig.querySelector(".nm").textContent = f.name || "";
 }
+
+// ── Scheda personaggio (carta reale + ferite/sanguinanti/veleno/focus) ──
+function charFile(name) { return ({ Ronin: "ronin/ronin_char.webp", Warrior: "warrior/warrior_char.webp" })[name] || ""; }
+
+function openCharCard(idx) {
+  if (!board || !board.fighters || !board.fighters[idx]) return;
+  const f = board.fighters[idx];
+  const card = $("charcard"); card.classList.remove("hidden");
+  const img = card.querySelector(".cc-img");
+  const file = charFile(f.name);
+  if (file && IMG_BASE) { img.src = IMG_BASE + file; img.style.display = ""; img.onerror = () => { img.style.display = "none"; }; }
+  else img.style.display = "none";
+  card.querySelector(".cc-name").textContent = `G${idx + 1} · ${f.name}`;
+  const total = f.wounds || 0, bleed = f.bleed || 0, limit = f.limit || 0;
+  const normal = Math.max(0, total - bleed), free = Math.max(0, limit - total);
+  let wh = "Ferite: " + "❤".repeat(normal) + "🩸".repeat(bleed) + "♡".repeat(free);
+  if (f.poison) wh += "  ☠×" + f.poison;
+  if (f.stun) wh += "  ✦" + f.stun;
+  card.querySelector(".cc-wounds").textContent = wh;
+  card.querySelector(".cc-focus").textContent = "Focus: " + "◈".repeat(f.focus) + "◇".repeat(Math.max(0, 3 - f.focus));
+}
+
+function closeCharCard() { $("charcard").classList.add("hidden"); }
 
 // ── Helpers DOM/SVG ──────────────────────────────────────────────────────────
 function el(tag, cls, txt) { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
