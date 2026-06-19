@@ -11,6 +11,7 @@ signal card_hovered(card_data: Dictionary, entered: bool)
 signal kamae_chosen(slug: String)
 signal confirm_pressed()
 signal option_chosen(alt: String)
+signal rotate_requested(dir: int)
 
 @onready var hand: Control = $Hand
 @onready var info: Label = $Top/Info
@@ -48,6 +49,8 @@ func _ready() -> void:
 	_build_confirm_button()
 	_build_option_chooser()
 	_build_status_strip()
+	_build_rotation_controls()
+	_build_focus_widget()
 
 
 ## Riquadro "carta giocata": mostra la carta programmata finché non è scartata a
@@ -256,14 +259,42 @@ func _build_kamae_chooser() -> void:
 	_kamae_box.set_meta("wrap", wrap)
 
 
+var _kamae_hl: Array = []   ## pannelli che illuminano i nodi raggiungibili sulla carta Kamae
+
+
+## Illumina sulla carta Kamae i nodi (caselle) raggiungibili dalla posizione attuale.
+func _highlight_kamae_nodes(reachable: Dictionary) -> void:
+	for p in _kamae_hl:
+		p.queue_free()
+	_kamae_hl.clear()
+	for slug in reachable:
+		if not _tree_nodes.has(slug):
+			continue
+		var n: Array = _tree_nodes[slug]
+		var hl := Panel.new()
+		hl.size = Vector2(34, 34)
+		hl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = Color(0.3, 0.95, 0.45, 0.32)
+		sb.set_border_width_all(3)
+		sb.border_color = Color(0.45, 1, 0.55)
+		sb.set_corner_radius_all(17)
+		hl.add_theme_stylebox_override("panel", sb)
+		_tree_panel.add_child(hl)
+		hl.position = Vector2(float(n[0]) * _tree_panel.size.x, float(n[1]) * _tree_panel.size.y) - hl.size * 0.5
+		_kamae_hl.append(hl)
+
+
 ## Mostra il selettore Kamae: `current` evidenziato, raggiungibili abilitati
 ## (reachable: slug -> focus guadagnato). Vuoto = nascondi.
 func show_kamae(current: String, reachable: Dictionary) -> void:
 	var wrap: Control = _kamae_box.get_meta("wrap")
 	if reachable.is_empty():
 		wrap.visible = false
+		_highlight_kamae_nodes({})
 		return
 	wrap.visible = true
+	_highlight_kamae_nodes(reachable)
 	for slug in _kamae_btns:
 		var b: Button = _kamae_btns[slug]
 		var name: String = _STANCE_LABEL[slug]
@@ -281,6 +312,7 @@ func show_kamae(current: String, reachable: Dictionary) -> void:
 
 func hide_kamae() -> void:
 	(_kamae_box.get_meta("wrap") as Control).visible = false
+	_highlight_kamae_nodes({})
 
 
 ## Mostra in mano le carte indicate (array di dizionari carta).
@@ -343,6 +375,73 @@ func set_status_cards(entries: Array) -> void:
 			lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			row.add_child(lbl)
 		_status_panel.add_child(row)
+
+
+## ── Frecce di rotazione vicino alla pedina (al posto dei tasti Q/E) ───────────
+var _rot_box: Control
+
+
+func _build_rotation_controls() -> void:
+	_rot_box = Control.new()
+	_rot_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_rot_box)
+	var bl := Button.new()
+	bl.text = "⟲"
+	bl.custom_minimum_size = Vector2(50, 50)
+	bl.position = Vector2(-96, -25)
+	bl.tooltip_text = "Ruota a sinistra"
+	bl.add_theme_font_size_override("font_size", 24)
+	bl.pressed.connect(func(): rotate_requested.emit(-1))
+	_rot_box.add_child(bl)
+	var br := Button.new()
+	br.text = "⟳"
+	br.custom_minimum_size = Vector2(50, 50)
+	br.position = Vector2(46, -25)
+	br.tooltip_text = "Ruota a destra"
+	br.add_theme_font_size_override("font_size", 24)
+	br.pressed.connect(func(): rotate_requested.emit(1))
+	_rot_box.add_child(br)
+	_rot_box.visible = false
+
+
+## Mostra le frecce di rotazione centrate sulla posizione-schermo `pos` della pedina.
+func show_rotation(pos: Vector2) -> void:
+	_rot_box.position = pos
+	_rot_box.visible = true
+
+
+func hide_rotation() -> void:
+	_rot_box.visible = false
+
+
+## ── Indicatore FOCUS (gettoni di concentrazione) ─────────────────────────────
+var _focus_lbl: Label
+var _focus_panel: PanelContainer
+
+
+func _build_focus_widget() -> void:
+	_focus_panel = PanelContainer.new()
+	_focus_panel.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+	_focus_panel.anchor_top = 1.0
+	_focus_panel.anchor_bottom = 1.0
+	_focus_panel.offset_left = 10
+	_focus_panel.offset_right = 250
+	_focus_panel.offset_top = -98
+	_focus_panel.offset_bottom = -54
+	_focus_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_focus_panel)
+	_focus_lbl = Label.new()
+	_focus_lbl.add_theme_font_size_override("font_size", 20)
+	_focus_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_focus_panel.add_child(_focus_lbl)
+
+
+## Mostra i gettoni focus del giocatore di turno: pieni ◈ e vuoti ◇ fino a `maxv`.
+func set_focus(who: String, cur: int, maxv: int) -> void:
+	var tokens := ""
+	for k in range(maxv):
+		tokens += "◈" if k < cur else "◇"
+	_focus_lbl.text = "%s — Focus  %s  (%d/%d)" % [who, tokens, cur, maxv]
 
 
 func set_info(text: String) -> void:
