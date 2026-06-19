@@ -3,6 +3,13 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.51.0] — 2026-06-19
+### Fix: turno bloccato dopo aver giocato la carta («Avanti» spariva)
+- Dopo aver bloccato la carta, il pulsante **«Avanti»** della Rivelazione veniva **nascosto
+  subito** (l'ordine delle chiamate spegneva il pulsante appena mostrato): il turno restava
+  fermo "in attesa". Ora la pulizia avviene **prima** di programmare, così la Rivelazione
+  mostra «Avanti» e si può proseguire. Versione 0.51.0.
+
 ## [0.50.0] — 2026-06-19
 ### Fix: «Avanti» nascosto e mano sovrapposta in Rivelazione
 - La **mano** ora viene **nascosta** in Rivelazione/Risoluzione (prima restava visibile e
