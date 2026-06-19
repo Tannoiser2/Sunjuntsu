@@ -60,5 +60,7 @@ Pubblico (board/pedine/ferite/narrazione/animazioni) resta sul tavolo.
   (`godot/tests/run_ws_e2e.sh`: relay + tavolo Godot + 2 client via WebSocket → partita
   completa). **Manca**: integrare il TAVOLO 3D (Arena) come vista host (oggi il tavolo è
   testato headless) e l'hosting del relay su un host sempre acceso.
-- ⬜ Tappa 4: integrazione tavolo (Arena ← MatchHost) + rifinitura UI telefono
-  (touch, immagini carte, riconnessione) + deploy del relay.
+- 🔶 Tappa 4.1: **tavolo 3D online** (`scenes/TableOnline`) + voce di menu "Online";
+  il tavolo crea la stanza, mostra il codice, possiede `MatchHost` e disegna lo stato
+  pubblico. Giocabile in **LAN** (relay locale). Manca: **hosting del relay** (gioco fuori
+  LAN) e rifinitura UI telefono (immagini carte, riconnessione).

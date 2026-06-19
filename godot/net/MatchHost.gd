@@ -28,6 +28,8 @@ func start() -> void:
 
 func _on_prompt(seat: int, kind: String, data: Dictionary) -> void:
 	channel.send_to_client(seat, {"t": "prompt", "kind": kind, "data": data})
+	# Avvisa il TAVOLO di chi sta decidendo (info pubblica, non la scelta).
+	channel.broadcast({"t": "event", "kind": "turn_of", "data": {"seat": seat, "step": kind}})
 
 
 func _on_host_msg(seat: int, msg: Dictionary) -> void:
