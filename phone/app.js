@@ -22,6 +22,7 @@ document.querySelectorAll(".seat").forEach((b) =>
   b.addEventListener("click", () => startConnect(Number(b.dataset.seat))));
 $("leave").addEventListener("click", leave);
 $("charcard").addEventListener("click", (e) => { if (e.target.id === "charcard" || e.target.className === "cc-close primary") closeCharCard(); });
+$("kamaecard").addEventListener("click", (e) => { if (e.target.id === "kamaecard" || e.target.className === "cc-close primary") closeKamae(); });
 
 const savedSeat = LS.getItem("senjutsu.seat");
 if (savedSeat !== null && $("code").value) startConnect(Number(savedSeat));
@@ -186,6 +187,32 @@ function openCharCard(idx) {
 
 function closeCharCard() { $("charcard").classList.add("hidden"); }
 
+// ── Carta Kamae interattiva: immagine + nodi raggiungibili toccabili ──
+function openKamae(ui) {
+  if (!ui || !ui.card || !IMG_BASE) return;
+  const m = $("kamaecard"); m.classList.remove("hidden");
+  const img = m.querySelector(".km-img");
+  img.src = IMG_BASE + ui.card; img.style.display = "";
+  img.onerror = () => { img.style.display = "none"; };
+  const layer = m.querySelector(".km-nodes"); layer.innerHTML = "";
+  const nodes = ui.nodes || {}, reach = ui.reach || {}, at = ui.at;
+  for (const slug in nodes) {
+    const isAt = slug === at;
+    const reachable = Object.prototype.hasOwnProperty.call(reach, slug) && !isAt;
+    if (!reachable && !isAt) continue;   // mostra solo posizione attuale e nodi raggiungibili
+    const pos = nodes[slug];
+    const n = el("button", "km-node" + (reachable ? " reach" : "") + (isAt ? " at" : ""));
+    n.style.left = (pos[0] * 100) + "%"; n.style.top = (pos[1] * 100) + "%";
+    const gain = reach[slug] || 0;
+    n.textContent = kamaeLabel(slug) + (reachable && gain > 0 ? " +◈" + gain : "") + (isAt ? " ●" : "");
+    if (reachable) n.onclick = () => { respond("resolve", { action: "kamae", slug }); closeKamae(); };
+    else n.disabled = true;
+    layer.appendChild(n);
+  }
+}
+
+function closeKamae() { $("kamaecard").classList.add("hidden"); }
+
 // ── Helpers DOM/SVG ──────────────────────────────────────────────────────────
 function el(tag, cls, txt) { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
 function svg(tag, attrs, kids) { const e = document.createElementNS(SVGNS, tag); for (const k in (attrs || {})) e.setAttribute(k, attrs[k]); (kids || []).forEach((c) => e.appendChild(c)); return e; }
@@ -324,7 +351,13 @@ function renderResolve(d) {
   } else {
     acts.appendChild(el("h3", null, "Passo 3 — Azione"));
     const kamae = d.kamae || {};
-    if (Object.keys(kamae).length) {
+    if (d.kamaeUI && d.kamaeUI.card) {
+      // Carta Kamae interattiva: apri la carta e tocca il nodo raggiungibile.
+      const kb = el("button", "jp big", "⟳ Cambia Kamae");
+      kb.onclick = () => openKamae(d.kamaeUI);
+      acts.appendChild(kb);
+    } else if (Object.keys(kamae).length) {
+      // Fallback: bottoni delle Kamae raggiungibili.
       acts.appendChild(el("div", "lbl", "Cambia Kamae"));
       const g = el("div", "grp");
       for (const slug of Object.keys(kamae)) {

@@ -126,6 +126,21 @@ input {
 .cc-row { font-size:17px; margin:3px 0; letter-spacing:1px; }
 .cc-close { min-height:48px; }
 
+/* ── Carta Kamae interattiva (immagine + nodi raggiungibili) ── */
+.kamae-wrap { position:relative; display:inline-block; max-width:84vw; max-height:62vh; }
+.km-img { display:block; max-width:84vw; max-height:62vh; border-radius:14px;
+  border:2px solid var(--seal-d); background:#cfc4ab; box-shadow:0 10px 30px rgba(0,0,0,.6); }
+.km-nodes { position:absolute; inset:0; pointer-events:none; }
+.km-node { position:absolute; transform:translate(-50%,-50%); pointer-events:auto;
+  font-size:13px; font-weight:700; padding:7px 10px; border-radius:999px; white-space:nowrap;
+  border:2px solid var(--seal-d); color:var(--ink);
+  background:linear-gradient(180deg,#f6eccd,#e9d39f); box-shadow:0 2px 6px rgba(20,12,4,.5); }
+.km-node.reach { border-color:var(--gold);
+  box-shadow:0 0 0 3px rgba(185,145,47,.55), 0 2px 6px rgba(20,12,4,.5); }
+.km-node.at { background:rgba(178,58,46,.94); color:#fff; border-color:#5a1c16; }
+.km-node:disabled { opacity:.9; }
+.km-hint { font-size:14px; }
+
 /* Vista PLAN / PICK: mano scorrevole orizzontale */
 .cards-strip {
   display:flex; gap:10px; overflow-x:auto; overflow-y:hidden; padding:12px;

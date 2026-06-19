@@ -3,6 +3,16 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.59.0] — 2026-06-19
+### Controller telefono: carta Kamae interattiva (immagine + nodi raggiungibili)
+- Quando una carta permette di **cambiare Kamae**, in risoluzione compare il pulsante
+  **«⟳ Cambia Kamae»** che apre la **carta Kamae reale** del personaggio con sopra i **nodi**
+  toccabili: il nodo **attuale** è evidenziato in rosso, i nodi **raggiungibili** in oro (con
+  l'eventuale **+◈ focus** guadagnato). Tocchi il nodo per spostare l'anello.
+- Le coordinate dei nodi e l'immagine carta vengono dai dati (`kamae_trees.json`) inviati nel
+  prompt di risoluzione (`kamaeUI`); resta il fallback a bottoni per compatibilità.
+- Completa la modalità verticale (stage 3/3). Versione 0.59.0.
+
 ## [0.58.0] — 2026-06-19
 ### Controller telefono: scheda personaggio (carta reale + ferite/veleno/focus)
 - **Tocca un ritratto** (il tuo o l'avversario) per aprire la **scheda personaggio**: la
