@@ -159,3 +159,19 @@ func card(id: int) -> Dictionary:
 ## True se la carta è di tipo attacco/difesa/meditazione.
 func is_type(c: Dictionary, t: String) -> bool:
 	return c.get("type", "") == t
+
+
+## Tipo "istantaneo" della carta dalle keyword (regolamento 1.5 p.13):
+##   "replacement" = Istantanea di Sostituzione (sostituisce la carta rivelata)
+##   "additional"  = Istantanea Aggiuntiva (giocata in più dopo aver risolto)
+##   "instant"     = Istantanea generica
+##   ""            = carta normale
+func instant_kind(id: int) -> String:
+	var kws: Array = card(id).get("keywords", [])
+	if "Instant Replacement" in kws:
+		return "replacement"
+	if "Instant Additional" in kws:
+		return "additional"
+	if "Instant" in kws:
+		return "instant"
+	return ""

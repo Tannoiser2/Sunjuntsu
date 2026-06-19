@@ -22,10 +22,10 @@ func _ready() -> void:
 	a.planned = 64; b.planned = -1
 	duel._resolve_chosen_speeds({})
 	duel._resolve_card(0, {}, log)
+	# #64 Testata (trascrizione corretta): 1 ferita sul fronte, +1 focus se a segno.
 	if b.wounds.size() != 1: print("FAIL Testata ferite=", b.wounds.size()); ok = false
-	if b.hobbles.size() != 1: print("FAIL Testata hobble=", b.hobbles.size()); ok = false
 	if a.focus != 1: print("FAIL Testata focus=", a.focus); ok = false
-	if ok: print("OK #64 Testata: 1 ferita, azzoppa, +1 focus")
+	if ok: print("OK #64 Testata: 1 ferita sul fronte, +1 focus se a segno")
 
 	# 2) Bersaglio fuori arco: Testata non colpisce se il nemico è dietro.
 	b.cell = -HexGrid.DIRS[0]; b.wounds.clear(); b.hobbles.clear()

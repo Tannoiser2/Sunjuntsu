@@ -14,6 +14,9 @@ func _ready():
 	b.draw_pile=CardDB.draw_pile_for("ronin"); b.draw_pile.shuffle()
 	s.fighters.append(a); s.fighters.append(b)
 	duel=Duel.new(s); duel.interactive=true
+	# Carte istantanee: in questo test le saltiamo sempre (tieni la carta).
+	duel.await_instant_replace.connect(func(i, _o): duel.apply_instant_replace(i, -1))
+	duel.await_instant_play.connect(func(i, _o): duel.apply_instant_play(i, -1))
 	duel.await_resolution.connect(func(i):
 		awaits+=1
 		if awaits>500: return

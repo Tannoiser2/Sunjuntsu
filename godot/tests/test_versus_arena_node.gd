@@ -20,8 +20,10 @@ func _play_first_playable(arena, pi: int) -> bool:
 func _drive_resolution(arena) -> void:
 	# Conferma le risoluzioni finché il turno non torna in pianificazione (o game over).
 	var guard := 0
-	while guard < 40:
-		if arena._phase_mode == "resolving":
+	while guard < 60:
+		if arena._phase_mode == "instant":
+			arena._on_instant_chosen(-1)        # salta le carte istantanee
+		elif arena._phase_mode == "resolving":
 			arena._confirm_resolution()
 		elif arena._phase_mode == "planning" or arena.state.phase == Domain.Phase.GAME_OVER:
 			return
@@ -72,6 +74,11 @@ func _run() -> void:
 
 	# ── G2 programma → parte la RISOLUZIONE interattiva ──
 	var p1 := _play_first_playable(arena, 1)
+	# Eventuale fase di sostituzione istantanea: salta.
+	var sg := 0
+	while arena._phase_mode == "instant" and sg < 6:
+		arena._on_instant_chosen(-1)
+		sg += 1
 	if not p1:
 		print("FAIL: G2 non riesce a programmare nessuna carta"); ok = false
 	elif arena._phase_mode != "resolving":

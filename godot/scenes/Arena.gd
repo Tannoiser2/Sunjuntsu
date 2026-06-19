@@ -50,6 +50,8 @@ var _split_stage: bool = false     ## true = stai risolvendo la PARTE BASSA (ini
 var _versus: bool = false
 var _planning_player: int = 0
 var _kamae_shown: int = 0    ## quale combattente è mostrato ora nella carta Kamae dell'HUD
+var _instant_mode: String = ""   ## "replace" (Rivelazione) | "play" (Risoluzione) | ""
+var _instant_index: int = -1     ## combattente a cui è offerta la scelta istantanea
 
 
 func _ready() -> void:
@@ -78,6 +80,9 @@ func _start_duel() -> void:
 	_duel.fighter_updated.connect(_on_fighter_updated)
 	_duel.duel_over.connect(_on_duel_over)
 	_duel.phase_changed.connect(_on_phase_changed)
+	_duel.await_instant_replace.connect(_on_await_instant_replace)
+	_duel.await_instant_play.connect(_on_await_instant_play)
+	_hud.instant_chosen.connect(_on_instant_chosen)
 	_hud.card_selected.connect(_on_card_selected)
 	_hud.card_hovered.connect(_on_card_hovered)
 	_hud.confirm_pressed.connect(_confirm_resolution)
@@ -139,7 +144,9 @@ func _on_phase_changed(p: int) -> void:
 	_hud.hide_kamae()
 	_hud.hide_confirm()
 	_hud.hide_options()
+	_hud.hide_instant()
 	_hud.hide_played_card()
+	_instant_mode = ""
 	_sync_pawns()
 	_setup_kamae_for(0)
 	_refresh_hand()
@@ -220,6 +227,8 @@ func _on_cards_revealed(planned: Dictionary) -> void:
 ## se è l'IA, agisce da sola.
 func _on_await_resolution(i: int) -> void:
 	_resolving_index = i
+	_instant_mode = ""
+	_hud.hide_instant()
 	if not state.fighters[i].is_ai:
 		# Umano (giocatore solo, oppure entrambi in 1v1): risoluzione interattiva.
 		# Sequenza: 1) movimento+rotazione  2) scelte (Kamae/OPPURE)  3) conferma.
@@ -344,6 +353,8 @@ func _on_turn_resolved(log: Array) -> void:
 	_hud.hide_kamae()
 	_hud.hide_confirm()
 	_hud.hide_options()
+	_hud.hide_instant()
+	_instant_mode = ""
 	_sync_pawns()
 	_refresh_hand()
 	_refresh_status()
@@ -804,6 +815,63 @@ func _on_option_chosen(alt: String) -> void:
 		return
 	_duel.set_option_choice(_resolving_index, alt)
 	_hud.mark_option(alt)
+
+
+## Etichetta breve per il selettore istantanee (nome · tipo · costo focus).
+func _instant_label(id: int) -> String:
+	var c := CardDB.card(id)
+	var typ: int = Domain.parse_card_type(str(c.get("type", "")))
+	var cost := int(c.get("focus", 0))
+	var s := "%s\n%s" % [c.get("name", "?"), Domain.CARD_TYPE_LABELS.get(typ, "?")]
+	if cost > 0:
+		s += " · ◈%d" % cost
+	return s
+
+
+func _instant_options(ids: Array) -> Array:
+	var out: Array = []
+	for id in ids:
+		out.append({"id": int(id), "label": _instant_label(int(id))})
+	return out
+
+
+## Rivelazione: offri la SOSTITUZIONE istantanea della carta rivelata di `i`.
+func _on_await_instant_replace(i: int, options: Array) -> void:
+	_instant_mode = "replace"
+	_instant_index = i
+	_phase_mode = "instant"
+	_clear_overlays()
+	_hud.hide_kamae(); _hud.hide_options(); _hud.hide_confirm()
+	_setup_kamae_for(i)
+	_refresh_status()
+	_hud.set_info("Sostituzione — %s: puoi sostituire la carta rivelata con un'istantanea" % _who(i))
+	_hud.set_hint("ISTANTANEA DI SOSTITUZIONE: scegli una carta (tipo diverso) o «Tieni / Salta».")
+	_hud.show_instant("%s — Sostituire la carta rivelata?" % _who(i), _instant_options(options))
+
+
+## Risoluzione: offri di giocare 1 carta istantanea aggiuntiva dopo la carta di `i`.
+func _on_await_instant_play(i: int, options: Array) -> void:
+	_instant_mode = "play"
+	_instant_index = i
+	_phase_mode = "instant"
+	_hud.hide_kamae(); _hud.hide_options(); _hud.hide_confirm()
+	_hud.set_info("Istantanea — %s: puoi giocare 1 carta istantanea aggiuntiva" % _who(i))
+	_hud.set_hint("ISTANTANEA AGGIUNTIVA: gioca 1 carta istantanea oppure «Tieni / Salta».")
+	_hud.show_instant("%s — Giocare un'istantanea aggiuntiva?" % _who(i), _instant_options(options))
+
+
+func _on_instant_chosen(id: int) -> void:
+	if _instant_mode == "":
+		return
+	var mode := _instant_mode
+	var idx := _instant_index
+	_instant_mode = ""
+	_instant_index = -1
+	_hud.hide_instant()
+	if mode == "replace":
+		_duel.apply_instant_replace(idx, id)   # → finalizza e parte la risoluzione
+	elif mode == "play":
+		_duel.apply_instant_play(idx, id)      # → prosegue l'ordine d'iniziativa
 
 
 ## Il giocatore sceglie la nuova posizione Kamae (con focus dai rami rosa).

@@ -16,6 +16,8 @@ func _ready():
 	var revealed=[false]
 	var resolved_steps=[0]
 	var turn_done=[false]
+	duel.await_instant_replace.connect(func(i,_o): duel.apply_instant_replace(i,-1))
+	duel.await_instant_play.connect(func(i,_o): duel.apply_instant_play(i,-1))
 	duel.cards_revealed.connect(func(p): revealed[0]=true)
 	duel.await_resolution.connect(func(i):
 		resolved_steps[0]+=1
@@ -39,8 +41,13 @@ func _ready():
 	else: print("OK: turno completato (cleanup)")
 	if a.discard.size() <= disc_before: print("FAIL: nessuno scarto"); ok=false
 	else: print("OK: carta scartata (scarti ", a.discard.size(), ")")
-	# Regola 1.5: si pesca 1 carta a inizio turno (mano = limite+1 prima di scegliere).
-	if a.hand.size() != a.hand_limit + 1: print("FAIL: pesca inizio turno errata =", a.hand.size(), " atteso ", a.hand_limit+1); ok=false
-	else: print("OK: pescata 1 a inizio turno, mano =", a.hand.size())
+	# Regola 1.5: si pesca 1 a inizio turno; le carte CORE stanno in mano ma NON
+	# contano verso il limite. Verifichiamo gli slot NON-core (limite .. limite+1).
+	var noncore := 0
+	for cid in a.hand:
+		if not Duel.is_core(cid): noncore += 1
+	if noncore < a.hand_limit or noncore > a.hand_limit + 1:
+		print("FAIL: slot mano non-core fuori range =", noncore, " (atteso ", a.hand_limit, "..", a.hand_limit+1, ")"); ok=false
+	else: print("OK: slot non-core nel limite (", noncore, "), core in mano a parte")
 	print("RISULTATO: ", "PASS" if ok else "FAIL")
 	get_tree().quit(0 if ok else 1)

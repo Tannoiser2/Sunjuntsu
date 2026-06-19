@@ -9,7 +9,7 @@ func _ready() -> void:
 
 	var version: String = str(ProjectSettings.get_setting("application/config/version", "?"))
 	$Version.text = "v%s" % version
-	$Changes.text = "Novità v%s:\n• GUI rinnovata: bottoni in stile, carte più in alto, testi leggibili\n• Focus VISIBILE (gettoni ◈) e spesa mostrata; rotazione con frecce ⟲⟳ sulla pedina\n• Risoluzione chiara: movimento→rotazione→scelte→conferma; nodi Kamae illuminati\nVedi REGOLAMENTO_FEDELTA.md e CHANGELOG.md" % version
+	$Changes.text = "Novità v%s:\n• Carte ISTANTANEE: sostituzione della carta rivelata + istantanee aggiuntive\n• GUI rinnovata: bottoni in stile, focus visibile (◈), rotazione con frecce ⟲⟳\n• Risoluzione chiara: movimento→rotazione→scelte→conferma; nodi Kamae illuminati\nVedi REGOLAMENTO_FEDELTA.md e CHANGELOG.md" % version
 
 
 func _on_solo() -> void:
