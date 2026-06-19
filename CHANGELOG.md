@@ -3,6 +3,16 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.54.0] — 2026-06-19
+### Fix: controller telefono bloccato in risoluzione («in attesa» senza tasti)
+- Nel passo **Rotazione** il telefono chiamava una funzione (`facingLabel`) **mai definita**:
+  l'errore interrompeva il disegno della schermata **prima** di mostrare i comandi, lasciando il
+  telefono fermo su "In attesa…" **senza pulsanti**. Aggiunta la funzione (frecce di
+  orientamento ↘ ↗ ↑ ↖ ↙ ↓): la risoluzione ora prosegue regolarmente.
+- I **comandi non coprono più la mappa**: layout a colonna con **mappa sopra** (grande) e
+  **barra comandi sotto** (mai sovrapposta). Rimosso un blocco CSS duplicato che reintroduceva
+  il vecchio pannello laterale sovrapposto. Versione 0.54.0.
+
 ## [0.53.0] — 2026-06-19
 ### Controller telefono: mappa a tutto schermo, comandi grandi centrati, passi separati
 - La **mappa** in risoluzione ora occupa **tutto lo schermo** (più grande); al tocco sul posto
