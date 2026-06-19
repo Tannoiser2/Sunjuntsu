@@ -132,8 +132,13 @@ input {
 
 /* Vista RESOLVE: mappa + pannello azioni */
 .resolve { display:flex; width:100%; min-height:0; }
-.map-wrap { flex:1; min-width:0; display:flex; align-items:center; justify-content:center; padding:8px; }
-.map { width:100%; height:100%; touch-action:manipulation; }
+.map-wrap { flex:1; min-width:0; display:flex; align-items:center; justify-content:center;
+  padding:6px; overflow:hidden; perspective:900px; }
+/* Inclinazione "da tavolo" come la camera del 3D */
+.map3d { width:100%; height:100%; display:flex; align-items:center; justify-content:center;
+  transform: rotateX(40deg) scale(1.02); transform-origin:center 58%; }
+.map { width:100%; height:100%; touch-action:manipulation;
+  filter: drop-shadow(0 10px 14px rgba(20,12,4,.45)); }
 .acts {
   flex:0 0 168px; display:flex; flex-direction:column; gap:8px; padding:10px;
   border-left:1px solid var(--line); background:linear-gradient(180deg,#efe7d5,#e7dcc4);
@@ -145,10 +150,11 @@ input {
 .acts .grp button { flex:1 1 46%; padding:9px; font-size:14px; }
 .acts .confirm { margin-top:auto; padding:14px; font-size:18px; }
 
-/* Mappa: tessere e pedine */
-.hex { fill:#cdbf9f; stroke:#a8966f; stroke-width:1; }
-.hex.move { fill:#e7c75a; cursor:pointer; }
-.hex.target { fill:#d8694f; cursor:pointer; }
+/* Mappa: tessere e pedine. Le tessere neutre sono semi-trasparenti per far
+   vedere la texture vera della mappa sotto; mosse/bersagli restano evidenti. */
+.hex { fill:#15100a; fill-opacity:0.10; stroke:#1c140c; stroke-opacity:0.45; stroke-width:1; }
+.hex.move { fill:#e7c75a; fill-opacity:0.78; cursor:pointer; }
+.hex.target { fill:#d8694f; fill-opacity:0.82; cursor:pointer; }
 .hex.move:active, .hex.target:active { filter:brightness(1.1); }
 .pawn-me { fill:#b23a2e; stroke:#5a1c16; stroke-width:1.5; }
 .pawn-foe { fill:#2f5fa6; stroke:#173058; stroke-width:1.5; }

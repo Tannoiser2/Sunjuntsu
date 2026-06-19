@@ -29,6 +29,7 @@ const rooms = new Map(); // code -> { table: ws|null, seats: Map<number, ws> }
 const HERE = dirname(fileURLToPath(import.meta.url));
 const PHONE_DIR = join(HERE, "..", "phone");
 const CARDS_DIR = join(HERE, "..", "godot", "assets", "cards");
+const MAPS_DIR = join(HERE, "..", "godot", "assets", "maps");
 const MIME = {
   ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8",
   ".css": "text/css; charset=utf-8", ".json": "application/json",
@@ -59,6 +60,10 @@ const http = createServer(async (req, res) => {
   if (url === "/" || url === "") url = "/index.html";
   if (url.startsWith("/cards/")) {
     const p = safeJoin(CARDS_DIR, url.slice("/cards/".length));
+    return p ? serveFile(res, p) : (res.writeHead(403), res.end("403"));
+  }
+  if (url.startsWith("/maps/")) {
+    const p = safeJoin(MAPS_DIR, url.slice("/maps/".length));
     return p ? serveFile(res, p) : (res.writeHead(403), res.end("403"));
   }
   const p = safeJoin(PHONE_DIR, url);

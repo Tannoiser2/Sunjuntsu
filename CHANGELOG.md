@@ -3,6 +3,15 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.45.0] — 2026-06-19
+### Telefono: mappa in stile 3D (texture vera + inclinazione da tavolo)
+- La mini-mappa toccabile del telefono ora mostra la **texture reale della mappa** sotto gli
+  esagoni e ha un'**inclinazione "da tavolo"** (prospettiva) per assomigliare alla vista 3D
+  del computer. Le tessere neutre sono semi-trasparenti (si vede la mappa); le caselle di
+  **movimento** (gialle) e i **bersagli** (rosse) restano ben evidenti e toccabili.
+- Il relay serve anche le **mappe** via HTTP su `/maps/...` (stessa porta), oltre a controller
+  e carte. Versione 0.45.0.
+
 ## [0.44.0] — 2026-06-19
 ### Carte Ronin e Guerriero ri-trascritte (Excel CORRETTO + audit)
 - Importate le **correzioni** dai due Excel (`*_carte_CORRETTO.xlsx`) e dal report di audit:
