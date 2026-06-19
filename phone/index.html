@@ -2,36 +2,52 @@
 <html lang="it">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
 <title>Senjutsu — Controller</title>
 <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="connect" class="screen">
+  <!-- Suggerimento orientamento (mostrato solo in verticale) -->
+  <div id="rotate" class="rotate-hint">
+    <div class="kanji">戦</div>
+    <p>Ruota il telefono in <b>orizzontale</b></p>
+  </div>
+
+  <!-- Schermata di connessione -->
+  <div id="connect" class="screen connect">
+    <div class="seal">戦</div>
     <h1>Senjutsu</h1>
     <p class="sub">Controller del giocatore</p>
     <label>Server
-      <input id="server" type="text" placeholder="ws://INDIRIZZO:8123" />
+      <input id="server" type="text" placeholder="ws://INDIRIZZO:8080" />
     </label>
     <label>Codice stanza
       <input id="code" type="text" maxlength="6" autocapitalize="characters" placeholder="ABCD" />
     </label>
     <div class="seats">
-      <button class="seat" data-seat="0">Giocatore 1</button>
-      <button class="seat" data-seat="1">Giocatore 2</button>
+      <button class="seat jp" data-seat="0">Giocatore 1</button>
+      <button class="seat jp" data-seat="1">Giocatore 2</button>
     </div>
     <p id="status" class="status"></p>
   </div>
 
-  <div id="game" class="screen hidden">
-    <header>
-      <span id="who"></span>
-      <span id="pubstatus" class="pub"></span>
-      <button id="leave" class="ghost">Esci</button>
+  <!-- Schermata di gioco (orizzontale) -->
+  <div id="game" class="screen game hidden">
+    <header id="hud">
+      <div class="hud-id">
+        <span id="who" class="who"></span>
+        <span id="kamae" class="chip"></span>
+      </div>
+      <div id="news" class="news"></div>
+      <div class="hud-stats">
+        <span id="wounds" class="stat wounds"></span>
+        <span id="focus" class="stat focus"></span>
+        <span id="round" class="stat round"></span>
+        <button id="leave" class="ghost">Esci</button>
+      </div>
     </header>
     <p id="net" class="net"></p>
-    <h2 id="title">In attesa…</h2>
-    <div id="prompt"></div>
+    <main id="content"></main>
   </div>
 
   <script src="app.js"></script>
