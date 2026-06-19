@@ -3,6 +3,21 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.44.0] — 2026-06-19
+### Carte Ronin e Guerriero ri-trascritte (Excel CORRETTO + audit)
+- Importate le **correzioni** dai due Excel (`*_carte_CORRETTO.xlsx`) e dal report di audit:
+  **44 carte** (Ronin + Guerriero) riallineate in `geometry.json` — movimenti (direzione
+  obbligatoria/opzionale, avanti/indietro, gating per Kamae), griglie d'attacco (celle/lato/
+  distanza), iniziative divise (parte bassa), difese e contrattacchi, alternative *OPPURE*,
+  costi focus, e gli effetti corretti (stordimento vs sanguinante, scambio posizione, ecc.).
+- Nuovi verbi del motore per coprire le carte: **`foe_stun`** (stordisci l'avversario),
+  **`swap_positions`** (scambia posizione), ed **esecuzione per-cella** nella griglia d'attacco
+  (es. Colpo della Fenice Fiammante).
+- Iniziativa/focus delle 44 carte allineati ai valori corretti.
+- Suite completa verde (20 suite); aggiornati `test_options` e `test_multi` alle carte corrette.
+  Restano alcune approssimazioni dichiarate (note nelle carte) per simboli non ancora
+  modellati per-cella. Versione 0.44.0.
+
 ## [0.43.0] — 2026-06-19
 ### Controller telefono rinnovato: orizzontale, mappa toccabile, stile giapponese
 - **Orizzontale**: layout pensato per il telefono in landscape (con avviso "ruota il telefono"

@@ -27,7 +27,10 @@ func _ready():
 				var dest=AI.move_target(s,f)
 				if dest!=f.cell and not s.is_blocked(dest): f.cell=dest
 				f.facing=AI.facing_toward(f.cell,foe.cell)
-		duel.resolve_current())
+		duel.resolve_current()
+		# Carte a iniziativa divisa: risolvi subito anche la parte bassa.
+		while duel.has_pending_split():
+			duel.resolve_split_now())
 	duel.duel_over.connect(func(w): over[0]=true; over[1]=w)
 	duel.start()
 	var turns := 0
