@@ -21,18 +21,8 @@ body {
 }
 .hidden { display:none !important; }
 
-/* ── Suggerimento rotazione (solo in verticale) ── */
+/* ── Orientamento ── Il controller funziona sia in VERTICALE sia in ORIZZONTALE. */
 .rotate-hint { display:none; }
-@media (orientation: portrait) {
-  .rotate-hint {
-    display:flex; position:fixed; inset:0; z-index:50;
-    flex-direction:column; align-items:center; justify-content:center; gap:14px;
-    background:var(--paper); color:var(--ink); text-align:center;
-  }
-  .rotate-hint .kanji { font-size:90px; color:var(--seal); opacity:.85; }
-  .rotate-hint p { font-size:20px; }
-  .screen.game { filter: blur(2px); }
-}
 
 /* ── Bottoni stile giapponese ── */
 button {
@@ -182,3 +172,22 @@ input {
 
 .waiting { margin:auto; text-align:center; color:var(--ink-soft); font-size:20px; padding:30px; }
 .finish { margin:auto; text-align:center; font-size:26px; padding:30px; }
+
+/* ── Layout VERTICALE (portrait, es. iPhone in mano) ──────────────────────────
+   Carte in alto da scorrere, mappa + bottoni in basso. I ritratti diventano
+   piccoli e vanno negli angoli in alto, senza rubare larghezza alla mappa. */
+@media (orientation: portrait) {
+  /* Rispetta notch/barra di sistema iPhone. */
+  #hud { padding-top: calc(6px + env(safe-area-inset-top)); }
+  .acts { padding-bottom: calc(8px + env(safe-area-inset-bottom)); }
+  /* In verticale non servono i margini laterali ampi: la mappa prende tutto. */
+  #content { padding: 0 4px; }
+  /* La risoluzione resta a colonna: mappa sopra (grande), comandi sotto. */
+  .map3d { transform: rotateX(26deg) scale(1.02); }
+  /* Ritratti: piccoli, in alto agli angoli, sopra il contenuto ma non sulla mappa. */
+  .fighter { top: calc(50px + env(safe-area-inset-top)); transform:none; width:60px; }
+  .fighter.left { left:6px; } .fighter.right { right:6px; }
+  .fighter .pic { width:60px; height:60px; }
+  .fighter .nm { font-size:11px; }
+}
+
