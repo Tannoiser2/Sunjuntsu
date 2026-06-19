@@ -200,9 +200,8 @@ func _on_card_played(card_data: Dictionary) -> void:
 	if _versus and state.phase == Domain.Phase.PLANNING:
 		_enter_handoff()
 		return
-	# La carta è bloccata (coperta). La RIVELAZIONE arriva da _on_cards_revealed.
-	_hud.set_info("Carta programmata (coperta). Rivelazione…")
-	_refresh_hand()
+	# La carta è bloccata (coperta). La RIVELAZIONE (che nasconde la mano e mostra
+	# l'ordine d'iniziativa) è già stata avviata da _on_cards_revealed durante plan_card.
 
 
 ## 1v1 hot-seat: il giocatore corrente ha programmato; chiede di passare il
@@ -229,6 +228,7 @@ func _on_fighter_updated(_i: int) -> void:
 func _on_cards_revealed(planned: Dictionary) -> void:
 	_revealed_planned = planned
 	_phase_mode = "reveal"
+	_hud.show_hand([])   # nascondi la mano: ora si risolve, non si sceglie (e non copre «Avanti»)
 
 
 ## Tocca a `i` risolvere (ordine d'iniziativa). Se sei tu, muovi e attacca;

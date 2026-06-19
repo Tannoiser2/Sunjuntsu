@@ -151,6 +151,7 @@ func hide_options() -> void:
 
 func _build_confirm_button() -> void:
 	_confirm_btn = Button.new()
+	_confirm_btn.z_index = 300   # sopra le carte della mano (che hanno z fino a 20)
 	_confirm_btn.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
 	_confirm_btn.anchor_left = 1.0
 	_confirm_btn.anchor_top = 1.0
