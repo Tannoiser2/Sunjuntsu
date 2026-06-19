@@ -299,3 +299,5 @@ function renderResolve(d) {
 function typeLabel(t) { return ({ attack: "Attacco", defence: "Difesa", meditation: "Meditazione", core: "Base", status: "Stato" })[t] || t || "—"; }
 function kamaeLabel(s) { return ({ aggression: "Aggressività", balance: "Equilibrio", determination: "Determinazione", neutral: "Neutra" })[s] || s || "—"; }
 function combatLabel(k) { return ({ hit: "colpo a segno", blocked: "parato", counter: "contrattacco", collision: "urto" })[k] || (k || ""); }
+// Orientamento: freccia per direzione esagonale assoluta (DIRS flat-top).
+function facingLabel(f) { return (["↘", "↗", "↑", "↖", "↙", "↓"])[((f % 6) + 6) % 6] || "•"; }
