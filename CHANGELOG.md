@@ -3,6 +3,19 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.37.0] — 2026-06-19
+### Multiplayer companion — Tappa 1: protocollo decisioni (no rete)
+- Nuovo `engine/MatchProtocol.gd`: strato sopra il motore che trasforma **ogni
+  punto-decisione** del turno in un **messaggio dati** (`prompt`) e applica la risposta
+  (`respond`) — la base per il multiplayer "tavolo + telefoni" (vedi
+  `docs/MULTIPLAYER_PLAN.md`). Niente rete in questo passo.
+- Prompt: `plan` (scegli carta), `instant_replace` (sostituzione), `resolve`
+  (movimento/rotazione/Kamae/OPPURE/conferma a passi), `instant_play` (istantanea
+  aggiuntiva); eventi pubblici per il tavolo (rivelazione/combattimento/log/fine).
+- I seat IA sono gestiti in automatico; le mani restano per-seat (private).
+- Nuovo test `test_protocol`: gioca una **partita 1v1 completa solo via protocollo**
+  (prompt→risposta) fino a una fine coerente. Documento di piano in `docs/`. Versione 0.37.0.
+
 ## [0.36.0] — 2026-06-19
 ### Animazioni di combattimento
 - Nuovo segnale `combat_event` dal motore (solo presentazione, non tocca le regole) e
