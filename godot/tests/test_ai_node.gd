@@ -50,7 +50,7 @@ func _ready() -> void:
 
 	# ── Mazzo solo dell'avversario Ronin: sottoinsieme curato, carte valide ──
 	var deck := CardDB.solo_deck_for("ronin")
-	if deck.size() < 6:
+	if deck.size() < 4:
 		print("FAIL: mazzo solo Ronin troppo piccolo (%d)" % deck.size()); ok = false
 	else:
 		var allvalid := true

@@ -4160,6 +4160,148 @@
     "Attack"
    ],
    "type": "attack"
+  },
+  {
+   "id": 901,
+   "name": "CHARGE (Solo)",
+   "char": "Ronin Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "1",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 902,
+   "name": "STEEL BLOCK (Solo)",
+   "char": "Ronin Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "6,5,4",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 903,
+   "name": "REVERSE CARVED FANG (Solo)",
+   "char": "Ronin Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "1",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 904,
+   "name": "FERAL SWEEP (Solo)",
+   "char": "Ronin Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "3",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 905,
+   "name": "THE TERROR (Solo)",
+   "char": "Ronin Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Meditation",
+    "Nightmare"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 911,
+   "name": "EMBER BLOCK (Solo)",
+   "char": "Warrior Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "9,8,7,6,5",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 912,
+   "name": "SCYTHING UPPERCUT (Solo)",
+   "char": "Warrior Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "8",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 913,
+   "name": "WARDING ARC (Solo)",
+   "char": "Warrior Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 914,
+   "name": "REFOCUSED MIND (Solo)",
+   "char": "Warrior Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 915,
+   "name": "FLAMING PHOENIX ARC (Solo)",
+   "char": "Warrior Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack",
+    "Nightmare"
+   ],
+   "type": "attack"
   }
  ]
 }

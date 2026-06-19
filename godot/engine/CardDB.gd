@@ -118,10 +118,13 @@ func draw_pile_for(slug: String) -> Array:
 func solo_deck_for(slug: String) -> Array:
 	match slug:
 		"ronin":
-			# attacchi mischia + 1 difesa (con counter) + 2 meditazioni (una cambia comportamento)
-			return [27, 29, 35, 32, 33, 31, 28, 102]
+			# Mazzo SOLO dedicato dell'avversario Ronin (carte "SOLO" con la meccanica
+			# CHANGE AI BEHAVIOUR / RESET DECK): Charge, Steel Block, Reverse Carved Fang,
+			# Feral Sweep, The Terror (incubo).
+			return [901, 902, 903, 904, 905]
 		"warrior":
-			return [86, 58, 60, 113, 64, 63, 56, 59]
+			# Mazzo SOLO dedicato dell'avversario Guerriero.
+			return [911, 912, 913, 914, 915]
 	return draw_pile_for(slug)
 
 
