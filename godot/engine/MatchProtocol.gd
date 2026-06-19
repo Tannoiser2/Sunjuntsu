@@ -53,6 +53,7 @@ func _board_data() -> Dictionary:
 			"name": f.character, "cell": _cell_key(f.cell), "facing": f.facing,
 			"wounds": f.wounds.size(), "limit": f.effective_wound_limit(),
 			"stun": f.stun, "focus": f.focus, "kamae": Domain.STANCE_SLUG[f.stance],
+			"hand": f.hand.size(), "deck": f.draw_pile.size(), "discard": f.discard.size(),
 		})
 	return {"fighters": arr, "round": state.round_num, "radius": state.map_radius}
 
@@ -207,12 +208,15 @@ func _apply_resolve_action(seat: int, data: Dictionary) -> void:
 	match str(data.get("action", "")):
 		"move":
 			_do_move(_key_cell(str(data.get("cell", ""))))
+		"skip_move":
+			_rmove_used = true   # "non muovere": passa al passo rotazione/azioni
 		"rotate":
 			_do_rotate(int(data.get("facing", state.fighters[_rseat].facing)))
 		"kamae":
 			_do_kamae(str(data.get("slug", "")))
 		"option":
 			duel.set_option_choice(_rseat, data.get("alt", ""))
+			public_event.emit("choice", {"seat": seat, "text": "sceglie: " + _option_label(_resolve_geom(), data.get("alt", ""))})
 		"confirm":
 			_do_confirm()
 			return
@@ -322,10 +326,54 @@ func _kamae_reachable() -> Dictionary:
 func _option_briefs() -> Array:
 	if _rsplit or _rseat == -1:
 		return []
+	var g := CardDB.geometry(state.fighters[_rseat].planned)
 	var out: Array = []
 	for k in duel.option_keys(_rseat):
-		out.append({"alt": k})
+		out.append({"alt": k, "label": _option_label(g, k)})
 	return out
+
+
+## Etichetta leggibile di un'opzione OPPURE: concatena le frasi dei suoi effetti.
+func _option_label(g: Dictionary, alt) -> String:
+	var parts: Array = []
+	for e in g.get("effects", []):
+		if str(e.get("alt", "")) == str(alt):
+			parts.append(_effect_phrase(e))
+	return " + ".join(parts) if not parts.is_empty() else str(alt)
+
+
+## Frase breve e leggibile per un singolo effetto v2.
+func _effect_phrase(e: Dictionary) -> String:
+	var n := int(e.get("n", 1))
+	var s := ""
+	match str(e.get("do", "")):
+		"draw": s = "Pesca %d" % n
+		"search_draw": s = "Cerca e pesca %d" % n
+		"focus": s = "+%d focus" % n
+		"change_kamae": s = "Cambia Kamae"
+		"switch_kamae": s = "Passa a %s" % Domain.STANCE_NAMES.get(Domain.STANCE_FROM_SLUG.get(str(e.get("to","")), -1), str(e.get("to","")))
+		"discard_self": s = "Scarta %d" % n
+		"stun_self": s = "Prendi %d stordito" % n
+		"foe_stun": s = "Avversario +%d stordito" % n
+		"push": s = "Spingi %d" % n
+		"pull": s = "Tira %d" % n
+		"rotate_target": s = "Ruota avversario %d" % n
+		"foe_lose_focus": s = "Avversario −%d focus" % n
+		"foe_discard": s = "Avversario scarta %d" % n
+		"spend_focus": s = "Spendi focus"
+		"replace_wound_bleed": s = "Ferita→sanguinante"
+		"bleed": s = "Sanguinante"
+		"hobble": s = "Azzoppa %d" % n
+		"swap_positions": s = "Scambia posizione"
+		"reduce_damage": s = "Riduci danno %d" % n
+		"reset_deck": s = "Rimescola il mazzo"
+		"cancel_movement": s = "Annulla movimento avv."
+		"cancel_abilities": s = "Annulla abilità avv."
+		"block_initiative": s = "Blocco ampio +%d" % n
+		_: s = str(e.get("do", "?"))
+	if int(e.get("focus_cost", 0)) > 0:
+		s += " (◈%d)" % int(e.get("focus_cost", 0))
+	return s
 
 
 func _card_briefs(ids: Array) -> Array:

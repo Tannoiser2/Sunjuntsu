@@ -37,6 +37,12 @@ var _room_code: String = ""
 var _attempts: int = 0
 var _finished := false
 
+var _played_panel: PanelContainer
+var _played_box: HBoxContainer
+var _played_tex: Array = []
+var _log_lbl: Label
+var _log_lines: Array = []
+
 const NET_CFG := "user://net.cfg"
 
 
@@ -161,14 +167,29 @@ func _on_public(kind: String, data: Dictionary) -> void:
 			_refresh_status(data)
 		"turn_of":
 			var step: String = {
-				"plan": "programma una carta", "resolve": "muove/risolve",
+				"plan": "programma (coperta)", "resolve": "muove / agisce / attacca",
 				"instant_replace": "valuta una sostituzione", "instant_play": "valuta un'istantanea",
 			}.get(str(data.get("step", "")), str(data.get("step", "")))
-			_status_lbl.text = "Giocatore %d: %s" % [int(data.get("seat", 0)) + 1, step]
+			var who := int(data.get("seat", 0)) + 1
+			if str(data.get("step", "")) == "plan":
+				_status_lbl.text = "Programmazione — i giocatori scelgono la carta (coperta)"
+			else:
+				_status_lbl.text = "⚡ Iniziativa — tocca al Giocatore %d: %s" % [who, step]
 		"revealed":
-			_status_lbl.text = "Carte rivelate — risoluzione per iniziativa"
+			_status_lbl.text = "Carte rivelate — risoluzione per iniziativa (alta → bassa)"
+			_show_played(data.get("planned", {}))
+			_log("— Rivelazione —")
+		"choice":
+			_log("Giocatore %d %s" % [int(data.get("seat", 0)) + 1, str(data.get("text", ""))])
+		"combat":
+			var lbl: String = {"hit": "colpo a segno", "blocked": "parato", "counter": "contrattacco", "collision": "urto"}.get(str(data.get("kind", "")), str(data.get("kind", "")))
+			_log("⚔ %s → Giocatore %d" % [lbl, int(data.get("target", 0)) + 1])
 		"turn":
 			_sync_pawns()
+			for line in data.get("log", []):
+				_log(str(line))
+			_log("— Nuovo turno —")
+			_hide_played()
 
 
 func _refresh_status(board: Dictionary) -> void:
@@ -176,10 +197,10 @@ func _refresh_status(board: Dictionary) -> void:
 	if fs.size() < 2:
 		return
 	var a: Dictionary = fs[0]; var b: Dictionary = fs[1]
-	_players_lbl.text = "Round %d  ·  G1 %s ❤%d/%d ◈%d [%s]  —  G2 %s ❤%d/%d ◈%d [%s]" % [
+	_players_lbl.text = "Round %d   ·   G1 %s ❤%d/%d ◈%d [%s] mano%d mazzo%d   —   G2 %s ❤%d/%d ◈%d [%s] mano%d mazzo%d" % [
 		int(board.get("round", 1)),
-		a.get("name", "?"), a.get("wounds", 0), a.get("limit", 0), a.get("focus", 0), a.get("kamae", ""),
-		b.get("name", "?"), b.get("wounds", 0), b.get("limit", 0), b.get("focus", 0), b.get("kamae", "")]
+		a.get("name", "?"), a.get("wounds", 0), a.get("limit", 0), a.get("focus", 0), a.get("kamae", ""), a.get("hand", 0), a.get("deck", 0),
+		b.get("name", "?"), b.get("wounds", 0), b.get("limit", 0), b.get("focus", 0), b.get("kamae", ""), b.get("hand", 0), b.get("deck", 0)]
 
 
 func _sync_pawns() -> void:
@@ -382,6 +403,75 @@ func _build_hud() -> void:
 	_help_lbl.add_theme_font_size_override("font_size", 13)
 	_help_lbl.modulate = Color(1, 1, 1, 0.75)
 	vb.add_child(_help_lbl)
+
+	# ── Carte giocate (rivelazione) ──
+	var played_panel := PanelContainer.new()
+	played_panel.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	played_panel.anchor_left = 1.0; played_panel.anchor_right = 1.0
+	played_panel.offset_left = -260; played_panel.offset_right = -8; played_panel.offset_top = 8
+	played_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	layer.add_child(played_panel)
+	var pv := VBoxContainer.new(); played_panel.add_child(pv)
+	pv.add_child(_mk_label("Carte giocate", 14))
+	_played_box = HBoxContainer.new(); pv.add_child(_played_box)
+	for i in range(2):
+		var col := VBoxContainer.new(); _played_box.add_child(col)
+		col.add_child(_mk_label("Giocatore %d" % (i + 1), 12))
+		var tr := TextureRect.new()
+		tr.custom_minimum_size = Vector2(108, 150)
+		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+		col.add_child(tr)
+		_played_tex.append(tr)
+	played_panel.visible = false
+	_played_panel = played_panel
+
+	# ── Registro pubblico (cosa succede) ──
+	var log_panel := PanelContainer.new()
+	log_panel.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+	log_panel.anchor_top = 1.0; log_panel.anchor_bottom = 1.0
+	log_panel.offset_left = 8; log_panel.offset_right = 380; log_panel.offset_top = -210; log_panel.offset_bottom = -8
+	log_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	layer.add_child(log_panel)
+	var lv := VBoxContainer.new(); log_panel.add_child(lv)
+	lv.add_child(_mk_label("Registro", 14))
+	_log_lbl = Label.new()
+	_log_lbl.add_theme_font_size_override("font_size", 13)
+	_log_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	lv.add_child(_log_lbl)
+
+
+func _mk_label(t: String, sz: int) -> Label:
+	var l := Label.new(); l.text = t; l.add_theme_font_size_override("font_size", sz)
+	return l
+
+
+## Mostra le due carte rivelate (immagini reali).
+func _show_played(planned) -> void:
+	if _played_panel == null:
+		return
+	for i in range(2):
+		var cid: int = -1
+		if typeof(planned) == TYPE_DICTIONARY:
+			cid = int(planned.get(i, planned.get(str(i), -1)))
+		var file: String = CardDB.image_for(cid) if cid != -1 else ""
+		_played_tex[i].texture = (_load_texture("res://assets/cards/" + file) if file != "" else null)
+	_played_panel.visible = true
+
+
+func _hide_played() -> void:
+	if _played_panel != null:
+		_played_panel.visible = false
+
+
+## Aggiunge una riga al registro pubblico (tiene le ultime ~10).
+func _log(line: String) -> void:
+	if _log_lbl == null or line.strip_edges() == "":
+		return
+	_log_lines.append(line)
+	while _log_lines.size() > 10:
+		_log_lines.pop_front()
+	_log_lbl.text = "\n".join(_log_lines)
 
 
 # ─── Camera orbitale ─────────────────────────────────────────────────────────

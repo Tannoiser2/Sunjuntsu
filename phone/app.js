@@ -194,6 +194,8 @@ function renderResolve(d) {
   const targets = new Set(d.targets || []);
   const [mq, mr] = parseKey(d.cell);
   const foe = d.foe ? parseKey(d.foe) : null;
+  // Passo 1 = MOVIMENTO (caselle gialle); poi passo 2 = ROTAZIONE + AZIONI/ATTACCO.
+  const moveStep = Object.keys(legal).length > 0;
 
   // Calcola il viewBox dall'estensione degli esagoni.
   let minX = 1e9, minY = 1e9, maxX = -1e9, maxY = -1e9;
@@ -211,12 +213,12 @@ function renderResolve(d) {
     root.appendChild(bg);
   }
 
-  // Tessere
+  // Tessere — nel passo MOVIMENTO solo le gialle; nel passo AZIONI solo i bersagli rossi.
   for (const { q, r, p } of cells) {
     let cls = "hex";
     const key = pk(q, r);
-    const isMove = legal.hasOwnProperty(key);
-    const isTarget = targets.has(key);
+    const isMove = moveStep && legal.hasOwnProperty(key);
+    const isTarget = !moveStep && targets.has(key);
     if (isMove) cls += " move"; else if (isTarget) cls += " target";
     const poly = svg("polygon", { class: cls, points: hexPts(p.x, p.y) });
     if (isMove) poly.addEventListener("click", () => respond("resolve", { action: "move", cell: key }));
@@ -233,13 +235,15 @@ function renderResolve(d) {
   const fd = DIRS[((d.facing % 6) + 6) % 6]; const fv = ax(fd[0], fd[1]); const fl = Math.hypot(fv.x, fv.y) || 1;
   root.appendChild(svg("line", { class: "facing", x1: mp.x, y1: mp.y, x2: mp.x + fv.x / fl * S * 0.9, y2: mp.y + fv.y / fl * S * 0.9 }));
 
-  // Maniglie di rotazione (facing legali)
-  for (const f of (d.legalFacings || [])) {
-    const dd = DIRS[((f % 6) + 6) % 6]; const dv = ax(dd[0], dd[1]); const dl = Math.hypot(dv.x, dv.y) || 1;
-    const hx = mp.x + dv.x / dl * S * 1.7, hy = mp.y + dv.y / dl * S * 1.7;
-    const h = svg("circle", { class: "rot", cx: hx, cy: hy, r: S * 0.32 });
-    h.addEventListener("click", () => respond("resolve", { action: "rotate", facing: f }));
-    root.appendChild(h);
+  // Maniglie di rotazione (SOLO nel passo azioni, per non sovrapporsi al movimento)
+  if (!moveStep) {
+    for (const f of (d.legalFacings || [])) {
+      const dd = DIRS[((f % 6) + 6) % 6]; const dv = ax(dd[0], dd[1]); const dl = Math.hypot(dv.x, dv.y) || 1;
+      const hx = mp.x + dv.x / dl * S * 1.7, hy = mp.y + dv.y / dl * S * 1.7;
+      const h = svg("circle", { class: "rot", cx: hx, cy: hy, r: S * 0.32 });
+      h.addEventListener("click", () => respond("resolve", { action: "rotate", facing: f }));
+      root.appendChild(h);
+    }
   }
 
   // Layout: mappa + pannello azioni
@@ -249,36 +253,44 @@ function renderResolve(d) {
   wrap.appendChild(mapWrap);
   const acts = el("div", "acts");
   acts.appendChild(el("h3", null, d.card));
-  acts.appendChild(el("div", "hint",
-    (Object.keys(legal).length ? "Tocca una casella gialla per muovere. " : "") +
-    ((d.legalFacings || []).length ? "Tocca le pedine verdi per ruotare. " : "") +
-    (targets.size ? "Tocca il rosso per attaccare. " : "") + "Oppure Conferma."));
 
-  const kamae = d.kamae || {};
-  if (Object.keys(kamae).length) {
-    acts.appendChild(el("h3", null, "Cambia Kamae"));
-    const g = el("div", "grp");
-    for (const slug of Object.keys(kamae)) {
-      const gain = kamae[slug];
-      const b = el("button", "jp", `${kamaeLabel(slug)}${gain > 0 ? " +◈" + gain : ""}`);
-      b.onclick = () => respond("resolve", { action: "kamae", slug });
-      g.appendChild(b);
+  if (moveStep) {
+    // PASSO 1 — solo movimento.
+    acts.appendChild(el("div", "hint", "Passo 1 — Movimento: tocca una casella gialla, oppure «Non muovere»."));
+    const skip = el("button", "primary confirm", "Non muovere →");
+    skip.onclick = () => respond("resolve", { action: "skip_move" });
+    acts.appendChild(skip);
+  } else {
+    // PASSO 2 — rotazione + azioni + attacco.
+    acts.appendChild(el("div", "hint",
+      ((d.legalFacings || []).length ? "Passo 2 — Ruota (pedine verdi), " : "Passo 2 — ") +
+      (targets.size ? "poi tocca il rosso per attaccare, " : "") + "o Conferma."));
+    const kamae = d.kamae || {};
+    if (Object.keys(kamae).length) {
+      acts.appendChild(el("h3", null, "Cambia Kamae"));
+      const g = el("div", "grp");
+      for (const slug of Object.keys(kamae)) {
+        const gain = kamae[slug];
+        const b = el("button", "jp", `${kamaeLabel(slug)}${gain > 0 ? " +◈" + gain : ""}`);
+        b.onclick = () => respond("resolve", { action: "kamae", slug });
+        g.appendChild(b);
+      }
+      acts.appendChild(g);
     }
-    acts.appendChild(g);
-  }
-  if ((d.options || []).length) {
-    acts.appendChild(el("h3", null, "Scelta (OPPURE)"));
-    const g = el("div", "grp");
-    for (const o of d.options) {
-      const b = el("button", "jp", String(o.alt));
-      b.onclick = () => respond("resolve", { action: "option", alt: o.alt });
-      g.appendChild(b);
+    if ((d.options || []).length) {
+      acts.appendChild(el("h3", null, "Scegli (OPPURE)"));
+      const g = el("div", "grp");
+      for (const o of d.options) {
+        const b = el("button", "jp", o.label || String(o.alt));
+        b.onclick = () => respond("resolve", { action: "option", alt: o.alt });
+        g.appendChild(b);
+      }
+      acts.appendChild(g);
     }
-    acts.appendChild(g);
+    const conf = el("button", "primary confirm", "Conferma ▶");
+    conf.onclick = () => respond("resolve", { action: "confirm" });
+    acts.appendChild(conf);
   }
-  const conf = el("button", "primary confirm", "Conferma ▶");
-  conf.onclick = () => respond("resolve", { action: "confirm" });
-  acts.appendChild(conf);
   wrap.appendChild(acts);
   setContent(wrap);
 }
