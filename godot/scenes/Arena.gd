@@ -52,10 +52,12 @@ var _planning_player: int = 0
 var _kamae_shown: int = 0    ## quale combattente è mostrato ora nella carta Kamae dell'HUD
 var _instant_mode: String = ""   ## "replace" (Rivelazione) | "play" (Risoluzione) | ""
 var _instant_index: int = -1     ## combattente a cui è offerta la scelta istantanea
+var _visuals: bool = true        ## animazioni di combattimento attive (disattive in headless)
 
 
 func _ready() -> void:
 	_versus = (Domain.game_mode == "versus")
+	_visuals = DisplayServer.get_name() != "headless"   # niente animazioni nei test headless
 	state = GameState.new()
 	state.map_radius = map_radius
 	_build_environment()
@@ -82,6 +84,7 @@ func _start_duel() -> void:
 	_duel.phase_changed.connect(_on_phase_changed)
 	_duel.await_instant_replace.connect(_on_await_instant_replace)
 	_duel.await_instant_play.connect(_on_await_instant_play)
+	_duel.combat_event.connect(_on_combat_event)
 	_hud.instant_chosen.connect(_on_instant_chosen)
 	_hud.card_selected.connect(_on_card_selected)
 	_hud.card_hovered.connect(_on_card_hovered)
@@ -964,6 +967,78 @@ func _process(_dt: float) -> void:
 			_hud.hide_rotation()
 	else:
 		_hud.hide_rotation()
+
+
+# ─── Animazioni di combattimento (solo presentazione) ────────────────────────
+
+## Evento di combattimento dal motore: anima affondo, impatto, parata, urto.
+func _on_combat_event(kind: String, attacker: int, target: int, _info: Dictionary) -> void:
+	if not _visuals:
+		return
+	match kind:
+		"hit":
+			_lunge_pawn(attacker, state.fighters[target].cell)
+			_spawn_impact(state.fighters[target].cell, Color(1.0, 0.32, 0.2), 1.4)
+			_camera_shake(0.05)
+		"blocked":
+			_lunge_pawn(attacker, state.fighters[target].cell)
+			_spawn_impact(state.fighters[target].cell, Color(0.55, 0.8, 1.0), 1.1)
+			_camera_shake(0.025)
+		"counter":
+			_spawn_impact(state.fighters[target].cell, Color(1.0, 0.5, 0.15), 1.2)
+			_camera_shake(0.04)
+		"collision":
+			_spawn_impact(state.fighters[target].cell, Color(1.0, 0.75, 0.2), 1.6)
+			_camera_shake(0.08)
+
+
+## Affondo della pedina `idx` verso `toward_cell` e ritorno (colpo).
+func _lunge_pawn(idx: int, toward_cell: Vector2i) -> void:
+	if idx < 0 or idx >= _pawns.size():
+		return
+	var pawn := _pawns[idx]
+	var start: Vector3 = pawn.position
+	var tgt := HexGrid.hex_to_world(toward_cell, hex_size)
+	var peak := start.lerp(tgt, 0.4)
+	peak.y = start.y
+	var tw := create_tween()
+	tw.tween_property(pawn, "position", peak, 0.10).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tw.tween_property(pawn, "position", start, 0.13).set_trans(Tween.TRANS_SINE)
+
+
+## Lampo d'impatto sulla cella: sfera emissiva che cresce e svanisce.
+func _spawn_impact(cell: Vector2i, color: Color, peak: float) -> void:
+	var mi := MeshInstance3D.new()
+	var sph := SphereMesh.new()
+	sph.radius = hex_size * 0.45
+	sph.height = hex_size * 0.9
+	mi.mesh = sph
+	var m := StandardMaterial3D.new()
+	m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	m.emission_enabled = true
+	m.emission = color
+	var c := color
+	c.a = 0.8
+	m.albedo_color = c
+	mi.material_override = m
+	add_child(mi)
+	mi.position = HexGrid.hex_to_world(cell, hex_size) + Vector3(0, hex_size * 0.9, 0)
+	mi.scale = Vector3.ONE * 0.3
+	var tw := create_tween()
+	tw.set_parallel(true)
+	tw.tween_property(mi, "scale", Vector3.ONE * peak, 0.30).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tw.tween_property(m, "albedo_color:a", 0.0, 0.30)
+	tw.chain().tween_callback(mi.queue_free)
+
+
+## Breve scossa della camera (sfasamento del frustum), intensità `amt`.
+func _camera_shake(amt: float) -> void:
+	var cam: Camera3D = _cam_pivot.get_node("Camera3D")
+	var tw := create_tween()
+	for k in range(5):
+		tw.tween_property(cam, "h_offset", randf_range(-amt, amt), 0.035)
+	tw.tween_property(cam, "h_offset", 0.0, 0.05)
 
 
 ## La carta in risoluzione consente di ruotare la pedina del giocatore attivo?
