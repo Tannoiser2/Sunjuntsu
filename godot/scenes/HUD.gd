@@ -12,6 +12,7 @@ signal kamae_chosen(slug: String)
 signal confirm_pressed()
 signal option_chosen(alt: String)
 signal rotate_requested(dir: int)
+signal instant_chosen(id: int)
 
 @onready var hand: Control = $Hand
 @onready var info: Label = $Top/Info
@@ -51,6 +52,7 @@ func _ready() -> void:
 	_build_status_strip()
 	_build_rotation_controls()
 	_build_focus_widget()
+	_build_instant_chooser()
 
 
 ## Riquadro "carta giocata": mostra la carta programmata finché non è scartata a
@@ -442,6 +444,60 @@ func set_focus(who: String, cur: int, maxv: int) -> void:
 	for k in range(maxv):
 		tokens += "◈" if k < cur else "◇"
 	_focus_lbl.text = "%s — Focus  %s  (%d/%d)" % [who, tokens, cur, maxv]
+
+
+## ── Selettore CARTE ISTANTANEE (Sostituzione / Aggiuntiva) ───────────────────
+var _inst_box: VBoxContainer
+var _inst_title: Label
+var _inst_row: HBoxContainer
+
+
+func _build_instant_chooser() -> void:
+	_inst_box = VBoxContainer.new()
+	_inst_box.set_anchors_preset(Control.PRESET_CENTER)
+	_inst_box.anchor_left = 0.5; _inst_box.anchor_right = 0.5
+	_inst_box.anchor_top = 0.5; _inst_box.anchor_bottom = 0.5
+	_inst_box.offset_left = -340; _inst_box.offset_right = 340
+	_inst_box.offset_top = -90; _inst_box.offset_bottom = 90
+	add_child(_inst_box)
+	var bg := PanelContainer.new()
+	_inst_box.add_child(bg)
+	var inner := VBoxContainer.new()
+	bg.add_child(inner)
+	_inst_title = Label.new()
+	_inst_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_inst_title.add_theme_font_size_override("font_size", 18)
+	inner.add_child(_inst_title)
+	_inst_row = HBoxContainer.new()
+	_inst_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	inner.add_child(_inst_row)
+	_inst_box.visible = false
+
+
+## Mostra il selettore istantanee. `options` = Array di {id:int, label:String}.
+## Aggiunge sempre un bottone "Tieni / Salta" (id -1).
+func show_instant(title: String, options: Array) -> void:
+	_inst_title.text = title
+	for c in _inst_row.get_children():
+		c.queue_free()
+	for opt in options:
+		var b := Button.new()
+		b.custom_minimum_size = Vector2(210, 70)
+		b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		b.text = String(opt.get("label", "?"))
+		var cid := int(opt.get("id", -1))
+		b.pressed.connect(func(): instant_chosen.emit(cid))
+		_inst_row.add_child(b)
+	var skip := Button.new()
+	skip.custom_minimum_size = Vector2(150, 70)
+	skip.text = "Tieni / Salta"
+	skip.pressed.connect(func(): instant_chosen.emit(-1))
+	_inst_row.add_child(skip)
+	_inst_box.visible = true
+
+
+func hide_instant() -> void:
+	_inst_box.visible = false
 
 
 func set_info(text: String) -> void:

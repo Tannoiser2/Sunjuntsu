@@ -22,6 +22,12 @@ signal fighter_updated(index: int)        ## stato cambiato (ferite/focus/mano)
 signal duel_over(winner_index: int)
 signal cards_revealed(planned: Dictionary)   ## fi → card_id (fase rivelazione)
 signal await_resolution(index: int)          ## tocca a `index` risolvere (mossa interattiva)
+## Fase RIVELAZIONE (regolamento 1.5 p.16): `index` può sostituire la carta rivelata con
+## un'Istantanea di Sostituzione. options = Array[int] di carte giocabili (vuoto possibile).
+signal await_instant_replace(index: int, options: Array)
+## Fase RISOLUZIONE: dopo aver risolto la carta scelta, `index` può giocare 1 carta
+## istantanea (Aggiuntiva/Istantanea). options = Array[int].
+signal await_instant_play(index: int, options: Array)
 
 var state: GameState
 
@@ -38,6 +44,12 @@ var _fizzled: Dictionary = {}
 var _res_log: Array = []
 var _opt_choice: Dictionary = {}   ## scelta "OPPURE" del giocatore (indice → chiave alt)
 var _pending_split: Dictionary = {}   ## parte bassa (iniziativa divisa) del giocatore in attesa
+
+## Carte istantanee (regolamento 1.5 p.13/16).
+var _replace_idx: int = -1            ## indice corrente nella fase di sostituzione
+var _instant_used: Dictionary = {}    ## indice → ha già giocato 1 istantanea questo turno
+var _attack_ok: Dictionary = {}       ## indice → il suo attacco è andato a segno (per le reazioni)
+var _block_ok: Dictionary = {}        ## indice → il suo blocco è riuscito
 
 ## Velocità d'iniziativa scelta da ogni combattente per il turno corrente
 ## (indice → valore). Le difese a iniziativa variabile scelgono il valore che
@@ -200,11 +212,20 @@ func _all_planned() -> bool:
 ## Prepara la risoluzione: paga i costi, calcola velocità scelte, blocchi e
 ## ordine d'iniziativa. Popola _fizzled, _block_ready, _order, _res_log.
 func _setup_resolution() -> void:
+	_pay_costs()
+	_finalize_resolution_setup()
+
+
+## Passo "paga i costi" della Rivelazione (focus obbligatori/opzionali, scarti).
+func _pay_costs() -> void:
 	_set_phase(Domain.Phase.RESOLUTION)
 	_res_log = []
 	_fizzled = {}
 	_opt_choice = {}   # le scelte "OPPURE" si impostano durante la risoluzione
 	_pending_split = {}
+	_instant_used = {}
+	_attack_ok = {}
+	_block_ok = {}
 	# Paga i costi di focus obbligatori; se non basta, la carta "svanisce".
 	for i in range(state.fighters.size()):
 		var f := state.fighters[i]
@@ -229,6 +250,10 @@ func _setup_resolution() -> void:
 			if not _discard_one_noncore(f):
 				break   # niente non-core da scartare (le core non si scartano)
 
+
+## Passo "scegli iniziative variabili + calcola ordine" della Rivelazione.
+## Va eseguito DOPO l'eventuale sostituzione istantanea (che cambia la carta).
+func _finalize_resolution_setup() -> void:
 	_resolve_chosen_speeds(_fizzled)
 
 	_block_ready = {}
@@ -263,13 +288,74 @@ func _resolve_turn() -> void:
 ## per il primo combattente nell'ordine d'iniziativa. La scena guida il
 ## movimento/attacco e poi chiama `resolve_current()`.
 func begin_resolution() -> void:
-	_setup_resolution()
-	_order_idx = -1
+	_pay_costs()
 	var planned := {}
 	for i in range(state.fighters.size()):
 		planned[i] = state.fighters[i].planned
 	cards_revealed.emit(planned)
+	# Rivelazione p.16: dopo aver pagato i costi, ogni umano può SOSTITUIRE la carta
+	# rivelata con un'Istantanea di Sostituzione, poi si calcolano iniziative e ordine.
+	_replace_idx = -1
+	_advance_replacement()
+
+
+# ─── Fase RIVELAZIONE: Istantanee di Sostituzione (regolamento 1.5 p.7/13/16) ──
+
+## Carte in mano di `i` che possono sostituire la carta rivelata: Istantanee di
+## Sostituzione di tipo DIVERSO (Attacco/Difesa/Meditazione), non core, e che `i`
+## può permettersi (recuperando il focus della carta originale).
+func instant_replacements_for(i: int) -> Array:
+	var f := state.fighters[i]
+	if f.is_ai or f.planned == -1 or is_core(f.planned):
+		return []
+	var orig_type: String = CardDB.card(f.planned).get("type", "")
+	var orig_cost := _focus_cost_of(f.planned)
+	var out: Array = []
+	for cid in f.hand:
+		if CardDB.instant_kind(cid) != "replacement" or is_core(cid):
+			continue
+		if CardDB.card(cid).get("type", "") == orig_type:
+			continue   # deve essere di tipo diverso
+		if f.focus + orig_cost < _focus_cost_of(cid):
+			continue   # non può pagarla nemmeno col rimborso
+		out.append(cid)
+	return out
+
+
+## Costo focus totale di una carta (focus carta + play_cost).
+func _focus_cost_of(cid: int) -> int:
+	return int(CardDB.card(cid).get("focus", 0)) + int(CardDB.geometry(cid).get("play_cost", {}).get("focus", 0))
+
+
+## Avanza la fase di sostituzione: offre la scelta al prossimo umano con opzioni;
+## quando finita, calcola iniziative/ordine e parte la risoluzione.
+func _advance_replacement() -> void:
+	_replace_idx += 1
+	while _replace_idx < state.fighters.size():
+		var opts := instant_replacements_for(_replace_idx)
+		if not opts.is_empty():
+			await_instant_replace.emit(_replace_idx, opts)
+			return
+		_replace_idx += 1
+	_finalize_resolution_setup()
+	_order_idx = -1
 	_advance_resolution()
+
+
+## La scena ha deciso: `new_id` = carta di sostituzione (o -1 per tenere la carta).
+func apply_instant_replace(i: int, new_id: int) -> void:
+	if new_id != -1 and instant_replacements_for(i).has(new_id):
+		var f := state.fighters[i]
+		var orig: int = f.planned
+		f.focus = mini(GameState.Fighter.MAX_FOCUS, f.focus + _focus_cost_of(orig))  # rimborso
+		f.focus = maxi(0, f.focus - _focus_cost_of(new_id))                            # nuovo costo
+		f.discard.append(orig)        # la carta originale viene scartata
+		f.hand.erase(new_id)
+		f.planned = new_id
+		_fizzled.erase(i)
+		_res_log.append("%s sostituisce %s con %s (istantanea)" % [
+			f.character, CardDB.card(orig).get("name", "?"), CardDB.card(new_id).get("name", "?")])
+	_advance_replacement()
 
 
 func _advance_resolution() -> void:
@@ -300,11 +386,75 @@ func resolve_current() -> void:
 	_resolve_card(i, _block_ready, _res_log)
 	if not _pending_split.is_empty():
 		return   # in pausa: il giocatore deve risolvere la parte bassa (resolve_split_now)
+	_post_resolve(i)
+
+
+## Dopo aver risolto la carta scelta da `i`: offre (interattivo) di giocare 1 carta
+## istantanea (Aggiuntiva/Istantanea), poi prosegue l'ordine d'iniziativa.
+func _post_resolve(i: int) -> void:
+	if interactive:
+		var opts := instant_plays_for(i)
+		if not opts.is_empty():
+			await_instant_play.emit(i, opts)
+			return
+	_continue_after_resolver()
+
+
+func _continue_after_resolver() -> void:
 	var w := _check_winner()
 	if w != -2:
 		_finish(_res_log, w)
 		return
 	_advance_resolution()
+
+
+# ─── Fase RISOLUZIONE: Istantanee Aggiuntive / Istantanee (regolamento 1.5 p.13) ──
+
+## Carte istantanee (Aggiuntive/Istantanee) che `i` può giocare ORA: massimo 1 per
+## turno e solo se NON ha giocato una carta core (regolamento p.13).
+func instant_plays_for(i: int) -> Array:
+	var f := state.fighters[i]
+	if f.is_ai or bool(_instant_used.get(i, false)) or f.planned == -1 or is_core(f.planned):
+		return []
+	var out: Array = []
+	for cid in f.hand:
+		var k := CardDB.instant_kind(cid)
+		if (k == "additional" or k == "instant") and not is_core(cid):
+			if f.focus >= _focus_cost_of(cid):
+				out.append(cid)
+	return out
+
+
+## La scena ha deciso: `id` = carta istantanea da giocare ora (o -1 per saltare).
+func apply_instant_play(i: int, id: int) -> void:
+	if id != -1 and instant_plays_for(i).has(id):
+		_resolve_instant_card(i, id)
+	_continue_after_resolver()
+
+
+## Risolve una carta istantanea giocata in reazione (fuori dalla scelta del turno).
+func _resolve_instant_card(i: int, id: int) -> void:
+	var f := state.fighters[i]
+	var foe_idx := _opponent_index(i)
+	var c := CardDB.card(id)
+	var g := CardDB.geometry(id)
+	var name: String = c.get("name", "?")
+	f.focus = maxi(0, f.focus - _focus_cost_of(id))
+	f.hand.erase(id)
+	_instant_used[i] = true
+	var alt = _resolve_option(i, g)
+	match c.get("type", ""):
+		"attack":
+			_resolve_attack_top(i, g, name, _res_log, alt)
+		"defence":
+			_apply_effects(i, foe_idx, g, "always", _res_log, alt)
+		_:
+			_apply_effects(i, foe_idx, g, "always", _res_log, alt)
+	# Effetti "se a segno": valgono come reazione se il TUO attacco è andato a segno.
+	if bool(_attack_ok.get(i, false)):
+		_apply_effects(i, foe_idx, g, "on_hit", _res_log, alt)
+	f.discard.append(id)
+	_res_log.append("%s gioca l'istantanea %s" % [f.character, name])
 
 
 ## True se la parte bassa (iniziativa divisa) del giocatore attende la risoluzione.
@@ -341,11 +491,7 @@ func resolve_split_now() -> void:
 	var name: String = _pending_split["name"]
 	_pending_split = {}
 	_resolve_split_bottom(i, split, name, _res_log, false)   # do_move=false: usa la posizione scelta
-	var w := _check_winner()
-	if w != -2:
-		_finish(_res_log, w)
-		return
-	_advance_resolution()
+	_continue_after_resolver()
 
 
 ## Calcola la velocità d'iniziativa scelta da ogni combattente per il turno.
@@ -508,6 +654,7 @@ func _resolve_attack_top(i: int, g: Dictionary, name: String, log: Array, chosen
 		return
 	var atk_speed := int(_chosen.get(i, _speed_of(i)))
 	if _attack_blocked(i, foe_idx, atk_speed, g):
+		_block_ok[foe_idx] = true   # il blocco del difensore è riuscito (reazioni "se blocco riuscito")
 		if int(_block_ready.get(foe_idx, -1)) == atk_speed:
 			_block_ready[foe_idx] = -1
 			_try_counter(foe_idx, i, atk_speed, log)
@@ -524,6 +671,7 @@ func _resolve_attack_top(i: int, g: Dictionary, name: String, log: Array, chosen
 		var tag := "bleed" if kind == "bleed" else "wound"
 		for _w in range(n):
 			foe.wounds.append(tag)
+	_attack_ok[i] = true   # attacco a segno (reazioni "se attacco riuscito")
 	_apply_if_success(i, foe_idx, g, log)
 	_apply_effects(i, foe_idx, g, "on_hit", log, chosen_alt)
 	fighter_updated.emit(foe_idx)

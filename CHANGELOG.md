@@ -3,6 +3,24 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.35.0] — 2026-06-19
+### Carte ISTANTANEE: sostituzione + aggiuntive (regolamento 1.5 p.7/13/16)
+- **Istantanea di Sostituzione** (es. #61 Colpo Corto, #32 Balzo del Lupo): nella fase di
+  **Rivelazione**, dopo aver pagato i costi, puoi **sostituire la carta rivelata** con
+  un'istantanea di **tipo diverso** (Attacco/Difesa/Meditazione, non core); la carta
+  originale va negli scarti e **recuperi il focus** che avevi speso, pagando quello della
+  nuova. Poi si calcolano iniziative e ordine sulla carta nuova.
+- **Istantanea Aggiuntiva / Istantanea** (es. #56 Punto Cieco, #54 Ruggito Ardente, #30
+  Artigli Laceranti, #25 Armatura Pesante): dopo aver risolto la carta scelta puoi giocare
+  **1 carta istantanea** dalla mano — **mai** se hai giocato una carta core (regolamento).
+  Gli effetti "se a segno" si applicano come reazione se il tuo attacco è andato a segno.
+- Riconoscimento dal mazzo: `CardDB.instant_kind()` dalle keyword
+  (Instant / Instant Additional / Instant Replacement).
+- **UI**: selettore dedicato per scegliere la carta istantanea (o «Tieni / Salta»),
+  nelle due finestre giuste del turno (Rivelazione e Risoluzione).
+- Nuovo test `test_instant`; aggiornati i test interattivi per gestire le nuove finestre;
+  ripristinati due test datati (mano con carte core; #64 trascritta). Versione 0.35.0.
+
 ## [0.34.0] — 2026-06-19
 ### Restyling GUI + focus visibile + rotazione con frecce + sequenza chiara
 - **Tema UI** applicato a tutto il gioco (`scenes/ui_theme.tres`): **bottoni in stile**

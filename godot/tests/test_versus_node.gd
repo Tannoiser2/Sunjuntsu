@@ -50,6 +50,8 @@ func _ready() -> void:
 	var d2 := Duel.new(s2)
 	d2.interactive = true
 	var resolved_for: Array = []
+	d2.await_instant_replace.connect(func(i, _o): d2.apply_instant_replace(i, -1))
+	d2.await_instant_play.connect(func(i, _o): d2.apply_instant_play(i, -1))
 	d2.await_resolution.connect(func(i):
 		resolved_for.append(i)
 		# La "scena" conferma subito la risoluzione del combattente i.
