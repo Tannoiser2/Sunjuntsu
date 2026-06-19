@@ -64,11 +64,16 @@ func _run() -> void:
 			break
 		if not _play_first_playable(arena, 1):
 			break
+		# RIVELAZIONE: «Avanti» avvia la risoluzione.
+		if arena._phase_mode == "reveal":
+			arena._confirm_resolution()
 		# Risoluzione: salta le istantanee, posiziona per colpire e conferma, per entrambi
 		var rg := 0
-		while not _over and rg < 24 and (arena._phase_mode == "resolving" or arena._phase_mode == "instant"):
+		while not _over and rg < 24 and arena._phase_mode in ["resolving", "instant", "reveal"]:
 			if arena._phase_mode == "instant":
 				arena._on_instant_chosen(-1)
+			elif arena._phase_mode == "reveal":
+				arena._confirm_resolution()
 			else:
 				_position_for_attack(arena, arena._resolving_index)
 				arena._confirm_resolution()

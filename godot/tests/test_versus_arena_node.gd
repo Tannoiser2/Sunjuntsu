@@ -23,6 +23,8 @@ func _drive_resolution(arena) -> void:
 	while guard < 60:
 		if arena._phase_mode == "instant":
 			arena._on_instant_chosen(-1)        # salta le carte istantanee
+		elif arena._phase_mode == "reveal":
+			arena._confirm_resolution()         # «Avanti»: avvia la risoluzione
 		elif arena._phase_mode == "resolving":
 			arena._confirm_resolution()
 		elif arena._phase_mode == "planning" or arena.state.phase == Domain.Phase.GAME_OVER:
@@ -72,19 +74,24 @@ func _run() -> void:
 	else:
 		print("OK: dispositivo passato → tocca al Giocatore 2 programmare")
 
-	# ── G2 programma → parte la RISOLUZIONE interattiva ──
+	# ── G2 programma → fase RIVELAZIONE (carte + ordine iniziativa) ──
 	var p1 := _play_first_playable(arena, 1)
-	# Eventuale fase di sostituzione istantanea: salta.
+	if not p1:
+		print("FAIL: G2 non riesce a programmare nessuna carta"); ok = false
+	elif arena._phase_mode != "reveal":
+		print("FAIL: dopo G2 non parte la rivelazione (fase=%s)" % arena._phase_mode); ok = false
+	else:
+		print("OK: G2 programma → RIVELAZIONE (carte + ordine iniziativa)")
+	# «Avanti» → risoluzione per iniziativa (salta eventuali istantanee).
+	arena._confirm_resolution()
 	var sg := 0
 	while arena._phase_mode == "instant" and sg < 6:
 		arena._on_instant_chosen(-1)
 		sg += 1
-	if not p1:
-		print("FAIL: G2 non riesce a programmare nessuna carta"); ok = false
-	elif arena._phase_mode != "resolving":
-		print("FAIL: dopo G2 non parte la risoluzione (fase=%s)" % arena._phase_mode); ok = false
+	if arena._phase_mode != "resolving":
+		print("FAIL: dopo «Avanti» non parte la risoluzione (fase=%s)" % arena._phase_mode); ok = false
 	else:
-		print("OK: G2 programma → rivelazione e risoluzione per iniziativa")
+		print("OK: «Avanti» → risoluzione per iniziativa")
 
 	# ── Risoluzione: deve toccare a ENTRAMBI gli umani ──
 	await _drive_resolution(arena)
