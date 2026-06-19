@@ -3,6 +3,16 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.57.0] — 2026-06-19
+### Controller telefono: ora utilizzabile anche in VERTICALE (iPhone in mano)
+- Il controller **non forza più l'orizzontale**: funziona in **entrambi gli orientamenti**.
+  In **verticale** la mappa prende tutta la larghezza (margini laterali ridotti), la
+  risoluzione resta a colonna (mappa sopra, comandi sotto) e i **ritratti** diventano piccoli
+  negli angoli in alto.
+- Rispetto di **notch/safe-area** iPhone (padding su barra di stato e bordo inferiore).
+- (Prossimi passi: carta personaggio con ferite/sanguinanti/veleno/focus, e carta Kamae
+  interattiva.) Versione 0.57.0.
+
 ## [0.56.0] — 2026-06-19
 ### Controller telefono: ritratti dei contendenti ai lati dello schermo
 - Aggiunti i **ritratti** di **Ronin** e **Guerriero** (da Tabelle/Senjutsu/Personaggi) come
