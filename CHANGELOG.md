@@ -3,6 +3,19 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.39.0] — 2026-06-19
+### Multiplayer companion — Tappa 3: rete WebSocket + stanze + telefono
+- **Server relay** (`server/server.js`, Node `ws`): stanze con **codice** e instradamento
+  messaggi tavolo↔telefoni; non conosce le regole. Test `server/relay.test.mjs` (PASS).
+- **`net/WebSocketChannel.gd`**: canale Godot con la **stessa interfaccia** del loopback,
+  sopra WebSocket reale (vale per tavolo e telefono).
+- **Pagina telefono** (`phone/index.html` + `app.js` + `style.css`): si collega al relay,
+  entra in una stanza su un seat, riceve i prompt e invia le scelte (mano privata).
+- **E2E reale** (`godot/tests/run_ws_e2e.sh`): relay + tavolo Godot + 2 client via
+  WebSocket giocano una partita 1v1 completa fino a fine coerente (PASS, ~120 messaggi).
+- Resta da fare (Tappa 4): collegare il **tavolo 3D** (Arena) come vista host e ospitare
+  il relay su un host sempre acceso. Versione 0.39.0.
+
 ## [0.38.0] — 2026-06-19
 ### Multiplayer companion — Tappa 2: loopback locale (host + client)
 - Astrazione di **trasporto** (`net/LoopbackChannel.gd`) con messaggi **serializzabili**
