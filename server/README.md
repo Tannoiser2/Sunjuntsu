@@ -9,17 +9,22 @@ regole: gestisce solo **stanze** (codice) e **instradamento** dei messaggi. Vedi
 ```bash
 cd server
 npm install        # una volta (dipendenza: ws)
-npm start          # avvia su ws://0.0.0.0:8080  (PORT per cambiare porta)
+npm start          # HTTP + WebSocket su :8080  (PORT per cambiare porta)
 ```
+Lo stesso processo fa due cose sulla **stessa porta**:
+- **WebSocket** (relay stanze) — `ws://<ip-del-pc>:8080`
+- **HTTP statico** — serve il controller telefono (`../phone/`) e l'**arte delle carte**
+  (`../godot/assets/cards/` → `/cards/...`).
 
 ## Telefoni
-Apri `../phone/index.html` (servito staticamente o da file), inserisci:
-- **Server**: `ws://<ip-del-pc>:8080`
-- **Codice stanza**: quello mostrato dal tavolo
-- **Giocatore 1/2**
+Dal telefono apri nel browser **`http://<ip-del-pc>:8080/`** (niente più `file://`):
+- il campo **Server** è già precompilato con la stessa origine;
+- inserisci il **Codice stanza** mostrato dal tavolo e scegli **Giocatore 1/2**.
 
-Su LAN serve l'IP del PC che ospita relay+tavolo; in produzione il relay va su un host
-sempre acceso (es. free-tier) e le pagine tavolo/telefono come siti statici.
+Le carte appaiono con la **loro immagine** (servite da `/cards/`). Il controller **ricorda**
+la sessione e si **riconnette da solo** (refresh/segnale perso), riprendendo dal prompt in
+corso. Su LAN serve l'IP del PC che ospita relay+tavolo; in produzione il relay va su un
+host sempre acceso (es. free-tier).
 
 ## Test
 ```bash

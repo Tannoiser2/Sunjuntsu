@@ -15,9 +15,55 @@
 // Avvio: `node server/server.js`  (porta da env PORT, default 8080).
 
 import { WebSocketServer } from "ws";
+import { createServer } from "node:http";
+import { readFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
+import { dirname, join, normalize, extname } from "node:path";
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 8080;
 const rooms = new Map(); // code -> { table: ws|null, seats: Map<number, ws> }
+
+// ─── Server HTTP statico: serve il CONTROLLER (phone/) e l'ARTE delle carte ───
+// Così i telefoni aprono http://<host>:<porta>/ (niente file://) e le immagini delle
+// carte sono raggiungibili su /cards/...  Il WebSocket gira sulla STESSA porta.
+const HERE = dirname(fileURLToPath(import.meta.url));
+const PHONE_DIR = join(HERE, "..", "phone");
+const CARDS_DIR = join(HERE, "..", "godot", "assets", "cards");
+const MIME = {
+  ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8",
+  ".css": "text/css; charset=utf-8", ".json": "application/json",
+  ".webp": "image/webp", ".png": "image/png", ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg", ".svg": "image/svg+xml", ".ico": "image/x-icon",
+};
+
+// Risolve un path-URL dentro una directory base, bloccando i path-traversal.
+function safeJoin(base, urlPath) {
+  const rel = normalize(decodeURIComponent(urlPath)).replace(/^(\.\.[/\\])+/, "");
+  const full = join(base, rel);
+  return full.startsWith(base) ? full : null;
+}
+
+async function serveFile(res, path) {
+  try {
+    const buf = await readFile(path);
+    res.writeHead(200, { "content-type": MIME[extname(path).toLowerCase()] || "application/octet-stream" });
+    res.end(buf);
+  } catch {
+    res.writeHead(404, { "content-type": "text/plain" });
+    res.end("404");
+  }
+}
+
+const http = createServer(async (req, res) => {
+  let url = (req.url || "/").split("?")[0];
+  if (url === "/" || url === "") url = "/index.html";
+  if (url.startsWith("/cards/")) {
+    const p = safeJoin(CARDS_DIR, url.slice("/cards/".length));
+    return p ? serveFile(res, p) : (res.writeHead(403), res.end("403"));
+  }
+  const p = safeJoin(PHONE_DIR, url);
+  return p ? serveFile(res, p) : (res.writeHead(403), res.end("403"));
+});
 
 function makeCode() {
   const A = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -37,8 +83,12 @@ function send(ws, obj) {
   if (ws && ws.readyState === ws.OPEN) ws.send(JSON.stringify(obj));
 }
 
-const wss = new WebSocketServer({ port: PORT });
-console.log(`[senjutsu-relay] in ascolto su ws://0.0.0.0:${PORT}`);
+const wss = new WebSocketServer({ server: http });
+http.listen(PORT, () => {
+  console.log(`[senjutsu-relay] HTTP + WebSocket su :${PORT}`);
+  console.log(`  Controller telefono:  http://<ip-del-pc>:${PORT}/`);
+  console.log(`  WebSocket:            ws://<ip-del-pc>:${PORT}`);
+});
 
 wss.on("connection", (ws) => {
   ws._role = null; // "table" | "phone"
