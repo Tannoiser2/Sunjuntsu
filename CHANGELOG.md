@@ -3,6 +3,16 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.48.0] — 2026-06-19
+### Tavolo: ordine d'iniziativa + animazioni delle carte
+- **Ordine d'iniziativa** mostrato sul tavolo: "Ordine iniziativa: 1) G1 Att ⚡8 · 2) G2 Dif ⚡5",
+  così è chiaro chi risolve prima e in che sequenza (alta → bassa).
+- **Animazioni delle carte giocate** sul tavolo: **comparsa** alla rivelazione (dissolvenza +
+  ingrandimento), **sostituzione** (la carta si capovolge e cambia quando si gioca un'istantanea
+  di sostituzione), **scarto** a fine turno (sfuma). 
+- Motore/protocollo: nuovo segnale `resolution_order` → evento pubblico `order`; la sostituzione
+  istantanea ri-trasmette le carte rivelate per animarle. Versione 0.48.0.
+
 ## [0.47.0] — 2026-06-19
 ### Mazzi SOLO dedicati per gli avversari Ronin e Guerriero
 - L'IA solitaria ora usa il suo **mazzo SOLO dedicato** (non più le carte del giocatore):

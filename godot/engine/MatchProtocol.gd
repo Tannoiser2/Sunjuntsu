@@ -40,6 +40,7 @@ func _init(initial_state: GameState) -> void:
 	duel.await_resolution.connect(_on_await_resolution)
 	duel.await_instant_play.connect(_on_await_instant_play)
 	duel.combat_event.connect(func(kind, a, t, info): public_event.emit("combat", {"kind": kind, "attacker": a, "target": t, "info": info}))
+	duel.resolution_order.connect(func(order): public_event.emit("order", {"order": order}))
 	duel.fighter_updated.connect(func(_i): _emit_board())
 	duel.turn_resolved.connect(func(log): public_event.emit("turn", {"log": log}))
 	duel.duel_over.connect(func(w): finished.emit(w))
@@ -78,7 +79,14 @@ func respond(seat: int, kind: String, data: Dictionary) -> void:
 		"plan":
 			duel.plan_card(seat, int(data.get("card", -1)))
 		"instant_replace":
-			duel.apply_instant_replace(seat, int(data.get("pick", -1)))
+			var picked := int(data.get("pick", -1))
+			duel.apply_instant_replace(seat, picked)
+			if picked != -1:
+				# Carta sostituita: aggiorna le carte mostrate sul tavolo (animazione).
+				var planned := {}
+				for j in range(state.fighters.size()):
+					planned[j] = state.fighters[j].planned
+				public_event.emit("revealed", {"planned": planned, "replaced": seat})
 		"instant_play":
 			duel.apply_instant_play(seat, int(data.get("pick", -1)))
 		"resolve":
