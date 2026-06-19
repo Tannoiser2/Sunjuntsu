@@ -3,6 +3,22 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.41.0] — 2026-06-19
+### Controller telefono: carte con arte reale, layout touch, riconnessione
+- **Carte con immagine**: il controller mostra le carte con la **loro arte reale** (mano,
+  sostituzioni, istantanee), con didascalia (nome · tipo · ◈). Fallback a testo se l'immagine
+  manca.
+- **Server tutto-in-uno**: il relay ora serve anche via **HTTP** il controller (`/`) e l'arte
+  delle carte (`/cards/...`) sulla **stessa porta** del WebSocket. Dal telefono basta aprire
+  `http://<ip>:<porta>/` (niente più `file://`); il campo Server è precompilato con la stessa
+  origine. Protezione contro i path-traversal.
+- **Riconnessione**: il controller **ricorda** la sessione (server/codice/seat) e si
+  **riconnette da solo** (con backoff) dopo un calo di rete o il refresh della pagina; l'host
+  **rimanda il prompt in corso** così riprendi esattamente da dove eri. Aggiunto il tasto
+  **Esci**.
+- **Touch**: bottoni più grandi, mano a griglia, pillole per movimento/rotazione/Kamae/OPPURE.
+- Verifica: relay test + E2E WebSocket (partita 1v1 completa) verdi. Versione 0.41.0.
+
 ## [0.40.0] — 2026-06-19
 ### Multiplayer companion — Tappa 4.1: tavolo 3D online + voce di menu
 - Nuova scena **`TableOnline`**: la vista TAVOLO online. Costruisce la board 3D, si collega
