@@ -146,6 +146,7 @@ func _resolve_geom() -> Dictionary:
 
 func _resolve_data() -> Dictionary:
 	var f := state.fighters[_rseat]
+	var foe := state.opponent_of(f)
 	var g := _resolve_geom()
 	var legal_cells := {}
 	var legal_facings: Array = []
@@ -173,6 +174,7 @@ func _resolve_data() -> Dictionary:
 		"legalFacings": legal_facings,
 		"facing": f.facing,
 		"cell": _cell_key(f.cell),
+		"foe": _cell_key(foe.cell) if foe != null else "",
 		"targets": targets,
 		"kamae": _kamae_reachable(),
 		"options": _option_briefs(),

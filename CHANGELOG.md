@@ -3,6 +3,19 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.38.0] — 2026-06-19
+### Multiplayer companion — Tappa 2: loopback locale (host + client)
+- Astrazione di **trasporto** (`net/LoopbackChannel.gd`) con messaggi **serializzabili**
+  (round-trip JSON, consegna asincrona): in Tappa 3 basterà sostituirla con un canale
+  WebSocket dagli stessi metodi/segnali.
+- **`net/MatchHost.gd`** (tavolo autorevole): possiede `MatchProtocol`, inoltra i prompt al
+  seat giusto, trasmette eventi pubblici/fine, applica le risposte.
+- **`net/MatchClient.gd`** (telefono): riceve i prompt del proprio seat e gli eventi
+  pubblici, invia le risposte; non conosce regole né stato completo (mano privata).
+- Nuovo test `test_loopback`: un host + **due client-bot** giocano una partita 1v1 intera
+  **interamente via canale** (i bot decidono solo dai dati del prompt) fino a fine coerente
+  — 10/10 esecuzioni OK. Versione 0.38.0.
+
 ## [0.37.0] — 2026-06-19
 ### Multiplayer companion — Tappa 1: protocollo decisioni (no rete)
 - Nuovo `engine/MatchProtocol.gd`: strato sopra il motore che trasforma **ogni
