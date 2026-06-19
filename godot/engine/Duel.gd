@@ -665,8 +665,9 @@ func _resolve_attack_top(i: int, g: Dictionary, name: String, log: Array, chosen
 		log.append("%s attacca con %s a velocità %d — PARATO da %s" % [
 			f.character, name, atk_speed, foe.character])
 		return
-	var n: int = int(cells.get(foe.cell, g.get("wounds", 1)))
-	var kind: String = g.get("wound_kind", "normal")
+	var raw = cells.get(foe.cell, g.get("wounds", 1))
+	var kind: String = "exec" if str(raw) == "exec" else g.get("wound_kind", "normal")
+	var n: int = 0 if str(raw) == "exec" else int(raw)
 	if kind == "exec":
 		foe.wounds.append("exec"); foe.wounds.resize(foe.wound_limit)
 	elif n > 0:
@@ -710,8 +711,9 @@ func _resolve_split_bottom(i: int, split: Dictionary, name: String, log: Array, 
 				log.append("%s (parte bassa di %s, vel %d) — PARATO da %s" % [
 					f.character, name, bspeed, foe.character])
 			else:
-				var n: int = int(cells.get(foe.cell, 1))
-				var kind: String = split.get("wound_kind", "normal")
+				var raw = cells.get(foe.cell, 1)
+				var kind: String = "exec" if str(raw) == "exec" else split.get("wound_kind", "normal")
+				var n: int = 0 if str(raw) == "exec" else int(raw)
 				if kind == "exec":
 					foe.wounds.append("exec"); foe.wounds.resize(foe.wound_limit)
 				else:
@@ -921,7 +923,7 @@ static func attack_v2_cells(origin: Vector2i, facing: int, geom: Dictionary, fal
 			var k: int = int(cell_def.get("k", 1))
 			var ad: int = (facing + d) % 6
 			var cell: Vector2i = origin + HexGrid.DIRS[ad] * maxi(1, k)
-			out[cell] = int(cell_def.get("w", 1))
+			out[cell] = cell_def.get("w", 1)   # int, oppure "exec" (esecuzione su quella cella)
 		return out
 	# fallback schema vecchio
 	for cell in attack_cells(origin, facing, geom, fallback_range):
@@ -1025,6 +1027,14 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 				f.gain_focus(int(e.get("n", 1)))
 			"hobble":
 				if foe != null: foe.add_hobble(maxi(1, int(e.get("n", 1))))
+			"foe_stun":
+				if foe != null:
+					foe.stun += maxi(1, int(e.get("n", 1)))
+					log.append("%s: %s subisce %d stordimento" % [f.character, foe.character, maxi(1, int(e.get("n", 1)))])
+			"swap_positions":
+				if foe != null:
+					var tmp := f.cell; f.cell = foe.cell; foe.cell = tmp
+					log.append("%s scambia posizione con %s" % [f.character, foe.character])
 			"rotate_target":
 				if foe != null: foe.facing = (foe.facing + int(e.get("n", 1))) % 6
 			"draw":

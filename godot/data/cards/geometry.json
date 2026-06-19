@@ -2,15 +2,11 @@
  "note": "Schema v2: trascrizione fedele (best-effort) da Guerriero.pdf/Ronin.pdf. attack/defence.cells: d=direzione relativa 0-5 (0=fronte,orario), k=anello, w=ferite, v=valore blocco. effects: lista ordinata con when(on_hit/always), gate kamae, focus_cost (bonus opzionali). Le carte con 'note ... DA VERIFICARE' e i diagrammi anello-2 vanno controllati sul gioco fisico.",
  "cards": {
   "53": {
-   "name": "Carta Speciale Guerriero",
+   "name": "CARTA SPECIALE GUERRIERO",
    "type": "core",
-   "play_cost": {
-    "discard": 1
-   },
    "move": {
     "opts": [
      {
-      "ordered": false,
       "atoms": [
        {
         "t": "step",
@@ -29,24 +25,29 @@
    },
    "effects": [
     {
-     "do": "draw",
-     "n": 2,
+     "do": "discard_self",
+     "n": 1,
      "alt": "a"
     },
     {
-     "do": "search_draw",
-     "n": 1,
+     "do": "draw",
+     "n": 2,
      "alt": "b"
+    },
+    {
+     "do": "stun_self",
+     "n": 1,
+     "alt": "c"
     },
     {
      "do": "focus",
      "n": 1,
-     "alt": "b"
+     "alt": "c"
     },
     {
      "do": "change_kamae",
      "n": 1,
-     "alt": "c"
+     "alt": "d"
     }
    ]
   },
@@ -61,8 +62,7 @@
      "alt": "a"
     },
     {
-     "do": "rotate_target",
-     "n": 1,
+     "do": "swap_positions",
      "when": "on_hit",
      "kamae": "balance",
      "alt": "b"
@@ -74,41 +74,15 @@
      "alt": "c"
     }
    ],
-   "note": "Carta reazione istantanea giocata se l'attacco va a segno. DA VERIFICARE."
+   "note": "Istantanea: gioca se l'attacco è riuscito."
   },
   "55": {
    "name": "COLPO DELLA FENICE FIAMMANTE",
    "type": "attack",
    "kamae_req": "aggression",
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 2
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 1,
-      "k": 2,
-      "w": 1
-     },
-     {
-      "d": 5,
-      "k": 1,
-      "w": 1
-     }
-    ]
-   },
-   "wound_kind": "exec",
    "move": {
     "opts": [
      {
-      "ordered": false,
       "atoms": [
        {
         "t": "step",
@@ -120,7 +94,31 @@
      }
     ]
    },
-   "note": "Costo 3 focus, richiede Aggressività. Fronte 2 ferite; Fronte-Dx ESECUZIONE(?); 1 ferita ai lati. Icona exec/kabuto ambigua, DA VERIFICARE."
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 2
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": "exec"
+     },
+     {
+      "d": 1,
+      "k": 2,
+      "w": 1
+     },
+     {
+      "d": 2,
+      "k": 2,
+      "w": 1
+     }
+    ]
+   },
+   "note": "'Destra dist2' approssimata a Retro-Dx anello2. Fronte-Dx dist1 = ESECUZIONE."
   },
   "56": {
    "name": "PUNTO CIECO",
@@ -128,7 +126,6 @@
    "move": {
     "opts": [
      {
-      "ordered": false,
       "atoms": [
        {
         "t": "rot",
@@ -152,7 +149,7 @@
      "alt": "b"
     }
    ],
-   "note": "Istantanea. Cerca e prendi 1 attacco (o difesa in Equilibrio). DA VERIFICARE ultima riga."
+   "note": "Istantanea: cerca attacco (o difesa in Equilibrio)."
   },
   "57": {
    "name": "ISTINTO BRUCIANTE",
@@ -160,20 +157,23 @@
    "move": {
     "opts": [
      {
-      "ordered": false,
       "atoms": [
        {
         "t": "step",
-        "dir": 0,
+        "dirs": [
+         0,
+         3
+        ],
         "n": 1,
         "opt": true,
         "kamae": "aggression"
        },
        {
         "t": "step",
-        "dir": 0,
+        "dir": -1,
         "n": 1,
-        "opt": true
+        "opt": true,
+        "focus_cost": 1
        },
        {
         "t": "rot",
@@ -193,12 +193,32 @@
      "do": "draw",
      "n": 5
     }
-   ],
-   "note": "Reset: rimescola le abilità non-meditazione e pesca 5. Movimenti gated. DA VERIFICARE."
+   ]
   },
   "58": {
    "name": "FINTA FALCIANTE",
    "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "step",
+        "dir": -1,
+        "n": 1,
+        "opt": true,
+        "kamae": "determination"
+       }
+      ]
+     }
+    ]
+   },
    "attack": {
     "cells": [
      {
@@ -218,28 +238,6 @@
      }
     ]
    },
-   "move": {
-    "opts": [
-     {
-      "ordered": false,
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": false
-       },
-       {
-        "t": "step",
-        "dir": -1,
-        "n": 1,
-        "opt": true,
-        "kamae": "determination"
-       }
-      ]
-     }
-    ]
-   },
    "effects": [
     {
      "do": "foe_lose_focus",
@@ -247,7 +245,7 @@
      "when": "on_hit"
     }
    ],
-   "note": "3 esagoni frontali 1 ferita. Passo avanti obblig OPPURE (Determ) passo qualsiasi."
+   "note": "(focus) iniziativa attacco 3 alternativa: non modellata."
   },
   "59": {
    "name": "CONCENTRAZIONE RITROVATA",
@@ -255,7 +253,6 @@
    "move": {
     "opts": [
      {
-      "ordered": false,
       "atoms": [
        {
         "t": "step",
@@ -294,12 +291,39 @@
      "do": "switch_kamae",
      "to": "aggression"
     }
-   ],
-   "note": "Mossa base passo1+rot1 OPPURE (Determinazione) passo2+rot2."
+   ]
   },
   "60": {
    "name": "FALCIATA MONTANTE",
    "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 3,
+        "n": 1,
+        "opt": false
+       }
+      ]
+     },
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dirs": [
+         0,
+         3
+        ],
+        "n": 1,
+        "opt": true,
+        "kamae": "determination"
+       }
+      ]
+     }
+    ]
+   },
    "attack": {
     "cells": [
      {
@@ -319,43 +343,40 @@
      }
     ]
    },
-   "move": {
-    "opts": [
-     {
-      "ordered": false,
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": false
-       },
-       {
-        "t": "step",
-        "dir": -1,
-        "n": 1,
-        "opt": true,
-        "kamae": "determination"
-       }
-      ]
-     }
-    ]
-   },
    "effects": [
     {
      "do": "replace_wound_bleed",
+     "when": "on_hit",
      "kamae": "balance"
     },
     {
      "do": "switch_kamae",
      "to": "aggression"
     }
-   ],
-   "note": "Passo avanti obblig OPPURE (Determ) passo qualsiasi. Equilibrio: ferita->sanguinante. DA VERIFICARE esagoni."
+   ]
   },
   "61": {
    "name": "COLPO CORTO",
    "type": "attack",
+   "kamae_req": "aggression",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dirs": [
+         0,
+         3
+        ],
+        "n": 1,
+        "opt": true,
+        "kamae": "aggression"
+       }
+      ]
+     }
+    ]
+   },
    "attack": {
     "cells": [
      {
@@ -365,30 +386,13 @@
      }
     ]
    },
-   "move": {
-    "opts": [
-     {
-      "ordered": false,
-      "atoms": [
-       {
-        "t": "step",
-        "dir": -1,
-        "n": 1,
-        "opt": true,
-        "kamae": "aggression"
-       }
-      ]
-     }
-    ]
-   },
    "effects": [
     {
      "do": "foe_lose_focus",
      "n": 1,
      "when": "on_hit"
     }
-   ],
-   "note": "Sostituzione istantanea. Passo qualsiasi 1 (Aggr)."
+   ]
   },
   "62": {
    "name": "ARCO RESPINGENTE",
@@ -424,7 +428,7 @@
      "when": "on_hit"
     },
     {
-     "do": "foe_lose_focus",
+     "do": "foe_discard",
      "n": 1,
      "when": "on_hit",
      "kamae": "determination",
@@ -435,8 +439,7 @@
      "to": "aggression",
      "when": "on_hit"
     }
-   ],
-   "note": "4 esagoni a ventaglio 1 ferita. DA VERIFICARE esagoni esatti."
+   ]
   },
   "63": {
    "name": "BLOCCO CINEREO",
@@ -445,15 +448,18 @@
     "cells": [
      {
       "d": 0,
-      "k": 1
+      "k": 1,
+      "v": 1
      },
      {
       "d": 5,
-      "k": 1
+      "k": 1,
+      "v": 1
      },
      {
       "d": 4,
-      "k": 1
+      "k": 1,
+      "v": 1
      }
     ]
    },
@@ -464,40 +470,25 @@
     {
      "do": "push",
      "n": 1,
-     "when": "on_hit",
      "alt": "a"
     },
     {
-     "do": "push",
-     "n": 1,
-     "when": "on_hit",
+     "do": "swap_positions",
      "alt": "b"
     },
     {
      "do": "switch_kamae",
      "to": "aggression",
-     "when": "on_hit",
      "focus_cost": 1
     }
-   ],
-   "note": "Counter ▼8. Griglia blocco Fronte/Fronte-Sx/Retro-Sx (DA VERIFICARE esagoni esatti)."
+   ]
   },
   "64": {
    "name": "TESTATA",
    "type": "attack",
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
-   },
    "move": {
     "opts": [
      {
-      "ordered": false,
       "atoms": [
        {
         "t": "step",
@@ -515,14 +506,27 @@
      }
     ]
    },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
    "effects": [
+    {
+     "do": "foe_stun",
+     "n": 1,
+     "when": "on_hit"
+    },
     {
      "do": "focus",
      "n": 1,
      "when": "on_hit"
     }
-   ],
-   "note": "Passo avanti opz; rotazione 1 (Aggr). 'Se riuscito' icona kabuto+fulmine = stordimento? DA VERIFICARE."
+   ]
   },
   "65": {
    "name": "SPIRALE DI FIAMME",
@@ -541,38 +545,48 @@
      }
     ]
    },
-   "move": {
-    "opts": [
-     {
-      "ordered": false,
-      "atoms": [
-       {
-        "t": "step",
-        "dir": -1,
-        "n": 1,
-        "opt": false,
-        "kamae": "determination"
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": true,
-        "kamae": "determination"
-       },
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": false
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
+   "split": {
+    "initiative": 5,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1,
+         "opt": false,
+         "kamae": "determination"
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false,
+         "kamae": "determination"
+        }
+       ]
+      },
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dirs": [
+          0,
+          3
+         ],
+         "n": 1,
+         "opt": false,
+         "focus_cost": 1
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
    },
    "effects": [
     {
@@ -581,13 +595,37 @@
      "when": "on_hit"
     }
    ],
-   "note": "Iniziativa divisa: parte alta vel.7 (Aggr), parte bassa vel.5. Ferite a Fronte-Dx e Retro-Dx. DA VERIFICARE."
+   "note": "Iniziativa alternativa 7 in Aggressività."
   },
   "72": {
    "name": "SQUARCIO DI NODACHI",
    "type": "attack",
-   "play_cost": {
-    "discard": 1
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dirs": [
+         0,
+         3
+        ],
+        "n": 1,
+        "opt": false,
+        "kamae": "balance"
+       }
+      ]
+     },
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
    },
    "attack": {
     "cells": [
@@ -598,35 +636,12 @@
      }
     ]
    },
-   "move": {
-    "opts": [
-     {
-      "ordered": false,
-      "atoms": [
-       {
-        "t": "step",
-        "dir": -1,
-        "n": 1,
-        "opt": false,
-        "kamae": "balance"
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false,
-        "kamae": "balance"
-       }
-      ]
-     }
-    ]
-   },
    "effects": [
     {
      "do": "discard_self",
      "n": 1
     }
-   ],
-   "note": "Costo di gioco: scarta 1 carta. Mossa (Equilibrio): passo qualsiasi 1 OPPURE rotazione 1. 1 ferita sul fronte."
+   ]
   },
   "83": {
    "name": "BLOCCO AMPIO",
@@ -637,28 +652,21 @@
      "n": 1
     }
    ],
-   "note": "Carta istantanea: +1 all'intervallo d'iniziativa del blocco."
+   "note": "Istantanea: gioca prima di scegliere l'iniziativa in un blocco."
   },
   "86": {
    "name": "COLPO IN AFFONDO",
    "type": "attack",
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 0
-     }
-    ]
-   },
    "move": {
     "opts": [
      {
-      "ordered": false,
       "atoms": [
        {
         "t": "step",
-        "dir": -1,
+        "dirs": [
+         0,
+         3
+        ],
         "n": 1,
         "opt": false
        },
@@ -669,6 +677,15 @@
         "kamae": "determination"
        }
       ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 0
      }
     ]
    },
@@ -682,7 +699,7 @@
      "n": 1
     }
    ],
-   "note": "Attacco con ASTERISCO sul fronte. Valori iniziativa per banda (Aggr=7). DA VERIFICARE."
+   "note": "Asterisco Fronte: in Equilibrio 1 ferita. Iniziativa alt 7 in Aggressività."
   },
   "87": {
    "name": "SABBIA NEGLI OCCHI",
@@ -714,21 +731,40 @@
      "when": "on_hit"
     },
     {
-     "do": "switch_kamae",
-     "to": "neutral",
-     "when": "on_hit"
-    },
-    {
      "do": "change_kamae",
      "n": 1,
      "when": "on_hit"
     }
    ],
-   "note": "NON BLOCCABILE. 3 asterischi frontali."
+   "note": "Asterischi = avversario scarta 2 focus. 'avversario passa a Neutra' non modellato."
   },
   "113": {
    "name": "TAGLIO TRONCANTE",
    "type": "attack",
+   "wound_kind": "bleed",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "step",
+        "dirs": [
+         0,
+         3
+        ],
+        "n": 1,
+        "opt": true,
+        "focus_cost": 1
+       }
+      ]
+     }
+    ]
+   },
    "attack": {
     "cells": [
      {
@@ -743,28 +779,7 @@
      }
     ]
    },
-   "wound_kind": "bleed",
-   "move": {
-    "opts": [
-     {
-      "ordered": false,
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false
-       },
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
-   },
-   "note": "Fronte-Sx ferita sanguinante; fronte asterisco. 2° passo a costo focus. DA VERIFICARE."
+   "note": "Fronte-Sx sanguinante. Asterisco Fronte: in Aggressività 1 ferita."
   },
   "116": {
    "name": "MENTE RAPIDA",
@@ -772,7 +787,6 @@
    "move": {
     "opts": [
      {
-      "ordered": false,
       "atoms": [
        {
         "t": "step",
@@ -807,36 +821,37 @@
      "n": 1,
      "focus_cost": 1
     }
-   ],
-   "note": "In alto icona passo-qualsiasi ✶2 (base). Riga arancione=Aggression passo avanti; verde=Determination rotazione. Ultima riga: 4-quadretti=COSTO FOCUS (non stance)."
+   ]
   },
   "118": {
    "name": "BLOCCO SELVAGGIO",
    "type": "defence",
-   "play_cost": {
-    "discard": 2
-   },
    "defence": {
     "cells": [
      {
       "d": 0,
-      "k": 1
+      "k": 1,
+      "v": 1
      },
      {
       "d": 5,
-      "k": 1
+      "k": 1,
+      "v": 1
      },
      {
       "d": 1,
-      "k": 1
+      "k": 1,
+      "v": 1
      },
      {
       "d": 4,
-      "k": 1
+      "k": 1,
+      "v": 1
      },
      {
       "d": 2,
-      "k": 1
+      "k": 1,
+      "v": 1
      }
     ]
    },
@@ -847,17 +862,17 @@
    "effects": [
     {
      "do": "discard_self",
-     "n": 7,
+     "n": 2,
      "kamae": "aggression"
     },
     {
-     "do": "discard_self",
-     "n": 1,
+     "do": "spend_focus",
+     "all": true,
      "alt": "a"
     },
     {
-     "do": "discard_self",
-     "n": 1,
+     "do": "spend_focus",
+     "all_but": 1,
      "kamae": "determination",
      "alt": "b"
     },
@@ -865,8 +880,7 @@
      "do": "switch_kamae",
      "to": "neutral"
     }
-   ],
-   "note": "Counter ▼7/▼6 nella banda Aggressione. Griglia blocco a 5 esagoni. DA VERIFICARE costo/effetto del counter (scarta 2?)."
+   ]
   },
   "119": {
    "name": "FENDENTE SELVAGGIO",
@@ -896,42 +910,21 @@
      "n": 2
     },
     {
-     "do": "discard_self",
-     "n": 1
+     "do": "spend_focus",
+     "all": true
     },
     {
      "do": "switch_kamae",
      "to": "neutral"
     }
-   ],
-   "note": "3 esagoni frontali da 2 ferite ciascuno."
+   ]
   },
   "123": {
    "name": "RESPINTA",
    "type": "defence",
-   "defence": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1
-     },
-     {
-      "d": 5,
-      "k": 1
-     },
-     {
-      "d": 1,
-      "k": 1
-     }
-    ]
-   },
-   "counter": [
-    1
-   ],
    "move": {
     "opts": [
      {
-      "ordered": false,
       "atoms": [
        {
         "t": "rot",
@@ -940,7 +933,10 @@
        },
        {
         "t": "step",
-        "dir": -1,
+        "dirs": [
+         0,
+         3
+        ],
         "n": 1,
         "opt": true
        }
@@ -948,22 +944,41 @@
      }
     ]
    },
+   "defence": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 5,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "v": 1
+     }
+    ]
+   },
+   "counter": [
+    1
+   ],
    "effects": [
     {
      "do": "push",
-     "n": 1,
-     "when": "on_hit"
+     "n": 1
     }
-   ],
-   "note": "Counter ▼1. Rotazione 1 in alto (obblig). Passo qualsiasi 1 opz in basso."
+   ]
   },
   "23": {
-   "name": "Carta Core del Ronin",
+   "name": "CARTA SPECIALE RONIN",
    "type": "core",
    "move": {
     "opts": [
      {
-      "ordered": false,
       "atoms": [
        {
         "t": "step",
@@ -989,59 +1004,57 @@
     {
      "do": "draw",
      "n": 2,
-     "alt": "a"
+     "alt": "b"
     },
     {
      "do": "stun_self",
      "n": 1,
-     "alt": "b"
+     "alt": "c"
     },
     {
      "do": "switch_kamae",
      "to": "any",
-     "alt": "b"
+     "alt": "c"
     },
     {
      "do": "change_kamae",
      "n": 1,
-     "alt": "c"
+     "alt": "d"
     }
-   ],
-   "note": "OPPURE: A=scarta1+muovi/ruota+pesca2 | B=stordito1+passa a kamae qualsiasi | C=cambia kamae 1. Move dell opzione A (limite: applicata anche se scegli B/C)."
+   ]
   },
   "24": {
    "name": "VORTICE CREMISI",
    "type": "attack",
-   "kamae_req": "aggression",
    "attack": {
     "cells": [
-     {
-      "d": 5,
-      "k": 1,
-      "w": 2
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 2
-     },
-     {
-      "d": 4,
-      "k": 1,
-      "w": 2
-     },
-     {
-      "d": 2,
-      "k": 1,
-      "w": 2
-     },
      {
       "d": 0,
       "k": 2,
       "w": 2
      },
      {
+      "d": 1,
+      "k": 2,
+      "w": 2
+     },
+     {
+      "d": 2,
+      "k": 2,
+      "w": 2
+     },
+     {
       "d": 3,
+      "k": 2,
+      "w": 2
+     },
+     {
+      "d": 4,
+      "k": 2,
+      "w": 2
+     },
+     {
+      "d": 5,
       "k": 2,
       "w": 2
      }
@@ -1052,7 +1065,6 @@
     "move": {
      "opts": [
       {
-       "ordered": false,
        "atoms": [
         {
          "t": "step",
@@ -1074,7 +1086,7 @@
      ]
     }
    },
-   "note": "Costo 3 focus. Attacco ad area (anello di esagoni da 2 ferite). Iniziativa divisa (sotto vel.5, 2 ferite fronte). DA VERIFICARE esagoni esatti."
+   "note": "Top vel8: anello dist2 (12 celle fisiche → 6 raggi). Bottom vel5 Fronte 2 ferite."
   },
   "25": {
    "name": "ARMATURA PESANTE",
@@ -1088,14 +1100,31 @@
      "do": "focus",
      "n": 1,
      "focus_cost": 1
+    },
+    {
+     "do": "stun_self",
+     "n": 1
     }
    ],
-   "note": "Carta persistente (rimane in gioco): riduzione danno. Verbo 'reduce_damage' non ancora nel motore (inerte)."
+   "note": "Persistente: riduce di 1 il danno (min 1). Ogni riduzione: focus a costo / 1 stordimento."
   },
   "26": {
    "name": "CARICA DEL TORO",
    "type": "attack",
-   "kamae_req": "aggression",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
    "attack": {
     "cells": [
      {
@@ -1110,27 +1139,11 @@
      }
     ]
    },
-   "move": {
-    "opts": [
-     {
-      "ordered": false,
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
-   },
    "split": {
     "initiative": 5,
     "move": {
      "opts": [
       {
-       "ordered": false,
        "atoms": [
         {
          "t": "step",
@@ -1148,36 +1161,42 @@
        "d": 5,
        "k": 1,
        "w": 1
+      },
+      {
+       "d": 0,
+       "k": 1,
+       "w": 1
       }
      ]
     }
-   },
-   "note": "Iniziativa divisa: sopra vel.7 (2+2 ferite ai lati), sotto vel.5 (1 ferita). Passo avanti obblig. DA VERIFICARE."
+   }
   },
   "27": {
    "name": "AFFONDO INVERTITO DI ZANNA",
    "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dirs": [
+         0,
+         3
+        ],
+        "n": 1,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
    "attack": {
     "cells": [
      {
       "d": 0,
       "k": 1,
       "w": 2
-     }
-    ]
-   },
-   "move": {
-    "opts": [
-     {
-      "ordered": false,
-      "atoms": [
-       {
-        "t": "step",
-        "dir": -1,
-        "n": 1,
-        "opt": true
-       }
-      ]
      }
     ]
    },
@@ -1188,8 +1207,7 @@
      "when": "on_hit",
      "kamae": "aggression"
     }
-   ],
-   "note": "2 ferite sul fronte. DA VERIFICARE: 'Reverse' suggerisce passo all'indietro (un agente vede passo qualsiasi)."
+   ]
   },
   "28": {
    "name": "IL TERRORE",
@@ -1199,7 +1217,6 @@
     "move": {
      "opts": [
       {
-       "ordered": false,
        "atoms": [
         {
          "t": "rot",
@@ -1214,13 +1231,14 @@
    },
    "effects": [
     {
-     "do": "change_ai_behaviour"
+     "do": "cancel_abilities"
     },
     {
-     "do": "cancel_abilities"
+     "do": "rotate_target",
+     "n": 1
     }
    ],
-   "note": "DISTANZA. Iniziativa divisa (sotto vel.3). Icone parzialmente ambigue. DA VERIFICARE."
+   "note": "Distanza 3; ogni avversario annulla abilità attive e cambia orientamento."
   },
   "29": {
    "name": "SPAZZATA FEROCE",
@@ -1249,31 +1267,18 @@
      }
     ]
    },
-   "move": {
-    "opts": [
-     {
-      "ordered": false,
-      "atoms": [
-       {
-        "t": "step",
-        "dir": -1,
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
-   },
    "split": {
     "initiative": 1,
     "move": {
      "opts": [
       {
-       "ordered": false,
        "atoms": [
         {
          "t": "step",
-         "dir": -1,
+         "dirs": [
+          0,
+          3
+         ],
          "n": 1,
          "opt": false
         }
@@ -1288,8 +1293,7 @@
      "to": "aggression",
      "focus_cost": 1
     }
-   ],
-   "note": "4 esagoni 1 ferita attorno. Iniziativa divisa (sotto vel.1). DA VERIFICARE esagoni esatti."
+   ]
   },
   "30": {
    "name": "ARTIGLI LACERANTI",
@@ -1300,7 +1304,7 @@
      "when": "on_hit"
     }
    ],
-   "note": "Reazione istantanea: trasforma una ferita in sanguinante."
+   "note": "Istantanea: gioca se l'attacco è riuscito → 1 ferita diventa sanguinante."
   },
   "31": {
    "name": "DIFESA D'ACCIAIO",
@@ -1309,15 +1313,18 @@
     "cells": [
      {
       "d": 5,
-      "k": 1
+      "k": 1,
+      "v": 1
      },
      {
       "d": 0,
-      "k": 1
+      "k": 1,
+      "v": 1
      },
      {
       "d": 1,
-      "k": 1
+      "k": 1,
+      "v": 1
      }
     ]
    },
@@ -1326,33 +1333,10 @@
     5,
     4
    ],
-   "move": {
-    "opts": [
-     {
-      "ordered": false,
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": false,
-        "kamae": "determination"
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false,
-        "kamae": "determination"
-       }
-      ]
-     }
-    ]
-   },
    "effects": [
     {
      "do": "rotate_target",
-     "n": 1,
-     "when": "on_hit"
+     "n": 1
     },
     {
      "do": "change_kamae",
@@ -1360,25 +1344,15 @@
      "focus_cost": 1
     }
    ],
-   "note": "Counter ▼6/▼5/▼4. Griglia blocco 3 esagoni frontali."
+   "note": "[costo focus] passo Fronte + rotazione non modellato (movimento in difesa)."
   },
   "32": {
    "name": "BALZO DEL LUPO",
    "type": "attack",
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
-   },
    "wound_kind": "bleed",
    "move": {
     "opts": [
      {
-      "ordered": false,
       "atoms": [
        {
         "t": "step",
@@ -1390,18 +1364,8 @@
      }
     ]
    },
-   "note": "Sostituzione istantanea. Ferita sanguinante sul fronte."
-  },
-  "33": {
-   "name": "COLPO ALLE CAVIGLIE",
-   "type": "attack",
    "attack": {
     "cells": [
-     {
-      "d": 5,
-      "k": 1,
-      "w": 1
-     },
      {
       "d": 0,
       "k": 1,
@@ -1409,14 +1373,28 @@
      }
     ]
    },
+   "effects": [
+    {
+     "do": "push",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
+   "note": "Istantanea di sostituzione. 'avversario movimento' approssimato a spinta 1."
+  },
+  "33": {
+   "name": "COLPO ALLE CAVIGLIE",
+   "type": "attack",
    "move": {
     "opts": [
      {
-      "ordered": false,
       "atoms": [
        {
         "t": "step",
-        "dir": -1,
+        "dirs": [
+         0,
+         3
+        ],
         "n": 1,
         "opt": false
        },
@@ -1426,6 +1404,20 @@
         "opt": false
        }
       ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
      }
     ]
    },
@@ -1434,7 +1426,6 @@
     "move": {
      "opts": [
       {
-       "ordered": false,
        "atoms": [
         {
          "t": "rot",
@@ -1449,15 +1440,16 @@
    "effects": [
     {
      "do": "draw",
-     "n": 1
+     "n": 1,
+     "alt": "a"
     },
     {
      "do": "draw",
      "n": 2,
-     "kamae": "determination"
+     "kamae": "determination",
+     "alt": "b"
     }
-   ],
-   "note": "DA VERIFICARE esagoni feriti (Fronte-Sx+Fronte vs Fronte-Sx+Fronte-Dx). Iniziativa divisa (sotto vel.2)."
+   ]
   },
   "34": {
    "name": "RITIRATA COMPOSTA",
@@ -1465,11 +1457,10 @@
    "move": {
     "opts": [
      {
-      "ordered": false,
       "atoms": [
        {
         "t": "step",
-        "dir": 0,
+        "dir": 3,
         "n": 1,
         "opt": false
        },
@@ -1477,13 +1468,16 @@
         "t": "rot",
         "n": 1,
         "opt": false
-       },
+       }
+      ]
+     },
+     {
+      "atoms": [
        {
         "t": "step",
         "dir": -1,
         "n": 1,
-        "opt": false,
-        "kamae": "determination"
+        "opt": false
        },
        {
         "t": "rot",
@@ -1504,26 +1498,15 @@
      "do": "draw",
      "n": 3
     }
-   ],
-   "note": "Movimento base passo1+rot1 OPPURE (Determ) passo-qualsiasi1+rot2. Banda Aggr con [5] = iniziativa alternativa? DA VERIFICARE."
+   ]
   },
   "35": {
    "name": "CHIATTA DI BUOI",
    "type": "attack",
    "non_blockable": true,
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 2,
-      "w": 0
-     }
-    ]
-   },
    "move": {
     "opts": [
      {
-      "ordered": false,
       "atoms": [
        {
         "t": "step",
@@ -1547,7 +1530,20 @@
      }
     ]
    },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 0
+     }
+    ]
+   },
    "effects": [
+    {
+     "do": "swap_positions",
+     "when": "on_hit"
+    },
     {
      "do": "rotate_target",
      "n": 1,
@@ -1560,18 +1556,13 @@
     },
     {
      "do": "switch_kamae",
-     "to": "aggression",
-     "when": "on_hit"
+     "to": "aggression"
     }
-   ],
-   "note": "NON BLOCCABILE. Asterisco a dist2 fronte. Passo avanti obblig POI passo opz; rotazione (Equilibrio)."
+   ]
   },
   "71": {
    "name": "SPAZZATA DI NAGINATA",
    "type": "attack",
-   "play_cost": {
-    "discard": 1
-   },
    "attack": {
     "cells": [
      {
@@ -1583,6 +1574,11 @@
       "d": 0,
       "k": 1,
       "w": 1
+     },
+     {
+      "d": 4,
+      "k": 1,
+      "w": 0
      }
     ]
    },
@@ -1591,7 +1587,6 @@
     "move": {
      "opts": [
       {
-       "ordered": false,
        "atoms": [
         {
          "t": "step",
@@ -1615,40 +1610,41 @@
      "n": 1
     }
    ],
-   "note": "Arma. DA VERIFICARE: un agente vede un asterisco a Retro-Sx e una riga '*!' (Equilibrio). Costo: scarta 1."
+   "note": "Cella Retro-Sx asterisco: in Equilibrio 1 ferita (non per-cella)."
   },
   "89": {
    "name": "BLOCCO D'EMERGENZA",
    "type": "defence",
-   "defence": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1
-     },
-     {
-      "d": 5,
-      "k": 1
-     }
-    ]
-   },
    "move": {
     "opts": [
      {
-      "ordered": false,
       "atoms": [
        {
         "t": "rot",
         "n": 1,
         "opt": false,
         "kamae": "determination"
-       },
+       }
+      ]
+     },
+     {
+      "atoms": [
        {
         "t": "rot",
         "n": 2,
-        "opt": false
+        "opt": false,
+        "focus_cost": 1
        }
       ]
+     }
+    ]
+   },
+   "defence": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "v": 1
      }
     ]
    },
@@ -1657,8 +1653,7 @@
      "do": "switch_kamae",
      "to": "neutral"
     }
-   ],
-   "note": "Sostituzione istantanea. Rotazione 1 (Determ) / 2 (focus). Griglia blocco DA VERIFICARE."
+   ]
   },
   "98": {
    "name": "GRIDO DI GUERRA",
@@ -1666,7 +1661,6 @@
    "move": {
     "opts": [
      {
-      "ordered": false,
       "atoms": [
        {
         "t": "step",
@@ -1703,8 +1697,7 @@
      "do": "switch_kamae",
      "to": "aggression"
     }
-   ],
-   "note": "DISTANZA. Passo avanti obblig POI passo opz; rotazione (Determ)."
+   ]
   },
   "102": {
    "name": "MENTE RISOLUTA",
@@ -1712,7 +1705,6 @@
    "move": {
     "opts": [
      {
-      "ordered": false,
       "atoms": [
        {
         "t": "step",
@@ -1731,9 +1723,6 @@
    },
    "effects": [
     {
-     "do": "change_approach"
-    },
-    {
      "do": "change_kamae",
      "n": 1
     },
@@ -1748,13 +1737,17 @@
      "kamae": "determination",
      "alt": "b"
     }
-   ],
-   "note": "Movimento passo-qualsiasi2+rot2."
+   ]
   },
   "104": {
    "name": "COLPO AZZOPPANTE",
    "type": "meditation",
    "effects": [
+    {
+     "do": "hobble",
+     "n": 1,
+     "when": "on_hit"
+    },
     {
      "do": "push",
      "n": 1,
@@ -1762,24 +1755,14 @@
      "kamae": "aggression"
     }
    ],
-   "note": "Reazione istantanea giocata se l'attacco va a segno. DA VERIFICARE icone."
+   "note": "Istantanea: gioca se l'attacco è riuscito."
   },
   "107": {
    "name": "AFFONDO IN SPINTA",
    "type": "attack",
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 2
-     }
-    ]
-   },
    "move": {
     "opts": [
      {
-      "ordered": false,
       "atoms": [
        {
         "t": "step",
@@ -1790,20 +1773,34 @@
        {
         "t": "rot",
         "n": 1,
-        "opt": false
+        "opt": false,
+        "focus_cost": 1
        }
       ]
      }
     ]
    },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 2
+     }
+    ]
+   },
    "effects": [
     {
-     "do": "switch_kamae",
-     "to": "aggression",
+     "do": "hobble",
+     "n": 1,
      "when": "on_hit"
+    },
+    {
+     "do": "switch_kamae",
+     "to": "aggression"
     }
    ],
-   "note": "2 ferite sul fronte. Rotazione a costo focus. DA VERIFICARE."
+   "note": "Iniziativa alternativa 6 in Aggressività."
   },
   "125": {
    "name": "CALCIO DEL CAVALLO",
@@ -1812,7 +1809,7 @@
     "cells": [
      {
       "d": 0,
-      "k": 2,
+      "k": 1,
       "w": 0
      }
     ]
@@ -1822,7 +1819,6 @@
     "move": {
      "opts": [
       {
-       "ordered": false,
        "atoms": [
         {
          "t": "step",
@@ -1844,6 +1840,10 @@
    },
    "effects": [
     {
+     "do": "swap_positions",
+     "when": "on_hit"
+    },
+    {
      "do": "push",
      "n": 1,
      "when": "on_hit",
@@ -1856,29 +1856,21 @@
      "kamae": "aggression",
      "alt": "b"
     }
-   ],
-   "note": "Asterisco a dist2 fronte. Iniziativa divisa (sotto vel.5)."
+   ]
   },
   "126": {
    "name": "COLPO D'ELSA",
    "type": "attack",
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
-   },
    "move": {
     "opts": [
      {
-      "ordered": false,
       "atoms": [
        {
         "t": "step",
-        "dir": -1,
+        "dirs": [
+         0,
+         3
+        ],
         "n": 1,
         "opt": false
        },
@@ -1889,6 +1881,15 @@
         "kamae": "determination"
        }
       ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
      }
     ]
    },
@@ -1910,25 +1911,14 @@
      "when": "on_hit",
      "kamae": "aggression"
     }
-   ],
-   "note": "1 ferita sul fronte. DA VERIFICARE riga scarta focus avversario."
+   ]
   },
   "127": {
    "name": "SPINTA INDIETRO",
    "type": "attack",
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 0
-     }
-    ]
-   },
    "move": {
     "opts": [
      {
-      "ordered": false,
       "atoms": [
        {
         "t": "rot",
@@ -1939,14 +1929,22 @@
      }
     ]
    },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 0
+     }
+    ]
+   },
    "effects": [
     {
      "do": "push",
      "n": 2,
      "when": "on_hit"
     }
-   ],
-   "note": "Attacco ad asterisco: spinge l'avversario di 2. DA VERIFICARE esagoni vicini."
+   ]
   }
  },
  "characters": {
