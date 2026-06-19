@@ -3,6 +3,22 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.34.0] — 2026-06-19
+### Restyling GUI + focus visibile + rotazione con frecce + sequenza chiara
+- **Tema UI** applicato a tutto il gioco (`scenes/ui_theme.tres`): **bottoni in stile**
+  (stati normale/hover/premuto/disabilitato, angoli arrotondati, ombre), pannelli e
+  etichette leggibili (contorno) sopra la scena 3D.
+- **Focus visibile**: nuovo indicatore con i **gettoni di concentrazione** (◈ pieni / ◇
+  vuoti, x3) del giocatore di turno, che **diminuiscono quando li spendi** e aumentano
+  attraversando il ramo rosa della Kamae (il costo è anche sulle carte).
+- **Rotazione senza tasti**: frecce ⟲ ⟳ **vicino alla pedina** (oltre a Q/E), mostrate solo
+  quando la carta consente di ruotare.
+- **Sequenza di risoluzione più chiara**: per iniziativa, prima **movimento + rotazione**,
+  poi le **scelte** (Kamae/OPPURE), infine **conferma**; la barra di stato descrive il passo
+  corrente (chi risolve, iniziativa, cosa fare).
+- **Cambio Kamae illuminato**: i nodi raggiungibili sulla carta Kamae vengono evidenziati.
+- **Carte più in alto** e più leggibili. Versione 0.34.0.
+
 ## [0.33.0] — 2026-06-18
 ### Le ferite (e gli altri stati) sono CARTE
 - Le **ferite**, lo **stordimento**, gli **azzoppamenti** e i **veleni** sono ora modellati

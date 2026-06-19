@@ -37,7 +37,7 @@ func _layout() -> void:
 		return
 	await get_tree().process_frame
 	var center_x: float = size.x * 0.5
-	var base_y: float = size.y - 150.0
+	var base_y: float = size.y - 226.0    ## carte più in alto (più leggibili)
 	for i in range(n):
 		var cv = _cards[i]
 		var off: float = i - (n - 1) * 0.5

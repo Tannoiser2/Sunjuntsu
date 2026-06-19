@@ -83,6 +83,7 @@ func _start_duel() -> void:
 	_hud.confirm_pressed.connect(_confirm_resolution)
 	_hud.kamae_chosen.connect(_on_kamae_chosen)
 	_hud.option_chosen.connect(_on_option_chosen)
+	_hud.rotate_requested.connect(_rotate_player)
 	_duel.start()
 	_planning_player = 0
 	# Carta Kamae del giocatore attivo + segnalino della posizione.
@@ -221,19 +222,27 @@ func _on_await_resolution(i: int) -> void:
 	_resolving_index = i
 	if not state.fighters[i].is_ai:
 		# Umano (giocatore solo, oppure entrambi in 1v1): risoluzione interattiva.
+		# Sequenza: 1) movimento+rotazione  2) scelte (Kamae/OPPURE)  3) conferma.
 		_phase_mode = "resolving"
 		_move_used = false
 		_kamae_used = false
 		_selected_card = CardDB.card(state.fighters[i].planned).duplicate()
 		_selected_card["id"] = state.fighters[i].planned
 		_setup_kamae_for(i)
-		_refresh_overlays()
-		_refresh_kamae_chooser()
-		_refresh_option_chooser()
+		_hud.hide_kamae()
+		_hud.hide_options()
+		_refresh_overlays()          # calcola _move_states e disegna il movimento
+		if not _movable_cells_exist():
+			# Niente da muovere: salta direttamente al passo delle scelte.
+			_move_used = true
+			_refresh_overlays()
+			_show_choosers()
 		_refresh_status()
 		_hud.show_confirm()
-		var pre := "⚔ %s — risoluzione: %s" if _versus else "⚔ Tua risoluzione: %s"
-		_hud.set_info((pre % [_who(i), _selected_card.get("name", "?")]) if _versus else (pre % _selected_card.get("name", "?")))
+		var ini := _duel._speed_of(i) if _duel != null else -1
+		var step := "muovi e ruota la pedina" if _movable_cells_exist() else "scegli ed esegui"
+		_hud.set_info("⚔ Risoluzione — %s · iniziativa %s · %s: %s" % [
+			_who(i), (str(ini) if ini >= 0 else "—"), step, _selected_card.get("name", "?")])
 	else:
 		_phase_mode = "ai"
 		_clear_overlays()
@@ -393,6 +402,8 @@ func _refresh_status() -> void:
 		_who(0), p.character, p.remaining_wounds(), p.wound_limit, p.focus, Domain.STANCE_NAMES[p.stance], _status_badges(p), p.draw_pile.size(), p.discard.size(),
 		_who(1), e.character, e.remaining_wounds(), e.wound_limit, e.focus, Domain.STANCE_NAMES[e.stance], _status_badges(e), e.draw_pile.size(), _ai_posture(e)])
 	_hud.set_kamae_marker(Domain.STANCE_SLUG[state.fighters[_kamae_shown].stance])
+	var af := _active()
+	_hud.set_focus(_who(af), state.fighters[af].focus, GameState.Fighter.MAX_FOCUS)
 	_refresh_status_cards()
 
 
@@ -443,6 +454,7 @@ func _build_environment() -> void:
 	add_child(_cam_pivot)
 	var cam := Camera3D.new()
 	cam.name = "Camera3D"
+	cam.current = true
 	_cam_pivot.add_child(cam)
 	_update_camera()
 
@@ -869,6 +881,51 @@ func _apply_pawn_facing(i: int) -> void:
 	_pawns[i].call("face", _facing_angle(state.fighters[i].cell, state.fighters[i].facing))
 
 
+## Aggiorna ogni frame le frecce di rotazione: visibili sulla pedina del giocatore
+## di turno SOLO quando la carta consente di ruotare.
+func _process(_dt: float) -> void:
+	if _hud == null:
+		return
+	if _phase_mode == "resolving" and _resolving_index >= 0 \
+			and not state.fighters[_resolving_index].is_ai and _rotation_allowed():
+		var cam: Camera3D = _cam_pivot.get_node("Camera3D")
+		var wp: Vector3 = _pawns[_resolving_index].global_position + Vector3(0, hex_size * 1.7, 0)
+		if not cam.is_position_behind(wp):
+			_hud.show_rotation(cam.unproject_position(wp))
+		else:
+			_hud.hide_rotation()
+	else:
+		_hud.hide_rotation()
+
+
+## La carta in risoluzione consente di ruotare la pedina del giocatore attivo?
+func _rotation_allowed() -> bool:
+	if _selected_card.is_empty():
+		return false
+	var f := state.fighters[_active()]
+	var facings: Array = _move_states.get(f.cell, [])
+	if facings.size() > 1:
+		return true
+	var g: Dictionary = _selected_card.get("geom_override", CardDB.geometry(int(_selected_card.get("id", -1))))
+	return not g.has("move") and int(g.get("rotates", 0)) > 0
+
+
+## Esistono celle di movimento (diverse dalla cella attuale) per la carta attiva?
+func _movable_cells_exist() -> bool:
+	var f := state.fighters[_active()]
+	for cell in _move_states.keys():
+		if cell != f.cell:
+			return true
+	return false
+
+
+## Dopo il movimento/rotazione: mostra le SCELTE della carta (Kamae, OPPURE).
+func _show_choosers() -> void:
+	if _phase_mode == "resolving" and _resolving_index >= 0 and not state.fighters[_resolving_index].is_ai:
+		_refresh_kamae_chooser()
+		_refresh_option_chooser()
+
+
 # ─── Calibrazione live griglia↔mappa ─────────────────────────────────────────
 
 func _set_hex_size(v: float) -> void:
@@ -937,6 +994,7 @@ func _move_active_to(cell: Vector2i) -> void:
 	_move_used = true            # movimento della carta speso
 	_apply_pawn_facing(idx_f)
 	_refresh_overlays()          # ora mostra solo l'arco d'attacco aggiornato
+	_show_choosers()             # passo successivo: scelte (Kamae/OPPURE)
 
 
 # ─── Input: camera orbitale + picking ────────────────────────────────────────
@@ -956,10 +1014,11 @@ func _unhandled_input(event: InputEvent) -> void:
 			KEY_E:
 				if my_turn: _rotate_player(1)
 				return
-			KEY_SPACE:   # non muovere: passa alla fase bersagli
+			KEY_SPACE:   # non muovere: passa al passo bersagli/scelte
 				if my_turn and not _move_used:
 					_move_used = true
 					_refresh_overlays()
+					_show_choosers()
 				return
 			KEY_ENTER, KEY_KP_ENTER:   # conferma: applica attacco/effetti
 				if my_turn:

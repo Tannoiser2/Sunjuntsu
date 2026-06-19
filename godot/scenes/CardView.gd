@@ -113,7 +113,7 @@ func _on_hover(entered: bool) -> void:
 	var tw := create_tween().set_parallel()
 	if entered:
 		z_index = 10
-		tw.tween_property(self, "position", base_pos + Vector2(0, -50), 0.12)
+		tw.tween_property(self, "position", base_pos + Vector2(0, -72), 0.12)
 		tw.tween_property(self, "rotation", 0.0, 0.12)
 		tw.tween_property(self, "scale", Vector2(1.15, 1.15), 0.12)
 	else:
@@ -127,7 +127,7 @@ func set_selected(v: bool) -> void:
 	selected = v
 	var tw := create_tween().set_parallel()
 	z_index = 20 if v else 0
-	tw.tween_property(self, "position", base_pos + Vector2(0, -70 if v else 0), 0.15)
+	tw.tween_property(self, "position", base_pos + Vector2(0, -96 if v else 0), 0.15)
 	tw.tween_property(self, "rotation", 0.0 if v else base_rot, 0.15)
 	tw.tween_property(self, "scale", Vector2(1.25, 1.25) if v else Vector2.ONE, 0.15)
 	modulate = Color(1.3, 1.2, 0.7) if v else Color.WHITE
