@@ -105,7 +105,22 @@ input {
 .stat.round { color:var(--ink-soft); font-size:13px; }
 .net { margin:0; padding:2px 12px; min-height:0; color:var(--seal-d); font-size:13px; }
 
-#content { flex:1; min-height:0; display:flex; }
+/* Lascia ai lati lo spazio per i ritratti dei contendenti (non coprono la mappa). */
+#content { flex:1; min-height:0; display:flex; padding:0 92px; }
+
+/* ── Ritratti dei contendenti (cerchi ai lati) ── */
+.fighters { position:absolute; inset:0; pointer-events:none; z-index:6; }
+.fighter { position:absolute; top:54%; transform:translateY(-50%); width:84px; margin:0;
+  text-align:center; }
+.fighter.left { left:5px; } .fighter.right { right:5px; }
+.fighter .pic { width:84px; height:84px; border-radius:50%; object-fit:cover; display:block;
+  border:3px solid #6b6256; background:#cfc4ab; box-shadow:0 3px 8px rgba(20,12,4,.5); }
+.fighter.me .pic { border-color:var(--seal); }
+.fighter.foe .pic { border-color:#2f5fa6; }
+.fighter.active .pic { border-color:var(--gold);
+  box-shadow:0 0 0 3px rgba(185,145,47,.6), 0 3px 8px rgba(20,12,4,.5); }
+.fighter .nm { margin-top:4px; font-size:12px; font-weight:700; white-space:nowrap;
+  color:var(--ink); text-shadow:0 1px 2px rgba(250,244,232,.85); }
 
 /* Vista PLAN / PICK: mano scorrevole orizzontale */
 .cards-strip {

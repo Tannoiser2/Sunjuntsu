@@ -6,8 +6,8 @@ const qs = new URLSearchParams(location.search);
 const LS = window.localStorage;
 const SVGNS = "http://www.w3.org/2000/svg";
 
-let ws = null, seat = -1, lastPrompt = null, board = null;
-let IMG_BASE = "", MAP_BASE = "";
+let ws = null, seat = -1, lastPrompt = null, board = null, activeSeat = -1;
+let IMG_BASE = "", MAP_BASE = "", PORTRAIT_BASE = "";
 let intentional = false, attempts = 0, reconnectTimer = null;
 
 // ── Connessione ──────────────────────────────────────────────────────────────
@@ -51,6 +51,7 @@ function connect() {
   const code = $("code").value.trim().toUpperCase();
   IMG_BASE = imgBaseFromWs(url);
   MAP_BASE = IMG_BASE.replace("/cards/", "/maps/");
+  PORTRAIT_BASE = IMG_BASE.replace("/cards/", "/portraits/");
   setStatus("Connessione…"); setNet("Connessione…");
   try { ws = new WebSocket(url); } catch { scheduleReconnect(); return; }
   ws.onopen = () => { attempts = 0; setNet(""); ws.send(JSON.stringify({ t: "join", code, seat })); };
@@ -92,6 +93,7 @@ function onMessage(m) {
 
 function respond(kind, data) {
   ws.send(JSON.stringify({ t: "to_host", payload: { t: "respond", kind, data } }));
+  activeSeat = -1; updateFighters();
   waiting("Inviato. Attendi…");
 }
 
@@ -101,6 +103,7 @@ function onPayload(p) {
   if (p.t === "finished") { lastPrompt = null; finished(p.winner); return; }
   if (p.t !== "prompt") return;
   lastPrompt = p;
+  activeSeat = seat; updateFighters();   // ho un'azione da fare → evidenzia il mio ritratto
   switch (p.kind) {
     case "plan": renderPlan(p.data); break;
     case "instant_replace": renderPick("Sostituire la carta rivelata?", p.kind, p.data.options); break;
@@ -111,10 +114,10 @@ function onPayload(p) {
 
 function onEvent(kind, data) {
   if (kind === "board") { board = data; updateHud(); return; }
-  if (kind === "turn_of") news(data.seat === seat ? "▶ Tocca a te" : "Avversario…");
+  if (kind === "turn_of") { activeSeat = data.seat; updateFighters(); news(data.seat === seat ? "▶ Tocca a te" : "Avversario…"); }
   else if (kind === "combat") news("⚔ " + combatLabel(data.kind));
   else if (kind === "revealed") news("Carte rivelate");
-  else if (kind === "turn") news("Nuovo turno");
+  else if (kind === "turn") { activeSeat = -1; updateFighters(); news("Nuovo turno"); }
 }
 
 // ── Barra di stato ───────────────────────────────────────────────────────────
@@ -128,6 +131,32 @@ function updateHud() {
   $("wounds").textContent = `❤ ${me.wounds}/${me.limit}` + (me.stun ? `  ✦${me.stun}` : "");
   $("focus").textContent = "◈".repeat(me.focus) + "◇".repeat(Math.max(0, 3 - me.focus));
   $("round").textContent = `Round ${board.round}`;
+  updateFighters();
+}
+
+// ── Ritratti dei contendenti (cerchi ai lati: io a sinistra, avversario a destra) ──
+function portraitFile(name) { return ({ Ronin: "ronin.png", Warrior: "guerriero.png" })[name] || ""; }
+
+function updateFighters() {
+  if (!board || !board.fighters) return;
+  const other = board.fighters.length > 1 ? (seat === 0 ? 1 : 0) : -1;
+  setFighter($("fLeft"), seat, "me");
+  setFighter($("fRight"), other, "foe");
+}
+
+function setFighter(fig, idx, role) {
+  if (!fig) return;
+  if (idx < 0 || !board.fighters[idx]) { fig.classList.add("hidden"); return; }
+  const f = board.fighters[idx];
+  fig.className = "fighter " + (role === "me" ? "left me" : "right foe") + (idx === activeSeat ? " active" : "");
+  const pic = fig.querySelector(".pic");
+  const file = portraitFile(f.name);
+  if (file && PORTRAIT_BASE) {
+    const url = PORTRAIT_BASE + file;
+    if (pic.getAttribute("src") !== url) { pic.src = url; pic.onerror = () => { pic.style.visibility = "hidden"; }; }
+    pic.style.visibility = "";
+  } else { pic.style.visibility = "hidden"; }
+  fig.querySelector(".nm").textContent = f.name || "";
 }
 
 // ── Helpers DOM/SVG ──────────────────────────────────────────────────────────

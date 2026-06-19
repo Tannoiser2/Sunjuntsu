@@ -3,6 +3,15 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.56.0] — 2026-06-19
+### Controller telefono: ritratti dei contendenti ai lati dello schermo
+- Aggiunti i **ritratti** di **Ronin** e **Guerriero** (da Tabelle/Senjutsu/Personaggi) come
+  **cerchi ai lati** dello schermo del telefono: **io a sinistra** (bordo vermiglio),
+  **avversario a destra** (bordo blu), con il nome sotto. Il ritratto di chi deve agire si
+  **evidenzia in oro**.
+- I cerchi stanno nei **margini laterali** (il contenuto ha spazio riservato): **non coprono
+  la mappa**. Il server espone la nuova rotta statica **`/portraits/`**. Versione 0.56.0.
+
 ## [0.55.0] — 2026-06-19
 ### Fix: rotazione non più illimitata (rispetta il budget della carta)
 - In risoluzione (telefono/tavolo) la **rotazione** era di fatto **illimitata**: i facing
