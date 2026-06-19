@@ -3,6 +3,19 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.47.0] — 2026-06-19
+### Mazzi SOLO dedicati per gli avversari Ronin e Guerriero
+- L'IA solitaria ora usa il suo **mazzo SOLO dedicato** (non più le carte del giocatore):
+  **Ronin** = Charge, Steel Block, Reverse Carved Fang, Feral Sweep, The Terror (incubo);
+  **Guerriero** = Ember Block, Scything Uppercut, Warding Arc, Refocused Mind, Flaming Phoenix
+  Arc (incubo). Trascritte (best-effort) dall'Excel *Solo_AI_carte* corretto.
+- **Ripristinata la meccanica solo**: le carte SOLO portano **CHANGE AI BEHAVIOUR** (l'IA
+  alterna offensiva/difensiva, postura visibile) e **RESET DECK** (rimescola e cicla), che si
+  erano persi quando #28 era stata ri-trascritta come carta del giocatore.
+- Geometria approssimata dove la trascrizione era parziale (note sulle carte). Le altre ~110
+  carte solo (altri avversari non ancora nel gioco) restano da integrare quando quei
+  personaggi verranno aggiunti. Suite verde (54 carte testate). Versione 0.47.0.
+
 ## [0.46.0] — 2026-06-19
 ### Chiarezza: scelte leggibili, movimento/rotazione separati, tavolo informativo
 - **Scelte OPPURE leggibili**: sul telefono le opzioni non sono più "a/b/c" ma la **descrizione**

@@ -1945,6 +1945,386 @@
      "when": "on_hit"
     }
    ]
+  },
+  "901": {
+   "name": "CHARGE (Solo)",
+   "type": "attack",
+   "non_blockable": true,
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "split": {
+    "initiative": 2,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    },
+    "attack": {
+     "cells": [
+      {
+       "d": 0,
+       "k": 1,
+       "w": 1
+      }
+     ]
+    },
+    "effects": [
+     {
+      "do": "push",
+      "n": 1
+     }
+    ]
+   },
+   "note": "Solo Ronin 001 (trascrizione parziale)."
+  },
+  "902": {
+   "name": "STEEL BLOCK (Solo)",
+   "type": "defence",
+   "defence": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "v": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "rotate_target",
+     "n": 1
+    },
+    {
+     "do": "change_ai_behaviour"
+    },
+    {
+     "do": "reset_deck"
+    }
+   ],
+   "note": "Solo Ronin 002. Griglia difesa approssimata."
+  },
+  "903": {
+   "name": "REVERSE CARVED FANG (Solo)",
+   "type": "attack",
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 2
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "push",
+     "n": 1,
+     "when": "on_hit",
+     "alt": "a"
+    },
+    {
+     "do": "rotate_target",
+     "n": 1,
+     "when": "on_hit",
+     "alt": "b"
+    }
+   ],
+   "note": "Solo Ronin 003."
+  },
+  "904": {
+   "name": "FERAL SWEEP (Solo)",
+   "type": "attack",
+   "attack": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "split": {
+    "initiative": 2,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "effects": [
+    {
+     "do": "change_ai_behaviour"
+    }
+   ],
+   "note": "Solo Ronin 004."
+  },
+  "905": {
+   "name": "THE TERROR (Solo)",
+   "type": "meditation",
+   "effects": [
+    {
+     "do": "change_ai_behaviour"
+    },
+    {
+     "do": "cancel_abilities"
+    }
+   ],
+   "split": {
+    "initiative": 3,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "rot",
+         "n": 2,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    },
+    "effects": [
+     {
+      "do": "rotate_target",
+      "n": 1
+     },
+     {
+      "do": "reset_deck"
+     }
+    ]
+   },
+   "note": "Solo Ronin Nightmare. RANGE/ALL approssimato."
+  },
+  "911": {
+   "name": "EMBER BLOCK (Solo)",
+   "type": "defence",
+   "defence": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "v": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "push",
+     "n": 1
+    },
+    {
+     "do": "change_ai_behaviour"
+    },
+    {
+     "do": "reset_deck"
+    }
+   ],
+   "note": "Solo Warrior 001. Difesa 8 approssimata."
+  },
+  "912": {
+   "name": "SCYTHING UPPERCUT (Solo)",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 0,
+      "k": 2,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "change_ai_behaviour"
+    }
+   ],
+   "note": "Solo Warrior."
+  },
+  "913": {
+   "name": "WARDING ARC (Solo)",
+   "type": "attack",
+   "attack": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "foe_discard",
+     "n": 1,
+     "when": "on_hit"
+    },
+    {
+     "do": "change_ai_behaviour"
+    }
+   ],
+   "note": "Solo Warrior 002."
+  },
+  "914": {
+   "name": "REFOCUSED MIND (Solo)",
+   "type": "meditation",
+   "effects": [
+    {
+     "do": "change_ai_behaviour"
+    }
+   ],
+   "split": {
+    "initiative": 3,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 2,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    },
+    "effects": [
+     {
+      "do": "reset_deck"
+     }
+    ]
+   },
+   "note": "Solo Warrior 003."
+  },
+  "915": {
+   "name": "FLAMING PHOENIX ARC (Solo)",
+   "type": "attack",
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "change_ai_behaviour"
+    },
+    {
+     "do": "reset_deck"
+    }
+   ],
+   "note": "Solo Warrior Nightmare."
   }
  },
  "characters": {
