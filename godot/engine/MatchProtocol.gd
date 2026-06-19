@@ -28,6 +28,10 @@ var _rseat: int = -1
 var _rmove_used: bool = false
 var _rkamae_used: bool = false
 var _rsplit: bool = false
+# Stati raggiungibili (cella → facing legali) calcolati UNA volta dalla posizione di
+# partenza: la rotazione è limitata a questo insieme (come fa l'arena locale), così il
+# budget di rotazione della carta non si "azzera" a ogni rotazione.
+var _rreach: Dictionary = {}
 
 
 func _init(initial_state: GameState) -> void:
@@ -161,7 +165,20 @@ func _begin_resolve(i: int) -> void:
 	_rmove_used = false
 	_rkamae_used = false
 	_rsplit = false
+	_compute_reach()
 	prompt.emit(i, "resolve", _resolve_data())
+
+
+## Calcola gli stati raggiungibili (cella → facing legali) dalla posizione ATTUALE,
+## una sola volta all'inizio della risoluzione (o della parte bassa dello split).
+func _compute_reach() -> void:
+	_rreach = {}
+	if _rseat == -1:
+		return
+	var f := state.fighters[_rseat]
+	var g := _resolve_geom()
+	if g.has("move"):
+		_rreach = Move.reachable_by_cell(f.cell, f.facing, g["move"], state.is_blocked, Domain.STANCE_SLUG[f.stance])
 
 
 ## Geometria della carta in risoluzione (carta scelta o parte bassa dello split).
@@ -176,18 +193,15 @@ func _resolve_data() -> Dictionary:
 	var foe := state.opponent_of(f)
 	var g := _resolve_geom()
 	var legal_cells := {}
-	var legal_facings: Array = []
 	var can_move: bool = (not _rmove_used) and g.has("move") and not f.movement_cancelled
 	if can_move:
-		var reach := Move.reachable_by_cell(f.cell, f.facing, g["move"], state.is_blocked, Domain.STANCE_SLUG[f.stance])
-		for cell in reach.keys():
+		# Celle di destinazione (dalla mappa raggiungibile fissa, esclusa quella attuale).
+		for cell in _rreach.keys():
 			if cell != f.cell:
-				legal_cells[_cell_key(cell)] = reach[cell]
-		legal_facings = (reach.get(f.cell, []) as Array)
-	elif g.has("move"):
-		# Dopo il movimento: i facing legali nella cella attuale (per la rotazione).
-		var reach2 := Move.reachable_by_cell(f.cell, f.facing, g.get("move", {}), state.is_blocked, Domain.STANCE_SLUG[f.stance]) if g.has("move") else {}
-		legal_facings = (reach2.get(f.cell, []) as Array)
+				legal_cells[_cell_key(cell)] = _rreach[cell]
+	# Facing legali nella cella ATTUALE: insieme FISSO calcolato a inizio risoluzione,
+	# così il budget di rotazione della carta è rispettato e non si rigenera.
+	var legal_facings: Array = (_rreach.get(f.cell, []) as Array)
 	# Bersagli d'attacco visibili (per l'anteprima sul telefono).
 	var targets: Array = []
 	if g.get("type", "") == "attack" or g.has("attack"):
@@ -238,15 +252,11 @@ func _do_move(cell: Vector2i) -> void:
 	var f := state.fighters[_rseat]
 	if _rmove_used or f.movement_cancelled:
 		return
-	var g := _resolve_geom()
-	if not g.has("move"):
-		return
-	var reach := Move.reachable_by_cell(f.cell, f.facing, g["move"], state.is_blocked, Domain.STANCE_SLUG[f.stance])
-	if not reach.has(cell) or cell == f.cell:
+	if not _rreach.has(cell) or cell == f.cell:
 		return
 	f.cell = cell
 	# Facing: mantieni l'attuale se legale, altrimenti il legale più vicino.
-	var facings: Array = reach[cell]
+	var facings: Array = _rreach[cell]
 	if not facings.is_empty() and not facings.has(f.facing):
 		var best: int = int(facings[0]); var best_d := 99
 		for fc in facings:
@@ -259,9 +269,9 @@ func _do_move(cell: Vector2i) -> void:
 func _do_rotate(facing: int) -> void:
 	var f := state.fighters[_rseat]
 	var g := _resolve_geom()
-	var allowed: Array = []
-	if g.has("move"):
-		allowed = (Move.reachable_by_cell(f.cell, f.facing, g["move"], state.is_blocked, Domain.STANCE_SLUG[f.stance]).get(f.cell, []) as Array)
+	# Solo i facing dell'insieme FISSO calcolato a inizio risoluzione: la rotazione
+	# resta limitata al budget della carta (non si rigenera a ogni passo).
+	var allowed: Array = (_rreach.get(f.cell, []) as Array)
 	if allowed.has(facing):
 		f.facing = facing
 	elif not g.has("move") and int(g.get("rotates", 0)) > 0:
@@ -294,6 +304,7 @@ func _do_confirm() -> void:
 		_rsplit = true
 		_rmove_used = false
 		_rkamae_used = true   # niente cambio Kamae nella parte bassa
+		_compute_reach()
 		prompt.emit(_rseat, "resolve", _resolve_data())
 
 
