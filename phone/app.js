@@ -8,6 +8,7 @@ const SVGNS = "http://www.w3.org/2000/svg";
 
 let ws = null, seat = -1, lastPrompt = null, board = null, activeSeat = -1;
 let IMG_BASE = "", MAP_BASE = "", PORTRAIT_BASE = "";
+let _prevMine = null, _ccTimer = null, _ccAuto = false;
 let intentional = false, attempts = 0, reconnectTimer = null;
 
 // ── Connessione ──────────────────────────────────────────────────────────────
@@ -106,6 +107,7 @@ function onPayload(p) {
   if (p.t !== "prompt") return;
   lastPrompt = p;
   activeSeat = seat; updateFighters();   // ho un'azione da fare → evidenzia il mio ritratto
+  if (_ccAuto) closeCharCard();          // se la scheda era apparsa da sola, chiudila: devo agire
   switch (p.kind) {
     case "plan": renderPlan(p.data); break;
     case "instant_replace": renderPick("Sostituire la carta rivelata?", p.kind, p.data.options); break;
@@ -136,6 +138,19 @@ function updateHud() {
   $("focus").textContent = "◈".repeat(me.focus) + "◇".repeat(Math.max(0, 3 - me.focus));
   $("round").textContent = `Round ${board.round}`;
   updateFighters();
+  maybeFlashCharCard(me);
+}
+
+// Scheda personaggio "a comparsa": si apre da sola quando subisci ferite/veleno o
+// cambia il focus, poi si richiude da sola. Non disturba mentre devi agire tu.
+function maybeFlashCharCard(me) {
+  const cur = { wounds: me.wounds || 0, bleed: me.bleed || 0, poison: me.poison || 0, focus: me.focus || 0 };
+  if (!_prevMine) { _prevMine = cur; return; }
+  const p = _prevMine; _prevMine = cur;
+  const worse = cur.wounds > p.wounds || cur.bleed > p.bleed || cur.poison > p.poison;
+  const focusChanged = cur.focus !== p.focus;
+  if (activeSeat === seat) return;            // sto per agire: non coprire mappa/bottoni
+  if (worse || focusChanged) { openCharCard(seat); _ccAuto = true; clearTimeout(_ccTimer); _ccTimer = setTimeout(closeCharCard, 2600); }
 }
 
 // ── Ritratti dei contendenti (cerchi ai lati: io a sinistra, avversario a destra) ──
@@ -185,7 +200,7 @@ function openCharCard(idx) {
   card.querySelector(".cc-focus").textContent = "Focus: " + "◈".repeat(f.focus) + "◇".repeat(Math.max(0, 3 - f.focus));
 }
 
-function closeCharCard() { $("charcard").classList.add("hidden"); }
+function closeCharCard() { clearTimeout(_ccTimer); _ccAuto = false; $("charcard").classList.add("hidden"); }
 
 // ── Carta Kamae interattiva: immagine + nodi raggiungibili toccabili ──
 function openKamae(ui) {
