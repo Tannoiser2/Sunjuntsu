@@ -3,6 +3,16 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.55.0] — 2026-06-19
+### Fix: rotazione non più illimitata (rispetta il budget della carta)
+- In risoluzione (telefono/tavolo) la **rotazione** era di fatto **illimitata**: i facing
+  legali venivano **ricalcolati dal facing corrente** a ogni passo, così il budget di
+  rotazione della carta (di solito 1 o 2 passi) si **rigenerava** ad ogni rotazione.
+- Ora gli stati raggiungibili (cella → facing) sono calcolati **una sola volta** dalla
+  posizione di partenza e la rotazione è **limitata a quell'insieme fisso** — come già fa
+  l'arena locale. Il telefono salta il passo Rotazione se l'unico facing disponibile è
+  quello attuale. Versione 0.55.0.
+
 ## [0.54.0] — 2026-06-19
 ### Fix: controller telefono bloccato in risoluzione («in attesa» senza tasti)
 - Nel passo **Rotazione** il telefono chiamava una funzione (`facingLabel`) **mai definita**:

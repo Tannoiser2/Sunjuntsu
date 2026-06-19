@@ -202,8 +202,11 @@ function renderResolve(d) {
   const [mq, mr] = parseKey(d.cell);
   const foe = d.foe ? parseKey(d.foe) : null;
   // Passi SEPARATI: 1) Movimento  2) Rotazione  3) Azione/Attacco.
+  // La rotazione è limitata ai facing legali della carta: se l'unico facing
+  // disponibile è quello attuale, niente passo rotazione.
+  const canRotate = facings.some((f) => f !== d.facing);
   const moveStep = Object.keys(legal).length > 0;
-  const rotStep = !moveStep && !_rotDone && facings.length > 0;
+  const rotStep = !moveStep && !_rotDone && canRotate;
   const attackStep = !moveStep && !rotStep;
 
   // Mappa (viewBox dall'estensione esagoni).
