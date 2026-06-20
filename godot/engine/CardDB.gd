@@ -53,6 +53,15 @@ func image_for(id: int) -> String:
 	return images.get(id, "")
 
 
+## Aggiorna in memoria l'immagine associata a una carta (usata dall'editor dopo
+## il salvataggio, così anteprima/indicatori si aggiornano senza riavvio).
+func set_image(id: int, rel_path: String) -> void:
+	if rel_path == "":
+		images.erase(id)
+	else:
+		images[id] = rel_path
+
+
 func _load_kamae_trees() -> void:
 	var path := "res://data/cards/kamae_trees.json"
 	if not FileAccess.file_exists(path):

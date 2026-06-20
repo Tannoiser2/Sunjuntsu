@@ -50,6 +50,7 @@ var _w: Dictionary = {}          ## campo -> widget editabile
 var _w_type: Label               ## etichetta `type` derivata (read-only)
 var _geom_editor: GeometryEditor ## editor visuale geometria (Fase 4)
 var _issues_box: VBoxContainer   ## pannello avvisi di validazione (Fase 3)
+var _img_path_label: Label       ## path immagine corrente (Fase 6)
 var _current_id: int = -1
 var _pending_new: bool = false   ## carta creata/duplicata non ancora salvata
 
@@ -327,10 +328,35 @@ func _build_form(id: int, c: Dictionary) -> void:
 	save_geo.pressed.connect(_on_save_geometry)
 	_form.add_child(save_geo)
 
-	# Immagine — sola lettura.
-	_add_section("Immagine  (sola lettura)")
+	# Immagine — associa/importa.
+	_add_section("Immagine")
 	var img := "" if _pending_new else CardDB.image_for(id)
-	_add_readonly_field("path", img if img != "" else "(nessuna)")
+	var prow := HBoxContainer.new()
+	var pk := Label.new()
+	pk.text = "path"
+	pk.custom_minimum_size = Vector2(110, 0)
+	pk.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
+	prow.add_child(pk)
+	_img_path_label = Label.new()
+	_img_path_label.text = img if img != "" else "(nessuna)"
+	_img_path_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_img_path_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	prow.add_child(_img_path_label)
+	_form.add_child(prow)
+	var imgbtns := HBoxContainer.new()
+	var pick := Button.new()
+	pick.text = "Cambia immagine…"
+	pick.pressed.connect(_open_image_picker)
+	imgbtns.add_child(pick)
+	var imp := Button.new()
+	imp.text = "Importa/ritaglia…"
+	imp.pressed.connect(_open_image_import)
+	imgbtns.add_child(imp)
+	var clr := Button.new()
+	clr.text = "Rimuovi"
+	clr.pressed.connect(func(): _set_image(""))
+	imgbtns.add_child(clr)
+	_form.add_child(imgbtns)
 
 
 func _build_keywords_field(kws) -> void:
@@ -529,6 +555,105 @@ func _count_id(id: int) -> int:
 		if int(c.get("id", -999999)) == id:
 			n += 1
 	return n
+
+
+## ─── Immagini (Fase 6) ──────────────────────────────────────────────────────
+
+func _current_char() -> String:
+	if _w.has("char"):
+		return _selected_text(_w["char"])
+	return str(CardDB.card(_current_id).get("char", ""))
+
+
+## Associa/azzera l'immagine della carta corrente e aggiorna tutto in vivo.
+func _set_image(rel: String) -> void:
+	if _current_id < 0:
+		return
+	var res := _store.save_image_for(_current_id, rel)
+	if not res.get("ok", false):
+		_status.text = "✗ Errore immagine: %s" % str(res.get("error", ""))
+		return
+	CardDB.set_image(_current_id, rel)
+	if _img_path_label != null:
+		_img_path_label.text = rel if rel != "" else "(nessuna)"
+	var card: Dictionary = _collect_fields() if _w.has("name") else CardDB.card(_current_id)
+	_update_preview(card, rel)
+	_update_indicators(CardDB.geometry(_current_id), rel)
+	_refresh_list()
+	_select_in_list(_current_id)
+	_run_validation()
+	_status.text = "✓ Immagine #%d %s" % [_current_id, "rimossa" if rel == "" else "→ " + rel]
+
+
+## Picker delle immagini già presenti in assets/cards (cartella del personaggio
+## in cima), come griglia di miniature.
+func _open_image_picker() -> void:
+	if _current_id < 0:
+		return
+	var pop := PopupPanel.new()
+	add_child(pop)
+	var scroll := ScrollContainer.new()
+	scroll.custom_minimum_size = Vector2(540, 480)
+	var grid := GridContainer.new()
+	grid.columns = 4
+	var slug := CardStore.char_slug(_current_char())
+	var imgs := CardStore.list_card_images()
+	imgs.sort_custom(func(a, b):
+		var pa: bool = a.begins_with(slug + "/")
+		var pb: bool = b.begins_with(slug + "/")
+		if pa != pb:
+			return pa
+		return a < b)
+	for rel in imgs:
+		var b := Button.new()
+		b.custom_minimum_size = Vector2(120, 165)
+		b.icon = CardView._load_texture("res://assets/cards/" + rel)
+		b.expand_icon = true
+		b.tooltip_text = rel
+		b.pressed.connect(func():
+			pop.queue_free()
+			_set_image(rel))
+		grid.add_child(b)
+	scroll.add_child(grid)
+	pop.add_child(scroll)
+	pop.popup_centered(Vector2i(580, 540))
+
+
+## Importa un file immagine dal disco e apre il dialog di ritaglio.
+func _open_image_import() -> void:
+	if _current_id < 0:
+		return
+	var fd := FileDialog.new()
+	fd.access = FileDialog.ACCESS_FILESYSTEM
+	fd.file_mode = FileDialog.FILE_MODE_OPEN_FILE
+	fd.filters = ["*.png, *.jpg, *.jpeg, *.webp ; Immagini"]
+	add_child(fd)
+	fd.file_selected.connect(func(path: String):
+		fd.queue_free()
+		var img := Image.new()
+		if img.load(path) != OK:
+			_status.text = "✗ Impossibile caricare: %s" % path
+			return
+		_open_crop_dialog(img))
+	fd.canceled.connect(fd.queue_free)
+	fd.popup_centered(Vector2i(760, 520))
+
+
+func _open_crop_dialog(img: Image) -> void:
+	var dlg := ImageCropDialog.new()
+	add_child(dlg)
+	dlg.setup(img)
+	dlg.cropped.connect(func(region: Rect2i):
+		var slug := CardStore.char_slug(_current_char())
+		if slug == "":
+			slug = "carta"
+		var dest := CardStore.next_image_name(slug)
+		var res := CardStore.crop_and_save_webp(img, region, dest)
+		if not res.get("ok", false):
+			_status.text = "✗ Ritaglio: %s" % str(res.get("error", ""))
+			return
+		_set_image(dest))
+	dlg.popup_centered()
 
 
 func _default_char() -> String:
