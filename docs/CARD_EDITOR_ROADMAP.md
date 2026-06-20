@@ -233,10 +233,15 @@ Queste scelte cambiano l'architettura; vanno fissate **prima** di Fase 2.
 > con `.bak`, int puliti (no float `2.0`) e diff minimi. Test headless verdi su
 > Godot 4.6 (`test_geometry_editor`: round-trip move/attack/effects + mutatori).
 
-### Fase 5 — Anteprima geometria & Tester
-- [ ] Disegno dell'arco attacco/difesa sul nido d'ape (read-only render).
-- [ ] Bottone "Simula carta": risolve la carta in un `Duel` con avversario dummy
-      e mostra l'esito (riusa engine, niente GUI 3D).
+### Fase 5 — Anteprima geometria & Tester ✅
+- [x] Disegno dell'arco attacco/difesa sul nido d'ape (l'editor visuale della
+      Fase 4 mostra le celle colpite direttamente sugli esagoni).
+- [x] Bottone "▶ Simula carta": risolve il gemello in un `Duel` con avversario
+      fittizio e mostra l'esito (ferite, posizione, log) — `engine/CardSimulator.gd`,
+      riusa il motore senza GUI 3D.
+
+> **Stato 2026-06-20:** Fase 5 completata. L'editor è COMPLETO su tutta la
+> roadmap (M1→M4 + tester). 8 suite di test headless verdi su Godot 4.6.
 
 ### Fase 6 — Immagini & rifiniture
 - [x] Associare/cambiare l'immagine di una carta (picker a miniature dai file in

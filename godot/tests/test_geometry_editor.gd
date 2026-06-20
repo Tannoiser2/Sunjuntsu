@@ -17,10 +17,15 @@ func _check(cond: bool, msg: String) -> void:
 func _atk_set(g: Dictionary) -> Dictionary:
 	var s := {}
 	for c in g.get("attack", {}).get("cells", []):
+		var ax: Vector2i
+		if c.has("q"):
+			ax = Vector2i(int(c.get("q")), int(c.get("r")))
+		else:
+			ax = HexGrid.DIRS[int(c.get("d")) % 6] * maxi(1, int(c.get("k")))
 		var w = c.get("w")
 		if typeof(w) != TYPE_STRING:
 			w = int(w)   # JSON può dare float: normalizza per il confronto
-		s["%d_%d" % [int(c.get("d")), int(c.get("k"))]] = w
+		s["%d_%d" % [ax.x, ax.y]] = w
 	return s
 
 

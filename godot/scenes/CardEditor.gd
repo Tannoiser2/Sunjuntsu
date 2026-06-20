@@ -145,7 +145,7 @@ func _build_topbar() -> Control:
 ## Colonna sinistra stretta: solo l'elenco delle carte.
 func _build_list_panel() -> Control:
 	var col := VBoxContainer.new()
-	col.custom_minimum_size = Vector2(220, 0)
+	col.custom_minimum_size = Vector2(165, 0)
 	col.add_theme_constant_override("separation", 6)
 	_list = ItemList.new()
 	_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -164,46 +164,38 @@ func _build_center() -> Control:
 	center.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	center.add_theme_constant_override("separation", 10)
 
-	# Colonna ORIGINALE.
+	# Colonna ORIGINALE (compatta).
 	var orig := VBoxContainer.new()
-	orig.custom_minimum_size = Vector2(280, 0)
-	orig.add_theme_constant_override("separation", 6)
+	orig.custom_minimum_size = Vector2(190, 0)
+	orig.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	orig.add_theme_constant_override("separation", 4)
 	var ol := Label.new()
 	ol.text = "Carta originale"
-	ol.add_theme_font_size_override("font_size", 15)
+	ol.add_theme_font_size_override("font_size", 14)
 	ol.add_theme_color_override("font_color", Color(0.7, 0.78, 0.9))
 	orig.add_child(ol)
 	_orig_preview = CenterContainer.new()
-	_orig_preview.custom_minimum_size = Vector2(0, 380)
+	_orig_preview.custom_minimum_size = Vector2(180, 250)
 	orig.add_child(_orig_preview)
-	var prow := HBoxContainer.new()
-	var pk := Label.new()
-	pk.text = "img"
-	pk.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
-	prow.add_child(pk)
 	_img_path_label = Label.new()
 	_img_path_label.text = "(nessuna)"
-	_img_path_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_img_path_label.add_theme_font_size_override("font_size", 10)
+	_img_path_label.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
 	_img_path_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	prow.add_child(_img_path_label)
-	orig.add_child(prow)
+	orig.add_child(_img_path_label)
 	var imgbtns := HBoxContainer.new()
-	var pick := Button.new()
-	pick.text = "Cambia…"
-	pick.pressed.connect(_open_image_picker)
-	imgbtns.add_child(pick)
-	var imp := Button.new()
-	imp.text = "Importa/ritaglia…"
-	imp.pressed.connect(_open_image_import)
-	imgbtns.add_child(imp)
-	var clr := Button.new()
-	clr.text = "Rimuovi"
-	clr.pressed.connect(func(): _set_image(""))
-	imgbtns.add_child(clr)
+	imgbtns.add_theme_constant_override("separation", 4)
+	for spec in [["Cambia", _open_image_picker], ["Importa", _open_image_import],
+			["✕", func(): _set_image("")]]:
+		var b := Button.new()
+		b.text = spec[0]
+		b.add_theme_font_size_override("font_size", 11)
+		b.pressed.connect(spec[1])
+		imgbtns.add_child(b)
 	orig.add_child(imgbtns)
 	_orig_indicators = Label.new()
 	_orig_indicators.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_orig_indicators.add_theme_font_size_override("font_size", 13)
+	_orig_indicators.add_theme_font_size_override("font_size", 11)
 	orig.add_child(_orig_indicators)
 	center.add_child(orig)
 
@@ -239,7 +231,8 @@ func _toolbar_button(parent: Control, text: String, cb: Callable) -> Button:
 ## Colonna destra: contenitore della palette (riempito per carta in _build_form).
 func _build_palette_panel() -> Control:
 	var scroll := ScrollContainer.new()
-	scroll.custom_minimum_size = Vector2(210, 0)
+	scroll.custom_minimum_size = Vector2(172, 0)
+	scroll.size_flags_horizontal = Control.SIZE_SHRINK_END
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_palette_holder = VBoxContainer.new()
 	_palette_holder.add_theme_constant_override("separation", 6)
@@ -393,10 +386,17 @@ func _build_form(id: int, c: Dictionary, geom_data = null) -> void:
 	var geom_src: Dictionary = geom_data if geom_data != null else CardDB.geometry(id)
 	_geom_editor.load_geometry(str(c.get("type", "attack")), geom_src)
 	_geom_editor.changed.connect(func(): _on_edit())
+	var geobtns := HBoxContainer.new()
 	var save_geo := Button.new()
 	save_geo.text = "Salva geometria"
 	save_geo.pressed.connect(_on_save_geometry)
-	_form.add_child(save_geo)
+	geobtns.add_child(save_geo)
+	var sim := Button.new()
+	sim.text = "▶ Simula carta"
+	sim.tooltip_text = "Risolve il gemello contro un avversario fittizio e mostra l'esito"
+	sim.pressed.connect(_on_simulate)
+	geobtns.add_child(sim)
+	_form.add_child(geobtns)
 
 	# Palette trascinabile nella colonna destra (legata a questo GeometryEditor).
 	for ch in _palette_holder.get_children():
@@ -564,6 +564,69 @@ func _on_save_geometry() -> void:
 	var nd: int = g.get("defence", {}).get("cells", []).size()
 	_status.text = "✓ Geometria #%d salvata (%d celle att., %d dif.)" % [id, na, nd]
 	_run_validation()
+
+
+## ─── Tester "Simula carta" (Fase 5) ─────────────────────────────────────────
+
+func _on_simulate() -> void:
+	if _current_id < 0 or _geom_editor == null:
+		return
+	var card: Dictionary = _collect_fields() if _w.has("name") else CardDB.card(_current_id)
+	var geom := _geom_editor.to_geometry()
+	_show_sim_result(CardSimulator.simulate(card, geom))
+
+
+func _show_sim_result(r: Dictionary) -> void:
+	var pop := PopupPanel.new()
+	add_child(pop)
+	var vb := VBoxContainer.new()
+	vb.custom_minimum_size = Vector2(480, 380)
+	vb.add_theme_constant_override("separation", 6)
+
+	var head := Label.new()
+	head.add_theme_font_size_override("font_size", 16)
+	if r.get("hit", false):
+		var tags = r.get("target_tags", [])
+		var suffix := ""
+		if tags is Array and not tags.is_empty():
+			suffix = " (%s)" % ", ".join(tags.map(func(x): return str(x)))
+		head.text = "✅ COLPITO — %d ferita/e%s" % [int(r.get("target_wounds", 0)), suffix]
+		head.add_theme_color_override("font_color", Color(0.5, 0.8, 0.5))
+	else:
+		head.text = "❌ Nessuna ferita (fuori arco / parato / carta non offensiva)"
+		head.add_theme_color_override("font_color", Color(0.9, 0.7, 0.4))
+	vb.add_child(head)
+
+	var sub := Label.new()
+	sub.text = "Attaccante: cella %s · facing %d · focus %d   |   bersaglio in %s" % [
+		str(r.get("attacker_cell")), int(r.get("attacker_facing", 0)),
+		int(r.get("attacker_focus", 0)), str(r.get("target_cell"))]
+	sub.add_theme_font_size_override("font_size", 12)
+	sub.add_theme_color_override("font_color", Color(0.6, 0.66, 0.74))
+	vb.add_child(sub)
+
+	var sc := ScrollContainer.new()
+	sc.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	var logbox := VBoxContainer.new()
+	logbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var ll := Label.new()
+	ll.text = "Log di risoluzione:"
+	ll.add_theme_color_override("font_color", Color(0.7, 0.78, 0.9))
+	logbox.add_child(ll)
+	for line in r.get("log", []):
+		var l := Label.new()
+		l.text = "• " + str(line)
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		logbox.add_child(l)
+	sc.add_child(logbox)
+	vb.add_child(sc)
+
+	var close := Button.new()
+	close.text = "Chiudi"
+	close.pressed.connect(pop.queue_free)
+	vb.add_child(close)
+	pop.add_child(vb)
+	pop.popup_centered(Vector2i(520, 440))
 
 
 ## ─── Undo / Redo (Fase 6) ───────────────────────────────────────────────────
@@ -831,7 +894,7 @@ func _update_preview(c: Dictionary, img: String) -> void:
 		tr.texture = CardView._load_texture("res://assets/cards/" + img)
 		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		tr.custom_minimum_size = Vector2(260, 360)
+		tr.custom_minimum_size = Vector2(180, 250)
 		_orig_preview.add_child(tr)
 	else:
 		var ph := Label.new()

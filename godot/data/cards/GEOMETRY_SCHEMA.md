@@ -93,10 +93,15 @@ sulla pedina (▲ = fronte). Ogni cella colpita/protetta:
 
 | Campo cella | Tipo | Significato |
 |-------------|------|-------------|
-| `d` | int | Direzione relativa `0`–`5` (`0`=fronte, senso orario). |
-| `k` | int | Anello (`1`=adiacente, `2`=distanza 2, …). |
+| `q`, `r` | int | **Coordinate assiali** dell'esagono relativo alla pedina con fronte = `DIRS[0]` (qualsiasi esagono del vicinato, non solo i 6 raggi). Fronte adiacente = `(1,0)`. |
 | `w` | int \| string | *(attacco)* ferite: intero, oppure `"exec"` (esecuzione) o `"bleed"` (sanguinante). |
 | `v` | int | *(difesa)* valore di blocco della cella. |
+
+> **Schema celle.** L'editor scrive le celle in **coordinate assiali piene** `{q,r}`,
+> così può colpire *ogni* esagono del vicinato (incluso l'anello 2 fuori dai raggi).
+> Il motore le orienta secondo il facing (`HexGrid.rotate`). È supportato anche il
+> vecchio formato a 6 direzioni **`{d,k}`** (`d`=direzione 0–5, `k`=anello): le carte
+> non ancora ri-salvate lo usano e risolvono in modo identico (`{q,r} = DIRS[d]*k`).
 
 ### Effetti — `effects[]`
 

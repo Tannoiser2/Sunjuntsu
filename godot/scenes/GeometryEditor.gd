@@ -17,9 +17,9 @@ extends VBoxContainer
 
 signal changed
 
-const RINGS := 2          ## anelli mostrati (dati reali: max k = 2)
-const HEX_R := 24.0       ## raggio esagono in px
-const HEX_D := 58.0       ## distanza centro→anello-1 in px
+const RINGS := 2          ## anelli mostrati (vicinato completo entro distanza 2)
+const HEX_R := 21.0       ## raggio esagono in px
+const HEX_PIX := 25.0     ## scala unità-mondo → px per la disposizione del nido d'ape
 
 # Colori icone.
 const COL_WOUND := Color(0.86, 0.30, 0.24)
@@ -152,19 +152,20 @@ func to_geometry() -> Dictionary:
 	return g
 
 
-# Mutatori pubblici (usati dal drag-drop e dai test headless).
-func set_attack_cell(d: int, k: int, w) -> void:
-	_attack[Vector2i(d, k)] = w
-	_after_change(Vector2i(d, k))
+# Mutatori pubblici (usati dal drag-drop e dai test headless). Coordinate
+# assiali (q,r) relative alla pedina con facing 0 (es. fronte adiacente = (1,0)).
+func set_attack_cell(q: int, r: int, w) -> void:
+	_attack[Vector2i(q, r)] = w
+	_after_change(Vector2i(q, r))
 
-func set_defence_cell(d: int, k: int, v: int) -> void:
-	_defence[Vector2i(d, k)] = v
-	_after_change(Vector2i(d, k))
+func set_defence_cell(q: int, r: int, v: int) -> void:
+	_defence[Vector2i(q, r)] = v
+	_after_change(Vector2i(q, r))
 
-func clear_cell(d: int, k: int) -> void:
-	_attack.erase(Vector2i(d, k))
-	_defence.erase(Vector2i(d, k))
-	_after_change(Vector2i(d, k))
+func clear_cell(q: int, r: int) -> void:
+	_attack.erase(Vector2i(q, r))
+	_defence.erase(Vector2i(q, r))
+	_after_change(Vector2i(q, r))
 
 func add_opt() -> int:
 	_opts.append([])
@@ -205,14 +206,11 @@ func _build_ui() -> void:
 	kr.add_child(none)
 	add_child(kr)
 
-	# Nido d'ape: bersaglio del drag (le icone arrivano dalla palette).
-	_add_subtitle("Combattimento — trascina le icone dalla palette sugli esagoni  (clic destro = svuota)")
-	var hc := CenterContainer.new()
+	# Nido d'ape completo (tutti gli esagoni entro distanza 2): bersaglio del drag.
+	_add_subtitle("Combattimento — trascina dalla palette; trascina tra esagoni per spostare; clic destro = svuota")
 	_honey = Control.new()
-	var side := HEX_D * RINGS * 2.0 + HEX_R * 2.0
-	_honey.custom_minimum_size = Vector2(side, side)
-	hc.add_child(_honey)
-	add_child(hc)
+	_honey.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	add_child(_honey)
 
 	# Movimento: sequenze (le righe sono bersaglio del drag delle frecce).
 	_add_subtitle("Movimento — trascina frecce/rotazioni dalla palette nelle sequenze")
@@ -257,8 +255,8 @@ func build_palette() -> Control:
 	if not _built:
 		_build_ui()
 	var col := VBoxContainer.new()
-	col.add_theme_constant_override("separation", 8)
-	col.custom_minimum_size = Vector2(190, 0)
+	col.add_theme_constant_override("separation", 6)
+	col.custom_minimum_size = Vector2(150, 0)
 	var title := Label.new()
 	title.text = "Palette"
 	title.add_theme_font_size_override("font_size", 15)
@@ -334,25 +332,35 @@ func _build_honeycomb() -> void:
 	_hex_cells.clear()
 	for ch in _honey.get_children():
 		ch.queue_free()
-	var center := _honey.custom_minimum_size * 0.5
-	# Pedina al centro.
-	_add_hex_cell(center, 0, 0, true)
-	# Anelli 1..RINGS, 6 raggi clockwise dall'alto.
-	for k in range(1, RINGS + 1):
-		for d in range(6):
-			var pos := center + _dir_unit(d) * HEX_D * k
-			_add_hex_cell(pos, d, k, false)
+	# Tutti gli esagoni del vicinato entro distanza RINGS (centro + anello 1 e 2).
+	var cells := HexGrid.hexes_in_range(Vector2i.ZERO, RINGS)
+	var maxr := 0.0
+	for ax in cells:
+		maxr = maxf(maxr, _hex_pixel(ax).length())
+	var side := (maxr + HEX_R) * 2.0 + 6.0
+	_honey.custom_minimum_size = Vector2(side, side)
+	_honey.size = Vector2(side, side)
+	var center := Vector2(side, side) * 0.5
+	for ax in cells:
+		_add_hex_cell(center + _hex_pixel(ax), ax, ax == Vector2i.ZERO)
 
 
-func _add_hex_cell(center_px: Vector2, d: int, k: int, is_pawn: bool) -> void:
+func _add_hex_cell(center_px: Vector2, ax: Vector2i, is_pawn: bool) -> void:
 	var cell := HexCell.new()
-	cell.setup(self, d, k, HEX_R, is_pawn)
+	cell.setup(self, ax, HEX_R, is_pawn)
 	cell.position = center_px - Vector2(HEX_R, HEX_R)
 	cell.custom_minimum_size = Vector2(2 * HEX_R, 2 * HEX_R)
 	cell.size = cell.custom_minimum_size
 	_honey.add_child(cell)
 	if not is_pawn:
-		_hex_cells[Vector2i(d, k)] = cell
+		_hex_cells[ax] = cell
+
+
+## Posizione in px (centro del controllo) di un esagono assiale, con il FRONTE
+## (DIRS[0]) verso l'alto. Usa la geometria flat-top di HexGrid ruotata di 90°.
+static func _hex_pixel(ax: Vector2i) -> Vector2:
+	var w := HexGrid.hex_to_world(ax, 1.0)
+	return Vector2(-w.z, -w.x) * HEX_PIX
 
 
 func _add_subtitle(text: String) -> void:
@@ -362,10 +370,6 @@ func _add_subtitle(text: String) -> void:
 	l.add_theme_font_size_override("font_size", 12)
 	l.add_theme_color_override("font_color", Color(0.6, 0.66, 0.74))
 	add_child(l)
-
-
-static func _dir_unit(d: int) -> Vector2:
-	return Vector2.from_angle(deg_to_rad(-90.0 + 60.0 * d))
 
 
 # ─── Refresh ─────────────────────────────────────────────────────────────────
@@ -558,19 +562,23 @@ func _eff_opt(values: Array, cur: String, on_set: Callable) -> OptionButton:
 
 func _on_cell_drop(cell, data: Dictionary) -> void:
 	var kind: String = data.get("kind", "")
-	var d: int = cell.d
-	var k: int = cell.k
+	var q: int = cell.ax.x
+	var r: int = cell.ax.y
 	match kind:
-		"w1": set_attack_cell(d, k, 1)
-		"w2": set_attack_cell(d, k, 2)
-		"w0": set_attack_cell(d, k, 0)
-		"exec": set_attack_cell(d, k, "exec")
-		"bleed": set_attack_cell(d, k, "bleed")
-		"shield": set_defence_cell(d, k, int(data.get("value", 1)))
+		"w1": set_attack_cell(q, r, 1)
+		"w2": set_attack_cell(q, r, 2)
+		"w0": set_attack_cell(q, r, 0)
+		"exec": set_attack_cell(q, r, "exec")
+		"bleed": set_attack_cell(q, r, "bleed")
+		"shield": set_defence_cell(q, r, int(data.get("value", 1)))
+	# Spostamento da un altro esagono: svuota la cella di partenza.
+	var from = data.get("from", null)
+	if from is Vector2i and from != cell.ax:
+		clear_cell(from.x, from.y)
 
 
 func _on_cell_clear(cell) -> void:
-	clear_cell(cell.d, cell.k)
+	clear_cell(cell.ax.x, cell.ax.y)
 
 
 func _on_move_drop(opt_idx: int, data: Dictionary) -> void:
@@ -610,20 +618,27 @@ func _after_change(key: Vector2i) -> void:
 
 # ─── Conversione celle dict ↔ schema ─────────────────────────────────────────
 
+## Legge le celle in coordinate assiali (q,r). Accetta sia lo schema nuovo
+## {q,r,...} sia quello legacy a 6 direzioni {d,k,...} (convertito: DIRS[d]*k).
 func _cells_from(section: Dictionary, value_key: String) -> Dictionary:
 	var out := {}
 	for cell in section.get("cells", []):
-		var key := Vector2i(int(cell.get("d", 0)), int(cell.get("k", 1)))
+		var key: Vector2i
+		if cell.has("q"):
+			key = Vector2i(int(cell.get("q", 0)), int(cell.get("r", 0)))
+		else:
+			key = HexGrid.DIRS[int(cell.get("d", 0)) % 6] * maxi(1, int(cell.get("k", 1)))
 		out[key] = _coerce(cell.get(value_key, 1))
 	return out
 
 
+## Scrive le celle in coordinate assiali piene {q,r,...}, ordinate stabilmente.
 func _cells_to(cells: Dictionary, value_key: String) -> Array:
 	var keys: Array = cells.keys()
 	keys.sort_custom(func(a, b): return a.y < b.y if a.y != b.y else a.x < b.x)
 	var out := []
 	for key in keys:
-		out.append({"d": key.x, "k": key.y, value_key: _coerce(cells[key])})
+		out.append({"q": key.x, "r": key.y, value_key: _coerce(cells[key])})
 	return out
 
 
@@ -676,17 +691,19 @@ static func _draw_centered(ci: CanvasItem, font: Font, c: Vector2, text: String,
 
 class HexCell extends Control:
 	var ed: GeometryEditor
-	var d: int
-	var k: int
-	var r: float
+	var ax: Vector2i   ## coordinata assiale (q, r) relativa alla pedina (facing 0)
+	var r: float       ## raggio in px
 	var is_pawn: bool
 	var atk = null   ## ferite (int|String) o null
 	var dfn = null   ## valore blocco (int) o null
 
-	func setup(editor: GeometryEditor, dd: int, kk: int, rr: float, pawn: bool) -> void:
-		ed = editor; d = dd; k = kk; r = rr; is_pawn = pawn
+	func setup(editor: GeometryEditor, axial: Vector2i, rr: float, pawn: bool) -> void:
+		ed = editor; ax = axial; r = rr; is_pawn = pawn
 		mouse_filter = Control.MOUSE_FILTER_STOP
-		tooltip_text = "pedina" if pawn else "dir %d · anello %d" % [d, k]
+		tooltip_text = "pedina" if pawn else "q %d · r %d · dist %d" % [ax.x, ax.y, _hex_dist(ax)]
+
+	static func _hex_dist(a: Vector2i) -> int:
+		return (absi(a.x) + absi(a.y) + absi(a.x + a.y)) / 2
 
 	func _draw() -> void:
 		var c := Vector2(r, r)
@@ -721,6 +738,26 @@ class HexCell extends Control:
 
 	func _drop_data(_pos: Vector2, data) -> void:
 		ed._on_cell_drop(self, data)
+
+	## Trascinando da una cella PIENA si sposta il suo contenuto su un altro esagono.
+	func _get_drag_data(_pos: Vector2):
+		if is_pawn or (atk == null and dfn == null):
+			return null
+		var kind: String
+		var val
+		if dfn != null and atk == null:
+			kind = "shield"; val = int(dfn)
+		elif typeof(atk) == TYPE_STRING:
+			kind = atk; val = atk            # "exec" / "bleed"
+		else:
+			var n := int(atk)
+			kind = "w2" if n == 2 else ("w0" if n == 0 else "w1"); val = atk
+		var prev := DragIcon.new()
+		prev.setup(ed, kind, val)
+		prev.custom_minimum_size = size
+		prev.size = size
+		set_drag_preview(prev)
+		return {"kind": kind, "value": val, "from": ax}
 
 	func _gui_input(event: InputEvent) -> void:
 		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
