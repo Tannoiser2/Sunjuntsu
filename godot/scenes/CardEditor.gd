@@ -43,6 +43,8 @@ var _btn_dup: Button
 var _btn_save: Button
 var _btn_cancel: Button
 var _btn_remove: Button
+var _btn_undo: Button
+var _btn_redo: Button
 
 # Stato di editing.
 var _store: CardStore
@@ -53,6 +55,12 @@ var _issues_box: VBoxContainer   ## pannello avvisi di validazione (Fase 3)
 var _img_path_label: Label       ## path immagine corrente (Fase 6)
 var _current_id: int = -1
 var _pending_new: bool = false   ## carta creata/duplicata non ancora salvata
+
+# Undo/redo (Fase 6): cronologia dello stato di editing (anagrafica + geometria)
+# della carta corrente. Modello working-state, coerente col salvataggio esplicito.
+var _history: Array = []
+var _hist_idx: int = 0
+var _suspend_record: bool = false   ## true durante (ri)costruzione del form
 
 
 func _ready() -> void:
@@ -143,6 +151,8 @@ func _build_detail_panel() -> Control:
 	_btn_save = _toolbar_button(tb, "Salva", _on_save)
 	_btn_cancel = _toolbar_button(tb, "Annulla", _on_cancel)
 	_btn_remove = _toolbar_button(tb, "Rimuovi override", _on_remove_override)
+	_btn_undo = _toolbar_button(tb, "↶ Undo", _undo)
+	_btn_redo = _toolbar_button(tb, "↷ Redo", _redo)
 	col.add_child(tb)
 
 	_status = Label.new()
@@ -285,6 +295,7 @@ func _load_card(id: int, is_new: bool, fields: Dictionary = {}) -> void:
 	_update_indicators(CardDB.geometry(id), img)
 	_update_toolbar()
 	_run_validation()
+	_reset_history()
 	if is_new:
 		_status.text = "Carta #%d non salvata — compila e premi Salva" % id
 	elif not _store.get_override(id).is_empty():
@@ -293,7 +304,8 @@ func _load_card(id: int, is_new: bool, fields: Dictionary = {}) -> void:
 		_status.text = "Carta #%d (dall'Excel)" % id
 
 
-func _build_form(id: int, c: Dictionary) -> void:
+func _build_form(id: int, c: Dictionary, geom_data = null) -> void:
+	_suspend_record = true
 	for ch in _form.get_children():
 		ch.queue_free()
 	_w = {}
@@ -315,14 +327,22 @@ func _build_form(id: int, c: Dictionary) -> void:
 	_w["initiative"] = _add_edit_text("initiative", str(c.get("initiative", "-")))
 	_w["focus"] = _add_edit_spin("focus", 0, 9, int(c.get("focus", 0)))
 	_build_keywords_field(c.get("keywords", []))
+	# Registrazione undo/redo + validazione su ogni modifica dell'anagrafica.
+	_w["name"].text_changed.connect(func(_t): _on_edit())
+	_w["char"].item_selected.connect(func(_i): _on_edit())
+	_w["amount"].value_changed.connect(func(_v): _on_edit())
+	_w["rank"].item_selected.connect(func(_i): _on_edit())
+	_w["initiative"].text_changed.connect(func(_t): _on_edit())
+	_w["focus"].value_changed.connect(func(_v): _on_edit())
 
 	# Geometria/effetti — editor visuale drag & drop (Fase 4).
 	_add_section("Geometria / effetti  (visuale — trascina le icone)")
 	_geom_editor = GeometryEditor.new()
 	_geom_editor.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_form.add_child(_geom_editor)
-	_geom_editor.load_geometry(str(c.get("type", "attack")), CardDB.geometry(id))
-	_geom_editor.changed.connect(func(): _run_validation())
+	var geom_src: Dictionary = geom_data if geom_data != null else CardDB.geometry(id)
+	_geom_editor.load_geometry(str(c.get("type", "attack")), geom_src)
+	_geom_editor.changed.connect(func(): _on_edit())
 	var save_geo := Button.new()
 	save_geo.text = "Salva geometria"
 	save_geo.pressed.connect(_on_save_geometry)
@@ -358,11 +378,13 @@ func _build_form(id: int, c: Dictionary) -> void:
 	imgbtns.add_child(clr)
 	_form.add_child(imgbtns)
 
+	_suspend_record = false
+
 
 func _build_keywords_field(kws) -> void:
 	var le := LineEdit.new()
 	le.text = ", ".join(_as_strings(kws))
-	le.text_changed.connect(func(_t): _recalc_type())
+	le.text_changed.connect(func(_t): _recalc_type(); _record())
 	_w["keywords"] = le
 	_edit_row("keywords", le)
 
@@ -386,6 +408,7 @@ func _on_add_keyword(idx: int, opt: OptionButton) -> void:
 			cur.append(kw)
 			_w["keywords"].text = ", ".join(cur)
 			_recalc_type()
+			_record()
 	opt.selected = 0
 
 
@@ -516,6 +539,85 @@ func _on_save_geometry() -> void:
 	var nd: int = g.get("defence", {}).get("cells", []).size()
 	_status.text = "✓ Geometria #%d salvata (%d celle att., %d dif.)" % [id, na, nd]
 	_run_validation()
+
+
+## ─── Undo / Redo (Fase 6) ───────────────────────────────────────────────────
+
+func _on_edit() -> void:
+	_run_validation()
+	_record()
+
+
+func _snapshot() -> Dictionary:
+	return {
+		"ana": _collect_fields() if _w.has("name") else {},
+		"geo": _geom_editor.to_geometry() if _geom_editor != null else {},
+	}
+
+
+func _record() -> void:
+	if _suspend_record or _current_id < 0:
+		return
+	var snap := _snapshot()
+	if not _history.is_empty() \
+			and _history[_hist_idx].get("ana") == snap["ana"] \
+			and _history[_hist_idx].get("geo") == snap["geo"]:
+		return   # nessun cambiamento effettivo
+	_history.resize(_hist_idx + 1)   # tronca il "redo" oltre il punto corrente
+	_history.append(snap)
+	_hist_idx = _history.size() - 1
+	_update_undo_buttons()
+
+
+func _reset_history() -> void:
+	_history = [_snapshot()]
+	_hist_idx = 0
+	_update_undo_buttons()
+
+
+func _undo() -> void:
+	if _hist_idx <= 0:
+		return
+	_hist_idx -= 1
+	_restore(_history[_hist_idx])
+	_status.text = "↶ Undo (%d/%d)" % [_hist_idx + 1, _history.size()]
+
+
+func _redo() -> void:
+	if _hist_idx >= _history.size() - 1:
+		return
+	_hist_idx += 1
+	_restore(_history[_hist_idx])
+	_status.text = "↷ Redo (%d/%d)" % [_hist_idx + 1, _history.size()]
+
+
+func _restore(snap: Dictionary) -> void:
+	var ana: Dictionary = snap.get("ana", {})
+	var geo: Dictionary = snap.get("geo", {})
+	_build_form(_current_id, ana if not ana.is_empty() else CardDB.card(_current_id), geo)
+	var img := "" if _pending_new else CardDB.image_for(_current_id)
+	_update_preview(ana, img)
+	_update_indicators(CardDB.geometry(_current_id), img)
+	_run_validation()
+	_update_undo_buttons()
+
+
+func _update_undo_buttons() -> void:
+	if _btn_undo != null:
+		_btn_undo.disabled = _hist_idx <= 0
+	if _btn_redo != null:
+		_btn_redo.disabled = _hist_idx >= _history.size() - 1
+
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	if not (event is InputEventKey) or not event.pressed or event.echo:
+		return
+	if event.ctrl_pressed and event.keycode == KEY_Z:
+		_redo() if event.shift_pressed else _undo()
+		accept_event()
+	elif event.ctrl_pressed and event.keycode == KEY_Y:
+		_redo()
+		accept_event()
 
 
 ## Validazione live (Fase 3): valuta lo stato CORRENTE del form + geometria e
@@ -681,6 +783,11 @@ func _clear_form_to_hint() -> void:
 	for ch in _preview_holder.get_children():
 		ch.queue_free()
 	_indicators.text = ""
+	_w = {}
+	_geom_editor = null
+	_history = []
+	_hist_idx = 0
+	_update_undo_buttons()
 
 
 # ─── Anteprima & indicatori ──────────────────────────────────────────────────
