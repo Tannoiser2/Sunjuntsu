@@ -24,6 +24,20 @@ static func neighbors(cell: Vector2i) -> Array[Vector2i]:
 	return out
 
 
+## Ruota un offset assiale di `steps` passi da 60°, coerente con l'indicizzazione
+## delle direzioni del motore: DIRS[d] ruotato di `steps` -> DIRS[d + steps].
+## Usato per orientare le celle di una carta secondo il facing del combattente.
+static func rotate(cell: Vector2i, steps: int) -> Vector2i:
+	var q := cell.x
+	var r := cell.y
+	for _i in range(((steps % 6) + 6) % 6):
+		var nq := q + r
+		var nr := -q
+		q = nq
+		r = nr
+	return Vector2i(q, r)
+
+
 ## Distanza in esagoni (metrica cubica).
 static func distance(a: Vector2i, b: Vector2i) -> int:
 	var ac := _to_cube(a)

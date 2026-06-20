@@ -96,5 +96,7 @@ static func _first_cell(geom: Dictionary) -> Vector2i:
 		cells = geom.get("defence", {}).get("cells", [])
 	if not cells.is_empty():
 		var c0 = cells[0]
+		if c0.has("q"):
+			return Vector2i(int(c0.get("q", 0)), int(c0.get("r", 0)))
 		return HexGrid.DIRS[int(c0.get("d", 0)) % 6] * maxi(1, int(c0.get("k", 1)))
 	return HexGrid.DIRS[0]

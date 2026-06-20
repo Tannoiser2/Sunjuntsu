@@ -928,11 +928,7 @@ static func attack_v2_cells(origin: Vector2i, facing: int, geom: Dictionary, fal
 	var atk = geom.get("attack", null)
 	if atk != null and not (atk.get("cells", []) as Array).is_empty():
 		for cell_def in atk.get("cells", []):
-			var d: int = int(cell_def.get("d", 0))
-			var k: int = int(cell_def.get("k", 1))
-			var ad: int = (facing + d) % 6
-			var cell: Vector2i = origin + HexGrid.DIRS[ad] * maxi(1, k)
-			out[cell] = cell_def.get("w", 1)   # int, oppure "exec" (esecuzione su quella cella)
+			out[origin + _cell_offset(cell_def, facing)] = cell_def.get("w", 1)   # int o "exec"
 		return out
 	# fallback schema vecchio
 	for cell in attack_cells(origin, facing, geom, fallback_range):
@@ -946,11 +942,19 @@ static func defence_v2_cells(origin: Vector2i, facing: int, geom: Dictionary) ->
 	var dfn = geom.get("defence", null)
 	if dfn != null:
 		for cell_def in dfn.get("cells", []):
-			var d: int = int(cell_def.get("d", 0))
-			var k: int = int(cell_def.get("k", 1))
-			var ad: int = (facing + d) % 6
-			out[origin + HexGrid.DIRS[ad] * maxi(1, k)] = int(cell_def.get("v", 0))
+			out[origin + _cell_offset(cell_def, facing)] = int(cell_def.get("v", 0))
 	return out
+
+
+## Offset (assiale) di una cella carta dato il facing. Supporta lo schema nuovo
+## a coordinate piene {q,r} (qualsiasi esagono del vicinato) e quello legacy a
+## 6 direzioni {d,k} (raggio); entrambi risolvono in modo identico per i raggi.
+static func _cell_offset(cell_def: Dictionary, facing: int) -> Vector2i:
+	if cell_def.has("q"):
+		return HexGrid.rotate(Vector2i(int(cell_def.get("q", 0)), int(cell_def.get("r", 0))), facing)
+	var d: int = int(cell_def.get("d", 0))
+	var k: int = int(cell_def.get("k", 1))
+	return HexGrid.DIRS[(facing + d) % 6] * maxi(1, k)
 
 
 ## Applica la lista `effects` v2 per la finestra `when` ("always" / "on_hit").
