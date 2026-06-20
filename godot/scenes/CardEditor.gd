@@ -34,10 +34,11 @@ var _list: ItemList
 var _count: Label
 
 # Pannello di dettaglio / editing.
-var _form: VBoxContainer
+var _form: VBoxContainer         ## colonna "carta simulata" (gemello editabile)
 var _status: Label
-var _preview_holder: Control
-var _indicators: Label
+var _orig_preview: Control       ## colonna "carta originale" (immagine reale)
+var _orig_indicators: Label
+var _palette_holder: Control     ## colonna destra: palette trascinabili
 var _btn_new: Button
 var _btn_dup: Button
 var _btn_save: Button
@@ -77,89 +78,144 @@ func _ready() -> void:
 
 func _build_ui() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
-	var root := HBoxContainer.new()
+	var root := VBoxContainer.new()
 	root.set_anchors_preset(Control.PRESET_FULL_RECT)
-	root.add_theme_constant_override("separation", 12)
-	root.offset_left = 12; root.offset_top = 12
-	root.offset_right = -12; root.offset_bottom = -12
+	root.add_theme_constant_override("separation", 6)
+	root.offset_left = 10; root.offset_top = 8
+	root.offset_right = -10; root.offset_bottom = -8
 	add_child(root)
-	root.add_child(_build_left_panel())
-	root.add_child(_build_detail_panel())
-	root.add_child(_build_right_panel())
 
+	root.add_child(_build_topbar())
 
-func _build_left_panel() -> Control:
-	var col := VBoxContainer.new()
-	col.custom_minimum_size = Vector2(340, 0)
-	col.add_theme_constant_override("separation", 8)
-
-	var header := HBoxContainer.new()
-	var title := Label.new()
-	title.text = "Editor Carte"
-	title.add_theme_font_size_override("font_size", 22)
-	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	header.add_child(title)
-	var back := Button.new()
-	back.text = "← Menu"
-	back.pressed.connect(_on_back)
-	header.add_child(back)
-	col.add_child(header)
-
-	_search = LineEdit.new()
-	_search.placeholder_text = "Cerca per nome…"
-	_search.clear_button_enabled = true
-	_search.text_changed.connect(func(_t): _refresh_list())
-	col.add_child(_search)
-
-	var filters := HBoxContainer.new()
-	filters.add_theme_constant_override("separation", 6)
-	_char_opt = OptionButton.new()
-	_char_opt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_char_opt.item_selected.connect(func(_i): _refresh_list())
-	filters.add_child(_char_opt)
-	_type_opt = OptionButton.new()
-	_type_opt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_type_opt.item_selected.connect(func(_i): _refresh_list())
-	filters.add_child(_type_opt)
-	_rank_opt = OptionButton.new()
-	_rank_opt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_rank_opt.item_selected.connect(func(_i): _refresh_list())
-	filters.add_child(_rank_opt)
-	col.add_child(filters)
-
-	_list = ItemList.new()
-	_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_list.item_selected.connect(_on_item_selected)
-	col.add_child(_list)
-
-	_count = Label.new()
-	_count.add_theme_font_size_override("font_size", 12)
-	col.add_child(_count)
-	return col
-
-
-func _build_detail_panel() -> Control:
-	var col := VBoxContainer.new()
-	col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	col.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	col.add_theme_constant_override("separation", 6)
-
-	var tb := HBoxContainer.new()
-	tb.add_theme_constant_override("separation", 6)
-	_btn_new = _toolbar_button(tb, "Nuova", _on_new)
-	_btn_dup = _toolbar_button(tb, "Duplica", _on_duplicate)
-	_btn_save = _toolbar_button(tb, "Salva", _on_save)
-	_btn_cancel = _toolbar_button(tb, "Annulla", _on_cancel)
-	_btn_remove = _toolbar_button(tb, "Rimuovi override", _on_remove_override)
-	_btn_undo = _toolbar_button(tb, "↶ Undo", _undo)
-	_btn_redo = _toolbar_button(tb, "↷ Redo", _redo)
-	col.add_child(tb)
+	var main := HBoxContainer.new()
+	main.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	main.add_theme_constant_override("separation", 10)
+	root.add_child(main)
+	main.add_child(_build_list_panel())     # lista stretta a sinistra
+	main.add_child(_build_center())          # originale ↔ simulata
+	main.add_child(_build_palette_panel())   # palette a destra
 
 	_status = Label.new()
 	_status.add_theme_font_size_override("font_size", 12)
 	_status.add_theme_color_override("font_color", Color(0.7, 0.78, 0.9))
-	col.add_child(_status)
+	root.add_child(_status)
 
+
+## Riga in alto: azioni (a sinistra) + filtri (a destra).
+func _build_topbar() -> Control:
+	var bar := HBoxContainer.new()
+	bar.add_theme_constant_override("separation", 6)
+	_btn_new = _toolbar_button(bar, "Nuova", _on_new)
+	_btn_dup = _toolbar_button(bar, "Duplica", _on_duplicate)
+	_btn_save = _toolbar_button(bar, "Salva", _on_save)
+	_btn_cancel = _toolbar_button(bar, "Annulla", _on_cancel)
+	_btn_remove = _toolbar_button(bar, "Rimuovi override", _on_remove_override)
+	_btn_undo = _toolbar_button(bar, "↶", _undo)
+	_btn_redo = _toolbar_button(bar, "↷", _redo)
+
+	var sep := VSeparator.new()
+	bar.add_child(sep)
+
+	_search = LineEdit.new()
+	_search.placeholder_text = "Cerca per nome…"
+	_search.clear_button_enabled = true
+	_search.custom_minimum_size = Vector2(180, 0)
+	_search.text_changed.connect(func(_t): _refresh_list())
+	bar.add_child(_search)
+	_char_opt = OptionButton.new()
+	_char_opt.item_selected.connect(func(_i): _refresh_list())
+	bar.add_child(_char_opt)
+	_type_opt = OptionButton.new()
+	_type_opt.item_selected.connect(func(_i): _refresh_list())
+	bar.add_child(_type_opt)
+	_rank_opt = OptionButton.new()
+	_rank_opt.item_selected.connect(func(_i): _refresh_list())
+	bar.add_child(_rank_opt)
+
+	var spacer := Control.new()
+	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	bar.add_child(spacer)
+	var back := Button.new()
+	back.text = "← Menu"
+	back.pressed.connect(_on_back)
+	bar.add_child(back)
+	return bar
+
+
+## Colonna sinistra stretta: solo l'elenco delle carte.
+func _build_list_panel() -> Control:
+	var col := VBoxContainer.new()
+	col.custom_minimum_size = Vector2(220, 0)
+	col.add_theme_constant_override("separation", 6)
+	_list = ItemList.new()
+	_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_list.item_selected.connect(_on_item_selected)
+	col.add_child(_list)
+	_count = Label.new()
+	_count.add_theme_font_size_override("font_size", 11)
+	_count.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	col.add_child(_count)
+	return col
+
+
+## Centro: carta ORIGINALE (immagine reale) ↔ carta SIMULATA (gemello editabile).
+func _build_center() -> Control:
+	var center := HBoxContainer.new()
+	center.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	center.add_theme_constant_override("separation", 10)
+
+	# Colonna ORIGINALE.
+	var orig := VBoxContainer.new()
+	orig.custom_minimum_size = Vector2(280, 0)
+	orig.add_theme_constant_override("separation", 6)
+	var ol := Label.new()
+	ol.text = "Carta originale"
+	ol.add_theme_font_size_override("font_size", 15)
+	ol.add_theme_color_override("font_color", Color(0.7, 0.78, 0.9))
+	orig.add_child(ol)
+	_orig_preview = CenterContainer.new()
+	_orig_preview.custom_minimum_size = Vector2(0, 380)
+	orig.add_child(_orig_preview)
+	var prow := HBoxContainer.new()
+	var pk := Label.new()
+	pk.text = "img"
+	pk.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
+	prow.add_child(pk)
+	_img_path_label = Label.new()
+	_img_path_label.text = "(nessuna)"
+	_img_path_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_img_path_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	prow.add_child(_img_path_label)
+	orig.add_child(prow)
+	var imgbtns := HBoxContainer.new()
+	var pick := Button.new()
+	pick.text = "Cambia…"
+	pick.pressed.connect(_open_image_picker)
+	imgbtns.add_child(pick)
+	var imp := Button.new()
+	imp.text = "Importa/ritaglia…"
+	imp.pressed.connect(_open_image_import)
+	imgbtns.add_child(imp)
+	var clr := Button.new()
+	clr.text = "Rimuovi"
+	clr.pressed.connect(func(): _set_image(""))
+	imgbtns.add_child(clr)
+	orig.add_child(imgbtns)
+	_orig_indicators = Label.new()
+	_orig_indicators.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_orig_indicators.add_theme_font_size_override("font_size", 13)
+	orig.add_child(_orig_indicators)
+	center.add_child(orig)
+
+	# Colonna SIMULATA (gemello).
+	var simcol := VBoxContainer.new()
+	simcol.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	simcol.add_theme_constant_override("separation", 4)
+	var sl := Label.new()
+	sl.text = "Carta simulata  (gemello digitale — modificabile)"
+	sl.add_theme_font_size_override("font_size", 15)
+	sl.add_theme_color_override("font_color", Color(0.7, 0.78, 0.9))
+	simcol.add_child(sl)
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -167,8 +223,9 @@ func _build_detail_panel() -> Control:
 	_form.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_form.add_theme_constant_override("separation", 4)
 	scroll.add_child(_form)
-	col.add_child(scroll)
-	return col
+	simcol.add_child(scroll)
+	center.add_child(simcol)
+	return center
 
 
 func _toolbar_button(parent: Control, text: String, cb: Callable) -> Button:
@@ -179,22 +236,15 @@ func _toolbar_button(parent: Control, text: String, cb: Callable) -> Button:
 	return b
 
 
-func _build_right_panel() -> Control:
-	var col := VBoxContainer.new()
-	col.custom_minimum_size = Vector2(300, 0)
-	col.add_theme_constant_override("separation", 8)
-	var lbl := Label.new()
-	lbl.text = "Anteprima"
-	lbl.add_theme_font_size_override("font_size", 16)
-	col.add_child(lbl)
-	_preview_holder = CenterContainer.new()
-	_preview_holder.custom_minimum_size = Vector2(0, 230)
-	col.add_child(_preview_holder)
-	_indicators = Label.new()
-	_indicators.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_indicators.add_theme_font_size_override("font_size", 13)
-	col.add_child(_indicators)
-	return col
+## Colonna destra: contenitore della palette (riempito per carta in _build_form).
+func _build_palette_panel() -> Control:
+	var scroll := ScrollContainer.new()
+	scroll.custom_minimum_size = Vector2(210, 0)
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_palette_holder = VBoxContainer.new()
+	_palette_holder.add_theme_constant_override("separation", 6)
+	scroll.add_child(_palette_holder)
+	return scroll
 
 
 # ─── Filtri ed elenco ────────────────────────────────────────────────────────
@@ -348,35 +398,10 @@ func _build_form(id: int, c: Dictionary, geom_data = null) -> void:
 	save_geo.pressed.connect(_on_save_geometry)
 	_form.add_child(save_geo)
 
-	# Immagine — associa/importa.
-	_add_section("Immagine")
-	var img := "" if _pending_new else CardDB.image_for(id)
-	var prow := HBoxContainer.new()
-	var pk := Label.new()
-	pk.text = "path"
-	pk.custom_minimum_size = Vector2(110, 0)
-	pk.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
-	prow.add_child(pk)
-	_img_path_label = Label.new()
-	_img_path_label.text = img if img != "" else "(nessuna)"
-	_img_path_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_img_path_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	prow.add_child(_img_path_label)
-	_form.add_child(prow)
-	var imgbtns := HBoxContainer.new()
-	var pick := Button.new()
-	pick.text = "Cambia immagine…"
-	pick.pressed.connect(_open_image_picker)
-	imgbtns.add_child(pick)
-	var imp := Button.new()
-	imp.text = "Importa/ritaglia…"
-	imp.pressed.connect(_open_image_import)
-	imgbtns.add_child(imp)
-	var clr := Button.new()
-	clr.text = "Rimuovi"
-	clr.pressed.connect(func(): _set_image(""))
-	imgbtns.add_child(clr)
-	_form.add_child(imgbtns)
+	# Palette trascinabile nella colonna destra (legata a questo GeometryEditor).
+	for ch in _palette_holder.get_children():
+		ch.queue_free()
+	_palette_holder.add_child(_geom_editor.build_palette())
 
 	_suspend_record = false
 
@@ -780,9 +805,12 @@ func _clear_form_to_hint() -> void:
 	hint.text = "Seleziona una carta, oppure premi «Nuova»."
 	hint.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
 	_form.add_child(hint)
-	for ch in _preview_holder.get_children():
+	for ch in _orig_preview.get_children():
 		ch.queue_free()
-	_indicators.text = ""
+	for ch in _palette_holder.get_children():
+		ch.queue_free()
+	_orig_indicators.text = ""
+	_img_path_label.text = "(nessuna)"
 	_w = {}
 	_geom_editor = null
 	_history = []
@@ -790,27 +818,34 @@ func _clear_form_to_hint() -> void:
 	_update_undo_buttons()
 
 
-# ─── Anteprima & indicatori ──────────────────────────────────────────────────
+# ─── Carta originale (colonna sinistra del centro) & indicatori ──────────────
 
+## Mostra l'immagine REALE della carta (grande) per il confronto col gemello.
+## Se non c'è immagine, un segnaposto. Aggiorna anche il path.
 func _update_preview(c: Dictionary, img: String) -> void:
-	for ch in _preview_holder.get_children():
+	for ch in _orig_preview.get_children():
 		ch.queue_free()
-	var cv := CardView.new()
-	_preview_holder.add_child(cv)
+	_img_path_label.text = img if img != "" else "(nessuna)"
 	if img != "":
-		var entry := c.duplicate(true)
-		entry["file"] = img
-		cv.setup(entry)
+		var tr := TextureRect.new()
+		tr.texture = CardView._load_texture("res://assets/cards/" + img)
+		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		tr.custom_minimum_size = Vector2(260, 360)
+		_orig_preview.add_child(tr)
 	else:
-		cv.setup(c)
-	cv.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var ph := Label.new()
+		ph.text = "(nessuna immagine originale)\nusa «Cambia…» o «Importa»"
+		ph.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		ph.add_theme_color_override("font_color", Color(0.55, 0.55, 0.6))
+		_orig_preview.add_child(ph)
 
 
 func _update_indicators(g: Dictionary, img: String) -> void:
 	var lines: Array = []
 	lines.append("✓ Geometria presente" if not g.is_empty() else "⚠ Senza geometria")
 	lines.append("✓ Immagine presente" if img != "" else "⚠ Senza immagine")
-	_indicators.text = "\n".join(lines)
+	_orig_indicators.text = "  ·  ".join(lines)
 
 
 func _geometry_summary(g: Dictionary) -> String:

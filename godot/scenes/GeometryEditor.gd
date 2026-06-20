@@ -191,48 +191,31 @@ func _build_ui() -> void:
 	_built = true
 	add_theme_constant_override("separation", 6)
 
-	# Tipo geometria + kamae richiesto.
-	var top := HBoxContainer.new()
-	var tl := Label.new()
-	tl.text = "Geometria visuale"
-	tl.add_theme_font_size_override("font_size", 15)
-	tl.add_theme_color_override("font_color", Color(0.7, 0.78, 0.9))
-	tl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	top.add_child(tl)
-	add_child(top)
-
-	_add_subtitle("Kamae richiesto  (clic per impostare/azzerare)")
+	# Kamae richiesto: valore corrente (si imposta dai token nella palette).
+	_add_subtitle("Kamae richiesto")
 	var kr := HBoxContainer.new()
 	kr.add_theme_constant_override("separation", 6)
-	for slug in ["aggression", "balance", "determination"]:
-		var tok := DragIcon.new()
-		tok.setup(self, "kamae_" + slug, slug)
-		tok.custom_minimum_size = Vector2(2 * HEX_R, 2 * HEX_R)
-		tok.gui_input.connect(_on_kamae_token_input.bind(slug))
-		kr.add_child(tok)
+	_kamae_label = Label.new()
+	_kamae_label.add_theme_font_size_override("font_size", 12)
+	_kamae_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	kr.add_child(_kamae_label)
 	var none := Button.new()
-	none.text = "nessuno"
+	none.text = "azzera"
 	none.pressed.connect(func(): set_kamae_req(""))
 	kr.add_child(none)
 	add_child(kr)
-	_kamae_label = Label.new()
-	_kamae_label.add_theme_font_size_override("font_size", 12)
-	add_child(_kamae_label)
 
-	# Nido d'ape + palette combattimento.
-	_add_subtitle("Combattimento — trascina le icone sugli esagoni  (clic destro = svuota)")
-	var combat := HBoxContainer.new()
-	combat.add_theme_constant_override("separation", 12)
+	# Nido d'ape: bersaglio del drag (le icone arrivano dalla palette).
+	_add_subtitle("Combattimento — trascina le icone dalla palette sugli esagoni  (clic destro = svuota)")
+	var hc := CenterContainer.new()
 	_honey = Control.new()
 	var side := HEX_D * RINGS * 2.0 + HEX_R * 2.0
 	_honey.custom_minimum_size = Vector2(side, side)
-	combat.add_child(_honey)
-	combat.add_child(_build_combat_palette())
-	add_child(combat)
+	hc.add_child(_honey)
+	add_child(hc)
 
-	# Movimento.
-	_add_subtitle("Movimento — trascina frecce NERE (obblig.) / BIANCHE (facolt.) e rotazioni")
-	add_child(_build_move_palette())
+	# Movimento: sequenze (le righe sono bersaglio del drag delle frecce).
+	_add_subtitle("Movimento — trascina frecce/rotazioni dalla palette nelle sequenze")
 	_moves_box = VBoxContainer.new()
 	_moves_box.add_theme_constant_override("separation", 4)
 	add_child(_moves_box)
@@ -266,15 +249,60 @@ func _build_ui() -> void:
 	_build_honeycomb()
 
 
+## Palette dei sorgenti TRASCINABILI (combattimento, movimento, kamae), da
+## collocare fuori dal canvas (colonna destra dell'editor). Il drag-drop
+## funziona attraverso l'albero della scena. Richiede che il canvas sia già
+## costruito (così gli esagoni esistono come bersagli).
+func build_palette() -> Control:
+	if not _built:
+		_build_ui()
+	var col := VBoxContainer.new()
+	col.add_theme_constant_override("separation", 8)
+	col.custom_minimum_size = Vector2(190, 0)
+	var title := Label.new()
+	title.text = "Palette"
+	title.add_theme_font_size_override("font_size", 15)
+	title.add_theme_color_override("font_color", Color(0.7, 0.78, 0.9))
+	col.add_child(title)
+	var hint := Label.new()
+	hint.text = "trascina sul gemello ←"
+	hint.add_theme_font_size_override("font_size", 11)
+	hint.add_theme_color_override("font_color", Color(0.6, 0.66, 0.74))
+	col.add_child(hint)
+	col.add_child(_build_combat_palette())
+	var ml := Label.new()
+	ml.text = "Movimento"
+	ml.add_theme_font_size_override("font_size", 12)
+	col.add_child(ml)
+	col.add_child(_build_move_palette())
+	var kl := Label.new()
+	kl.text = "Kamae (clic per impostare)"
+	kl.add_theme_font_size_override("font_size", 12)
+	col.add_child(kl)
+	var km := HBoxContainer.new()
+	km.add_theme_constant_override("separation", 6)
+	for slug in ["aggression", "balance", "determination"]:
+		var tok := DragIcon.new()
+		tok.setup(self, "kamae_" + slug, slug)
+		tok.custom_minimum_size = Vector2(2 * HEX_R, 2 * HEX_R)
+		tok.gui_input.connect(_on_kamae_token_input.bind(slug))
+		km.add_child(tok)
+	col.add_child(km)
+	return col
+
+
 func _build_combat_palette() -> Control:
 	var col := VBoxContainer.new()
-	col.add_theme_constant_override("separation", 6)
+	col.add_theme_constant_override("separation", 4)
 	var l := Label.new()
 	l.text = "Attacco"
 	l.add_theme_font_size_override("font_size", 12)
 	col.add_child(l)
+	var grid := GridContainer.new()
+	grid.columns = 3
 	for spec in [["w1", 1], ["w2", 2], ["exec", "exec"], ["bleed", "bleed"], ["w0", 0]]:
-		col.add_child(_palette_icon(spec[0], spec[1]))
+		grid.add_child(_palette_icon(spec[0], spec[1]))
+	col.add_child(grid)
 	var l2 := Label.new()
 	l2.text = "Difesa"
 	l2.add_theme_font_size_override("font_size", 12)
