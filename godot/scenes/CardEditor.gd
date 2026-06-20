@@ -393,10 +393,17 @@ func _build_form(id: int, c: Dictionary, geom_data = null) -> void:
 	var geom_src: Dictionary = geom_data if geom_data != null else CardDB.geometry(id)
 	_geom_editor.load_geometry(str(c.get("type", "attack")), geom_src)
 	_geom_editor.changed.connect(func(): _on_edit())
+	var geobtns := HBoxContainer.new()
 	var save_geo := Button.new()
 	save_geo.text = "Salva geometria"
 	save_geo.pressed.connect(_on_save_geometry)
-	_form.add_child(save_geo)
+	geobtns.add_child(save_geo)
+	var sim := Button.new()
+	sim.text = "▶ Simula carta"
+	sim.tooltip_text = "Risolve il gemello contro un avversario fittizio e mostra l'esito"
+	sim.pressed.connect(_on_simulate)
+	geobtns.add_child(sim)
+	_form.add_child(geobtns)
 
 	# Palette trascinabile nella colonna destra (legata a questo GeometryEditor).
 	for ch in _palette_holder.get_children():
@@ -564,6 +571,69 @@ func _on_save_geometry() -> void:
 	var nd: int = g.get("defence", {}).get("cells", []).size()
 	_status.text = "✓ Geometria #%d salvata (%d celle att., %d dif.)" % [id, na, nd]
 	_run_validation()
+
+
+## ─── Tester "Simula carta" (Fase 5) ─────────────────────────────────────────
+
+func _on_simulate() -> void:
+	if _current_id < 0 or _geom_editor == null:
+		return
+	var card: Dictionary = _collect_fields() if _w.has("name") else CardDB.card(_current_id)
+	var geom := _geom_editor.to_geometry()
+	_show_sim_result(CardSimulator.simulate(card, geom))
+
+
+func _show_sim_result(r: Dictionary) -> void:
+	var pop := PopupPanel.new()
+	add_child(pop)
+	var vb := VBoxContainer.new()
+	vb.custom_minimum_size = Vector2(480, 380)
+	vb.add_theme_constant_override("separation", 6)
+
+	var head := Label.new()
+	head.add_theme_font_size_override("font_size", 16)
+	if r.get("hit", false):
+		var tags = r.get("target_tags", [])
+		var suffix := ""
+		if tags is Array and not tags.is_empty():
+			suffix = " (%s)" % ", ".join(tags.map(func(x): return str(x)))
+		head.text = "✅ COLPITO — %d ferita/e%s" % [int(r.get("target_wounds", 0)), suffix]
+		head.add_theme_color_override("font_color", Color(0.5, 0.8, 0.5))
+	else:
+		head.text = "❌ Nessuna ferita (fuori arco / parato / carta non offensiva)"
+		head.add_theme_color_override("font_color", Color(0.9, 0.7, 0.4))
+	vb.add_child(head)
+
+	var sub := Label.new()
+	sub.text = "Attaccante: cella %s · facing %d · focus %d   |   bersaglio in %s" % [
+		str(r.get("attacker_cell")), int(r.get("attacker_facing", 0)),
+		int(r.get("attacker_focus", 0)), str(r.get("target_cell"))]
+	sub.add_theme_font_size_override("font_size", 12)
+	sub.add_theme_color_override("font_color", Color(0.6, 0.66, 0.74))
+	vb.add_child(sub)
+
+	var sc := ScrollContainer.new()
+	sc.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	var logbox := VBoxContainer.new()
+	logbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var ll := Label.new()
+	ll.text = "Log di risoluzione:"
+	ll.add_theme_color_override("font_color", Color(0.7, 0.78, 0.9))
+	logbox.add_child(ll)
+	for line in r.get("log", []):
+		var l := Label.new()
+		l.text = "• " + str(line)
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		logbox.add_child(l)
+	sc.add_child(logbox)
+	vb.add_child(sc)
+
+	var close := Button.new()
+	close.text = "Chiudi"
+	close.pressed.connect(pop.queue_free)
+	vb.add_child(close)
+	pop.add_child(vb)
+	pop.popup_centered(Vector2i(520, 440))
 
 
 ## ─── Undo / Redo (Fase 6) ───────────────────────────────────────────────────
