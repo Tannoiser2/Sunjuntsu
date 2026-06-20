@@ -1,53 +1,78 @@
-## Editor di carte — Senjutsu (Fase 1: browser & inspector, SOLA LETTURA)
+## Editor di carte — Senjutsu
 ##
-## Scena standalone (decisione §4.2 della roadmap), raggiungibile dal Menu e
-## testabile headless. Mostra l'elenco delle carte con filtri (personaggio,
-## tipo, rank, testo libero sul nome), un pannello di dettaglio con TUTTI i
-## campi (anagrafica + geometria + immagine) e un'anteprima riusando CardView.
+## Scena standalone (decisione §4.2), raggiungibile dal Menu e testabile headless.
+##  - Fase 1: browser con filtri + inspector con anteprima (CardView).
+##  - Fase 2: editing dell'ANAGRAFICA con widget tipizzati, ricalcolo automatico
+##    di `type` dai keywords, creazione/duplica carta e salvataggio via overlay
+##    (engine/CardStore.gd → card_pool_overrides.json), senza toccare l'Excel.
 ##
-## Lettura via CardDB (già carica e indicizza tutto). La scrittura arriverà in
-## Fase 2 tramite engine/CardStore.gd. Vedi docs/CARD_EDITOR_ROADMAP.md.
+## Geometria/effetti e immagine restano in sola lettura (Fasi 4/6).
+## Vedi docs/CARD_EDITOR_ROADMAP.md.
 extends Control
 
 const CardView := preload("res://scenes/CardView.gd")
+
+## Keyword note per l'autocomplete (vocabolario §3.3 + dati reali).
+const KNOWN_KEYWORDS := [
+	"Attack", "Defence", "Attack/Defence", "Meditation", "Core",
+	"Instant", "Instant Replacement", "Instant Additional",
+	"Prepared", "Bushido", "Weapon", "Solo",
+	"Range1", "Range2", "Range3", "Range4", "Range5", "Range6",
+]
 
 ## Valori dei filtri a tendina, paralleli agli indici degli OptionButton.
 var _char_values: Array = []
 var _type_values: Array = []
 var _rank_values: Array = []
 
-# Riferimenti ai widget costruiti in codice.
+# Widget del browser.
 var _search: LineEdit
 var _char_opt: OptionButton
 var _type_opt: OptionButton
 var _rank_opt: OptionButton
 var _list: ItemList
 var _count: Label
-var _detail: VBoxContainer
+
+# Pannello di dettaglio / editing.
+var _form: VBoxContainer
+var _status: Label
 var _preview_holder: Control
 var _indicators: Label
+var _btn_new: Button
+var _btn_dup: Button
+var _btn_save: Button
+var _btn_cancel: Button
+var _btn_remove: Button
 
-var _selected_id: int = -1
+# Stato di editing.
+var _store: CardStore
+var _w: Dictionary = {}          ## campo -> widget editabile
+var _w_type: Label               ## etichetta `type` derivata (read-only)
+var _geom_editor: GeometryEditor ## editor visuale geometria (Fase 4)
+var _current_id: int = -1
+var _pending_new: bool = false   ## carta creata/duplicata non ancora salvata
 
 
 func _ready() -> void:
+	_store = CardStore.new()
+	_store.load_overrides()
 	_build_ui()
 	_populate_filters()
 	_refresh_list()
+	_clear_form_to_hint()
+	_update_toolbar()
 
 
 # ─── Costruzione UI ──────────────────────────────────────────────────────────
 
 func _build_ui() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
-
 	var root := HBoxContainer.new()
 	root.set_anchors_preset(Control.PRESET_FULL_RECT)
 	root.add_theme_constant_override("separation", 12)
 	root.offset_left = 12; root.offset_top = 12
 	root.offset_right = -12; root.offset_bottom = -12
 	add_child(root)
-
 	root.add_child(_build_left_panel())
 	root.add_child(_build_detail_panel())
 	root.add_child(_build_right_panel())
@@ -100,61 +125,76 @@ func _build_left_panel() -> Control:
 	_count = Label.new()
 	_count.add_theme_font_size_override("font_size", 12)
 	col.add_child(_count)
-
 	return col
 
 
 func _build_detail_panel() -> Control:
+	var col := VBoxContainer.new()
+	col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	col.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	col.add_theme_constant_override("separation", 6)
+
+	var tb := HBoxContainer.new()
+	tb.add_theme_constant_override("separation", 6)
+	_btn_new = _toolbar_button(tb, "Nuova", _on_new)
+	_btn_dup = _toolbar_button(tb, "Duplica", _on_duplicate)
+	_btn_save = _toolbar_button(tb, "Salva", _on_save)
+	_btn_cancel = _toolbar_button(tb, "Annulla", _on_cancel)
+	_btn_remove = _toolbar_button(tb, "Rimuovi override", _on_remove_override)
+	col.add_child(tb)
+
+	_status = Label.new()
+	_status.add_theme_font_size_override("font_size", 12)
+	_status.add_theme_color_override("font_color", Color(0.7, 0.78, 0.9))
+	col.add_child(_status)
+
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_detail = VBoxContainer.new()
-	_detail.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_detail.add_theme_constant_override("separation", 4)
-	scroll.add_child(_detail)
-	var hint := Label.new()
-	hint.text = "Seleziona una carta dall'elenco."
-	hint.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
-	_detail.add_child(hint)
-	return scroll
+	_form = VBoxContainer.new()
+	_form.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_form.add_theme_constant_override("separation", 4)
+	scroll.add_child(_form)
+	col.add_child(scroll)
+	return col
+
+
+func _toolbar_button(parent: Control, text: String, cb: Callable) -> Button:
+	var b := Button.new()
+	b.text = text
+	b.pressed.connect(cb)
+	parent.add_child(b)
+	return b
 
 
 func _build_right_panel() -> Control:
 	var col := VBoxContainer.new()
 	col.custom_minimum_size = Vector2(300, 0)
 	col.add_theme_constant_override("separation", 8)
-
 	var lbl := Label.new()
 	lbl.text = "Anteprima"
 	lbl.add_theme_font_size_override("font_size", 16)
 	col.add_child(lbl)
-
 	_preview_holder = CenterContainer.new()
 	_preview_holder.custom_minimum_size = Vector2(0, 230)
 	col.add_child(_preview_holder)
-
 	_indicators = Label.new()
 	_indicators.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_indicators.add_theme_font_size_override("font_size", 13)
 	col.add_child(_indicators)
-
 	return col
 
 
 # ─── Filtri ed elenco ────────────────────────────────────────────────────────
 
 func _populate_filters() -> void:
-	# Personaggi: "Tutti" + distinti ordinati.
 	_char_opt.clear()
 	_char_values = [""]
 	_char_opt.add_item("Tutti i personaggi")
-	var chars: Array = CardDB.by_char.keys()
-	chars.sort()
-	for c in chars:
+	for c in _char_list():
 		_char_opt.add_item(str(c))
 		_char_values.append(str(c))
 
-	# Tipo: "Tutti" + vocabolario controllato.
 	_type_opt.clear()
 	_type_values = [""]
 	_type_opt.add_item("Tutti i tipi")
@@ -163,7 +203,6 @@ func _populate_filters() -> void:
 		_type_opt.add_item(pair[1])
 		_type_values.append(pair[0])
 
-	# Rank: "Tutti" + i quattro rami + Core.
 	_rank_opt.clear()
 	_rank_values = [""]
 	_rank_opt.add_item("Tutti i rank")
@@ -171,6 +210,12 @@ func _populate_filters() -> void:
 			["Jade", "Giada"], ["-", "— (Base)"]]:
 		_rank_opt.add_item(pair[1])
 		_rank_values.append(pair[0])
+
+
+func _char_list() -> Array:
+	var a: Array = CardDB.by_char.keys()
+	a.sort()
+	return a
 
 
 func _refresh_list() -> void:
@@ -194,80 +239,298 @@ func _refresh_list() -> void:
 			continue
 		if needle != "" and not str(c.get("name", "")).to_lower().contains(needle):
 			continue
-		var has_geom := not CardDB.geometry(id).is_empty()
-		var has_img := CardDB.image_for(id) != ""
 		var flags := ""
-		if not has_geom:
-			flags += " ◇"   # senza geometria
-		if not has_img:
-			flags += " ✕"   # senza immagine
+		if CardDB.geometry(id).is_empty():
+			flags += " ◇"
+		if CardDB.image_for(id) == "":
+			flags += " ✕"
+		if id >= 10000:
+			flags += " ★"   # carta creata dall'editor
 		var idx := _list.add_item("#%d  %s%s" % [id, str(c.get("name", "?")), flags])
 		_list.set_item_metadata(idx, id)
 		shown += 1
 
-	_count.text = "%d / %d carte  ·  ◇ senza geometria  ✕ senza immagine" % [shown, ids.size()]
+	_count.text = "%d / %d carte  ·  ◇ no geometria  ✕ no immagine  ★ carta-utente" % [shown, ids.size()]
+	_select_in_list(_current_id)
 
-	# Mantieni selezione se ancora visibile.
-	if _selected_id != -1:
-		for i in _list.item_count:
-			if int(_list.get_item_metadata(i)) == _selected_id:
-				_list.select(i)
-				return
+
+func _select_in_list(id: int) -> void:
+	if id < 0:
+		return
+	for i in _list.item_count:
+		if int(_list.get_item_metadata(i)) == id:
+			_list.select(i)
+			return
 
 
 func _on_item_selected(idx: int) -> void:
-	_selected_id = int(_list.get_item_metadata(idx))
-	_show_card(_selected_id)
+	_load_card(int(_list.get_item_metadata(idx)), false)
 
 
 func _on_back() -> void:
 	get_tree().change_scene_to_file("res://scenes/Menu.tscn")
 
 
-# ─── Pannello di dettaglio ───────────────────────────────────────────────────
+# ─── Caricamento carta nel form ──────────────────────────────────────────────
 
-func _show_card(id: int) -> void:
-	for ch in _detail.get_children():
-		ch.queue_free()
-	var c: Dictionary = CardDB.card(id)
-
-	_add_heading(str(c.get("name", "?")))
-
-	# Anagrafica (card_pool.json)
-	_add_section("Anagrafica")
-	_add_field("id", str(id) + "  (read-only)")
-	_add_field("nome", str(c.get("name", "")))
-	_add_field("personaggio", str(c.get("char", "")))
-	_add_field("amount", str(c.get("amount", "")))
-	var rank_str := str(c.get("rank", "-"))
-	var rank := Domain.parse_rank(rank_str)
-	_add_field_colored("rank", "%s (%s)" % [Domain.RANK_LABELS.get(rank, "—"), rank_str],
-			Domain.RANK_COLORS.get(rank, Color.GRAY))
-	_add_field("initiative", str(c.get("initiative", "-")))
-	_add_field("focus", str(c.get("focus", 0)))
-	_add_field("keywords", ", ".join(_as_strings(c.get("keywords", []))))
-	var typ := Domain.parse_card_type(str(c.get("type", "")))
-	_add_field("type", "%s (%s)" % [Domain.CARD_TYPE_LABELS.get(typ, "?"), str(c.get("type", ""))])
-
-	# Geometria/effetti (geometry.json)
-	var g: Dictionary = CardDB.geometry(id)
-	_add_section("Geometria / effetti")
-	if g.is_empty():
-		var none := Label.new()
-		none.text = "— Nessuna geometria trascritta per questa carta."
-		none.add_theme_color_override("font_color", Color(0.85, 0.6, 0.3))
-		_detail.add_child(none)
+func _load_card(id: int, is_new: bool, fields: Dictionary = {}) -> void:
+	_current_id = id
+	_pending_new = is_new
+	var c: Dictionary = fields if not fields.is_empty() else CardDB.card(id)
+	_build_form(id, c)
+	var img := "" if is_new else CardDB.image_for(id)
+	_update_preview(c, img)
+	_update_indicators(CardDB.geometry(id), img)
+	_update_toolbar()
+	if is_new:
+		_status.text = "Carta #%d non salvata — compila e premi Salva" % id
+	elif not _store.get_override(id).is_empty():
+		_status.text = "Override attivo per #%d" % id
 	else:
-		_add_multiline("riassunto", _geometry_summary(g))
-		_add_multiline("JSON", JSON.stringify(g, "  "))
+		_status.text = "Carta #%d (dall'Excel)" % id
 
-	# Immagine (card_images.json)
-	_add_section("Immagine")
-	var img := CardDB.image_for(id)
-	_add_field("path", img if img != "" else "(nessuna)")
 
-	_update_preview(id, c, img)
-	_update_indicators(g, img)
+func _build_form(id: int, c: Dictionary) -> void:
+	for ch in _form.get_children():
+		ch.queue_free()
+	_w = {}
+
+	var head := Label.new()
+	head.text = "#%d%s" % [id, "  ★ carta-utente" if id >= 10000 else ""]
+	head.add_theme_font_size_override("font_size", 18)
+	_form.add_child(head)
+
+	_add_section("Anagrafica  (editabile)")
+	_w["name"] = _add_edit_text("nome", str(c.get("name", "")))
+	_w["char"] = _add_edit_option("personaggio", _char_list(), str(c.get("char", "Warrior")))
+	_w["amount"] = _add_edit_spin("amount", 1, 6, int(c.get("amount", 1)))
+	_w["rank"] = _add_edit_option("rank", ["Wood", "Steel", "Gold", "Jade", "-"], str(c.get("rank", "-")))
+	_w["initiative"] = _add_edit_text("initiative", str(c.get("initiative", "-")))
+	_w["focus"] = _add_edit_spin("focus", 0, 9, int(c.get("focus", 0)))
+	_build_keywords_field(c.get("keywords", []))
+
+	# Geometria/effetti — editor visuale drag & drop (Fase 4).
+	_add_section("Geometria / effetti  (visuale — trascina le icone)")
+	_geom_editor = GeometryEditor.new()
+	_geom_editor.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_form.add_child(_geom_editor)
+	_geom_editor.load_geometry(str(c.get("type", "attack")), CardDB.geometry(id))
+	var save_geo := Button.new()
+	save_geo.text = "Salva geometria"
+	save_geo.pressed.connect(_on_save_geometry)
+	_form.add_child(save_geo)
+
+	# Immagine — sola lettura.
+	_add_section("Immagine  (sola lettura)")
+	var img := "" if _pending_new else CardDB.image_for(id)
+	_add_readonly_field("path", img if img != "" else "(nessuna)")
+
+
+func _build_keywords_field(kws) -> void:
+	var le := LineEdit.new()
+	le.text = ", ".join(_as_strings(kws))
+	le.text_changed.connect(func(_t): _recalc_type())
+	_w["keywords"] = le
+	_edit_row("keywords", le)
+
+	var add := OptionButton.new()
+	add.add_item("＋ aggiungi keyword nota")
+	for kw in KNOWN_KEYWORDS:
+		add.add_item(kw)
+	add.item_selected.connect(_on_add_keyword.bind(add))
+	_edit_row("", add)
+
+	_w_type = Label.new()
+	_edit_row("type (auto)", _w_type)
+	_recalc_type()
+
+
+func _on_add_keyword(idx: int, opt: OptionButton) -> void:
+	if idx > 0:
+		var kw := opt.get_item_text(idx)
+		var cur := _parse_keywords()
+		if not cur.has(kw):
+			cur.append(kw)
+			_w["keywords"].text = ", ".join(cur)
+			_recalc_type()
+	opt.selected = 0
+
+
+func _parse_keywords() -> Array:
+	var out: Array = []
+	var le: LineEdit = _w["keywords"]
+	for tok in le.text.split(","):
+		var t := tok.strip_edges()
+		if t != "":
+			out.append(t)
+	return out
+
+
+func _recalc_type() -> void:
+	if _w_type == null:
+		return
+	var t := CardStore.derive_type(_parse_keywords())
+	var e := Domain.parse_card_type(t)
+	_w_type.text = "%s  (%s)" % [Domain.CARD_TYPE_LABELS.get(e, "?"), t]
+
+
+func _collect_fields() -> Dictionary:
+	var kws := _parse_keywords()
+	return {
+		"id": _current_id,
+		"name": _w["name"].text.strip_edges(),
+		"char": _selected_text(_w["char"]),
+		"amount": int(_w["amount"].value),
+		"rank": _selected_text(_w["rank"]),
+		"initiative": _w["initiative"].text.strip_edges(),
+		"focus": int(_w["focus"].value),
+		"keywords": kws,
+		"type": CardStore.derive_type(kws),
+	}
+
+
+# ─── Azioni: salva / nuova / duplica / annulla / rimuovi override ─────────────
+
+func _on_save() -> void:
+	if _current_id < 0:
+		return
+	var fields := _collect_fields()
+	var ov := _store.compute_override(_current_id, fields)
+	_store.set_override(_current_id, ov)
+	var res := _store.save_overrides()
+	if not res.get("ok", false):
+		_status.text = "✗ Errore salvataggio: %s" % str(res.get("error", ""))
+		return
+	CardDB.apply_override(_current_id, fields)
+	var saved_id := _current_id
+	_pending_new = false
+	_refresh_list()
+	_select_in_list(saved_id)
+	_load_card(saved_id, false)
+	if ov.is_empty():
+		_status.text = "✓ Salvato #%d (nessuna differenza dall'Excel: override rimosso)" % saved_id
+	else:
+		_status.text = "✓ Salvato #%d (%d campi nell'overlay)" % [saved_id, ov.size()]
+
+
+func _on_new() -> void:
+	var id := _store.next_free_id(CardDB.by_id.keys())
+	_load_card(id, true, CardStore.new_card_template(id, _default_char()))
+
+
+func _on_duplicate() -> void:
+	if _current_id < 0 or _pending_new:
+		return
+	var src := CardDB.card(_current_id)
+	if src.is_empty():
+		return
+	var src_id := _current_id
+	var id := _store.next_free_id(CardDB.by_id.keys())
+	var fields := src.duplicate(true)
+	fields["id"] = id
+	fields["name"] = str(src.get("name", "")) + " (copia)"
+	fields.erase("file")
+	_load_card(id, true, fields)
+	_status.text = "Duplicata da #%d → nuova #%d (non salvata)" % [src_id, id]
+
+
+func _on_cancel() -> void:
+	if _pending_new:
+		_pending_new = false
+		_current_id = -1
+		_clear_form_to_hint()
+		_update_toolbar()
+		_status.text = "Creazione annullata"
+	elif _current_id >= 0:
+		_load_card(_current_id, false)
+		_status.text = "Modifiche annullate"
+
+
+func _on_remove_override() -> void:
+	if _pending_new or _current_id < 0 or not _store.has_pristine(_current_id):
+		return
+	if _store.get_override(_current_id).is_empty():
+		_status.text = "Nessun override da rimuovere"
+		return
+	_store.clear_override(_current_id)
+	var res := _store.save_overrides()
+	if not res.get("ok", false):
+		_status.text = "✗ Errore: %s" % str(res.get("error", ""))
+		return
+	# Ripristina in memoria i valori originali dell'Excel.
+	CardDB.apply_override(_current_id, _store.pristine_card(_current_id))
+	var id := _current_id
+	_refresh_list()
+	_select_in_list(id)
+	_load_card(id, false)
+	_status.text = "✓ Override rimosso #%d (tornato all'Excel)" % id
+
+
+func _on_save_geometry() -> void:
+	if _current_id < 0 or _geom_editor == null:
+		return
+	var g := _geom_editor.to_geometry()
+	var res := _store.save_card_geometry(_current_id, g)
+	if not res.get("ok", false):
+		_status.text = "✗ Errore geometria: %s" % str(res.get("error", ""))
+		return
+	CardDB.set_geometry(_current_id, g)
+	var id := _current_id
+	_refresh_list()
+	_select_in_list(id)
+	var na: int = g.get("attack", {}).get("cells", []).size()
+	var nd: int = g.get("defence", {}).get("cells", []).size()
+	_status.text = "✓ Geometria #%d salvata (%d celle att., %d dif.)" % [id, na, nd]
+
+
+func _default_char() -> String:
+	var list := _char_list()
+	return str(list[0]) if not list.is_empty() else "Warrior"
+
+
+func _update_toolbar() -> void:
+	var loaded := _current_id >= 0
+	_btn_save.disabled = not loaded
+	_btn_cancel.disabled = not loaded
+	_btn_dup.disabled = not loaded or _pending_new
+	var has_override := loaded and not _pending_new and _store.has_pristine(_current_id) \
+			and not _store.get_override(_current_id).is_empty()
+	_btn_remove.disabled = not has_override
+
+
+func _clear_form_to_hint() -> void:
+	for ch in _form.get_children():
+		ch.queue_free()
+	var hint := Label.new()
+	hint.text = "Seleziona una carta, oppure premi «Nuova»."
+	hint.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
+	_form.add_child(hint)
+	for ch in _preview_holder.get_children():
+		ch.queue_free()
+	_indicators.text = ""
+
+
+# ─── Anteprima & indicatori ──────────────────────────────────────────────────
+
+func _update_preview(c: Dictionary, img: String) -> void:
+	for ch in _preview_holder.get_children():
+		ch.queue_free()
+	var cv := CardView.new()
+	_preview_holder.add_child(cv)
+	if img != "":
+		var entry := c.duplicate(true)
+		entry["file"] = img
+		cv.setup(entry)
+	else:
+		cv.setup(c)
+	cv.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+
+func _update_indicators(g: Dictionary, img: String) -> void:
+	var lines: Array = []
+	lines.append("✓ Geometria presente" if not g.is_empty() else "⚠ Senza geometria")
+	lines.append("✓ Immagine presente" if img != "" else "⚠ Senza immagine")
+	_indicators.text = "\n".join(lines)
 
 
 func _geometry_summary(g: Dictionary) -> String:
@@ -276,9 +539,8 @@ func _geometry_summary(g: Dictionary) -> String:
 	if g.has("kamae_req"):
 		lines.append("kamae richiesto: %s" % str(g["kamae_req"]))
 	if g.has("move"):
-		var opts: Array = g.get("move", {}).get("opts", [])
 		var parts: Array = []
-		for opt in opts:
+		for opt in g.get("move", {}).get("opts", []):
 			var atoms: Array = []
 			for a in opt.get("atoms", []):
 				var s := "passo" if a.get("t", "") == "step" else "rotazione"
@@ -305,68 +567,75 @@ func _geometry_summary(g: Dictionary) -> String:
 	if g.has("counter"):
 		lines.append("contrattacco a iniziative: %s" % str(g.get("counter")))
 	if g.has("effects"):
-		var effs: Array = g.get("effects", [])
 		var es: Array = []
-		for e in effs:
+		for e in g.get("effects", []):
 			es.append(str(e.get("do", "?")))
-		lines.append("effetti (%d): %s" % [effs.size(), ", ".join(es)])
+		lines.append("effetti (%d): %s" % [g.get("effects", []).size(), ", ".join(es)])
 	if g.has("note") and str(g.get("note", "")) != "":
 		lines.append("nota: %s" % str(g.get("note")))
 	return "\n".join(lines)
 
 
-# ─── Anteprima & indicatori ──────────────────────────────────────────────────
-
-func _update_preview(id: int, c: Dictionary, img: String) -> void:
-	for ch in _preview_holder.get_children():
-		ch.queue_free()
-	var cv := CardView.new()
-	_preview_holder.add_child(cv)
-	# CardView mostra l'immagine reale se l'entry ha "file", altrimenti la
-	# scheda data-driven dai campi anagrafici.
-	if img != "":
-		var entry := c.duplicate(true)
-		entry["file"] = img
-		cv.setup(entry)
-	else:
-		cv.setup(c)
-	cv.mouse_filter = Control.MOUSE_FILTER_IGNORE
-
-
-func _update_indicators(g: Dictionary, img: String) -> void:
-	var lines: Array = []
-	if g.is_empty():
-		lines.append("⚠ Senza geometria")
-	else:
-		lines.append("✓ Geometria presente")
-	if img == "":
-		lines.append("⚠ Senza immagine")
-	else:
-		lines.append("✓ Immagine presente")
-	_indicators.text = "\n".join(lines)
-
-
 # ─── Helper di layout ────────────────────────────────────────────────────────
 
-func _add_heading(text: String) -> void:
-	var l := Label.new()
-	l.text = text
-	l.add_theme_font_size_override("font_size", 20)
-	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_detail.add_child(l)
-
-
 func _add_section(text: String) -> void:
-	var sep := HSeparator.new()
-	_detail.add_child(sep)
+	_form.add_child(HSeparator.new())
 	var l := Label.new()
 	l.text = text
 	l.add_theme_font_size_override("font_size", 15)
 	l.add_theme_color_override("font_color", Color(0.7, 0.78, 0.9))
-	_detail.add_child(l)
+	_form.add_child(l)
 
 
-func _add_field(key: String, value: String) -> void:
+func _edit_row(key: String, widget: Control) -> void:
+	var hb := HBoxContainer.new()
+	var k := Label.new()
+	k.text = key
+	k.custom_minimum_size = Vector2(110, 0)
+	k.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
+	hb.add_child(k)
+	widget.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hb.add_child(widget)
+	_form.add_child(hb)
+
+
+func _add_edit_text(key: String, val: String) -> LineEdit:
+	var le := LineEdit.new()
+	le.text = val
+	_edit_row(key, le)
+	return le
+
+
+func _add_edit_spin(key: String, mn: int, mx: int, val: int) -> SpinBox:
+	var sb := SpinBox.new()
+	sb.min_value = mn
+	sb.max_value = mx
+	sb.step = 1
+	sb.value = clampi(val, mn, mx)
+	_edit_row(key, sb)
+	return sb
+
+
+func _add_edit_option(key: String, values: Array, current: String) -> OptionButton:
+	var opt := OptionButton.new()
+	var found := -1
+	for i in values.size():
+		opt.add_item(str(values[i]))
+		if str(values[i]) == current:
+			found = i
+	if found == -1 and current != "":
+		opt.add_item(current)
+		found = opt.item_count - 1
+	opt.selected = maxi(found, 0)
+	_edit_row(key, opt)
+	return opt
+
+
+func _selected_text(opt: OptionButton) -> String:
+	return opt.get_item_text(opt.selected) if opt.selected >= 0 else ""
+
+
+func _add_readonly_field(key: String, value: String) -> void:
 	var hb := HBoxContainer.new()
 	var k := Label.new()
 	k.text = key
@@ -378,27 +647,21 @@ func _add_field(key: String, value: String) -> void:
 	v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	v.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	hb.add_child(v)
-	_detail.add_child(hb)
-
-
-func _add_field_colored(key: String, value: String, color: Color) -> void:
-	_add_field(key, value)
-	var last: HBoxContainer = _detail.get_child(_detail.get_child_count() - 1)
-	(last.get_child(1) as Label).add_theme_color_override("font_color", color)
+	_form.add_child(hb)
 
 
 func _add_multiline(key: String, value: String) -> void:
 	var k := Label.new()
 	k.text = key
 	k.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
-	_detail.add_child(k)
+	_form.add_child(k)
 	var te := TextEdit.new()
 	te.text = value
 	te.editable = false
 	te.scroll_fit_content_height = true
 	te.custom_minimum_size = Vector2(0, 60)
 	te.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_detail.add_child(te)
+	_form.add_child(te)
 
 
 func _as_strings(arr) -> Array:

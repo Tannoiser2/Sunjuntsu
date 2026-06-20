@@ -83,6 +83,15 @@ func geometry(id: int) -> Dictionary:
 	return geom.get(id, {})
 
 
+## Aggiorna in memoria la geometria di una carta (usata dall'editor visuale dopo
+## il salvataggio, così list/anteprima si aggiornano senza riavvio).
+func set_geometry(id: int, g: Dictionary) -> void:
+	if g.is_empty():
+		geom.erase(id)
+	else:
+		geom[id] = g
+
+
 ## Statistiche del personaggio (limite ferite/mano, armi) o {} se assente.
 func character_stats(character: String) -> Dictionary:
 	return char_stats.get(character, {})
@@ -159,17 +168,44 @@ func _load_overrides() -> void:
 	var parsed = JSON.parse_string(FileAccess.get_file_as_string(POOL_OVERRIDES_PATH))
 	if typeof(parsed) != TYPE_DICTIONARY:
 		return
-	var by: Dictionary = parsed.get("by_id", {})
+	var by = parsed.get("by_id", {})
+	if typeof(by) != TYPE_DICTIONARY:
+		return
 	for k in by.keys():
-		var id := int(k)
-		if not by_id.has(id):
-			continue   # gli override valgono solo per carte esistenti nel pool
-		var fields = by[k]
-		if typeof(fields) != TYPE_DICTIONARY:
-			continue
+		if typeof(by[k]) == TYPE_DICTIONARY:
+			apply_override(int(k), by[k])
+
+
+## Applica un override anagrafico IN MEMORIA. Usato sia al caricamento sia
+## dall'editor dopo un salvataggio, così la vista runtime resta coerente senza
+## riavviare. Se la carta esiste, fonde i campi (spostando il bucket per
+## personaggio se cambia `char`); se l'id è nuovo (carta creata dall'editor,
+## id-utente >= 10000) la AGGIUNGE al catalogo.
+func apply_override(id: int, fields: Dictionary) -> void:
+	if by_id.has(id):
 		var card: Dictionary = by_id[id]
+		var old_char: String = str(card.get("char", "?"))
 		for f in fields.keys():
 			card[f] = fields[f]
+		var new_char: String = str(card.get("char", "?"))
+		if new_char != old_char:
+			if by_char.has(old_char):
+				by_char[old_char].erase(card)
+			if not by_char.has(new_char):
+				by_char[new_char] = []
+			by_char[new_char].append(card)
+		return
+	# Carta nuova: record completo aggiunto al catalogo.
+	var card := fields.duplicate(true)
+	card["id"] = id
+	var ch: String = str(card.get("char", "?"))
+	cards.append(card)
+	by_id[id] = card
+	if not by_char.has(ch):
+		by_char[ch] = []
+	by_char[ch].append(card)
+	if not characters.has(ch):
+		characters.append(ch)
 
 
 ## Carte di un personaggio (es. "Ronin", "Warrior").

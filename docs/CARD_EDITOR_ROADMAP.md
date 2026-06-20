@@ -193,13 +193,19 @@ Queste scelte cambiano l'architettura; vanno fissate **prima** di Fase 2.
 > `test_cardstore`, `test_cardeditor_smoke`, `test_allcards` (regressione ok).
 > Prossimo: Fase 2 (editing anagrafica via overlay).
 
-### Fase 2 — Editing anagrafica (scrittura)
-- [ ] Form editabile dei campi `card_pool` con widget tipizzati (dropdown per
-      `char/rank/type`, multi-select+autocomplete per `keywords`).
-- [ ] Ricalcolo automatico di `type` dai `keywords`.
-- [ ] Salvataggio secondo la decisione §4.1 (overlay/diretto) + `.bak`.
-- [ ] Creazione **nuova carta** con allocazione `id` libero.
-- [ ] Duplica carta.
+### Fase 2 — Editing anagrafica (scrittura) ✅
+- [x] Form editabile dei campi `card_pool` con widget tipizzati (dropdown per
+      `char/rank`, SpinBox per `amount/focus`, LineEdit per `name/initiative`,
+      keywords con campo testo + autocomplete da vocabolario noto).
+- [x] Ricalcolo automatico di `type` dai `keywords` (regola validata su 313/313 carte).
+- [x] Salvataggio overlay (§4.1b) `card_pool_overrides.json` + `.bak`; per le carte
+      Excel si salva solo il **delta** dai valori originali, le carte-utente per intero.
+- [x] Creazione **nuova carta** con allocazione `id` libero (intervallo id-utente ≥ 10000).
+- [x] Duplica carta (copia con id nuovo, marcata "(copia)").
+
+> **Stato 2026-06-20:** M2 in corso. Fase 2 completata; resta la Fase 3 (validazione).
+> `CardDB.apply_override()` aggiorna la vista runtime senza riavvio (gestisce carte
+> nuove e spostamento bucket per cambio `char`). Test headless verdi su Godot 4.6.
 
 ### Fase 3 — Validazione
 - [ ] `CardValidator.gd` + test. Regole minime:
@@ -208,13 +214,20 @@ Queste scelte cambiano l'architettura; vanno fissate **prima** di Fase 2.
       `type` incoerente coi keywords; `id` duplicato; `rank` non valido.
 - [ ] Mostrare warning/errori inline nell'inspector (non bloccanti vs bloccanti).
 
-### Fase 4 — Editor geometria/effetti
-- [ ] Editor `move` (lista atoms step/rot, dir/n/opt).
-- [ ] Editor `attack`/`defence` **visuale** sul nido d'ape (click su cella →
-      imposta ferite/blocco; direzione/anello dedotti dalla posizione).
+### Fase 4 — Editor geometria/effetti  ✅ (effects: parziale)
+- [x] Editor `move` (sequenze "OPPURE" di atoms step/rot, dir/n/opt) **drag & drop**
+      (frecce nere=obbligatorie / bianche=facoltative, rotazioni).
+- [x] Editor `attack`/`defence` **visuale** sul nido d'ape (modello a 6 direzioni,
+      §4.4): si **trascinano** ferite/esecuzione/sanguinamento/scudi sugli esagoni;
+      `d`/`k` dedotti dalla posizione. Clic destro = svuota cella.
 - [ ] Editor `effects` come lista ordinata con `do` da autocomplete + campi
-      contestuali (`n, when, kamae, alt, to, focus_cost`).
-- [ ] Editor `counter`, `kamae_req`, `note`.
+      contestuali (rinviato a Fase 4d; gli `effects` esistenti sono **preservati**).
+- [x] Editor `counter`, `kamae_req` (token colorati), `note`.
+
+> **Stato 2026-06-20:** M3 — editor geometria visuale operativo (`GeometryEditor.gd`,
+> incorporato in `CardEditor`). Salvataggio su `geometry.json` con `.bak`, int puliti
+> (no float `2.0`) e diff minimi. Manca solo l'editor degli `effects` (Fase 4d).
+> Test headless verdi su Godot 4.6 (`test_geometry_editor`: round-trip + mutatori).
 
 ### Fase 5 — Anteprima geometria & Tester
 - [ ] Disegno dell'arco attacco/difesa sul nido d'ape (read-only render).

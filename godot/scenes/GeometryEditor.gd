@@ -1,0 +1,612 @@
+## Editor visuale di geometria/effetti — Senjutsu (Fase 4)
+##
+## "Gemello digitale" editabile della faccia di una carta: si ricostruisce la
+## struttura TRASCINANDO le icone del gioco.
+##  - Nido d'ape (modello a 6 direzioni, come il motore): si trascinano ferite /
+##    esecuzione / sanguinamento sugli esagoni d'attacco e scudi su quelli di
+##    difesa. Ogni cella è un (d, k) → direzione relativa 0-5, anello 1-2.
+##  - Movimento: si trascinano frecce di passo NERE (obbligatorie) o BIANCHE
+##    (facoltative) e rotazioni, in una o più sequenze alternative ("OPPURE").
+##  - Kamae richiesto: token colorati (aggressione / equilibrio / determinazione).
+##  - counter (iniziative di contrattacco) e note.
+##
+## Gli `effects` esistenti sono PRESERVATI così come sono (editor dedicato in una
+## fase successiva). Serializza/deserializza lo Schema v2 (GEOMETRY_SCHEMA.md).
+class_name GeometryEditor
+extends VBoxContainer
+
+signal changed
+
+const RINGS := 2          ## anelli mostrati (dati reali: max k = 2)
+const HEX_R := 24.0       ## raggio esagono in px
+const HEX_D := 58.0       ## distanza centro→anello-1 in px
+
+# Colori icone.
+const COL_WOUND := Color(0.86, 0.30, 0.24)
+const COL_WOUND2 := Color(0.72, 0.13, 0.13)
+const COL_EXEC := Color(0.12, 0.12, 0.14)
+const COL_BLEED := Color(0.55, 0.30, 0.70)
+const COL_SHIELD := Color(0.30, 0.55, 0.85)
+const COL_TARGET := Color(0.45, 0.45, 0.5)
+const COL_PAWN := Color(0.85, 0.70, 0.30)
+
+const KAMAE_COLORS := {
+	"aggression": Color(0.86, 0.40, 0.30),
+	"balance": Color(0.40, 0.70, 0.45),
+	"determination": Color(0.45, 0.55, 0.85),
+}
+const KAMAE_LABELS := {
+	"aggression": "Aggressività", "balance": "Equilibrio", "determination": "Determinazione",
+}
+
+# ─── Modello dati ────────────────────────────────────────────────────────────
+var _type: String = "attack"
+var _attack: Dictionary = {}   ## Vector2i(d,k) -> ferite (int | "exec" | "bleed")
+var _defence: Dictionary = {}  ## Vector2i(d,k) -> valore blocco (int)
+var _opts: Array = []          ## Array[ Array[ {t,dir,n,opt} ] ]  (sequenze "OPPURE")
+var _kamae_req: String = ""
+var _counter: Array = []
+var _note: String = ""
+var _effects: Array = []       ## passthrough (non editati qui)
+var _name: String = ""
+
+# ─── Widget ──────────────────────────────────────────────────────────────────
+var _honey: Control
+var _hex_cells: Dictionary = {}   ## Vector2i(d,k) -> HexCell
+var _moves_box: VBoxContainer
+var _kamae_label: Label
+var _counter_edit: LineEdit
+var _note_edit: TextEdit
+var _built := false
+
+
+# ─── API pubblica ────────────────────────────────────────────────────────────
+
+## Carica la geometria di una carta (o {} per crearne una nuova).
+func load_geometry(card_type: String, geom: Dictionary) -> void:
+	_type = card_type if card_type != "" else str(geom.get("type", "attack"))
+	_name = str(geom.get("name", ""))
+	_attack = _cells_from(geom.get("attack", {}), "w")
+	_defence = _cells_from(geom.get("defence", {}), "v")
+	_opts = []
+	for opt in geom.get("move", {}).get("opts", []):
+		var atoms: Array = []
+		for a in opt.get("atoms", []):
+			atoms.append({
+				"t": str(a.get("t", "step")),
+				"dir": int(a.get("dir", 0)),
+				"n": int(a.get("n", 1)),
+				"opt": bool(a.get("opt", false)),
+			})
+		_opts.append(atoms)
+	_kamae_req = str(geom.get("kamae_req", ""))
+	_counter = []
+	for x in geom.get("counter", []):
+		_counter.append(int(x))
+	_effects = (geom.get("effects", []) as Array).duplicate(true)
+	_note = str(geom.get("note", ""))
+	if not _built:
+		_build_ui()
+	_refresh_all()
+
+
+## Serializza lo stato corrente nello Schema v2 (campi vuoti omessi).
+func to_geometry() -> Dictionary:
+	var g := {}
+	if _name != "":
+		g["name"] = _name
+	g["type"] = _type
+	if _kamae_req != "":
+		g["kamae_req"] = _kamae_req
+	var opts := []
+	for atoms in _opts:
+		if atoms.is_empty():
+			continue
+		var out_atoms := []
+		for a in atoms:
+			var atom := {"t": a["t"]}
+			if a["t"] == "step":
+				atom["dir"] = a["dir"]
+			atom["n"] = a["n"]
+			atom["opt"] = a["opt"]
+			out_atoms.append(atom)
+		opts.append({"atoms": out_atoms})
+	if not opts.is_empty():
+		g["move"] = {"opts": opts}
+	var acells := _cells_to(_attack, "w")
+	if not acells.is_empty():
+		g["attack"] = {"cells": acells}
+	var dcells := _cells_to(_defence, "v")
+	if not dcells.is_empty():
+		g["defence"] = {"cells": dcells}
+	if not _counter.is_empty():
+		g["counter"] = _counter
+	if not _effects.is_empty():
+		g["effects"] = _effects
+	if _note != "":
+		g["note"] = _note
+	return g
+
+
+# Mutatori pubblici (usati dal drag-drop e dai test headless).
+func set_attack_cell(d: int, k: int, w) -> void:
+	_attack[Vector2i(d, k)] = w
+	_after_change(Vector2i(d, k))
+
+func set_defence_cell(d: int, k: int, v: int) -> void:
+	_defence[Vector2i(d, k)] = v
+	_after_change(Vector2i(d, k))
+
+func clear_cell(d: int, k: int) -> void:
+	_attack.erase(Vector2i(d, k))
+	_defence.erase(Vector2i(d, k))
+	_after_change(Vector2i(d, k))
+
+func add_opt() -> int:
+	_opts.append([])
+	_rebuild_moves()
+	return _opts.size() - 1
+
+func add_move_atom(opt_idx: int, atom: Dictionary) -> void:
+	while _opts.size() <= opt_idx:
+		_opts.append([])
+	_opts[opt_idx].append(atom)
+	_rebuild_moves()
+	changed.emit()
+
+func set_kamae_req(slug: String) -> void:
+	_kamae_req = slug
+	if _kamae_label:
+		_update_kamae_label()
+	changed.emit()
+
+
+# ─── Costruzione UI ──────────────────────────────────────────────────────────
+
+func _build_ui() -> void:
+	_built = true
+	add_theme_constant_override("separation", 6)
+
+	# Tipo geometria + kamae richiesto.
+	var top := HBoxContainer.new()
+	var tl := Label.new()
+	tl.text = "Geometria visuale"
+	tl.add_theme_font_size_override("font_size", 15)
+	tl.add_theme_color_override("font_color", Color(0.7, 0.78, 0.9))
+	tl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	top.add_child(tl)
+	add_child(top)
+
+	_add_subtitle("Kamae richiesto  (clic per impostare/azzerare)")
+	var kr := HBoxContainer.new()
+	kr.add_theme_constant_override("separation", 6)
+	for slug in ["aggression", "balance", "determination"]:
+		var tok := DragIcon.new()
+		tok.setup(self, "kamae_" + slug, slug)
+		tok.custom_minimum_size = Vector2(2 * HEX_R, 2 * HEX_R)
+		tok.gui_input.connect(_on_kamae_token_input.bind(slug))
+		kr.add_child(tok)
+	var none := Button.new()
+	none.text = "nessuno"
+	none.pressed.connect(func(): set_kamae_req(""))
+	kr.add_child(none)
+	add_child(kr)
+	_kamae_label = Label.new()
+	_kamae_label.add_theme_font_size_override("font_size", 12)
+	add_child(_kamae_label)
+
+	# Nido d'ape + palette combattimento.
+	_add_subtitle("Combattimento — trascina le icone sugli esagoni  (clic destro = svuota)")
+	var combat := HBoxContainer.new()
+	combat.add_theme_constant_override("separation", 12)
+	_honey = Control.new()
+	var side := HEX_D * RINGS * 2.0 + HEX_R * 2.0
+	_honey.custom_minimum_size = Vector2(side, side)
+	combat.add_child(_honey)
+	combat.add_child(_build_combat_palette())
+	add_child(combat)
+
+	# Movimento.
+	_add_subtitle("Movimento — trascina frecce NERE (obblig.) / BIANCHE (facolt.) e rotazioni")
+	add_child(_build_move_palette())
+	_moves_box = VBoxContainer.new()
+	_moves_box.add_theme_constant_override("separation", 4)
+	add_child(_moves_box)
+	var add_opt_btn := Button.new()
+	add_opt_btn.text = "+ alternativa (OPPURE)"
+	add_opt_btn.pressed.connect(func(): add_opt())
+	add_child(add_opt_btn)
+
+	# Counter + note.
+	_add_subtitle("Contrattacco (iniziative, separate da virgola) e note")
+	_counter_edit = LineEdit.new()
+	_counter_edit.placeholder_text = "es. 8, 6"
+	_counter_edit.text_changed.connect(_on_counter_changed)
+	add_child(_counter_edit)
+	_note_edit = TextEdit.new()
+	_note_edit.custom_minimum_size = Vector2(0, 50)
+	_note_edit.placeholder_text = "annotazioni / incertezze di trascrizione"
+	_note_edit.text_changed.connect(func(): _note = _note_edit.text; changed.emit())
+	add_child(_note_edit)
+
+	_build_honeycomb()
+
+
+func _build_combat_palette() -> Control:
+	var col := VBoxContainer.new()
+	col.add_theme_constant_override("separation", 6)
+	var l := Label.new()
+	l.text = "Attacco"
+	l.add_theme_font_size_override("font_size", 12)
+	col.add_child(l)
+	for spec in [["w1", 1], ["w2", 2], ["exec", "exec"], ["bleed", "bleed"], ["w0", 0]]:
+		col.add_child(_palette_icon(spec[0], spec[1]))
+	var l2 := Label.new()
+	l2.text = "Difesa"
+	l2.add_theme_font_size_override("font_size", 12)
+	col.add_child(l2)
+	col.add_child(_palette_icon("shield", 1))
+	return col
+
+
+func _build_move_palette() -> Control:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 6)
+	for spec in [["step", false], ["step", true], ["rot", false], ["rot", true]]:
+		var di := DragIcon.new()
+		var kind: String = spec[0] + ("_opt" if spec[1] else "")
+		di.setup(self, kind, null)
+		di.custom_minimum_size = Vector2(2 * HEX_R, 2 * HEX_R)
+		row.add_child(di)
+	return row
+
+
+func _palette_icon(kind: String, value) -> DragIcon:
+	var di := DragIcon.new()
+	di.setup(self, kind, value)
+	di.custom_minimum_size = Vector2(2 * HEX_R, 2 * HEX_R)
+	return di
+
+
+func _build_honeycomb() -> void:
+	_hex_cells.clear()
+	for ch in _honey.get_children():
+		ch.queue_free()
+	var center := _honey.custom_minimum_size * 0.5
+	# Pedina al centro.
+	_add_hex_cell(center, 0, 0, true)
+	# Anelli 1..RINGS, 6 raggi clockwise dall'alto.
+	for k in range(1, RINGS + 1):
+		for d in range(6):
+			var pos := center + _dir_unit(d) * HEX_D * k
+			_add_hex_cell(pos, d, k, false)
+
+
+func _add_hex_cell(center_px: Vector2, d: int, k: int, is_pawn: bool) -> void:
+	var cell := HexCell.new()
+	cell.setup(self, d, k, HEX_R, is_pawn)
+	cell.position = center_px - Vector2(HEX_R, HEX_R)
+	cell.custom_minimum_size = Vector2(2 * HEX_R, 2 * HEX_R)
+	cell.size = cell.custom_minimum_size
+	_honey.add_child(cell)
+	if not is_pawn:
+		_hex_cells[Vector2i(d, k)] = cell
+
+
+func _add_subtitle(text: String) -> void:
+	add_child(HSeparator.new())
+	var l := Label.new()
+	l.text = text
+	l.add_theme_font_size_override("font_size", 12)
+	l.add_theme_color_override("font_color", Color(0.6, 0.66, 0.74))
+	add_child(l)
+
+
+static func _dir_unit(d: int) -> Vector2:
+	return Vector2.from_angle(deg_to_rad(-90.0 + 60.0 * d))
+
+
+# ─── Refresh ─────────────────────────────────────────────────────────────────
+
+func _refresh_all() -> void:
+	if not _built:
+		return
+	for key in _hex_cells:
+		_refresh_cell(key)
+	_rebuild_moves()
+	_update_kamae_label()
+	_counter_edit.text = ", ".join(_counter.map(func(x): return str(x)))
+	_note_edit.text = _note
+
+
+func _refresh_cell(key: Vector2i) -> void:
+	var cell: HexCell = _hex_cells.get(key)
+	if cell == null:
+		return
+	cell.atk = _attack.get(key, null)
+	cell.dfn = _defence.get(key, null)
+	cell.queue_redraw()
+
+
+func _update_kamae_label() -> void:
+	if _kamae_req == "":
+		_kamae_label.text = "kamae richiesto: nessuno"
+	else:
+		_kamae_label.text = "kamae richiesto: %s" % KAMAE_LABELS.get(_kamae_req, _kamae_req)
+
+
+func _rebuild_moves() -> void:
+	if _moves_box == null:
+		return
+	for ch in _moves_box.get_children():
+		ch.queue_free()
+	for i in _opts.size():
+		_moves_box.add_child(_build_opt_row(i))
+
+
+func _build_opt_row(opt_idx: int) -> Control:
+	var row := MoveOptRow.new()
+	row.setup(self, opt_idx)
+	row.add_theme_constant_override("separation", 4)
+	var tag := Label.new()
+	tag.text = ("seq %d:" % (opt_idx + 1)) if _opts.size() > 1 else "passi:"
+	tag.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
+	row.add_child(tag)
+	for ai in _opts[opt_idx].size():
+		row.add_child(_build_atom_chip(opt_idx, ai))
+	var hint := Label.new()
+	hint.text = "  ⟵ trascina qui"
+	hint.add_theme_color_override("font_color", Color(0.45, 0.45, 0.5))
+	hint.add_theme_font_size_override("font_size", 11)
+	row.add_child(hint)
+	return row
+
+
+func _build_atom_chip(opt_idx: int, atom_idx: int) -> Control:
+	var a: Dictionary = _opts[opt_idx][atom_idx]
+	var chip := HBoxContainer.new()
+	chip.add_theme_constant_override("separation", 2)
+
+	var glyph := Button.new()
+	glyph.custom_minimum_size = Vector2(40, 30)
+	glyph.add_theme_color_override("font_color", Color.BLACK if not a["opt"] else Color(0.2, 0.2, 0.2))
+	if a["t"] == "step":
+		glyph.text = "%s d%d" % ["▲" if not a["opt"] else "△", a["dir"]]
+		glyph.pressed.connect(_cycle_dir.bind(opt_idx, atom_idx))
+	else:
+		glyph.text = "↻" if not a["opt"] else "↺"
+	chip.add_child(glyph)
+
+	var sp := SpinBox.new()
+	sp.min_value = 1; sp.max_value = 6; sp.value = a["n"]
+	sp.value_changed.connect(func(v): _opts[opt_idx][atom_idx]["n"] = int(v); changed.emit())
+	chip.add_child(sp)
+
+	var opt_chk := CheckBox.new()
+	opt_chk.text = "opz"
+	opt_chk.button_pressed = a["opt"]
+	opt_chk.toggled.connect(func(p): _opts[opt_idx][atom_idx]["opt"] = p; _rebuild_moves(); changed.emit())
+	chip.add_child(opt_chk)
+
+	var rm := Button.new()
+	rm.text = "✕"
+	rm.pressed.connect(func():
+		_opts[opt_idx].remove_at(atom_idx)
+		_rebuild_moves(); changed.emit())
+	chip.add_child(rm)
+	return chip
+
+
+# ─── Handler ─────────────────────────────────────────────────────────────────
+
+func _on_cell_drop(cell, data: Dictionary) -> void:
+	var kind: String = data.get("kind", "")
+	var d: int = cell.d
+	var k: int = cell.k
+	match kind:
+		"w1": set_attack_cell(d, k, 1)
+		"w2": set_attack_cell(d, k, 2)
+		"w0": set_attack_cell(d, k, 0)
+		"exec": set_attack_cell(d, k, "exec")
+		"bleed": set_attack_cell(d, k, "bleed")
+		"shield": set_defence_cell(d, k, int(data.get("value", 1)))
+
+
+func _on_cell_clear(cell) -> void:
+	clear_cell(cell.d, cell.k)
+
+
+func _on_move_drop(opt_idx: int, data: Dictionary) -> void:
+	var kind: String = data.get("kind", "")
+	var is_opt := kind.ends_with("_opt")
+	var t := "rot" if kind.begins_with("rot") else "step"
+	add_move_atom(opt_idx, {"t": t, "dir": 0, "n": 1, "opt": is_opt})
+
+
+func _on_kamae_token_input(event: InputEvent, slug: String) -> void:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		set_kamae_req("" if _kamae_req == slug else slug)
+
+
+func _on_counter_changed(text: String) -> void:
+	_counter = []
+	for tok in text.split(","):
+		var s := tok.strip_edges()
+		if s.is_valid_int():
+			_counter.append(int(s))
+	changed.emit()
+
+
+func _cycle_dir(opt_idx: int, atom_idx: int) -> void:
+	var order := [0, 1, 2, 3, 4, 5, -1]
+	var cur: int = _opts[opt_idx][atom_idx]["dir"]
+	var i := order.find(cur)
+	_opts[opt_idx][atom_idx]["dir"] = order[(i + 1) % order.size()]
+	_rebuild_moves()
+	changed.emit()
+
+
+func _after_change(key: Vector2i) -> void:
+	_refresh_cell(key)
+	changed.emit()
+
+
+# ─── Conversione celle dict ↔ schema ─────────────────────────────────────────
+
+func _cells_from(section: Dictionary, value_key: String) -> Dictionary:
+	var out := {}
+	for cell in section.get("cells", []):
+		var key := Vector2i(int(cell.get("d", 0)), int(cell.get("k", 1)))
+		out[key] = _coerce(cell.get(value_key, 1))
+	return out
+
+
+func _cells_to(cells: Dictionary, value_key: String) -> Array:
+	var keys: Array = cells.keys()
+	keys.sort_custom(func(a, b): return a.y < b.y if a.y != b.y else a.x < b.x)
+	var out := []
+	for key in keys:
+		out.append({"d": key.x, "k": key.y, value_key: _coerce(cells[key])})
+	return out
+
+
+## Le ferite/blocco sono interi (`int`) tranne i marcatori string "exec"/"bleed".
+## JSON può restituire i numeri come float: normalizziamo a int per JSON puliti.
+static func _coerce(v):
+	return v if typeof(v) == TYPE_STRING else int(v)
+
+
+# ─── Disegno icone (condiviso da celle e palette) ────────────────────────────
+
+static func draw_icon(ci: CanvasItem, kind: String, c: Vector2, r: float, value) -> void:
+	var font := ThemeDB.fallback_font
+	match kind:
+		"w1", "w2", "w0", "exec", "bleed":
+			var col := COL_WOUND
+			var txt := "1"
+			if kind == "w2": col = COL_WOUND2; txt = "2"
+			elif kind == "w0": col = COL_TARGET; txt = "·"
+			elif kind == "exec": col = COL_EXEC; txt = "✕"
+			elif kind == "bleed": col = COL_BLEED; txt = "≈"
+			ci.draw_circle(c, r * 0.62, col)
+			_draw_centered(ci, font, c, txt, Color.WHITE, int(r))
+		"shield":
+			ci.draw_circle(c, r * 0.62, COL_SHIELD)
+			_draw_centered(ci, font, c, "▽" + str(value), Color.WHITE, int(r * 0.9))
+		"kamae_aggression", "kamae_balance", "kamae_determination":
+			var slug := kind.substr(6)
+			ci.draw_circle(c, r * 0.62, KAMAE_COLORS.get(slug, Color.GRAY))
+			ci.draw_arc(c, r * 0.62, 0, TAU, 24, Color.WHITE, 2.0)
+		"step", "step_opt":
+			var filled := kind == "step"
+			ci.draw_circle(c, r * 0.62, Color.BLACK if filled else Color(0.92, 0.92, 0.92))
+			_draw_centered(ci, font, c, "▲", Color.WHITE if filled else Color.BLACK, int(r))
+		"rot", "rot_opt":
+			var filled := kind == "rot"
+			ci.draw_circle(c, r * 0.62, Color.BLACK if filled else Color(0.92, 0.92, 0.92))
+			_draw_centered(ci, font, c, "↻", Color.WHITE if filled else Color.BLACK, int(r))
+
+
+static func _draw_centered(ci: CanvasItem, font: Font, c: Vector2, text: String, col: Color, fs: int) -> void:
+	if font == null:
+		return
+	var sz := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs)
+	ci.draw_string(font, c - sz * 0.5 + Vector2(0, sz.y * 0.35), text,
+		HORIZONTAL_ALIGNMENT_LEFT, -1, fs, col)
+
+
+# ─── Inner class: esagono droppabile ─────────────────────────────────────────
+
+class HexCell extends Control:
+	var ed: GeometryEditor
+	var d: int
+	var k: int
+	var r: float
+	var is_pawn: bool
+	var atk = null   ## ferite (int|String) o null
+	var dfn = null   ## valore blocco (int) o null
+
+	func setup(editor: GeometryEditor, dd: int, kk: int, rr: float, pawn: bool) -> void:
+		ed = editor; d = dd; k = kk; r = rr; is_pawn = pawn
+		mouse_filter = Control.MOUSE_FILTER_STOP
+		tooltip_text = "pedina" if pawn else "dir %d · anello %d" % [d, k]
+
+	func _draw() -> void:
+		var c := Vector2(r, r)
+		var pts := PackedVector2Array()
+		for i in range(6):
+			pts.append(c + Vector2.from_angle(deg_to_rad(-90 + 60 * i)) * r * 0.92)
+		var bg := Color(0.18, 0.18, 0.22)
+		if is_pawn:
+			bg = Color(0.22, 0.20, 0.12)
+		elif atk != null or dfn != null:
+			bg = Color(0.24, 0.24, 0.30)
+		draw_colored_polygon(pts, bg)
+		pts.append(pts[0])
+		draw_polyline(pts, Color(0.45, 0.45, 0.5), 1.5)
+		if is_pawn:
+			var tri := PackedVector2Array([c + Vector2(0, -r * 0.4), c + Vector2(-r * 0.4, r * 0.35), c + Vector2(r * 0.4, r * 0.35)])
+			draw_colored_polygon(tri, GeometryEditor.COL_PAWN)
+			return
+		if atk != null:
+			var kind := "w1"
+			if typeof(atk) == TYPE_STRING:
+				kind = "exec" if atk == "exec" else ("bleed" if atk == "bleed" else "w1")
+			else:
+				var n := int(atk)
+				kind = "w2" if n == 2 else ("w0" if n == 0 else "w1")
+			GeometryEditor.draw_icon(self, kind, c if dfn == null else c - Vector2(0, r * 0.32), r * (1.0 if dfn == null else 0.6), atk)
+		if dfn != null:
+			GeometryEditor.draw_icon(self, "shield", c if atk == null else c + Vector2(0, r * 0.32), r * (1.0 if atk == null else 0.6), int(dfn))
+
+	func _can_drop_data(_pos: Vector2, data) -> bool:
+		return not is_pawn and data is Dictionary and data.has("kind")
+
+	func _drop_data(_pos: Vector2, data) -> void:
+		ed._on_cell_drop(self, data)
+
+	func _gui_input(event: InputEvent) -> void:
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
+			ed._on_cell_clear(self)
+
+
+# ─── Inner class: icona trascinabile (palette / token) ───────────────────────
+
+class DragIcon extends Control:
+	var ed: GeometryEditor
+	var kind: String
+	var value
+
+	func setup(editor: GeometryEditor, k: String, v) -> void:
+		ed = editor; kind = k; value = v
+		mouse_filter = Control.MOUSE_FILTER_STOP
+		tooltip_text = k
+
+	func _draw() -> void:
+		GeometryEditor.draw_icon(self, kind, size * 0.5, minf(size.x, size.y) * 0.5, value)
+
+	func _get_drag_data(_pos: Vector2):
+		var prev := DragIcon.new()
+		prev.setup(ed, kind, value)
+		prev.custom_minimum_size = size
+		prev.size = size
+		set_drag_preview(prev)
+		return {"kind": kind, "value": value}
+
+
+# ─── Inner class: riga di una sequenza di movimento (drop target) ────────────
+
+class MoveOptRow extends HBoxContainer:
+	var ed: GeometryEditor
+	var opt_idx: int
+
+	func setup(editor: GeometryEditor, idx: int) -> void:
+		ed = editor; opt_idx = idx
+		mouse_filter = Control.MOUSE_FILTER_STOP
+
+	func _can_drop_data(_pos: Vector2, data) -> bool:
+		return data is Dictionary and str(data.get("kind", "")).begins_with("step") \
+			or data is Dictionary and str(data.get("kind", "")).begins_with("rot")
+
+	func _drop_data(_pos: Vector2, data) -> void:
+		ed._on_move_drop(opt_idx, data)

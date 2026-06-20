@@ -24,12 +24,38 @@ func _ready() -> void:
 	var list: ItemList = editor._list
 	_check(list != null and list.item_count > 0, "elenco popolato (%d carte)" % (list.item_count if list else -1))
 
-	# Seleziona la prima carta e verifica che il dettaglio si costruisca.
+	# Seleziona la prima carta e verifica che il form editabile si costruisca.
 	editor._on_item_selected(0)
 	await get_tree().process_frame
-	_check(editor._selected_id > 0, "carta selezionata id=%d" % editor._selected_id)
-	_check(editor._detail.get_child_count() > 1, "pannello dettaglio costruito")
+	_check(editor._current_id > 0, "carta selezionata id=%d" % editor._current_id)
+	_check(editor._form.get_child_count() > 1, "form di dettaglio costruito")
 	_check(editor._preview_holder.get_child_count() == 1, "anteprima CardView creata")
+	_check(editor._w.has("name") and editor._w.has("keywords"), "widget editabili presenti")
+
+	# Ricalcolo automatico di type dai keywords.
+	editor._w["keywords"].text = "Defence"
+	editor._recalc_type()
+	_check(editor._collect_fields().get("type", "") == "defence", "type ricalcolato da keywords")
+
+	# «Nuova» crea una carta-utente non salvata con id >= 10000.
+	editor._on_new()
+	await get_tree().process_frame
+	_check(editor._current_id >= 10000 and editor._pending_new, "Nuova: id-utente pending #%d" % editor._current_id)
+	_check(editor._btn_remove.disabled, "Rimuovi-override disabilitato su carta nuova")
+	_check(not editor._btn_save.disabled, "Salva abilitato su carta nuova")
+
+	# «Duplica» richiede una carta esistente: riselezioniamo e duplichiamo.
+	editor._on_item_selected(0)
+	var base_id: int = editor._current_id
+	editor._on_duplicate()
+	await get_tree().process_frame
+	_check(editor._current_id >= 10000 and editor._pending_new, "Duplica: nuova carta-utente pending")
+	_check(editor._current_id != base_id, "duplicato ha un id diverso dall'originale #%d" % base_id)
+	_check(editor._collect_fields().get("name", "").ends_with("(copia)"), "duplicato marcato (copia)")
+
+	# «Annulla» su carta nuova la scarta senza crash.
+	editor._on_cancel()
+	_check(editor._current_id == -1 and not editor._pending_new, "Annulla scarta la carta nuova")
 
 	# Un filtro testuale assurdo deve svuotare l'elenco senza crash.
 	editor._search.text = "zzz_nessuna_carta_zzz"
