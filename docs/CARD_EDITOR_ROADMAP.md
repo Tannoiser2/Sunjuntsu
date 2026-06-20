@@ -244,13 +244,13 @@ Queste scelte cambiano l'architettura; vanno fissate **prima** di Fase 2.
       `card_images.json` (+`.bak`).
 - [x] Import/crop di una nuova immagine dal disco (FileDialog → ritaglio
       aspect-locked al formato carta → webp in `assets/cards/{slug}/`).
-- [ ] Undo/redo nell'editor.
+- [x] Undo/redo nell'editor (cronologia working-state di anagrafica + geometria,
+      bottoni in toolbar + Ctrl+Z / Ctrl+Shift+Z / Ctrl+Y).
 - [ ] Aggiornare `tests/test_allcards` se cambia la struttura dati.
 
-> **Stato 2026-06-20:** M4 — immagini operative (`ImageCropDialog.gd`,
-> `CardStore.save_image_for/crop_and_save_webp/list_card_images`). Resta solo
-> undo/redo. Test headless `test_cardimages` verde su Godot 4.6 (scan, slug,
-> naming, crop→463×645 webp).
+> **Stato 2026-06-20:** M4 completata — immagini + undo/redo. L'editor copre
+> **ogni aspetto di ogni carta**. Resta solo l'opzionale Fase 5 (tester "Simula
+> carta"). 7 suite di test headless verdi su Godot 4.6.
 
 ---
 

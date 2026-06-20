@@ -37,6 +37,21 @@ func _ready() -> void:
 	editor._recalc_type()
 	_check(editor._collect_fields().get("type", "") == "defence", "type ricalcolato da keywords")
 
+	# Undo/redo: una modifica alla geometria si annulla e si ripristina.
+	editor._on_item_selected(0)
+	await get_tree().process_frame
+	var base_atk: int = editor._geom_editor.to_geometry().get("attack", {}).get("cells", []).size()
+	_check(editor._btn_undo.disabled, "Undo disabilitato al caricamento")
+	editor._geom_editor.set_attack_cell(0, 1, 2)
+	_check(editor._geom_editor.to_geometry().get("attack", {}).get("cells", []).size() == base_atk + 1, "cella aggiunta")
+	_check(not editor._btn_undo.disabled, "Undo abilitato dopo una modifica")
+	editor._undo()
+	await get_tree().process_frame
+	_check(editor._geom_editor.to_geometry().get("attack", {}).get("cells", []).size() == base_atk, "Undo ripristina lo stato precedente")
+	editor._redo()
+	await get_tree().process_frame
+	_check(editor._geom_editor.to_geometry().get("attack", {}).get("cells", []).size() == base_atk + 1, "Redo riapplica la modifica")
+
 	# «Nuova» crea una carta-utente non salvata con id >= 10000.
 	editor._on_new()
 	await get_tree().process_frame
