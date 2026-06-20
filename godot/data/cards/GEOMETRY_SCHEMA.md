@@ -68,8 +68,10 @@ agganciata al **numero stampato sulla carta** (= Card ID).
 | `type` | string (enum) | `attack` \| `defence` \| `meditation` \| `core`. |
 | `kamae_req` | string (enum, opz.) | Kamae richiesto: `aggression` \| `balance` \| `determination`. |
 | `move` | object (opz.) | `{ "opts": [ Opzione, … ] }` — vedi **Movimento**. |
-| `attack` | object (opz.) | `{ "cells": [ Cella, … ] }` — celle offensive. |
-| `defence` | object (opz.) | `{ "cells": [ Cella, … ] }` — celle protette. |
+| `attack` | object (opz.) | `{ "cells": [ Cella, … ] }` — celle offensive (variante unica). |
+| `attacks` | array[object] (opz.) | **Più varianti d'attacco**, ciascuna `{ "cells": […], "kamae": "<slug>"? }`. Il motore usa la variante il cui `kamae` combacia con la posa (stance) dell'attaccante; in mancanza, quella senza `kamae`. In alternativa a `attack`. |
+| `defence` | object (opz.) | `{ "cells": [ Cella, … ] }` — celle protette (variante unica). |
+| `defences` | array[object] (opz.) | Più varianti di difesa gated da `kamae`, come `attacks`. |
 | `counter` | array[int] (opz.) | Iniziative a cui scatta il contrattacco. |
 | `effects` | array[object] (opz.) | Effetti ordinati — vedi **Effetti**. |
 | `note` | string (opz.) | Note di trascrizione / incertezze (es. `"… DA VERIFICARE"`). |

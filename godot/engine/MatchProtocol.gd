@@ -209,8 +209,8 @@ func _resolve_data() -> Dictionary:
 	var legal_facings: Array = (_rreach.get(f.cell, []) as Array)
 	# Bersagli d'attacco visibili (per l'anteprima sul telefono).
 	var targets: Array = []
-	if g.get("type", "") == "attack" or g.has("attack"):
-		for cell in Duel.attack_v2_cells(f.cell, f.facing, g, 1):
+	if g.get("type", "") == "attack" or g.has("attack") or g.has("attacks"):
+		for cell in Duel.attack_v2_cells(f.cell, f.facing, g, 1, f.stance):
 			targets.append(_cell_key(cell))
 	return {
 		"card": CardDB.card(state.fighters[_rseat].planned).get("name", "Parte bassa") if not _rsplit else "Parte bassa",
