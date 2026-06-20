@@ -94,10 +94,10 @@ static func plan_move(state: GameState, me: GameState.Fighter, geom: Dictionary)
 	var threat := {}
 	if foe.planned != -1:
 		var fg := CardDB.geometry(foe.planned)
-		if fg.has("attack"):
-			for cell in Duel.attack_v2_cells(foe.cell, foe.facing, fg, 1):
+		if fg.has("attack") or fg.has("attacks"):
+			for cell in Duel.attack_v2_cells(foe.cell, foe.facing, fg, 1, foe.stance):
 				threat[cell] = true
-	var has_atk: bool = geom.has("attack")
+	var has_atk: bool = geom.has("attack") or geom.has("attacks")
 	var rear: Vector2i = foe.cell + HexGrid.DIRS[(foe.facing + 3) % 6]
 	var desired_dir: int = _approach_dir(foe.facing, me.ai_approach)
 	var best_state := start
@@ -108,7 +108,7 @@ static func plan_move(state: GameState, me: GameState.Fighter, geom: Dictionary)
 		var can_atk := 0
 		var wounds := 0
 		if has_atk:
-			var cells := Duel.attack_v2_cells(c, fc, geom, 1)
+			var cells := Duel.attack_v2_cells(c, fc, geom, 1, me.stance)
 			if cells.has(foe.cell):
 				can_atk = 1
 				wounds = int(cells[foe.cell])

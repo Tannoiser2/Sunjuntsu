@@ -659,7 +659,7 @@ func _resolve_attack_top(i: int, g: Dictionary, name: String, log: Array, chosen
 	if foe_idx == -1:
 		return
 	var foe := state.fighters[foe_idx]
-	var cells := attack_v2_cells(f.cell, f.facing, g, _card_range(CardDB.card(f.planned)))
+	var cells := attack_v2_cells(f.cell, f.facing, g, _card_range(CardDB.card(f.planned)), f.stance)
 	if not cells.has(foe.cell):
 		log.append("%s usa %s ma il bersaglio è fuori arco/portata (dist %d)" % [
 			f.character, name, HexGrid.distance(f.cell, foe.cell)])
@@ -675,7 +675,8 @@ func _resolve_attack_top(i: int, g: Dictionary, name: String, log: Array, chosen
 			f.character, name, atk_speed, foe.character])
 		return
 	var raw = cells.get(foe.cell, g.get("wounds", 1))
-	var kind: String = "exec" if str(raw) == "exec" else g.get("wound_kind", "normal")
+	var act := _active_variant(g, "attack", "attacks", f.stance)
+	var kind: String = "exec" if str(raw) == "exec" else str(act.get("wound_kind", g.get("wound_kind", "normal")))
 	var n: int = 0 if str(raw) == "exec" else int(raw)
 	if kind == "exec":
 		foe.wounds.append("exec"); foe.wounds.resize(foe.wound_limit)
@@ -796,7 +797,7 @@ func attack_hits_now(i: int) -> bool:
 	var fo := _opponent_index(i)
 	if fo == -1:
 		return false
-	return attack_v2_cells(f.cell, f.facing, CardDB.geometry(f.planned), _card_range(c)).has(state.fighters[fo].cell)
+	return attack_v2_cells(f.cell, f.facing, CardDB.geometry(f.planned), _card_range(c), f.stance).has(state.fighters[fo].cell)
 
 
 ## Esiste una posizione raggiungibile con le mosse della carta da cui l'attacco
@@ -813,14 +814,14 @@ func attack_can_hit(i: int) -> bool:
 		return false
 	var foe_cell: Vector2i = state.fighters[fo].cell
 	var g := CardDB.geometry(f.planned)
-	if attack_v2_cells(f.cell, f.facing, g, _card_range(c)).has(foe_cell):
+	if attack_v2_cells(f.cell, f.facing, g, _card_range(c), f.stance).has(foe_cell):
 		return true
 	if not g.has("move"):
 		return false
 	var reach := Move.reachable_by_cell(f.cell, f.facing, g["move"], state.is_blocked, Domain.STANCE_SLUG[f.stance])
 	for cell in reach.keys():
 		for fc in reach[cell]:
-			if attack_v2_cells(cell, fc, g, 1).has(foe_cell):
+			if attack_v2_cells(cell, fc, g, 1, f.stance).has(foe_cell):
 				return true
 	return false
 
@@ -843,7 +844,7 @@ func _collect_block_hexes(def_idx: int, atk_speed: int) -> Dictionary:
 	if dfn.planned != -1 and not _fizzled.has(def_idx) \
 			and matches \
 			and CardDB.card(dfn.planned).get("type", "") == "defence":
-		for cell in defence_v2_cells(dfn.cell, dfn.facing, CardDB.geometry(dfn.planned)).keys():
+		for cell in defence_v2_cells(dfn.cell, dfn.facing, CardDB.geometry(dfn.planned), dfn.stance).keys():
 			blocks[cell] = true
 		from_def = true
 	return {"blocks": blocks, "from_def": from_def}
@@ -923,27 +924,60 @@ func _try_counter(def_idx: int, att_idx: int, atk_speed: int, log: Array) -> voi
 ## Celle bersaglio (cella → ferite) dalla geometria v2 `attack.cells`
 ## (ogni cella: d=direzione relativa 0..5, k=anello 1.., w=ferite). Se assente,
 ## ripiega sullo schema vecchio (dirs+range, ferite uniformi).
-static func attack_v2_cells(origin: Vector2i, facing: int, geom: Dictionary, fallback_range: int) -> Dictionary:
+static func attack_v2_cells(origin: Vector2i, facing: int, geom: Dictionary, fallback_range: int, stance: int = -1) -> Dictionary:
 	var out := {}
-	var atk = geom.get("attack", null)
-	if atk != null and not (atk.get("cells", []) as Array).is_empty():
+	var atk := _active_variant(geom, "attack", "attacks", stance)
+	if not atk.is_empty() and not (atk.get("cells", []) as Array).is_empty():
 		for cell_def in atk.get("cells", []):
 			out[origin + _cell_offset(cell_def, facing)] = cell_def.get("w", 1)   # int o "exec"
 		return out
+	if geom.has("attacks") or geom.get("attack", null) != null:
+		return out   # ci sono varianti d'attacco ma nessuna attiva nella kamae corrente
 	# fallback schema vecchio
 	for cell in attack_cells(origin, facing, geom, fallback_range):
 		out[cell] = int(geom.get("wounds", 1))
 	return out
 
 
-## Celle difese (cella → valore di blocco) dalla geometria v2 `defence.cells`.
-static func defence_v2_cells(origin: Vector2i, facing: int, geom: Dictionary) -> Dictionary:
+## Difesa v2 `defence.cells` (cella → valore di blocco). Supporta più varianti
+## `defences` gated da kamae: si usa quella attiva per la `stance` del difensore.
+static func defence_v2_cells(origin: Vector2i, facing: int, geom: Dictionary, stance: int = -1) -> Dictionary:
 	var out := {}
-	var dfn = geom.get("defence", null)
-	if dfn != null:
-		for cell_def in dfn.get("cells", []):
-			out[origin + _cell_offset(cell_def, facing)] = int(cell_def.get("v", 0))
+	var dfn := _active_variant(geom, "defence", "defences", stance)
+	for cell_def in dfn.get("cells", []):
+		out[origin + _cell_offset(cell_def, facing)] = int(cell_def.get("v", 0))
 	return out
+
+
+## Variante di combattimento (attacco o difesa) attiva data la kamae (stance):
+## `array_key` (es. "attacks") è una lista di varianti, ciascuna con un eventuale
+## gate `kamae`; `single_key` (es. "attack") è la forma classica a variante unica
+## (retro-compatibile). Sceglie la variante gated che combacia con la stance,
+## altrimenti quella senza gate. In risoluzione (stance>=0) senza match → {}.
+static func _active_variant(geom: Dictionary, single_key: String, array_key: String, stance: int) -> Dictionary:
+	var variants: Array = []
+	if geom.has(array_key):
+		for v in geom[array_key]:
+			if v is Dictionary:
+				variants.append(v)
+	elif geom.get(single_key, null) != null:
+		variants.append(geom[single_key])
+	if variants.is_empty():
+		return {}
+	var slug := ""
+	if stance >= 0 and stance < Domain.STANCE_SLUG.size():
+		slug = str(Domain.STANCE_SLUG[stance])
+	var ungated := {}
+	var has_ungated := false
+	for v in variants:
+		var k := str(v.get("kamae", ""))
+		if k != "" and k == slug:
+			return v                      # variante gated attiva
+		if k == "":
+			ungated = v; has_ungated = true
+	if has_ungated:
+		return ungated
+	return variants[0] if stance < 0 else {}
 
 
 ## Offset (assiale) di una cella carta dato il facing. Supporta lo schema nuovo
