@@ -43,6 +43,7 @@ func _cell_label(ge: GeometryEditor, ax: Vector2i) -> String:
 func _ready() -> void:
 	_test_roundtrip()
 	_test_mutators()
+	_test_move_fidelity()
 	_test_effects()
 	if _failures == 0:
 		print("GEOMETRY EDITOR DONE ok")
@@ -123,6 +124,30 @@ func _test_mutators() -> void:
 	_check(g2.get("kamae_req", "") == "balance", "kamae_req impostato")
 	_check(g2.get("counter", []) == [8, 6], "counter parsato dagli interi")
 	ge.queue_free()
+
+
+func _test_move_fidelity() -> void:
+	print("[movimento: fedeltà dirs/kamae/focus/-1]")
+	# #57 ha: step dirs[0,3] kamae focus_cost, step dir -1 focus_cost, rot kamae.
+	var ge := GeometryEditor.new()
+	add_child(ge)
+	ge.load_geometry("attack", CardDB.geometry(57))
+	var atoms: Array = ge.to_geometry().get("move", {}).get("opts", [])[0].get("atoms", [])
+	_check(atoms.size() == 3, "#57: 3 atomi preservati (%d)" % atoms.size())
+	_check(atoms[0].get("dirs", []) == [0, 3], "scelta di direzioni {dirs:[0,3]} preservata")
+	_check(str(atoms[0].get("kamae", "")) == "aggression", "kamae sull'atomo preservato")
+	_check(int(atoms[1].get("dir", 0)) == -1, "passo libero (dir -1) preservato")
+	_check(int(atoms[1].get("focus_cost", 0)) == 1, "focus_cost sull'atomo preservato")
+	_check(atoms[2].get("t") == "rot" and str(atoms[2].get("kamae", "")) == "determination",
+		"rotazione con kamae preservata")
+	ge.queue_free()
+
+	# Round-trip a due opzioni (#60: OPPURE).
+	var ge2 := GeometryEditor.new()
+	add_child(ge2)
+	ge2.load_geometry("attack", CardDB.geometry(60))
+	_check(ge2.to_geometry().get("move", {}).get("opts", []).size() == 2, "#60: due alternative OPPURE preservate")
+	ge2.queue_free()
 
 
 func _test_effects() -> void:
