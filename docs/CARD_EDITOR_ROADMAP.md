@@ -239,10 +239,18 @@ Queste scelte cambiano l'architettura; vanno fissate **prima** di Fase 2.
       e mostra l'esito (riusa engine, niente GUI 3D).
 
 ### Fase 6 — Immagini & rifiniture
-- [ ] Associare/cambiare l'immagine di una carta (picker dai file in `assets/cards`).
-- [ ] (Opz.) integrare il flusso di import/crop da PDF (oggi in `tools/`).
+- [x] Associare/cambiare l'immagine di una carta (picker a miniature dai file in
+      `assets/cards`, cartella del personaggio in cima) + salvataggio in
+      `card_images.json` (+`.bak`).
+- [x] Import/crop di una nuova immagine dal disco (FileDialog → ritaglio
+      aspect-locked al formato carta → webp in `assets/cards/{slug}/`).
 - [ ] Undo/redo nell'editor.
 - [ ] Aggiornare `tests/test_allcards` se cambia la struttura dati.
+
+> **Stato 2026-06-20:** M4 — immagini operative (`ImageCropDialog.gd`,
+> `CardStore.save_image_for/crop_and_save_webp/list_card_images`). Resta solo
+> undo/redo. Test headless `test_cardimages` verde su Godot 4.6 (scan, slug,
+> naming, crop→463×645 webp).
 
 ---
 

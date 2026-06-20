@@ -242,6 +242,80 @@ func save_images(by_id: Dictionary, note := "") -> Dictionary:
 	return save_json(IMAGES_PATH, payload, "  ", false)
 
 
+## Associa (o azzera, con "") l'immagine di una carta in card_images.json,
+## preservando le altre voci. `rel_path` è relativo a res://assets/cards/.
+func save_image_for(id: int, rel_path: String) -> Dictionary:
+	var parsed = read_json(IMAGES_PATH)
+	var by := {}
+	var note := ""
+	if typeof(parsed) == TYPE_DICTIONARY:
+		by = parsed.get("by_id", {})
+		note = parsed.get("note", "")
+	if rel_path == "":
+		by.erase(str(id))
+	else:
+		by[str(id)] = rel_path
+	return save_images(by, note)
+
+
+## Elenco delle immagini disponibili sotto res://assets/cards/, come percorsi
+## relativi (es. "warrior/warrior_01.webp"). Ordinato.
+static func list_card_images() -> Array:
+	var out: Array = []
+	_scan_webp("res://assets/cards/", "", out)
+	out.sort()
+	return out
+
+
+static func _scan_webp(base: String, rel: String, out: Array) -> void:
+	var d := DirAccess.open(base + rel)
+	if d == null:
+		return
+	d.list_dir_begin()
+	var f := d.get_next()
+	while f != "":
+		if d.current_is_dir():
+			if not f.begins_with("."):
+				_scan_webp(base, rel + f + "/", out)
+		elif f.to_lower().ends_with(".webp"):
+			out.append(rel + f)
+		f = d.get_next()
+	d.list_dir_end()
+
+
+## Primo nome libero "{slug}/{slug}_NN.webp" per un personaggio (per l'import).
+static func next_image_name(char_slug: String) -> String:
+	var existing := list_card_images()
+	var n := 1
+	while ("%s/%s_%02d.webp" % [char_slug, char_slug, n]) in existing:
+		n += 1
+	return "%s/%s_%02d.webp" % [char_slug, char_slug, n]
+
+
+## Slug-cartella per un personaggio (es. "Gen. Ability" -> "gen_ability").
+static func char_slug(character: String) -> String:
+	var s := character.to_lower().strip_edges()
+	s = s.replace(".", "").replace("/", "_").replace(" ", "_")
+	return s
+
+
+## Ritaglia `region` (px sull'immagine sorgente), ridimensiona al formato carta
+## e salva in res://assets/cards/<dest_rel> come webp. Logica pura/testabile.
+static func crop_and_save_webp(src: Image, region: Rect2i, dest_rel: String, out_w := 463, out_h := 645) -> Dictionary:
+	var bounds := Rect2i(Vector2i.ZERO, src.get_size())
+	var reg := region.intersection(bounds)
+	if reg.size.x <= 0 or reg.size.y <= 0:
+		return {"ok": false, "error": "regione di ritaglio vuota"}
+	var cropped := src.get_region(reg)
+	cropped.resize(out_w, out_h, Image.INTERPOLATE_LANCZOS)
+	var abs_path := "res://assets/cards/" + dest_rel
+	DirAccess.make_dir_recursive_absolute(abs_path.get_base_dir())
+	var err := cropped.save_webp(abs_path, false, 0.92)
+	if err != OK:
+		return {"ok": false, "error": "save_webp errore %d" % err}
+	return {"ok": true, "path": dest_rel}
+
+
 ## Aggiorna la geometria di UNA carta preservando le altre, la nota e i
 ## `characters`, poi riscrive l'intero geometry.json (scrittura atomica + .bak).
 func save_card_geometry(id: int, geom: Dictionary) -> Dictionary:
