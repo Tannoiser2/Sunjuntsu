@@ -23,6 +23,10 @@ const IMAGES_PATH := "res://data/cards/card_images.json"
 ## Override anagrafici in memoria: id (String) -> { campo: valore }.
 var overrides: Dictionary = {}
 
+## Pool ORIGINALE (Excel) indicizzato per id, senza overlay. Caricato pigro:
+## serve a calcolare l'override minimo (delta) e a ripristinare una carta.
+var _pristine: Dictionary = {}
+
 
 # ─── I/O di basso livello ────────────────────────────────────────────────────
 
@@ -102,6 +106,88 @@ func clear_override(id: int) -> void:
 ## Override di una carta come dict (vuoto se assente).
 func get_override(id: int) -> Dictionary:
 	return overrides.get(str(id), {})
+
+
+# ─── Pool pristine, delta e allocazione id ───────────────────────────────────
+
+func _ensure_pristine() -> void:
+	if not _pristine.is_empty():
+		return
+	var parsed = read_json(POOL_PATH)
+	if typeof(parsed) == TYPE_DICTIONARY:
+		for c in parsed.get("cards", []):
+			_pristine[int(c.get("id", -1))] = c
+
+
+## True se la carta esiste nel pool generato dall'Excel (non è una carta-utente).
+func has_pristine(id: int) -> bool:
+	_ensure_pristine()
+	return _pristine.has(id)
+
+
+## Carta originale (Excel) per id, senza overlay applicato; {} se id-utente.
+func pristine_card(id: int) -> Dictionary:
+	_ensure_pristine()
+	return _pristine.get(id, {})
+
+
+## Override minimo da salvare per una carta:
+##  - carta dell'Excel: SOLO i campi che differiscono dall'originale (così future
+##    modifiche dell'Excel ai campi non toccati continuano a passare);
+##  - carta nuova (id-utente, non nel pool): il record completo.
+## Un dict vuoto significa "nessuna differenza" → l'override va rimosso.
+func compute_override(id: int, edited: Dictionary) -> Dictionary:
+	_ensure_pristine()
+	if not _pristine.has(id):
+		return edited.duplicate(true)
+	var base: Dictionary = _pristine[id]
+	var diff := {}
+	for k in edited.keys():
+		if base.get(k, null) != edited[k]:
+			diff[k] = edited[k]
+	return diff
+
+
+## Primo id libero >= floor_id (default 10000, intervallo riservato alle carte
+## create dall'editor: non collide col pool Excel, con le carte di stato (id
+## negativi) né coi mazzi SOLO).
+func next_free_id(used_ids: Array, floor_id := 10000) -> int:
+	var used := {}
+	for u in used_ids:
+		used[int(u)] = true
+	var id := floor_id
+	while used.has(id):
+		id += 1
+	return id
+
+
+## Tipo della carta DEDOTTO dai keywords (regola §3.1): priorità
+## attack > defence > meditation > core > altrimenti other. I keyword combinati
+## tipo "Attack/Defence" valgono per entrambe le parti.
+static func derive_type(keywords) -> String:
+	var s := {}
+	if keywords is Array:
+		for k in keywords:
+			for part in str(k).split("/"):
+				s[part.strip_edges().to_lower()] = true
+	if s.has("attack"):
+		return "attack"
+	if s.has("defence"):
+		return "defence"
+	if s.has("meditation"):
+		return "meditation"
+	if s.has("core"):
+		return "core"
+	return "other"
+
+
+## Record di default per una nuova carta (id-utente).
+static func new_card_template(id: int, character: String) -> Dictionary:
+	return {
+		"id": id, "name": "Nuova Carta", "char": character,
+		"amount": 1, "rank": "Wood", "initiative": "-",
+		"focus": 0, "keywords": [], "type": "other",
+	}
 
 
 ## Salva l'overlay anagrafica su disco (chiavi ordinate, diff git stabili).

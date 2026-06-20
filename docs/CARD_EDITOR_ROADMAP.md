@@ -193,13 +193,19 @@ Queste scelte cambiano l'architettura; vanno fissate **prima** di Fase 2.
 > `test_cardstore`, `test_cardeditor_smoke`, `test_allcards` (regressione ok).
 > Prossimo: Fase 2 (editing anagrafica via overlay).
 
-### Fase 2 — Editing anagrafica (scrittura)
-- [ ] Form editabile dei campi `card_pool` con widget tipizzati (dropdown per
-      `char/rank/type`, multi-select+autocomplete per `keywords`).
-- [ ] Ricalcolo automatico di `type` dai `keywords`.
-- [ ] Salvataggio secondo la decisione §4.1 (overlay/diretto) + `.bak`.
-- [ ] Creazione **nuova carta** con allocazione `id` libero.
-- [ ] Duplica carta.
+### Fase 2 — Editing anagrafica (scrittura) ✅
+- [x] Form editabile dei campi `card_pool` con widget tipizzati (dropdown per
+      `char/rank`, SpinBox per `amount/focus`, LineEdit per `name/initiative`,
+      keywords con campo testo + autocomplete da vocabolario noto).
+- [x] Ricalcolo automatico di `type` dai `keywords` (regola validata su 313/313 carte).
+- [x] Salvataggio overlay (§4.1b) `card_pool_overrides.json` + `.bak`; per le carte
+      Excel si salva solo il **delta** dai valori originali, le carte-utente per intero.
+- [x] Creazione **nuova carta** con allocazione `id` libero (intervallo id-utente ≥ 10000).
+- [x] Duplica carta (copia con id nuovo, marcata "(copia)").
+
+> **Stato 2026-06-20:** M2 in corso. Fase 2 completata; resta la Fase 3 (validazione).
+> `CardDB.apply_override()` aggiorna la vista runtime senza riavvio (gestisce carte
+> nuove e spostamento bucket per cambio `char`). Test headless verdi su Godot 4.6.
 
 ### Fase 3 — Validazione
 - [ ] `CardValidator.gd` + test. Regole minime:
