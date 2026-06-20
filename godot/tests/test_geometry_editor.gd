@@ -27,6 +27,7 @@ func _atk_set(g: Dictionary) -> Dictionary:
 func _ready() -> void:
 	_test_roundtrip()
 	_test_mutators()
+	_test_effects()
 	if _failures == 0:
 		print("GEOMETRY EDITOR DONE ok")
 		get_tree().quit(0)
@@ -95,3 +96,32 @@ func _test_mutators() -> void:
 	_check(g2.get("kamae_req", "") == "balance", "kamae_req impostato")
 	_check(g2.get("counter", []) == [8, 6], "counter parsato dagli interi")
 	ge.queue_free()
+
+
+func _test_effects() -> void:
+	print("[effetti]")
+	# Round-trip su #53 (5 effetti do/n/alt).
+	var orig := CardDB.geometry(53)
+	var ge := GeometryEditor.new()
+	add_child(ge)
+	ge.load_geometry(str(orig.get("type", "core")), orig)
+	var out := ge.to_geometry()
+	var e0: Array = orig.get("effects", [])
+	var e1: Array = out.get("effects", [])
+	_check(e1.size() == e0.size(), "stesso numero di effetti dopo round-trip (%d)" % e0.size())
+	_check(e1.size() > 0 and e1[0].get("do") == e0[0].get("do"), "primo verbo conservato")
+	_check(e1.size() > 0 and e1[0].get("alt") == e0[0].get("alt"), "campo alt conservato")
+	_check(not e1[0].has("when"), "campi vuoti omessi nella serializzazione")
+	ge.queue_free()
+
+	# Mutatore: aggiungi effetto pre-popolato.
+	var ge2 := GeometryEditor.new()
+	add_child(ge2)
+	ge2.load_geometry("attack", {})
+	ge2.add_effect({"do": "push", "n": 1, "when": "on_hit"})
+	ge2.add_effect({"do": ""})   # verbo vuoto: deve sparire nella serializzazione
+	var eff: Array = ge2.to_geometry().get("effects", [])
+	_check(eff.size() == 1, "effetto senza verbo scartato")
+	_check(eff[0].get("do") == "push" and eff[0].get("when") == "on_hit", "effetto aggiunto serializzato")
+	_check(not eff[0].has("kamae") and not eff[0].has("focus_cost"), "campi non impostati omessi")
+	ge2.queue_free()
