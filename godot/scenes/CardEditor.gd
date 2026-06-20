@@ -38,7 +38,6 @@ var _form: VBoxContainer         ## colonna "carta simulata" (gemello editabile)
 var _status: Label
 var _orig_preview: Control       ## colonna "carta originale" (immagine reale)
 var _orig_indicators: Label
-var _palette_holder: Control     ## colonna destra: palette trascinabili
 var _btn_new: Button
 var _btn_dup: Button
 var _btn_save: Button
@@ -92,8 +91,7 @@ func _build_ui() -> void:
 	main.add_theme_constant_override("separation", 10)
 	root.add_child(main)
 	main.add_child(_build_list_panel())     # lista stretta a sinistra
-	main.add_child(_build_center())          # originale ↔ simulata
-	main.add_child(_build_palette_panel())   # palette a destra
+	main.add_child(_build_center())          # originale ↔ simulata (con widget inline)
 
 	_status = Label.new()
 	_status.add_theme_font_size_override("font_size", 12)
@@ -172,11 +170,11 @@ func _build_center() -> Control:
 	center.size_flags_stretch_ratio = 6.5
 	center.add_theme_constant_override("separation", 10)
 
-	# Colonna ORIGINALE.
+	# Colonna ORIGINALE (più grande).
 	var orig := VBoxContainer.new()
-	orig.custom_minimum_size = Vector2(150, 0)
+	orig.custom_minimum_size = Vector2(210, 0)
 	orig.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	orig.size_flags_stretch_ratio = 1.3
+	orig.size_flags_stretch_ratio = 2.2
 	orig.add_theme_constant_override("separation", 4)
 	var ol := Label.new()
 	ol.text = "Carta originale"
@@ -184,7 +182,8 @@ func _build_center() -> Control:
 	ol.add_theme_color_override("font_color", Color(0.7, 0.78, 0.9))
 	orig.add_child(ol)
 	_orig_preview = CenterContainer.new()
-	_orig_preview.custom_minimum_size = Vector2(156, 216)
+	_orig_preview.custom_minimum_size = Vector2(220, 308)
+	_orig_preview.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	orig.add_child(_orig_preview)
 	_img_path_label = Label.new()
 	_img_path_label.text = "(nessuna)"
@@ -208,19 +207,12 @@ func _build_center() -> Control:
 	orig.add_child(_orig_indicators)
 	center.add_child(orig)
 
-	# Colonna SIMULATA (gemello) — larghezza FISSA: i contenuti larghi scorrono
-	# dentro la colonna invece di espanderla e spingere la palette fuori schermo.
+	# Colonna SIMULATA (gemello editabile): anagrafica compatta + widget inline.
 	var simcol := VBoxContainer.new()
 	simcol.custom_minimum_size = Vector2(250, 0)
 	simcol.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	simcol.size_flags_stretch_ratio = 3.2
+	simcol.size_flags_stretch_ratio = 3.0
 	simcol.add_theme_constant_override("separation", 4)
-	var sl := Label.new()
-	sl.text = "Carta simulata"
-	sl.add_theme_font_size_override("font_size", 14)
-	sl.add_theme_color_override("font_color", Color(0.7, 0.78, 0.9))
-	sl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	simcol.add_child(sl)
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -243,18 +235,7 @@ func _toolbar_button(parent: Control, text: String, cb: Callable) -> Button:
 	return b
 
 
-## Colonna destra: contenitore della palette (riempito per carta in _build_form).
-func _build_palette_panel() -> Control:
-	var scroll := ScrollContainer.new()
-	scroll.custom_minimum_size = Vector2(140, 0)
-	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	scroll.size_flags_stretch_ratio = 1.4
-	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	_palette_holder = VBoxContainer.new()
-	_palette_holder.add_theme_constant_override("separation", 6)
-	scroll.add_child(_palette_holder)
-	return scroll
+## (Colonna destra rimossa: i widget si aggiungono inline dalla carta simulata.)
 
 
 # ─── Filtri ed elenco ────────────────────────────────────────────────────────
@@ -379,13 +360,25 @@ func _build_form(id: int, c: Dictionary, geom_data = null) -> void:
 	_issues_box.add_theme_constant_override("separation", 1)
 	_form.add_child(_issues_box)
 
-	_add_section("Anagrafica")
-	_w["name"] = _add_edit_text("nome", str(c.get("name", "")))
-	_w["char"] = _add_edit_option("personaggio", _char_list(), str(c.get("char", "Warrior")))
-	_w["amount"] = _add_edit_spin("amount", 1, 6, int(c.get("amount", 1)))
-	_w["rank"] = _add_edit_option("rank", ["Wood", "Steel", "Gold", "Jade", "-"], str(c.get("rank", "-")))
-	_w["initiative"] = _add_edit_text("initiative", str(c.get("initiative", "-")))
-	_w["focus"] = _add_edit_spin("focus", 0, 9, int(c.get("focus", 0)))
+	# Anagrafica compatta: nome e personaggio su riga intera; i numeri appaiati.
+	_w["name"] = _mk_text(str(c.get("name", "")))
+	_w["char"] = _mk_option(_char_list(), str(c.get("char", "Warrior")))
+	_w["amount"] = _mk_spin(1, 6, int(c.get("amount", 1)))
+	_w["rank"] = _mk_option(["Wood", "Steel", "Gold", "Jade", "-"], str(c.get("rank", "-")))
+	_w["initiative"] = _mk_text(str(c.get("initiative", "-")))
+	_w["focus"] = _mk_spin(0, 9, int(c.get("focus", 0)))
+	_form.add_child(_field("nome", _w["name"]))
+	_form.add_child(_field("pers.", _w["char"]))
+	var nrow := HBoxContainer.new()
+	nrow.add_theme_constant_override("separation", 6)
+	nrow.add_child(_field("n.", _w["amount"]))
+	nrow.add_child(_field("rank", _w["rank"]))
+	_form.add_child(nrow)
+	var irow := HBoxContainer.new()
+	irow.add_theme_constant_override("separation", 6)
+	irow.add_child(_field("iniz.", _w["initiative"]))
+	irow.add_child(_field("focus", _w["focus"]))
+	_form.add_child(irow)
 	_build_keywords_field(c.get("keywords", []))
 	# Registrazione undo/redo + validazione su ogni modifica dell'anagrafica.
 	_w["name"].text_changed.connect(func(_t): _on_edit())
@@ -414,11 +407,6 @@ func _build_form(id: int, c: Dictionary, geom_data = null) -> void:
 	sim.pressed.connect(_on_simulate)
 	geobtns.add_child(sim)
 	_form.add_child(geobtns)
-
-	# Palette trascinabile nella colonna destra (legata a questo GeometryEditor).
-	for ch in _palette_holder.get_children():
-		ch.queue_free()
-	_palette_holder.add_child(_geom_editor.build_palette())
 
 	_suspend_record = false
 
@@ -887,8 +875,6 @@ func _clear_form_to_hint() -> void:
 	_form.add_child(hint)
 	for ch in _orig_preview.get_children():
 		ch.queue_free()
-	for ch in _palette_holder.get_children():
-		ch.queue_free()
 	_orig_indicators.text = ""
 	_img_path_label.text = "(nessuna)"
 	_w = {}
@@ -911,7 +897,7 @@ func _update_preview(c: Dictionary, img: String) -> void:
 		tr.texture = CardView._load_texture("res://assets/cards/" + img)
 		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		tr.custom_minimum_size = Vector2(156, 216)
+		tr.custom_minimum_size = Vector2(230, 322)
 		_orig_preview.add_child(tr)
 	else:
 		var ph := Label.new()
@@ -1033,6 +1019,49 @@ func _add_edit_option(key: String, values: Array, current: String) -> OptionButt
 
 func _selected_text(opt: OptionButton) -> String:
 	return opt.get_item_text(opt.selected) if opt.selected >= 0 else ""
+
+
+# Costruttori "nudi" (senza riga propria) per l'anagrafica compatta.
+func _mk_text(val: String) -> LineEdit:
+	var le := LineEdit.new()
+	le.text = val
+	return le
+
+func _mk_spin(mn: int, mx: int, val: int) -> SpinBox:
+	var sb := SpinBox.new()
+	sb.min_value = mn; sb.max_value = mx; sb.step = 1
+	sb.value = clampi(val, mn, mx)
+	sb.custom_minimum_size = Vector2(56, 0)
+	return sb
+
+func _mk_option(values: Array, current: String) -> OptionButton:
+	var opt := OptionButton.new()
+	var found := -1
+	for i in values.size():
+		opt.add_item(str(values[i]))
+		if str(values[i]) == current:
+			found = i
+	if found == -1 and current != "":
+		opt.add_item(current)
+		found = opt.item_count - 1
+	opt.selected = maxi(found, 0)
+	opt.clip_text = true
+	opt.custom_minimum_size = Vector2(70, 0)
+	return opt
+
+## Campo etichetta+widget compatto (l'etichetta a sinistra, il widget si allarga).
+func _field(label: String, widget: Control) -> HBoxContainer:
+	var h := HBoxContainer.new()
+	h.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	h.add_theme_constant_override("separation", 4)
+	var l := Label.new()
+	l.text = label
+	l.add_theme_font_size_override("font_size", 11)
+	l.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
+	h.add_child(l)
+	widget.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	h.add_child(widget)
+	return h
 
 
 func _add_readonly_field(key: String, value: String) -> void:

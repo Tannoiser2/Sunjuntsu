@@ -1,17 +1,20 @@
-## Editor visuale di geometria/effetti — Senjutsu (Fase 4)
+## Editor visuale di geometria/effetti — Senjutsu
 ##
-## "Gemello digitale" editabile della faccia di una carta: si ricostruisce la
-## struttura TRASCINANDO le icone del gioco.
-##  - Nido d'ape (modello a 6 direzioni, come il motore): si trascinano ferite /
-##    esecuzione / sanguinamento sugli esagoni d'attacco e scudi su quelli di
-##    difesa. Ogni cella è un (d, k) → direzione relativa 0-5, anello 1-2.
-##  - Movimento: si trascinano frecce di passo NERE (obbligatorie) o BIANCHE
-##    (facoltative) e rotazioni, in una o più sequenze alternative ("OPPURE").
-##  - Kamae richiesto: token colorati (aggressione / equilibrio / determinazione).
-##  - counter (iniziative di contrattacco) e note.
+## "Gemello digitale" editabile della faccia di una carta, costruito a WIDGET:
+## la carta è una pila di widget, ognuno con un SELETTORE DI TIPO in cima che lo
+## trasforma (Combattimento, Movimento, Kamae, Effetto, Contrattacco, Nota). Si
+## possono avere PIÙ widget dello stesso tipo (es. più attacchi gated da kamae
+## diversi, più sequenze di movimento, più effetti).
 ##
-## Gli `effects` esistenti sono PRESERVATI così come sono (editor dedicato in una
-## fase successiva). Serializza/deserializza lo Schema v2 (GEOMETRY_SCHEMA.md).
+## - Combattimento: nido d'ape a clic-ciclo (vuoto→ferita→doppia→esec→sanguina→
+##   difesa) + gate kamae opzionale (la variante d'attacco attiva in quella posa).
+## - Movimento: una sequenza di atomi (passo con rosetta a 6 direzioni / libero,
+##   rotazione), con passi, facoltativo, kamae, costo focus.
+## - Kamae richiesto, Contrattacco (iniziative), Nota.
+##
+## Serializza/deserializza lo Schema v2 (GEOMETRY_SCHEMA.md), incluse le varianti
+## `attacks`/`defences` gated da kamae. L'ordine dei widget si salva in `layout`
+## (estetico, ignorato dal motore).
 class_name GeometryEditor
 extends VBoxContainer
 
@@ -19,7 +22,6 @@ signal changed
 
 const RINGS := 2          ## anelli mostrati (vicinato completo entro distanza 2)
 const HEX_R := 21.0       ## raggio esagono in px
-const HEX_PIX := 25.0     ## scala unità-mondo → px per la disposizione del nido d'ape
 
 # Colori icone.
 const COL_WOUND := Color(0.86, 0.30, 0.24)
@@ -41,92 +43,98 @@ const KAMAE_LABELS := {
 const WHEN_OPTS := ["", "on_hit", "always"]
 const KAMAE_OPTS := ["", "aggression", "balance", "determination"]
 
-# Blocchi componibili della carta (l'ordine è solo estetico: il motore ignora
-# `layout`). Ogni blocco edita una parte dello schema.
-const BLOCK_TYPES := ["combat", "movement", "kamae", "effects", "counter", "note"]
-const BLOCK_TITLES := {
-	"combat": "Combattimento", "movement": "Movimento", "kamae": "Kamae richiesto",
-	"effects": "Effetti", "counter": "Contrattacco", "note": "Nota",
+# Tipi di widget selezionabili e loro etichette.
+const WIDGET_TYPES := ["combat", "movement", "kamae", "effect", "counter", "note"]
+const WIDGET_TITLES := {
+	"combat": "Combattimento (att./dif.)", "movement": "Movimento",
+	"kamae": "Kamae richiesto", "effect": "Effetto",
+	"counter": "Contrattacco", "note": "Nota",
 }
-var _block_order: Array = []   ## sottoinsieme ordinato di BLOCK_TYPES da mostrare
+const SINGLETON_TYPES := ["kamae", "counter", "note"]   # al massimo uno per carta
+
+# Stati ciclici di un esagono di combattimento (clic per avanzare).
+const CELL_CYCLE := ["empty", "w1", "w2", "exec", "bleed", "shield"]
 
 # ─── Modello dati ────────────────────────────────────────────────────────────
 var _type: String = "attack"
-var _attack: Dictionary = {}   ## Vector2i(d,k) -> ferite (int | "exec" | "bleed")
-var _defence: Dictionary = {}  ## Vector2i(d,k) -> valore blocco (int)
-var _opts: Array = []          ## Array[ Array[ {t,dir,n,opt} ] ]  (sequenze "OPPURE")
-var _kamae_req: String = ""
-var _counter: Array = []
-var _note: String = ""
-var _effects: Array = []       ## passthrough (non editati qui)
 var _name: String = ""
-
-# ─── Widget ──────────────────────────────────────────────────────────────────
-var _honey: Control
-var _hex_cells: Dictionary = {}   ## Vector2i(d,k) -> HexCell
-var _moves_box: VBoxContainer
-var _effects_box: VBoxContainer
-var _kamae_label: Label
-var _counter_edit: LineEdit
-var _note_edit: TextEdit
+var _widgets: Array = []   ## lista ordinata di widget (Dictionary con "type" + dati)
 var _built := false
 
 
 # ─── API pubblica ────────────────────────────────────────────────────────────
 
-## Carica la geometria di una carta (o {} per crearne una nuova).
 func load_geometry(card_type: String, geom: Dictionary) -> void:
 	_type = card_type if card_type != "" else str(geom.get("type", "attack"))
 	_name = str(geom.get("name", ""))
-	_attack = _cells_from(geom.get("attack", {}), "w")
-	_defence = _cells_from(geom.get("defence", {}), "v")
-	_opts = []
-	for opt in geom.get("move", {}).get("opts", []):
-		var atoms: Array = []
-		for a in opt.get("atoms", []):
-			atoms.append(_norm_atom(a))
-		_opts.append(atoms)
-	_kamae_req = str(geom.get("kamae_req", ""))
-	_counter = []
-	for x in geom.get("counter", []):
-		_counter.append(int(x))
-	_effects = []
-	for e in geom.get("effects", []):
-		if typeof(e) == TYPE_DICTIONARY:
-			_effects.append(_norm_effect(e))
-	_note = str(geom.get("note", ""))
-	_block_order = _compute_block_order(geom.get("layout", []))
+	_widgets = _widgets_from(geom)
 	if not _built:
 		_build_ui()
-	_refresh_all()
+	else:
+		_rebuild_widgets()
 
 
-## Ordine dei blocchi: dal `layout` salvato (se presente), completato con i
-## blocchi che hanno dati; altrimenti ordine canonico dei blocchi con dati.
-func _compute_block_order(layout) -> Array:
-	var order := []
-	if layout is Array:
-		for t in layout:
-			if t in BLOCK_TYPES and not (t in order):
-				order.append(t)
-	for t in _present_blocks():
-		if not (t in order):
-			order.append(t)
-	if order.is_empty():
-		order = ["combat"]   # carta nuova: parti dal Combattimento
-	return order
+## Ricostruisce la lista di widget dalla geometria (raggruppa le varianti di
+## combattimento per kamae; un widget Movimento per opzione; un Effetto per
+## effetto; singoli per kamae/counter/note). L'ordine segue `layout` se presente.
+func _widgets_from(geom: Dictionary) -> Array:
+	# Varianti d'attacco e difesa (schema nuovo `attacks`/`defences` o classico).
+	var atk_vars := _read_variants(geom, "attack", "attacks", "w")
+	var dfn_vars := _read_variants(geom, "defence", "defences", "v")
+	var kamae_keys := []
+	for v in atk_vars:
+		if not (v["kamae"] in kamae_keys): kamae_keys.append(v["kamae"])
+	for v in dfn_vars:
+		if not (v["kamae"] in kamae_keys): kamae_keys.append(v["kamae"])
+	var pool := {"combat": [], "movement": [], "kamae": [], "effect": [], "counter": [], "note": []}
+	for k in kamae_keys:
+		var cw := {"type": "combat", "kamae": k, "attack": {}, "defence": {}}
+		for v in atk_vars:
+			if v["kamae"] == k: cw["attack"] = v["cells"]; break
+		for v in dfn_vars:
+			if v["kamae"] == k: cw["defence"] = v["cells"]; break
+		pool["combat"].append(cw)
+	for opt in geom.get("move", {}).get("opts", []):
+		var atoms := []
+		for a in opt.get("atoms", []):
+			atoms.append(_norm_atom(a))
+		pool["movement"].append({"type": "movement", "atoms": atoms})
+	if str(geom.get("kamae_req", "")) != "":
+		pool["kamae"].append({"type": "kamae", "req": str(geom["kamae_req"])})
+	for e in geom.get("effects", []):
+		if typeof(e) == TYPE_DICTIONARY:
+			pool["effect"].append(_effect_widget(e))
+	var cvals := []
+	for x in geom.get("counter", []):
+		cvals.append(int(x))
+	if not cvals.is_empty():
+		pool["counter"].append({"type": "counter", "values": cvals})
+	if str(geom.get("note", "")) != "":
+		pool["note"].append({"type": "note", "text": str(geom["note"])})
+
+	# Ordina secondo `layout` (consuma dai pool per tipo), poi il resto canonico.
+	var out := []
+	for t in geom.get("layout", []):
+		if pool.has(t) and not pool[t].is_empty():
+			out.append(pool[t].pop_front())
+	for t in WIDGET_TYPES:
+		for w in pool[t]:
+			out.append(w)
+	if out.is_empty():
+		out = [_new_widget("combat")]   # carta nuova: parti dal Combattimento
+	return out
 
 
-## Blocchi che hanno dati, in ordine canonico.
-func _present_blocks() -> Array:
-	var p := []
-	if not _attack.is_empty() or not _defence.is_empty(): p.append("combat")
-	if not _opts.is_empty(): p.append("movement")
-	if _kamae_req != "": p.append("kamae")
-	if not _effects.is_empty(): p.append("effects")
-	if not _counter.is_empty(): p.append("counter")
-	if _note != "": p.append("note")
-	return p
+## Legge le varianti di combattimento: lista di { cells: {axial:val}, kamae }.
+func _read_variants(geom: Dictionary, single_key: String, array_key: String, vk: String) -> Array:
+	var out := []
+	if geom.has(array_key):
+		for v in geom[array_key]:
+			if v is Dictionary:
+				out.append({"cells": _cells_from(v, vk), "kamae": str(v.get("kamae", ""))})
+	elif geom.get(single_key, null) != null:
+		out.append({"cells": _cells_from(geom[single_key], vk), "kamae": ""})
+	return out
 
 
 ## Serializza lo stato corrente nello Schema v2 (campi vuoti omessi).
@@ -135,101 +143,170 @@ func to_geometry() -> Dictionary:
 	if _name != "":
 		g["name"] = _name
 	g["type"] = _type
-	if _kamae_req != "":
-		g["kamae_req"] = _kamae_req
+
+	# Kamae richiesto (primo widget kamae).
+	for w in _widgets:
+		if w["type"] == "kamae" and str(w.get("req", "")) != "":
+			g["kamae_req"] = str(w["req"]); break
+
+	# Movimento → opzioni (una per widget movimento con atomi).
 	var opts := []
-	for atoms in _opts:
-		if atoms.is_empty():
-			continue
-		var out_atoms := []
-		for a in atoms:
-			var atom := {"t": a["t"]}
-			if a["t"] == "step":
-				if bool(a.get("free", false)):
-					atom["dir"] = -1                       # passo libero
-				elif (a.get("dirs", []) as Array).size() == 1:
-					atom["dir"] = int(a["dirs"][0])
-				elif (a.get("dirs", []) as Array).size() > 1:
-					atom["dirs"] = (a["dirs"] as Array).duplicate()   # scelta di direzioni
-				else:
-					atom["dir"] = 0
-			atom["n"] = int(a["n"])
-			atom["opt"] = bool(a["opt"])
-			if str(a.get("kamae", "")) != "":
-				atom["kamae"] = str(a["kamae"])
-			if int(a.get("focus_cost", 0)) > 0:
-				atom["focus_cost"] = int(a["focus_cost"])
-			out_atoms.append(atom)
-		opts.append({"atoms": out_atoms})
+	for w in _widgets:
+		if w["type"] == "movement":
+			var out_atoms := []
+			for a in w.get("atoms", []):
+				out_atoms.append(_atom_to(a))
+			if not out_atoms.is_empty():
+				opts.append({"atoms": out_atoms})
 	if not opts.is_empty():
 		g["move"] = {"opts": opts}
-	var acells := _cells_to(_attack, "w")
-	if not acells.is_empty():
-		g["attack"] = {"cells": acells}
-	var dcells := _cells_to(_defence, "v")
-	if not dcells.is_empty():
-		g["defence"] = {"cells": dcells}
-	if not _counter.is_empty():
-		g["counter"] = _counter
+
+	# Combattimento → varianti attacco/difesa (gated da kamae se presenti).
+	var atk_vars := []
+	var dfn_vars := []
+	for w in _widgets:
+		if w["type"] != "combat":
+			continue
+		var ac := _cells_to(w.get("attack", {}), "w")
+		if not ac.is_empty():
+			var v := {"cells": ac}
+			if str(w.get("kamae", "")) != "": v["kamae"] = str(w["kamae"])
+			atk_vars.append(v)
+		var dc := _cells_to(w.get("defence", {}), "v")
+		if not dc.is_empty():
+			var v2 := {"cells": dc}
+			if str(w.get("kamae", "")) != "": v2["kamae"] = str(w["kamae"])
+			dfn_vars.append(v2)
+	_write_variants(g, "attack", "attacks", atk_vars)
+	_write_variants(g, "defence", "defences", dfn_vars)
+
+	# Contrattacco (primo widget counter).
+	for w in _widgets:
+		if w["type"] == "counter" and not (w.get("values", []) as Array).is_empty():
+			g["counter"] = (w["values"] as Array).duplicate(); break
+
+	# Effetti (ogni widget effect con verbo).
 	var effs := []
-	for e in _effects:
-		var ce := {"do": str(e.get("do", ""))}
-		if ce["do"] == "":
-			continue   # un effetto senza verbo è ignorato
-		if int(e.get("n", 0)) > 0:
-			ce["n"] = int(e["n"])
-		if str(e.get("when", "")) != "":
-			ce["when"] = str(e["when"])
-		if str(e.get("kamae", "")) != "":
-			ce["kamae"] = str(e["kamae"])
-		if str(e.get("to", "")) != "":
-			ce["to"] = str(e["to"])
-		if int(e.get("focus_cost", 0)) > 0:
-			ce["focus_cost"] = int(e["focus_cost"])
-		if str(e.get("alt", "")) != "":
-			ce["alt"] = str(e["alt"])
-		effs.append(ce)
+	for w in _widgets:
+		if w["type"] == "effect" and str(w.get("do", "")) != "":
+			effs.append(_effect_to(w))
 	if not effs.is_empty():
 		g["effects"] = effs
-	if _note != "":
-		g["note"] = _note
-	# Disposizione dei blocchi (estetica; il motore la ignora).
-	if not _block_order.is_empty():
-		g["layout"] = _block_order.duplicate()
+
+	# Nota (primo widget note).
+	for w in _widgets:
+		if w["type"] == "note" and str(w.get("text", "")) != "":
+			g["note"] = str(w["text"]); break
+
+	# Disposizione dei widget (estetica; il motore la ignora).
+	var layout := []
+	for w in _widgets:
+		if str(w.get("type", "")) != "":
+			layout.append(w["type"])
+	if not layout.is_empty():
+		g["layout"] = layout
 	return g
 
 
-# Mutatori pubblici (usati dal drag-drop e dai test headless). Coordinate
-# assiali (q,r) relative alla pedina con facing 0 (es. fronte adiacente = (1,0)).
+## Scrive le varianti: forma classica singola (`attack`) se una sola e senza
+## gate kamae, altrimenti lista `attacks`.
+func _write_variants(g: Dictionary, single_key: String, array_key: String, vars: Array) -> void:
+	if vars.is_empty():
+		return
+	if vars.size() == 1 and not vars[0].has("kamae"):
+		g[single_key] = {"cells": vars[0]["cells"]}
+	else:
+		g[array_key] = vars
+
+
+# ─── Mutatori pubblici (drag-drop / test headless) ───────────────────────────
+
+func _first_combat() -> Dictionary:
+	for w in _widgets:
+		if w["type"] == "combat":
+			return w
+	var cw := _new_widget("combat")
+	_widgets.append(cw)
+	if _built:
+		_rebuild_widgets()
+	return cw
+
 func set_attack_cell(q: int, r: int, w) -> void:
-	_attack[Vector2i(q, r)] = w
-	_after_change(Vector2i(q, r))
+	_first_combat()["attack"][Vector2i(q, r)] = w
+	changed.emit()
 
 func set_defence_cell(q: int, r: int, v: int) -> void:
-	_defence[Vector2i(q, r)] = v
-	_after_change(Vector2i(q, r))
+	_first_combat()["defence"][Vector2i(q, r)] = v
+	changed.emit()
 
 func clear_cell(q: int, r: int) -> void:
-	_attack.erase(Vector2i(q, r))
-	_defence.erase(Vector2i(q, r))
-	_after_change(Vector2i(q, r))
+	var cw := _first_combat()
+	cw["attack"].erase(Vector2i(q, r))
+	cw["defence"].erase(Vector2i(q, r))
+	changed.emit()
 
 func add_opt() -> int:
-	_opts.append([])
-	_rebuild_moves()
-	return _opts.size() - 1
+	_widgets.append(_new_widget("movement"))
+	if _built:
+		_rebuild_widgets()
+	changed.emit()
+	return _widgets.size() - 1
 
-func add_move_atom(opt_idx: int, atom: Dictionary) -> void:
-	while _opts.size() <= opt_idx:
-		_opts.append([])
-	_opts[opt_idx].append(_norm_atom(atom))
-	_rebuild_moves()
+func add_move_atom(widget_idx: int, atom: Dictionary) -> void:
+	if widget_idx < 0 or widget_idx >= _widgets.size():
+		return
+	_widgets[widget_idx]["atoms"].append(_norm_atom(atom))
+	if _built:
+		_rebuild_widgets()
+	changed.emit()
+
+func add_effect(e := {}) -> void:
+	_widgets.append(_effect_widget(e))
+	if _built:
+		_rebuild_widgets()
+	changed.emit()
+
+func set_kamae_req(slug: String) -> void:
+	var kw = null
+	for w in _widgets:
+		if w["type"] == "kamae":
+			kw = w; break
+	if kw == null:
+		if slug == "":
+			return
+		kw = _new_widget("kamae")
+		_widgets.append(kw)
+	kw["req"] = slug
+	if _built:
+		_rebuild_widgets()
 	changed.emit()
 
 
-## Normalizza un atomo di movimento nel formato interno dell'editor, preservando
-## tutti i campi (dirs/kamae/focus_cost). Internamente lo step tiene `dirs`
-## (lista di direzioni scelte) + `free` (passo libero, dir -1).
+# ─── Costruzione del nuovo widget e normalizzazione ──────────────────────────
+
+func _new_widget(type: String) -> Dictionary:
+	match type:
+		"combat": return {"type": "combat", "kamae": "", "attack": {}, "defence": {}}
+		"movement": return {"type": "movement", "atoms": []}
+		"kamae": return {"type": "kamae", "req": ""}
+		"effect": return _effect_widget({})
+		"counter": return {"type": "counter", "values": []}
+		"note": return {"type": "note", "text": ""}
+	return {"type": ""}
+
+
+static func _effect_widget(e: Dictionary) -> Dictionary:
+	return {
+		"type": "effect",
+		"do": str(e.get("do", "")), "n": int(e.get("n", 0)),
+		"when": str(e.get("when", "")), "kamae": str(e.get("kamae", "")),
+		"to": str(e.get("to", "")), "focus_cost": int(e.get("focus_cost", 0)),
+		"alt": str(e.get("alt", "")),
+	}
+
+
+## Normalizza un atomo di movimento (preserva dirs/kamae/focus_cost; lo step
+## tiene `dirs` = direzioni scelte e `free` = passo libero, dir -1).
 static func _norm_atom(a: Dictionary) -> Dictionary:
 	var atom := {
 		"t": str(a.get("t", "step")),
@@ -251,11 +328,36 @@ static func _norm_atom(a: Dictionary) -> Dictionary:
 			atom["dirs"] = [] if dd == -1 else [dd]
 	return atom
 
-func set_kamae_req(slug: String) -> void:
-	_kamae_req = slug
-	if _kamae_label:
-		_update_kamae_label()
-	changed.emit()
+
+func _atom_to(a: Dictionary) -> Dictionary:
+	var atom := {"t": a["t"]}
+	if a["t"] == "step":
+		if bool(a.get("free", false)):
+			atom["dir"] = -1
+		elif (a.get("dirs", []) as Array).size() == 1:
+			atom["dir"] = int(a["dirs"][0])
+		elif (a.get("dirs", []) as Array).size() > 1:
+			atom["dirs"] = (a["dirs"] as Array).duplicate()
+		else:
+			atom["dir"] = 0
+	atom["n"] = int(a["n"])
+	atom["opt"] = bool(a["opt"])
+	if str(a.get("kamae", "")) != "":
+		atom["kamae"] = str(a["kamae"])
+	if int(a.get("focus_cost", 0)) > 0:
+		atom["focus_cost"] = int(a["focus_cost"])
+	return atom
+
+
+func _effect_to(e: Dictionary) -> Dictionary:
+	var ce := {"do": str(e.get("do", ""))}
+	if int(e.get("n", 0)) > 0: ce["n"] = int(e["n"])
+	if str(e.get("when", "")) != "": ce["when"] = str(e["when"])
+	if str(e.get("kamae", "")) != "": ce["kamae"] = str(e["kamae"])
+	if str(e.get("to", "")) != "": ce["to"] = str(e["to"])
+	if int(e.get("focus_cost", 0)) > 0: ce["focus_cost"] = int(e["focus_cost"])
+	if str(e.get("alt", "")) != "": ce["alt"] = str(e["alt"])
+	return ce
 
 
 # ─── Costruzione UI ──────────────────────────────────────────────────────────
@@ -263,63 +365,60 @@ func set_kamae_req(slug: String) -> void:
 func _build_ui() -> void:
 	_built = true
 	add_theme_constant_override("separation", 6)
-	_rebuild_blocks()
+	_rebuild_widgets()
 
 
-## (Ri)costruisce la pila di blocchi secondo _block_order. I widget-corpo
-## (_honey, _moves_box, …) vengono ricreati per i soli blocchi presenti.
-func _rebuild_blocks() -> void:
+func _rebuild_widgets() -> void:
 	if not _built:
 		return
 	for ch in get_children():
 		ch.queue_free()
-	_honey = null
-	_moves_box = null
-	_effects_box = null
-	_counter_edit = null
-	_note_edit = null
-	_kamae_label = null
-	for i in _block_order.size():
-		add_child(_build_block(_block_order[i], i))
-	# Popola i corpi appena creati (funzioni tutte null-safe).
-	_build_honeycomb()
-	_rebuild_moves()
-	_rebuild_effects()
-	_update_kamae_label()
-	if _counter_edit:
-		_counter_edit.text = ", ".join(_counter.map(func(x): return str(x)))
-	if _note_edit:
-		_note_edit.text = _note
+	for i in _widgets.size():
+		add_child(_build_widget(i))
+	# "+ aggiungi widget" in fondo.
+	var add := Button.new()
+	add.text = "+ aggiungi widget"
+	add.tooltip_text = "Aggiunge un widget; scegline il tipo dal menu in cima"
+	add.pressed.connect(func():
+		_widgets.append(_new_widget(""))
+		_rebuild_widgets()
+		changed.emit())
+	add_child(add)
 
 
-func _build_block(type: String, idx: int) -> Control:
+func _build_widget(idx: int) -> Control:
+	var w: Dictionary = _widgets[idx]
 	var panel := PanelContainer.new()
 	var box := VBoxContainer.new()
 	box.add_theme_constant_override("separation", 3)
 	panel.add_child(box)
 
+	# Intestazione: selettore di TIPO + sposta su/giù + rimuovi.
 	var head := HBoxContainer.new()
 	head.add_theme_constant_override("separation", 3)
-	var t := Label.new()
-	t.text = BLOCK_TITLES.get(type, type)
-	t.add_theme_font_size_override("font_size", 13)
-	t.add_theme_color_override("font_color", Color(0.72, 0.8, 0.92))
-	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	head.add_child(t)
+	var topt := OptionButton.new()
+	topt.add_theme_font_size_override("font_size", 12)
+	topt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	topt.add_item("(tipo…)")
+	for t in WIDGET_TYPES:
+		topt.add_item(str(WIDGET_TITLES[t]))
+	topt.selected = WIDGET_TYPES.find(str(w.get("type", ""))) + 1
+	topt.item_selected.connect(func(i): _set_widget_type(idx, "" if i == 0 else WIDGET_TYPES[i - 1]))
+	head.add_child(topt)
 	var up := _mini_btn("su", "Sposta su")
 	up.disabled = idx == 0
-	up.pressed.connect(func(): _move_block(idx, -1))
+	up.pressed.connect(func(): _move_widget(idx, -1))
 	head.add_child(up)
 	var dn := _mini_btn("giù", "Sposta giù")
-	dn.disabled = idx == _block_order.size() - 1
-	dn.pressed.connect(func(): _move_block(idx, 1))
+	dn.disabled = idx == _widgets.size() - 1
+	dn.pressed.connect(func(): _move_widget(idx, 1))
 	head.add_child(dn)
-	var rm := _mini_btn("x", "Rimuovi blocco (svuota i dati)")
-	rm.pressed.connect(func(): _remove_block(type))
+	var rm := _mini_btn("x", "Rimuovi widget")
+	rm.pressed.connect(func(): _widgets.remove_at(idx); _rebuild_widgets(); changed.emit())
 	head.add_child(rm)
 	box.add_child(head)
 
-	box.add_child(_build_block_body(type))
+	box.add_child(_build_widget_body(w))
 	return panel
 
 
@@ -331,325 +430,143 @@ func _mini_btn(txt: String, tip: String) -> Button:
 	return b
 
 
-func _build_block_body(type: String) -> Control:
-	match type:
-		"combat":
-			var v := VBoxContainer.new()
-			var hint := Label.new()
-			hint.text = "clic = scorri icona · clic destro = svuota"
-			hint.add_theme_font_size_override("font_size", 10)
-			hint.add_theme_color_override("font_color", Color(0.55, 0.6, 0.68))
-			v.add_child(hint)
-			_honey = Control.new()
-			_honey.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-			v.add_child(_honey)
-			return v
-		"movement":
-			var v := VBoxContainer.new()
-			v.add_theme_constant_override("separation", 3)
-			_moves_box = VBoxContainer.new()
-			_moves_box.add_theme_constant_override("separation", 4)
-			v.add_child(_moves_box)
-			var add_opt_btn := Button.new()
-			add_opt_btn.text = "+ sequenza"
-			add_opt_btn.pressed.connect(func(): add_opt())
-			v.add_child(add_opt_btn)
-			return v
-		"kamae":
-			var v := VBoxContainer.new()
-			var krow := HBoxContainer.new()
-			krow.add_theme_constant_override("separation", 6)
-			for slug in ["aggression", "balance", "determination"]:
-				var tok := DragIcon.new()
-				tok.setup(self, "kamae_" + slug, slug)
-				tok.custom_minimum_size = Vector2(2 * HEX_R, 2 * HEX_R)
-				tok.gui_input.connect(_on_kamae_token_input.bind(slug))
-				krow.add_child(tok)
-			var az := Button.new()
-			az.text = "azzera"
-			az.pressed.connect(func(): set_kamae_req(""))
-			krow.add_child(az)
-			v.add_child(krow)
-			_kamae_label = Label.new()
-			_kamae_label.add_theme_font_size_override("font_size", 12)
-			v.add_child(_kamae_label)
-			return v
-		"effects":
-			var v := VBoxContainer.new()
-			v.add_theme_constant_override("separation", 3)
-			_effects_box = VBoxContainer.new()
-			_effects_box.add_theme_constant_override("separation", 3)
-			v.add_child(_effects_box)
-			var add_eff := Button.new()
-			add_eff.text = "+ effetto"
-			add_eff.pressed.connect(func(): add_effect())
-			v.add_child(add_eff)
-			return v
-		"counter":
-			_counter_edit = LineEdit.new()
-			_counter_edit.placeholder_text = "iniziative di contrattacco, es. 8, 6"
-			_counter_edit.text_changed.connect(_on_counter_changed)
-			return _counter_edit
-		"note":
-			_note_edit = TextEdit.new()
-			_note_edit.custom_minimum_size = Vector2(0, 50)
-			_note_edit.placeholder_text = "annotazioni / incertezze di trascrizione"
-			_note_edit.text_changed.connect(func(): _note = _note_edit.text; changed.emit())
-			return _note_edit
-	return Control.new()
+func _set_widget_type(idx: int, type: String) -> void:
+	if type != "" and type in SINGLETON_TYPES:
+		for j in _widgets.size():
+			if j != idx and _widgets[j]["type"] == type:
+				_rebuild_widgets()   # singleton già presente: annulla la scelta
+				return
+	_widgets[idx] = _new_widget(type)
+	_rebuild_widgets()
+	changed.emit()
 
 
-# ─── Gestione blocchi (aggiungi / sposta / rimuovi) ──────────────────────────
-
-func add_block(type: String) -> void:
-	if type in BLOCK_TYPES and not (type in _block_order):
-		_block_order.append(type)
-		_rebuild_blocks()
-		changed.emit()
-
-
-func _move_block(idx: int, delta: int) -> void:
+func _move_widget(idx: int, delta: int) -> void:
 	var j := idx + delta
-	if j < 0 or j >= _block_order.size():
+	if j < 0 or j >= _widgets.size():
 		return
-	var tmp = _block_order[idx]
-	_block_order[idx] = _block_order[j]
-	_block_order[j] = tmp
-	_rebuild_blocks()
+	var tmp = _widgets[idx]
+	_widgets[idx] = _widgets[j]
+	_widgets[j] = tmp
+	_rebuild_widgets()
 	changed.emit()
 
 
-## Rimuove il blocco E svuota i dati corrispondenti.
-func _remove_block(type: String) -> void:
-	_block_order.erase(type)
-	match type:
-		"combat": _attack.clear(); _defence.clear()
-		"movement": _opts.clear()
-		"kamae": _kamae_req = ""
-		"effects": _effects.clear()
-		"counter": _counter.clear()
-		"note": _note = ""
-	_rebuild_blocks()
-	changed.emit()
-
-
-## Palette dei sorgenti TRASCINABILI (combattimento, movimento, kamae), da
-## collocare fuori dal canvas (colonna destra dell'editor). Il drag-drop
-## funziona attraverso l'albero della scena. Richiede che il canvas sia già
-## costruito (così gli esagoni esistono come bersagli).
-## Pannello "Aggiungi blocco" (colonna destra dell'editor): un bottone per tipo
-## di blocco; il clic aggiunge il blocco alla carta (no-op se già presente).
-func build_palette() -> Control:
-	if not _built:
-		_build_ui()
-	var col := VBoxContainer.new()
-	col.add_theme_constant_override("separation", 6)
-	col.custom_minimum_size = Vector2(150, 0)
-	var title := Label.new()
-	title.text = "Blocchi"
-	title.add_theme_font_size_override("font_size", 15)
-	title.add_theme_color_override("font_color", Color(0.7, 0.78, 0.9))
-	col.add_child(title)
+func _build_widget_body(w: Dictionary) -> Control:
+	match str(w.get("type", "")):
+		"combat": return _build_combat_body(w)
+		"movement": return _build_movement_body(w)
+		"kamae": return _build_kamae_body(w)
+		"effect": return _build_effect_body(w)
+		"counter": return _build_counter_body(w)
+		"note": return _build_note_body(w)
 	var hint := Label.new()
-	hint.text = "Aggiungi un blocco alla carta:"
+	hint.text = "Scegli un tipo dal menu in alto."
 	hint.add_theme_font_size_override("font_size", 11)
-	hint.add_theme_color_override("font_color", Color(0.6, 0.66, 0.74))
-	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	col.add_child(hint)
-	for type in BLOCK_TYPES:
-		var b := Button.new()
-		b.text = "+ " + str(BLOCK_TITLES.get(type, type))
-		b.add_theme_font_size_override("font_size", 12)
-		b.pressed.connect(func(): add_block(type))
-		col.add_child(b)
-	return col
+	hint.add_theme_color_override("font_color", Color(0.6, 0.6, 0.66))
+	return hint
 
 
-func _build_combat_palette() -> Control:
-	var col := VBoxContainer.new()
-	col.add_theme_constant_override("separation", 4)
-	var l := Label.new()
-	l.text = "Attacco"
-	l.add_theme_font_size_override("font_size", 12)
-	col.add_child(l)
-	var grid := GridContainer.new()
-	grid.columns = 3
-	for spec in [["w1", 1], ["w2", 2], ["exec", "exec"], ["bleed", "bleed"], ["w0", 0]]:
-		grid.add_child(_palette_icon(spec[0], spec[1]))
-	col.add_child(grid)
-	var l2 := Label.new()
-	l2.text = "Difesa"
-	l2.add_theme_font_size_override("font_size", 12)
-	col.add_child(l2)
-	col.add_child(_palette_icon("shield", 1))
-	return col
+# ─── Corpo: Combattimento (nido d'ape a clic-ciclo + gate kamae) ─────────────
+
+func _build_combat_body(w: Dictionary) -> Control:
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 2)
+	var grow := HBoxContainer.new()
+	grow.add_theme_constant_override("separation", 4)
+	grow.add_child(_lbl("attivo in kamae"))
+	grow.add_child(_eff_opt(KAMAE_OPTS, str(w.get("kamae", "")), func(val): w["kamae"] = val))
+	v.add_child(grow)
+	var hint := Label.new()
+	hint.text = "clic = scorri icona · clic destro = svuota"
+	hint.add_theme_font_size_override("font_size", 10)
+	hint.add_theme_color_override("font_color", Color(0.55, 0.6, 0.68))
+	v.add_child(hint)
+	v.add_child(_build_honey(w))
+	return v
 
 
-func _palette_icon(kind: String, value) -> DragIcon:
-	var di := DragIcon.new()
-	di.setup(self, kind, value)
-	di.custom_minimum_size = Vector2(2 * HEX_R, 2 * HEX_R)
-	return di
-
-
-func _build_honeycomb() -> void:
-	_hex_cells.clear()
-	if _honey == null:
-		return
-	for ch in _honey.get_children():
-		ch.queue_free()
-	# Tutti gli esagoni del vicinato entro distanza RINGS (centro + anello 1 e 2).
+func _build_honey(w: Dictionary) -> Control:
+	var honey := Control.new()
+	honey.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	var cells := HexGrid.hexes_in_range(Vector2i.ZERO, RINGS)
 	var maxr := 0.0
 	for ax in cells:
 		maxr = maxf(maxr, _hex_pixel(ax).length())
 	var side := (maxr + HEX_R) * 2.0 + 6.0
-	_honey.custom_minimum_size = Vector2(side, side)
-	_honey.size = Vector2(side, side)
+	honey.custom_minimum_size = Vector2(side, side)
+	honey.size = Vector2(side, side)
 	var center := Vector2(side, side) * 0.5
 	for ax in cells:
-		_add_hex_cell(center + _hex_pixel(ax), ax, ax == Vector2i.ZERO)
+		var cell := HexCell.new()
+		cell.setup(self, w, ax, HEX_R, ax == Vector2i.ZERO)
+		cell.position = center + _hex_pixel(ax) - Vector2(HEX_R, HEX_R)
+		cell.custom_minimum_size = Vector2(2 * HEX_R, 2 * HEX_R)
+		cell.size = cell.custom_minimum_size
+		honey.add_child(cell)
+	return honey
 
 
-func _add_hex_cell(center_px: Vector2, ax: Vector2i, is_pawn: bool) -> void:
-	var cell := HexCell.new()
-	cell.setup(self, ax, HEX_R, is_pawn)
-	cell.position = center_px - Vector2(HEX_R, HEX_R)
-	cell.custom_minimum_size = Vector2(2 * HEX_R, 2 * HEX_R)
-	cell.size = cell.custom_minimum_size
-	_honey.add_child(cell)
-	if not is_pawn:
-		_hex_cells[ax] = cell
+func _cycle_cell(cw: Dictionary, ax: Vector2i) -> void:
+	var nxt := (_cell_state_index(cw, ax) + 1) % CELL_CYCLE.size()
+	cw["attack"].erase(ax)
+	cw["defence"].erase(ax)
+	match CELL_CYCLE[nxt]:
+		"w1": cw["attack"][ax] = 1
+		"w2": cw["attack"][ax] = 2
+		"exec": cw["attack"][ax] = "exec"
+		"bleed": cw["attack"][ax] = "bleed"
+		"shield": cw["defence"][ax] = 1
+	changed.emit()
 
 
-## Posizione in px (centro del controllo) di un esagono assiale. Esagoni a LATO
-## PIATTO IN ALTO, col FRONTE (DIRS[0]) verso l'alto: il reticolo è lineare nelle
-## coordinate assiali, screen = q·Sq + r·Sr con basi scelte per orientare DIRS[0]
-## a Nord (le 6 direzioni cadono a 60° l'una dall'altra).
-static func _hex_pixel(ax: Vector2i) -> Vector2:
-	var d := HEX_R * 1.78   # distanza tra centri adiacenti (quasi a contatto)
-	var sq := Vector2(0.0, -d)
-	var sr := Vector2(-0.8660254 * d, -0.5 * d)
-	return sq * ax.x + sr * ax.y
+func _clear_cell(cw: Dictionary, ax: Vector2i) -> void:
+	cw["attack"].erase(ax)
+	cw["defence"].erase(ax)
+	changed.emit()
 
 
-## Versore schermo della direzione `d` (0..5), col fronte (DIRS[0]) verso l'alto.
-static func _dir_screen(d: int) -> Vector2:
-	return _hex_pixel(HexGrid.DIRS[d % 6]).normalized()
+func _cell_state_index(cw: Dictionary, ax: Vector2i) -> int:
+	if cw["defence"].has(ax):
+		return CELL_CYCLE.find("shield")
+	if cw["attack"].has(ax):
+		var w = cw["attack"][ax]
+		if typeof(w) == TYPE_STRING:
+			return maxi(1, CELL_CYCLE.find(str(w)))   # "exec" / "bleed"
+		return CELL_CYCLE.find("w2") if int(w) == 2 else CELL_CYCLE.find("w1")
+	return 0
 
 
-func _add_subtitle(text: String) -> void:
-	add_child(HSeparator.new())
-	var l := Label.new()
-	l.text = text
-	l.add_theme_font_size_override("font_size", 12)
-	l.add_theme_color_override("font_color", Color(0.6, 0.66, 0.74))
-	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	l.custom_minimum_size = Vector2(120, 0)
-	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	add_child(l)
+# ─── Corpo: Movimento (una sequenza di atomi) ────────────────────────────────
 
-
-# ─── Refresh ─────────────────────────────────────────────────────────────────
-
-func _refresh_all() -> void:
-	if not _built:
-		return
-	for key in _hex_cells:
-		_refresh_cell(key)
-	_rebuild_moves()
-	_rebuild_effects()
-	_update_kamae_label()
-	if _counter_edit:
-		_counter_edit.text = ", ".join(_counter.map(func(x): return str(x)))
-	if _note_edit:
-		_note_edit.text = _note
-
-
-func _refresh_cell(key: Vector2i) -> void:
-	var cell: HexCell = _hex_cells.get(key)
-	if cell == null:
-		return
-	cell.atk = _attack.get(key, null)
-	cell.dfn = _defence.get(key, null)
-	cell.queue_redraw()
-
-
-func _update_kamae_label() -> void:
-	if _kamae_label == null:
-		return
-	if _kamae_req == "":
-		_kamae_label.text = "kamae richiesto: nessuno"
-	else:
-		_kamae_label.text = "kamae richiesto: %s" % KAMAE_LABELS.get(_kamae_req, _kamae_req)
-
-
-## Editor visuale del movimento: ogni opzione è una "Sequenza" (alternativa
-## OPPURE) con una lista di atomi. Lo STEP usa una rosetta a 6 direzioni
-## (attiva/disattiva) + passi + facoltativo + kamae; la ROTAZIONE usa entità +
-## facoltativo + kamae.
-func _rebuild_moves() -> void:
-	if _moves_box == null:
-		return
-	for ch in _moves_box.get_children():
-		ch.queue_free()
-	for i in _opts.size():
-		if i > 0:
-			var orl := Label.new()
-			orl.text = "— OPPURE —"
-			orl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-			orl.add_theme_font_size_override("font_size", 11)
-			orl.add_theme_color_override("font_color", Color(0.75, 0.7, 0.4))
-			_moves_box.add_child(orl)
-		_moves_box.add_child(_build_seq_panel(i))
-
-
-func _build_seq_panel(opt_idx: int) -> Control:
-	var panel := PanelContainer.new()
-	var box := VBoxContainer.new()
-	box.add_theme_constant_override("separation", 3)
-	panel.add_child(box)
-
-	var head := HBoxContainer.new()
-	var tag := Label.new()
-	tag.text = "Sequenza %d" % (opt_idx + 1)
-	tag.add_theme_font_size_override("font_size", 11)
-	tag.add_theme_color_override("font_color", Color(0.6, 0.66, 0.74))
-	tag.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	head.add_child(tag)
-	var del := Button.new()
-	del.text = "x"
-	del.tooltip_text = "Rimuovi sequenza"
-	del.pressed.connect(func(): _opts.remove_at(opt_idx); _rebuild_moves(); changed.emit())
-	head.add_child(del)
-	box.add_child(head)
-
-	for ai in _opts[opt_idx].size():
-		box.add_child(_build_atom_editor(opt_idx, ai))
-
+func _build_movement_body(w: Dictionary) -> Control:
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 3)
+	var atoms: Array = w["atoms"]
+	for ai in atoms.size():
+		v.add_child(_build_atom_editor(w, ai))
 	var add := HBoxContainer.new()
 	add.add_theme_constant_override("separation", 4)
 	var ap := Button.new()
 	ap.text = "+ passo"
-	ap.pressed.connect(func(): add_move_atom(opt_idx, {"t": "step", "dir": 0, "n": 1, "opt": false}))
+	ap.pressed.connect(func(): atoms.append(_norm_atom({"t": "step", "dir": 0, "n": 1, "opt": false})); _rebuild_widgets(); changed.emit())
 	add.add_child(ap)
 	var ar := Button.new()
 	ar.text = "+ rotazione"
-	ar.pressed.connect(func(): add_move_atom(opt_idx, {"t": "rot", "n": 1, "opt": false}))
+	ar.pressed.connect(func(): atoms.append(_norm_atom({"t": "rot", "n": 1, "opt": false})); _rebuild_widgets(); changed.emit())
 	add.add_child(ar)
-	box.add_child(add)
-	return panel
+	v.add_child(add)
+	return v
 
 
-func _build_atom_editor(opt_idx: int, atom_idx: int) -> Control:
-	var a: Dictionary = _opts[opt_idx][atom_idx]
+func _build_atom_editor(w: Dictionary, ai: int) -> Control:
+	var a: Dictionary = w["atoms"][ai]
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 6)
-
 	if a["t"] == "step":
 		var ros := DirRosette.new()
 		ros.setup(self, a.get("dirs", []), bool(a.get("free", false)),
-			func(dirs, free): _set_step_dirs(opt_idx, atom_idx, dirs, free))
+			func(dirs, free): a["dirs"] = dirs; a["free"] = free; changed.emit())
 		row.add_child(ros)
 	else:
 		var rotc := Control.new()
@@ -660,87 +577,96 @@ func _build_atom_editor(opt_idx: int, atom_idx: int) -> Control:
 	var col := VBoxContainer.new()
 	col.add_theme_constant_override("separation", 1)
 	col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-
 	var r1 := HBoxContainer.new()
 	r1.add_theme_constant_override("separation", 3)
 	r1.add_child(_lbl("passi" if a["t"] == "step" else "entità"))
 	var sp := SpinBox.new()
-	sp.min_value = 1
-	sp.max_value = 6
-	sp.value = a["n"]
+	sp.min_value = 1; sp.max_value = 6; sp.value = a["n"]
 	sp.custom_minimum_size = Vector2(54, 0)
-	sp.value_changed.connect(func(v): _opts[opt_idx][atom_idx]["n"] = int(v); changed.emit())
+	sp.value_changed.connect(func(val): a["n"] = int(val); changed.emit())
 	r1.add_child(sp)
 	var chk := CheckBox.new()
 	chk.text = "facolt."
 	chk.button_pressed = a["opt"]
 	chk.add_theme_font_size_override("font_size", 11)
-	chk.toggled.connect(func(p): _opts[opt_idx][atom_idx]["opt"] = p; _rebuild_moves(); changed.emit())
+	chk.toggled.connect(func(p): a["opt"] = p; _rebuild_widgets(); changed.emit())
 	r1.add_child(chk)
 	var rm := Button.new()
 	rm.text = "x"
-	rm.pressed.connect(func(): _opts[opt_idx].remove_at(atom_idx); _rebuild_moves(); changed.emit())
+	rm.pressed.connect(func(): w["atoms"].remove_at(ai); _rebuild_widgets(); changed.emit())
 	r1.add_child(rm)
 	col.add_child(r1)
-
 	var r2 := HBoxContainer.new()
 	r2.add_theme_constant_override("separation", 3)
 	r2.add_child(_lbl("kamae"))
-	r2.add_child(_eff_opt(KAMAE_OPTS, str(a.get("kamae", "")), func(v): _opts[opt_idx][atom_idx]["kamae"] = v))
+	r2.add_child(_eff_opt(KAMAE_OPTS, str(a.get("kamae", "")), func(val): a["kamae"] = val))
 	if a["t"] == "step":
 		r2.add_child(_lbl("F"))
 		var fs := SpinBox.new()
-		fs.min_value = 0
-		fs.max_value = 3
-		fs.value = int(a.get("focus_cost", 0))
+		fs.min_value = 0; fs.max_value = 3; fs.value = int(a.get("focus_cost", 0))
 		fs.custom_minimum_size = Vector2(48, 0)
-		fs.value_changed.connect(func(v): _opts[opt_idx][atom_idx]["focus_cost"] = int(v); changed.emit())
+		fs.value_changed.connect(func(val): a["focus_cost"] = int(val); changed.emit())
 		r2.add_child(fs)
 	col.add_child(r2)
 	row.add_child(col)
 	return row
 
 
-func _set_step_dirs(opt_idx: int, atom_idx: int, dirs: Array, free: bool) -> void:
-	_opts[opt_idx][atom_idx]["dirs"] = dirs
-	_opts[opt_idx][atom_idx]["free"] = free
-	changed.emit()
+# ─── Corpo: Kamae richiesto / Contrattacco / Nota / Effetto ──────────────────
+
+func _build_kamae_body(w: Dictionary) -> Control:
+	var v := VBoxContainer.new()
+	var krow := HBoxContainer.new()
+	krow.add_theme_constant_override("separation", 6)
+	for slug in ["aggression", "balance", "determination"]:
+		var tok := DragIcon.new()
+		tok.setup(self, "kamae_" + slug, slug)
+		tok.custom_minimum_size = Vector2(2 * HEX_R, 2 * HEX_R)
+		tok.gui_input.connect(func(ev):
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
+				w["req"] = "" if str(w.get("req", "")) == slug else slug
+				_rebuild_widgets(); changed.emit())
+		krow.add_child(tok)
+	var az := Button.new()
+	az.text = "azzera"
+	az.pressed.connect(func(): w["req"] = ""; _rebuild_widgets(); changed.emit())
+	krow.add_child(az)
+	v.add_child(krow)
+	var lbl := Label.new()
+	var req := str(w.get("req", ""))
+	lbl.text = "richiesto: %s" % (KAMAE_LABELS.get(req, req) if req != "" else "nessuno")
+	lbl.add_theme_font_size_override("font_size", 12)
+	v.add_child(lbl)
+	return v
 
 
-# ─── Effetti ─────────────────────────────────────────────────────────────────
-
-static func _norm_effect(e: Dictionary) -> Dictionary:
-	return {
-		"do": str(e.get("do", "")), "n": int(e.get("n", 0)),
-		"when": str(e.get("when", "")), "kamae": str(e.get("kamae", "")),
-		"to": str(e.get("to", "")), "focus_cost": int(e.get("focus_cost", 0)),
-		"alt": str(e.get("alt", "")),
-	}
-
-
-## Aggiunge un effetto (vuoto o pre-popolato). Usato dal bottone e dai test.
-func add_effect(e := {}) -> void:
-	_effects.append(_norm_effect(e))
-	_rebuild_effects()
-	changed.emit()
+func _build_counter_body(w: Dictionary) -> Control:
+	var le := LineEdit.new()
+	le.placeholder_text = "iniziative di contrattacco, es. 8, 6"
+	le.text = ", ".join((w.get("values", []) as Array).map(func(x): return str(x)))
+	le.text_changed.connect(func(t: String):
+		var vals := []
+		for tok in t.split(","):
+			var s := tok.strip_edges()
+			if s.is_valid_int(): vals.append(int(s))
+		w["values"] = vals
+		changed.emit())
+	return le
 
 
-func _rebuild_effects() -> void:
-	if _effects_box == null:
-		return
-	for ch in _effects_box.get_children():
-		ch.queue_free()
-	for i in _effects.size():
-		_effects_box.add_child(_build_effect_row(i))
+func _build_note_body(w: Dictionary) -> Control:
+	var te := TextEdit.new()
+	te.custom_minimum_size = Vector2(0, 50)
+	te.placeholder_text = "annotazioni / incertezze di trascrizione"
+	te.text = str(w.get("text", ""))
+	te.text_changed.connect(func(): w["text"] = te.text; changed.emit())
+	return te
 
 
-## Una riga effetto su DUE righe compatte (sta nella colonna senza scroll
-## orizzontale): riga 1 = verbo + n + rimuovi; riga 2 = when/kamae/to/focus/alt.
-func _build_effect_row(i: int) -> Control:
-	var e: Dictionary = _effects[i]
+## Effetto su due righe compatte: verbo + n ; when/kamae/to/focus/alt.
+func _build_effect_body(w: Dictionary) -> Control:
 	var box := VBoxContainer.new()
 	box.add_theme_constant_override("separation", 2)
-
 	var r1 := HBoxContainer.new()
 	r1.add_theme_constant_override("separation", 3)
 	var do_opt := OptionButton.new()
@@ -749,36 +675,30 @@ func _build_effect_row(i: int) -> Control:
 	do_opt.add_item("(verbo…)")
 	for v in CardValidator.EFFECT_VERBS:
 		do_opt.add_item(v)
-	do_opt.selected = CardValidator.EFFECT_VERBS.find(str(e.get("do", ""))) + 1
-	do_opt.item_selected.connect(func(idx):
-		_effects[i]["do"] = "" if idx == 0 else CardValidator.EFFECT_VERBS[idx - 1]
-		changed.emit())
+	do_opt.selected = CardValidator.EFFECT_VERBS.find(str(w.get("do", ""))) + 1
+	do_opt.item_selected.connect(func(i): w["do"] = "" if i == 0 else CardValidator.EFFECT_VERBS[i - 1]; changed.emit())
 	r1.add_child(do_opt)
 	r1.add_child(_lbl("n"))
-	r1.add_child(_eff_spin(int(e.get("n", 0)), 0, 9, func(v): _effects[i]["n"] = v))
-	var rm := Button.new()
-	rm.text = "x"
-	rm.pressed.connect(func(): _effects.remove_at(i); _rebuild_effects(); changed.emit())
-	r1.add_child(rm)
+	r1.add_child(_eff_spin(int(w.get("n", 0)), 0, 9, func(val): w["n"] = val))
 	box.add_child(r1)
-
 	var r2 := HBoxContainer.new()
 	r2.add_theme_constant_override("separation", 3)
-	r2.add_child(_eff_opt(WHEN_OPTS, str(e.get("when", "")), func(v): _effects[i]["when"] = v))
-	r2.add_child(_eff_opt(KAMAE_OPTS, str(e.get("kamae", "")), func(v): _effects[i]["kamae"] = v))
-	r2.add_child(_eff_opt(KAMAE_OPTS, str(e.get("to", "")), func(v): _effects[i]["to"] = v))
+	r2.add_child(_eff_opt(WHEN_OPTS, str(w.get("when", "")), func(val): w["when"] = val))
+	r2.add_child(_eff_opt(KAMAE_OPTS, str(w.get("kamae", "")), func(val): w["kamae"] = val))
+	r2.add_child(_eff_opt(KAMAE_OPTS, str(w.get("to", "")), func(val): w["to"] = val))
 	r2.add_child(_lbl("F"))
-	r2.add_child(_eff_spin(int(e.get("focus_cost", 0)), 0, 3, func(v): _effects[i]["focus_cost"] = v))
+	r2.add_child(_eff_spin(int(w.get("focus_cost", 0)), 0, 3, func(val): w["focus_cost"] = val))
 	var alt := LineEdit.new()
 	alt.custom_minimum_size = Vector2(34, 0)
 	alt.placeholder_text = "alt"
-	alt.text = str(e.get("alt", ""))
-	alt.text_changed.connect(func(t): _effects[i]["alt"] = t.strip_edges(); changed.emit())
+	alt.text = str(w.get("alt", ""))
+	alt.text_changed.connect(func(t): w["alt"] = t.strip_edges(); changed.emit())
 	r2.add_child(alt)
 	box.add_child(r2)
-	box.add_child(HSeparator.new())
 	return box
 
+
+# ─── Helper widget ───────────────────────────────────────────────────────────
 
 func _lbl(t: String) -> Label:
 	var l := Label.new()
@@ -809,63 +729,27 @@ func _eff_opt(values: Array, cur: String, on_set: Callable) -> OptionButton:
 	return o
 
 
-# ─── Handler ─────────────────────────────────────────────────────────────────
+# ─── Geometria del nido d'ape ────────────────────────────────────────────────
 
-## Stati ciclici di un esagono di combattimento (clic per avanzare).
-const CELL_CYCLE := ["empty", "w1", "w2", "exec", "bleed", "shield"]
-
-func _on_cell_cycle(cell) -> void:
-	var ax: Vector2i = cell.ax
-	var nxt := (_cell_state_index(ax) + 1) % CELL_CYCLE.size()
-	_attack.erase(ax)
-	_defence.erase(ax)
-	match CELL_CYCLE[nxt]:
-		"w1": _attack[ax] = 1
-		"w2": _attack[ax] = 2
-		"exec": _attack[ax] = "exec"
-		"bleed": _attack[ax] = "bleed"
-		"shield": _defence[ax] = 1
-	_after_change(ax)
+## Posizione in px (centro del controllo) di un esagono assiale. Esagoni a LATO
+## PIATTO IN ALTO, col FRONTE (DIRS[0]) verso l'alto: reticolo lineare nelle
+## coordinate assiali, screen = q·Sq + r·Sr con basi orientate a Nord.
+static func _hex_pixel(ax: Vector2i) -> Vector2:
+	var d := HEX_R * 1.78
+	var sq := Vector2(0.0, -d)
+	var sr := Vector2(-0.8660254 * d, -0.5 * d)
+	return sq * ax.x + sr * ax.y
 
 
-func _cell_state_index(ax: Vector2i) -> int:
-	if _defence.has(ax):
-		return CELL_CYCLE.find("shield")
-	if _attack.has(ax):
-		var w = _attack[ax]
-		if typeof(w) == TYPE_STRING:
-			return maxi(1, CELL_CYCLE.find(str(w)))   # "exec" / "bleed"
-		return CELL_CYCLE.find("w2") if int(w) == 2 else CELL_CYCLE.find("w1")
-	return 0
-
-
-func _on_cell_clear(cell) -> void:
-	clear_cell(cell.ax.x, cell.ax.y)
-
-
-func _on_kamae_token_input(event: InputEvent, slug: String) -> void:
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		set_kamae_req("" if _kamae_req == slug else slug)
-
-
-func _on_counter_changed(text: String) -> void:
-	_counter = []
-	for tok in text.split(","):
-		var s := tok.strip_edges()
-		if s.is_valid_int():
-			_counter.append(int(s))
-	changed.emit()
-
-
-func _after_change(key: Vector2i) -> void:
-	_refresh_cell(key)
-	changed.emit()
+## Versore schermo della direzione `d` (0..5), col fronte (DIRS[0]) verso l'alto.
+static func _dir_screen(d: int) -> Vector2:
+	return _hex_pixel(HexGrid.DIRS[d % 6]).normalized()
 
 
 # ─── Conversione celle dict ↔ schema ─────────────────────────────────────────
 
-## Legge le celle in coordinate assiali (q,r). Accetta sia lo schema nuovo
-## {q,r,...} sia quello legacy a 6 direzioni {d,k,...} (convertito: DIRS[d]*k).
+## Legge le celle in coordinate assiali (q,r). Accetta lo schema nuovo {q,r,...}
+## e quello legacy a 6 direzioni {d,k,...} (convertito: DIRS[d]*k).
 func _cells_from(section: Dictionary, value_key: String) -> Dictionary:
 	var out := {}
 	for cell in section.get("cells", []):
@@ -888,8 +772,6 @@ func _cells_to(cells: Dictionary, value_key: String) -> Array:
 	return out
 
 
-## Le ferite/blocco sono interi (`int`) tranne i marcatori string "exec"/"bleed".
-## JSON può restituire i numeri come float: normalizziamo a int per JSON puliti.
 static func _coerce(v):
 	return v if typeof(v) == TYPE_STRING else int(v)
 
@@ -960,18 +842,17 @@ static func _draw_centered(ci: CanvasItem, font: Font, c: Vector2, text: String,
 		HORIZONTAL_ALIGNMENT_LEFT, -1, fs, col)
 
 
-# ─── Inner class: esagono droppabile ─────────────────────────────────────────
+# ─── Inner class: esagono di combattimento (clic-ciclo sui dati del widget) ──
 
 class HexCell extends Control:
 	var ed: GeometryEditor
-	var ax: Vector2i   ## coordinata assiale (q, r) relativa alla pedina (facing 0)
-	var r: float       ## raggio in px
+	var cw: Dictionary   ## widget combattimento di appartenenza
+	var ax: Vector2i
+	var r: float
 	var is_pawn: bool
-	var atk = null   ## ferite (int|String) o null
-	var dfn = null   ## valore blocco (int) o null
 
-	func setup(editor: GeometryEditor, axial: Vector2i, rr: float, pawn: bool) -> void:
-		ed = editor; ax = axial; r = rr; is_pawn = pawn
+	func setup(editor: GeometryEditor, combat_widget: Dictionary, axial: Vector2i, rr: float, pawn: bool) -> void:
+		ed = editor; cw = combat_widget; ax = axial; r = rr; is_pawn = pawn
 		mouse_filter = Control.MOUSE_FILTER_STOP
 		tooltip_text = "pedina" if pawn else "q %d · r %d · dist %d" % [ax.x, ax.y, _hex_dist(ax)]
 
@@ -980,6 +861,11 @@ class HexCell extends Control:
 
 	func _draw() -> void:
 		var c := Vector2(r, r)
+		var atk = null
+		var dfn = null
+		if not is_pawn:
+			atk = cw.get("attack", {}).get(ax, null)
+			dfn = cw.get("defence", {}).get(ax, null)
 		var pts := PackedVector2Array()
 		for i in range(6):
 			pts.append(c + Vector2.from_angle(deg_to_rad(-60 + 60 * i)) * r * 0.95)   # lato piatto in alto
@@ -1006,18 +892,19 @@ class HexCell extends Control:
 		if dfn != null:
 			GeometryEditor.draw_icon(self, "shield", c if atk == null else c + Vector2(0, r * 0.32), r * (1.0 if atk == null else 0.6), int(dfn))
 
-	## Clic sinistro = avanza il ciclo (vuoto→ferita→doppia→esec→sanguina→difesa);
-	## clic destro = svuota. Niente trascinamento (più comodo su touch).
+	## Clic sinistro = avanza il ciclo; clic destro = svuota.
 	func _gui_input(event: InputEvent) -> void:
 		if is_pawn or not (event is InputEventMouseButton and event.pressed):
 			return
 		if event.button_index == MOUSE_BUTTON_LEFT:
-			ed._on_cell_cycle(self)
+			ed._cycle_cell(cw, ax)
+			queue_redraw()
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
-			ed._on_cell_clear(self)
+			ed._clear_cell(cw, ax)
+			queue_redraw()
 
 
-# ─── Inner class: icona trascinabile (palette / token) ───────────────────────
+# ─── Inner class: icona disegnata (token kamae) ──────────────────────────────
 
 class DragIcon extends Control:
 	var ed: GeometryEditor
@@ -1032,26 +919,18 @@ class DragIcon extends Control:
 	func _draw() -> void:
 		GeometryEditor.draw_icon(self, kind, size * 0.5, minf(size.x, size.y) * 0.5, value)
 
-	func _get_drag_data(_pos: Vector2):
-		var prev := DragIcon.new()
-		prev.setup(ed, kind, value)
-		prev.custom_minimum_size = size
-		prev.size = size
-		set_drag_preview(prev)
-		return {"kind": kind, "value": value}
-
 
 # ─── Inner class: rosetta direzioni del passo (6 direzioni + libero) ─────────
 
 ## Mostra le 6 direzioni attorno alla pedina (fronte in alto): clic per
-## attivare/disattivare. Il pulsante centrale = passo LIBERO (qualsiasi
-## direzione, dir -1). Chiama on_change(dirs: Array, free: bool) a ogni modifica.
+## attivare/disattivare. Il centro = passo LIBERO (dir -1). Chiama
+## on_change(dirs: Array, free: bool) a ogni modifica.
 class DirRosette extends Control:
 	var ed: GeometryEditor
 	var dirs: Array = []
 	var free: bool = false
 	var on_change: Callable
-	const RAD := 17.0   ## raggio dal centro alle direzioni
+	const RAD := 17.0
 
 	func setup(editor: GeometryEditor, initial_dirs: Array, is_free: bool, cb: Callable) -> void:
 		ed = editor
@@ -1064,7 +943,6 @@ class DirRosette extends Control:
 
 	func _draw() -> void:
 		var c := size * 0.5
-		# centro = pedina / "libero"
 		var ccol := GeometryEditor.COL_PAWN if free else Color(0.30, 0.30, 0.36)
 		draw_circle(c, 9.0, ccol)
 		var tri := PackedVector2Array([c + Vector2(0, -5), c + Vector2(-5, 4), c + Vector2(5, 4)])
@@ -1086,7 +964,7 @@ class DirRosette extends Control:
 			return
 		var c := size * 0.5
 		if event.position.distance_to(c) <= 11.0:
-			free = not free      # centro = passo libero
+			free = not free
 		else:
 			var best := -1
 			var bestd := 14.0
