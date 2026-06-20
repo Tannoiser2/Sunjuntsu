@@ -30,7 +30,7 @@ func _ready() -> void:
 	_check(editor._current_id > 0, "carta selezionata id=%d" % editor._current_id)
 	_check(editor._form.get_child_count() > 1, "form di dettaglio costruito")
 	_check(editor._orig_preview.get_child_count() == 1, "colonna originale popolata")
-	_check(editor._palette_holder.get_child_count() == 1, "palette costruita nella colonna destra")
+	_check(editor._geom_editor._widgets.size() >= 1, "editor geometria a widget popolato")
 	_check(editor._w.has("name") and editor._w.has("keywords"), "widget editabili presenti")
 
 	# Ricalcolo automatico di type dai keywords.
