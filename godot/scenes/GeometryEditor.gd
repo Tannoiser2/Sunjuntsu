@@ -75,12 +75,7 @@ func load_geometry(card_type: String, geom: Dictionary) -> void:
 	for opt in geom.get("move", {}).get("opts", []):
 		var atoms: Array = []
 		for a in opt.get("atoms", []):
-			atoms.append({
-				"t": str(a.get("t", "step")),
-				"dir": int(a.get("dir", 0)),
-				"n": int(a.get("n", 1)),
-				"opt": bool(a.get("opt", false)),
-			})
+			atoms.append(_norm_atom(a))
 		_opts.append(atoms)
 	_kamae_req = str(geom.get("kamae_req", ""))
 	_counter = []
@@ -112,9 +107,20 @@ func to_geometry() -> Dictionary:
 		for a in atoms:
 			var atom := {"t": a["t"]}
 			if a["t"] == "step":
-				atom["dir"] = a["dir"]
-			atom["n"] = a["n"]
-			atom["opt"] = a["opt"]
+				if bool(a.get("free", false)):
+					atom["dir"] = -1                       # passo libero
+				elif (a.get("dirs", []) as Array).size() == 1:
+					atom["dir"] = int(a["dirs"][0])
+				elif (a.get("dirs", []) as Array).size() > 1:
+					atom["dirs"] = (a["dirs"] as Array).duplicate()   # scelta di direzioni
+				else:
+					atom["dir"] = 0
+			atom["n"] = int(a["n"])
+			atom["opt"] = bool(a["opt"])
+			if str(a.get("kamae", "")) != "":
+				atom["kamae"] = str(a["kamae"])
+			if int(a.get("focus_cost", 0)) > 0:
+				atom["focus_cost"] = int(a["focus_cost"])
 			out_atoms.append(atom)
 		opts.append({"atoms": out_atoms})
 	if not opts.is_empty():
@@ -175,9 +181,34 @@ func add_opt() -> int:
 func add_move_atom(opt_idx: int, atom: Dictionary) -> void:
 	while _opts.size() <= opt_idx:
 		_opts.append([])
-	_opts[opt_idx].append(atom)
+	_opts[opt_idx].append(_norm_atom(atom))
 	_rebuild_moves()
 	changed.emit()
+
+
+## Normalizza un atomo di movimento nel formato interno dell'editor, preservando
+## tutti i campi (dirs/kamae/focus_cost). Internamente lo step tiene `dirs`
+## (lista di direzioni scelte) + `free` (passo libero, dir -1).
+static func _norm_atom(a: Dictionary) -> Dictionary:
+	var atom := {
+		"t": str(a.get("t", "step")),
+		"n": int(a.get("n", 1)),
+		"opt": bool(a.get("opt", false)),
+		"kamae": str(a.get("kamae", "")),
+		"focus_cost": int(a.get("focus_cost", 0)),
+	}
+	if atom["t"] == "step":
+		if a.has("dirs"):
+			var ds := []
+			for x in a["dirs"]:
+				ds.append(int(x))
+			atom["dirs"] = ds
+			atom["free"] = false
+		else:
+			var dd := int(a.get("dir", 0))
+			atom["free"] = dd == -1
+			atom["dirs"] = [] if dd == -1 else [dd]
+	return atom
 
 func set_kamae_req(slug: String) -> void:
 	_kamae_req = slug
@@ -268,11 +299,6 @@ func build_palette() -> Control:
 	legend.add_theme_color_override("font_color", Color(0.6, 0.66, 0.74))
 	legend.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	col.add_child(legend)
-	var ml := Label.new()
-	ml.text = "Movimento (trascina)"
-	ml.add_theme_font_size_override("font_size", 12)
-	col.add_child(ml)
-	col.add_child(_build_move_palette())
 	var kl := Label.new()
 	kl.text = "Kamae (clic per impostare)"
 	kl.add_theme_font_size_override("font_size", 12)
@@ -307,18 +333,6 @@ func _build_combat_palette() -> Control:
 	col.add_child(l2)
 	col.add_child(_palette_icon("shield", 1))
 	return col
-
-
-func _build_move_palette() -> Control:
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 6)
-	for spec in [["step", false], ["step", true], ["rot", false], ["rot", true]]:
-		var di := DragIcon.new()
-		var kind: String = spec[0] + ("_opt" if spec[1] else "")
-		di.setup(self, kind, null)
-		di.custom_minimum_size = Vector2(2 * HEX_R, 2 * HEX_R)
-		row.add_child(di)
-	return row
 
 
 func _palette_icon(kind: String, value) -> DragIcon:
@@ -367,6 +381,11 @@ static func _hex_pixel(ax: Vector2i) -> Vector2:
 	return sq * ax.x + sr * ax.y
 
 
+## Versore schermo della direzione `d` (0..5), col fronte (DIRS[0]) verso l'alto.
+static func _dir_screen(d: int) -> Vector2:
+	return _hex_pixel(HexGrid.DIRS[d % 6]).normalized()
+
+
 func _add_subtitle(text: String) -> void:
 	add_child(HSeparator.new())
 	var l := Label.new()
@@ -409,66 +428,127 @@ func _update_kamae_label() -> void:
 		_kamae_label.text = "kamae richiesto: %s" % KAMAE_LABELS.get(_kamae_req, _kamae_req)
 
 
+## Editor visuale del movimento: ogni opzione è una "Sequenza" (alternativa
+## OPPURE) con una lista di atomi. Lo STEP usa una rosetta a 6 direzioni
+## (attiva/disattiva) + passi + facoltativo + kamae; la ROTAZIONE usa entità +
+## facoltativo + kamae.
 func _rebuild_moves() -> void:
 	if _moves_box == null:
 		return
 	for ch in _moves_box.get_children():
 		ch.queue_free()
 	for i in _opts.size():
-		_moves_box.add_child(_build_opt_row(i))
+		if i > 0:
+			var orl := Label.new()
+			orl.text = "— OPPURE —"
+			orl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			orl.add_theme_font_size_override("font_size", 11)
+			orl.add_theme_color_override("font_color", Color(0.75, 0.7, 0.4))
+			_moves_box.add_child(orl)
+		_moves_box.add_child(_build_seq_panel(i))
 
 
-func _build_opt_row(opt_idx: int) -> Control:
-	var row := MoveOptRow.new()
-	row.setup(self, opt_idx)
-	row.add_theme_constant_override("separation", 4)
+func _build_seq_panel(opt_idx: int) -> Control:
+	var panel := PanelContainer.new()
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override("separation", 3)
+	panel.add_child(box)
+
+	var head := HBoxContainer.new()
 	var tag := Label.new()
-	tag.text = ("seq %d:" % (opt_idx + 1)) if _opts.size() > 1 else "passi:"
-	tag.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
-	row.add_child(tag)
+	tag.text = "Sequenza %d" % (opt_idx + 1)
+	tag.add_theme_font_size_override("font_size", 11)
+	tag.add_theme_color_override("font_color", Color(0.6, 0.66, 0.74))
+	tag.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	head.add_child(tag)
+	var del := Button.new()
+	del.text = "x"
+	del.tooltip_text = "Rimuovi sequenza"
+	del.pressed.connect(func(): _opts.remove_at(opt_idx); _rebuild_moves(); changed.emit())
+	head.add_child(del)
+	box.add_child(head)
+
 	for ai in _opts[opt_idx].size():
-		row.add_child(_build_atom_chip(opt_idx, ai))
-	var hint := Label.new()
-	hint.text = "  ⟵ trascina qui"
-	hint.add_theme_color_override("font_color", Color(0.45, 0.45, 0.5))
-	hint.add_theme_font_size_override("font_size", 11)
-	row.add_child(hint)
+		box.add_child(_build_atom_editor(opt_idx, ai))
+
+	var add := HBoxContainer.new()
+	add.add_theme_constant_override("separation", 4)
+	var ap := Button.new()
+	ap.text = "+ passo"
+	ap.pressed.connect(func(): add_move_atom(opt_idx, {"t": "step", "dir": 0, "n": 1, "opt": false}))
+	add.add_child(ap)
+	var ar := Button.new()
+	ar.text = "+ rotazione"
+	ar.pressed.connect(func(): add_move_atom(opt_idx, {"t": "rot", "n": 1, "opt": false}))
+	add.add_child(ar)
+	box.add_child(add)
+	return panel
+
+
+func _build_atom_editor(opt_idx: int, atom_idx: int) -> Control:
+	var a: Dictionary = _opts[opt_idx][atom_idx]
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 6)
+
+	if a["t"] == "step":
+		var ros := DirRosette.new()
+		ros.setup(self, a.get("dirs", []), bool(a.get("free", false)),
+			func(dirs, free): _set_step_dirs(opt_idx, atom_idx, dirs, free))
+		row.add_child(ros)
+	else:
+		var rotc := Control.new()
+		rotc.custom_minimum_size = Vector2(46, 46)
+		rotc.draw.connect(func(): GeometryEditor.draw_icon(rotc, "rot" if not a["opt"] else "rot_opt", Vector2(23, 23), 20.0, 1))
+		row.add_child(rotc)
+
+	var col := VBoxContainer.new()
+	col.add_theme_constant_override("separation", 1)
+	col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
+	var r1 := HBoxContainer.new()
+	r1.add_theme_constant_override("separation", 3)
+	r1.add_child(_lbl("passi" if a["t"] == "step" else "entità"))
+	var sp := SpinBox.new()
+	sp.min_value = 1
+	sp.max_value = 6
+	sp.value = a["n"]
+	sp.custom_minimum_size = Vector2(54, 0)
+	sp.value_changed.connect(func(v): _opts[opt_idx][atom_idx]["n"] = int(v); changed.emit())
+	r1.add_child(sp)
+	var chk := CheckBox.new()
+	chk.text = "facolt."
+	chk.button_pressed = a["opt"]
+	chk.add_theme_font_size_override("font_size", 11)
+	chk.toggled.connect(func(p): _opts[opt_idx][atom_idx]["opt"] = p; _rebuild_moves(); changed.emit())
+	r1.add_child(chk)
+	var rm := Button.new()
+	rm.text = "x"
+	rm.pressed.connect(func(): _opts[opt_idx].remove_at(atom_idx); _rebuild_moves(); changed.emit())
+	r1.add_child(rm)
+	col.add_child(r1)
+
+	var r2 := HBoxContainer.new()
+	r2.add_theme_constant_override("separation", 3)
+	r2.add_child(_lbl("kamae"))
+	r2.add_child(_eff_opt(KAMAE_OPTS, str(a.get("kamae", "")), func(v): _opts[opt_idx][atom_idx]["kamae"] = v))
+	if a["t"] == "step":
+		r2.add_child(_lbl("F"))
+		var fs := SpinBox.new()
+		fs.min_value = 0
+		fs.max_value = 3
+		fs.value = int(a.get("focus_cost", 0))
+		fs.custom_minimum_size = Vector2(48, 0)
+		fs.value_changed.connect(func(v): _opts[opt_idx][atom_idx]["focus_cost"] = int(v); changed.emit())
+		r2.add_child(fs)
+	col.add_child(r2)
+	row.add_child(col)
 	return row
 
 
-func _build_atom_chip(opt_idx: int, atom_idx: int) -> Control:
-	var a: Dictionary = _opts[opt_idx][atom_idx]
-	var chip := HBoxContainer.new()
-	chip.add_theme_constant_override("separation", 2)
-
-	var glyph := Button.new()
-	glyph.custom_minimum_size = Vector2(40, 30)
-	glyph.add_theme_color_override("font_color", Color.BLACK if not a["opt"] else Color(0.2, 0.2, 0.2))
-	if a["t"] == "step":
-		glyph.text = "%s d%d" % ["▲" if not a["opt"] else "△", a["dir"]]
-		glyph.pressed.connect(_cycle_dir.bind(opt_idx, atom_idx))
-	else:
-		glyph.text = "↻" if not a["opt"] else "↺"
-	chip.add_child(glyph)
-
-	var sp := SpinBox.new()
-	sp.min_value = 1; sp.max_value = 6; sp.value = a["n"]
-	sp.value_changed.connect(func(v): _opts[opt_idx][atom_idx]["n"] = int(v); changed.emit())
-	chip.add_child(sp)
-
-	var opt_chk := CheckBox.new()
-	opt_chk.text = "opz"
-	opt_chk.button_pressed = a["opt"]
-	opt_chk.toggled.connect(func(p): _opts[opt_idx][atom_idx]["opt"] = p; _rebuild_moves(); changed.emit())
-	chip.add_child(opt_chk)
-
-	var rm := Button.new()
-	rm.text = "x"
-	rm.pressed.connect(func():
-		_opts[opt_idx].remove_at(atom_idx)
-		_rebuild_moves(); changed.emit())
-	chip.add_child(rm)
-	return chip
+func _set_step_dirs(opt_idx: int, atom_idx: int, dirs: Array, free: bool) -> void:
+	_opts[opt_idx][atom_idx]["dirs"] = dirs
+	_opts[opt_idx][atom_idx]["free"] = free
+	changed.emit()
 
 
 # ─── Effetti ─────────────────────────────────────────────────────────────────
@@ -607,13 +687,6 @@ func _on_cell_clear(cell) -> void:
 	clear_cell(cell.ax.x, cell.ax.y)
 
 
-func _on_move_drop(opt_idx: int, data: Dictionary) -> void:
-	var kind: String = data.get("kind", "")
-	var is_opt := kind.ends_with("_opt")
-	var t := "rot" if kind.begins_with("rot") else "step"
-	add_move_atom(opt_idx, {"t": t, "dir": 0, "n": 1, "opt": is_opt})
-
-
 func _on_kamae_token_input(event: InputEvent, slug: String) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		set_kamae_req("" if _kamae_req == slug else slug)
@@ -625,15 +698,6 @@ func _on_counter_changed(text: String) -> void:
 		var s := tok.strip_edges()
 		if s.is_valid_int():
 			_counter.append(int(s))
-	changed.emit()
-
-
-func _cycle_dir(opt_idx: int, atom_idx: int) -> void:
-	var order := [0, 1, 2, 3, 4, 5, -1]
-	var cur: int = _opts[opt_idx][atom_idx]["dir"]
-	var i := order.find(cur)
-	_opts[opt_idx][atom_idx]["dir"] = order[(i + 1) % order.size()]
-	_rebuild_moves()
 	changed.emit()
 
 
@@ -821,19 +885,67 @@ class DragIcon extends Control:
 		return {"kind": kind, "value": value}
 
 
-# ─── Inner class: riga di una sequenza di movimento (drop target) ────────────
+# ─── Inner class: rosetta direzioni del passo (6 direzioni + libero) ─────────
 
-class MoveOptRow extends HBoxContainer:
+## Mostra le 6 direzioni attorno alla pedina (fronte in alto): clic per
+## attivare/disattivare. Il pulsante centrale = passo LIBERO (qualsiasi
+## direzione, dir -1). Chiama on_change(dirs: Array, free: bool) a ogni modifica.
+class DirRosette extends Control:
 	var ed: GeometryEditor
-	var opt_idx: int
+	var dirs: Array = []
+	var free: bool = false
+	var on_change: Callable
+	const RAD := 17.0   ## raggio dal centro alle direzioni
 
-	func setup(editor: GeometryEditor, idx: int) -> void:
-		ed = editor; opt_idx = idx
+	func setup(editor: GeometryEditor, initial_dirs: Array, is_free: bool, cb: Callable) -> void:
+		ed = editor
+		dirs = (initial_dirs as Array).duplicate()
+		free = is_free
+		on_change = cb
+		custom_minimum_size = Vector2(86, 86)
 		mouse_filter = Control.MOUSE_FILTER_STOP
+		tooltip_text = "Clic: attiva/disattiva direzione. Centro = passo libero."
 
-	func _can_drop_data(_pos: Vector2, data) -> bool:
-		return data is Dictionary and str(data.get("kind", "")).begins_with("step") \
-			or data is Dictionary and str(data.get("kind", "")).begins_with("rot")
+	func _draw() -> void:
+		var c := size * 0.5
+		# centro = pedina / "libero"
+		var ccol := GeometryEditor.COL_PAWN if free else Color(0.30, 0.30, 0.36)
+		draw_circle(c, 9.0, ccol)
+		var tri := PackedVector2Array([c + Vector2(0, -5), c + Vector2(-5, 4), c + Vector2(5, 4)])
+		draw_colored_polygon(tri, Color(0.1, 0.1, 0.1) if free else Color(0.7, 0.7, 0.75))
+		var font := ThemeDB.fallback_font
+		for d in range(6):
+			var p := c + GeometryEditor._dir_screen(d) * RAD * 1.7
+			var on := d in dirs and not free
+			draw_circle(p, 8.0, Color(0.40, 0.62, 0.95) if on else Color(0.24, 0.24, 0.30))
+			draw_arc(p, 8.0, 0, TAU, 16, Color(0.5, 0.5, 0.55), 1.0)
+			if font:
+				var s := str(d)
+				var sz := font.get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, 11)
+				draw_string(font, p - sz * 0.5 + Vector2(0, sz.y * 0.35), s,
+					HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color.WHITE if on else Color(0.7, 0.7, 0.75))
 
-	func _drop_data(_pos: Vector2, data) -> void:
-		ed._on_move_drop(opt_idx, data)
+	func _gui_input(event: InputEvent) -> void:
+		if not (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT):
+			return
+		var c := size * 0.5
+		if event.position.distance_to(c) <= 11.0:
+			free = not free      # centro = passo libero
+		else:
+			var best := -1
+			var bestd := 14.0
+			for d in range(6):
+				var p := c + GeometryEditor._dir_screen(d) * RAD * 1.7
+				var dist: float = event.position.distance_to(p)
+				if dist < bestd:
+					bestd = dist; best = d
+			if best == -1:
+				return
+			free = false
+			if best in dirs:
+				dirs.erase(best)
+			else:
+				dirs.append(best)
+				dirs.sort()
+		queue_redraw()
+		on_change.call(dirs.duplicate(), free)
