@@ -207,13 +207,13 @@ func _build_ui() -> void:
 	add_child(kr)
 
 	# Nido d'ape completo (tutti gli esagoni entro distanza 2): bersaglio del drag.
-	_add_subtitle("Combattimento — trascina dalla palette; trascina tra esagoni per spostare; clic destro = svuota")
+	_add_subtitle("Combattimento")
 	_honey = Control.new()
 	_honey.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	add_child(_honey)
 
 	# Movimento: sequenze (le righe sono bersaglio del drag delle frecce).
-	_add_subtitle("Movimento — trascina frecce/rotazioni dalla palette nelle sequenze")
+	_add_subtitle("Movimento")
 	_moves_box = VBoxContainer.new()
 	_moves_box.add_theme_constant_override("separation", 4)
 	add_child(_moves_box)
@@ -223,7 +223,7 @@ func _build_ui() -> void:
 	add_child(add_opt_btn)
 
 	# Effetti.
-	_add_subtitle("Effetti — verbo + campi contestuali (n, when, kamae, to, focus, alt)")
+	_add_subtitle("Effetti")
 	_effects_box = VBoxContainer.new()
 	_effects_box.add_theme_constant_override("separation", 3)
 	add_child(_effects_box)
@@ -233,7 +233,7 @@ func _build_ui() -> void:
 	add_child(add_eff)
 
 	# Counter + note.
-	_add_subtitle("Contrattacco (iniziative, separate da virgola) e note")
+	_add_subtitle("Contrattacco / note")
 	_counter_edit = LineEdit.new()
 	_counter_edit.placeholder_text = "es. 8, 6"
 	_counter_edit.text_changed.connect(_on_counter_changed)
@@ -369,6 +369,9 @@ func _add_subtitle(text: String) -> void:
 	l.text = text
 	l.add_theme_font_size_override("font_size", 12)
 	l.add_theme_color_override("font_color", Color(0.6, 0.66, 0.74))
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	l.custom_minimum_size = Vector2(120, 0)
+	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	add_child(l)
 
 
@@ -497,6 +500,8 @@ func _build_effect_row(i: int) -> Control:
 	row.add_theme_constant_override("separation", 3)
 
 	var do_opt := OptionButton.new()
+	do_opt.clip_text = true
+	do_opt.custom_minimum_size = Vector2(96, 0)
 	do_opt.add_item("(verbo…)")
 	for v in CardValidator.EFFECT_VERBS:
 		do_opt.add_item(v)
@@ -554,6 +559,8 @@ func _eff_opt(values: Array, cur: String, on_set: Callable) -> OptionButton:
 		if values[i] == cur:
 			found = i
 	o.selected = maxi(found, 0)
+	o.clip_text = true
+	o.custom_minimum_size = Vector2(62, 0)
 	o.item_selected.connect(func(idx): on_set.call(values[idx]); changed.emit())
 	return o
 

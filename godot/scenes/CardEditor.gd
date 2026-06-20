@@ -145,7 +145,7 @@ func _build_topbar() -> Control:
 ## Colonna sinistra stretta: solo l'elenco delle carte.
 func _build_list_panel() -> Control:
 	var col := VBoxContainer.new()
-	col.custom_minimum_size = Vector2(165, 0)
+	col.custom_minimum_size = Vector2(150, 0)
 	col.add_theme_constant_override("separation", 6)
 	_list = ItemList.new()
 	_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -161,12 +161,12 @@ func _build_list_panel() -> Control:
 ## Centro: carta ORIGINALE (immagine reale) ↔ carta SIMULATA (gemello editabile).
 func _build_center() -> Control:
 	var center := HBoxContainer.new()
-	center.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	center.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	center.add_theme_constant_override("separation", 10)
 
 	# Colonna ORIGINALE (compatta).
 	var orig := VBoxContainer.new()
-	orig.custom_minimum_size = Vector2(190, 0)
+	orig.custom_minimum_size = Vector2(168, 0)
 	orig.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	orig.add_theme_constant_override("separation", 4)
 	var ol := Label.new()
@@ -175,7 +175,7 @@ func _build_center() -> Control:
 	ol.add_theme_color_override("font_color", Color(0.7, 0.78, 0.9))
 	orig.add_child(ol)
 	_orig_preview = CenterContainer.new()
-	_orig_preview.custom_minimum_size = Vector2(180, 250)
+	_orig_preview.custom_minimum_size = Vector2(156, 216)
 	orig.add_child(_orig_preview)
 	_img_path_label = Label.new()
 	_img_path_label.text = "(nessuna)"
@@ -199,14 +199,17 @@ func _build_center() -> Control:
 	orig.add_child(_orig_indicators)
 	center.add_child(orig)
 
-	# Colonna SIMULATA (gemello).
+	# Colonna SIMULATA (gemello) — larghezza FISSA: i contenuti larghi scorrono
+	# dentro la colonna invece di espanderla e spingere la palette fuori schermo.
 	var simcol := VBoxContainer.new()
-	simcol.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	simcol.custom_minimum_size = Vector2(360, 0)
+	simcol.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	simcol.add_theme_constant_override("separation", 4)
 	var sl := Label.new()
-	sl.text = "Carta simulata  (gemello digitale — modificabile)"
-	sl.add_theme_font_size_override("font_size", 15)
+	sl.text = "Carta simulata"
+	sl.add_theme_font_size_override("font_size", 14)
 	sl.add_theme_color_override("font_color", Color(0.7, 0.78, 0.9))
+	sl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	simcol.add_child(sl)
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -231,8 +234,8 @@ func _toolbar_button(parent: Control, text: String, cb: Callable) -> Button:
 ## Colonna destra: contenitore della palette (riempito per carta in _build_form).
 func _build_palette_panel() -> Control:
 	var scroll := ScrollContainer.new()
-	scroll.custom_minimum_size = Vector2(172, 0)
-	scroll.size_flags_horizontal = Control.SIZE_SHRINK_END
+	scroll.custom_minimum_size = Vector2(158, 0)
+	scroll.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_palette_holder = VBoxContainer.new()
 	_palette_holder.add_theme_constant_override("separation", 6)
@@ -362,7 +365,7 @@ func _build_form(id: int, c: Dictionary, geom_data = null) -> void:
 	_issues_box.add_theme_constant_override("separation", 1)
 	_form.add_child(_issues_box)
 
-	_add_section("Anagrafica  (editabile)")
+	_add_section("Anagrafica")
 	_w["name"] = _add_edit_text("nome", str(c.get("name", "")))
 	_w["char"] = _add_edit_option("personaggio", _char_list(), str(c.get("char", "Warrior")))
 	_w["amount"] = _add_edit_spin("amount", 1, 6, int(c.get("amount", 1)))
@@ -379,7 +382,7 @@ func _build_form(id: int, c: Dictionary, geom_data = null) -> void:
 	_w["focus"].value_changed.connect(func(_v): _on_edit())
 
 	# Geometria/effetti — editor visuale drag & drop (Fase 4).
-	_add_section("Geometria / effetti  (visuale — trascina le icone)")
+	_add_section("Geometria / effetti")
 	_geom_editor = GeometryEditor.new()
 	_geom_editor.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_form.add_child(_geom_editor)
@@ -894,7 +897,7 @@ func _update_preview(c: Dictionary, img: String) -> void:
 		tr.texture = CardView._load_texture("res://assets/cards/" + img)
 		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		tr.custom_minimum_size = Vector2(180, 250)
+		tr.custom_minimum_size = Vector2(156, 216)
 		_orig_preview.add_child(tr)
 	else:
 		var ph := Label.new()
@@ -960,8 +963,10 @@ func _add_section(text: String) -> void:
 	_form.add_child(HSeparator.new())
 	var l := Label.new()
 	l.text = text
-	l.add_theme_font_size_override("font_size", 15)
+	l.add_theme_font_size_override("font_size", 14)
 	l.add_theme_color_override("font_color", Color(0.7, 0.78, 0.9))
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	l.custom_minimum_size = Vector2(120, 0)
 	_form.add_child(l)
 
 
@@ -969,7 +974,8 @@ func _edit_row(key: String, widget: Control) -> void:
 	var hb := HBoxContainer.new()
 	var k := Label.new()
 	k.text = key
-	k.custom_minimum_size = Vector2(110, 0)
+	k.custom_minimum_size = Vector2(78, 0)
+	k.add_theme_font_size_override("font_size", 11)
 	k.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
 	hb.add_child(k)
 	widget.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -1005,6 +1011,8 @@ func _add_edit_option(key: String, values: Array, current: String) -> OptionButt
 		opt.add_item(current)
 		found = opt.item_count - 1
 	opt.selected = maxi(found, 0)
+	opt.clip_text = true
+	opt.custom_minimum_size = Vector2(80, 0)
 	_edit_row(key, opt)
 	return opt
 
