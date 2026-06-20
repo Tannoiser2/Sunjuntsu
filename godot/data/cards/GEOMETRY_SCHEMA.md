@@ -1,51 +1,138 @@
-# Geometria/effetti delle carte — schema di trascrizione
+# Geometria/effetti delle carte — Schema v2
 
-`geometry.json` contiene i dati stampati **solo sulla faccia delle carte** (non
-presenti nell'Excel): portata/raggio dell'attacco, ferite, movimento, blocco ed
-effetti. Trascrizione manuale dalle immagini in
-`Tabelle_Materiali/Senjutsu/CARTE/` — ogni voce è verificata col **numero
-stampato** (= Card ID).
+`geometry.json` contiene i dati stampati **sulla faccia delle carte** (non
+presenti nell'Excel di deckbuilding): movimento, arco/anelli dell'attacco,
+ferite, blocco difensivo, contrattacco ed effetti. Trascrizione manuale
+best-effort dalle immagini in `Tabelle_Materiali/Senjutsu/CARTE/`; ogni voce è
+agganciata al **numero stampato sulla carta** (= Card ID).
 
-## Convenzione griglia
-La honeycomb sulla carta è il vicinato esagonale del personaggio (centro + 6
-adiacenti) orientato secondo la direzione: il **▲** è la pedina, le icone sugli
-esagoni indicano i bersagli. In un duello 1v1 ciò che conta è **se l'avversario
-è nella portata/arco dell'attacco**: per questo trascriviamo `range` (raggio max
-degli esagoni colpiti) e, dove utile, `dirs` (direzioni relative: 0 = fronte,
-senso orario). Le icone:
+> Questo documento descrive lo **schema reale** usato dai dati (`Schema v2`).
+> Il vecchio schema v1 (`range/wounds/dirs/block`) è stato abbandonato: non
+> corrisponde più ai dati e non va usato.
 
-| Icona | Significato | Campo |
-|-------|-------------|-------|
-| ! (ottagono) | 1 ferita | `wounds: 1` |
-| ‼ / doppia | 2 ferite | `wounds: 2` |
-| goccia | ferita sanguinante | `wound_kind: "bleed"` |
-| teschio | esecuzione (sconfitta) | `wound_kind: "exec"` |
-| scudo ▽ | esagono bloccato (difesa) | `block: true` |
-| ▲ | pedina/orientamento | (riferimento) |
-| ↑ / ↓ / ↕ | passo (avanti/indietro) | `steps` |
-| ↻ | rotazione | `rotates` |
-| ✱ | iniziativa (variabile) | (in deck) |
-| fiore | focus | `focus_gain` |
+## Struttura del file
 
-## Campi per carta (tutti opzionali)
+```jsonc
+{
+  "note": "...riassunto delle convenzioni e degli avvisi di affidabilità...",
+  "cards": {
+    "<id>": { /* geometria di una carta, vedi sotto */ }
+  },
+  "characters": {
+    "<Personaggio>": { "card_id": int, "name": str,
+                       "wound_limit": int, "hand_limit": int, "weapons": [str] }
+  }
+}
+```
+
+- La **chiave** in `cards` è l'`id` come **stringa** (in `card_pool.json` è `int`).
+  Lo store normalizza: int per la logica, string per la chiave JSON.
+- `characters` mappa il personaggio (es. `"Warrior"`) ai suoi limiti e armi.
+
+## Geometria di una carta (tutti i campi opzionali tranne `name`/`type`)
+
+```jsonc
+"55": {
+  "name": "COLPO DELLA FENICE FIAMMANTE",   // string — nome stampato (riferimento)
+  "type": "attack",                          // attack | defence | meditation | core
+  "kamae_req": "aggression",                 // gate kamae per giocarla (opz.)
+
+  "move": { "opts": [ { "atoms": [           // movimento: lista di OPZIONI alternative,
+      { "t": "step", "dir": 0, "n": 1, "opt": false },   // ognuna è una sequenza di ATOMI
+      { "t": "rot",  "n": 2, "opt": true }
+  ] } ] },
+
+  "attack":  { "cells": [                     // arco offensivo: celle colpite
+      { "d": 0, "k": 1, "w": 2 },             // d=dir relativa, k=anello, w=ferite
+      { "d": 1, "k": 1, "w": "exec" }
+  ] },
+
+  "defence": { "cells": [ { "d": 0, "k": 1, "v": 1 } ] },  // v=valore di blocco
+
+  "counter": [8],                             // iniziative di contrattacco (opz.)
+
+  "effects": [                                // lista ORDINATA di effetti
+    { "do": "push", "n": 1, "when": "on_hit", "kamae": "balance",
+      "alt": "a", "to": "aggression", "focus_cost": 1 }
+  ],
+
+  "note": "annotazioni / incertezze di trascrizione"
+}
+```
+
+### Campi
+
 | Campo | Tipo | Significato |
 |-------|------|-------------|
-| `range` | int | raggio max dell'attacco (1 = mischia, 2+ = reach/ranged) |
-| `wounds` | int | ferite inflitte al bersaglio colpito (default 1) |
-| `wound_kind` | string | `normal` / `bleed` / `exec` |
-| `dirs` | array[int] | direzioni relative colpite (0=fronte, orario) — best effort |
-| `steps` | int | passi di movimento |
-| `rotates` | int | rotazioni |
-| `alt_step_rotate` | bool | passo **oppure** rotazione (non entrambi) |
-| `block` | bool | è una difesa che para |
-| `block_value` | int/string | valore/iniziative del blocco |
-| `focus_gain` | int | focus ottenuti |
-| `draw` | int | carte pescate |
-| `discard` | int | carte scartate |
-| `change_kamae` | bool | permette di cambiare kamae |
-| `if_success` | array[string] | effetti "se riuscito": `push:N`, `bleed`, `focus:N`, `rotate:N` |
-| `note` | string | annotazioni / incertezze |
+| `name` | string | Nome stampato sulla carta (riferimento, ridondante con `card_pool`). |
+| `type` | string (enum) | `attack` \| `defence` \| `meditation` \| `core`. |
+| `kamae_req` | string (enum, opz.) | Kamae richiesto: `aggression` \| `balance` \| `determination`. |
+| `move` | object (opz.) | `{ "opts": [ Opzione, … ] }` — vedi **Movimento**. |
+| `attack` | object (opz.) | `{ "cells": [ Cella, … ] }` — celle offensive. |
+| `defence` | object (opz.) | `{ "cells": [ Cella, … ] }` — celle protette. |
+| `counter` | array[int] (opz.) | Iniziative a cui scatta il contrattacco. |
+| `effects` | array[object] (opz.) | Effetti ordinati — vedi **Effetti**. |
+| `note` | string (opz.) | Note di trascrizione / incertezze (es. `"… DA VERIFICARE"`). |
 
-> **Stato**: trascrizione iniziale e iterativa. I campi robusti (portata, ferite,
-> movimento, focus, blocco, effetti) sono affidabili; gli offset esatti dell'arco
-> (`dirs`) sono best effort e vanno verificati sul gioco fisico.
+### Movimento — `move.opts[].atoms[]`
+
+`move` è un insieme di **opzioni alternative** (`opts`); il giocatore ne sceglie
+una. Ogni opzione è una sequenza ordinata di **atomi**:
+
+| Campo atomo | Tipo | Significato |
+|-------------|------|-------------|
+| `t` | string | `step` (passo) \| `rot` (rotazione). |
+| `dir` | int | Direzione del passo: `0`=fronte, senso **orario** 0–5; `-1`=indietro. Solo per `step`. |
+| `n` | int | Quantità (passi o scatti di rotazione). |
+| `opt` | bool | `true` = atomo **facoltativo** (bonus). |
+
+### Celle attacco/difesa — `attack.cells[]` / `defence.cells[]`
+
+La honeycomb sulla carta è il vicinato esagonale (centro + anelli) orientato
+sulla pedina (▲ = fronte). Ogni cella colpita/protetta:
+
+| Campo cella | Tipo | Significato |
+|-------------|------|-------------|
+| `d` | int | Direzione relativa `0`–`5` (`0`=fronte, senso orario). |
+| `k` | int | Anello (`1`=adiacente, `2`=distanza 2, …). |
+| `w` | int \| string | *(attacco)* ferite: intero, oppure `"exec"` (esecuzione) o `"bleed"` (sanguinante). |
+| `v` | int | *(difesa)* valore di blocco della cella. |
+
+### Effetti — `effects[]`
+
+Lista **ordinata**; ogni effetto è un oggetto con un verbo `do` e campi
+contestuali:
+
+| Campo | Tipo | Significato |
+|-------|------|-------------|
+| `do` | string | Verbo dell'effetto (vocabolario sotto). |
+| `n` | int (opz.) | Quantità (passi di push, focus, carte, …). |
+| `when` | string (opz.) | Condizione: `on_hit` \| `always` (default contestuale). |
+| `kamae` | string (opz.) | Gate kamae per l'effetto: `aggression` \| `balance` \| `determination`. |
+| `alt` | string (opz.) | Etichetta di alternativa (effetti mutuamente esclusivi). |
+| `to` | string (opz.) | Kamae di destinazione (per cambi di kamae). |
+| `focus_cost` | int (opz.) | Costo in focus dell'effetto (bonus opzionali). |
+
+**Verbi `do` presenti nei dati** (usare come autocomplete; estendibile):
+`block_initiative, cancel_abilities, cancel_movement, change_ai_behaviour,
+change_kamae, discard_self, draw, focus, foe_discard, foe_lose_focus, foe_stun,
+hobble, push, reduce_damage, replace_wound_bleed, reset_deck, rotate_target,
+search_draw, spend_focus, stun_self, swap_positions, switch_kamae`.
+
+## Vocabolari controllati
+
+- `type`: `attack, defence, meditation, core` (anagrafica ammette anche `other`).
+- `atom.t`: `step, rot`.
+- `w` (ferite): intero `≥ 0`, oppure `"exec"`, `"bleed"`.
+- `kamae` / `kamae_req` / `to`: `aggression, balance, determination`.
+
+## Affidabilità
+
+Trascrizione iterativa e best-effort. I campi robusti (movimento, ferite, focus,
+blocco, effetti) sono affidabili; gli **offset esatti dell'arco** (`d`/`k`) sono
+best-effort e annotati nelle `note` (cerca `DA VERIFICARE`). L'editor visuale
+sul nido d'ape è pensato proprio per correggerli: il campo `note` va sempre
+preservato.
+
+Allo stato attuale **54 carte su 303** hanno geometria trascritta; l'editor deve
+gestire bene il caso "geometria assente" (crearla da zero).

@@ -8,6 +8,7 @@
 extends Node
 
 const POOL_PATH := "res://data/cards/card_pool.json"
+const POOL_OVERRIDES_PATH := "res://data/cards/card_pool_overrides.json"
 const GEOMETRY_PATH := "res://data/cards/geometry.json"
 
 const DECK_DIR := "res://data/decks/"
@@ -25,6 +26,7 @@ var kamae_trees: Dictionary = {}      ## slug personaggio -> albero kamae
 
 func _ready() -> void:
 	_load_pool()
+	_load_overrides()
 	_load_decks()
 	_load_geometry()
 	_load_images()
@@ -144,6 +146,30 @@ func _load_pool() -> void:
 		if not by_char.has(ch):
 			by_char[ch] = []
 		by_char[ch].append(c)
+
+
+## Override anagrafici dell'editor di carte (decisione §4.1b della roadmap):
+## un file separato `card_pool_overrides.json` con `by_id[<id>] = {campi…}`
+## viene fuso SOPRA il pool generato dall'Excel, senza toccare card_pool.json.
+## No-op se il file non esiste. I dict in `by_id` e `cards` sono gli stessi
+## oggetti: fondere qui aggiorna entrambe le viste.
+func _load_overrides() -> void:
+	if not FileAccess.file_exists(POOL_OVERRIDES_PATH):
+		return
+	var parsed = JSON.parse_string(FileAccess.get_file_as_string(POOL_OVERRIDES_PATH))
+	if typeof(parsed) != TYPE_DICTIONARY:
+		return
+	var by: Dictionary = parsed.get("by_id", {})
+	for k in by.keys():
+		var id := int(k)
+		if not by_id.has(id):
+			continue   # gli override valgono solo per carte esistenti nel pool
+		var fields = by[k]
+		if typeof(fields) != TYPE_DICTIONARY:
+			continue
+		var card: Dictionary = by_id[id]
+		for f in fields.keys():
+			card[f] = fields[f]
 
 
 ## Carte di un personaggio (es. "Ronin", "Warrior").
