@@ -109,43 +109,50 @@ func _build_topbar() -> Control:
 	_btn_dup = _toolbar_button(bar, "Duplica", _on_duplicate)
 	_btn_save = _toolbar_button(bar, "Salva", _on_save)
 	_btn_cancel = _toolbar_button(bar, "Annulla", _on_cancel)
-	_btn_remove = _toolbar_button(bar, "Rimuovi override", _on_remove_override)
+	_btn_remove = _toolbar_button(bar, "Rim. ovr", _on_remove_override)
+	_btn_remove.tooltip_text = "Rimuovi override"
 	_btn_undo = _toolbar_button(bar, "↶", _undo)
 	_btn_redo = _toolbar_button(bar, "↷", _redo)
 
-	var sep := VSeparator.new()
-	bar.add_child(sep)
+	bar.add_child(VSeparator.new())
 
 	_search = LineEdit.new()
-	_search.placeholder_text = "Cerca per nome…"
+	_search.placeholder_text = "Cerca…"
 	_search.clear_button_enabled = true
-	_search.custom_minimum_size = Vector2(180, 0)
+	_search.custom_minimum_size = Vector2(120, 0)
+	_search.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_search.text_changed.connect(func(_t): _refresh_list())
 	bar.add_child(_search)
-	_char_opt = OptionButton.new()
-	_char_opt.item_selected.connect(func(_i): _refresh_list())
+	_char_opt = _filter_option()
+	_type_opt = _filter_option()
+	_rank_opt = _filter_option()
 	bar.add_child(_char_opt)
-	_type_opt = OptionButton.new()
-	_type_opt.item_selected.connect(func(_i): _refresh_list())
 	bar.add_child(_type_opt)
-	_rank_opt = OptionButton.new()
-	_rank_opt.item_selected.connect(func(_i): _refresh_list())
 	bar.add_child(_rank_opt)
 
-	var spacer := Control.new()
-	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	bar.add_child(spacer)
 	var back := Button.new()
 	back.text = "← Menu"
+	back.add_theme_font_size_override("font_size", 12)
 	back.pressed.connect(_on_back)
 	bar.add_child(back)
 	return bar
 
 
+func _filter_option() -> OptionButton:
+	var o := OptionButton.new()
+	o.clip_text = true
+	o.custom_minimum_size = Vector2(96, 0)
+	o.add_theme_font_size_override("font_size", 12)
+	o.item_selected.connect(func(_i): _refresh_list())
+	return o
+
+
 ## Colonna sinistra stretta: solo l'elenco delle carte.
 func _build_list_panel() -> Control:
 	var col := VBoxContainer.new()
-	col.custom_minimum_size = Vector2(150, 0)
+	col.custom_minimum_size = Vector2(110, 0)
+	col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	col.size_flags_stretch_ratio = 1.2
 	col.add_theme_constant_override("separation", 6)
 	_list = ItemList.new()
 	_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -161,13 +168,15 @@ func _build_list_panel() -> Control:
 ## Centro: carta ORIGINALE (immagine reale) ↔ carta SIMULATA (gemello editabile).
 func _build_center() -> Control:
 	var center := HBoxContainer.new()
-	center.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	center.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	center.size_flags_stretch_ratio = 6.5
 	center.add_theme_constant_override("separation", 10)
 
-	# Colonna ORIGINALE (compatta).
+	# Colonna ORIGINALE.
 	var orig := VBoxContainer.new()
-	orig.custom_minimum_size = Vector2(168, 0)
-	orig.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	orig.custom_minimum_size = Vector2(150, 0)
+	orig.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	orig.size_flags_stretch_ratio = 1.3
 	orig.add_theme_constant_override("separation", 4)
 	var ol := Label.new()
 	ol.text = "Carta originale"
@@ -202,8 +211,9 @@ func _build_center() -> Control:
 	# Colonna SIMULATA (gemello) — larghezza FISSA: i contenuti larghi scorrono
 	# dentro la colonna invece di espanderla e spingere la palette fuori schermo.
 	var simcol := VBoxContainer.new()
-	simcol.custom_minimum_size = Vector2(360, 0)
-	simcol.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	simcol.custom_minimum_size = Vector2(250, 0)
+	simcol.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	simcol.size_flags_stretch_ratio = 3.2
 	simcol.add_theme_constant_override("separation", 4)
 	var sl := Label.new()
 	sl.text = "Carta simulata"
@@ -214,6 +224,7 @@ func _build_center() -> Control:
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED  # niente scroll orizzontale
 	_form = VBoxContainer.new()
 	_form.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_form.add_theme_constant_override("separation", 4)
@@ -226,6 +237,7 @@ func _build_center() -> Control:
 func _toolbar_button(parent: Control, text: String, cb: Callable) -> Button:
 	var b := Button.new()
 	b.text = text
+	b.add_theme_font_size_override("font_size", 12)
 	b.pressed.connect(cb)
 	parent.add_child(b)
 	return b
@@ -234,9 +246,11 @@ func _toolbar_button(parent: Control, text: String, cb: Callable) -> Button:
 ## Colonna destra: contenitore della palette (riempito per carta in _build_form).
 func _build_palette_panel() -> Control:
 	var scroll := ScrollContainer.new()
-	scroll.custom_minimum_size = Vector2(158, 0)
-	scroll.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	scroll.custom_minimum_size = Vector2(140, 0)
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.size_flags_stretch_ratio = 1.4
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	_palette_holder = VBoxContainer.new()
 	_palette_holder.add_theme_constant_override("separation", 6)
 	scroll.add_child(_palette_holder)
@@ -417,14 +431,14 @@ func _build_keywords_field(kws) -> void:
 	_edit_row("keywords", le)
 
 	var add := OptionButton.new()
-	add.add_item("＋ aggiungi keyword nota")
+	add.add_item("+ keyword")
 	for kw in KNOWN_KEYWORDS:
 		add.add_item(kw)
 	add.item_selected.connect(_on_add_keyword.bind(add))
 	_edit_row("", add)
 
 	_w_type = Label.new()
-	_edit_row("type (auto)", _w_type)
+	_edit_row("type", _w_type)
 	_recalc_type()
 
 

@@ -218,7 +218,7 @@ func _build_ui() -> void:
 	_moves_box.add_theme_constant_override("separation", 4)
 	add_child(_moves_box)
 	var add_opt_btn := Button.new()
-	add_opt_btn.text = "+ alternativa (OPPURE)"
+	add_opt_btn.text = "+ sequenza"
 	add_opt_btn.pressed.connect(func(): add_opt())
 	add_child(add_opt_btn)
 
@@ -228,7 +228,7 @@ func _build_ui() -> void:
 	_effects_box.add_theme_constant_override("separation", 3)
 	add_child(_effects_box)
 	var add_eff := Button.new()
-	add_eff.text = "+ aggiungi effetto"
+	add_eff.text = "+ effetto"
 	add_eff.pressed.connect(func(): add_effect())
 	add_child(add_eff)
 
@@ -263,7 +263,7 @@ func build_palette() -> Control:
 	title.add_theme_color_override("font_color", Color(0.7, 0.78, 0.9))
 	col.add_child(title)
 	var hint := Label.new()
-	hint.text = "trascina sul gemello ←"
+	hint.text = "↓ trascina"
 	hint.add_theme_font_size_override("font_size", 11)
 	hint.add_theme_color_override("font_color", Color(0.6, 0.66, 0.74))
 	col.add_child(hint)
@@ -494,14 +494,18 @@ func _rebuild_effects() -> void:
 		_effects_box.add_child(_build_effect_row(i))
 
 
+## Una riga effetto su DUE righe compatte (sta nella colonna senza scroll
+## orizzontale): riga 1 = verbo + n + rimuovi; riga 2 = when/kamae/to/focus/alt.
 func _build_effect_row(i: int) -> Control:
 	var e: Dictionary = _effects[i]
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 3)
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override("separation", 2)
 
+	var r1 := HBoxContainer.new()
+	r1.add_theme_constant_override("separation", 3)
 	var do_opt := OptionButton.new()
 	do_opt.clip_text = true
-	do_opt.custom_minimum_size = Vector2(96, 0)
+	do_opt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	do_opt.add_item("(verbo…)")
 	for v in CardValidator.EFFECT_VERBS:
 		do_opt.add_item(v)
@@ -509,31 +513,31 @@ func _build_effect_row(i: int) -> Control:
 	do_opt.item_selected.connect(func(idx):
 		_effects[i]["do"] = "" if idx == 0 else CardValidator.EFFECT_VERBS[idx - 1]
 		changed.emit())
-	row.add_child(do_opt)
-
-	row.add_child(_lbl("n"))
-	row.add_child(_eff_spin(int(e.get("n", 0)), 0, 9, func(v): _effects[i]["n"] = v))
-	row.add_child(_lbl("when"))
-	row.add_child(_eff_opt(WHEN_OPTS, str(e.get("when", "")), func(v): _effects[i]["when"] = v))
-	row.add_child(_lbl("kamae"))
-	row.add_child(_eff_opt(KAMAE_OPTS, str(e.get("kamae", "")), func(v): _effects[i]["kamae"] = v))
-	row.add_child(_lbl("to"))
-	row.add_child(_eff_opt(KAMAE_OPTS, str(e.get("to", "")), func(v): _effects[i]["to"] = v))
-	row.add_child(_lbl("focus"))
-	row.add_child(_eff_spin(int(e.get("focus_cost", 0)), 0, 3, func(v): _effects[i]["focus_cost"] = v))
-
-	row.add_child(_lbl("alt"))
-	var alt := LineEdit.new()
-	alt.custom_minimum_size = Vector2(36, 0)
-	alt.text = str(e.get("alt", ""))
-	alt.text_changed.connect(func(t): _effects[i]["alt"] = t.strip_edges(); changed.emit())
-	row.add_child(alt)
-
+	r1.add_child(do_opt)
+	r1.add_child(_lbl("n"))
+	r1.add_child(_eff_spin(int(e.get("n", 0)), 0, 9, func(v): _effects[i]["n"] = v))
 	var rm := Button.new()
 	rm.text = "✕"
 	rm.pressed.connect(func(): _effects.remove_at(i); _rebuild_effects(); changed.emit())
-	row.add_child(rm)
-	return row
+	r1.add_child(rm)
+	box.add_child(r1)
+
+	var r2 := HBoxContainer.new()
+	r2.add_theme_constant_override("separation", 3)
+	r2.add_child(_eff_opt(WHEN_OPTS, str(e.get("when", "")), func(v): _effects[i]["when"] = v))
+	r2.add_child(_eff_opt(KAMAE_OPTS, str(e.get("kamae", "")), func(v): _effects[i]["kamae"] = v))
+	r2.add_child(_eff_opt(KAMAE_OPTS, str(e.get("to", "")), func(v): _effects[i]["to"] = v))
+	r2.add_child(_lbl("◆"))
+	r2.add_child(_eff_spin(int(e.get("focus_cost", 0)), 0, 3, func(v): _effects[i]["focus_cost"] = v))
+	var alt := LineEdit.new()
+	alt.custom_minimum_size = Vector2(34, 0)
+	alt.placeholder_text = "alt"
+	alt.text = str(e.get("alt", ""))
+	alt.text_changed.connect(func(t): _effects[i]["alt"] = t.strip_edges(); changed.emit())
+	r2.add_child(alt)
+	box.add_child(r2)
+	box.add_child(HSeparator.new())
+	return box
 
 
 func _lbl(t: String) -> Label:
