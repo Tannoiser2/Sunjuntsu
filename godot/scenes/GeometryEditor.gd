@@ -41,6 +41,15 @@ const KAMAE_LABELS := {
 const WHEN_OPTS := ["", "on_hit", "always"]
 const KAMAE_OPTS := ["", "aggression", "balance", "determination"]
 
+# Blocchi componibili della carta (l'ordine è solo estetico: il motore ignora
+# `layout`). Ogni blocco edita una parte dello schema.
+const BLOCK_TYPES := ["combat", "movement", "kamae", "effects", "counter", "note"]
+const BLOCK_TITLES := {
+	"combat": "Combattimento", "movement": "Movimento", "kamae": "Kamae richiesto",
+	"effects": "Effetti", "counter": "Contrattacco", "note": "Nota",
+}
+var _block_order: Array = []   ## sottoinsieme ordinato di BLOCK_TYPES da mostrare
+
 # ─── Modello dati ────────────────────────────────────────────────────────────
 var _type: String = "attack"
 var _attack: Dictionary = {}   ## Vector2i(d,k) -> ferite (int | "exec" | "bleed")
@@ -86,9 +95,38 @@ func load_geometry(card_type: String, geom: Dictionary) -> void:
 		if typeof(e) == TYPE_DICTIONARY:
 			_effects.append(_norm_effect(e))
 	_note = str(geom.get("note", ""))
+	_block_order = _compute_block_order(geom.get("layout", []))
 	if not _built:
 		_build_ui()
 	_refresh_all()
+
+
+## Ordine dei blocchi: dal `layout` salvato (se presente), completato con i
+## blocchi che hanno dati; altrimenti ordine canonico dei blocchi con dati.
+func _compute_block_order(layout) -> Array:
+	var order := []
+	if layout is Array:
+		for t in layout:
+			if t in BLOCK_TYPES and not (t in order):
+				order.append(t)
+	for t in _present_blocks():
+		if not (t in order):
+			order.append(t)
+	if order.is_empty():
+		order = ["combat"]   # carta nuova: parti dal Combattimento
+	return order
+
+
+## Blocchi che hanno dati, in ordine canonico.
+func _present_blocks() -> Array:
+	var p := []
+	if not _attack.is_empty() or not _defence.is_empty(): p.append("combat")
+	if not _opts.is_empty(): p.append("movement")
+	if _kamae_req != "": p.append("kamae")
+	if not _effects.is_empty(): p.append("effects")
+	if not _counter.is_empty(): p.append("counter")
+	if _note != "": p.append("note")
+	return p
 
 
 ## Serializza lo stato corrente nello Schema v2 (campi vuoti omessi).
@@ -155,6 +193,9 @@ func to_geometry() -> Dictionary:
 		g["effects"] = effs
 	if _note != "":
 		g["note"] = _note
+	# Disposizione dei blocchi (estetica; il motore la ignora).
+	if not _block_order.is_empty():
+		g["layout"] = _block_order.duplicate()
 	return g
 
 
@@ -222,66 +263,182 @@ func set_kamae_req(slug: String) -> void:
 func _build_ui() -> void:
 	_built = true
 	add_theme_constant_override("separation", 6)
+	_rebuild_blocks()
 
-	# Kamae richiesto: valore corrente (si imposta dai token nella palette).
-	_add_subtitle("Kamae richiesto")
-	var kr := HBoxContainer.new()
-	kr.add_theme_constant_override("separation", 6)
-	_kamae_label = Label.new()
-	_kamae_label.add_theme_font_size_override("font_size", 12)
-	_kamae_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	kr.add_child(_kamae_label)
-	var none := Button.new()
-	none.text = "azzera"
-	none.pressed.connect(func(): set_kamae_req(""))
-	kr.add_child(none)
-	add_child(kr)
 
-	# Nido d'ape completo (tutti gli esagoni entro distanza 2): bersaglio del drag.
-	_add_subtitle("Combattimento")
-	_honey = Control.new()
-	_honey.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	add_child(_honey)
-
-	# Movimento: sequenze (le righe sono bersaglio del drag delle frecce).
-	_add_subtitle("Movimento")
-	_moves_box = VBoxContainer.new()
-	_moves_box.add_theme_constant_override("separation", 4)
-	add_child(_moves_box)
-	var add_opt_btn := Button.new()
-	add_opt_btn.text = "+ sequenza"
-	add_opt_btn.pressed.connect(func(): add_opt())
-	add_child(add_opt_btn)
-
-	# Effetti.
-	_add_subtitle("Effetti")
-	_effects_box = VBoxContainer.new()
-	_effects_box.add_theme_constant_override("separation", 3)
-	add_child(_effects_box)
-	var add_eff := Button.new()
-	add_eff.text = "+ effetto"
-	add_eff.pressed.connect(func(): add_effect())
-	add_child(add_eff)
-
-	# Counter + note.
-	_add_subtitle("Contrattacco / note")
-	_counter_edit = LineEdit.new()
-	_counter_edit.placeholder_text = "es. 8, 6"
-	_counter_edit.text_changed.connect(_on_counter_changed)
-	add_child(_counter_edit)
-	_note_edit = TextEdit.new()
-	_note_edit.custom_minimum_size = Vector2(0, 50)
-	_note_edit.placeholder_text = "annotazioni / incertezze di trascrizione"
-	_note_edit.text_changed.connect(func(): _note = _note_edit.text; changed.emit())
-	add_child(_note_edit)
-
+## (Ri)costruisce la pila di blocchi secondo _block_order. I widget-corpo
+## (_honey, _moves_box, …) vengono ricreati per i soli blocchi presenti.
+func _rebuild_blocks() -> void:
+	if not _built:
+		return
+	for ch in get_children():
+		ch.queue_free()
+	_honey = null
+	_moves_box = null
+	_effects_box = null
+	_counter_edit = null
+	_note_edit = null
+	_kamae_label = null
+	for i in _block_order.size():
+		add_child(_build_block(_block_order[i], i))
+	# Popola i corpi appena creati (funzioni tutte null-safe).
 	_build_honeycomb()
+	_rebuild_moves()
+	_rebuild_effects()
+	_update_kamae_label()
+	if _counter_edit:
+		_counter_edit.text = ", ".join(_counter.map(func(x): return str(x)))
+	if _note_edit:
+		_note_edit.text = _note
+
+
+func _build_block(type: String, idx: int) -> Control:
+	var panel := PanelContainer.new()
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override("separation", 3)
+	panel.add_child(box)
+
+	var head := HBoxContainer.new()
+	head.add_theme_constant_override("separation", 3)
+	var t := Label.new()
+	t.text = BLOCK_TITLES.get(type, type)
+	t.add_theme_font_size_override("font_size", 13)
+	t.add_theme_color_override("font_color", Color(0.72, 0.8, 0.92))
+	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	head.add_child(t)
+	var up := _mini_btn("su", "Sposta su")
+	up.disabled = idx == 0
+	up.pressed.connect(func(): _move_block(idx, -1))
+	head.add_child(up)
+	var dn := _mini_btn("giù", "Sposta giù")
+	dn.disabled = idx == _block_order.size() - 1
+	dn.pressed.connect(func(): _move_block(idx, 1))
+	head.add_child(dn)
+	var rm := _mini_btn("x", "Rimuovi blocco (svuota i dati)")
+	rm.pressed.connect(func(): _remove_block(type))
+	head.add_child(rm)
+	box.add_child(head)
+
+	box.add_child(_build_block_body(type))
+	return panel
+
+
+func _mini_btn(txt: String, tip: String) -> Button:
+	var b := Button.new()
+	b.text = txt
+	b.tooltip_text = tip
+	b.add_theme_font_size_override("font_size", 11)
+	return b
+
+
+func _build_block_body(type: String) -> Control:
+	match type:
+		"combat":
+			var v := VBoxContainer.new()
+			var hint := Label.new()
+			hint.text = "clic = scorri icona · clic destro = svuota"
+			hint.add_theme_font_size_override("font_size", 10)
+			hint.add_theme_color_override("font_color", Color(0.55, 0.6, 0.68))
+			v.add_child(hint)
+			_honey = Control.new()
+			_honey.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+			v.add_child(_honey)
+			return v
+		"movement":
+			var v := VBoxContainer.new()
+			v.add_theme_constant_override("separation", 3)
+			_moves_box = VBoxContainer.new()
+			_moves_box.add_theme_constant_override("separation", 4)
+			v.add_child(_moves_box)
+			var add_opt_btn := Button.new()
+			add_opt_btn.text = "+ sequenza"
+			add_opt_btn.pressed.connect(func(): add_opt())
+			v.add_child(add_opt_btn)
+			return v
+		"kamae":
+			var v := VBoxContainer.new()
+			var krow := HBoxContainer.new()
+			krow.add_theme_constant_override("separation", 6)
+			for slug in ["aggression", "balance", "determination"]:
+				var tok := DragIcon.new()
+				tok.setup(self, "kamae_" + slug, slug)
+				tok.custom_minimum_size = Vector2(2 * HEX_R, 2 * HEX_R)
+				tok.gui_input.connect(_on_kamae_token_input.bind(slug))
+				krow.add_child(tok)
+			var az := Button.new()
+			az.text = "azzera"
+			az.pressed.connect(func(): set_kamae_req(""))
+			krow.add_child(az)
+			v.add_child(krow)
+			_kamae_label = Label.new()
+			_kamae_label.add_theme_font_size_override("font_size", 12)
+			v.add_child(_kamae_label)
+			return v
+		"effects":
+			var v := VBoxContainer.new()
+			v.add_theme_constant_override("separation", 3)
+			_effects_box = VBoxContainer.new()
+			_effects_box.add_theme_constant_override("separation", 3)
+			v.add_child(_effects_box)
+			var add_eff := Button.new()
+			add_eff.text = "+ effetto"
+			add_eff.pressed.connect(func(): add_effect())
+			v.add_child(add_eff)
+			return v
+		"counter":
+			_counter_edit = LineEdit.new()
+			_counter_edit.placeholder_text = "iniziative di contrattacco, es. 8, 6"
+			_counter_edit.text_changed.connect(_on_counter_changed)
+			return _counter_edit
+		"note":
+			_note_edit = TextEdit.new()
+			_note_edit.custom_minimum_size = Vector2(0, 50)
+			_note_edit.placeholder_text = "annotazioni / incertezze di trascrizione"
+			_note_edit.text_changed.connect(func(): _note = _note_edit.text; changed.emit())
+			return _note_edit
+	return Control.new()
+
+
+# ─── Gestione blocchi (aggiungi / sposta / rimuovi) ──────────────────────────
+
+func add_block(type: String) -> void:
+	if type in BLOCK_TYPES and not (type in _block_order):
+		_block_order.append(type)
+		_rebuild_blocks()
+		changed.emit()
+
+
+func _move_block(idx: int, delta: int) -> void:
+	var j := idx + delta
+	if j < 0 or j >= _block_order.size():
+		return
+	var tmp = _block_order[idx]
+	_block_order[idx] = _block_order[j]
+	_block_order[j] = tmp
+	_rebuild_blocks()
+	changed.emit()
+
+
+## Rimuove il blocco E svuota i dati corrispondenti.
+func _remove_block(type: String) -> void:
+	_block_order.erase(type)
+	match type:
+		"combat": _attack.clear(); _defence.clear()
+		"movement": _opts.clear()
+		"kamae": _kamae_req = ""
+		"effects": _effects.clear()
+		"counter": _counter.clear()
+		"note": _note = ""
+	_rebuild_blocks()
+	changed.emit()
 
 
 ## Palette dei sorgenti TRASCINABILI (combattimento, movimento, kamae), da
 ## collocare fuori dal canvas (colonna destra dell'editor). Il drag-drop
 ## funziona attraverso l'albero della scena. Richiede che il canvas sia già
 ## costruito (così gli esagoni esistono come bersagli).
+## Pannello "Aggiungi blocco" (colonna destra dell'editor): un bottone per tipo
+## di blocco; il clic aggiunge il blocco alla carta (no-op se già presente).
 func build_palette() -> Control:
 	if not _built:
 		_build_ui()
@@ -289,29 +446,22 @@ func build_palette() -> Control:
 	col.add_theme_constant_override("separation", 6)
 	col.custom_minimum_size = Vector2(150, 0)
 	var title := Label.new()
-	title.text = "Palette"
+	title.text = "Blocchi"
 	title.add_theme_font_size_override("font_size", 15)
 	title.add_theme_color_override("font_color", Color(0.7, 0.78, 0.9))
 	col.add_child(title)
-	var legend := Label.new()
-	legend.text = "Combattimento: clic sull'esagono per scorrere ferita/doppia/esecuzione/sanguina/difesa.  Clic destro = svuota."
-	legend.add_theme_font_size_override("font_size", 11)
-	legend.add_theme_color_override("font_color", Color(0.6, 0.66, 0.74))
-	legend.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	col.add_child(legend)
-	var kl := Label.new()
-	kl.text = "Kamae (clic per impostare)"
-	kl.add_theme_font_size_override("font_size", 12)
-	col.add_child(kl)
-	var km := HBoxContainer.new()
-	km.add_theme_constant_override("separation", 6)
-	for slug in ["aggression", "balance", "determination"]:
-		var tok := DragIcon.new()
-		tok.setup(self, "kamae_" + slug, slug)
-		tok.custom_minimum_size = Vector2(2 * HEX_R, 2 * HEX_R)
-		tok.gui_input.connect(_on_kamae_token_input.bind(slug))
-		km.add_child(tok)
-	col.add_child(km)
+	var hint := Label.new()
+	hint.text = "Aggiungi un blocco alla carta:"
+	hint.add_theme_font_size_override("font_size", 11)
+	hint.add_theme_color_override("font_color", Color(0.6, 0.66, 0.74))
+	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	col.add_child(hint)
+	for type in BLOCK_TYPES:
+		var b := Button.new()
+		b.text = "+ " + str(BLOCK_TITLES.get(type, type))
+		b.add_theme_font_size_override("font_size", 12)
+		b.pressed.connect(func(): add_block(type))
+		col.add_child(b)
 	return col
 
 
@@ -344,6 +494,8 @@ func _palette_icon(kind: String, value) -> DragIcon:
 
 func _build_honeycomb() -> void:
 	_hex_cells.clear()
+	if _honey == null:
+		return
 	for ch in _honey.get_children():
 		ch.queue_free()
 	# Tutti gli esagoni del vicinato entro distanza RINGS (centro + anello 1 e 2).
@@ -408,8 +560,10 @@ func _refresh_all() -> void:
 	_rebuild_moves()
 	_rebuild_effects()
 	_update_kamae_label()
-	_counter_edit.text = ", ".join(_counter.map(func(x): return str(x)))
-	_note_edit.text = _note
+	if _counter_edit:
+		_counter_edit.text = ", ".join(_counter.map(func(x): return str(x)))
+	if _note_edit:
+		_note_edit.text = _note
 
 
 func _refresh_cell(key: Vector2i) -> void:
@@ -422,6 +576,8 @@ func _refresh_cell(key: Vector2i) -> void:
 
 
 func _update_kamae_label() -> void:
+	if _kamae_label == null:
+		return
 	if _kamae_req == "":
 		_kamae_label.text = "kamae richiesto: nessuno"
 	else:

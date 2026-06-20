@@ -73,6 +73,7 @@ agganciata al **numero stampato sulla carta** (= Card ID).
 | `counter` | array[int] (opz.) | Iniziative a cui scatta il contrattacco. |
 | `effects` | array[object] (opz.) | Effetti ordinati — vedi **Effetti**. |
 | `note` | string (opz.) | Note di trascrizione / incertezze (es. `"… DA VERIFICARE"`). |
+| `layout` | array[string] (opz.) | **Estetico, ignorato dal motore.** Ordine dei blocchi nell'editor (`combat`, `movement`, `kamae`, `effects`, `counter`, `note`): permette di disporre i blocchi come sulla carta fisica. |
 
 ### Movimento — `move.opts[].atoms[]`
 

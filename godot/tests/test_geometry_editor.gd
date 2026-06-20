@@ -44,6 +44,7 @@ func _ready() -> void:
 	_test_roundtrip()
 	_test_mutators()
 	_test_move_fidelity()
+	_test_blocks()
 	_test_effects()
 	if _failures == 0:
 		print("GEOMETRY EDITOR DONE ok")
@@ -147,6 +148,35 @@ func _test_move_fidelity() -> void:
 	add_child(ge2)
 	ge2.load_geometry("attack", CardDB.geometry(60))
 	_check(ge2.to_geometry().get("move", {}).get("opts", []).size() == 2, "#60: due alternative OPPURE preservate")
+	ge2.queue_free()
+
+
+func _test_blocks() -> void:
+	print("[blocchi componibili]")
+	var ge := GeometryEditor.new()
+	add_child(ge)
+	ge.load_geometry("attack", {})
+	_check(ge._block_order == ["combat"], "carta nuova: blocco Combattimento di default (%s)" % str(ge._block_order))
+	ge.add_block("movement")
+	ge.add_block("kamae")
+	_check(ge._block_order == ["combat", "movement", "kamae"], "blocchi aggiunti in coda")
+	ge.add_block("combat")
+	_check(ge._block_order.count("combat") == 1, "ri-aggiunta di un blocco presente è no-op")
+	ge._move_block(2, -1)
+	_check(ge._block_order == ["combat", "kamae", "movement"], "«su» scambia col blocco precedente")
+	ge.set_kamae_req("balance")
+	_check(ge.to_geometry().get("layout") == ["combat", "kamae", "movement"], "layout serializzato")
+	ge.set_attack_cell(1, 0, 1)
+	ge._remove_block("combat")
+	_check(not ("combat" in ge._block_order), "blocco rimosso dall'ordine")
+	_check(ge.to_geometry().get("attack") == null, "rimuovere il blocco svuota i dati")
+	ge.queue_free()
+
+	var ge2 := GeometryEditor.new()
+	add_child(ge2)
+	ge2.load_geometry("attack", {"layout": ["note", "combat"],
+		"attack": {"cells": [{"q": 1, "r": 0, "w": 1}]}, "note": "x"})
+	_check(ge2._block_order == ["note", "combat"], "layout salvato rispettato in caricamento (%s)" % str(ge2._block_order))
 	ge2.queue_free()
 
 
