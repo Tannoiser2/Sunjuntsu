@@ -48,6 +48,7 @@ var _btn_remove: Button
 var _store: CardStore
 var _w: Dictionary = {}          ## campo -> widget editabile
 var _w_type: Label               ## etichetta `type` derivata (read-only)
+var _geom_editor: GeometryEditor ## editor visuale geometria (Fase 4)
 var _current_id: int = -1
 var _pending_new: bool = false   ## carta creata/duplicata non ancora salvata
 
@@ -308,17 +309,16 @@ func _build_form(id: int, c: Dictionary) -> void:
 	_w["focus"] = _add_edit_spin("focus", 0, 9, int(c.get("focus", 0)))
 	_build_keywords_field(c.get("keywords", []))
 
-	# Geometria/effetti — sola lettura.
-	var g: Dictionary = CardDB.geometry(id)
-	_add_section("Geometria / effetti  (sola lettura)")
-	if g.is_empty():
-		var none := Label.new()
-		none.text = "— Nessuna geometria trascritta."
-		none.add_theme_color_override("font_color", Color(0.85, 0.6, 0.3))
-		_form.add_child(none)
-	else:
-		_add_multiline("riassunto", _geometry_summary(g))
-		_add_multiline("JSON", JSON.stringify(g, "  "))
+	# Geometria/effetti — editor visuale drag & drop (Fase 4).
+	_add_section("Geometria / effetti  (visuale — trascina le icone)")
+	_geom_editor = GeometryEditor.new()
+	_geom_editor.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_form.add_child(_geom_editor)
+	_geom_editor.load_geometry(str(c.get("type", "attack")), CardDB.geometry(id))
+	var save_geo := Button.new()
+	save_geo.text = "Salva geometria"
+	save_geo.pressed.connect(_on_save_geometry)
+	_form.add_child(save_geo)
 
 	# Immagine — sola lettura.
 	_add_section("Immagine  (sola lettura)")
@@ -464,6 +464,23 @@ func _on_remove_override() -> void:
 	_select_in_list(id)
 	_load_card(id, false)
 	_status.text = "✓ Override rimosso #%d (tornato all'Excel)" % id
+
+
+func _on_save_geometry() -> void:
+	if _current_id < 0 or _geom_editor == null:
+		return
+	var g := _geom_editor.to_geometry()
+	var res := _store.save_card_geometry(_current_id, g)
+	if not res.get("ok", false):
+		_status.text = "✗ Errore geometria: %s" % str(res.get("error", ""))
+		return
+	CardDB.set_geometry(_current_id, g)
+	var id := _current_id
+	_refresh_list()
+	_select_in_list(id)
+	var na: int = g.get("attack", {}).get("cells", []).size()
+	var nd: int = g.get("defence", {}).get("cells", []).size()
+	_status.text = "✓ Geometria #%d salvata (%d celle att., %d dif.)" % [id, na, nd]
 
 
 func _default_char() -> String:

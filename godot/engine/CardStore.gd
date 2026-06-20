@@ -207,8 +207,30 @@ func save_geometry(cards_by_id: Dictionary, characters: Dictionary, note := "") 
 	var existing = read_json(GEOMETRY_PATH)
 	if note == "" and typeof(existing) == TYPE_DICTIONARY:
 		note = existing.get("note", "")
-	var payload := {"note": note, "cards": cards_by_id, "characters": characters}
+	# La geometria non contiene float legittimi (d/k/w/v/n/counter sono interi):
+	# JSON.parse restituisce numeri come float, quindi normalizziamo a int per
+	# evitare che le carte non toccate diventino "2.0" e gonfino il diff.
+	var payload := {"note": note, "cards": _intify(cards_by_id), "characters": _intify(characters)}
 	return save_json(GEOMETRY_PATH, payload, " ", false)
+
+
+## Converte ricorsivamente i float a valore intero in `int` (preserva stringhe,
+## bool e float non interi). Usato per tenere puliti i JSON di geometria.
+static func _intify(v):
+	match typeof(v):
+		TYPE_FLOAT:
+			return int(v) if v == floorf(v) else v
+		TYPE_DICTIONARY:
+			var o := {}
+			for k in v:
+				o[k] = _intify(v[k])
+			return o
+		TYPE_ARRAY:
+			var o := []
+			for e in v:
+				o.append(_intify(e))
+			return o
+	return v
 
 
 ## Riscrive card_images.json. `by_id` ha chiavi String=id -> path relativo.
@@ -218,3 +240,21 @@ func save_images(by_id: Dictionary, note := "") -> Dictionary:
 		note = existing.get("note", "")
 	var payload := {"note": note, "by_id": by_id}
 	return save_json(IMAGES_PATH, payload, "  ", false)
+
+
+## Aggiorna la geometria di UNA carta preservando le altre, la nota e i
+## `characters`, poi riscrive l'intero geometry.json (scrittura atomica + .bak).
+func save_card_geometry(id: int, geom: Dictionary) -> Dictionary:
+	var parsed = read_json(GEOMETRY_PATH)
+	var cards := {}
+	var characters := {}
+	var note := ""
+	if typeof(parsed) == TYPE_DICTIONARY:
+		cards = parsed.get("cards", {})
+		characters = parsed.get("characters", {})
+		note = parsed.get("note", "")
+	if geom.is_empty():
+		cards.erase(str(id))
+	else:
+		cards[str(id)] = geom
+	return save_geometry(cards, characters, note)

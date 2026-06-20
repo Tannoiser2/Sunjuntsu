@@ -83,6 +83,15 @@ func geometry(id: int) -> Dictionary:
 	return geom.get(id, {})
 
 
+## Aggiorna in memoria la geometria di una carta (usata dall'editor visuale dopo
+## il salvataggio, così list/anteprima si aggiornano senza riavvio).
+func set_geometry(id: int, g: Dictionary) -> void:
+	if g.is_empty():
+		geom.erase(id)
+	else:
+		geom[id] = g
+
+
 ## Statistiche del personaggio (limite ferite/mano, armi) o {} se assente.
 func character_stats(character: String) -> Dictionary:
 	return char_stats.get(character, {})
