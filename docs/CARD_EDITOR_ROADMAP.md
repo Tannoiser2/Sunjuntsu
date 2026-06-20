@@ -20,7 +20,7 @@ Leggi docs/CARD_EDITOR_ROADMAP.md e iniziamo l'editor di carte.
 Prima conferma con me le "Decisioni da prendere" (§4), poi parti dalla Fase 1.
 ```
 
-Sviluppo sul branch `claude/clever-bell-8vgvns` (vedi convenzioni del repo).
+Sviluppo sul branch `claude/card-editor-roadmap-y1sp92` (vedi convenzioni del repo).
 
 ---
 
@@ -133,6 +133,11 @@ Naming: `{character}/{character}_{NN}.webp`.
 
 ## 4. Decisioni da prendere a inizio sessione (NON re-derivare: confermare con l'utente)
 
+> **Decise (sessione 2026-06-20):** §4.1 → **(b) overlay** (`card_pool_overrides.json`);
+> §4.2 → **scena standalone** (`CardEditor.tscn`); §4.3 → **sì, sola lettura prima**;
+> §4.4 → **editor geometria visuale IN SCOPE** (M3, dopo le basi); §4.5 → **immagini
+> con import/crop IN SCOPE** (M4).
+
 Queste scelte cambiano l'architettura; vanno fissate **prima** di Fase 2.
 
 1. **Sorgente di verità per l'anagrafica.** `card_pool.json` oggi è *generato*
@@ -171,17 +176,22 @@ Queste scelte cambiano l'architettura; vanno fissate **prima** di Fase 2.
 
 ## 6. TODO (a fasi, spuntabili)
 
-### Fase 0 — Setup (mezza giornata)
-- [ ] Confermare le **Decisioni §4** con l'utente.
-- [ ] Aggiornare `data/cards/GEOMETRY_SCHEMA.md` allo **Schema v2** reale (§3.2).
-- [ ] Scheletro `scenes/CardEditor.tscn` + voce nel `Menu.tscn`.
-- [ ] `engine/CardStore.gd` con load/save atomico + `.bak` (no UI ancora) + test headless.
+### Fase 0 — Setup (mezza giornata) ✅
+- [x] Confermare le **Decisioni §4** con l'utente.
+- [x] Aggiornare `data/cards/GEOMETRY_SCHEMA.md` allo **Schema v2** reale (§3.2).
+- [x] Scheletro `scenes/CardEditor.tscn` + voce nel `Menu.tscn`.
+- [x] `engine/CardStore.gd` con load/save atomico + `.bak` (no UI ancora) + test headless
+      (`tests/test_cardstore.tscn`). CardDB ora applica l'overlay `card_pool_overrides.json`.
 
-### Fase 1 — Browser & Inspector (sola lettura)
-- [ ] Lista carte con filtri (per `char`, `type`, `rank`, testo libero su `name`).
-- [ ] Pannello dettaglio: tutti i campi anagrafici + geometria + immagine.
-- [ ] Anteprima carta via `CardView` accanto al dettaglio.
-- [ ] Indicatori "carta senza geometria" / "senza immagine".
+### Fase 1 — Browser & Inspector (sola lettura) ✅
+- [x] Lista carte con filtri (per `char`, `type`, `rank`, testo libero su `name`).
+- [x] Pannello dettaglio: tutti i campi anagrafici + geometria + immagine.
+- [x] Anteprima carta via `CardView` accanto al dettaglio.
+- [x] Indicatori "carta senza geometria" / "senza immagine".
+
+> **Stato 2026-06-20:** M1 (Fase 0+1) completata. Test headless verdi su Godot 4.6:
+> `test_cardstore`, `test_cardeditor_smoke`, `test_allcards` (regressione ok).
+> Prossimo: Fase 2 (editing anagrafica via overlay).
 
 ### Fase 2 — Editing anagrafica (scrittura)
 - [ ] Form editabile dei campi `card_pool` con widget tipizzati (dropdown per
