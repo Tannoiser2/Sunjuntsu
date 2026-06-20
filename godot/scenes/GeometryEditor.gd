@@ -38,6 +38,8 @@ const KAMAE_COLORS := {
 const KAMAE_LABELS := {
 	"aggression": "Aggressività", "balance": "Equilibrio", "determination": "Determinazione",
 }
+const WHEN_OPTS := ["", "on_hit", "always"]
+const KAMAE_OPTS := ["", "aggression", "balance", "determination"]
 
 # ─── Modello dati ────────────────────────────────────────────────────────────
 var _type: String = "attack"
@@ -54,6 +56,7 @@ var _name: String = ""
 var _honey: Control
 var _hex_cells: Dictionary = {}   ## Vector2i(d,k) -> HexCell
 var _moves_box: VBoxContainer
+var _effects_box: VBoxContainer
 var _kamae_label: Label
 var _counter_edit: LineEdit
 var _note_edit: TextEdit
@@ -83,7 +86,10 @@ func load_geometry(card_type: String, geom: Dictionary) -> void:
 	_counter = []
 	for x in geom.get("counter", []):
 		_counter.append(int(x))
-	_effects = (geom.get("effects", []) as Array).duplicate(true)
+	_effects = []
+	for e in geom.get("effects", []):
+		if typeof(e) == TYPE_DICTIONARY:
+			_effects.append(_norm_effect(e))
 	_note = str(geom.get("note", ""))
 	if not _built:
 		_build_ui()
@@ -121,8 +127,26 @@ func to_geometry() -> Dictionary:
 		g["defence"] = {"cells": dcells}
 	if not _counter.is_empty():
 		g["counter"] = _counter
-	if not _effects.is_empty():
-		g["effects"] = _effects
+	var effs := []
+	for e in _effects:
+		var ce := {"do": str(e.get("do", ""))}
+		if ce["do"] == "":
+			continue   # un effetto senza verbo è ignorato
+		if int(e.get("n", 0)) > 0:
+			ce["n"] = int(e["n"])
+		if str(e.get("when", "")) != "":
+			ce["when"] = str(e["when"])
+		if str(e.get("kamae", "")) != "":
+			ce["kamae"] = str(e["kamae"])
+		if str(e.get("to", "")) != "":
+			ce["to"] = str(e["to"])
+		if int(e.get("focus_cost", 0)) > 0:
+			ce["focus_cost"] = int(e["focus_cost"])
+		if str(e.get("alt", "")) != "":
+			ce["alt"] = str(e["alt"])
+		effs.append(ce)
+	if not effs.is_empty():
+		g["effects"] = effs
 	if _note != "":
 		g["note"] = _note
 	return g
@@ -216,6 +240,16 @@ func _build_ui() -> void:
 	add_opt_btn.text = "+ alternativa (OPPURE)"
 	add_opt_btn.pressed.connect(func(): add_opt())
 	add_child(add_opt_btn)
+
+	# Effetti.
+	_add_subtitle("Effetti — verbo + campi contestuali (n, when, kamae, to, focus, alt)")
+	_effects_box = VBoxContainer.new()
+	_effects_box.add_theme_constant_override("separation", 3)
+	add_child(_effects_box)
+	var add_eff := Button.new()
+	add_eff.text = "+ aggiungi effetto"
+	add_eff.pressed.connect(func(): add_effect())
+	add_child(add_eff)
 
 	# Counter + note.
 	_add_subtitle("Contrattacco (iniziative, separate da virgola) e note")
@@ -314,6 +348,7 @@ func _refresh_all() -> void:
 	for key in _hex_cells:
 		_refresh_cell(key)
 	_rebuild_moves()
+	_rebuild_effects()
 	_update_kamae_label()
 	_counter_edit.text = ", ".join(_counter.map(func(x): return str(x)))
 	_note_edit.text = _note
@@ -395,6 +430,100 @@ func _build_atom_chip(opt_idx: int, atom_idx: int) -> Control:
 		_rebuild_moves(); changed.emit())
 	chip.add_child(rm)
 	return chip
+
+
+# ─── Effetti ─────────────────────────────────────────────────────────────────
+
+static func _norm_effect(e: Dictionary) -> Dictionary:
+	return {
+		"do": str(e.get("do", "")), "n": int(e.get("n", 0)),
+		"when": str(e.get("when", "")), "kamae": str(e.get("kamae", "")),
+		"to": str(e.get("to", "")), "focus_cost": int(e.get("focus_cost", 0)),
+		"alt": str(e.get("alt", "")),
+	}
+
+
+## Aggiunge un effetto (vuoto o pre-popolato). Usato dal bottone e dai test.
+func add_effect(e := {}) -> void:
+	_effects.append(_norm_effect(e))
+	_rebuild_effects()
+	changed.emit()
+
+
+func _rebuild_effects() -> void:
+	if _effects_box == null:
+		return
+	for ch in _effects_box.get_children():
+		ch.queue_free()
+	for i in _effects.size():
+		_effects_box.add_child(_build_effect_row(i))
+
+
+func _build_effect_row(i: int) -> Control:
+	var e: Dictionary = _effects[i]
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 3)
+
+	var do_opt := OptionButton.new()
+	do_opt.add_item("(verbo…)")
+	for v in CardValidator.EFFECT_VERBS:
+		do_opt.add_item(v)
+	do_opt.selected = CardValidator.EFFECT_VERBS.find(str(e.get("do", ""))) + 1
+	do_opt.item_selected.connect(func(idx):
+		_effects[i]["do"] = "" if idx == 0 else CardValidator.EFFECT_VERBS[idx - 1]
+		changed.emit())
+	row.add_child(do_opt)
+
+	row.add_child(_lbl("n"))
+	row.add_child(_eff_spin(int(e.get("n", 0)), 0, 9, func(v): _effects[i]["n"] = v))
+	row.add_child(_lbl("when"))
+	row.add_child(_eff_opt(WHEN_OPTS, str(e.get("when", "")), func(v): _effects[i]["when"] = v))
+	row.add_child(_lbl("kamae"))
+	row.add_child(_eff_opt(KAMAE_OPTS, str(e.get("kamae", "")), func(v): _effects[i]["kamae"] = v))
+	row.add_child(_lbl("to"))
+	row.add_child(_eff_opt(KAMAE_OPTS, str(e.get("to", "")), func(v): _effects[i]["to"] = v))
+	row.add_child(_lbl("focus"))
+	row.add_child(_eff_spin(int(e.get("focus_cost", 0)), 0, 3, func(v): _effects[i]["focus_cost"] = v))
+
+	row.add_child(_lbl("alt"))
+	var alt := LineEdit.new()
+	alt.custom_minimum_size = Vector2(36, 0)
+	alt.text = str(e.get("alt", ""))
+	alt.text_changed.connect(func(t): _effects[i]["alt"] = t.strip_edges(); changed.emit())
+	row.add_child(alt)
+
+	var rm := Button.new()
+	rm.text = "✕"
+	rm.pressed.connect(func(): _effects.remove_at(i); _rebuild_effects(); changed.emit())
+	row.add_child(rm)
+	return row
+
+
+func _lbl(t: String) -> Label:
+	var l := Label.new()
+	l.text = t
+	l.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
+	l.add_theme_font_size_override("font_size", 11)
+	return l
+
+
+func _eff_spin(val: int, mn: int, mx: int, on_set: Callable) -> SpinBox:
+	var sp := SpinBox.new()
+	sp.min_value = mn; sp.max_value = mx; sp.value = val
+	sp.value_changed.connect(func(v): on_set.call(int(v)); changed.emit())
+	return sp
+
+
+func _eff_opt(values: Array, cur: String, on_set: Callable) -> OptionButton:
+	var o := OptionButton.new()
+	var found := -1
+	for i in values.size():
+		o.add_item("—" if values[i] == "" else str(values[i]))
+		if values[i] == cur:
+			found = i
+	o.selected = maxi(found, 0)
+	o.item_selected.connect(func(idx): on_set.call(values[idx]); changed.emit())
+	return o
 
 
 # ─── Handler ─────────────────────────────────────────────────────────────────

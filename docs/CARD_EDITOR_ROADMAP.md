@@ -218,20 +218,20 @@ Queste scelte cambiano l'architettura; vanno fissate **prima** di Fase 2.
 > **Stato 2026-06-20:** M2 completata (Fase 2+3). Validazione live integrata in
 > `CardEditor`. Test headless `test_cardvalidator` verde su Godot 4.6.
 
-### Fase 4 — Editor geometria/effetti  ✅ (effects: parziale)
+### Fase 4 — Editor geometria/effetti  ✅
 - [x] Editor `move` (sequenze "OPPURE" di atoms step/rot, dir/n/opt) **drag & drop**
       (frecce nere=obbligatorie / bianche=facoltative, rotazioni).
 - [x] Editor `attack`/`defence` **visuale** sul nido d'ape (modello a 6 direzioni,
       §4.4): si **trascinano** ferite/esecuzione/sanguinamento/scudi sugli esagoni;
       `d`/`k` dedotti dalla posizione. Clic destro = svuota cella.
-- [ ] Editor `effects` come lista ordinata con `do` da autocomplete + campi
-      contestuali (rinviato a Fase 4d; gli `effects` esistenti sono **preservati**).
+- [x] Editor `effects` come lista ordinata con `do` da autocomplete (23 verbi) +
+      campi contestuali (`n, when, kamae, alt, to, focus_cost`).
 - [x] Editor `counter`, `kamae_req` (token colorati), `note`.
 
-> **Stato 2026-06-20:** M3 — editor geometria visuale operativo (`GeometryEditor.gd`,
-> incorporato in `CardEditor`). Salvataggio su `geometry.json` con `.bak`, int puliti
-> (no float `2.0`) e diff minimi. Manca solo l'editor degli `effects` (Fase 4d).
-> Test headless verdi su Godot 4.6 (`test_geometry_editor`: round-trip + mutatori).
+> **Stato 2026-06-20:** M3 completata — editor geometria visuale completo
+> (`GeometryEditor.gd`, incorporato in `CardEditor`). Salvataggio su `geometry.json`
+> con `.bak`, int puliti (no float `2.0`) e diff minimi. Test headless verdi su
+> Godot 4.6 (`test_geometry_editor`: round-trip move/attack/effects + mutatori).
 
 ### Fase 5 — Anteprima geometria & Tester
 - [ ] Disegno dell'arco attacco/difesa sul nido d'ape (read-only render).
