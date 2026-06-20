@@ -262,14 +262,14 @@ func build_palette() -> Control:
 	title.add_theme_font_size_override("font_size", 15)
 	title.add_theme_color_override("font_color", Color(0.7, 0.78, 0.9))
 	col.add_child(title)
-	var hint := Label.new()
-	hint.text = "↓ trascina"
-	hint.add_theme_font_size_override("font_size", 11)
-	hint.add_theme_color_override("font_color", Color(0.6, 0.66, 0.74))
-	col.add_child(hint)
-	col.add_child(_build_combat_palette())
+	var legend := Label.new()
+	legend.text = "Combattimento: clic sull'esagono per scorrere ferita/doppia/esecuzione/sanguina/difesa.  Clic destro = svuota."
+	legend.add_theme_font_size_override("font_size", 11)
+	legend.add_theme_color_override("font_color", Color(0.6, 0.66, 0.74))
+	legend.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	col.add_child(legend)
 	var ml := Label.new()
-	ml.text = "Movimento"
+	ml.text = "Movimento (trascina)"
 	ml.add_theme_font_size_override("font_size", 12)
 	col.add_child(ml)
 	col.add_child(_build_move_palette())
@@ -356,11 +356,15 @@ func _add_hex_cell(center_px: Vector2, ax: Vector2i, is_pawn: bool) -> void:
 		_hex_cells[ax] = cell
 
 
-## Posizione in px (centro del controllo) di un esagono assiale, con il FRONTE
-## (DIRS[0]) verso l'alto. Usa la geometria flat-top di HexGrid ruotata di 90°.
+## Posizione in px (centro del controllo) di un esagono assiale. Esagoni a LATO
+## PIATTO IN ALTO, col FRONTE (DIRS[0]) verso l'alto: il reticolo è lineare nelle
+## coordinate assiali, screen = q·Sq + r·Sr con basi scelte per orientare DIRS[0]
+## a Nord (le 6 direzioni cadono a 60° l'una dall'altra).
 static func _hex_pixel(ax: Vector2i) -> Vector2:
-	var w := HexGrid.hex_to_world(ax, 1.0)
-	return Vector2(-w.z, -w.x) * HEX_PIX
+	var d := HEX_R * 1.78   # distanza tra centri adiacenti (quasi a contatto)
+	var sq := Vector2(0.0, -d)
+	var sr := Vector2(-0.8660254 * d, -0.5 * d)
+	return sq * ax.x + sr * ax.y
 
 
 func _add_subtitle(text: String) -> void:
@@ -459,7 +463,7 @@ func _build_atom_chip(opt_idx: int, atom_idx: int) -> Control:
 	chip.add_child(opt_chk)
 
 	var rm := Button.new()
-	rm.text = "✕"
+	rm.text = "x"
 	rm.pressed.connect(func():
 		_opts[opt_idx].remove_at(atom_idx)
 		_rebuild_moves(); changed.emit())
@@ -517,7 +521,7 @@ func _build_effect_row(i: int) -> Control:
 	r1.add_child(_lbl("n"))
 	r1.add_child(_eff_spin(int(e.get("n", 0)), 0, 9, func(v): _effects[i]["n"] = v))
 	var rm := Button.new()
-	rm.text = "✕"
+	rm.text = "x"
 	rm.pressed.connect(func(): _effects.remove_at(i); _rebuild_effects(); changed.emit())
 	r1.add_child(rm)
 	box.add_child(r1)
@@ -527,7 +531,7 @@ func _build_effect_row(i: int) -> Control:
 	r2.add_child(_eff_opt(WHEN_OPTS, str(e.get("when", "")), func(v): _effects[i]["when"] = v))
 	r2.add_child(_eff_opt(KAMAE_OPTS, str(e.get("kamae", "")), func(v): _effects[i]["kamae"] = v))
 	r2.add_child(_eff_opt(KAMAE_OPTS, str(e.get("to", "")), func(v): _effects[i]["to"] = v))
-	r2.add_child(_lbl("◆"))
+	r2.add_child(_lbl("F"))
 	r2.add_child(_eff_spin(int(e.get("focus_cost", 0)), 0, 3, func(v): _effects[i]["focus_cost"] = v))
 	var alt := LineEdit.new()
 	alt.custom_minimum_size = Vector2(34, 0)
@@ -571,21 +575,32 @@ func _eff_opt(values: Array, cur: String, on_set: Callable) -> OptionButton:
 
 # ─── Handler ─────────────────────────────────────────────────────────────────
 
-func _on_cell_drop(cell, data: Dictionary) -> void:
-	var kind: String = data.get("kind", "")
-	var q: int = cell.ax.x
-	var r: int = cell.ax.y
-	match kind:
-		"w1": set_attack_cell(q, r, 1)
-		"w2": set_attack_cell(q, r, 2)
-		"w0": set_attack_cell(q, r, 0)
-		"exec": set_attack_cell(q, r, "exec")
-		"bleed": set_attack_cell(q, r, "bleed")
-		"shield": set_defence_cell(q, r, int(data.get("value", 1)))
-	# Spostamento da un altro esagono: svuota la cella di partenza.
-	var from = data.get("from", null)
-	if from is Vector2i and from != cell.ax:
-		clear_cell(from.x, from.y)
+## Stati ciclici di un esagono di combattimento (clic per avanzare).
+const CELL_CYCLE := ["empty", "w1", "w2", "exec", "bleed", "shield"]
+
+func _on_cell_cycle(cell) -> void:
+	var ax: Vector2i = cell.ax
+	var nxt := (_cell_state_index(ax) + 1) % CELL_CYCLE.size()
+	_attack.erase(ax)
+	_defence.erase(ax)
+	match CELL_CYCLE[nxt]:
+		"w1": _attack[ax] = 1
+		"w2": _attack[ax] = 2
+		"exec": _attack[ax] = "exec"
+		"bleed": _attack[ax] = "bleed"
+		"shield": _defence[ax] = 1
+	_after_change(ax)
+
+
+func _cell_state_index(ax: Vector2i) -> int:
+	if _defence.has(ax):
+		return CELL_CYCLE.find("shield")
+	if _attack.has(ax):
+		var w = _attack[ax]
+		if typeof(w) == TYPE_STRING:
+			return maxi(1, CELL_CYCLE.find(str(w)))   # "exec" / "bleed"
+		return CELL_CYCLE.find("w2") if int(w) == 2 else CELL_CYCLE.find("w1")
+	return 0
 
 
 func _on_cell_clear(cell) -> void:
@@ -664,18 +679,30 @@ static func _coerce(v):
 static func draw_icon(ci: CanvasItem, kind: String, c: Vector2, r: float, value) -> void:
 	var font := ThemeDB.fallback_font
 	match kind:
-		"w1", "w2", "w0", "exec", "bleed":
+		"w1", "w2", "w0":
 			var col := COL_WOUND
 			var txt := "1"
 			if kind == "w2": col = COL_WOUND2; txt = "2"
-			elif kind == "w0": col = COL_TARGET; txt = "·"
-			elif kind == "exec": col = COL_EXEC; txt = "✕"
-			elif kind == "bleed": col = COL_BLEED; txt = "≈"
+			elif kind == "w0": col = COL_TARGET; txt = ""
 			ci.draw_circle(c, r * 0.62, col)
-			_draw_centered(ci, font, c, txt, Color.WHITE, int(r))
+			if txt != "":
+				_draw_centered(ci, font, c, txt, Color.WHITE, int(r))
+			else:
+				ci.draw_circle(c, r * 0.16, Color.WHITE)
+		"exec":
+			ci.draw_circle(c, r * 0.62, COL_EXEC)
+			var d := r * 0.30
+			ci.draw_line(c + Vector2(-d, -d), c + Vector2(d, d), Color.WHITE, maxf(2.0, r * 0.12))
+			ci.draw_line(c + Vector2(-d, d), c + Vector2(d, -d), Color.WHITE, maxf(2.0, r * 0.12))
+		"bleed":
+			ci.draw_circle(c, r * 0.62, COL_BLEED)
+			var dp := r * 0.30
+			ci.draw_colored_polygon(PackedVector2Array([
+				c + Vector2(0, -dp * 1.5), c + Vector2(-dp, dp * 0.2), c + Vector2(dp, dp * 0.2)]), Color.WHITE)
+			ci.draw_circle(c + Vector2(0, dp * 0.35), dp * 0.75, Color.WHITE)
 		"shield":
-			ci.draw_circle(c, r * 0.62, COL_SHIELD)
-			_draw_centered(ci, font, c, "▽" + str(value), Color.WHITE, int(r * 0.9))
+			_draw_shield(ci, c, r * 0.72, COL_SHIELD)
+			_draw_centered(ci, font, c + Vector2(0, -r * 0.05), str(value), Color.WHITE, int(r * 0.8))
 		"kamae_aggression", "kamae_balance", "kamae_determination":
 			var slug := kind.substr(6)
 			ci.draw_circle(c, r * 0.62, KAMAE_COLORS.get(slug, Color.GRAY))
@@ -683,11 +710,26 @@ static func draw_icon(ci: CanvasItem, kind: String, c: Vector2, r: float, value)
 		"step", "step_opt":
 			var filled := kind == "step"
 			ci.draw_circle(c, r * 0.62, Color.BLACK if filled else Color(0.92, 0.92, 0.92))
-			_draw_centered(ci, font, c, "▲", Color.WHITE if filled else Color.BLACK, int(r))
+			_draw_triangle_up(ci, c, r * 0.42, Color.WHITE if filled else Color.BLACK)
 		"rot", "rot_opt":
 			var filled := kind == "rot"
 			ci.draw_circle(c, r * 0.62, Color.BLACK if filled else Color(0.92, 0.92, 0.92))
-			_draw_centered(ci, font, c, "↻", Color.WHITE if filled else Color.BLACK, int(r))
+			var ac := Color.WHITE if filled else Color.BLACK
+			ci.draw_arc(c, r * 0.34, deg_to_rad(-30), deg_to_rad(210), 18, ac, maxf(2.0, r * 0.1))
+			var tip := c + Vector2(r * 0.34, 0).rotated(deg_to_rad(-30))
+			ci.draw_line(tip, tip + Vector2(-r * 0.18, -r * 0.02), ac, maxf(2.0, r * 0.1))
+			ci.draw_line(tip, tip + Vector2(-r * 0.02, -r * 0.18), ac, maxf(2.0, r * 0.1))
+
+
+static func _draw_triangle_up(ci: CanvasItem, c: Vector2, s: float, col: Color) -> void:
+	ci.draw_colored_polygon(PackedVector2Array([
+		c + Vector2(0, -s), c + Vector2(-s * 0.9, s * 0.8), c + Vector2(s * 0.9, s * 0.8)]), col)
+
+
+static func _draw_shield(ci: CanvasItem, c: Vector2, s: float, col: Color) -> void:
+	ci.draw_colored_polygon(PackedVector2Array([
+		c + Vector2(-s * 0.8, -s * 0.7), c + Vector2(s * 0.8, -s * 0.7),
+		c + Vector2(s * 0.8, s * 0.05), c + Vector2(0, s * 0.9), c + Vector2(-s * 0.8, s * 0.05)]), col)
 
 
 static func _draw_centered(ci: CanvasItem, font: Font, c: Vector2, text: String, col: Color, fs: int) -> void:
@@ -720,7 +762,7 @@ class HexCell extends Control:
 		var c := Vector2(r, r)
 		var pts := PackedVector2Array()
 		for i in range(6):
-			pts.append(c + Vector2.from_angle(deg_to_rad(-90 + 60 * i)) * r * 0.92)
+			pts.append(c + Vector2.from_angle(deg_to_rad(-60 + 60 * i)) * r * 0.95)   # lato piatto in alto
 		var bg := Color(0.18, 0.18, 0.22)
 		if is_pawn:
 			bg = Color(0.22, 0.20, 0.12)
@@ -744,34 +786,14 @@ class HexCell extends Control:
 		if dfn != null:
 			GeometryEditor.draw_icon(self, "shield", c if atk == null else c + Vector2(0, r * 0.32), r * (1.0 if atk == null else 0.6), int(dfn))
 
-	func _can_drop_data(_pos: Vector2, data) -> bool:
-		return not is_pawn and data is Dictionary and data.has("kind")
-
-	func _drop_data(_pos: Vector2, data) -> void:
-		ed._on_cell_drop(self, data)
-
-	## Trascinando da una cella PIENA si sposta il suo contenuto su un altro esagono.
-	func _get_drag_data(_pos: Vector2):
-		if is_pawn or (atk == null and dfn == null):
-			return null
-		var kind: String
-		var val
-		if dfn != null and atk == null:
-			kind = "shield"; val = int(dfn)
-		elif typeof(atk) == TYPE_STRING:
-			kind = atk; val = atk            # "exec" / "bleed"
-		else:
-			var n := int(atk)
-			kind = "w2" if n == 2 else ("w0" if n == 0 else "w1"); val = atk
-		var prev := DragIcon.new()
-		prev.setup(ed, kind, val)
-		prev.custom_minimum_size = size
-		prev.size = size
-		set_drag_preview(prev)
-		return {"kind": kind, "value": val, "from": ax}
-
+	## Clic sinistro = avanza il ciclo (vuoto→ferita→doppia→esec→sanguina→difesa);
+	## clic destro = svuota. Niente trascinamento (più comodo su touch).
 	func _gui_input(event: InputEvent) -> void:
-		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
+		if is_pawn or not (event is InputEventMouseButton and event.pressed):
+			return
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			ed._on_cell_cycle(self)
+		elif event.button_index == MOUSE_BUTTON_RIGHT:
 			ed._on_cell_clear(self)
 
 

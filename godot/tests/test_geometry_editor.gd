@@ -29,6 +29,17 @@ func _atk_set(g: Dictionary) -> Dictionary:
 	return s
 
 
+func _cell_label(ge: GeometryEditor, ax: Vector2i) -> String:
+	if ge._defence.has(ax):
+		return "shield"
+	if ge._attack.has(ax):
+		var w = ge._attack[ax]
+		if typeof(w) == TYPE_STRING:
+			return str(w)
+		return "w2" if int(w) == 2 else "w1"
+	return "empty"
+
+
 func _ready() -> void:
 	_test_roundtrip()
 	_test_mutators()
@@ -93,6 +104,17 @@ func _test_mutators() -> void:
 	_check(atoms[0].get("t") == "step" and atoms[0].has("dir"), "passo serializza la direzione")
 	_check(atoms[1].get("t") == "rot" and not atoms[1].has("dir"), "rotazione senza direzione")
 	_check(atoms[1].get("opt") == true, "atomo opzionale marcato")
+
+	# Clic-ciclo su un esagono del nido d'ape: vuoto→w1→w2→exec→bleed→shield→vuoto.
+	var any_cell = ge._hex_cells.values()[0]
+	var ck: Vector2i = any_cell.ax
+	var seq := []
+	for _i in range(7):
+		ge._on_cell_cycle(any_cell)
+		seq.append(_cell_label(ge, ck))
+	_check(seq == ["w1", "w2", "exec", "bleed", "shield", "empty", "w1"],
+		"clic cicla gli stati dell'esagono (%s)" % str(seq))
+	ge.clear_cell(ck.x, ck.y)
 
 	# Kamae e counter.
 	ge.set_kamae_req("balance")

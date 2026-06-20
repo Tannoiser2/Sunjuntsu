@@ -111,8 +111,8 @@ func _build_topbar() -> Control:
 	_btn_cancel = _toolbar_button(bar, "Annulla", _on_cancel)
 	_btn_remove = _toolbar_button(bar, "Rim. ovr", _on_remove_override)
 	_btn_remove.tooltip_text = "Rimuovi override"
-	_btn_undo = _toolbar_button(bar, "↶", _undo)
-	_btn_redo = _toolbar_button(bar, "↷", _redo)
+	_btn_undo = _toolbar_button(bar, "Undo", _undo)
+	_btn_redo = _toolbar_button(bar, "Redo", _redo)
 
 	bar.add_child(VSeparator.new())
 
@@ -131,7 +131,7 @@ func _build_topbar() -> Control:
 	bar.add_child(_rank_opt)
 
 	var back := Button.new()
-	back.text = "← Menu"
+	back.text = "Menu"
 	back.add_theme_font_size_override("font_size", 12)
 	back.pressed.connect(_on_back)
 	bar.add_child(back)
@@ -195,7 +195,7 @@ func _build_center() -> Control:
 	var imgbtns := HBoxContainer.new()
 	imgbtns.add_theme_constant_override("separation", 4)
 	for spec in [["Cambia", _open_image_picker], ["Importa", _open_image_import],
-			["✕", func(): _set_image("")]]:
+			["Togli", func(): _set_image("")]]:
 		var b := Button.new()
 		b.text = spec[0]
 		b.add_theme_font_size_override("font_size", 11)
@@ -313,16 +313,16 @@ func _refresh_list() -> void:
 			continue
 		var flags := ""
 		if CardDB.geometry(id).is_empty():
-			flags += " ◇"
+			flags += " ~g"
 		if CardDB.image_for(id) == "":
-			flags += " ✕"
+			flags += " ~i"
 		if id >= 10000:
-			flags += " ★"   # carta creata dall'editor
+			flags += " *"   # carta creata dall'editor
 		var idx := _list.add_item("#%d  %s%s" % [id, str(c.get("name", "?")), flags])
 		_list.set_item_metadata(idx, id)
 		shown += 1
 
-	_count.text = "%d / %d carte  ·  ◇ no geometria  ✕ no immagine  ★ carta-utente" % [shown, ids.size()]
+	_count.text = "%d / %d carte   ~g no geometria · ~i no immagine · * carta-utente" % [shown, ids.size()]
 	_select_in_list(_current_id)
 
 
@@ -371,7 +371,7 @@ func _build_form(id: int, c: Dictionary, geom_data = null) -> void:
 	_w = {}
 
 	var head := Label.new()
-	head.text = "#%d%s" % [id, "  ★ carta-utente" if id >= 10000 else ""]
+	head.text = "#%d%s" % [id, "  * carta-utente" if id >= 10000 else ""]
 	head.add_theme_font_size_override("font_size", 18)
 	_form.add_child(head)
 
@@ -409,7 +409,7 @@ func _build_form(id: int, c: Dictionary, geom_data = null) -> void:
 	save_geo.pressed.connect(_on_save_geometry)
 	geobtns.add_child(save_geo)
 	var sim := Button.new()
-	sim.text = "▶ Simula carta"
+	sim.text = "Simula carta"
 	sim.tooltip_text = "Risolve il gemello contro un avversario fittizio e mostra l'esito"
 	sim.pressed.connect(_on_simulate)
 	geobtns.add_child(sim)
@@ -498,7 +498,7 @@ func _on_save() -> void:
 	_store.set_override(_current_id, ov)
 	var res := _store.save_overrides()
 	if not res.get("ok", false):
-		_status.text = "✗ Errore salvataggio: %s" % str(res.get("error", ""))
+		_status.text = "Errore salvataggio: %s" % str(res.get("error", ""))
 		return
 	CardDB.apply_override(_current_id, fields)
 	var saved_id := _current_id
@@ -507,9 +507,9 @@ func _on_save() -> void:
 	_select_in_list(saved_id)
 	_load_card(saved_id, false)
 	if ov.is_empty():
-		_status.text = "✓ Salvato #%d (nessuna differenza dall'Excel: override rimosso)" % saved_id
+		_status.text = "Salvato #%d (override rimosso: identica all'Excel)" % saved_id
 	else:
-		_status.text = "✓ Salvato #%d (%d campi nell'overlay)" % [saved_id, ov.size()]
+		_status.text = "Salvato #%d (%d campi nell'overlay)" % [saved_id, ov.size()]
 
 
 func _on_new() -> void:
@@ -530,7 +530,7 @@ func _on_duplicate() -> void:
 	fields["name"] = str(src.get("name", "")) + " (copia)"
 	fields.erase("file")
 	_load_card(id, true, fields)
-	_status.text = "Duplicata da #%d → nuova #%d (non salvata)" % [src_id, id]
+	_status.text = "Duplicata da #%d -> nuova #%d (non salvata)" % [src_id, id]
 
 
 func _on_cancel() -> void:
@@ -554,7 +554,7 @@ func _on_remove_override() -> void:
 	_store.clear_override(_current_id)
 	var res := _store.save_overrides()
 	if not res.get("ok", false):
-		_status.text = "✗ Errore: %s" % str(res.get("error", ""))
+		_status.text = "Errore: %s" % str(res.get("error", ""))
 		return
 	# Ripristina in memoria i valori originali dell'Excel.
 	CardDB.apply_override(_current_id, _store.pristine_card(_current_id))
@@ -562,7 +562,7 @@ func _on_remove_override() -> void:
 	_refresh_list()
 	_select_in_list(id)
 	_load_card(id, false)
-	_status.text = "✓ Override rimosso #%d (tornato all'Excel)" % id
+	_status.text = "Override rimosso #%d (tornato all'Excel)" % id
 
 
 func _on_save_geometry() -> void:
@@ -571,7 +571,7 @@ func _on_save_geometry() -> void:
 	var g := _geom_editor.to_geometry()
 	var res := _store.save_card_geometry(_current_id, g)
 	if not res.get("ok", false):
-		_status.text = "✗ Errore geometria: %s" % str(res.get("error", ""))
+		_status.text = "Errore geometria: %s" % str(res.get("error", ""))
 		return
 	CardDB.set_geometry(_current_id, g)
 	var id := _current_id
@@ -579,7 +579,7 @@ func _on_save_geometry() -> void:
 	_select_in_list(id)
 	var na: int = g.get("attack", {}).get("cells", []).size()
 	var nd: int = g.get("defence", {}).get("cells", []).size()
-	_status.text = "✓ Geometria #%d salvata (%d celle att., %d dif.)" % [id, na, nd]
+	_status.text = "Geometria #%d salvata (%d celle att., %d dif.)" % [id, na, nd]
 	_run_validation()
 
 
@@ -607,10 +607,10 @@ func _show_sim_result(r: Dictionary) -> void:
 		var suffix := ""
 		if tags is Array and not tags.is_empty():
 			suffix = " (%s)" % ", ".join(tags.map(func(x): return str(x)))
-		head.text = "✅ COLPITO — %d ferita/e%s" % [int(r.get("target_wounds", 0)), suffix]
+		head.text = "COLPITO — %d ferita/e%s" % [int(r.get("target_wounds", 0)), suffix]
 		head.add_theme_color_override("font_color", Color(0.5, 0.8, 0.5))
 	else:
-		head.text = "❌ Nessuna ferita (fuori arco / parato / carta non offensiva)"
+		head.text = "Mancato (fuori arco / parato / carta non offensiva)"
 		head.add_theme_color_override("font_color", Color(0.9, 0.7, 0.4))
 	vb.add_child(head)
 
@@ -632,7 +632,7 @@ func _show_sim_result(r: Dictionary) -> void:
 	logbox.add_child(ll)
 	for line in r.get("log", []):
 		var l := Label.new()
-		l.text = "• " + str(line)
+		l.text = "- " + str(line)
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		logbox.add_child(l)
 	sc.add_child(logbox)
@@ -685,7 +685,7 @@ func _undo() -> void:
 		return
 	_hist_idx -= 1
 	_restore(_history[_hist_idx])
-	_status.text = "↶ Undo (%d/%d)" % [_hist_idx + 1, _history.size()]
+	_status.text = "Undo (%d/%d)" % [_hist_idx + 1, _history.size()]
 
 
 func _redo() -> void:
@@ -693,7 +693,7 @@ func _redo() -> void:
 		return
 	_hist_idx += 1
 	_restore(_history[_hist_idx])
-	_status.text = "↷ Redo (%d/%d)" % [_hist_idx + 1, _history.size()]
+	_status.text = "Redo (%d/%d)" % [_hist_idx + 1, _history.size()]
 
 
 func _restore(snap: Dictionary) -> void:
@@ -741,7 +741,7 @@ func _run_validation() -> void:
 	})
 	if issues.is_empty():
 		var ok := Label.new()
-		ok.text = "✓ Nessun problema"
+		ok.text = "Nessun problema"
 		ok.add_theme_font_size_override("font_size", 12)
 		ok.add_theme_color_override("font_color", Color(0.45, 0.75, 0.5))
 		_issues_box.add_child(ok)
@@ -749,7 +749,7 @@ func _run_validation() -> void:
 	for it in issues:
 		var err: bool = it.get("level", "") == "error"
 		var l := Label.new()
-		l.text = "%s %s" % ["⛔" if err else "⚠", str(it.get("msg", ""))]
+		l.text = "%s %s" % ["[!]" if err else "[~]", str(it.get("msg", ""))]
 		l.add_theme_font_size_override("font_size", 12)
 		l.add_theme_color_override("font_color", Color(0.9, 0.42, 0.42) if err else Color(0.92, 0.76, 0.4))
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -789,7 +789,7 @@ func _set_image(rel: String) -> void:
 	_refresh_list()
 	_select_in_list(_current_id)
 	_run_validation()
-	_status.text = "✓ Immagine #%d %s" % [_current_id, "rimossa" if rel == "" else "→ " + rel]
+	_status.text = "Immagine #%d %s" % [_current_id, "rimossa" if rel == "" else rel]
 
 
 ## Picker delle immagini già presenti in assets/cards (cartella del personaggio
