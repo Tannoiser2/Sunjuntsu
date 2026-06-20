@@ -49,6 +49,7 @@ var _store: CardStore
 var _w: Dictionary = {}          ## campo -> widget editabile
 var _w_type: Label               ## etichetta `type` derivata (read-only)
 var _geom_editor: GeometryEditor ## editor visuale geometria (Fase 4)
+var _issues_box: VBoxContainer   ## pannello avvisi di validazione (Fase 3)
 var _current_id: int = -1
 var _pending_new: bool = false   ## carta creata/duplicata non ancora salvata
 
@@ -282,6 +283,7 @@ func _load_card(id: int, is_new: bool, fields: Dictionary = {}) -> void:
 	_update_preview(c, img)
 	_update_indicators(CardDB.geometry(id), img)
 	_update_toolbar()
+	_run_validation()
 	if is_new:
 		_status.text = "Carta #%d non salvata — compila e premi Salva" % id
 	elif not _store.get_override(id).is_empty():
@@ -300,6 +302,10 @@ func _build_form(id: int, c: Dictionary) -> void:
 	head.add_theme_font_size_override("font_size", 18)
 	_form.add_child(head)
 
+	_issues_box = VBoxContainer.new()
+	_issues_box.add_theme_constant_override("separation", 1)
+	_form.add_child(_issues_box)
+
 	_add_section("Anagrafica  (editabile)")
 	_w["name"] = _add_edit_text("nome", str(c.get("name", "")))
 	_w["char"] = _add_edit_option("personaggio", _char_list(), str(c.get("char", "Warrior")))
@@ -315,6 +321,7 @@ func _build_form(id: int, c: Dictionary) -> void:
 	_geom_editor.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_form.add_child(_geom_editor)
 	_geom_editor.load_geometry(str(c.get("type", "attack")), CardDB.geometry(id))
+	_geom_editor.changed.connect(func(): _run_validation())
 	var save_geo := Button.new()
 	save_geo.text = "Salva geometria"
 	save_geo.pressed.connect(_on_save_geometry)
@@ -372,6 +379,7 @@ func _recalc_type() -> void:
 	var t := CardStore.derive_type(_parse_keywords())
 	var e := Domain.parse_card_type(t)
 	_w_type.text = "%s  (%s)" % [Domain.CARD_TYPE_LABELS.get(e, "?"), t]
+	_run_validation()
 
 
 func _collect_fields() -> Dictionary:
@@ -481,6 +489,46 @@ func _on_save_geometry() -> void:
 	var na: int = g.get("attack", {}).get("cells", []).size()
 	var nd: int = g.get("defence", {}).get("cells", []).size()
 	_status.text = "✓ Geometria #%d salvata (%d celle att., %d dif.)" % [id, na, nd]
+	_run_validation()
+
+
+## Validazione live (Fase 3): valuta lo stato CORRENTE del form + geometria e
+## mostra gli avvisi inline (⛔ errori bloccanti, ⚠ warning non bloccanti).
+func _run_validation() -> void:
+	if _issues_box == null or _current_id < 0:
+		return
+	for ch in _issues_box.get_children():
+		ch.queue_free()
+	var card: Dictionary = _collect_fields() if _w.has("name") else CardDB.card(_current_id)
+	var geom: Dictionary = _geom_editor.to_geometry() if _geom_editor != null else CardDB.geometry(_current_id)
+	var img := "" if _pending_new else CardDB.image_for(_current_id)
+	var issues := CardValidator.validate(card, geom, img, {
+		"known_keywords": CardValidator.known_keywords_set(),
+		"duplicate": _count_id(_current_id) > 1,
+	})
+	if issues.is_empty():
+		var ok := Label.new()
+		ok.text = "✓ Nessun problema"
+		ok.add_theme_font_size_override("font_size", 12)
+		ok.add_theme_color_override("font_color", Color(0.45, 0.75, 0.5))
+		_issues_box.add_child(ok)
+		return
+	for it in issues:
+		var err: bool = it.get("level", "") == "error"
+		var l := Label.new()
+		l.text = "%s %s" % ["⛔" if err else "⚠", str(it.get("msg", ""))]
+		l.add_theme_font_size_override("font_size", 12)
+		l.add_theme_color_override("font_color", Color(0.9, 0.42, 0.42) if err else Color(0.92, 0.76, 0.4))
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_issues_box.add_child(l)
+
+
+func _count_id(id: int) -> int:
+	var n := 0
+	for c in CardDB.cards:
+		if int(c.get("id", -999999)) == id:
+			n += 1
+	return n
 
 
 func _default_char() -> String:

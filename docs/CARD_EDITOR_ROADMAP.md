@@ -207,12 +207,16 @@ Queste scelte cambiano l'architettura; vanno fissate **prima** di Fase 2.
 > `CardDB.apply_override()` aggiorna la vista runtime senza riavvio (gestisce carte
 > nuove e spostamento bucket per cambio `char`). Test headless verdi su Godot 4.6.
 
-### Fase 3 — Validazione
-- [ ] `CardValidator.gd` + test. Regole minime:
-      attacco senza celle/ferite; `kamae_req`/`kamae`/`to` fuori vocabolario;
-      `do` di effetto sconosciuto; keyword sconosciuta; immagine mancante;
-      `type` incoerente coi keywords; `id` duplicato; `rank` non valido.
-- [ ] Mostrare warning/errori inline nell'inspector (non bloccanti vs bloccanti).
+### Fase 3 — Validazione ✅
+- [x] `CardValidator.gd` + test. Regole: attacco/difesa senza celle (se la
+      geometria è avviata); `kamae_req`/`kamae`/`to` fuori vocabolario; `do` di
+      effetto sconosciuto; keyword sconosciuta; immagine mancante; `type`
+      incoerente coi keywords; `id` duplicato; `rank` non valido.
+- [x] Warning/errori inline nell'inspector (⚠ non bloccanti vs ⛔ bloccanti),
+      aggiornati live mentre editi anagrafica e geometria.
+
+> **Stato 2026-06-20:** M2 completata (Fase 2+3). Validazione live integrata in
+> `CardEditor`. Test headless `test_cardvalidator` verde su Godot 4.6.
 
 ### Fase 4 — Editor geometria/effetti  ✅ (effects: parziale)
 - [x] Editor `move` (sequenze "OPPURE" di atoms step/rot, dir/n/opt) **drag & drop**
