@@ -68,9 +68,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -130.0
-offset_top = -60.0
+offset_top = -90.0
 offset_right = 130.0
-offset_bottom = 90.0
+offset_bottom = 150.0
 theme_override_constants/separation = 16
 
 [node name="SoloButton" type="Button" parent="VBox"]
@@ -87,6 +87,11 @@ text = "1 vs 1 (locale)"
 layout_mode = 2
 custom_minimum_size = Vector2(0, 44)
 text = "Online (tavolo + telefoni)"
+
+[node name="EditorButton" type="Button" parent="VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 44)
+text = "Editor Carte"
 
 [node name="QuitButton" type="Button" parent="VBox"]
 layout_mode = 2
