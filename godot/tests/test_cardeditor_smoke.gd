@@ -31,12 +31,12 @@ func _ready() -> void:
 	_check(editor._form.get_child_count() > 1, "form di dettaglio costruito")
 	_check(editor._orig_preview.get_child_count() == 1, "colonna originale popolata")
 	_check(editor._geom_editor._widgets.size() >= 1, "editor geometria a widget popolato")
-	_check(editor._w.has("name") and editor._w.has("keywords"), "widget editabili presenti")
+	_check(editor._w.has("name") and editor._w.has("focus"), "widget editabili presenti")
 
-	# Ricalcolo automatico di type dai keywords.
-	editor._w["keywords"].text = "Defence"
+	# Ricalcolo automatico di type dai keyword (ora badge).
+	editor._keywords = ["Defence"]
 	editor._recalc_type()
-	_check(editor._collect_fields().get("type", "") == "defence", "type ricalcolato da keywords")
+	_check(editor._collect_fields().get("type", "") == "defence", "type ricalcolato da keyword")
 
 	# Undo/redo: una modifica alla geometria si annulla e si ripristina.
 	editor._on_item_selected(0)

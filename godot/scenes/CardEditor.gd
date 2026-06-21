@@ -50,6 +50,8 @@ var _btn_redo: Button
 var _store: CardStore
 var _w: Dictionary = {}          ## campo -> widget editabile
 var _w_type: Label               ## etichetta `type` derivata (read-only)
+var _keywords: Array = []        ## keyword/tipi correnti (badge)
+var _badges_box: Control         ## contenitore dei badge tipo
 var _geom_editor: GeometryEditor ## editor visuale geometria (Fase 4)
 var _issues_box: VBoxContainer   ## pannello avvisi di validazione (Fase 3)
 var _img_path_label: Label       ## path immagine corrente (Fase 6)
@@ -360,26 +362,33 @@ func _build_form(id: int, c: Dictionary, geom_data = null) -> void:
 	_issues_box.add_theme_constant_override("separation", 1)
 	_form.add_child(_issues_box)
 
-	# Anagrafica compatta: nome e personaggio su riga intera; i numeri appaiati.
+	# Crea prima TUTTI i widget (la validazione nei keyword li legge tutti).
 	_w["name"] = _mk_text(str(c.get("name", "")))
 	_w["char"] = _mk_option(_char_list(), str(c.get("char", "Warrior")))
-	_w["amount"] = _mk_spin(1, 6, int(c.get("amount", 1)))
 	_w["rank"] = _mk_option(["Wood", "Steel", "Gold", "Jade", "-"], str(c.get("rank", "-")))
-	_w["initiative"] = _mk_text(str(c.get("initiative", "-")))
 	_w["focus"] = _mk_spin(0, 9, int(c.get("focus", 0)))
-	_form.add_child(_field("nome", _w["name"]))
-	_form.add_child(_field("pers.", _w["char"]))
-	var nrow := HBoxContainer.new()
-	nrow.add_theme_constant_override("separation", 6)
-	nrow.add_child(_field("n.", _w["amount"]))
-	nrow.add_child(_field("rank", _w["rank"]))
-	_form.add_child(nrow)
-	var irow := HBoxContainer.new()
-	irow.add_theme_constant_override("separation", 6)
-	irow.add_child(_field("iniz.", _w["initiative"]))
-	irow.add_child(_field("focus", _w["focus"]))
-	_form.add_child(irow)
+	_w["amount"] = _mk_spin(1, 6, int(c.get("amount", 1)))
+	_w["initiative"] = _mk_text(str(c.get("initiative", "-")))
+
+	# Riga 1: nome · personaggio · rank.
+	var r1 := HBoxContainer.new()
+	r1.add_theme_constant_override("separation", 6)
+	r1.add_child(_field("nome", _w["name"]))
+	r1.add_child(_field("pers.", _w["char"]))
+	r1.add_child(_field("rank", _w["rank"]))
+	_form.add_child(r1)
+
+	# Riga 2: tipo come badge + "+".
 	_build_keywords_field(c.get("keywords", []))
+
+	# Riga 3: costo focus · copie (amount) · iniziativa.
+	var r3 := HBoxContainer.new()
+	r3.add_theme_constant_override("separation", 6)
+	r3.add_child(_field("focus", _w["focus"]))
+	r3.add_child(_field("copie", _w["amount"]))
+	r3.add_child(_field("iniz.", _w["initiative"]))
+	_form.add_child(r3)
+
 	# Registrazione undo/redo + validazione su ogni modifica dell'anagrafica.
 	_w["name"].text_changed.connect(func(_t): _on_edit())
 	_w["char"].item_selected.connect(func(_i): _on_edit())
@@ -411,45 +420,62 @@ func _build_form(id: int, c: Dictionary, geom_data = null) -> void:
 	_suspend_record = false
 
 
+## Riga "tipo": badge dei keyword (con x per rimuovere) + "+" per aggiungere,
+## e l'etichetta del tipo derivato.
 func _build_keywords_field(kws) -> void:
-	var le := LineEdit.new()
-	le.text = ", ".join(_as_strings(kws))
-	le.text_changed.connect(func(_t): _recalc_type(); _record())
-	_w["keywords"] = le
-	_edit_row("keywords", le)
-
+	_keywords = _as_strings(kws)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 4)
+	var l := Label.new()
+	l.text = "tipo"
+	l.add_theme_font_size_override("font_size", 11)
+	l.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
+	row.add_child(l)
+	_badges_box = HFlowContainer.new()
+	_badges_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(_badges_box)
 	var add := OptionButton.new()
-	add.add_item("+ keyword")
+	add.add_theme_font_size_override("font_size", 11)
+	add.add_item("+")
 	for kw in KNOWN_KEYWORDS:
 		add.add_item(kw)
 	add.item_selected.connect(_on_add_keyword.bind(add))
-	_edit_row("", add)
-
+	row.add_child(add)
+	_form.add_child(row)
 	_w_type = Label.new()
-	_edit_row("type", _w_type)
+	_w_type.add_theme_font_size_override("font_size", 11)
+	_w_type.add_theme_color_override("font_color", Color(0.6, 0.66, 0.74))
+	_form.add_child(_w_type)
+	_rebuild_badges()
 	_recalc_type()
+
+
+func _rebuild_badges() -> void:
+	for ch in _badges_box.get_children():
+		ch.queue_free()
+	for i in _keywords.size():
+		var kw := str(_keywords[i])
+		var b := Button.new()
+		b.text = kw + "  x"
+		b.tooltip_text = "Rimuovi"
+		b.add_theme_font_size_override("font_size", 11)
+		b.pressed.connect(func(): _keywords.erase(kw); _rebuild_badges(); _recalc_type(); _on_edit())
+		_badges_box.add_child(b)
 
 
 func _on_add_keyword(idx: int, opt: OptionButton) -> void:
 	if idx > 0:
 		var kw := opt.get_item_text(idx)
-		var cur := _parse_keywords()
-		if not cur.has(kw):
-			cur.append(kw)
-			_w["keywords"].text = ", ".join(cur)
+		if not _keywords.has(kw):
+			_keywords.append(kw)
+			_rebuild_badges()
 			_recalc_type()
-			_record()
+			_on_edit()
 	opt.selected = 0
 
 
 func _parse_keywords() -> Array:
-	var out: Array = []
-	var le: LineEdit = _w["keywords"]
-	for tok in le.text.split(","):
-		var t := tok.strip_edges()
-		if t != "":
-			out.append(t)
-	return out
+	return _keywords.duplicate()
 
 
 func _recalc_type() -> void:
