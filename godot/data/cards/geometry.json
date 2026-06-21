@@ -9,8 +9,7 @@
      {
       "atoms": [
        {
-        "t": "step",
-        "dir": -1,
+        "t": "anchor",
         "n": 1,
         "opt": true
        },
@@ -26,30 +25,30 @@
    "effects": [
     {
      "do": "discard_self",
-     "n": 1,
-     "alt": "a"
+     "n": 1
     },
     {
      "do": "draw",
      "n": 2,
-     "alt": "b"
+     "alt": "a"
     },
     {
-     "do": "stun_self",
+     "do": "search_draw",
      "n": 1,
-     "alt": "c"
+     "alt": "b"
     },
     {
      "do": "focus",
      "n": 1,
-     "alt": "c"
+     "alt": "b"
     },
     {
      "do": "change_kamae",
      "n": 1,
-     "alt": "d"
+     "alt": "c"
     }
-   ]
+   ],
+   "note": "Costo: SCARTA 1 CARTA (discard_self). Movimento ❄1 ↻2 (❄ = marcatore-àncora, non un passo). OPPURE: pesca 2 / prendi 1 attacco + ottieni 1 🪷 / cambia Kamae fino a 1 ramo."
   },
   "54": {
    "name": "RUGGITO ARDENTE",
@@ -64,17 +63,17 @@
     {
      "do": "swap_positions",
      "when": "on_hit",
-     "kamae": "balance",
+     "focus_cost": 1,
      "alt": "b"
     },
     {
-     "do": "replace_wound_bleed",
+     "do": "link_anchor",
      "when": "on_hit",
-     "kamae": "balance",
+     "focus_cost": 1,
      "alt": "c"
     }
    ],
-   "note": "Istantanea: gioca se l'attacco è riuscito."
+   "note": "Istantanea: gioca se l'attacco è riuscito. SPINGI 1, OPPURE (barre viola = focus) scambia posizione, OPPURE \"SOSTITUISCE ! CON ❄\" = link_anchor."
   },
   "55": {
    "name": "COLPO DELLA FENICE FIAMMANTE",
@@ -145,11 +144,15 @@
     {
      "do": "search_draw",
      "n": 1,
-     "kamae": "balance",
+     "focus_cost": 1,
      "alt": "b"
+    },
+    {
+     "do": "switch_kamae",
+     "to": "determination"
     }
    ],
-   "note": "Istantanea: cerca attacco (o difesa in Equilibrio)."
+   "note": "Istantanea, dopo aver risolto la tua carta: ↻1; CERCA+PRENDI 1 attacco, OPPURE (barra viola = focus) 1 difesa; poi PASSA A Determinazione."
   },
   "57": {
    "name": "ISTINTO BRUCIANTE",
@@ -160,26 +163,31 @@
       "atoms": [
        {
         "t": "step",
-        "dirs": [
-         0,
-         3
-        ],
+        "dir": 0,
         "n": 1,
-        "opt": true,
+        "opt": false,
         "kamae": "aggression"
-       },
+       }
+      ]
+     },
+     {
+      "atoms": [
        {
         "t": "step",
-        "dir": -1,
+        "dir": 0,
         "n": 1,
-        "opt": true,
-        "focus_cost": 1
-       },
+        "opt": false,
+        "kamae": "determination"
+       }
+      ]
+     },
+     {
+      "atoms": [
        {
         "t": "rot",
         "n": 2,
         "opt": false,
-        "kamae": "determination"
+        "kamae": "balance"
        }
       ]
      }
@@ -193,7 +201,8 @@
      "do": "draw",
      "n": 5
     }
-   ]
+   ],
+   "note": "Movimento per posa (alternative): Aggressività ↥1 · Determinazione ↥1 · Equilibrio ↻2. Poi rimescola le carte abilità non-meditazione e pesca 5."
   },
   "58": {
    "name": "FINTA FALCIANTE",
@@ -255,28 +264,30 @@
      {
       "atoms": [
        {
-        "t": "step",
-        "dir": -1,
+        "t": "anchor",
         "n": 1,
-        "opt": true
+        "opt": false
        },
        {
         "t": "rot",
         "n": 1,
-        "opt": true
-       },
+        "opt": false
+       }
+      ]
+     },
+     {
+      "atoms": [
        {
-        "t": "step",
-        "dir": -1,
+        "t": "anchor",
         "n": 2,
-        "opt": true,
-        "kamae": "determination"
+        "opt": false,
+        "kamae": "balance"
        },
        {
         "t": "rot",
         "n": 2,
-        "opt": true,
-        "kamae": "determination"
+        "opt": false,
+        "kamae": "balance"
        }
       ]
      }
@@ -291,7 +302,8 @@
      "do": "switch_kamae",
      "to": "aggression"
     }
-   ]
+   ],
+   "note": "Movimento: ❄1 ↻1, OPPURE (verde = Equilibrio) ❄2 ↻2 — il ❄ è un marcatore-àncora, non un passo. \"OTTIENI 1 🪷\" = focus; \"PASSA A\" = switch_kamae aggression."
   },
   "60": {
    "name": "FALCIATA MONTANTE",
@@ -430,7 +442,7 @@
      "do": "foe_discard",
      "n": 1,
      "when": "on_hit",
-     "kamae": "determination",
+     "kamae": "balance",
      "focus_cost": 1
     },
     {
@@ -438,7 +450,8 @@
      "to": "aggression",
      "when": "on_hit"
     }
-   ]
+   ],
+   "note": "Se riuscito: SPINGI 1; barra verde (Equilibrio) SCARTA 1 (con focus); \"PASSA A\" = switch_kamae aggression."
   },
   "63": {
    "name": "BLOCCO CINEREO",
