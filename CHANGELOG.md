@@ -3,6 +3,13 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.62.1] — 2026-06-21
+### Menu: "Novità" dal CHANGELOG + immagine di sfondo
+- Il riquadro **Novità** dello splash ora **legge l'ultima voce del CHANGELOG**
+  (titolo + primi punti): prima era un testo fisso che non cambiava mai.
+- Aggiunta l'**immagine dell'arena** come sfondo del menu (attenuata, con velo
+  scuro per la leggibilità dei pulsanti). Versione 0.62.1.
+
 ## [0.62.0] — 2026-06-21
 ### Editor carte: l'iniziativa diventa un widget contenitore
 - L'**iniziativa** non è più un campo dell'intestazione: è un **widget Iniziativa**
