@@ -71,15 +71,17 @@ const CELL_CYCLE := ["empty", "w1", "w2", "exec", "bleed", "shield"]
 # ─── Modello dati ────────────────────────────────────────────────────────────
 var _type: String = "attack"
 var _name: String = ""
+var _main_init: String = ""   ## iniziativa della parte ALTA (dal card_pool)
 var _widgets: Array = []   ## lista ordinata di widget (Dictionary con "type" + dati)
 var _built := false
 
 
 # ─── API pubblica ────────────────────────────────────────────────────────────
 
-func load_geometry(card_type: String, geom: Dictionary) -> void:
+func load_geometry(card_type: String, geom: Dictionary, main_init := "") -> void:
 	_type = card_type if card_type != "" else str(geom.get("type", "attack"))
 	_name = str(geom.get("name", ""))
+	_main_init = main_init
 	_widgets = _widgets_from(geom)
 	if not _built:
 		_build_ui()
@@ -141,7 +143,47 @@ func _widgets_from(geom: Dictionary) -> Array:
 			out.append(w)
 	if out.is_empty():
 		out = [_new_widget("combat")]   # carta nuova: parti dal Combattimento
+
+	# Carte a PIÙ iniziative (campo `split`): la parte ALTA va in un contenitore
+	# Iniziativa (valore dal card_pool) e lo split in una SECONDA Iniziativa con la
+	# propria velocità. Le carte a iniziativa singola restano una lista piatta.
+	if geom.has("split") and geom["split"] is Dictionary:
+		var sp: Dictionary = geom["split"]
+		return [_init_container(_main_init, out),
+			_init_container(_fmt_init(sp.get("initiative", "")), _split_to_children(sp))]
 	return out
+
+
+## Iniziativa come testo pulito: i numeri (anche letti come float dal JSON)
+## diventano interi; "6/7", "=", "-"… restano invariati.
+func _fmt_init(v) -> String:
+	if typeof(v) == TYPE_INT:
+		return str(v)
+	if typeof(v) == TYPE_FLOAT:
+		return str(int(round(v)))
+	return str(v)
+
+
+## Contenitore Iniziativa con un valore (testo) e dei figli.
+func _init_container(value: String, children: Array) -> Dictionary:
+	return {"type": "initiative", "cond": "", "value": value, "children": children}
+
+
+## Figli di una parte `split`: Movimento (obbligatorio) → Attacco → Effetti.
+func _split_to_children(sp: Dictionary) -> Array:
+	var ch := []
+	for opt in sp.get("move", {}).get("opts", []):
+		var atoms := []
+		for a in opt.get("atoms", []):
+			atoms.append(_norm_atom(a))
+		ch.append({"type": "movement", "cond": "", "atoms": atoms})
+	if sp.has("attack") and sp["attack"] is Dictionary:
+		ch.append({"type": "combat", "cond": "",
+			"attack": _cells_from(sp["attack"], "w"), "defence": {}})
+	for e in sp.get("effects", []):
+		if typeof(e) == TYPE_DICTIONARY:
+			ch.append(_effect_widget(e))
+	return ch
 
 
 ## Legge le varianti di combattimento: lista di { cells: {axial:val}, kamae }.
@@ -157,18 +199,72 @@ func _read_variants(geom: Dictionary, single_key: String, array_key: String, vk:
 
 
 ## Serializza lo stato corrente nello Schema v2 (campi vuoti omessi).
+##
+## Il motore lavora "in piatto": la prima Iniziativa è la parte ALTA (campi al
+## livello principale), la seconda diventa `split` (parte bassa). L'ALBERO
+## completo (annidamento + condizioni + valori iniziativa) è salvato in `layout`
+## e usato dall'editor per ricostruire fedelmente la struttura.
 func to_geometry() -> Dictionary:
 	var g := {}
 	if _name != "":
 		g["name"] = _name
 	g["type"] = _type
 
-	# Il motore lavora "in piatto": appiattisco l'albero in una lista di foglie
-	# nell'ordine di visita (l'annidamento Iniziativa/OPPURE è estetico per ora e
-	# vive nel `layout`; le alternative di Movimento restano opzioni distinte).
-	var flat: Array = []
-	_flatten(_widgets, flat)
+	var part := _partition()
+	_emit_part(g, part["main"])
 
+	if part["has_split"]:
+		var sg := {}
+		_emit_part(sg, part["split"])
+		# `split` capisce solo move/attack(singolo)/effects + initiative.
+		var sp := {}
+		if sg.has("move"): sp["move"] = sg["move"]
+		if sg.has("attack"):
+			sp["attack"] = sg["attack"]
+		elif sg.has("attacks") and not (sg["attacks"] as Array).is_empty():
+			sp["attack"] = {"cells": sg["attacks"][0]["cells"]}
+		if sg.has("effects"): sp["effects"] = sg["effects"]
+		var iv: String = part["split_value"]
+		sp["initiative"] = int(iv) if iv.is_valid_int() else iv
+		g["split"] = sp
+
+	var layout := _nodes_to(_widgets)
+	if not layout.is_empty():
+		g["layout"] = layout
+	return g
+
+
+## Iniziativa della parte ALTA (per il card_pool). Vuota se non impostata.
+func main_initiative() -> String:
+	return _partition()["main_value"]
+
+
+## Divide i widget in parte ALTA (main) e parte bassa (split). La prima
+## Iniziativa è la parte alta; la seconda è lo split. I widget sciolti al livello
+## superiore (senza Iniziativa) confluiscono nella parte alta.
+func _partition() -> Dictionary:
+	var init_cont := []
+	var loose := []
+	for w in _widgets:
+		if str(w.get("type", "")) == "initiative":
+			init_cont.append(w)
+		elif str(w.get("type", "")) != "":
+			loose.append(w)
+	var main: Array = []
+	_flatten(loose, main)
+	if init_cont.size() > 0:
+		_flatten(init_cont[0].get("children", []), main)
+	var split: Array = []
+	var has_split := init_cont.size() > 1
+	if has_split:
+		_flatten(init_cont[1].get("children", []), split)
+	var mv: String = str(init_cont[0].get("value", "")) if init_cont.size() > 0 else _main_init
+	var sv: String = str(init_cont[1].get("value", "")) if has_split else ""
+	return {"main": main, "split": split, "has_split": has_split, "main_value": mv, "split_value": sv}
+
+
+## Scrive in `g` i campi (kamae_req/move/attack/effects/…) da una lista di foglie.
+func _emit_part(g: Dictionary, flat: Array) -> void:
 	# Kamae richiesto (primo widget kamae).
 	for w in flat:
 		if w["type"] == "kamae" and str(w.get("req", "")) != "":
@@ -224,14 +320,6 @@ func to_geometry() -> Dictionary:
 		if w["type"] == "note" and str(w.get("text", "")) != "":
 			g["note"] = str(w["text"]); break
 
-	# Disposizione: l'ALBERO completo dei widget (annidamento + condizioni),
-	# serializzato in modo provvisorio. Il motore lo ignora; l'editor lo usa per
-	# ricostruire fedelmente la struttura al ricaricamento.
-	var layout := _nodes_to(_widgets)
-	if not layout.is_empty():
-		g["layout"] = layout
-	return g
-
 
 ## Raccoglie le foglie (tutto tranne i contenitori) in ordine di visita.
 func _flatten(list: Array, into: Array) -> void:
@@ -272,7 +360,7 @@ func _widget_to_node(w: Dictionary) -> Dictionary:
 		node["cond"] = str(w["cond"])
 	match t:
 		"initiative":
-			node["value"] = int(w.get("value", 2))
+			node["value"] = str(w.get("value", ""))
 			node["children"] = _nodes_to(w.get("children", []))
 		"oppure":
 			node["children"] = _nodes_to(w.get("children", []))
@@ -310,7 +398,7 @@ func _node_to_widget(node: Dictionary) -> Dictionary:
 	match t:
 		"initiative":
 			return {"type": "initiative", "cond": cond,
-				"value": int(node.get("value", 2)),
+				"value": str(node.get("value", "")),
 				"children": _nodes_to_widgets(node.get("children", []))}
 		"oppure":
 			return {"type": "oppure", "cond": cond,
@@ -414,7 +502,7 @@ func _new_widget(type: String) -> Dictionary:
 
 func _new_widget_base(type: String) -> Dictionary:
 	match type:
-		"initiative": return {"type": "initiative", "value": 2, "children": []}
+		"initiative": return {"type": "initiative", "value": "", "children": []}
 		"oppure": return {"type": "oppure", "children": []}
 		"combat": return {"type": "combat", "cond": "", "attack": {}, "defence": {}}
 		"movement": return {"type": "movement", "atoms": []}
@@ -704,11 +792,12 @@ func _build_container_body(w: Dictionary) -> Control:
 		var row := HBoxContainer.new()
 		row.add_theme_constant_override("separation", 4)
 		row.add_child(_lbl("iniziativa"))
-		var sp := SpinBox.new()
-		sp.min_value = 1; sp.max_value = 9; sp.value = int(w.get("value", 2))
-		sp.custom_minimum_size = Vector2(54, 0)
-		sp.value_changed.connect(func(val): w["value"] = int(val); changed.emit())
-		row.add_child(sp)
+		var le := LineEdit.new()
+		le.text = str(w.get("value", ""))
+		le.placeholder_text = "es. 8, 6/7, 5,4,3, ="
+		le.custom_minimum_size = Vector2(96, 0)
+		le.text_changed.connect(func(t): w["value"] = t.strip_edges(); changed.emit())
+		row.add_child(le)
 		v.add_child(row)
 	# Riquadro rientrato che ospita i widget figli (anche bersaglio di drop).
 	var nest := DropZone.new()

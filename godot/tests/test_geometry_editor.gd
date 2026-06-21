@@ -101,6 +101,36 @@ func _test_nesting() -> void:
 	ge.queue_free()
 
 
+func _test_split_initiative() -> void:
+	print("[iniziativa multipla: split → contenitori]")
+	var ge := GeometryEditor.new()
+	add_child(ge)
+	# Carta 024 (Vortice Cremisi): parte alta a iniziativa 8, split a 5.
+	ge.load_geometry("attack", CardDB.geometry(24), "8")
+	_check(ge._widgets.size() == 2, "due contenitori Iniziativa")
+	_check(ge._widgets[0]["type"] == "initiative" and str(ge._widgets[0]["value"]) == "8", "Iniziativa alta = 8")
+	_check(ge._widgets[1]["type"] == "initiative" and str(ge._widgets[1]["value"]) == "5", "Iniziativa split = 5")
+	var top: Array = ge._widgets[0]["children"]
+	var bot: Array = ge._widgets[1]["children"]
+	_check(top.size() >= 1 and top[0]["type"] == "combat", "parte alta: widget attacco")
+	var has_move := false
+	var has_atk := false
+	for w in bot:
+		if w["type"] == "movement": has_move = true
+		if w["type"] == "combat": has_atk = true
+	_check(has_move and has_atk, "split: movimento + attacco")
+	_check(ge.main_initiative() == "8", "main_initiative() = 8")
+	# Serializzazione: split + parte alta + albero.
+	var g := ge.to_geometry()
+	_check(g.has("split") and int(g["split"]["initiative"]) == 5, "split serializzato a iniziativa 5")
+	_check(g["split"].has("move") and g["split"].has("attack"), "split: move + attack serializzati")
+	_check(g.has("attack") or g.has("attacks"), "parte alta serializzata per il motore")
+	# Round-trip dall'albero (layout a nodi).
+	ge.load_geometry("attack", g, "8")
+	_check(ge._widgets.size() == 2 and ge._widgets[1]["type"] == "initiative", "round-trip: due iniziative")
+	ge.queue_free()
+
+
 func _ready() -> void:
 	_test_roundtrip()
 	_test_mutators()
@@ -109,6 +139,7 @@ func _ready() -> void:
 	_test_attack_variants()
 	_test_effects()
 	_test_nesting()
+	_test_split_initiative()
 	if _failures == 0:
 		print("GEOMETRY EDITOR DONE ok")
 		get_tree().quit(0)
