@@ -6,15 +6,23 @@
 ## possono avere PIÙ widget dello stesso tipo (es. più attacchi gated da kamae
 ## diversi, più sequenze di movimento, più effetti).
 ##
+## Ogni widget ha in cima una CONDIZIONE (kamae) opzionale ("se …") e si
+## RIPOSIZIONA per trascinamento (niente più tasti su/giù). Due widget sono
+## CONTENITORI che annidano altri widget:
+## - Iniziativa (con il numero di iniziativa);
+## - OPPURE (alternative).
+##
 ## - Combattimento: nido d'ape a clic-ciclo (vuoto→ferita→doppia→esec→sanguina→
-##   difesa) + gate kamae opzionale (la variante d'attacco attiva in quella posa).
+##   difesa); la condizione kamae sceglie la variante d'attacco attiva.
 ## - Movimento: una sequenza di atomi (passo con rosetta a 6 direzioni / libero,
 ##   rotazione), con passi, facoltativo, kamae, costo focus.
 ## - Kamae richiesto, Contrattacco (iniziative), Nota.
 ##
-## Serializza/deserializza lo Schema v2 (GEOMETRY_SCHEMA.md), incluse le varianti
-## `attacks`/`defences` gated da kamae. L'ordine dei widget si salva in `layout`
-## (estetico, ignorato dal motore).
+## Serializzazione PROVVISORIA: il motore riceve la geometria APPIATTITA (le
+## foglie dell'albero, varianti `attacks`/`defences` gated da kamae comprese),
+## mentre l'ALBERO completo (annidamento + condizioni) è salvato in `layout` come
+## struttura a nodi e ricostruito fedelmente al ricaricamento. (Il `layout`
+## classico — lista di stringhe — resta supportato in lettura.)
 class_name GeometryEditor
 extends VBoxContainer
 
@@ -45,7 +53,12 @@ const KAMAE_OPTS := ["", "aggression", "balance", "determination"]
 
 # Tipi di widget selezionabili e loro etichette.
 const WIDGET_TYPES := ["combat", "movement", "kamae", "effect", "counter", "note"]
+## Contenitori che annidano altri widget.
+const CONTAINER_TYPES := ["initiative", "oppure"]
+## Tutti i tipi offerti dal menu (contenitori in cima).
+const MENU_TYPES := ["initiative", "oppure", "combat", "movement", "kamae", "effect", "counter", "note"]
 const WIDGET_TITLES := {
+	"initiative": "——— Iniziativa", "oppure": "OPPURE (alternative)",
 	"combat": "Combattimento (att./dif.)", "movement": "Movimento",
 	"kamae": "Kamae richiesto", "effect": "Effetto",
 	"counter": "Contrattacco", "note": "Nota",
@@ -78,6 +91,12 @@ func load_geometry(card_type: String, geom: Dictionary) -> void:
 ## combattimento per kamae; un widget Movimento per opzione; un Effetto per
 ## effetto; singoli per kamae/counter/note). L'ordine segue `layout` se presente.
 func _widgets_from(geom: Dictionary) -> Array:
+	# Layout ad ALBERO (nuovo): lista di nodi → ricostruzione fedele con
+	# annidamento e condizioni. (Il layout classico è una lista di stringhe.)
+	var lay = geom.get("layout", [])
+	if lay is Array and not lay.is_empty() and typeof(lay[0]) == TYPE_DICTIONARY:
+		return _nodes_to_widgets(lay)
+
 	# Varianti d'attacco e difesa (schema nuovo `attacks`/`defences` o classico).
 	var atk_vars := _read_variants(geom, "attack", "attacks", "w")
 	var dfn_vars := _read_variants(geom, "defence", "defences", "v")
@@ -88,7 +107,7 @@ func _widgets_from(geom: Dictionary) -> Array:
 		if not (v["kamae"] in kamae_keys): kamae_keys.append(v["kamae"])
 	var pool := {"combat": [], "movement": [], "kamae": [], "effect": [], "counter": [], "note": []}
 	for k in kamae_keys:
-		var cw := {"type": "combat", "kamae": k, "attack": {}, "defence": {}}
+		var cw := {"type": "combat", "cond": k, "attack": {}, "defence": {}}
 		for v in atk_vars:
 			if v["kamae"] == k: cw["attack"] = v["cells"]; break
 		for v in dfn_vars:
@@ -144,14 +163,20 @@ func to_geometry() -> Dictionary:
 		g["name"] = _name
 	g["type"] = _type
 
+	# Il motore lavora "in piatto": appiattisco l'albero in una lista di foglie
+	# nell'ordine di visita (l'annidamento Iniziativa/OPPURE è estetico per ora e
+	# vive nel `layout`; le alternative di Movimento restano opzioni distinte).
+	var flat: Array = []
+	_flatten(_widgets, flat)
+
 	# Kamae richiesto (primo widget kamae).
-	for w in _widgets:
+	for w in flat:
 		if w["type"] == "kamae" and str(w.get("req", "")) != "":
 			g["kamae_req"] = str(w["req"]); break
 
 	# Movimento → opzioni (una per widget movimento con atomi).
 	var opts := []
-	for w in _widgets:
+	for w in flat:
 		if w["type"] == "movement":
 			var out_atoms := []
 			for a in w.get("atoms", []):
@@ -161,51 +186,61 @@ func to_geometry() -> Dictionary:
 	if not opts.is_empty():
 		g["move"] = {"opts": opts}
 
-	# Combattimento → varianti attacco/difesa (gated da kamae se presenti).
+	# Combattimento → varianti attacco/difesa (gated dalla condizione kamae).
 	var atk_vars := []
 	var dfn_vars := []
-	for w in _widgets:
+	for w in flat:
 		if w["type"] != "combat":
 			continue
+		var ck := str(w.get("cond", ""))
 		var ac := _cells_to(w.get("attack", {}), "w")
 		if not ac.is_empty():
 			var v := {"cells": ac}
-			if str(w.get("kamae", "")) != "": v["kamae"] = str(w["kamae"])
+			if ck != "": v["kamae"] = ck
 			atk_vars.append(v)
 		var dc := _cells_to(w.get("defence", {}), "v")
 		if not dc.is_empty():
 			var v2 := {"cells": dc}
-			if str(w.get("kamae", "")) != "": v2["kamae"] = str(w["kamae"])
+			if ck != "": v2["kamae"] = ck
 			dfn_vars.append(v2)
 	_write_variants(g, "attack", "attacks", atk_vars)
 	_write_variants(g, "defence", "defences", dfn_vars)
 
 	# Contrattacco (primo widget counter).
-	for w in _widgets:
+	for w in flat:
 		if w["type"] == "counter" and not (w.get("values", []) as Array).is_empty():
 			g["counter"] = (w["values"] as Array).duplicate(); break
 
 	# Effetti (ogni widget effect con verbo).
 	var effs := []
-	for w in _widgets:
+	for w in flat:
 		if w["type"] == "effect" and str(w.get("do", "")) != "":
 			effs.append(_effect_to(w))
 	if not effs.is_empty():
 		g["effects"] = effs
 
 	# Nota (primo widget note).
-	for w in _widgets:
+	for w in flat:
 		if w["type"] == "note" and str(w.get("text", "")) != "":
 			g["note"] = str(w["text"]); break
 
-	# Disposizione dei widget (estetica; il motore la ignora).
-	var layout := []
-	for w in _widgets:
-		if str(w.get("type", "")) != "":
-			layout.append(w["type"])
+	# Disposizione: l'ALBERO completo dei widget (annidamento + condizioni),
+	# serializzato in modo provvisorio. Il motore lo ignora; l'editor lo usa per
+	# ricostruire fedelmente la struttura al ricaricamento.
+	var layout := _nodes_to(_widgets)
 	if not layout.is_empty():
 		g["layout"] = layout
 	return g
+
+
+## Raccoglie le foglie (tutto tranne i contenitori) in ordine di visita.
+func _flatten(list: Array, into: Array) -> void:
+	for w in list:
+		var t := str(w.get("type", ""))
+		if t in CONTAINER_TYPES:
+			_flatten(w.get("children", []), into)
+		elif t != "":
+			into.append(w)
 
 
 ## Scrive le varianti: forma classica singola (`attack`) se una sola e senza
@@ -217,6 +252,92 @@ func _write_variants(g: Dictionary, single_key: String, array_key: String, vars:
 		g[single_key] = {"cells": vars[0]["cells"]}
 	else:
 		g[array_key] = vars
+
+
+# ─── (De)serializzazione dell'albero dei widget (layout provvisorio) ──────────
+
+## Albero → lista di nodi JSON-friendly (ricorsiva sui contenitori).
+func _nodes_to(list: Array) -> Array:
+	var out := []
+	for w in list:
+		if str(w.get("type", "")) != "":
+			out.append(_widget_to_node(w))
+	return out
+
+
+func _widget_to_node(w: Dictionary) -> Dictionary:
+	var t := str(w.get("type", ""))
+	var node := {"type": t}
+	if str(w.get("cond", "")) != "":
+		node["cond"] = str(w["cond"])
+	match t:
+		"initiative":
+			node["value"] = int(w.get("value", 2))
+			node["children"] = _nodes_to(w.get("children", []))
+		"oppure":
+			node["children"] = _nodes_to(w.get("children", []))
+		"combat":
+			node["attack"] = {"cells": _cells_to(w.get("attack", {}), "w")}
+			node["defence"] = {"cells": _cells_to(w.get("defence", {}), "v")}
+		"movement":
+			var atoms := []
+			for a in w.get("atoms", []):
+				atoms.append(_atom_to(a))
+			node["atoms"] = atoms
+		"kamae":
+			node["req"] = str(w.get("req", ""))
+		"effect":
+			node.merge(_effect_to(w))
+		"counter":
+			node["values"] = (w.get("values", []) as Array).duplicate()
+		"note":
+			node["text"] = str(w.get("text", ""))
+	return node
+
+
+## Lista di nodi → widget (ricorsiva). Inverso di `_nodes_to`.
+func _nodes_to_widgets(nodes: Array) -> Array:
+	var out := []
+	for n in nodes:
+		if typeof(n) == TYPE_DICTIONARY:
+			out.append(_node_to_widget(n))
+	return out
+
+
+func _node_to_widget(node: Dictionary) -> Dictionary:
+	var t := str(node.get("type", ""))
+	var cond := str(node.get("cond", ""))
+	match t:
+		"initiative":
+			return {"type": "initiative", "cond": cond,
+				"value": int(node.get("value", 2)),
+				"children": _nodes_to_widgets(node.get("children", []))}
+		"oppure":
+			return {"type": "oppure", "cond": cond,
+				"children": _nodes_to_widgets(node.get("children", []))}
+		"combat":
+			return {"type": "combat", "cond": cond,
+				"attack": _cells_from(node.get("attack", {}), "w"),
+				"defence": _cells_from(node.get("defence", {}), "v")}
+		"movement":
+			var atoms := []
+			for a in node.get("atoms", []):
+				atoms.append(_norm_atom(a))
+			return {"type": "movement", "cond": cond, "atoms": atoms}
+		"kamae":
+			return {"type": "kamae", "cond": cond, "req": str(node.get("req", ""))}
+		"effect":
+			var e := _effect_widget(node)
+			e["cond"] = cond
+			return e
+		"counter":
+			var vals := []
+			for x in node.get("values", []):
+				vals.append(int(x))
+			return {"type": "counter", "cond": cond, "values": vals}
+		"note":
+			return {"type": "note", "cond": cond, "text": str(node.get("text", ""))}
+	return _new_widget("")
 
 
 # ─── Mutatori pubblici (drag-drop / test headless) ───────────────────────────
@@ -285,8 +406,17 @@ func set_kamae_req(slug: String) -> void:
 # ─── Costruzione del nuovo widget e normalizzazione ──────────────────────────
 
 func _new_widget(type: String) -> Dictionary:
+	var w := _new_widget_base(type)
+	if not w.has("cond"):
+		w["cond"] = ""   # condizione (kamae) all'inizio del widget
+	return w
+
+
+func _new_widget_base(type: String) -> Dictionary:
 	match type:
-		"combat": return {"type": "combat", "kamae": "", "attack": {}, "defence": {}}
+		"initiative": return {"type": "initiative", "value": 2, "children": []}
+		"oppure": return {"type": "oppure", "children": []}
+		"combat": return {"type": "combat", "cond": "", "attack": {}, "defence": {}}
 		"movement": return {"type": "movement", "atoms": []}
 		"kamae": return {"type": "kamae", "req": ""}
 		"effect": return _effect_widget({})
@@ -373,48 +503,54 @@ func _rebuild_widgets() -> void:
 		return
 	for ch in get_children():
 		ch.queue_free()
-	for i in _widgets.size():
-		add_child(_build_widget(i))
-	# "+ aggiungi widget" in fondo.
+	_build_list(self, _widgets)
+
+
+## Popola `parent` con i widget di `siblings` (ricorsivo per i contenitori) e un
+## pulsante "+ aggiungi widget" che inserisce in QUESTA lista.
+func _build_list(parent: Node, siblings: Array) -> void:
+	for i in siblings.size():
+		parent.add_child(_build_widget(siblings, i))
 	var add := Button.new()
 	add.text = "+ aggiungi widget"
 	add.tooltip_text = "Aggiunge un widget; scegline il tipo dal menu in cima"
 	add.pressed.connect(func():
-		_widgets.append(_new_widget(""))
+		siblings.append(_new_widget(""))
 		_rebuild_widgets()
 		changed.emit())
-	add_child(add)
+	parent.add_child(add)
 
 
-func _build_widget(idx: int) -> Control:
-	var w: Dictionary = _widgets[idx]
-	var panel := PanelContainer.new()
+func _build_widget(siblings: Array, idx: int) -> Control:
+	var w: Dictionary = siblings[idx]
+	var panel := WidgetSlot.new()
+	panel.ed = self
+	panel.siblings = siblings
+	panel.widget = w
 	var box := VBoxContainer.new()
 	box.add_theme_constant_override("separation", 3)
 	panel.add_child(box)
 
-	# Intestazione: selettore di TIPO + sposta su/giù + rimuovi.
+	# Intestazione: maniglia di trascinamento + TIPO + condizione + rimuovi.
 	var head := HBoxContainer.new()
 	head.add_theme_constant_override("separation", 3)
+	var grip := _lbl("⠿")
+	grip.tooltip_text = "Trascina per riposizionare il widget"
+	head.add_child(grip)
 	var topt := OptionButton.new()
 	topt.add_theme_font_size_override("font_size", 12)
 	topt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	topt.add_item("(tipo…)")
-	for t in WIDGET_TYPES:
+	for t in MENU_TYPES:
 		topt.add_item(str(WIDGET_TITLES[t]))
-	topt.selected = WIDGET_TYPES.find(str(w.get("type", ""))) + 1
-	topt.item_selected.connect(func(i): _set_widget_type(idx, "" if i == 0 else WIDGET_TYPES[i - 1]))
+	topt.selected = MENU_TYPES.find(str(w.get("type", ""))) + 1
+	topt.item_selected.connect(func(i): _set_type_in(siblings, idx, "" if i == 0 else MENU_TYPES[i - 1]))
 	head.add_child(topt)
-	var up := _mini_btn("su", "Sposta su")
-	up.disabled = idx == 0
-	up.pressed.connect(func(): _move_widget(idx, -1))
-	head.add_child(up)
-	var dn := _mini_btn("giù", "Sposta giù")
-	dn.disabled = idx == _widgets.size() - 1
-	dn.pressed.connect(func(): _move_widget(idx, 1))
-	head.add_child(dn)
+	if str(w.get("type", "")) != "":
+		head.add_child(_lbl("se"))
+		head.add_child(_eff_opt(KAMAE_OPTS, str(w.get("cond", "")), func(val): w["cond"] = val; changed.emit()))
 	var rm := _mini_btn("x", "Rimuovi widget")
-	rm.pressed.connect(func(): _widgets.remove_at(idx); _rebuild_widgets(); changed.emit())
+	rm.pressed.connect(func(): siblings.remove_at(idx); _rebuild_widgets(); changed.emit())
 	head.add_child(rm)
 	box.add_child(head)
 
@@ -430,30 +566,120 @@ func _mini_btn(txt: String, tip: String) -> Button:
 	return b
 
 
-func _set_widget_type(idx: int, type: String) -> void:
+## Cambia il tipo del widget in `siblings[idx]`. I singleton (kamae/counter/note)
+## restano unici sull'INTERA carta (anche annidati).
+func _set_type_in(siblings: Array, idx: int, type: String) -> void:
 	if type != "" and type in SINGLETON_TYPES:
-		for j in _widgets.size():
-			if j != idx and _widgets[j]["type"] == type:
+		var target = siblings[idx]
+		for other in _all_widgets():
+			if other != target and str(other.get("type", "")) == type:
 				_rebuild_widgets()   # singleton già presente: annulla la scelta
 				return
-	_widgets[idx] = _new_widget(type)
+	siblings[idx] = _new_widget(type)
 	_rebuild_widgets()
 	changed.emit()
+
+
+func _move_in(siblings: Array, idx: int, delta: int) -> void:
+	var j := idx + delta
+	if j < 0 or j >= siblings.size():
+		return
+	var tmp = siblings[idx]
+	siblings[idx] = siblings[j]
+	siblings[j] = tmp
+	_rebuild_widgets()
+	changed.emit()
+
+
+## Tutti i widget dell'albero (foglie + contenitori), per i controlli singleton.
+func _all_widgets() -> Array:
+	var out := []
+	_collect_all(_widgets, out)
+	return out
+
+
+func _collect_all(list: Array, into: Array) -> void:
+	for w in list:
+		into.append(w)
+		if str(w.get("type", "")) in CONTAINER_TYPES:
+			_collect_all(w.get("children", []), into)
+
+
+# ─── Riposizionamento per trascinamento ──────────────────────────────────────
+
+## Indice per IDENTITÀ (i widget sono Dictionary: `find` userebbe l'uguaglianza
+## per valore e confonderebbe duplicati).
+func _index_of(list: Array, w) -> int:
+	for i in list.size():
+		if is_same(list[i], w):
+			return i
+	return -1
+
+
+## Vero se `w` può essere spostato nella lista `dst` (un contenitore non può
+## finire dentro sé stesso o un proprio discendente).
+func _can_move(w: Dictionary, dst: Array) -> bool:
+	if str(w.get("type", "")) in CONTAINER_TYPES:
+		return not _list_in_subtree(w, dst)
+	return true
+
+
+func _list_in_subtree(w: Dictionary, list: Array) -> bool:
+	var ch = w.get("children", [])
+	if is_same(ch, list):
+		return true
+	for c in ch:
+		if str(c.get("type", "")) in CONTAINER_TYPES and _list_in_subtree(c, list):
+			return true
+	return false
+
+
+## Sposta `w` (proveniente da `src`) accanto a `target_w` nella lista `dst`.
+func _reorder(w: Dictionary, src: Array, dst: Array, target_w, before: bool) -> void:
+	if is_same(w, target_w) or not _can_move(w, dst):
+		return
+	var src_idx := _index_of(src, w)
+	var t_idx := _index_of(dst, target_w)
+	if src_idx < 0 or t_idx < 0:
+		return
+	var insert_at := t_idx if before else t_idx + 1
+	src.remove_at(src_idx)
+	if is_same(src, dst) and src_idx < insert_at:
+		insert_at -= 1
+	dst.insert(clampi(insert_at, 0, dst.size()), w)
+	_rebuild_widgets()
+	changed.emit()
+
+
+## Sposta `w` in fondo alla lista `dst` (drop su contenitore vuoto).
+func _move_to_end(w: Dictionary, src: Array, dst: Array) -> void:
+	if not _can_move(w, dst):
+		return
+	var src_idx := _index_of(src, w)
+	if src_idx < 0:
+		return
+	src.remove_at(src_idx)
+	dst.append(w)
+	_rebuild_widgets()
+	changed.emit()
+
+
+func _title_of(w: Dictionary) -> String:
+	return str(WIDGET_TITLES.get(str(w.get("type", "")), "widget"))
+
+
+# Compatibilità test/headless: versioni a indice sul livello superiore.
+func _set_widget_type(idx: int, type: String) -> void:
+	_set_type_in(_widgets, idx, type)
 
 
 func _move_widget(idx: int, delta: int) -> void:
-	var j := idx + delta
-	if j < 0 or j >= _widgets.size():
-		return
-	var tmp = _widgets[idx]
-	_widgets[idx] = _widgets[j]
-	_widgets[j] = tmp
-	_rebuild_widgets()
-	changed.emit()
+	_move_in(_widgets, idx, delta)
 
 
 func _build_widget_body(w: Dictionary) -> Control:
 	match str(w.get("type", "")):
+		"initiative", "oppure": return _build_container_body(w)
 		"combat": return _build_combat_body(w)
 		"movement": return _build_movement_body(w)
 		"kamae": return _build_kamae_body(w)
@@ -467,16 +693,46 @@ func _build_widget_body(w: Dictionary) -> Control:
 	return hint
 
 
+# ─── Corpo: contenitori (Iniziativa / OPPURE) ────────────────────────────────
+
+## Contenitore: i figli sono annidati in un riquadro rientrato. Iniziativa ha
+## anche il numero di iniziativa.
+func _build_container_body(w: Dictionary) -> Control:
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 3)
+	if str(w.get("type", "")) == "initiative":
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 4)
+		row.add_child(_lbl("iniziativa"))
+		var sp := SpinBox.new()
+		sp.min_value = 1; sp.max_value = 9; sp.value = int(w.get("value", 2))
+		sp.custom_minimum_size = Vector2(54, 0)
+		sp.value_changed.connect(func(val): w["value"] = int(val); changed.emit())
+		row.add_child(sp)
+		v.add_child(row)
+	# Riquadro rientrato che ospita i widget figli (anche bersaglio di drop).
+	var nest := DropZone.new()
+	nest.ed = self
+	nest.target = w["children"]
+	var margin := MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 12)
+	margin.add_theme_constant_override("margin_top", 2)
+	margin.add_theme_constant_override("margin_bottom", 2)
+	margin.add_theme_constant_override("margin_right", 2)
+	var inner := VBoxContainer.new()
+	inner.add_theme_constant_override("separation", 4)
+	margin.add_child(inner)
+	nest.add_child(margin)
+	v.add_child(nest)
+	_build_list(inner, w["children"])
+	return v
+
+
 # ─── Corpo: Combattimento (nido d'ape a clic-ciclo + gate kamae) ─────────────
 
 func _build_combat_body(w: Dictionary) -> Control:
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 2)
-	var grow := HBoxContainer.new()
-	grow.add_theme_constant_override("separation", 4)
-	grow.add_child(_lbl("attivo in kamae"))
-	grow.add_child(_eff_opt(KAMAE_OPTS, str(w.get("kamae", "")), func(val): w["kamae"] = val))
-	v.add_child(grow)
 	var hint := Label.new()
 	hint.text = "clic = scorri icona · clic destro = svuota"
 	hint.add_theme_font_size_override("font_size", 10)
@@ -983,3 +1239,39 @@ class DirRosette extends Control:
 				dirs.sort()
 		queue_redraw()
 		on_change.call(dirs.duplicate(), free)
+
+
+# ─── Slot trascinabile e zona di rilascio (riposizionamento widget) ──────────
+
+## Pannello di un widget: si trascina per riposizionarlo; accetta il rilascio di
+## un altro widget posizionandolo prima/dopo di sé.
+class WidgetSlot extends PanelContainer:
+	var ed                    ## GeometryEditor proprietario
+	var siblings: Array       ## lista che contiene questo widget
+	var widget                ## il widget (Dictionary)
+
+	func _get_drag_data(_at: Vector2):
+		var prev := Label.new()
+		prev.text = "⠿ " + ed._title_of(widget)
+		set_drag_preview(prev)
+		return {"slot": true, "w": widget, "src": siblings}
+
+	func _can_drop_data(_at: Vector2, data) -> bool:
+		return data is Dictionary and data.get("slot", false) and ed._can_move(data["w"], siblings)
+
+	func _drop_data(at: Vector2, data) -> void:
+		var before := at.y < size.y * 0.5
+		ed._reorder(data["w"], data["src"], siblings, widget, before)
+
+
+## Corpo di un contenitore: accetta il rilascio di un widget aggiungendolo in
+## fondo ai propri figli (utile per contenitori vuoti).
+class DropZone extends PanelContainer:
+	var ed                    ## GeometryEditor proprietario
+	var target: Array         ## lista dei figli del contenitore
+
+	func _can_drop_data(_at: Vector2, data) -> bool:
+		return data is Dictionary and data.get("slot", false) and ed._can_move(data["w"], target)
+
+	func _drop_data(_at: Vector2, data) -> void:
+		ed._move_to_end(data["w"], data["src"], target)
