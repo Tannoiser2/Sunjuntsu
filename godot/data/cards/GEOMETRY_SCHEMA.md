@@ -84,10 +84,18 @@ una. Ogni opzione è una sequenza ordinata di **atomi**:
 
 | Campo atomo | Tipo | Significato |
 |-------------|------|-------------|
-| `t` | string | `step` (passo) \| `rot` (rotazione). |
-| `dir` | int | Direzione del passo: `0`=fronte, senso **orario** 0–5; `-1`=indietro. Solo per `step`. |
-| `n` | int | Quantità (passi o scatti di rotazione). |
+| `t` | string | `step` (passo) \| `rot` (rotazione) \| `anchor` (❄ àncora). |
+| `dir` | int | Direzione del passo: `0`=fronte, senso **orario** 0–5; `-1`=qualsiasi direzione. Solo per `step`. |
+| `n` | int | Quantità (passi · scatti di rotazione · numero stampato accanto al ❄). |
 | `opt` | bool | `true` = atomo **facoltativo** (bonus). |
+
+> **❄ Àncora (`t: "anchor"`).** Il fiocco di neve **non è un movimento**: è un
+> marcatore-àncora sulla **Griglia di Posizione**. Una carta Abilità può
+> *connettere* questo simbolo a un asterisco (`*`) sulla griglia, applicando
+> quegli effetti al **personaggio colpito**. Il motore lo tratta come atomo
+> "neutro": non sposta né ruota la pedina (vedi `Move.gd`). Compare nelle barre
+> di movimento gated da Kamae (es. `❄2 ↻2`); l'azione esplicita "sostituisci
+> `!` con ❄" è invece l'effetto `link_anchor` (vedi sotto).
 
 ### Celle attacco/difesa — `attack.cells[]` / `defence.cells[]`
 
@@ -124,13 +132,18 @@ contestuali:
 **Verbi `do` presenti nei dati** (usare come autocomplete; estendibile):
 `block_initiative, cancel_abilities, cancel_movement, change_ai_behaviour,
 change_kamae, discard_self, draw, focus, foe_discard, foe_lose_focus, foe_stun,
-hobble, push, reduce_damage, replace_wound_bleed, reset_deck, rotate_target,
-search_draw, spend_focus, stun_self, swap_positions, switch_kamae`.
+hobble, link_anchor, push, reduce_damage, replace_wound_bleed, reset_deck,
+rotate_target, search_draw, spend_focus, stun_self, swap_positions, switch_kamae`.
+
+> **`link_anchor`** (azione "SOSTITUISCI ! CON ❄", barra viola = focus): collega
+> il marcatore-àncora ❄ all'asterisco (`*`) sulla Griglia di Posizione; gli
+> effetti collegati si applicano al personaggio colpito. Di norma con
+> `focus_cost` (bonus a pagamento), quindi saltato nell'auto-risoluzione.
 
 ## Vocabolari controllati
 
 - `type`: `attack, defence, meditation, core` (anagrafica ammette anche `other`).
-- `atom.t`: `step, rot`.
+- `atom.t`: `step, rot, anchor`.
 - `w` (ferite): intero `≥ 0`, oppure `"exec"`, `"bleed"`.
 - `kamae` / `kamae_req` / `to`: `aggression, balance, determination`.
 

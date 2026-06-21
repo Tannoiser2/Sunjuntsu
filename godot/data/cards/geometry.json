@@ -9,8 +9,7 @@
      {
       "atoms": [
        {
-        "t": "step",
-        "dir": -1,
+        "t": "anchor",
         "n": 1,
         "opt": true
        },
@@ -26,30 +25,30 @@
    "effects": [
     {
      "do": "discard_self",
-     "n": 1,
-     "alt": "a"
+     "n": 1
     },
     {
      "do": "draw",
      "n": 2,
-     "alt": "b"
+     "alt": "a"
     },
     {
-     "do": "stun_self",
+     "do": "search_draw",
      "n": 1,
-     "alt": "c"
+     "alt": "b"
     },
     {
      "do": "focus",
      "n": 1,
-     "alt": "c"
+     "alt": "b"
     },
     {
      "do": "change_kamae",
      "n": 1,
-     "alt": "d"
+     "alt": "c"
     }
-   ]
+   ],
+   "note": "Costo: SCARTA 1 CARTA (discard_self). Movimento ❄1 ↻2 (❄ = marcatore-àncora, non un passo). OPPURE: pesca 2 / prendi 1 attacco + ottieni 1 🪷 / cambia Kamae fino a 1 ramo."
   },
   "54": {
    "name": "RUGGITO ARDENTE",
@@ -64,17 +63,17 @@
     {
      "do": "swap_positions",
      "when": "on_hit",
-     "kamae": "balance",
+     "focus_cost": 1,
      "alt": "b"
     },
     {
-     "do": "replace_wound_bleed",
+     "do": "link_anchor",
      "when": "on_hit",
-     "kamae": "balance",
+     "focus_cost": 1,
      "alt": "c"
     }
    ],
-   "note": "Istantanea: gioca se l'attacco è riuscito."
+   "note": "Istantanea: gioca se l'attacco è riuscito. SPINGI 1, OPPURE (barre viola = focus) scambia posizione, OPPURE \"SOSTITUISCE ! CON ❄\" = link_anchor."
   },
   "55": {
    "name": "COLPO DELLA FENICE FIAMMANTE",
@@ -145,11 +144,15 @@
     {
      "do": "search_draw",
      "n": 1,
-     "kamae": "balance",
+     "focus_cost": 1,
      "alt": "b"
+    },
+    {
+     "do": "switch_kamae",
+     "to": "determination"
     }
    ],
-   "note": "Istantanea: cerca attacco (o difesa in Equilibrio)."
+   "note": "Istantanea, dopo aver risolto la tua carta: ↻1; CERCA+PRENDI 1 attacco, OPPURE (barra viola = focus) 1 difesa; poi PASSA A Determinazione."
   },
   "57": {
    "name": "ISTINTO BRUCIANTE",
@@ -160,26 +163,31 @@
       "atoms": [
        {
         "t": "step",
-        "dirs": [
-         0,
-         3
-        ],
+        "dir": 0,
         "n": 1,
-        "opt": true,
+        "opt": false,
         "kamae": "aggression"
-       },
+       }
+      ]
+     },
+     {
+      "atoms": [
        {
         "t": "step",
-        "dir": -1,
+        "dir": 0,
         "n": 1,
-        "opt": true,
-        "focus_cost": 1
-       },
+        "opt": false,
+        "kamae": "determination"
+       }
+      ]
+     },
+     {
+      "atoms": [
        {
         "t": "rot",
         "n": 2,
         "opt": false,
-        "kamae": "determination"
+        "kamae": "balance"
        }
       ]
      }
@@ -193,7 +201,8 @@
      "do": "draw",
      "n": 5
     }
-   ]
+   ],
+   "note": "Movimento per posa (alternative): Aggressività ↥1 · Determinazione ↥1 · Equilibrio ↻2. Poi rimescola le carte abilità non-meditazione e pesca 5."
   },
   "58": {
    "name": "FINTA FALCIANTE",
@@ -204,16 +213,20 @@
       "atoms": [
        {
         "t": "step",
-        "dir": 0,
+        "dir": 3,
         "n": 1,
         "opt": false
-       },
+       }
+      ]
+     },
+     {
+      "atoms": [
        {
         "t": "step",
-        "dir": -1,
+        "dir": 3,
         "n": 1,
-        "opt": true,
-        "kamae": "determination"
+        "opt": false,
+        "kamae": "balance"
        }
       ]
      }
@@ -245,7 +258,7 @@
      "when": "on_hit"
     }
    ],
-   "note": "(focus) iniziativa attacco 3 alternativa: non modellata."
+   "note": "Movimento: ↧1 (senza gate) OPPURE ↧1 in Equilibrio (verde). Celle d5,d0,d1 (arco frontale). Se riuscito: SCARTA 2 🪷 = foe_lose_focus 2. Riquadro [3] arancio = iniziativa alternativa 3 in Aggressività (non modellata)."
   },
   "59": {
    "name": "CONCENTRAZIONE RITROVATA",
@@ -255,28 +268,30 @@
      {
       "atoms": [
        {
-        "t": "step",
-        "dir": -1,
+        "t": "anchor",
         "n": 1,
-        "opt": true
+        "opt": false
        },
        {
         "t": "rot",
         "n": 1,
-        "opt": true
-       },
+        "opt": false
+       }
+      ]
+     },
+     {
+      "atoms": [
        {
-        "t": "step",
-        "dir": -1,
+        "t": "anchor",
         "n": 2,
-        "opt": true,
-        "kamae": "determination"
+        "opt": false,
+        "kamae": "balance"
        },
        {
         "t": "rot",
         "n": 2,
-        "opt": true,
-        "kamae": "determination"
+        "opt": false,
+        "kamae": "balance"
        }
       ]
      }
@@ -291,7 +306,8 @@
      "do": "switch_kamae",
      "to": "aggression"
     }
-   ]
+   ],
+   "note": "Movimento: ❄1 ↻1, OPPURE (verde = Equilibrio) ❄2 ↻2 — il ❄ è un marcatore-àncora, non un passo. \"OTTIENI 1 🪷\" = focus; \"PASSA A\" = switch_kamae aggression."
   },
   "60": {
    "name": "FALCIATA MONTANTE",
@@ -312,13 +328,10 @@
       "atoms": [
        {
         "t": "step",
-        "dirs": [
-         0,
-         3
-        ],
+        "dir": 3,
         "n": 1,
-        "opt": true,
-        "kamae": "determination"
+        "opt": false,
+        "kamae": "balance"
        }
       ]
      }
@@ -345,15 +358,16 @@
    },
    "effects": [
     {
-     "do": "replace_wound_bleed",
+     "do": "link_anchor",
      "when": "on_hit",
-     "kamae": "balance"
+     "focus_cost": 1
     },
     {
      "do": "switch_kamae",
      "to": "aggression"
     }
-   ]
+   ],
+   "note": "Riquadro iniziativa [8] in Determinazione (gialla). Movimento: ↧1 (bianco, senza gate) OPPURE ↧1 in Equilibrio (verde). Barra viola (focus): \"SOSTITUISCI ! CON ❄\" = collega il marcatore-àncora ❄ all'asterisco (*) sulla Griglia di Posizione (gli effetti collegati si applicano al colpito). \"PASSA A\" = switch_kamae aggression."
   },
   "61": {
    "name": "COLPO CORTO",
@@ -400,6 +414,11 @@
    "attack": {
     "cells": [
      {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
       "d": 5,
       "k": 1,
       "w": 1
@@ -431,7 +450,7 @@
      "do": "foe_discard",
      "n": 1,
      "when": "on_hit",
-     "kamae": "determination",
+     "kamae": "balance",
      "focus_cost": 1
     },
     {
@@ -439,7 +458,8 @@
      "to": "aggression",
      "when": "on_hit"
     }
-   ]
+   ],
+   "note": "Arco offensivo verificato (hi-res): d0,d1,d2,d4,d5 (arco frontale ampio, manca solo il dietro d3). Se riuscito: SPINGI 1; barra verde (Equilibrio) SCARTA 1 (con focus); \"PASSA A\" = switch_kamae aggression."
   },
   "63": {
    "name": "BLOCCO CINEREO",
@@ -481,7 +501,8 @@
      "to": "aggression",
      "focus_cost": 1
     }
-   ]
+   ],
+   "note": "Difesa verificata (hi-res): scudi a d0,d5,d4 (fronte + lato sinistro). Counter 8. Se riuscito: SPINGI 1 OPPURE scambio; \"PASSA A\" aggression (focus)."
   },
   "64": {
    "name": "TESTATA",
@@ -526,25 +547,29 @@
      "n": 1,
      "when": "on_hit"
     }
-   ]
+   ],
+   "note": "Arco verificato (hi-res): singolo colpo frontale d0. Movimento ↥1 (senza gate) + ↻1 in Aggressività. Se riuscito: stordisci 1 e ottieni 1 🪷."
   },
   "65": {
    "name": "SPIRALE DI FIAMME",
    "type": "attack",
-   "attack": {
-    "cells": [
-     {
-      "d": 1,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 2,
-      "k": 1,
-      "w": 1
-     }
-    ]
-   },
+   "attacks": [
+    {
+     "cells": [
+      {
+       "d": 1,
+       "k": 1,
+       "w": 1
+      },
+      {
+       "d": 2,
+       "k": 1,
+       "w": 1
+      }
+     ],
+     "kamae": "aggression"
+    }
+   ],
    "split": {
     "initiative": 5,
     "move": {
@@ -552,17 +577,16 @@
       {
        "atoms": [
         {
-         "t": "step",
-         "dir": -1,
+         "t": "anchor",
          "n": 1,
          "opt": false,
-         "kamae": "determination"
+         "kamae": "balance"
         },
         {
          "t": "rot",
          "n": 1,
          "opt": false,
-         "kamae": "determination"
+         "kamae": "balance"
         }
        ]
       },
@@ -576,12 +600,13 @@
          ],
          "n": 1,
          "opt": false,
-         "focus_cost": 1
+         "kamae": "determination"
         },
         {
          "t": "rot",
          "n": 1,
-         "opt": false
+         "opt": false,
+         "kamae": "determination"
         }
        ]
       }
@@ -595,7 +620,7 @@
      "when": "on_hit"
     }
    ],
-   "note": "Iniziativa alternativa 7 in Aggressività."
+   "note": "Arco (Aggressività) verificato hi-res: d1,d2 (lato destro). Iniziativa alternativa 7 in Aggressività (con l'attacco). A iniziativa 5: riga VERDE (Equilibrio) = ❄1 ↻1 (❄ = marcatore-àncora, non un passo); riga GIALLA (Determinazione) = ↥1 ↻1."
   },
   "72": {
    "name": "SQUARCIO DI NODACHI",
@@ -611,8 +636,8 @@
          3
         ],
         "n": 1,
-        "opt": false,
-        "kamae": "balance"
+        "opt": true,
+        "focus_cost": 1
        }
       ]
      },
@@ -641,7 +666,8 @@
      "do": "discard_self",
      "n": 1
     }
-   ]
+   ],
+   "note": "Movimento: barra viola (focus) ↥1 OPPURE ↻1 (senza gate). Colpo frontale d0. SCARTA 1 carta."
   },
   "83": {
    "name": "BLOCCO AMPIO",
@@ -759,7 +785,7 @@
         ],
         "n": 1,
         "opt": true,
-        "focus_cost": 1
+        "kamae": "determination"
        }
       ]
      }
@@ -779,7 +805,7 @@
      }
     ]
    },
-   "note": "Fronte-Sx sanguinante. Asterisco Fronte: in Aggressività 1 ferita."
+   "note": "Audit hi-res: ↻1 (senza kamae) + passo avanti/indietro in Determinazione (4 quadretti, non focus). Fronte-Sx sanguinante; asterisco Fronte +1 ferita in Aggressività."
   },
   "116": {
    "name": "MENTE RAPIDA",
@@ -789,8 +815,7 @@
      {
       "atoms": [
        {
-        "t": "step",
-        "dir": -1,
+        "t": "anchor",
         "n": 2,
         "opt": true
        },
@@ -805,7 +830,7 @@
         "t": "rot",
         "n": 1,
         "opt": false,
-        "kamae": "determination"
+        "kamae": "balance"
        }
       ]
      }
@@ -821,7 +846,8 @@
      "n": 1,
      "focus_cost": 1
     }
-   ]
+   ],
+   "note": "Audit hi-res: ❄2 (àncora) + ⬆1 in Aggressività + ↻1 in Equilibrio (cerchio verde, non Determinazione). Pesca 2; cambia kamae 1 ramo (focus)."
   },
   "118": {
    "name": "BLOCCO SELVAGGIO",
@@ -873,14 +899,15 @@
     {
      "do": "spend_focus",
      "all_but": 1,
-     "kamae": "determination",
+     "kamae": "balance",
      "alt": "b"
     },
     {
      "do": "switch_kamae",
      "to": "neutral"
     }
-   ]
+   ],
+   "note": "Audit hi-res: blocco 5 esagoni; scarta 2 carte (Aggressività); scarta tutto il focus / OPPURE tutto tranne 1 in Equilibrio (cerchio verde, non Determinazione); PASSA A Neutrale (⛩)."
   },
   "119": {
    "name": "FENDENTE SELVAGGIO",
@@ -981,8 +1008,7 @@
      {
       "atoms": [
        {
-        "t": "step",
-        "dir": -1,
+        "t": "anchor",
         "n": 1,
         "opt": true
        },
@@ -998,30 +1024,30 @@
    "effects": [
     {
      "do": "discard_self",
-     "n": 1,
-     "alt": "a"
+     "n": 1
     },
     {
      "do": "draw",
      "n": 2,
-     "alt": "b"
+     "alt": "a"
     },
     {
-     "do": "stun_self",
+     "do": "search_draw",
      "n": 1,
-     "alt": "c"
+     "alt": "b"
     },
     {
      "do": "switch_kamae",
      "to": "any",
-     "alt": "c"
+     "alt": "b"
     },
     {
      "do": "change_kamae",
      "n": 1,
-     "alt": "d"
+     "alt": "c"
     }
-   ]
+   ],
+   "note": "Costo: SCARTA 1 CARTA. Movimento ❄1 ↻2 (❄ = marcatore-àncora). OPPURE: pesca 2 / prendi 1 attacco + passa a una qualsiasi Kamae / cambia Kamae fino a 1 ramo."
   },
   "24": {
    "name": "VORTICE CREMISI",
@@ -1029,37 +1055,37 @@
    "attacks": [
     {
      "cells": [
-     {
-      "d": 0,
-      "k": 2,
-      "w": 2
-     },
-     {
-      "d": 1,
-      "k": 2,
-      "w": 2
-     },
-     {
-      "d": 2,
-      "k": 2,
-      "w": 2
-     },
-     {
-      "d": 3,
-      "k": 2,
-      "w": 2
-     },
-     {
-      "d": 4,
-      "k": 2,
-      "w": 2
-     },
-     {
-      "d": 5,
-      "k": 2,
-      "w": 2
-     }
-    ],
+      {
+       "d": 0,
+       "k": 2,
+       "w": 2
+      },
+      {
+       "d": 1,
+       "k": 2,
+       "w": 2
+      },
+      {
+       "d": 2,
+       "k": 2,
+       "w": 2
+      },
+      {
+       "d": 3,
+       "k": 2,
+       "w": 2
+      },
+      {
+       "d": 4,
+       "k": 2,
+       "w": 2
+      },
+      {
+       "d": 5,
+       "k": 2,
+       "w": 2
+      }
+     ],
      "kamae": "aggression"
     }
    ],
@@ -1102,14 +1128,14 @@
     {
      "do": "focus",
      "n": 1,
-     "focus_cost": 1
+     "kamae": "aggression"
     },
     {
      "do": "stun_self",
      "n": 1
     }
    ],
-   "note": "Persistente: riduce di 1 il danno (min 1). Ogni riduzione: focus a costo / 1 stordimento."
+   "note": "Persistente: riduce di 1 il danno subìto (min 1). Ogni volta che il danno è ridotto: OTTIENI 1 🪷 (barra arancio = Aggressività) e PRENDI 1 stordimento."
   },
   "26": {
    "name": "CARICA DEL TORO",
@@ -1128,20 +1154,23 @@
      }
     ]
    },
-   "attack": {
-    "cells": [
-     {
-      "d": 5,
-      "k": 1,
-      "w": 2
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 2
-     }
-    ]
-   },
+   "attacks": [
+    {
+     "cells": [
+      {
+       "d": 5,
+       "k": 1,
+       "w": 2
+      },
+      {
+       "d": 1,
+       "k": 1,
+       "w": 2
+      }
+     ],
+     "kamae": "aggression"
+    }
+   ],
    "split": {
     "initiative": 5,
     "move": {
@@ -1222,6 +1251,12 @@
       {
        "atoms": [
         {
+         "t": "anchor",
+         "n": 2,
+         "opt": false,
+         "kamae": "aggression"
+        },
+        {
          "t": "rot",
          "n": 2,
          "opt": false,
@@ -1241,7 +1276,7 @@
      "n": 1
     }
    ],
-   "note": "Distanza 3; ogni avversario annulla abilità attive e cambia orientamento."
+   "note": "Distanza 3; ogni avversario annulla abilità attive e cambia orientamento. Barra arancio (Aggressività): ❄2 ↻2 — il ❄ è un marcatore-àncora sulla Griglia di Posizione (non un movimento)."
   },
   "29": {
    "name": "SPAZZATA FEROCE",
@@ -1301,6 +1336,7 @@
   "30": {
    "name": "ARTIGLI LACERANTI",
    "type": "meditation",
+   "kamae_req": "aggression",
    "effects": [
     {
      "do": "replace_wound_bleed",
@@ -1344,10 +1380,10 @@
     {
      "do": "change_kamae",
      "n": 2,
-     "focus_cost": 1
+     "kamae": "determination"
     }
    ],
-   "note": "[costo focus] passo Fronte + rotazione non modellato (movimento in difesa)."
+   "note": "Difesa d0,d5,d1 (arco frontale); counter 6/5/4. Se riuscito: ruota bersaglio ↻1; barra arancio (Aggressività) ↥1 ↻1 (movimento in difesa, non modellato); barra gialla (Determinazione) cambia Kamae fino a 2 rami."
   },
   "32": {
    "name": "BALZO DEL LUPO",
@@ -1449,7 +1485,7 @@
     {
      "do": "draw",
      "n": 2,
-     "kamae": "determination",
+     "kamae": "balance",
      "alt": "b"
     }
    ]
@@ -1477,16 +1513,16 @@
      {
       "atoms": [
        {
-        "t": "step",
-        "dir": -1,
+        "t": "anchor",
         "n": 1,
-        "opt": false
+        "opt": false,
+        "kamae": "balance"
        },
        {
         "t": "rot",
         "n": 2,
         "opt": false,
-        "kamae": "determination"
+        "kamae": "balance"
        }
       ]
      }
@@ -1501,7 +1537,8 @@
      "do": "draw",
      "n": 3
     }
-   ]
+   ],
+   "note": "Alternativa OPPURE verde (Equilibrio): ❄1 ↻2 — il ❄ è un marcatore-àncora sulla Griglia di Posizione (non un passo). \"OTTIENI 1 🪷\" = +1 focus."
   },
   "35": {
    "name": "CHIATTA DI BUOI",
@@ -1526,8 +1563,8 @@
        {
         "t": "rot",
         "n": 1,
-        "opt": false,
-        "kamae": "balance"
+        "opt": true,
+        "focus_cost": 1
        }
       ]
      }
@@ -1544,10 +1581,6 @@
    },
    "effects": [
     {
-     "do": "swap_positions",
-     "when": "on_hit"
-    },
-    {
      "do": "rotate_target",
      "n": 1,
      "when": "on_hit"
@@ -1561,7 +1594,8 @@
      "do": "switch_kamae",
      "to": "aggression"
     }
-   ]
+   ],
+   "note": "Non bloccabile. Movimento ↥1 POI ↥1; barra viola (focus) ↻1. Cella d0 = asterisco (*). Se riuscito: ruota bersaglio ↻1 e SPINGI 1; \"PASSA A\" aggression."
   },
   "71": {
    "name": "SPAZZATA DI NAGINATA",
@@ -1592,8 +1626,7 @@
       {
        "atoms": [
         {
-         "t": "step",
-         "dir": -1,
+         "t": "anchor",
          "n": 1,
          "opt": false
         },
@@ -1613,7 +1646,7 @@
      "n": 1
     }
    ],
-   "note": "Cella Retro-Sx asterisco: in Equilibrio 1 ferita (non per-cella)."
+   "note": "Split init 2: ❄1 ↻1 (❄ = marcatore-àncora, non un passo). Celle: d0,d5 ferite, d4 asterisco (*). Barra viola (focus) sull'asterisco. SCARTA 1 carta."
   },
   "89": {
    "name": "BLOCCO D'EMERGENZA",
@@ -1626,7 +1659,7 @@
         "t": "rot",
         "n": 1,
         "opt": false,
-        "kamae": "determination"
+        "kamae": "balance"
        }
       ]
      },
@@ -1636,7 +1669,7 @@
         "t": "rot",
         "n": 2,
         "opt": false,
-        "focus_cost": 1
+        "kamae": "determination"
        }
       ]
      }
@@ -1656,7 +1689,8 @@
      "do": "switch_kamae",
      "to": "neutral"
     }
-   ]
+   ],
+   "note": "Audit hi-res: ↻1 in Equilibrio (cerchio verde), ↻2 in Determinazione (4 quadretti) — non focus. PASSA A Neutrale (⛩)."
   },
   "98": {
    "name": "GRIDO DI GUERRA",
@@ -1710,8 +1744,7 @@
      {
       "atoms": [
        {
-        "t": "step",
-        "dir": -1,
+        "t": "anchor",
         "n": 2,
         "opt": false
        },
@@ -1719,6 +1752,16 @@
         "t": "rot",
         "n": 2,
         "opt": false
+       }
+      ]
+     },
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false,
+        "kamae": "determination"
        }
       ]
      }
@@ -1737,10 +1780,11 @@
     {
      "do": "draw",
      "n": 3,
-     "kamae": "determination",
+     "kamae": "balance",
      "alt": "b"
     }
-   ]
+   ],
+   "note": "Audit hi-res: movimento ❄2 ↻2 (❄=àncora); barra arancio ↻1 in Determinazione. Pesca 3 carte = barra verde in Equilibrio (cerchio), non Determinazione."
   },
   "104": {
    "name": "COLPO AZZOPPANTE",
@@ -1828,13 +1872,16 @@
          "dir": 0,
          "n": 1,
          "opt": false
-        },
+        }
+       ]
+      },
+      {
+       "atoms": [
         {
-         "t": "step",
-         "dir": -1,
+         "t": "anchor",
          "n": 1,
-         "opt": true,
-         "kamae": "determination"
+         "opt": false,
+         "kamae": "balance"
         }
        ]
       }
@@ -1859,7 +1906,8 @@
      "kamae": "aggression",
      "alt": "b"
     }
-   ]
+   ],
+   "note": "Audit hi-res: split ⬆1 OPPURE ❄1 in Equilibrio (❄=àncora, alternativa). SE RIUSCITO: scambio posizioni, SPINGI 1 / SPINGI 2 (Aggressività)."
   },
   "126": {
    "name": "COLPO D'ELSA",
@@ -1881,7 +1929,7 @@
         "t": "rot",
         "n": 1,
         "opt": false,
-        "kamae": "determination"
+        "kamae": "balance"
        }
       ]
      }
@@ -1914,7 +1962,8 @@
      "when": "on_hit",
      "kamae": "aggression"
     }
-   ]
+   ],
+   "note": "Audit hi-res: passo (avanti/indietro) + ↻1 in Equilibrio (cerchio verde), non Determinazione."
   },
   "127": {
    "name": "SPINTA INDIETRO",

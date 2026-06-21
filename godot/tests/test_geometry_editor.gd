@@ -218,18 +218,29 @@ func _test_mutators() -> void:
 
 
 func _test_move_fidelity() -> void:
-	print("[movimento: fedeltà dirs/kamae/focus/-1]")
+	print("[movimento: fedeltà dirs/kamae/focus/-1/anchor]")
+	# Geometria sintetica che esercita tutte le caratteristiche di un atomo:
+	# scelta di direzioni, kamae, passo libero (dir -1), focus_cost, rot+kamae
+	# e l'àncora ❄. Indipendente dai dati reali (che cambiano con gli audit).
+	var synth := {"name": "TEST", "type": "attack", "move": {"opts": [{"atoms": [
+		{"t": "step", "dirs": [0, 3], "n": 1, "opt": false, "kamae": "aggression"},
+		{"t": "step", "dir": -1, "n": 1, "opt": true, "focus_cost": 1},
+		{"t": "rot", "n": 2, "opt": false, "kamae": "determination"},
+		{"t": "anchor", "n": 2, "opt": false, "kamae": "balance"},
+	]}]}}
 	var ge := GeometryEditor.new()
 	add_child(ge)
-	ge.load_geometry("attack", CardDB.geometry(57))
+	ge.load_geometry("attack", synth)
 	var atoms: Array = ge.to_geometry().get("move", {}).get("opts", [])[0].get("atoms", [])
-	_check(atoms.size() == 3, "#57: 3 atomi preservati (%d)" % atoms.size())
+	_check(atoms.size() == 4, "4 atomi preservati (%d)" % atoms.size())
 	_check(atoms[0].get("dirs", []) == [0, 3], "scelta di direzioni {dirs:[0,3]} preservata")
 	_check(str(atoms[0].get("kamae", "")) == "aggression", "kamae sull'atomo preservato")
 	_check(int(atoms[1].get("dir", 0)) == -1, "passo libero (dir -1) preservato")
 	_check(int(atoms[1].get("focus_cost", 0)) == 1, "focus_cost sull'atomo preservato")
 	_check(atoms[2].get("t") == "rot" and str(atoms[2].get("kamae", "")) == "determination",
 		"rotazione con kamae preservata")
+	_check(atoms[3].get("t") == "anchor" and int(atoms[3].get("n", 0)) == 2
+		and str(atoms[3].get("kamae", "")) == "balance", "àncora ❄ (anchor) preservata")
 	ge.queue_free()
 
 	var ge2 := GeometryEditor.new()

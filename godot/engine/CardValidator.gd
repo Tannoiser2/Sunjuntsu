@@ -16,9 +16,9 @@ const RANKS := ["Wood", "Steel", "Gold", "Jade", "-"]
 const EFFECT_VERBS := [
 	"block_initiative", "cancel_abilities", "cancel_movement", "change_ai_behaviour",
 	"change_kamae", "discard_self", "draw", "focus", "foe_discard", "foe_lose_focus",
-	"foe_stun", "hobble", "push", "reduce_damage", "replace_wound_bleed", "reset_deck",
-	"rotate_target", "search_draw", "spend_focus", "stun_self", "swap_positions",
-	"switch_kamae",
+	"foe_stun", "hobble", "link_anchor", "push", "reduce_damage", "replace_wound_bleed",
+	"reset_deck", "rotate_target", "search_draw", "spend_focus", "stun_self",
+	"swap_positions", "switch_kamae",
 ]
 
 ## Keyword note "statiche" (oltre a quelle presenti nei dati reali).
