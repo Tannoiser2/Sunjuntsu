@@ -785,7 +785,7 @@
         ],
         "n": 1,
         "opt": true,
-        "focus_cost": 1
+        "kamae": "determination"
        }
       ]
      }
@@ -805,7 +805,7 @@
      }
     ]
    },
-   "note": "Fronte-Sx sanguinante. Asterisco Fronte: in Aggressività 1 ferita."
+   "note": "Audit hi-res: ↻1 (senza kamae) + passo avanti/indietro in Determinazione (4 quadretti, non focus). Fronte-Sx sanguinante; asterisco Fronte +1 ferita in Aggressività."
   },
   "116": {
    "name": "MENTE RAPIDA",
@@ -815,8 +815,7 @@
      {
       "atoms": [
        {
-        "t": "step",
-        "dir": -1,
+        "t": "anchor",
         "n": 2,
         "opt": true
        },
@@ -831,7 +830,7 @@
         "t": "rot",
         "n": 1,
         "opt": false,
-        "kamae": "determination"
+        "kamae": "balance"
        }
       ]
      }
@@ -847,7 +846,8 @@
      "n": 1,
      "focus_cost": 1
     }
-   ]
+   ],
+   "note": "Audit hi-res: ❄2 (àncora) + ⬆1 in Aggressività + ↻1 in Equilibrio (cerchio verde, non Determinazione). Pesca 2; cambia kamae 1 ramo (focus)."
   },
   "118": {
    "name": "BLOCCO SELVAGGIO",
@@ -899,14 +899,15 @@
     {
      "do": "spend_focus",
      "all_but": 1,
-     "kamae": "determination",
+     "kamae": "balance",
      "alt": "b"
     },
     {
      "do": "switch_kamae",
      "to": "neutral"
     }
-   ]
+   ],
+   "note": "Audit hi-res: blocco 5 esagoni; scarta 2 carte (Aggressività); scarta tutto il focus / OPPURE tutto tranne 1 in Equilibrio (cerchio verde, non Determinazione); PASSA A Neutrale (⛩)."
   },
   "119": {
    "name": "FENDENTE SELVAGGIO",
