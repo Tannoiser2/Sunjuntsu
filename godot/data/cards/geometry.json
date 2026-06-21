@@ -1054,37 +1054,37 @@
    "attacks": [
     {
      "cells": [
-     {
-      "d": 0,
-      "k": 2,
-      "w": 2
-     },
-     {
-      "d": 1,
-      "k": 2,
-      "w": 2
-     },
-     {
-      "d": 2,
-      "k": 2,
-      "w": 2
-     },
-     {
-      "d": 3,
-      "k": 2,
-      "w": 2
-     },
-     {
-      "d": 4,
-      "k": 2,
-      "w": 2
-     },
-     {
-      "d": 5,
-      "k": 2,
-      "w": 2
-     }
-    ],
+      {
+       "d": 0,
+       "k": 2,
+       "w": 2
+      },
+      {
+       "d": 1,
+       "k": 2,
+       "w": 2
+      },
+      {
+       "d": 2,
+       "k": 2,
+       "w": 2
+      },
+      {
+       "d": 3,
+       "k": 2,
+       "w": 2
+      },
+      {
+       "d": 4,
+       "k": 2,
+       "w": 2
+      },
+      {
+       "d": 5,
+       "k": 2,
+       "w": 2
+      }
+     ],
      "kamae": "aggression"
     }
    ],
@@ -1658,7 +1658,7 @@
         "t": "rot",
         "n": 1,
         "opt": false,
-        "kamae": "determination"
+        "kamae": "balance"
        }
       ]
      },
@@ -1668,7 +1668,7 @@
         "t": "rot",
         "n": 2,
         "opt": false,
-        "focus_cost": 1
+        "kamae": "determination"
        }
       ]
      }
@@ -1688,7 +1688,8 @@
      "do": "switch_kamae",
      "to": "neutral"
     }
-   ]
+   ],
+   "note": "Audit hi-res: ↻1 in Equilibrio (cerchio verde), ↻2 in Determinazione (4 quadretti) — non focus. PASSA A Neutrale (⛩)."
   },
   "98": {
    "name": "GRIDO DI GUERRA",
@@ -1742,8 +1743,7 @@
      {
       "atoms": [
        {
-        "t": "step",
-        "dir": -1,
+        "t": "anchor",
         "n": 2,
         "opt": false
        },
@@ -1751,6 +1751,16 @@
         "t": "rot",
         "n": 2,
         "opt": false
+       }
+      ]
+     },
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false,
+        "kamae": "determination"
        }
       ]
      }
@@ -1769,10 +1779,11 @@
     {
      "do": "draw",
      "n": 3,
-     "kamae": "determination",
+     "kamae": "balance",
      "alt": "b"
     }
-   ]
+   ],
+   "note": "Audit hi-res: movimento ❄2 ↻2 (❄=àncora); barra arancio ↻1 in Determinazione. Pesca 3 carte = barra verde in Equilibrio (cerchio), non Determinazione."
   },
   "104": {
    "name": "COLPO AZZOPPANTE",
@@ -1860,13 +1871,16 @@
          "dir": 0,
          "n": 1,
          "opt": false
-        },
+        }
+       ]
+      },
+      {
+       "atoms": [
         {
-         "t": "step",
-         "dir": -1,
+         "t": "anchor",
          "n": 1,
-         "opt": true,
-         "kamae": "determination"
+         "opt": false,
+         "kamae": "balance"
         }
        ]
       }
@@ -1891,7 +1905,8 @@
      "kamae": "aggression",
      "alt": "b"
     }
-   ]
+   ],
+   "note": "Audit hi-res: split ⬆1 OPPURE ❄1 in Equilibrio (❄=àncora, alternativa). SE RIUSCITO: scambio posizioni, SPINGI 1 / SPINGI 2 (Aggressività)."
   },
   "126": {
    "name": "COLPO D'ELSA",
@@ -1913,7 +1928,7 @@
         "t": "rot",
         "n": 1,
         "opt": false,
-        "kamae": "determination"
+        "kamae": "balance"
        }
       ]
      }
@@ -1946,7 +1961,8 @@
      "when": "on_hit",
      "kamae": "aggression"
     }
-   ]
+   ],
+   "note": "Audit hi-res: passo (avanti/indietro) + ↻1 in Equilibrio (cerchio verde), non Determinazione."
   },
   "127": {
    "name": "SPINTA INDIETRO",
