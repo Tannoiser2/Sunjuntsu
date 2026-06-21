@@ -304,7 +304,8 @@
         "t": "step",
         "dir": 3,
         "n": 1,
-        "opt": false
+        "opt": false,
+        "kamae": "aggression"
        }
       ]
      },
@@ -312,13 +313,10 @@
       "atoms": [
        {
         "t": "step",
-        "dirs": [
-         0,
-         3
-        ],
+        "dir": 3,
         "n": 1,
-        "opt": true,
-        "kamae": "determination"
+        "opt": false,
+        "kamae": "balance"
        }
       ]
      }
@@ -345,15 +343,16 @@
    },
    "effects": [
     {
-     "do": "replace_wound_bleed",
+     "do": "link_anchor",
      "when": "on_hit",
-     "kamae": "balance"
+     "focus_cost": 1
     },
     {
      "do": "switch_kamae",
      "to": "aggression"
     }
-   ]
+   ],
+   "note": "Movimento gated: ↧1 in Aggressività OPPURE ↧1 in Equilibrio (verde). Barra viola (focus): \"SOSTITUISCI ! CON ❄\" = collega il marcatore-àncora ❄ all'asterisco (*) sulla Griglia di Posizione (gli effetti collegati si applicano al colpito). \"PASSA A\" = switch_kamae aggression."
   },
   "61": {
    "name": "COLPO CORTO",
@@ -555,8 +554,7 @@
       {
        "atoms": [
         {
-         "t": "step",
-         "dir": -1,
+         "t": "anchor",
          "n": 1,
          "opt": false,
          "kamae": "determination"
@@ -598,7 +596,7 @@
      "when": "on_hit"
     }
    ],
-   "note": "Iniziativa alternativa 7 in Aggressività."
+   "note": "Iniziativa alternativa 7 in Aggressività. Riga verde (Determinazione) = ❄1 ↻1: il ❄ è un marcatore-àncora sulla Griglia di Posizione (non un passo). Riga arancio (focus): ↥1 ↻1."
   },
   "72": {
    "name": "SQUARCIO DI NODACHI",
@@ -1228,6 +1226,12 @@
       {
        "atoms": [
         {
+         "t": "anchor",
+         "n": 2,
+         "opt": false,
+         "kamae": "aggression"
+        },
+        {
          "t": "rot",
          "n": 2,
          "opt": false,
@@ -1247,7 +1251,7 @@
      "n": 1
     }
    ],
-   "note": "Distanza 3; ogni avversario annulla abilità attive e cambia orientamento."
+   "note": "Distanza 3; ogni avversario annulla abilità attive e cambia orientamento. Barra arancio (Aggressività): ❄2 ↻2 — il ❄ è un marcatore-àncora sulla Griglia di Posizione (non un movimento)."
   },
   "29": {
    "name": "SPAZZATA FEROCE",
@@ -1484,8 +1488,7 @@
      {
       "atoms": [
        {
-        "t": "step",
-        "dir": -1,
+        "t": "anchor",
         "n": 1,
         "opt": false,
         "kamae": "balance"
@@ -1509,7 +1512,8 @@
      "do": "draw",
      "n": 3
     }
-   ]
+   ],
+   "note": "Alternativa OPPURE verde (Equilibrio): ❄1 ↻2 — il ❄ è un marcatore-àncora sulla Griglia di Posizione (non un passo). \"OTTIENI 1 🪷\" = +1 focus."
   },
   "35": {
    "name": "CHIATTA DI BUOI",

@@ -900,6 +900,11 @@ func _build_movement_body(w: Dictionary) -> Control:
 	ar.text = "+ rotazione"
 	ar.pressed.connect(func(): atoms.append(_norm_atom({"t": "rot", "n": 1, "opt": false})); _rebuild_widgets(); changed.emit())
 	add.add_child(ar)
+	var an := Button.new()
+	an.text = "+ ❄ àncora"
+	an.tooltip_text = "Marcatore-àncora sulla Griglia di Posizione (collegabile a un asterisco da una carta Abilità) — non muove la pedina"
+	an.pressed.connect(func(): atoms.append(_norm_atom({"t": "anchor", "n": 1, "opt": false})); _rebuild_widgets(); changed.emit())
+	add.add_child(an)
 	v.add_child(add)
 	return v
 
@@ -913,6 +918,12 @@ func _build_atom_editor(w: Dictionary, ai: int) -> Control:
 		ros.setup(self, a.get("dirs", []), bool(a.get("free", false)),
 			func(dirs, free): a["dirs"] = dirs; a["free"] = free; changed.emit())
 		row.add_child(ros)
+	elif a["t"] == "anchor":
+		var anc := Control.new()
+		anc.custom_minimum_size = Vector2(46, 46)
+		anc.tooltip_text = "❄ àncora (Griglia di Posizione) — non muove la pedina"
+		anc.draw.connect(func(): GeometryEditor.draw_icon(anc, "anchor" if not a["opt"] else "anchor_opt", Vector2(23, 23), 20.0, 1))
+		row.add_child(anc)
 	else:
 		var rotc := Control.new()
 		rotc.custom_minimum_size = Vector2(46, 46)
@@ -1166,6 +1177,21 @@ static func draw_icon(ci: CanvasItem, kind: String, c: Vector2, r: float, value)
 			var tip := c + Vector2(r * 0.34, 0).rotated(deg_to_rad(-30))
 			ci.draw_line(tip, tip + Vector2(-r * 0.18, -r * 0.02), ac, maxf(2.0, r * 0.1))
 			ci.draw_line(tip, tip + Vector2(-r * 0.02, -r * 0.18), ac, maxf(2.0, r * 0.1))
+		"anchor", "anchor_opt":
+			# ❄ Fiocco di neve: marcatore-àncora (non un movimento).
+			var filled := kind == "anchor"
+			ci.draw_circle(c, r * 0.62, Color(0.20, 0.42, 0.70) if filled else Color(0.92, 0.92, 0.92))
+			var ac: Color = Color.WHITE if filled else Color(0.20, 0.42, 0.70)
+			var lw := maxf(2.0, r * 0.1)
+			for i in range(3):
+				var dir: Vector2 = Vector2(0, r * 0.46).rotated(deg_to_rad(60 * i))
+				ci.draw_line(c - dir, c + dir, ac, lw)
+				# rametti del fiocco alle due punte
+				for tip_end: Vector2 in [c + dir, c - dir]:
+					var inward: Vector2 = (c - tip_end).normalized()
+					var b: Vector2 = tip_end + inward * (r * 0.18)
+					ci.draw_line(b, b + inward.rotated(deg_to_rad(40)) * (r * 0.16), ac, lw)
+					ci.draw_line(b, b + inward.rotated(deg_to_rad(-40)) * (r * 0.16), ac, lw)
 
 
 static func _draw_triangle_up(ci: CanvasItem, c: Vector2, s: float, col: Color) -> void:
