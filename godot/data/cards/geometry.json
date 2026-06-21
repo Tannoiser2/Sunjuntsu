@@ -213,16 +213,20 @@
       "atoms": [
        {
         "t": "step",
-        "dir": 0,
+        "dir": 3,
         "n": 1,
         "opt": false
-       },
+       }
+      ]
+     },
+     {
+      "atoms": [
        {
         "t": "step",
-        "dir": -1,
+        "dir": 3,
         "n": 1,
-        "opt": true,
-        "kamae": "determination"
+        "opt": false,
+        "kamae": "balance"
        }
       ]
      }
@@ -254,7 +258,7 @@
      "when": "on_hit"
     }
    ],
-   "note": "(focus) iniziativa attacco 3 alternativa: non modellata."
+   "note": "Movimento: ↧1 (senza gate) OPPURE ↧1 in Equilibrio (verde). Celle d5,d0,d1 (arco frontale). Se riuscito: SCARTA 2 🪷 = foe_lose_focus 2. Riquadro [3] arancio = iniziativa alternativa 3 in Aggressività (non modellata)."
   },
   "59": {
    "name": "CONCENTRAZIONE RITROVATA",
@@ -632,8 +636,8 @@
          3
         ],
         "n": 1,
-        "opt": false,
-        "kamae": "balance"
+        "opt": true,
+        "focus_cost": 1
        }
       ]
      },
@@ -662,7 +666,8 @@
      "do": "discard_self",
      "n": 1
     }
-   ]
+   ],
+   "note": "Movimento: barra viola (focus) ↥1 OPPURE ↻1 (senza gate). Colpo frontale d0. SCARTA 1 carta."
   },
   "83": {
    "name": "BLOCCO AMPIO",
@@ -1002,8 +1007,7 @@
      {
       "atoms": [
        {
-        "t": "step",
-        "dir": -1,
+        "t": "anchor",
         "n": 1,
         "opt": true
        },
@@ -1019,30 +1023,30 @@
    "effects": [
     {
      "do": "discard_self",
-     "n": 1,
-     "alt": "a"
+     "n": 1
     },
     {
      "do": "draw",
      "n": 2,
-     "alt": "b"
+     "alt": "a"
     },
     {
-     "do": "stun_self",
+     "do": "search_draw",
      "n": 1,
-     "alt": "c"
+     "alt": "b"
     },
     {
      "do": "switch_kamae",
      "to": "any",
-     "alt": "c"
+     "alt": "b"
     },
     {
      "do": "change_kamae",
      "n": 1,
-     "alt": "d"
+     "alt": "c"
     }
-   ]
+   ],
+   "note": "Costo: SCARTA 1 CARTA. Movimento ❄1 ↻2 (❄ = marcatore-àncora). OPPURE: pesca 2 / prendi 1 attacco + passa a una qualsiasi Kamae / cambia Kamae fino a 1 ramo."
   },
   "24": {
    "name": "VORTICE CREMISI",
@@ -1123,14 +1127,14 @@
     {
      "do": "focus",
      "n": 1,
-     "focus_cost": 1
+     "kamae": "aggression"
     },
     {
      "do": "stun_self",
      "n": 1
     }
    ],
-   "note": "Persistente: riduce di 1 il danno (min 1). Ogni riduzione: focus a costo / 1 stordimento."
+   "note": "Persistente: riduce di 1 il danno subìto (min 1). Ogni volta che il danno è ridotto: OTTIENI 1 🪷 (barra arancio = Aggressività) e PRENDI 1 stordimento."
   },
   "26": {
    "name": "CARICA DEL TORO",
@@ -1375,10 +1379,10 @@
     {
      "do": "change_kamae",
      "n": 2,
-     "focus_cost": 1
+     "kamae": "determination"
     }
    ],
-   "note": "[costo focus] passo Fronte + rotazione non modellato (movimento in difesa)."
+   "note": "Difesa d0,d5,d1 (arco frontale); counter 6/5/4. Se riuscito: ruota bersaglio ↻1; barra arancio (Aggressività) ↥1 ↻1 (movimento in difesa, non modellato); barra gialla (Determinazione) cambia Kamae fino a 2 rami."
   },
   "32": {
    "name": "BALZO DEL LUPO",
@@ -1558,8 +1562,8 @@
        {
         "t": "rot",
         "n": 1,
-        "opt": false,
-        "kamae": "balance"
+        "opt": true,
+        "focus_cost": 1
        }
       ]
      }
@@ -1576,10 +1580,6 @@
    },
    "effects": [
     {
-     "do": "swap_positions",
-     "when": "on_hit"
-    },
-    {
      "do": "rotate_target",
      "n": 1,
      "when": "on_hit"
@@ -1593,7 +1593,8 @@
      "do": "switch_kamae",
      "to": "aggression"
     }
-   ]
+   ],
+   "note": "Non bloccabile. Movimento ↥1 POI ↥1; barra viola (focus) ↻1. Cella d0 = asterisco (*). Se riuscito: ruota bersaglio ↻1 e SPINGI 1; \"PASSA A\" aggression."
   },
   "71": {
    "name": "SPAZZATA DI NAGINATA",
@@ -1624,8 +1625,7 @@
       {
        "atoms": [
         {
-         "t": "step",
-         "dir": -1,
+         "t": "anchor",
          "n": 1,
          "opt": false
         },
@@ -1645,7 +1645,7 @@
      "n": 1
     }
    ],
-   "note": "Cella Retro-Sx asterisco: in Equilibrio 1 ferita (non per-cella)."
+   "note": "Split init 2: ❄1 ↻1 (❄ = marcatore-àncora, non un passo). Celle: d0,d5 ferite, d4 asterisco (*). Barra viola (focus) sull'asterisco. SCARTA 1 carta."
   },
   "89": {
    "name": "BLOCCO D'EMERGENZA",
