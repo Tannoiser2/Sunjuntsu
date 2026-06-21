@@ -59,6 +59,48 @@ func _count_type(ge: GeometryEditor, type: String) -> int:
 	return n
 
 
+func _test_nesting() -> void:
+	print("[annidamento + condizioni + drag]")
+	var ge := GeometryEditor.new()
+	add_child(ge)
+	ge.load_geometry("attack", {})
+	# Costruisci: Iniziativa(2) { combat(cond=balance), OPPURE { movement } }.
+	var init_w := ge._new_widget("initiative")
+	init_w["value"] = 2
+	var combat := ge._new_widget("combat")
+	combat["cond"] = "balance"
+	combat["attack"][Vector2i(1, 0)] = 1
+	var oppure := ge._new_widget("oppure")
+	var mv := ge._new_widget("movement")
+	mv["atoms"].append(ge._norm_atom({"t": "step", "dir": 0, "n": 1, "opt": false}))
+	oppure["children"].append(mv)
+	init_w["children"].append(combat)
+	init_w["children"].append(oppure)
+	ge._widgets = [init_w]
+
+	# Serializza: il motore vede le foglie appiattite; il layout è ad albero.
+	var g := ge.to_geometry()
+	_check(g.has("attacks"), "foglia combat annidata (gated) appiattita per il motore")
+	_check(g.get("move", {}).get("opts", []).size() == 1, "movimento in OPPURE → 1 opzione")
+	_check(g["layout"][0]["type"] == "initiative", "layout ad albero serializzato")
+	_check(int(g["layout"][0]["value"]) == 2, "valore iniziativa serializzato")
+
+	# Round-trip: l'albero si ricostruisce identico.
+	ge.load_geometry("attack", g)
+	_check(ge._widgets.size() == 1 and ge._widgets[0]["type"] == "initiative", "iniziativa ricaricata")
+	var ch: Array = ge._widgets[0]["children"]
+	_check(ch.size() == 2, "due figli ricaricati")
+	_check(ch[0]["type"] == "combat" and str(ch[0]["cond"]) == "balance", "condizione kamae preservata")
+	_check(ch[1]["type"] == "oppure" and (ch[1]["children"] as Array).size() == 1, "OPPURE con un figlio")
+
+	# Drag: niente cicli (un contenitore non entra in sé stesso).
+	_check(not ge._can_move(ge._widgets[0], ch), "contenitore non spostabile nei propri figli")
+	# Sposta la foglia movimento fuori, accanto all'iniziativa (in fondo al top).
+	ge._move_to_end(ch[1]["children"][0], ch[1]["children"], ge._widgets)
+	_check(ge._widgets.size() == 2 and ge._widgets[1]["type"] == "movement", "drag sposta il widget tra liste")
+	ge.queue_free()
+
+
 func _ready() -> void:
 	_test_roundtrip()
 	_test_mutators()
@@ -66,6 +108,7 @@ func _ready() -> void:
 	_test_widgets()
 	_test_attack_variants()
 	_test_effects()
+	_test_nesting()
 	if _failures == 0:
 		print("GEOMETRY EDITOR DONE ok")
 		get_tree().quit(0)
@@ -203,9 +246,9 @@ func _test_attack_variants() -> void:
 	add_child(ge)
 	ge.load_geometry("attack", {})
 	var c0 := ge._first_combat()
-	c0["kamae"] = "aggression"
+	c0["cond"] = "aggression"
 	c0["attack"][Vector2i(1, 0)] = 2
-	ge._widgets.append({"type": "combat", "kamae": "balance",
+	ge._widgets.append({"type": "combat", "cond": "balance",
 		"attack": {Vector2i(1, -1): 1}, "defence": {}})
 	var g := ge.to_geometry()
 	_check(g.has("attacks") and (g["attacks"] as Array).size() == 2, "due varianti → schema `attacks`")
@@ -216,7 +259,7 @@ func _test_attack_variants() -> void:
 	var kamae_set := {}
 	for w in ge._widgets:
 		if w["type"] == "combat":
-			kamae_set[str(w["kamae"])] = true
+			kamae_set[str(w["cond"])] = true
 	_check(kamae_set.has("aggression") and kamae_set.has("balance"), "gate kamae preservati per widget")
 	ge.queue_free()
 
