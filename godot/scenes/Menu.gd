@@ -11,7 +11,45 @@ func _ready() -> void:
 
 	var version: String = str(ProjectSettings.get_setting("application/config/version", "?"))
 	$Version.text = "v%s" % version
-	$Changes.text = "Novità v%s:\n• Controller telefono ORIZZONTALE: barra di stato (Kamae/ferite/focus), mano scorrevole\n• Movimento GRAFICO: mappa 2D toccabile (muovi/ruota/attacca), stile giapponese\n• ONLINE companion (tavolo 3D + telefoni); animazioni; carte istantanee\nVedi docs/MULTIPLAYER_PLAN.md e CHANGELOG.md" % version
+	$Changes.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	$Changes.text = _latest_changes(version)
+
+
+## Ricava le "Novità" dall'ultima voce del CHANGELOG.md (titolo + primi punti),
+## così lo splash resta sempre allineato. Fallback se il file non è leggibile
+## (es. build esportata in cui non è impacchettato).
+func _latest_changes(version: String) -> String:
+	var path := ProjectSettings.globalize_path("res://").path_join("../CHANGELOG.md")
+	if not FileAccess.file_exists(path):
+		return "Novità v%s — vedi CHANGELOG.md" % version
+	var lines := FileAccess.get_file_as_string(path).split("\n")
+	var out: Array = []
+	var started := false
+	var bullets := 0
+	for raw in lines:
+		var line := str(raw)
+		if line.begins_with("## ["):
+			if started:
+				break
+			started = true
+			# "## [0.62.0] — 2026-06-21" → "Novità v0.62.0 — 2026-06-21"
+			out.append("Novità v" + line.substr(4).replace("] —", " —").replace("]", "").strip_edges())
+		elif started and line.begins_with("### "):
+			out.append(_clean_md(line.substr(4)))
+		elif started and line.strip_edges().begins_with("- ") and bullets < 3:
+			out.append("• " + _trunc(_clean_md(line.strip_edges().substr(2)), 92))
+			bullets += 1
+	if out.is_empty():
+		return "Novità v%s — vedi CHANGELOG.md" % version
+	return "\n".join(out)
+
+
+func _clean_md(s: String) -> String:
+	return s.replace("**", "").replace("`", "").strip_edges()
+
+
+func _trunc(s: String, n: int) -> String:
+	return s if s.length() <= n else s.substr(0, n - 1).strip_edges() + "…"
 
 
 func _on_solo() -> void:
