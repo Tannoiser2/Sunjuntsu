@@ -3,6 +3,17 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.62.0] — 2026-06-21
+### Editor carte: l'iniziativa diventa un widget contenitore
+- L'**iniziativa** non è più un campo dell'intestazione: è un **widget Iniziativa**
+  che **raccoglie tutti i widget attivi a quella iniziativa**.
+- Le carte a **più iniziative** (campo `split`, es. **024 Vortice Cremisi**) si aprono con
+  **due contenitori Iniziativa**: la **parte alta** (con la sua velocità) e la **parte bassa**
+  (lo split, con movimento/attacco e la propria velocità). Le carte a iniziativa singola
+  restano una lista piatta.
+- L'iniziativa della parte alta resta sincronizzata con il `card_pool` (ordine di turno
+  invariato); lo split continua a essere serializzato per il motore. Versione 0.62.0.
+
 ## [0.61.0] — 2026-06-21
 ### Editor carte: intestazione riorganizzata + geometria annidabile
 - **Intestazione** su tre righe: **nome · personaggio · rank**; il **tipo** come **badge**

@@ -1026,8 +1026,9 @@
   "24": {
    "name": "VORTICE CREMISI",
    "type": "attack",
-   "attack": {
-    "cells": [
+   "attacks": [
+    {
+     "cells": [
      {
       "d": 0,
       "k": 2,
@@ -1058,8 +1059,10 @@
       "k": 2,
       "w": 2
      }
-    ]
-   },
+    ],
+     "kamae": "aggression"
+    }
+   ],
    "split": {
     "initiative": 5,
     "move": {

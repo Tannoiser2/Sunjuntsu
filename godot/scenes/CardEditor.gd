@@ -52,6 +52,7 @@ var _w: Dictionary = {}          ## campo -> widget editabile
 var _w_type: Label               ## etichetta `type` derivata (read-only)
 var _keywords: Array = []        ## keyword/tipi correnti (badge)
 var _badges_box: Control         ## contenitore dei badge tipo
+var _card_initiative: String = "-"  ## iniziativa parte alta (ora nel widget Iniziativa)
 var _geom_editor: GeometryEditor ## editor visuale geometria (Fase 4)
 var _issues_box: VBoxContainer   ## pannello avvisi di validazione (Fase 3)
 var _img_path_label: Label       ## path immagine corrente (Fase 6)
@@ -368,7 +369,9 @@ func _build_form(id: int, c: Dictionary, geom_data = null) -> void:
 	_w["rank"] = _mk_option(["Wood", "Steel", "Gold", "Jade", "-"], str(c.get("rank", "-")))
 	_w["focus"] = _mk_spin(0, 9, int(c.get("focus", 0)))
 	_w["amount"] = _mk_spin(1, 6, int(c.get("amount", 1)))
-	_w["initiative"] = _mk_text(str(c.get("initiative", "-")))
+	# L'iniziativa NON è più un campo: vive nel widget Iniziativa della geometria
+	# (la teniamo qui solo per inoltrarla all'editor e ri-sincronizzarla).
+	_card_initiative = str(c.get("initiative", "-"))
 
 	# Riga 1: nome · personaggio · rank.
 	var r1 := HBoxContainer.new()
@@ -381,12 +384,11 @@ func _build_form(id: int, c: Dictionary, geom_data = null) -> void:
 	# Riga 2: tipo come badge + "+".
 	_build_keywords_field(c.get("keywords", []))
 
-	# Riga 3: costo focus · copie (amount) · iniziativa.
+	# Riga 3: costo focus · copie (amount).
 	var r3 := HBoxContainer.new()
 	r3.add_theme_constant_override("separation", 6)
 	r3.add_child(_field("focus", _w["focus"]))
 	r3.add_child(_field("copie", _w["amount"]))
-	r3.add_child(_field("iniz.", _w["initiative"]))
 	_form.add_child(r3)
 
 	# Registrazione undo/redo + validazione su ogni modifica dell'anagrafica.
@@ -394,7 +396,6 @@ func _build_form(id: int, c: Dictionary, geom_data = null) -> void:
 	_w["char"].item_selected.connect(func(_i): _on_edit())
 	_w["amount"].value_changed.connect(func(_v): _on_edit())
 	_w["rank"].item_selected.connect(func(_i): _on_edit())
-	_w["initiative"].text_changed.connect(func(_t): _on_edit())
 	_w["focus"].value_changed.connect(func(_v): _on_edit())
 
 	# Geometria/effetti — editor visuale drag & drop (Fase 4).
@@ -403,7 +404,7 @@ func _build_form(id: int, c: Dictionary, geom_data = null) -> void:
 	_geom_editor.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_form.add_child(_geom_editor)
 	var geom_src: Dictionary = geom_data if geom_data != null else CardDB.geometry(id)
-	_geom_editor.load_geometry(str(c.get("type", "attack")), geom_src)
+	_geom_editor.load_geometry(str(c.get("type", "attack")), geom_src, _card_initiative)
 	_geom_editor.changed.connect(func(): _on_edit())
 	var geobtns := HBoxContainer.new()
 	var save_geo := Button.new()
@@ -489,13 +490,20 @@ func _recalc_type() -> void:
 
 func _collect_fields() -> Dictionary:
 	var kws := _parse_keywords()
+	# L'iniziativa arriva dal widget Iniziativa (parte alta); se vuota, tiene il
+	# valore caricato dal card_pool.
+	var init_val := _card_initiative
+	if _geom_editor != null:
+		var mi := _geom_editor.main_initiative()
+		if mi.strip_edges() != "":
+			init_val = mi.strip_edges()
 	return {
 		"id": _current_id,
 		"name": _w["name"].text.strip_edges(),
 		"char": _selected_text(_w["char"]),
 		"amount": int(_w["amount"].value),
 		"rank": _selected_text(_w["rank"]),
-		"initiative": _w["initiative"].text.strip_edges(),
+		"initiative": init_val,
 		"focus": int(_w["focus"].value),
 		"keywords": kws,
 		"type": CardStore.derive_type(kws),
