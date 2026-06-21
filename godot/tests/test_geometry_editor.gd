@@ -113,6 +113,7 @@ func _test_split_initiative() -> void:
 	var top: Array = ge._widgets[0]["children"]
 	var bot: Array = ge._widgets[1]["children"]
 	_check(top.size() >= 1 and top[0]["type"] == "combat", "parte alta: widget attacco")
+	_check(top.size() >= 1 and str(top[0].get("cond", "")) == "aggression", "parte alta: condizione kamae aggression")
 	var has_move := false
 	var has_atk := false
 	for w in bot:
