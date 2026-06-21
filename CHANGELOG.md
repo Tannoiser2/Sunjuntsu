@@ -3,6 +3,21 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.61.0] — 2026-06-21
+### Editor carte: intestazione riorganizzata + geometria annidabile
+- **Intestazione** su tre righe: **nome · personaggio · rank**; il **tipo** come **badge**
+  rimovibili (con "+" per aggiungerne); **costo focus · copie · iniziativa**. I keyword
+  passano da campo testo a **badge cliccabili**.
+- **Geometria a widget annidabili**: due **contenitori** — **Iniziativa** (con numero di
+  iniziativa) e **OPPURE (alternative)** — annidano altri widget in un riquadro rientrato.
+- Ogni widget ha in cima una **condizione kamae** ("se …"); per il Combattimento è la posa
+  che attiva la variante d'attacco.
+- I widget si **riposizionano trascinandoli** (drag & drop tra liste e dentro/fuori i
+  contenitori); rimossi i tasti su/giù.
+- Serializzazione **provvisoria**: il motore riceve la geometria appiattita (invariato),
+  mentre l'albero completo (annidamento + condizioni) è salvato in `layout` e ricostruito
+  al ricaricamento; le carte col layout classico restano compatibili. Versione 0.61.0.
+
 ## [0.60.0] — 2026-06-19
 ### Controller telefono: scheda personaggio "a comparsa quando serve"
 - La **scheda personaggio** ora **appare da sola** nei momenti rilevanti — quando **subisci
