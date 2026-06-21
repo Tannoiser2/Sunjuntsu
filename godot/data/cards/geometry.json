@@ -531,20 +531,23 @@
   "65": {
    "name": "SPIRALE DI FIAMME",
    "type": "attack",
-   "attack": {
-    "cells": [
-     {
-      "d": 1,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 2,
-      "k": 1,
-      "w": 1
-     }
-    ]
-   },
+   "attacks": [
+    {
+     "cells": [
+      {
+       "d": 1,
+       "k": 1,
+       "w": 1
+      },
+      {
+       "d": 2,
+       "k": 1,
+       "w": 1
+      }
+     ],
+     "kamae": "aggression"
+    }
+   ],
    "split": {
     "initiative": 5,
     "move": {
@@ -1128,20 +1131,23 @@
      }
     ]
    },
-   "attack": {
-    "cells": [
-     {
-      "d": 5,
-      "k": 1,
-      "w": 2
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 2
-     }
-    ]
-   },
+   "attacks": [
+    {
+     "cells": [
+      {
+       "d": 5,
+       "k": 1,
+       "w": 2
+      },
+      {
+       "d": 1,
+       "k": 1,
+       "w": 2
+      }
+     ],
+     "kamae": "aggression"
+    }
+   ],
    "split": {
     "initiative": 5,
     "move": {
@@ -1301,6 +1307,7 @@
   "30": {
    "name": "ARTIGLI LACERANTI",
    "type": "meditation",
+   "kamae_req": "aggression",
    "effects": [
     {
      "do": "replace_wound_bleed",
@@ -1449,7 +1456,7 @@
     {
      "do": "draw",
      "n": 2,
-     "kamae": "determination",
+     "kamae": "balance",
      "alt": "b"
     }
    ]
@@ -1480,13 +1487,14 @@
         "t": "step",
         "dir": -1,
         "n": 1,
-        "opt": false
+        "opt": false,
+        "kamae": "balance"
        },
        {
         "t": "rot",
         "n": 2,
         "opt": false,
-        "kamae": "determination"
+        "kamae": "balance"
        }
       ]
      }
