@@ -410,6 +410,11 @@
    "attack": {
     "cells": [
      {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
       "d": 5,
       "k": 1,
       "w": 1
@@ -450,7 +455,7 @@
      "when": "on_hit"
     }
    ],
-   "note": "Se riuscito: SPINGI 1; barra verde (Equilibrio) SCARTA 1 (con focus); \"PASSA A\" = switch_kamae aggression."
+   "note": "Arco offensivo verificato (hi-res): d0,d1,d2,d4,d5 (arco frontale ampio, manca solo il dietro d3). Se riuscito: SPINGI 1; barra verde (Equilibrio) SCARTA 1 (con focus); \"PASSA A\" = switch_kamae aggression."
   },
   "63": {
    "name": "BLOCCO CINEREO",
@@ -492,7 +497,8 @@
      "to": "aggression",
      "focus_cost": 1
     }
-   ]
+   ],
+   "note": "Difesa verificata (hi-res): scudi a d0,d5,d4 (fronte + lato sinistro). Counter 8. Se riuscito: SPINGI 1 OPPURE scambio; \"PASSA A\" aggression (focus)."
   },
   "64": {
    "name": "TESTATA",
@@ -537,7 +543,8 @@
      "n": 1,
      "when": "on_hit"
     }
-   ]
+   ],
+   "note": "Arco verificato (hi-res): singolo colpo frontale d0. Movimento ↥1 (senza gate) + ↻1 in Aggressività. Se riuscito: stordisci 1 e ottieni 1 🪷."
   },
   "65": {
    "name": "SPIRALE DI FIAMME",
@@ -609,7 +616,7 @@
      "when": "on_hit"
     }
    ],
-   "note": "Iniziativa alternativa 7 in Aggressività (con l'attacco). A iniziativa 5: riga VERDE (Equilibrio) = ❄1 ↻1 (❄ = marcatore-àncora, non un passo); riga GIALLA (Determinazione) = ↥1 ↻1."
+   "note": "Arco (Aggressività) verificato hi-res: d1,d2 (lato destro). Iniziativa alternativa 7 in Aggressività (con l'attacco). A iniziativa 5: riga VERDE (Equilibrio) = ❄1 ↻1 (❄ = marcatore-àncora, non un passo); riga GIALLA (Determinazione) = ↥1 ↻1."
   },
   "72": {
    "name": "SQUARCIO DI NODACHI",
