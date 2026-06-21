@@ -316,8 +316,7 @@
         "t": "step",
         "dir": 3,
         "n": 1,
-        "opt": false,
-        "kamae": "aggression"
+        "opt": false
        }
       ]
      },
@@ -364,7 +363,7 @@
      "to": "aggression"
     }
    ],
-   "note": "Movimento gated: ↧1 in Aggressività OPPURE ↧1 in Equilibrio (verde). Barra viola (focus): \"SOSTITUISCI ! CON ❄\" = collega il marcatore-àncora ❄ all'asterisco (*) sulla Griglia di Posizione (gli effetti collegati si applicano al colpito). \"PASSA A\" = switch_kamae aggression."
+   "note": "Riquadro iniziativa [8] in Determinazione (gialla). Movimento: ↧1 (bianco, senza gate) OPPURE ↧1 in Equilibrio (verde). Barra viola (focus): \"SOSTITUISCI ! CON ❄\" = collega il marcatore-àncora ❄ all'asterisco (*) sulla Griglia di Posizione (gli effetti collegati si applicano al colpito). \"PASSA A\" = switch_kamae aggression."
   },
   "61": {
    "name": "COLPO CORTO",
@@ -570,13 +569,13 @@
          "t": "anchor",
          "n": 1,
          "opt": false,
-         "kamae": "determination"
+         "kamae": "balance"
         },
         {
          "t": "rot",
          "n": 1,
          "opt": false,
-         "kamae": "determination"
+         "kamae": "balance"
         }
        ]
       },
@@ -590,12 +589,13 @@
          ],
          "n": 1,
          "opt": false,
-         "focus_cost": 1
+         "kamae": "determination"
         },
         {
          "t": "rot",
          "n": 1,
-         "opt": false
+         "opt": false,
+         "kamae": "determination"
         }
        ]
       }
@@ -609,7 +609,7 @@
      "when": "on_hit"
     }
    ],
-   "note": "Iniziativa alternativa 7 in Aggressività. Riga verde (Determinazione) = ❄1 ↻1: il ❄ è un marcatore-àncora sulla Griglia di Posizione (non un passo). Riga arancio (focus): ↥1 ↻1."
+   "note": "Iniziativa alternativa 7 in Aggressività (con l'attacco). A iniziativa 5: riga VERDE (Equilibrio) = ❄1 ↻1 (❄ = marcatore-àncora, non un passo); riga GIALLA (Determinazione) = ↥1 ↻1."
   },
   "72": {
    "name": "SQUARCIO DI NODACHI",
