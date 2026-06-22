@@ -2377,6 +2377,399 @@
     }
    ],
    "note": "Solo Warrior Nightmare."
+  },
+  "8": {
+   "name": "CARTA SPECIALE MAESTRO",
+   "type": "core",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "anchor",
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 2,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "discard_self",
+     "n": 1
+    },
+    {
+     "do": "draw",
+     "n": 2,
+     "alt": "a"
+    },
+    {
+     "do": "search_draw",
+     "n": 1,
+     "alt": "b"
+    },
+    {
+     "do": "change_kamae",
+     "n": 1,
+     "alt": "c"
+    }
+   ],
+   "note": "Costo: SCARTA 1 CARTA (discard_self). Movimento ❄1 ↻2 (❄=àncora). OPPURE: pesca fino a 2 / scarta 1 poi cerca negli scarti e prendi 1 attacco / cambia Kamae fino a 1 ramo."
+  },
+  "9": {
+   "name": "RIFLESSIONE DEL DRAGO",
+   "type": "meditation",
+   "effects": [
+    {
+     "do": "change_kamae",
+     "n": 1
+    },
+    {
+     "do": "search_draw",
+     "n": 1,
+     "focus_cost": 1
+    }
+   ],
+   "note": "Passa a una qualsiasi Kamae. Cerca negli scarti (costo 1🪷 oppure 0 a una condizione) una carta e GIOCALA COME meditazione. DA VERIFICARE costo focus."
+  },
+  "10": {
+   "name": "ZANNA CELATA DELLA VIPERA",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 3,
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "change_kamae",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
+   "note": "Movimento ↓1 ↻1. SE RIUSCITO: passa a una qualsiasi Kamae. Arco d'attacco (honeycomb fronte) DA VERIFICARE."
+  },
+  "11": {
+   "name": "ECO DELLA LAMA",
+   "type": "meditation",
+   "effects": [
+    {
+     "do": "search_draw",
+     "n": 1,
+     "focus_cost": 1
+    }
+   ],
+   "note": "Aggiunta istantanea. Più righe 'CERCA + PRENDI 1' (OPPURE) per prendere 1 carta di un tipo a scelta, gating per tipo/costo focus. Alternative DA DETTAGLIARE."
+  },
+  "12": {
+   "name": "INTUIZIONE OSCURA",
+   "type": "meditation",
+   "effects": [
+    {
+     "do": "draw",
+     "n": 3
+    },
+    {
+     "do": "reset_deck",
+     "n": 1
+    },
+    {
+     "do": "change_kamae",
+     "n": 1
+    }
+   ],
+   "note": "GUARDA LA MANO DI [avversario]; MISCHIA 1 carta NEL MAZZO (fino a 3 volte); PESCA 3 CARTE; PASSA A UNA QUALSIASI KAMAE. 'guarda mano' e 'mischia nel mazzo' approssimati. DA VERIFICARE."
+  },
+  "13": {
+   "name": "OCCHIO DEL DRAGONE",
+   "type": "meditation",
+   "effects": [
+    {
+     "do": "draw",
+     "n": 2,
+     "alt": "a"
+    },
+    {
+     "do": "push",
+     "n": 1,
+     "alt": "b"
+    }
+   ],
+   "note": "Aggiunta istantanea. Righe alternative (gating focus): SCARTA 2 / PESCA 2 CARTE / ❄1 / PESCA FINO A 2 CARTE / TIRA O SPINGI 1. Mappatura effetti DA DETTAGLIARE."
+  },
+  "14": {
+   "name": "PATTO OSCURO",
+   "type": "meditation",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "anchor",
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "search_draw",
+     "n": 1,
+     "alt": "a"
+    },
+    {
+     "do": "foe_discard",
+     "n": 1,
+     "alt": "b"
+    }
+   ],
+   "note": "❄1 ↻1. CERCA TRA LE PRIME 3 CARTE + PRENDI 1 carta abilità. OPPURE cerca tra le prime 3 carte dell'avversario, scegli 1 carta abilità e prendila. Distanza 3. 'foe_discard' approssima il furto. DA VERIFICARE."
+  },
+  "15": {
+   "name": "CODA DEL DRAGONE",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "change_kamae",
+     "n": 1
+    }
+   ],
+   "note": "Sostituzione istantanea. PASSA A UNA QUALSIASI KAMAE. Movimento ↑1 ↻1 (+ opzione passo ↕). SE RIUSCITO: effetto viola. Arco d'attacco DA VERIFICARE."
+  },
+  "16": {
+   "name": "SESTO SENSO",
+   "type": "defence",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 3,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "defence": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "v": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "foe_discard",
+     "n": 1,
+     "when": "on_hit",
+     "focus_cost": 1
+    }
+   ],
+   "note": "↻3. Blocco (honeycomb). SE RIUSCITO: SCARTA 1 (costo 🪷) e GUARDA LA MANO DI [avversario]. Celle di blocco e 'guarda mano' DA VERIFICARE."
+  },
+  "17": {
+   "name": "SAGGEZZA CORROTTA",
+   "type": "meditation",
+   "effects": [
+    {
+     "do": "draw",
+     "n": 2
+    }
+   ],
+   "note": "Aggiunta istantanea. GIOCA SE IL BLOCCO È RIUSCITO. Bande iniziativa 9/8–7/6–5/4 (archi arancio/verde/rosso). Effetto: TUTTI I GIOCATORI PESCANO 2 CARTE. Gating iniziativa DA VERIFICARE."
+  },
+  "18": {
+   "name": "COLPO INDOLENTE",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "link_anchor",
+     "n": 1,
+     "when": "on_hit",
+     "focus_cost": 1
+    },
+    {
+     "do": "discard_self",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
+   "note": "Honeycomb (fronte ↕) + ↑1. SE RIUSCITO: SOSTITUISCI ! CON ❄ (link_anchor, costo 🪷); SCARTA 1 CARTA. Arco d'attacco DA VERIFICARE."
+  },
+  "19": {
+   "name": "TAGLIO MAGISTRALE",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "anchor",
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 0,
+      "k": 2,
+      "w": 1
+     }
+    ]
+   },
+   "note": "❄1 ↻1. Honeycomb a più anelli (4 righe colorate con frecce ↕). Arco d'attacco multi-riga DA VERIFICARE."
+  },
+  "20": {
+   "name": "RIPOSIZIONAMENTO",
+   "type": "meditation",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 3,
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 2,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "draw",
+     "n": 2,
+     "alt": "a"
+    },
+    {
+     "do": "search_draw",
+     "n": 1,
+     "alt": "b"
+    },
+    {
+     "do": "change_kamae",
+     "n": 1,
+     "alt": "c"
+    }
+   ],
+   "note": "Movimento ↓1 ↑1 ↻2. PESCA FINO A 2 CARTE / CERCA + PRENDI 1 (meditazione) / CAMBIA KAMAE FINO A 1 RAMO."
   }
  },
  "characters": {
@@ -2402,6 +2795,18 @@
     "Naginata",
     "Nodachi",
     "Yari"
+   ]
+  },
+  "Master": {
+   "card_id": 6,
+   "name": "Il Vecchio Dragone",
+   "wound_limit": 7,
+   "hand_limit": 5,
+   "weapons": [
+    "Katana",
+    "Tachi",
+    "Shikomizue",
+    "Wakizashi"
    ]
   }
  }
