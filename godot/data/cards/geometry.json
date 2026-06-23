@@ -2770,6 +2770,479 @@
     }
    ],
    "note": "Movimento ↓1 ↑1 ↻2. PESCA FINO A 2 CARTE / CERCA + PRENDI 1 (meditazione) / CAMBIA KAMAE FINO A 1 RAMO."
+  },
+  "38": {
+   "name": "CARTA SPECIALE ALLIEVO",
+   "type": "core",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "anchor",
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 2,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "discard_self",
+     "n": 1
+    },
+    {
+     "do": "draw",
+     "n": 2,
+     "alt": "a"
+    },
+    {
+     "do": "search_draw",
+     "n": 1,
+     "alt": "b"
+    },
+    {
+     "do": "change_kamae",
+     "n": 1,
+     "alt": "c"
+    }
+   ],
+   "note": "Costo SCARTA 1 CARTA. Movimento ❄1 ↻2. OPPURE pesca fino a 2 / cerca e prendi 1 / cambia Kamae fino a 1 ramo. Gemella della Carta Speciale Maestro (8)."
+  },
+  "39": {
+   "name": "PRENDERE FIATO",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 3,
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 0,
+      "k": 2,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "change_kamae",
+     "n": 1,
+     "when": "on_hit"
+    },
+    {
+     "do": "search_draw",
+     "n": 1
+    }
+   ],
+   "note": "Attacco a colonna frontale (honeycomb). SE RIUSCITO: passa a una qualsiasi Kamae. Movimento ↓1 ↻1; CERCA+PRENDI 1. Focus 2. Arco DA VERIFICARE."
+  },
+  "40": {
+   "name": "CODA FULMINEA",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 3,
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "change_kamae",
+     "n": 1,
+     "to": "aggression"
+    }
+   ],
+   "note": "Movimento ↓1 (poi ↓1 ↻1). PASSA A [Kamae aggression]. Focus 2. Arco frontale DA VERIFICARE."
+  },
+  "41": {
+   "name": "INTUIZIONE ARDENTE",
+   "type": "meditation",
+   "effects": [
+    {
+     "do": "reset_deck",
+     "n": 1
+    },
+    {
+     "do": "draw",
+     "n": 3
+    },
+    {
+     "do": "change_kamae",
+     "n": 1
+    }
+   ],
+   "note": "MISCHIA NEL MAZZO fino a 1 carta per tipo (attacco/meditazione/difesa); PESCA FINO A 3 CARTE; PASSA A UNA QUALSIASI KAMAE. 'reset_deck' approssima i rimescolamenti per tipo. DA VERIFICARE."
+  },
+  "42": {
+   "name": "SPECCHIO D'ACQUA",
+   "type": "meditation",
+   "effects": [
+    {
+     "do": "search_draw",
+     "n": 1,
+     "alt": "a"
+    },
+    {
+     "do": "search_draw",
+     "n": 1,
+     "alt": "b"
+    }
+   ],
+   "note": "CERCA NEGLI SCARTI + PRENDI 1 (meditazione) OPPURE 1 (attacco); GIOCA LA CARTA PESCATA COME [...]. DA VERIFICARE i tipi."
+  },
+  "43": {
+   "name": "TIGRE APPOSTATA",
+   "type": "meditation",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "discard_self",
+     "n": 1
+    },
+    {
+     "do": "change_kamae",
+     "n": 1
+    }
+   ],
+   "note": "Aggiunta istantanea. GIOCA SE IL BLOCCO È RIUSCITO. ↻1 ↑1; SCARTA 1 CARTA; PASSA A UNA QUALSIASI KAMAE."
+  },
+  "44": {
+   "name": "COLPO ASTUTO",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "anchor",
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "discard_self",
+     "n": 1,
+     "when": "on_hit"
+    },
+    {
+     "do": "foe_discard",
+     "n": 1
+    }
+   ],
+   "note": "Preparata. Honeycomb frontale. SE RIUSCITO: SCARTA 1 CARTA; GUARDA LA MANO DI [avversario]. Movimento ❄1 ↻1. 'foe_discard' approssima 'guarda mano'. Arco DA VERIFICARE."
+  },
+  "45": {
+   "name": "OBBEDIENZA",
+   "type": "defence",
+   "defence": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "v": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "change_kamae",
+     "n": 1,
+     "alt": "a"
+    },
+    {
+     "do": "foe_discard",
+     "n": 1,
+     "alt": "b"
+    },
+    {
+     "do": "change_kamae",
+     "n": 1,
+     "alt": "c"
+    }
+   ],
+   "note": "Preparata. Blocco (honeycomb). SE RIUSCITO: fai passare l'avversario a una qualsiasi Kamae; RUBA 1 carta DA [avversario]; CAMBIA KAMAE FINO A 1 RAMO. Celle blocco e furto DA VERIFICARE."
+  },
+  "46": {
+   "name": "COLPO DELLA ROCCIA",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     },
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 3,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "note": "Movimento ↻1 OPPURE ↓1 ↻1. Honeycomb frontale. Arco DA VERIFICARE."
+  },
+  "47": {
+   "name": "SQUARCIO ROTANTE",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "change_kamae",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
+   "note": "Sostituzione istantanea. ↻1. Honeycomb frontale. SE RIUSCITO: ↻1 (rotazione, modellata come effetto). Arco DA VERIFICARE."
+  },
+  "48": {
+   "name": "CASCATA FENDENTE",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 0,
+      "k": 2,
+      "w": 1
+     }
+    ]
+   },
+   "note": "↑1 ↻1. Attacco a colonna frontale. Barra viola (effetto/❄). Arco DA VERIFICARE."
+  },
+  "49": {
+   "name": "SCAMBIO DELLA MONTAGNA",
+   "type": "defence",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 3,
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 2,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "defence": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "v": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "swap_positions",
+     "n": 1
+    },
+    {
+     "do": "focus",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
+   "note": "Blocco (honeycomb). ★ SCAMBIA POSIZIONE CON [avversario]. SE RIUSCITO: OTTIENI 1 🪷; movimento ↘1 ↻2. Celle blocco DA VERIFICARE."
+  },
+  "50": {
+   "name": "MENTE PLACIDA",
+   "type": "meditation",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "anchor",
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 2,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "change_kamae",
+     "n": 1
+    },
+    {
+     "do": "search_draw",
+     "n": 1
+    }
+   ],
+   "note": "❄1 ↻1. CAMBIA KAMAE FINO A 1 RAMO; CERCA TRA LE PRIME 3 CARTE DEL MAZZO + PRENDI 1; ↻2."
   }
  },
  "characters": {
@@ -2800,14 +3273,28 @@
   "Master": {
    "card_id": 6,
    "name": "Il Vecchio Dragone",
-   "wound_limit": 7,
+   "wound_limit": 5,
    "hand_limit": 5,
    "weapons": [
     "Katana",
     "Tachi",
     "Shikomizue",
     "Wakizashi"
-   ]
+   ],
+   "note": "Rinomanza stampata 74 (icona ventaglio). Ferite 5 / mano 5."
+  },
+  "Student": {
+   "card_id": 36,
+   "name": "Impavido come una Tigre",
+   "wound_limit": 5,
+   "hand_limit": 5,
+   "weapons": [
+    "Katana",
+    "Tanto",
+    "Shikomizue",
+    "Wakizashi"
+   ],
+   "note": "Rinomanza stampata 62 (icona ventaglio). Ferite 5 / mano 5."
   }
  }
 }
