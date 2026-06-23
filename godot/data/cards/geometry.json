@@ -5111,6 +5111,194 @@
     }
    ],
    "note": "Arma Tonfa (parata). SCARTA 1 CARTA (costo). ❄1 ↻2. SE RIUSCITO: SCARTA 1 CARTA. Init 5,4,3. Arco difesa DA VERIFICARE."
+  },
+  "96": {
+   "name": "COLPO SQUARCIANTE",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 2,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "push",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
+   "note": "Init 6. ↻1 ↑2 ↻1. Honeycomb frontale. SE RIUSCITO: spingi/effetto (barra arancio). Arco DA VERIFICARE."
+  },
+  "97": {
+   "name": "PROVOCAZIONE",
+   "type": "meditation",
+   "effects": [
+    {
+     "do": "change_ai_behaviour",
+     "n": 1
+    },
+    {
+     "do": "change_kamae",
+     "n": 1,
+     "to": "determination"
+    },
+    {
+     "do": "discard_self",
+     "n": 1
+    }
+   ],
+   "note": "Aggiunta istantanea, distanza. GIOCA SE L'ATTACCO O IL BLOCCO È RIUSCITO. PASSA A [Kamae torii=determination?]; icona occhio; SCARTA 1 CARTA. 'provocazione' = change_ai_behaviour (segnaposto). Kamae bersaglio DA VERIFICARE."
+  },
+  "111": {
+   "name": "BLOCCO DI FIUME",
+   "type": "defence",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "anchor",
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "defence": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "v": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "focus",
+     "n": 1,
+     "when": "on_hit"
+    },
+    {
+     "do": "change_kamae",
+     "n": 1
+    }
+   ],
+   "note": "Init 7,6,5,4. Honeycomb difesa frontale (valori ~6/5). ❄ POI ↻1. SE RIUSCITO: OTTIENI 1 🪷; PASSA A [kamae]. Celle/valori difesa DA VERIFICARE."
+  },
+  "121": {
+   "name": "DIFESA TRANQUILLA",
+   "type": "defence",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 4,
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "defence": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "v": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "focus",
+     "n": 1,
+     "when": "on_hit"
+    },
+    {
+     "do": "change_kamae",
+     "n": 1
+    }
+   ],
+   "note": "Init 6,5,4,3,2. ↻1; honeycomb difesa. SE RIUSCITO: OTTIENI 1 🪷; ↙1 POI ↻1; CAMBIA KAMAE FINO A 1 RAMO. Celle difesa DA VERIFICARE."
+  },
+  "100": {
+   "name": "SQUARCIO DIAGONALE",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 3,
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "link_anchor",
+     "n": 1,
+     "when": "on_hit",
+     "focus_cost": 1
+    }
+   ],
+   "note": "Init 5. ↓1 ↻1. Honeycomb frontale. Barra arancio ★! = SOSTITUISCI ! CON ❄ (link_anchor). Arco DA VERIFICARE."
   }
  },
  "characters": {

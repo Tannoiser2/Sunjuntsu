@@ -155,5 +155,5 @@ best-effort e annotati nelle `note` (cerca `DA VERIFICARE`). L'editor visuale
 sul nido d'ape è pensato proprio per correggerli: il campo `note` va sempre
 preservato.
 
-Allo stato attuale **135 carte su 303** hanno geometria trascritta; l'editor deve
+Allo stato attuale **140 carte su 303** hanno geometria trascritta; l'editor deve
 gestire bene il caso "geometria assente" (crearla da zero).
