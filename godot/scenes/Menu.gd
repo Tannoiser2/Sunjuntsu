@@ -19,7 +19,12 @@ func _ready() -> void:
 ## così lo splash resta sempre allineato. Fallback se il file non è leggibile
 ## (es. build esportata in cui non è impacchettato).
 func _latest_changes(version: String) -> String:
-	var path := ProjectSettings.globalize_path("res://").path_join("../CHANGELOG.md")
+	# Il file vive dentro il progetto (res://CHANGELOG.md) così è leggibile sia
+	# nell'editor sia nelle build esportate (incluso via include_filter "*.md").
+	# Fallback: vecchia posizione alla root del repo, per sicurezza.
+	var path := "res://CHANGELOG.md"
+	if not FileAccess.file_exists(path):
+		path = ProjectSettings.globalize_path("res://").path_join("../CHANGELOG.md")
 	if not FileAccess.file_exists(path):
 		return "Novità v%s — vedi CHANGELOG.md" % version
 	var lines := FileAccess.get_file_as_string(path).split("\n")
