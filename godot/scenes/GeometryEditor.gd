@@ -421,7 +421,8 @@ func _node_to_widget(node: Dictionary) -> Dictionary:
 			return {"type": "kamae", "cond": cond, "req": node.get("req", "")}
 		"effect":
 			var e := _effect_widget(node)
-			e["cond"] = cond
+			if not Kamae.gate_is_empty(cond):
+				e["cond"] = cond   # cond esplicito del layout ha precedenza
 			return e
 		"counter":
 			var vals := []
@@ -532,11 +533,15 @@ func _new_widget_base(type: String) -> Dictionary:
 	return {"type": ""}
 
 
+## Widget effetto: il gate kamae è la CONDIZIONE del widget (`cond`, la barra
+## "se" dell'intestazione), non un campo separato nel corpo. Lo carichiamo dal
+## campo `kamae` dei dati motore (retro-compatibile) e lo riscriviamo da `cond`.
 static func _effect_widget(e: Dictionary) -> Dictionary:
 	return {
 		"type": "effect",
+		"cond": e.get("kamae", ""),
 		"do": str(e.get("do", "")), "n": int(e.get("n", 0)),
-		"when": str(e.get("when", "")), "kamae": e.get("kamae", ""),
+		"when": str(e.get("when", "")),
 		"to": str(e.get("to", "")), "focus_cost": int(e.get("focus_cost", 0)),
 		"alt": str(e.get("alt", "")),
 	}
@@ -591,7 +596,8 @@ func _effect_to(e: Dictionary) -> Dictionary:
 	var ce := {"do": str(e.get("do", ""))}
 	if int(e.get("n", 0)) > 0: ce["n"] = int(e["n"])
 	if str(e.get("when", "")) != "": ce["when"] = str(e["when"])
-	var gek = e.get("kamae", "")
+	# Il gate dell'effetto è la condizione del widget (header "se").
+	var gek = e.get("cond", "")
 	if not Kamae.gate_is_empty(gek): ce["kamae"] = _gate_value(gek)
 	if str(e.get("to", "")) != "": ce["to"] = str(e["to"])
 	if int(e.get("focus_cost", 0)) > 0: ce["focus_cost"] = int(e["focus_cost"])
@@ -1005,43 +1011,38 @@ func _build_atom_editor(w: Dictionary, ai: int) -> Control:
 		rotc.draw.connect(func(): GeometryEditor.draw_icon(rotc, "rot" if not a["opt"] else "rot_opt", Vector2(18, 18), 16.0, 1))
 		row.add_child(rotc)
 
-	var col := VBoxContainer.new()
-	col.add_theme_constant_override("separation", 1)
-	col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var r1 := HBoxContainer.new()
-	r1.add_theme_constant_override("separation", 3)
-	r1.add_child(_lbl("passi" if a["t"] == "step" else "entità"))
+	# Tutto su una riga: passi/entità, kamae (gate per-atomo), Focus, facolt, x.
+	var line := HBoxContainer.new()
+	line.add_theme_constant_override("separation", 3)
+	line.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	line.add_child(_lbl("passi" if a["t"] == "step" else "entità"))
 	var sp := SpinBox.new()
 	sp.min_value = 1; sp.max_value = 6; sp.value = a["n"]
 	sp.custom_minimum_size = Vector2(42, 0)
 	sp.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	sp.value_changed.connect(func(val): a["n"] = int(val); changed.emit())
-	r1.add_child(sp)
-	var chk := CheckBox.new()
-	chk.text = "facolt."
-	chk.button_pressed = a["opt"]
-	chk.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	chk.toggled.connect(func(p): a["opt"] = p; _rebuild_widgets(); changed.emit())
-	r1.add_child(chk)
-	var rm := Button.new()
-	rm.text = "x"
-	rm.pressed.connect(func(): w["atoms"].remove_at(ai); _rebuild_widgets(); changed.emit())
-	r1.add_child(rm)
-	col.add_child(r1)
-	var r2 := HBoxContainer.new()
-	r2.add_theme_constant_override("separation", 3)
-	r2.add_child(_lbl("kamae"))
-	r2.add_child(_kamae_bar(a.get("kamae", ""), func(val): a["kamae"] = val; changed.emit()))
+	line.add_child(sp)
+	line.add_child(_lbl("kamae"))
+	line.add_child(_kamae_bar(a.get("kamae", ""), func(val): a["kamae"] = val; changed.emit()))
 	if a["t"] == "step":
-		r2.add_child(_lbl("F"))
+		line.add_child(_lbl("F"))
 		var fs := SpinBox.new()
 		fs.min_value = 0; fs.max_value = 3; fs.value = int(a.get("focus_cost", 0))
 		fs.custom_minimum_size = Vector2(40, 0)
 		fs.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		fs.value_changed.connect(func(val): a["focus_cost"] = int(val); changed.emit())
-		r2.add_child(fs)
-	col.add_child(r2)
-	row.add_child(col)
+		line.add_child(fs)
+	var chk := CheckBox.new()
+	chk.text = "facolt."
+	chk.button_pressed = a["opt"]
+	chk.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	chk.toggled.connect(func(p): a["opt"] = p; _rebuild_widgets(); changed.emit())
+	line.add_child(chk)
+	var rm := Button.new()
+	rm.text = "x"
+	rm.pressed.connect(func(): w["atoms"].remove_at(ai); _rebuild_widgets(); changed.emit())
+	line.add_child(rm)
+	row.add_child(line)
 	return row
 
 
@@ -1107,12 +1108,16 @@ func _build_note_body(w: Dictionary) -> Control:
 	return te
 
 
-## Effetto su due righe compatte: verbo + n ; when/kamae/to/focus/alt.
+## Effetto su una sola riga: il gate kamae è la condizione "se" dell'intestazione
+## del widget (non più ripetuta qui). Ordine: costo Focus (in testa), verbo, n,
+## quando, "a" (kamae target, selezione singola), alt.
 func _build_effect_body(w: Dictionary) -> Control:
-	var box := VBoxContainer.new()
-	box.add_theme_constant_override("separation", 2)
-	var r1 := HBoxContainer.new()
-	r1.add_theme_constant_override("separation", 3)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 3)
+	# Costo in Focus all'inizio del widget.
+	row.add_child(_lbl("F"))
+	row.add_child(_eff_spin(int(w.get("focus_cost", 0)), 0, 3, func(val): w["focus_cost"] = val))
+	# Verbo + quantità.
 	var do_opt := OptionButton.new()
 	do_opt.clip_text = true
 	do_opt.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -1122,29 +1127,24 @@ func _build_effect_body(w: Dictionary) -> Control:
 		do_opt.add_item(v)
 	do_opt.selected = CardValidator.EFFECT_VERBS.find(str(w.get("do", ""))) + 1
 	do_opt.item_selected.connect(func(i): w["do"] = "" if i == 0 else CardValidator.EFFECT_VERBS[i - 1]; changed.emit())
-	r1.add_child(do_opt)
-	r1.add_child(_lbl("n"))
-	r1.add_child(_eff_spin(int(w.get("n", 0)), 0, 9, func(val): w["n"] = val))
-	box.add_child(r1)
-	var r2 := HBoxContainer.new()
-	r2.add_theme_constant_override("separation", 3)
-	r2.add_child(_eff_opt(WHEN_OPTS, str(w.get("when", "")), func(val): w["when"] = val))
-	r2.add_child(_lbl("se"))
-	r2.add_child(_kamae_bar(w.get("kamae", ""), func(val): w["kamae"] = val; changed.emit()))
-	r2.add_child(_lbl("a"))
+	row.add_child(do_opt)
+	row.add_child(_lbl("n"))
+	row.add_child(_eff_spin(int(w.get("n", 0)), 0, 9, func(val): w["n"] = val))
+	# Quando.
+	row.add_child(_eff_opt(WHEN_OPTS, str(w.get("when", "")), func(val): w["when"] = val))
+	# Kamae di destinazione ("a"): selezione singola.
+	row.add_child(_lbl("a"))
 	var _on_to := func(val): w["to"] = val; changed.emit()
-	r2.add_child(_kamae_bar(str(w.get("to", "")), _on_to, false))
-	r2.add_child(_lbl("F"))
-	r2.add_child(_eff_spin(int(w.get("focus_cost", 0)), 0, 3, func(val): w["focus_cost"] = val))
+	row.add_child(_kamae_bar(str(w.get("to", "")), _on_to, false))
+	# Alt.
 	var alt := LineEdit.new()
 	alt.custom_minimum_size = Vector2(34, 0)
 	alt.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	alt.placeholder_text = "alt"
 	alt.text = str(w.get("alt", ""))
 	alt.text_changed.connect(func(t): w["alt"] = t.strip_edges(); changed.emit())
-	r2.add_child(alt)
-	box.add_child(r2)
-	return box
+	row.add_child(alt)
+	return row
 
 
 # ─── Helper widget ───────────────────────────────────────────────────────────
@@ -1414,8 +1414,8 @@ class KamaeBar extends Control:
 	var cur_set: Array = []
 	var multi_select: bool = true
 	var on_set: Callable
-	const SEG_W := 17.0
-	const SEG_H := 15.0
+	const SEG_W := 20.0
+	const SEG_H := 26.0
 
 	func setup(editor: GeometryEditor, current, cb: Callable, multi: bool = true) -> void:
 		ed = editor
@@ -1431,6 +1431,7 @@ class KamaeBar extends Control:
 				cur_set.append(current)
 		var n := GeometryEditor.KAMAE_BAR.size()
 		custom_minimum_size = Vector2(SEG_W * n + 2.0, SEG_H)
+		size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		mouse_filter = Control.MOUSE_FILTER_STOP
 		tooltip_text = "Kamae: clic per scegliere" + (", più segmenti = gate OR" if multi else ", clic sull'attiva per azzerare")
 
