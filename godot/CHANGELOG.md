@@ -3,6 +3,27 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.66.0] — 2026-06-23
+### Editor carte: rifiniture grafiche dei widget
+- **Simboli non resi dal font rimossi**: alcuni glifi (in particolare la freccia
+  `→`, ma anche trattini lunghi `—`, punto centrale `·`, ellissi `…`)
+  apparivano come "tofu" (riquadro col codice). Tutte le stringhe della UI ora
+  usano solo ASCII + lettere accentate italiane (che il tema rende).
+- **Larghezza uniforme**: tutti i widget hanno la stessa larghezza (riempiono la
+  colonna) invece di adattarsi al contenuto.
+- **Angoli più stondati** dei pannelli-widget (raggio 8).
+- **Campi più bassi**: menu/spin/righe di testo non si allungano più in
+  verticale (allineamento "shrink center"), restano alti poco più del testo.
+- **Testo di dimensione uniforme** in tutti i widget: un tema dell'editor fissa
+  un'unica misura (12) per tutti i controlli, al posto degli override sparsi.
+- **Trascinamento da qualsiasi zona** non interattiva del widget (sfondo ed
+  etichette non catturano più il mouse); durante il drag si vede un'**anteprima
+  stilizzata** che segue il cursore e l'originale si **attenua**.
+- **Note a capo automatico** (word-wrap) invece dello scorrimento orizzontale.
+  (Le note sono **solo promemoria di trascrizione**: il campo `note` non è letto
+  dal motore, nessun effetto di gioco.)
+- ⚠️ Da verificare in Godot (la sessione non aveva il binario). Versione 0.66.0.
+
 ## [0.65.0] — 2026-06-23
 ### Editor carte: interfaccia più compatta + selettore Kamae a barra colorata
 - **Selettore Kamae senza testo**: i menu a tendina della Kamae (condizione "se"
