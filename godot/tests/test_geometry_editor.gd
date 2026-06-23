@@ -59,6 +59,22 @@ func _count_type(ge: GeometryEditor, type: String) -> int:
 	return n
 
 
+## Tipi di una lista di widget arbitraria (es. i figli di un contenitore Iniziativa).
+func _types_of(arr: Array) -> Array:
+	var out := []
+	for w in arr:
+		out.append(str(w["type"]))
+	return out
+
+
+func _count_of(arr: Array, type: String) -> int:
+	var n := 0
+	for w in arr:
+		if w["type"] == type:
+			n += 1
+	return n
+
+
 func _test_nesting() -> void:
 	print("[annidamento + condizioni + drag]")
 	var ge := GeometryEditor.new()
@@ -175,7 +191,10 @@ func _test_mutators() -> void:
 	var ge := GeometryEditor.new()
 	add_child(ge)
 	ge.load_geometry("attack", {})
-	_check(_types(ge) == ["combat"], "carta nuova: un widget Combattimento")
+	# Ogni carta è avvolta in un contenitore Iniziativa; le azioni stanno dentro.
+	_check(_types(ge) == ["initiative"], "carta nuova: un contenitore Iniziativa")
+	var mch: Array = ge._widgets[0]["children"]
+	_check(_types_of(mch) == ["combat"], "dentro l'Iniziativa: un Combattimento")
 	_check(ge.to_geometry().get("attack", null) == null, "geometria vuota: nessun attacco")
 
 	var cw := ge._first_combat()
@@ -255,23 +274,25 @@ func _test_widgets() -> void:
 	var ge := GeometryEditor.new()
 	add_child(ge)
 	ge.load_geometry("attack", {})
-	_check(_types(ge) == ["combat"], "carta nuova: solo Combattimento")
+	# Le azioni componibili vivono DENTRO il contenitore Iniziativa.
+	var ch: Array = ge._widgets[0]["children"]
+	_check(_types_of(ch) == ["combat"], "carta nuova: solo Combattimento")
 	# Aggiungi un widget vuoto e trasformalo in Movimento.
-	ge._widgets.append(ge._new_widget(""))
-	ge._set_widget_type(ge._widgets.size() - 1, "movement")
-	_check(_types(ge) == ["combat", "movement"], "widget aggiunto e trasformato in Movimento")
+	ch.append(ge._new_widget(""))
+	ge._set_type_in(ch, ch.size() - 1, "movement")
+	_check(_types_of(ch) == ["combat", "movement"], "widget aggiunto e trasformato in Movimento")
 	# Più widget dello stesso tipo (Combattimento) sono ammessi.
-	ge._widgets.append(ge._new_widget("combat"))
-	_check(_count_type(ge, "combat") == 2, "due widget Combattimento ammessi")
+	ch.append(ge._new_widget("combat"))
+	_check(_count_of(ch, "combat") == 2, "due widget Combattimento ammessi")
 	# Singleton: un secondo Kamae viene rifiutato.
-	ge._widgets.append(ge._new_widget("kamae"))
-	ge._widgets.append(ge._new_widget(""))
-	ge._set_widget_type(ge._widgets.size() - 1, "kamae")
-	_check(ge._widgets[ge._widgets.size() - 1]["type"] == "", "secondo Kamae rifiutato (singleton)")
+	ch.append(ge._new_widget("kamae"))
+	ch.append(ge._new_widget(""))
+	ge._set_type_in(ch, ch.size() - 1, "kamae")
+	_check(ch[ch.size() - 1]["type"] == "", "secondo Kamae rifiutato (singleton)")
 	# Sposta su.
-	var n := ge._widgets.size()
-	ge._move_widget(1, -1)
-	_check(ge._widgets[0]["type"] == "movement" and ge._widgets.size() == n, "«su» scambia i widget")
+	var n := ch.size()
+	ge._move_in(ch, 1, -1)
+	_check(ch[0]["type"] == "movement" and ch.size() == n, "«su» scambia i widget")
 	ge.queue_free()
 
 	# Persistenza del layout in caricamento.
@@ -279,7 +300,8 @@ func _test_widgets() -> void:
 	add_child(ge2)
 	ge2.load_geometry("attack", {"layout": ["note", "combat"],
 		"attack": {"cells": [{"q": 1, "r": 0, "w": 1}]}, "note": "x"})
-	_check(_types(ge2) == ["note", "combat"], "layout salvato rispettato (%s)" % str(_types(ge2)))
+	var lch: Array = ge2._widgets[0]["children"]
+	_check(_types_of(lch) == ["note", "combat"], "layout salvato rispettato (%s)" % str(_types_of(lch)))
 	ge2.queue_free()
 
 
@@ -288,19 +310,21 @@ func _test_attack_variants() -> void:
 	var ge := GeometryEditor.new()
 	add_child(ge)
 	ge.load_geometry("attack", {})
+	var ch: Array = ge._widgets[0]["children"]
 	var c0 := ge._first_combat()
 	c0["cond"] = "aggression"
 	c0["attack"][Vector2i(1, 0)] = 2
-	ge._widgets.append({"type": "combat", "cond": "balance",
+	ch.append({"type": "combat", "cond": "balance",
 		"attack": {Vector2i(1, -1): 1}, "defence": {}})
 	var g := ge.to_geometry()
 	_check(g.has("attacks") and (g["attacks"] as Array).size() == 2, "due varianti → schema `attacks`")
 	_check(str(g["attacks"][0].get("kamae", "")) == "aggression", "kamae della prima variante serializzato")
-	# Round-trip: ricarica → due widget Combattimento gated.
+	# Round-trip: ricarica → due widget Combattimento gated (dentro l'Iniziativa).
 	ge.load_geometry("attack", g)
-	_check(_count_type(ge, "combat") == 2, "due widget Combattimento dopo il round-trip")
+	var rch: Array = ge._widgets[0]["children"]
+	_check(_count_of(rch, "combat") == 2, "due widget Combattimento dopo il round-trip")
 	var kamae_set := {}
-	for w in ge._widgets:
+	for w in rch:
 		if w["type"] == "combat":
 			kamae_set[str(w["cond"])] = true
 	_check(kamae_set.has("aggression") and kamae_set.has("balance"), "gate kamae preservati per widget")

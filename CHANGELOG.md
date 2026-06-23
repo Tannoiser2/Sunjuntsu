@@ -3,6 +3,22 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.64.0] — 2026-06-23
+### Editor carte: il widget Iniziativa ora avvolge OGNI carta
+- Prima il contenitore **Iniziativa** veniva creato solo per le carte a più
+  iniziative (campo `split`); le carte a iniziativa singola restavano una
+  **lista piatta** di widget (vecchio metodo). Ora **ogni** carta ha le sue
+  azioni dentro un contenitore Iniziativa, che mostra a quale iniziativa sono
+  attive (valore dal `card_pool`).
+- I mutatori dell'editor (`_first_combat`, `add_opt`, `add_move_atom`,
+  `add_effect`, `set_kamae_req`) operano dentro il contenitore (`_primary_children`),
+  così i widget aggiunti finiscono nell'Iniziativa e non al livello superiore.
+- Round-trip salvataggio invariato: il motore riceve la geometria appiattita,
+  l'albero completo (incluso il contenitore) è in `layout`. Test aggiornati.
+- ⚠️ Da verificare in Godot (suite `test_geometry_editor`, `test_cardeditor_smoke`
+  e l'editor): la sessione di sviluppo non aveva il binario per eseguirli.
+  Versione 0.64.0.
+
 ## [0.63.0] — 2026-06-23
 ### Dati carte: mazzi Maestro e Allievo + armi e abilità generiche
 - **Geometria trascritta da 54 a 140 carte** su 303 (`geometry.json`): mazzi
