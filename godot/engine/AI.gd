@@ -24,8 +24,8 @@ static func choose_card(state: GameState, me: GameState.Fighter) -> int:
 	var meditations: Array = []
 	for id in me.hand:
 		# Salta le carte non giocabili nella Kamae attuale.
-		var req: String = CardDB.geometry(id).get("kamae_req", "")
-		if req != "" and req != Domain.STANCE_SLUG[me.stance]:
+		var req = CardDB.geometry(id).get("kamae_req", "")
+		if not Kamae.gate_allows(req, Domain.STANCE_SLUG[me.stance]):
 			continue
 		var c := CardDB.card(id)
 		match c.get("type", ""):

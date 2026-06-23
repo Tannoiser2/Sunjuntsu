@@ -61,5 +61,61 @@ func _ready() -> void:
 	else:
 		print("OK: focus cappato a 3")
 
+	# ─── OR gate: gate_allows ────────────────────────────────────────────────
+	# Array con più stance → OR: vero se la stance corrente è in lista.
+	if not Kamae.gate_allows(["aggression", "balance"], "aggression"):
+		print("FAIL: gate_allows OR non accetta aggression"); ok = false
+	elif not Kamae.gate_allows(["aggression", "balance"], "balance"):
+		print("FAIL: gate_allows OR non accetta balance"); ok = false
+	elif Kamae.gate_allows(["aggression", "balance"], "determination"):
+		print("FAIL: gate_allows OR accetta determination (non nel set)"); ok = false
+	else:
+		print("OK: gate_allows Array (OR gate)")
+
+	# Array vuoto → nessun vincolo (sempre vero).
+	if not Kamae.gate_allows([], "neutral"):
+		print("FAIL: gate_allows [] deve essere sempre vero"); ok = false
+	else:
+		print("OK: gate_allows [] → true")
+
+	# gate_is_empty su Array vuoto → true; su Array non vuoto → false.
+	if not Kamae.gate_is_empty([]):
+		print("FAIL: gate_is_empty [] deve essere true"); ok = false
+	elif Kamae.gate_is_empty(["aggression"]):
+		print("FAIL: gate_is_empty [aggression] deve essere false"); ok = false
+	elif Kamae.gate_is_empty(["aggression", "balance"]):
+		print("FAIL: gate_is_empty [agg,bal] deve essere false"); ok = false
+	else:
+		print("OK: gate_is_empty Array")
+
+	# _apply_effects con gate OR: l'effetto si applica solo nelle stance del set.
+	var p2 := _mk("Warrior")
+	p2.stance = Domain.Stance.AGGRESSION
+	var s3 := GameState.new(); s3.fighters = [p2, _mk("Ronin")]
+	var duel3 := Duel.new(s3)
+	# effetto con gate OR ["aggression","balance"] su fighter in AGGRESSION → deve applicarsi
+	var geom_or := {"effects": [
+		{"do": "gain_focus", "n": 1, "when": "always",
+		 "kamae": ["aggression", "balance"]}
+	]}
+	var focus_before := p2.focus
+	duel3._apply_effects(0, -1, geom_or, "always", [])
+	if p2.focus != focus_before + 1:
+		print("FAIL: OR gate non ha applicato effetto in aggression (focus=%d)" % p2.focus); ok = false
+	else:
+		print("OK: OR gate gate applica effetto in aggression")
+
+	# stesso effetto con fighter in DETERMINATION → non deve applicarsi
+	var p3 := _mk("Warrior")
+	p3.stance = Domain.Stance.DETERMINATION
+	var s4 := GameState.new(); s4.fighters = [p3, _mk("Ronin")]
+	var duel4 := Duel.new(s4)
+	var f3_before := p3.focus
+	duel4._apply_effects(0, -1, geom_or, "always", [])
+	if p3.focus != f3_before:
+		print("FAIL: OR gate ha applicato effetto in determination (non dovrebbe)"); ok = false
+	else:
+		print("OK: OR gate blocca effetto in determination")
+
 	print("RISULTATO: ", "PASS" if ok else "FAIL")
 	get_tree().quit(0 if ok else 1)

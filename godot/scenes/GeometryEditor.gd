@@ -121,8 +121,9 @@ func _widgets_from(geom: Dictionary) -> Array:
 		for a in opt.get("atoms", []):
 			atoms.append(_norm_atom(a))
 		pool["movement"].append({"type": "movement", "atoms": atoms})
-	if str(geom.get("kamae_req", "")) != "":
-		pool["kamae"].append({"type": "kamae", "req": str(geom["kamae_req"])})
+	var geom_kr = geom.get("kamae_req", "")
+	if not Kamae.gate_is_empty(geom_kr):
+		pool["kamae"].append({"type": "kamae", "req": geom_kr})
 	for e in geom.get("effects", []):
 		if typeof(e) == TYPE_DICTIONARY:
 			pool["effect"].append(_effect_widget(e))
@@ -194,7 +195,7 @@ func _read_variants(geom: Dictionary, single_key: String, array_key: String, vk:
 	if geom.has(array_key):
 		for v in geom[array_key]:
 			if v is Dictionary:
-				out.append({"cells": _cells_from(v, vk), "kamae": str(v.get("kamae", ""))})
+				out.append({"cells": _cells_from(v, vk), "kamae": v.get("kamae", "")})
 	elif geom.get(single_key, null) != null:
 		out.append({"cells": _cells_from(geom[single_key], vk), "kamae": ""})
 	return out
@@ -269,8 +270,9 @@ func _partition() -> Dictionary:
 func _emit_part(g: Dictionary, flat: Array) -> void:
 	# Kamae richiesto (primo widget kamae).
 	for w in flat:
-		if w["type"] == "kamae" and str(w.get("req", "")) != "":
-			g["kamae_req"] = str(w["req"]); break
+		var kr = w.get("req", "")
+		if w["type"] == "kamae" and not Kamae.gate_is_empty(kr):
+			g["kamae_req"] = _gate_value(kr); break
 
 	# Movimento → opzioni (una per widget movimento con atomi).
 	var opts := []
@@ -290,16 +292,16 @@ func _emit_part(g: Dictionary, flat: Array) -> void:
 	for w in flat:
 		if w["type"] != "combat":
 			continue
-		var ck := str(w.get("cond", ""))
+		var ck = w.get("cond", "")
 		var ac := _cells_to(w.get("attack", {}), "w")
 		if not ac.is_empty():
 			var v := {"cells": ac}
-			if ck != "": v["kamae"] = ck
+			if not Kamae.gate_is_empty(ck): v["kamae"] = _gate_value(ck)
 			atk_vars.append(v)
 		var dc := _cells_to(w.get("defence", {}), "v")
 		if not dc.is_empty():
 			var v2 := {"cells": dc}
-			if ck != "": v2["kamae"] = ck
+			if not Kamae.gate_is_empty(ck): v2["kamae"] = _gate_value(ck)
 			dfn_vars.append(v2)
 	_write_variants(g, "attack", "attacks", atk_vars)
 	_write_variants(g, "defence", "defences", dfn_vars)
@@ -358,8 +360,9 @@ func _nodes_to(list: Array) -> Array:
 func _widget_to_node(w: Dictionary) -> Dictionary:
 	var t := str(w.get("type", ""))
 	var node := {"type": t}
-	if str(w.get("cond", "")) != "":
-		node["cond"] = str(w["cond"])
+	var wck = w.get("cond", "")
+	if not Kamae.gate_is_empty(wck):
+		node["cond"] = _gate_value(wck)
 	match t:
 		"initiative":
 			node["value"] = str(w.get("value", ""))
@@ -375,7 +378,7 @@ func _widget_to_node(w: Dictionary) -> Dictionary:
 				atoms.append(_atom_to(a))
 			node["atoms"] = atoms
 		"kamae":
-			node["req"] = str(w.get("req", ""))
+			node["req"] = _gate_value(w.get("req", ""))
 		"effect":
 			node.merge(_effect_to(w))
 		"counter":
@@ -396,7 +399,7 @@ func _nodes_to_widgets(nodes: Array) -> Array:
 
 func _node_to_widget(node: Dictionary) -> Dictionary:
 	var t := str(node.get("type", ""))
-	var cond := str(node.get("cond", ""))
+	var cond = node.get("cond", "")
 	match t:
 		"initiative":
 			return {"type": "initiative", "cond": cond,
@@ -415,10 +418,11 @@ func _node_to_widget(node: Dictionary) -> Dictionary:
 				atoms.append(_norm_atom(a))
 			return {"type": "movement", "cond": cond, "atoms": atoms}
 		"kamae":
-			return {"type": "kamae", "cond": cond, "req": str(node.get("req", ""))}
+			return {"type": "kamae", "cond": cond, "req": node.get("req", "")}
 		"effect":
 			var e := _effect_widget(node)
-			e["cond"] = cond
+			if not Kamae.gate_is_empty(cond):
+				e["cond"] = cond   # cond esplicito del layout ha precedenza
 			return e
 		"counter":
 			var vals := []
@@ -529,11 +533,15 @@ func _new_widget_base(type: String) -> Dictionary:
 	return {"type": ""}
 
 
+## Widget effetto: il gate kamae è la CONDIZIONE del widget (`cond`, la barra
+## "se" dell'intestazione), non un campo separato nel corpo. Lo carichiamo dal
+## campo `kamae` dei dati motore (retro-compatibile) e lo riscriviamo da `cond`.
 static func _effect_widget(e: Dictionary) -> Dictionary:
 	return {
 		"type": "effect",
+		"cond": e.get("kamae", ""),
 		"do": str(e.get("do", "")), "n": int(e.get("n", 0)),
-		"when": str(e.get("when", "")), "kamae": str(e.get("kamae", "")),
+		"when": str(e.get("when", "")),
 		"to": str(e.get("to", "")), "focus_cost": int(e.get("focus_cost", 0)),
 		"alt": str(e.get("alt", "")),
 	}
@@ -546,7 +554,7 @@ static func _norm_atom(a: Dictionary) -> Dictionary:
 		"t": str(a.get("t", "step")),
 		"n": int(a.get("n", 1)),
 		"opt": bool(a.get("opt", false)),
-		"kamae": str(a.get("kamae", "")),
+		"kamae": a.get("kamae", ""),
 		"focus_cost": int(a.get("focus_cost", 0)),
 	}
 	if atom["t"] == "step":
@@ -576,8 +584,9 @@ func _atom_to(a: Dictionary) -> Dictionary:
 			atom["dir"] = 0
 	atom["n"] = int(a["n"])
 	atom["opt"] = bool(a["opt"])
-	if str(a.get("kamae", "")) != "":
-		atom["kamae"] = str(a["kamae"])
+	var gk = a.get("kamae", "")
+	if not Kamae.gate_is_empty(gk):
+		atom["kamae"] = _gate_value(gk)
 	if int(a.get("focus_cost", 0)) > 0:
 		atom["focus_cost"] = int(a["focus_cost"])
 	return atom
@@ -587,7 +596,9 @@ func _effect_to(e: Dictionary) -> Dictionary:
 	var ce := {"do": str(e.get("do", ""))}
 	if int(e.get("n", 0)) > 0: ce["n"] = int(e["n"])
 	if str(e.get("when", "")) != "": ce["when"] = str(e["when"])
-	if str(e.get("kamae", "")) != "": ce["kamae"] = str(e["kamae"])
+	# Il gate dell'effetto è la condizione del widget (header "se").
+	var gek = e.get("cond", "")
+	if not Kamae.gate_is_empty(gek): ce["kamae"] = _gate_value(gek)
 	if str(e.get("to", "")) != "": ce["to"] = str(e["to"])
 	if int(e.get("focus_cost", 0)) > 0: ce["focus_cost"] = int(e["focus_cost"])
 	if str(e.get("alt", "")) != "": ce["alt"] = str(e["alt"])
@@ -666,7 +677,7 @@ func _build_widget(siblings: Array, idx: int) -> Control:
 	head.add_child(topt)
 	if str(w.get("type", "")) != "":
 		head.add_child(_lbl("se"))
-		head.add_child(_kamae_bar(str(w.get("cond", "")), func(val): w["cond"] = val; changed.emit()))
+		head.add_child(_kamae_bar(w.get("cond", ""), func(val): w["cond"] = val; changed.emit()))
 	var rm := _mini_btn("x", "Rimuovi widget")
 	rm.pressed.connect(func(): siblings.remove_at(idx); _rebuild_widgets(); changed.emit())
 	head.add_child(rm)
@@ -1000,43 +1011,38 @@ func _build_atom_editor(w: Dictionary, ai: int) -> Control:
 		rotc.draw.connect(func(): GeometryEditor.draw_icon(rotc, "rot" if not a["opt"] else "rot_opt", Vector2(18, 18), 16.0, 1))
 		row.add_child(rotc)
 
-	var col := VBoxContainer.new()
-	col.add_theme_constant_override("separation", 1)
-	col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var r1 := HBoxContainer.new()
-	r1.add_theme_constant_override("separation", 3)
-	r1.add_child(_lbl("passi" if a["t"] == "step" else "entità"))
+	# Tutto su una riga: passi/entità, kamae (gate per-atomo), Focus, facolt, x.
+	var line := HBoxContainer.new()
+	line.add_theme_constant_override("separation", 3)
+	line.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	line.add_child(_lbl("passi" if a["t"] == "step" else "entità"))
 	var sp := SpinBox.new()
 	sp.min_value = 1; sp.max_value = 6; sp.value = a["n"]
 	sp.custom_minimum_size = Vector2(42, 0)
 	sp.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	sp.value_changed.connect(func(val): a["n"] = int(val); changed.emit())
-	r1.add_child(sp)
-	var chk := CheckBox.new()
-	chk.text = "facolt."
-	chk.button_pressed = a["opt"]
-	chk.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	chk.toggled.connect(func(p): a["opt"] = p; _rebuild_widgets(); changed.emit())
-	r1.add_child(chk)
-	var rm := Button.new()
-	rm.text = "x"
-	rm.pressed.connect(func(): w["atoms"].remove_at(ai); _rebuild_widgets(); changed.emit())
-	r1.add_child(rm)
-	col.add_child(r1)
-	var r2 := HBoxContainer.new()
-	r2.add_theme_constant_override("separation", 3)
-	r2.add_child(_lbl("kamae"))
-	r2.add_child(_kamae_bar(str(a.get("kamae", "")), func(val): a["kamae"] = val; changed.emit()))
+	line.add_child(sp)
+	line.add_child(_lbl("kamae"))
+	line.add_child(_kamae_bar(a.get("kamae", ""), func(val): a["kamae"] = val; changed.emit()))
 	if a["t"] == "step":
-		r2.add_child(_lbl("F"))
+		line.add_child(_lbl("F"))
 		var fs := SpinBox.new()
 		fs.min_value = 0; fs.max_value = 3; fs.value = int(a.get("focus_cost", 0))
 		fs.custom_minimum_size = Vector2(40, 0)
 		fs.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		fs.value_changed.connect(func(val): a["focus_cost"] = int(val); changed.emit())
-		r2.add_child(fs)
-	col.add_child(r2)
-	row.add_child(col)
+		line.add_child(fs)
+	var chk := CheckBox.new()
+	chk.text = "facolt."
+	chk.button_pressed = a["opt"]
+	chk.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	chk.toggled.connect(func(p): a["opt"] = p; _rebuild_widgets(); changed.emit())
+	line.add_child(chk)
+	var rm := Button.new()
+	rm.text = "x"
+	rm.pressed.connect(func(): w["atoms"].remove_at(ai); _rebuild_widgets(); changed.emit())
+	line.add_child(rm)
+	row.add_child(line)
 	return row
 
 
@@ -1052,7 +1058,17 @@ func _build_kamae_body(w: Dictionary) -> Control:
 		tok.custom_minimum_size = Vector2(2 * HEX_R, 2 * HEX_R)
 		tok.gui_input.connect(func(ev):
 			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
-				w["req"] = "" if str(w.get("req", "")) == slug else slug
+				var req = w.get("req", "")
+				var cur_set: Array = []
+				if req is Array:
+					cur_set = req.duplicate()
+				elif typeof(req) == TYPE_STRING and req != "":
+					cur_set = [req]
+				if slug in cur_set:
+					cur_set.erase(slug)
+				else:
+					cur_set.append(slug)
+				w["req"] = _gate_value(cur_set)
 				_rebuild_widgets(); changed.emit())
 		krow.add_child(tok)
 	var az := Button.new()
@@ -1061,8 +1077,7 @@ func _build_kamae_body(w: Dictionary) -> Control:
 	krow.add_child(az)
 	v.add_child(krow)
 	var lbl := Label.new()
-	var req := str(w.get("req", ""))
-	lbl.text = "richiesto: %s" % (KAMAE_LABELS.get(req, req) if req != "" else "nessuno")
+	lbl.text = "richiesto: %s" % _gate_label(w.get("req", ""))
 	v.add_child(lbl)
 	return v
 
@@ -1093,12 +1108,16 @@ func _build_note_body(w: Dictionary) -> Control:
 	return te
 
 
-## Effetto su due righe compatte: verbo + n ; when/kamae/to/focus/alt.
+## Effetto su una sola riga: il gate kamae è la condizione "se" dell'intestazione
+## del widget (non più ripetuta qui). Ordine: costo Focus (in testa), verbo, n,
+## quando, "a" (kamae target, selezione singola), alt.
 func _build_effect_body(w: Dictionary) -> Control:
-	var box := VBoxContainer.new()
-	box.add_theme_constant_override("separation", 2)
-	var r1 := HBoxContainer.new()
-	r1.add_theme_constant_override("separation", 3)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 3)
+	# Costo in Focus all'inizio del widget.
+	row.add_child(_lbl("F"))
+	row.add_child(_eff_spin(int(w.get("focus_cost", 0)), 0, 3, func(val): w["focus_cost"] = val))
+	# Verbo + quantità.
 	var do_opt := OptionButton.new()
 	do_opt.clip_text = true
 	do_opt.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -1108,28 +1127,24 @@ func _build_effect_body(w: Dictionary) -> Control:
 		do_opt.add_item(v)
 	do_opt.selected = CardValidator.EFFECT_VERBS.find(str(w.get("do", ""))) + 1
 	do_opt.item_selected.connect(func(i): w["do"] = "" if i == 0 else CardValidator.EFFECT_VERBS[i - 1]; changed.emit())
-	r1.add_child(do_opt)
-	r1.add_child(_lbl("n"))
-	r1.add_child(_eff_spin(int(w.get("n", 0)), 0, 9, func(val): w["n"] = val))
-	box.add_child(r1)
-	var r2 := HBoxContainer.new()
-	r2.add_theme_constant_override("separation", 3)
-	r2.add_child(_eff_opt(WHEN_OPTS, str(w.get("when", "")), func(val): w["when"] = val))
-	r2.add_child(_lbl("se"))
-	r2.add_child(_kamae_bar(str(w.get("kamae", "")), func(val): w["kamae"] = val; changed.emit()))
-	r2.add_child(_lbl("a"))
-	r2.add_child(_kamae_bar(str(w.get("to", "")), func(val): w["to"] = val; changed.emit()))
-	r2.add_child(_lbl("F"))
-	r2.add_child(_eff_spin(int(w.get("focus_cost", 0)), 0, 3, func(val): w["focus_cost"] = val))
+	row.add_child(do_opt)
+	row.add_child(_lbl("n"))
+	row.add_child(_eff_spin(int(w.get("n", 0)), 0, 9, func(val): w["n"] = val))
+	# Quando.
+	row.add_child(_eff_opt(WHEN_OPTS, str(w.get("when", "")), func(val): w["when"] = val))
+	# Kamae di destinazione ("a"): selezione singola.
+	row.add_child(_lbl("a"))
+	var _on_to := func(val): w["to"] = val; changed.emit()
+	row.add_child(_kamae_bar(str(w.get("to", "")), _on_to, false))
+	# Alt.
 	var alt := LineEdit.new()
 	alt.custom_minimum_size = Vector2(34, 0)
 	alt.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	alt.placeholder_text = "alt"
 	alt.text = str(w.get("alt", ""))
 	alt.text_changed.connect(func(t): w["alt"] = t.strip_edges(); changed.emit())
-	r2.add_child(alt)
-	box.add_child(r2)
-	return box
+	row.add_child(alt)
+	return row
 
 
 # ─── Helper widget ───────────────────────────────────────────────────────────
@@ -1165,12 +1180,12 @@ func _eff_opt(values: Array, cur: String, on_set: Callable) -> OptionButton:
 	return o
 
 
-## Selettore Kamae a BARRA COLORATA (niente testo): tre segmenti
-## rosso/verde/giallo. Clic = seleziona; clic sul segmento già attivo = azzera.
-## Chiama on_set(slug) con "" quando nessuna kamae è scelta.
-func _kamae_bar(cur: String, on_set: Callable) -> Control:
+## Selettore Kamae a BARRA COLORATA: tre segmenti rosso/verde/giallo.
+## multi=true → multi-select (gate OR, on_set riceve "" / "slug" / Array).
+## multi=false → single-select (on_set riceve "" / "slug").
+func _kamae_bar(cur, on_set: Callable, multi: bool = true) -> Control:
 	var bar := KamaeBar.new()
-	bar.setup(self, cur, on_set)
+	bar.setup(self, cur, on_set, multi)
 	return bar
 
 
@@ -1219,6 +1234,29 @@ func _cells_to(cells: Dictionary, value_key: String) -> Array:
 
 static func _coerce(v):
 	return v if typeof(v) == TYPE_STRING else int(v)
+
+
+## Normalizza un gate per JSON: Array vuoto/null/"" → ""; 1 slug → String;
+## più slug → Array di stringhe (gate OR).
+static func _gate_value(v) -> Variant:
+	if v == null: return ""
+	if v is Array:
+		if v.is_empty(): return ""
+		if v.size() == 1: return str(v[0])
+		var out: Array = []
+		for x in v:
+			out.append(str(x))
+		return out
+	return str(v)
+
+
+## Stringa leggibile di un gate (String o Array).
+static func _gate_label(v) -> String:
+	if v == null or v == "": return "nessuno"
+	if v is Array:
+		if v.is_empty(): return "nessuno"
+		return " o ".join(v.map(func(s): return KAMAE_LABELS.get(str(s), str(s))))
+	return KAMAE_LABELS.get(str(v), str(v))
 
 
 # ─── Disegno icone (condiviso da celle e palette) ────────────────────────────
@@ -1367,29 +1405,41 @@ class HexCell extends Control:
 # ─── Inner class: selettore Kamae a barra colorata (niente testo) ────────────
 
 ## Tre segmenti colorati (rosso=aggressione, verde=equilibrio, giallo=
-## determinazione). Il segmento attivo è pieno e bordato; gli altri sono
-## attenuati. Clic = seleziona; clic sull'attivo = azzera.
+## determinazione). Segmenti attivi pieni e bordati; gli altri attenuati.
+## multi=true: clic aggiunge/toglie dal set (gate OR).
+## multi=false: single-select (comportamento classico).
+## on_set riceve "" / "slug" / Array secondo il set corrente.
 class KamaeBar extends Control:
 	var ed: GeometryEditor
-	var cur: String = ""
+	var cur_set: Array = []
+	var multi_select: bool = true
 	var on_set: Callable
-	const SEG_W := 17.0
-	const SEG_H := 15.0
+	const SEG_W := 20.0
+	const SEG_H := 26.0
 
-	func setup(editor: GeometryEditor, current: String, cb: Callable) -> void:
+	func setup(editor: GeometryEditor, current, cb: Callable, multi: bool = true) -> void:
 		ed = editor
-		cur = current
+		multi_select = multi
 		on_set = cb
+		cur_set = []
+		if current is Array:
+			for x in current:
+				if str(x) in GeometryEditor.KAMAE_BAR:
+					cur_set.append(str(x))
+		elif typeof(current) == TYPE_STRING and current != "":
+			if current in GeometryEditor.KAMAE_BAR:
+				cur_set.append(current)
 		var n := GeometryEditor.KAMAE_BAR.size()
 		custom_minimum_size = Vector2(SEG_W * n + 2.0, SEG_H)
+		size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		mouse_filter = Control.MOUSE_FILTER_STOP
-		tooltip_text = "Kamae: clic per scegliere, clic sull'attiva per azzerare"
+		tooltip_text = "Kamae: clic per scegliere" + (", più segmenti = gate OR" if multi else ", clic sull'attiva per azzerare")
 
 	func _draw() -> void:
 		for i in GeometryEditor.KAMAE_BAR.size():
 			var slug: String = GeometryEditor.KAMAE_BAR[i]
 			var col: Color = GeometryEditor.KAMAE_COLORS.get(slug, Color.GRAY)
-			var on := slug == cur
+			var on := slug in cur_set
 			var rect := Rect2(i * SEG_W + 1.0, 0.0, SEG_W - 2.0, SEG_H)
 			draw_rect(rect, col if on else Color(col.r, col.g, col.b, 0.28))
 			if on:
@@ -1402,9 +1452,22 @@ class KamaeBar extends Control:
 		if i < 0 or i >= GeometryEditor.KAMAE_BAR.size():
 			return
 		var slug: String = GeometryEditor.KAMAE_BAR[i]
-		cur = "" if cur == slug else slug
+		if multi_select:
+			if slug in cur_set:
+				cur_set.erase(slug)
+			else:
+				cur_set.append(slug)
+		else:
+			cur_set = [] if cur_set == [slug] else [slug]
 		queue_redraw()
-		on_set.call(cur)
+		var result: Variant
+		if cur_set.is_empty():
+			result = ""
+		elif cur_set.size() == 1:
+			result = cur_set[0]
+		else:
+			result = cur_set.duplicate()
+		on_set.call(result)
 
 
 # ─── Inner class: icona disegnata (token kamae) ──────────────────────────────

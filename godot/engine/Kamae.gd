@@ -14,6 +14,31 @@ extends RefCounted
 const STANCES := ["aggression", "balance", "determination", "neutral"]
 
 
+## Gate Kamae (condizione "se sei in …"). Un gate può essere:
+##   • assente / "" / [] / null  → nessun vincolo (sempre valido);
+##   • una stringa (una sola Kamae) → forma classica;
+##   • un Array di slug (più Kamae in OR) → valido in UNA QUALSIASI di esse.
+## `gate_allows` dice se la stance corrente soddisfa il gate.
+static func gate_allows(gate, stance_slug: String) -> bool:
+	if gate == null:
+		return true
+	if gate is Array:
+		return gate.is_empty() or (stance_slug in gate)
+	var s := str(gate)
+	return s == "" or s == stance_slug
+
+
+## Vero se il gate non pone alcun vincolo (vuoto). Utile per distinguere le
+## varianti "senza gate" (fallback) da quelle gated.
+static func gate_is_empty(gate) -> bool:
+	if gate == null:
+		return true
+	if gate is Array:
+		return gate.is_empty()
+	return str(gate) == ""
+
+
+
 static func _adj(tree: Dictionary) -> Dictionary:
 	var a := {}
 	for e in tree.get("edges", []):

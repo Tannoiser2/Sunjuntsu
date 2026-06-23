@@ -32,8 +32,8 @@ static func reachable_states(cell: Vector2i, facing: int, spec, is_blocked: Call
 	for opt in spec.get("opts", []):
 		var atoms: Array = []
 		for a in opt.get("atoms", []):
-			var gate: String = a.get("kamae", "")
-			if gate == "" or gate == stance_slug:
+			var gate = a.get("kamae", "")
+			if Kamae.gate_allows(gate, stance_slug):
 				atoms.append(a)
 		var ordered: bool = opt.get("ordered", false)
 		_enum(start, atoms, ordered, is_blocked, seen)

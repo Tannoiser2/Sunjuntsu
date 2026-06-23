@@ -173,8 +173,8 @@ func plan_card(fighter_index: int, card_id: int) -> bool:
 ## Una carta è giocabile solo se la sua Kamae richiesta (kamae_req) corrisponde
 ## alla posizione attuale del combattente.
 static func playable(f: GameState.Fighter, card_id: int) -> bool:
-	var req: String = CardDB.geometry(card_id).get("kamae_req", "")
-	return req == "" or req == Domain.STANCE_SLUG[f.stance]
+	var req = CardDB.geometry(card_id).get("kamae_req", "")
+	return Kamae.gate_allows(req, Domain.STANCE_SLUG[f.stance])
 
 
 ## Regole solo (rulebook p.20–22): gli avversari NON pescano, NON scelgono e NON
@@ -970,11 +970,11 @@ static func _active_variant(geom: Dictionary, single_key: String, array_key: Str
 	var ungated := {}
 	var has_ungated := false
 	for v in variants:
-		var k := str(v.get("kamae", ""))
-		if k != "" and k == slug:
-			return v                      # variante gated attiva
-		if k == "":
+		var k = v.get("kamae", "")
+		if Kamae.gate_is_empty(k):
 			ungated = v; has_ungated = true
+		elif Kamae.gate_allows(k, slug):
+			return v                      # variante gated attiva (anche OR)
 	if has_ungated:
 		return ungated
 	return variants[0] if stance < 0 else {}
@@ -1032,8 +1032,8 @@ func _resolve_option(i: int, geom: Dictionary):
 		for e in effs:
 			if e.get("alt", null) != ak:
 				continue
-			var gate := str(e.get("kamae", ""))
-			if gate != "" and gate != Domain.STANCE_SLUG[f.stance]:
+			var gate = e.get("kamae", "")
+			if not Kamae.gate_allows(gate, Domain.STANCE_SLUG[f.stance]):
 				continue
 			if int(e.get("focus_cost", 0)) > 0:
 				continue
@@ -1050,8 +1050,8 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 	for e in effs:
 		if str(e.get("when", "always")) != when:
 			continue
-		var gate: String = e.get("kamae", "")
-		if gate != "" and gate != Domain.STANCE_SLUG[f.stance]:
+		var gate = e.get("kamae", "")
+		if not Kamae.gate_allows(gate, Domain.STANCE_SLUG[f.stance]):
 			continue
 		if int(e.get("focus_cost", 0)) > 0:
 			continue   # bonus opzionale a pagamento: saltato in auto-risoluzione

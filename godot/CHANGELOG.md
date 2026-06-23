@@ -3,6 +3,30 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.67.0] — 2026-06-23
+### Gate Kamae in logica OR + editor più compatto
+- **Motore — gate Kamae OR**: il gate delle Kamae ora accetta un **Array di
+  stance** (es. `["aggression","balance"]`) interpretato in **OR**, oltre alla
+  stringa singola e al valore vuoto già supportati. In `Kamae.gd` due helper
+  uniformi — `gate_allows()` e `gate_is_empty()` — gestiscono `null` / `""` /
+  stringa / Array vuoto / Array pieno. Aggiornati tutti i punti di consumo:
+  `Duel.gd` (playable, variante attiva, selezione alternativa, applicazione
+  effetti), `AI.gd` (check `kamae_req`) e `Move.gd` (filtro atomi).
+- **Editor — barra Kamae multi-select**: nel card editor la `KamaeBar` diventa
+  multi-selezione (gate OR); il campo "a" (kamae di destinazione) resta a
+  selezione singola. Serializzazione **retro-compatibile**: 1 stance → stringa,
+  N stance → Array, vuoto → `""`.
+- **Editor — gate unico nell'header**: rimosso il controllo Kamae duplicato nel
+  corpo dell'effetto (duplicava il "se" dell'intestazione); il gate dell'effetto
+  ora **è** la condizione del widget. Atomi di movimento ed effetti compattati
+  su una sola riga (entità, kamae, Focus, facoltatività); il gate Kamae
+  per-atomo resta distinto (coperto da `test_move_fidelity`). Segmenti della
+  `KamaeBar` più alti (26px) per allinearsi ai campi di testo.
+- **Test**: `test_kamae_node.gd` con nuovi casi per `gate_allows`/`gate_is_empty`
+  su Array e verifica di `_apply_effects` con gate OR (fighter in stance inclusa
+  ed esclusa dal set).
+- ⚠️ Da verificare in Godot (la sessione non aveva il binario). Versione 0.67.0.
+
 ## [0.66.0] — 2026-06-23
 ### Editor carte: rifiniture grafiche dei widget
 - **Simboli non resi dal font rimossi**: alcuni glifi (in particolare la freccia
