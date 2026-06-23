@@ -1,12 +1,12 @@
 {
- "source": "Generato da Tabelle_Materiali/Senjutsu/Tabelle/Senjutsu_Deckbuilding_1.1.xlsx (foglio 'Card Pool')",
+ "source": "Generato da Senjutsu_Deckbuilding_1.1.xlsx (foglio 'Card Pool'); nomi IT da names_it.json; carte non-Excel (Solo) preservate.",
  "ranks": [
   "Wood",
   "Steel",
   "Gold",
   "Jade"
  ],
- "count": 303,
+ "count": 313,
  "characters": [
   "Ashigaru",
   "Ashigaru/Hachiko",
@@ -22,11 +22,13 @@
   "Ninja/Weapon",
   "Onna-Bugeisha",
   "Ronin",
+  "Ronin Solo",
   "Sailor",
   "Sailor/Weapon",
   "Student",
   "Wakou",
   "Warrior",
+  "Warrior Solo",
   "Weapon",
   "Yasuke",
   "Yasuke/Weapon",
@@ -36,7 +38,7 @@
  "cards": [
   {
    "id": 153,
-   "name": "Advantage",
+   "name": "Vantaggio",
    "char": "Gen. Ability",
    "amount": 6,
    "rank": "Wood",
@@ -63,7 +65,7 @@
   },
   {
    "id": 33,
-   "name": "Ankle Biter",
+   "name": "Colpo alle Caviglie",
    "char": "Ronin",
    "amount": 3,
    "rank": "Wood",
@@ -183,7 +185,7 @@
   },
   {
    "id": 140,
-   "name": "Backhand Slash",
+   "name": "Squarcio di Rovescio",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -196,7 +198,7 @@
   },
   {
    "id": 82,
-   "name": "Benevolence",
+   "name": "Benevolenza",
    "char": "Gen. Ability",
    "amount": 2,
    "rank": "Gold",
@@ -237,7 +239,7 @@
   },
   {
    "id": 11,
-   "name": "Bladed Echo",
+   "name": "Eco della Lama",
    "char": "Master",
    "amount": 1,
    "rank": "Gold",
@@ -251,7 +253,7 @@
   },
   {
    "id": 41,
-   "name": "Blazing Insight",
+   "name": "Intuizione Ardente",
    "char": "Student",
    "amount": 1,
    "rank": "Gold",
@@ -264,7 +266,7 @@
   },
   {
    "id": 54,
-   "name": "Blazing Roar",
+   "name": "Ruggito Ardente",
    "char": "Warrior",
    "amount": 1,
    "rank": "Jade",
@@ -278,7 +280,7 @@
   },
   {
    "id": 154,
-   "name": "Bleeding Slice",
+   "name": "Taglio Sanguinante",
    "char": "Gen. Ability",
    "amount": 6,
    "rank": "Wood",
@@ -291,7 +293,7 @@
   },
   {
    "id": 56,
-   "name": "Blind Spot",
+   "name": "Punto Cieco",
    "char": "Warrior",
    "amount": 1,
    "rank": "Gold",
@@ -306,7 +308,7 @@
   },
   {
    "id": 78,
-   "name": "Blood Fury Cut",
+   "name": "Furia Sanguinosa",
    "char": "Gen. Ability",
    "amount": 2,
    "rank": "Jade",
@@ -319,7 +321,7 @@
   },
   {
    "id": 66,
-   "name": "Bo Staff Block",
+   "name": "Blocco di Bastone Bo",
    "char": "Weapon",
    "amount": 2,
    "rank": "-",
@@ -335,7 +337,7 @@
   },
   {
    "id": 67,
-   "name": "Bo Staff Thrust",
+   "name": "Affondo di Bastone Bo",
    "char": "Weapon",
    "amount": 2,
    "rank": "-",
@@ -367,7 +369,7 @@
   },
   {
    "id": 83,
-   "name": "Broad Block",
+   "name": "Blocco Ampio",
    "char": "Gen. Ability",
    "amount": 2,
    "rank": "Gold",
@@ -407,7 +409,7 @@
   },
   {
    "id": 26,
-   "name": "Bull Rush",
+   "name": "Carica del Toro",
    "char": "Ronin",
    "amount": 1,
    "rank": "Gold",
@@ -420,7 +422,7 @@
   },
   {
    "id": 57,
-   "name": "Burning Instinct",
+   "name": "Istinto Bruciante",
    "char": "Warrior",
    "amount": 1,
    "rank": "Gold",
@@ -433,7 +435,7 @@
   },
   {
    "id": 84,
-   "name": "Calm Composure",
+   "name": "Calma Composta",
    "char": "Gen. Ability",
    "amount": 2,
    "rank": "Gold",
@@ -447,7 +449,7 @@
   },
   {
    "id": 121,
-   "name": "Calm Defence",
+   "name": "Difesa Tranquilla",
    "char": "Gen. Ability",
    "amount": 6,
    "rank": "Wood",
@@ -474,7 +476,7 @@
   },
   {
    "id": 142,
-   "name": "Calming Purpose",
+   "name": "Calma Convinzione",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -597,7 +599,7 @@
   },
   {
    "id": 48,
-   "name": "Cleaving Waterfall",
+   "name": "Cascata Fendente",
    "char": "Student",
    "amount": 3,
    "rank": "Wood",
@@ -637,7 +639,7 @@
   },
   {
    "id": 155,
-   "name": "Counter Attack",
+   "name": "Contrattacco",
    "char": "Gen. Ability",
    "amount": 6,
    "rank": "Wood",
@@ -664,7 +666,7 @@
   },
   {
    "id": 85,
-   "name": "Courage",
+   "name": "Coraggio",
    "char": "Gen. Ability",
    "amount": 2,
    "rank": "Gold",
@@ -706,7 +708,7 @@
   },
   {
    "id": 24,
-   "name": "Crimson Whirlwind",
+   "name": "Vortice Cremisi",
    "char": "Ronin",
    "amount": 1,
    "rank": "Jade",
@@ -719,7 +721,7 @@
   },
   {
    "id": 143,
-   "name": "Cross Kick",
+   "name": "Calcio Incrociato",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -787,7 +789,7 @@
   },
   {
    "id": 14,
-   "name": "Dark Bargain",
+   "name": "Patto Oscuro",
    "char": "Master",
    "amount": 2,
    "rank": "Steel",
@@ -801,7 +803,7 @@
   },
   {
    "id": 12,
-   "name": "Dark Insight",
+   "name": "Intuizione Oscura",
    "char": "Master",
    "amount": 1,
    "rank": "Gold",
@@ -827,7 +829,7 @@
   },
   {
    "id": 86,
-   "name": "Dashdown Strike",
+   "name": "Colpo in Affondo",
    "char": "Gen. Ability",
    "amount": 2,
    "rank": "Gold",
@@ -840,7 +842,7 @@
   },
   {
    "id": 122,
-   "name": "Deep Meditation",
+   "name": "Meditazione Profonda",
    "char": "Gen. Ability",
    "amount": 6,
    "rank": "Wood",
@@ -881,7 +883,7 @@
   },
   {
    "id": 100,
-   "name": "Diagonal Slash",
+   "name": "Squarcio Diagonale",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -894,7 +896,7 @@
   },
   {
    "id": 87,
-   "name": "Dirt Throw",
+   "name": "Sabbia Negli Occhi",
    "char": "Gen. Ability",
    "amount": 2,
    "rank": "Gold",
@@ -935,7 +937,7 @@
   },
   {
    "id": 79,
-   "name": "Divine Inspiration",
+   "name": "Ispirazione Divina",
    "char": "Gen. Ability",
    "amount": 2,
    "rank": "Jade",
@@ -975,7 +977,7 @@
   },
   {
    "id": 9,
-   "name": "Dragon Reflection",
+   "name": "Riflessione del Drago",
    "char": "Master",
    "amount": 1,
    "rank": "Jade",
@@ -988,7 +990,7 @@
   },
   {
    "id": 15,
-   "name": "Dragon Tail",
+   "name": "Coda del Dragone",
    "char": "Master",
    "amount": 2,
    "rank": "Steel",
@@ -1002,7 +1004,7 @@
   },
   {
    "id": 39,
-   "name": "Drawn Breath",
+   "name": "Prendere Fiato",
    "char": "Student",
    "amount": 1,
    "rank": "Jade",
@@ -1042,7 +1044,7 @@
   },
   {
    "id": 68,
-   "name": "Dual Sai Cross",
+   "name": "Incrocio di Doppio Sai",
    "char": "Weapon",
    "amount": 2,
    "rank": "-",
@@ -1071,7 +1073,7 @@
   },
   {
    "id": 88,
-   "name": "Duty",
+   "name": "Dovere",
    "char": "Gen. Ability",
    "amount": 2,
    "rank": "Gold",
@@ -1126,7 +1128,7 @@
   },
   {
    "id": 63,
-   "name": "Ember Block",
+   "name": "Blocco Cinereo",
    "char": "Warrior",
    "amount": 3,
    "rank": "Wood",
@@ -1139,7 +1141,7 @@
   },
   {
    "id": 89,
-   "name": "Emergency Block",
+   "name": "Blocco D'emergenza",
    "char": "Gen. Ability",
    "amount": 2,
    "rank": "Gold",
@@ -1219,7 +1221,7 @@
   },
   {
    "id": 90,
-   "name": "Evasive Step",
+   "name": "Passo Evasivo",
    "char": "Gen. Ability",
    "amount": 2,
    "rank": "Gold",
@@ -1233,7 +1235,7 @@
   },
   {
    "id": 13,
-   "name": "Eye of the Dragon",
+   "name": "Occhio del Dragone",
    "char": "Master",
    "amount": 1,
    "rank": "Gold",
@@ -1276,7 +1278,7 @@
   },
   {
    "id": 34,
-   "name": "Falling Restraint",
+   "name": "Ritirata Composta",
    "char": "Ronin",
    "amount": 3,
    "rank": "Wood",
@@ -1316,7 +1318,7 @@
   },
   {
    "id": 101,
-   "name": "Feint Cut",
+   "name": "Taglio di Finta",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -1330,7 +1332,7 @@
   },
   {
    "id": 123,
-   "name": "Fend",
+   "name": "Respinta",
    "char": "Gen. Ability",
    "amount": 5,
    "rank": "Wood",
@@ -1343,7 +1345,7 @@
   },
   {
    "id": 29,
-   "name": "Feral Sweep",
+   "name": "Spazzata Feroce",
    "char": "Ronin",
    "amount": 2,
    "rank": "Steel",
@@ -1356,7 +1358,7 @@
   },
   {
    "id": 124,
-   "name": "Field Bandages",
+   "name": "Fasciature da Campo",
    "char": "Gen. Ability",
    "amount": 6,
    "rank": "Wood",
@@ -1370,7 +1372,7 @@
   },
   {
    "id": 102,
-   "name": "Firm Mind",
+   "name": "Mente Risoluta",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -1383,7 +1385,7 @@
   },
   {
    "id": 55,
-   "name": "Flaming Phoenix Arc",
+   "name": "Colpo della Fenice Fiammante",
    "char": "Warrior",
    "amount": 1,
    "rank": "Jade",
@@ -1396,7 +1398,7 @@
   },
   {
    "id": 156,
-   "name": "Focused Exertion",
+   "name": "Sforzo Concentrato",
    "char": "Gen. Ability",
    "amount": 6,
    "rank": "Wood",
@@ -1557,7 +1559,7 @@
   },
   {
    "id": 80,
-   "name": "Guardian's Defence",
+   "name": "Difesa del Guardiano",
    "char": "Gen. Ability",
    "amount": 2,
    "rank": "Jade",
@@ -1571,7 +1573,7 @@
   },
   {
    "id": 148,
-   "name": "Hail Strike",
+   "name": "Colpo di Grandine",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -1597,7 +1599,7 @@
   },
   {
    "id": 64,
-   "name": "Headbutt",
+   "name": "Testata",
    "char": "Warrior",
    "amount": 3,
    "rank": "Wood",
@@ -1637,7 +1639,7 @@
   },
   {
    "id": 25,
-   "name": "Heavy Armour",
+   "name": "Armatura Pesante",
    "char": "Ronin",
    "amount": 1,
    "rank": "Jade",
@@ -1665,7 +1667,7 @@
   },
   {
    "id": 10,
-   "name": "Hidden Viper Fang",
+   "name": "Zanna Celata della Vipera",
    "char": "Master",
    "amount": 1,
    "rank": "Jade",
@@ -1707,7 +1709,7 @@
   },
   {
    "id": 104,
-   "name": "Hobbling Blow",
+   "name": "Colpo Azzoppante",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -1721,7 +1723,7 @@
   },
   {
    "id": 91,
-   "name": "Honesty",
+   "name": "Onesta",
    "char": "Gen. Ability",
    "amount": 2,
    "rank": "Gold",
@@ -1736,7 +1738,7 @@
   },
   {
    "id": 92,
-   "name": "Honour",
+   "name": "Onore",
    "char": "Gen. Ability",
    "amount": 2,
    "rank": "Gold",
@@ -1751,7 +1753,7 @@
   },
   {
    "id": 105,
-   "name": "Horizontal Cut",
+   "name": "Taglio Orizzontale",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -1764,7 +1766,7 @@
   },
   {
    "id": 125,
-   "name": "Horse Kick",
+   "name": "Calcio del Cavallo",
    "char": "Gen. Ability",
    "amount": 6,
    "rank": "Wood",
@@ -1818,7 +1820,7 @@
   },
   {
    "id": 18,
-   "name": "Idle Strike",
+   "name": "Colpo Indolente",
    "char": "Master",
    "amount": 3,
    "rank": "Wood",
@@ -1844,7 +1846,7 @@
   },
   {
    "id": 44,
-   "name": "Insightful Blow",
+   "name": "Colpo Astuto",
    "char": "Student",
    "amount": 2,
    "rank": "Steel",
@@ -1871,7 +1873,7 @@
   },
   {
    "id": 106,
-   "name": "Iron Will",
+   "name": "Volonta di Ferro",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -1898,7 +1900,7 @@
   },
   {
    "id": 133,
-   "name": "Jumonji Yari Pierce",
+   "name": "Stoccata di Jumonji Yari",
    "char": "Weapon",
    "amount": 2,
    "rank": "-",
@@ -1927,7 +1929,7 @@
   },
   {
    "id": 69,
-   "name": "Kama Hook",
+   "name": "Aggancio di Kama",
    "char": "Weapon",
    "amount": 2,
    "rank": "-",
@@ -1956,7 +1958,7 @@
   },
   {
    "id": 134,
-   "name": "Kanabo Smash",
+   "name": "Colpo di Kanabo",
    "char": "Weapon",
    "amount": 2,
    "rank": "-",
@@ -1972,7 +1974,7 @@
   },
   {
    "id": 135,
-   "name": "Katana Cut",
+   "name": "Taglio di Katana",
    "char": "Weapon",
    "amount": 2,
    "rank": "-",
@@ -1988,7 +1990,7 @@
   },
   {
    "id": 136,
-   "name": "Katana Slash",
+   "name": "Fendente di Katana",
    "char": "Weapon",
    "amount": 2,
    "rank": "-",
@@ -2004,7 +2006,7 @@
   },
   {
    "id": 70,
-   "name": "Katana Swing",
+   "name": "Fendente di Katana",
    "char": "Weapon",
    "amount": 2,
    "rank": "-",
@@ -2062,7 +2064,7 @@
   },
   {
    "id": 81,
-   "name": "Legendary Fortitude",
+   "name": "Tempra Leggendaria",
    "char": "Gen. Ability",
    "amount": 2,
    "rank": "Jade",
@@ -2075,7 +2077,7 @@
   },
   {
    "id": 40,
-   "name": "Lightning Tail",
+   "name": "Coda Fulminea",
    "char": "Student",
    "amount": 1,
    "rank": "Jade",
@@ -2168,7 +2170,7 @@
   },
   {
    "id": 107,
-   "name": "Lunging Thrust",
+   "name": "Affondo in Spinta",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -2195,7 +2197,7 @@
   },
   {
    "id": 8,
-   "name": "Master Core Card",
+   "name": "Carta Speciale Maestro",
    "char": "Master",
    "amount": 1,
    "rank": "-",
@@ -2208,7 +2210,7 @@
   },
   {
    "id": 19,
-   "name": "Masterful Cut",
+   "name": "Taglio Magistrale",
    "char": "Master",
    "amount": 3,
    "rank": "Wood",
@@ -2248,7 +2250,7 @@
   },
   {
    "id": 108,
-   "name": "Misdirection",
+   "name": "Difesa Accennante",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -2287,7 +2289,7 @@
   },
   {
    "id": 49,
-   "name": "Mountain Switch",
+   "name": "Scambio della Montagna",
    "char": "Student",
    "amount": 3,
    "rank": "Wood",
@@ -2355,7 +2357,7 @@
   },
   {
    "id": 137,
-   "name": "Naginata Carve",
+   "name": "Affondo di Naginata",
    "char": "Weapon",
    "amount": 2,
    "rank": "-",
@@ -2371,7 +2373,7 @@
   },
   {
    "id": 71,
-   "name": "Naginata Sweep",
+   "name": "Spazzata di Naginata",
    "char": "Weapon",
    "amount": 2,
    "rank": "-",
@@ -2400,7 +2402,7 @@
   },
   {
    "id": 72,
-   "name": "Nodachi Slash",
+   "name": "Squarcio di Nodachi",
    "char": "Weapon",
    "amount": 2,
    "rank": "-",
@@ -2416,7 +2418,7 @@
   },
   {
    "id": 73,
-   "name": "Nodachi Thrust",
+   "name": "Affondo di Nodachi",
    "char": "Weapon",
    "amount": 2,
    "rank": "-",
@@ -2432,7 +2434,7 @@
   },
   {
    "id": 45,
-   "name": "Obedience",
+   "name": "Obbedienza",
    "char": "Student",
    "amount": 2,
    "rank": "Steel",
@@ -2488,7 +2490,7 @@
   },
   {
    "id": 109,
-   "name": "Open Mind",
+   "name": "Mente Aperta",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -2501,7 +2503,7 @@
   },
   {
    "id": 149,
-   "name": "Overhead Carve",
+   "name": "Affondo Dall'alto",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -2527,7 +2529,7 @@
   },
   {
    "id": 35,
-   "name": "Oxen Barge",
+   "name": "Chiatta di Buoi",
    "char": "Ronin",
    "amount": 3,
    "rank": "Wood",
@@ -2570,7 +2572,7 @@
   },
   {
    "id": 126,
-   "name": "Pommel Smash",
+   "name": "Colpo D'elsa",
    "char": "Gen. Ability",
    "amount": 6,
    "rank": "Wood",
@@ -2610,7 +2612,7 @@
   },
   {
    "id": 127,
-   "name": "Push Back",
+   "name": "Spinta Indietro",
    "char": "Gen. Ability",
    "amount": 6,
    "rank": "Wood",
@@ -2650,7 +2652,7 @@
   },
   {
    "id": 128,
-   "name": "Quick Stab",
+   "name": "Stoccata Rapida",
    "char": "Gen. Ability",
    "amount": 6,
    "rank": "Wood",
@@ -2690,7 +2692,7 @@
   },
   {
    "id": 42,
-   "name": "Reflection Pool",
+   "name": "Specchio D'acqua",
    "char": "Student",
    "amount": 1,
    "rank": "Gold",
@@ -2703,7 +2705,7 @@
   },
   {
    "id": 59,
-   "name": "Refocused Mind",
+   "name": "Concentrazione Ritrovata",
    "char": "Warrior",
    "amount": 2,
    "rank": "Steel",
@@ -2716,7 +2718,7 @@
   },
   {
    "id": 20,
-   "name": "Reposition",
+   "name": "Riposizionamento",
    "char": "Master",
    "amount": 3,
    "rank": "Wood",
@@ -2742,7 +2744,7 @@
   },
   {
    "id": 93,
-   "name": "Respect",
+   "name": "Rispetto",
    "char": "Gen. Ability",
    "amount": 2,
    "rank": "Gold",
@@ -2757,7 +2759,7 @@
   },
   {
    "id": 27,
-   "name": "Reverse Carved Fang",
+   "name": "Affondo Invertito di Zanna",
    "char": "Ronin",
    "amount": 1,
    "rank": "Gold",
@@ -2783,7 +2785,7 @@
   },
   {
    "id": 94,
-   "name": "Righteousness",
+   "name": "Rettitudine",
    "char": "Gen. Ability",
    "amount": 2,
    "rank": "Gold",
@@ -2798,7 +2800,7 @@
   },
   {
    "id": 30,
-   "name": "Ripping Claws",
+   "name": "Artigli Laceranti",
    "char": "Ronin",
    "amount": 2,
    "rank": "Steel",
@@ -2812,7 +2814,7 @@
   },
   {
    "id": 150,
-   "name": "Rising Fury",
+   "name": "Furia Crescente",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -2827,7 +2829,7 @@
   },
   {
    "id": 111,
-   "name": "River Block",
+   "name": "Blocco di Fiume",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -2840,7 +2842,7 @@
   },
   {
    "id": 46,
-   "name": "Rock Strike",
+   "name": "Colpo della Roccia",
    "char": "Student",
    "amount": 2,
    "rank": "Steel",
@@ -2853,7 +2855,7 @@
   },
   {
    "id": 112,
-   "name": "Rolling Slash",
+   "name": "Squarcio Rotante",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -2866,7 +2868,7 @@
   },
   {
    "id": 23,
-   "name": "Ronin Core Card",
+   "name": "Carta Speciale Ronin",
    "char": "Ronin",
    "amount": 1,
    "rank": "-",
@@ -3009,7 +3011,7 @@
   },
   {
    "id": 58,
-   "name": "Scything Feint",
+   "name": "Finta Falciante",
    "char": "Warrior",
    "amount": 1,
    "rank": "Gold",
@@ -3022,7 +3024,7 @@
   },
   {
    "id": 60,
-   "name": "Scything Uppercut",
+   "name": "Falciata Montante",
    "char": "Warrior",
    "amount": 2,
    "rank": "Steel",
@@ -3049,7 +3051,7 @@
   },
   {
    "id": 95,
-   "name": "Self-control",
+   "name": "Autocontrollo",
    "char": "Gen. Ability",
    "amount": 2,
    "rank": "Gold",
@@ -3104,7 +3106,7 @@
   },
   {
    "id": 113,
-   "name": "Severing Cut",
+   "name": "Taglio Troncante",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -3143,7 +3145,7 @@
   },
   {
    "id": 74,
-   "name": "Shikomizue Parry",
+   "name": "Parata di Shikomizue",
    "char": "Weapon",
    "amount": 2,
    "rank": "-",
@@ -3159,7 +3161,7 @@
   },
   {
    "id": 61,
-   "name": "Short Strike",
+   "name": "Colpo Corto",
    "char": "Warrior",
    "amount": 2,
    "rank": "Steel",
@@ -3217,7 +3219,7 @@
   },
   {
    "id": 16,
-   "name": "Sixth Sense",
+   "name": "Sesto Senso",
    "char": "Master",
    "amount": 2,
    "rank": "Steel",
@@ -3310,7 +3312,7 @@
   },
   {
    "id": 65,
-   "name": "Spiralling Flames",
+   "name": "Spirale di Fiamme",
    "char": "Warrior",
    "amount": 3,
    "rank": "Wood",
@@ -3323,7 +3325,7 @@
   },
   {
    "id": 96,
-   "name": "Splitting Strike",
+   "name": "Colpo Squarciante",
    "char": "Gen. Ability",
    "amount": 2,
    "rank": "Gold",
@@ -3363,7 +3365,7 @@
   },
   {
    "id": 43,
-   "name": "Stalking Tiger Paw",
+   "name": "Tigre Appostata",
    "char": "Student",
    "amount": 1,
    "rank": "Gold",
@@ -3390,7 +3392,7 @@
   },
   {
    "id": 31,
-   "name": "Steel Block",
+   "name": "Difesa D'acciaio",
    "char": "Ronin",
    "amount": 2,
    "rank": "Steel",
@@ -3416,7 +3418,7 @@
   },
   {
    "id": 114,
-   "name": "Stone Block",
+   "name": "Difesa di Roccia",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -3456,7 +3458,7 @@
   },
   {
    "id": 38,
-   "name": "Student Core Card",
+   "name": "Carta Speciale Allievo",
    "char": "Student",
    "amount": 1,
    "rank": "-",
@@ -3509,7 +3511,7 @@
   },
   {
    "id": 115,
-   "name": "Swift Block",
+   "name": "Blocco Rapido",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -3523,7 +3525,7 @@
   },
   {
    "id": 116,
-   "name": "Swift Mind",
+   "name": "Mente Rapida",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -3549,7 +3551,7 @@
   },
   {
    "id": 75,
-   "name": "Tachi Cut",
+   "name": "Taglio di Tachi",
    "char": "Weapon",
    "amount": 2,
    "rank": "-",
@@ -3565,7 +3567,7 @@
   },
   {
    "id": 17,
-   "name": "Tainted Wisdom",
+   "name": "Saggezza Corrotta",
    "char": "Master",
    "amount": 2,
    "rank": "Steel",
@@ -3579,7 +3581,7 @@
   },
   {
    "id": 138,
-   "name": "Tanto Slice",
+   "name": "Taglio di Tanto",
    "char": "Weapon",
    "amount": 2,
    "rank": "-",
@@ -3595,7 +3597,7 @@
   },
   {
    "id": 97,
-   "name": "Taunt",
+   "name": "Provocazione",
    "char": "Gen. Ability",
    "amount": 2,
    "rank": "Gold",
@@ -3666,7 +3668,7 @@
   },
   {
    "id": 28,
-   "name": "The Terror",
+   "name": "Il Terrore",
    "char": "Ronin",
    "amount": 1,
    "rank": "Gold",
@@ -3693,7 +3695,7 @@
   },
   {
    "id": 76,
-   "name": "Tonfa Block",
+   "name": "Blocco di Tonfa",
    "char": "Weapon",
    "amount": 2,
    "rank": "-",
@@ -3722,7 +3724,7 @@
   },
   {
    "id": 117,
-   "name": "Trained Mind",
+   "name": "Mente Addestrata",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -3735,7 +3737,7 @@
   },
   {
    "id": 50,
-   "name": "Tranquil Mind",
+   "name": "Mente Placida",
    "char": "Student",
    "amount": 3,
    "rank": "Wood",
@@ -3774,7 +3776,7 @@
   },
   {
    "id": 47,
-   "name": "Turning Slash",
+   "name": "Squarcio Rotante",
    "char": "Student",
    "amount": 2,
    "rank": "Steel",
@@ -3882,7 +3884,7 @@
   },
   {
    "id": 77,
-   "name": "Wakizashi Slice",
+   "name": "Taglio di Wakizashi",
    "char": "Weapon",
    "amount": 2,
    "rank": "-",
@@ -3937,7 +3939,7 @@
   },
   {
    "id": 98,
-   "name": "War Cry",
+   "name": "Grido di Guerra",
    "char": "Gen. Ability",
    "amount": 2,
    "rank": "Gold",
@@ -3951,7 +3953,7 @@
   },
   {
    "id": 62,
-   "name": "Warding Arc",
+   "name": "Arco Respingente",
    "char": "Warrior",
    "amount": 2,
    "rank": "Steel",
@@ -3964,7 +3966,7 @@
   },
   {
    "id": 53,
-   "name": "Warrior Core Card",
+   "name": "Carta Speciale Guerriero",
    "char": "Warrior",
    "amount": 1,
    "rank": "-",
@@ -3977,7 +3979,7 @@
   },
   {
    "id": 158,
-   "name": "Wheel Strike",
+   "name": "Colpo a Ruota",
    "char": "Gen. Ability",
    "amount": 6,
    "rank": "Wood",
@@ -4016,7 +4018,7 @@
   },
   {
    "id": 118,
-   "name": "Wild Block",
+   "name": "Blocco Selvaggio",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -4029,7 +4031,7 @@
   },
   {
    "id": 119,
-   "name": "Wild Swing",
+   "name": "Fendente Selvaggio",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -4042,7 +4044,7 @@
   },
   {
    "id": 120,
-   "name": "Wind Block",
+   "name": "Blocco di Vento",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -4081,7 +4083,7 @@
   },
   {
    "id": 32,
-   "name": "Wolf Pounce",
+   "name": "Balzo del Lupo",
    "char": "Ronin",
    "amount": 2,
    "rank": "Steel",
@@ -4095,7 +4097,7 @@
   },
   {
    "id": 139,
-   "name": "Yari Impale",
+   "name": "Impalamento di Yari",
    "char": "Weapon",
    "amount": 2,
    "rank": "-",
@@ -4163,7 +4165,7 @@
   },
   {
    "id": 901,
-   "name": "CHARGE (Solo)",
+   "name": "Charge (solo)",
    "char": "Ronin Solo",
    "amount": 1,
    "rank": "-",
@@ -4177,7 +4179,7 @@
   },
   {
    "id": 902,
-   "name": "STEEL BLOCK (Solo)",
+   "name": "Steel Block (solo)",
    "char": "Ronin Solo",
    "amount": 1,
    "rank": "-",
@@ -4191,7 +4193,7 @@
   },
   {
    "id": 903,
-   "name": "REVERSE CARVED FANG (Solo)",
+   "name": "Reverse Carved Fang (solo)",
    "char": "Ronin Solo",
    "amount": 1,
    "rank": "-",
@@ -4205,7 +4207,7 @@
   },
   {
    "id": 904,
-   "name": "FERAL SWEEP (Solo)",
+   "name": "Feral Sweep (solo)",
    "char": "Ronin Solo",
    "amount": 1,
    "rank": "-",
@@ -4219,7 +4221,7 @@
   },
   {
    "id": 905,
-   "name": "THE TERROR (Solo)",
+   "name": "The Terror (solo)",
    "char": "Ronin Solo",
    "amount": 1,
    "rank": "-",
@@ -4234,7 +4236,7 @@
   },
   {
    "id": 911,
-   "name": "EMBER BLOCK (Solo)",
+   "name": "Ember Block (solo)",
    "char": "Warrior Solo",
    "amount": 1,
    "rank": "-",
@@ -4248,7 +4250,7 @@
   },
   {
    "id": 912,
-   "name": "SCYTHING UPPERCUT (Solo)",
+   "name": "Scything Uppercut (solo)",
    "char": "Warrior Solo",
    "amount": 1,
    "rank": "-",
@@ -4262,7 +4264,7 @@
   },
   {
    "id": 913,
-   "name": "WARDING ARC (Solo)",
+   "name": "Warding Arc (solo)",
    "char": "Warrior Solo",
    "amount": 1,
    "rank": "-",
@@ -4276,7 +4278,7 @@
   },
   {
    "id": 914,
-   "name": "REFOCUSED MIND (Solo)",
+   "name": "Refocused Mind (solo)",
    "char": "Warrior Solo",
    "amount": 1,
    "rank": "-",
@@ -4290,7 +4292,7 @@
   },
   {
    "id": 915,
-   "name": "FLAMING PHOENIX ARC (Solo)",
+   "name": "Flaming Phoenix Arc (solo)",
    "char": "Warrior Solo",
    "amount": 1,
    "rank": "-",

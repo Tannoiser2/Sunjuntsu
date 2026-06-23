@@ -1,0 +1,38 @@
+{
+ "note": "Mappa di localizzazione IT per i VALORI canonici (inglese) di card_pool.json. I campi char/type/rank/keywords restano in inglese nei dati (chiavi logiche del motore); editor/HUD li MOSTRANO in italiano via questa mappa. I nomi carta (name) sono invece gia' tradotti direttamente nel pool.",
+ "char": {
+  "Ashigaru": "Ashigaru", "Ashigaru/Hachiko": "Ashigaru/Hachiko",
+  "Assassin": "Assassino", "Gen. Ability": "Abilità Generica",
+  "Hachiko": "Hachiko", "Kojiro": "Kojiro", "Kojiro/Weapon": "Kojiro/Arma",
+  "Master": "Maestro", "Monk": "Monaco", "Musashi": "Musashi",
+  "Ninja": "Ninja", "Ninja/Weapon": "Ninja/Arma", "Onna-Bugeisha": "Onna-Bugeisha",
+  "Ronin": "Ronin", "Ronin Solo": "Ronin Solo", "Sailor": "Marinaio",
+  "Sailor/Weapon": "Marinaio/Arma", "Student": "Allievo", "Wakou": "Wakou",
+  "Warrior": "Guerriero", "Warrior Solo": "Guerriero Solo", "Weapon": "Arma",
+  "Yasuke": "Yasuke", "Yasuke/Weapon": "Yasuke/Arma", "Yojimbo": "Yojimbo",
+  "Yojimbo/Weapon": "Yojimbo/Arma"
+ },
+ "type": {
+  "attack": "Attacco", "defence": "Difesa", "meditation": "Meditazione",
+  "core": "Base", "other": "Altro"
+ },
+ "rank": {
+  "Wood": "Legno", "Steel": "Acciaio", "Gold": "Oro", "Jade": "Giada", "-": "-"
+ },
+ "keywords": {
+  "Attack": "Attacco", "Attack/Defence": "Attacco/Difesa", "Defence": "Difesa",
+  "Meditation": "Meditazione", "Mediation": "Meditazione",
+  "Instant": "Istantanea", "Instant Additional": "Aggiunta Istantanea",
+  "Instant Replacement": "Sostituzione Istantanea", "Prepared": "Preparata",
+  "Core": "Base", "Solo": "Solo", "Bushido": "Bushido", "Nightmare": "Incubo",
+  "Silver Frost": "Brina d'Argento", "Weapon": "Arma",
+  "Range1": "Distanza1", "Range2": "Distanza2", "Range3": "Distanza3",
+  "Range4": "Distanza4", "Range5": "Distanza5", "Range6": "Distanza6",
+  "Bo": "Bo", "Bokken": "Bokken", "Carrack": "Caracca", "Kama": "Kama",
+  "Kanabo": "Kanabo", "Katana": "Katana", "Kusarigama": "Kusarigama",
+  "Nagamaki": "Nagamaki", "Naginata": "Naginata", "Nodachi": "Nodachi",
+  "Pistol": "Pistola", "Sai": "Sai", "Shikomizue": "Shikomizue",
+  "Tachi": "Tachi", "Tanto": "Tanto", "Tessen": "Tessen", "Tonfa": "Tonfa",
+  "Wakizashi": "Wakizashi", "Yari": "Yari"
+ }
+}
