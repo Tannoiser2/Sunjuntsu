@@ -1,5 +1,5 @@
 {
-  "note": "Alberi Kamae trascritti (best-effort) dalle carte #052 Guerriero e #022 Ronin. Nodi: aggression/balance/determination/neutral + focus (loto, ramo rosa = +1 focus). 'start' = posizione iniziale dell'anello. 'card' = immagine dell'albero; 'nodes' = posizione normalizzata (0-1) di ogni nodo sull'immagine, per il segnalino. DA VERIFICARE sul gioco fisico.",
+  "note": "Alberi Kamae trascritti (best-effort) dalle carte #052 Guerriero, #022 Ronin, #007 Maestro, #037 Allievo. Mapping icone->pose (verificato sul Guerriero): mon rosso=aggression, griglia gialla=determination, fiore verde=balance, torii=neutral, loto rosa=focus (ramo rosa = +1 focus, archi incidenti al focus). 'start' = posizione iniziale dell'anello. 'card' = immagine dell'albero; 'nodes' = posizione normalizzata (0-1) di ogni nodo. Posizioni nodi e archi DA VERIFICARE sul gioco fisico.",
   "trees": {
     "warrior": {
       "start": "neutral",
@@ -35,6 +35,41 @@
         {"a": "neutral", "b": "balance", "pink": false},
         {"a": "balance", "b": "determination", "pink": false},
         {"a": "determination", "b": "aggression", "pink": false}
+      ]
+    },
+    "master": {
+      "start": "neutral",
+      "card": "master/master_02.webp",
+      "nodes": {
+        "aggression": [0.22, 0.18],
+        "determination": [0.68, 0.18],
+        "focus": [0.22, 0.47],
+        "neutral": [0.22, 0.78],
+        "balance": [0.68, 0.80]
+      },
+      "edges": [
+        {"a": "focus", "b": "aggression", "pink": true},
+        {"a": "focus", "b": "neutral", "pink": true},
+        {"a": "focus", "b": "determination", "pink": true},
+        {"a": "focus", "b": "balance", "pink": true}
+      ]
+    },
+    "student": {
+      "start": "neutral",
+      "card": "student/student_20.webp",
+      "nodes": {
+        "aggression": [0.62, 0.16],
+        "balance": [0.22, 0.42],
+        "focus": [0.62, 0.45],
+        "neutral": [0.22, 0.75],
+        "determination": [0.62, 0.78]
+      },
+      "edges": [
+        {"a": "aggression", "b": "focus", "pink": true},
+        {"a": "balance", "b": "focus", "pink": true},
+        {"a": "focus", "b": "determination", "pink": true},
+        {"a": "balance", "b": "neutral", "pink": false},
+        {"a": "neutral", "b": "determination", "pink": false}
       ]
     }
   }

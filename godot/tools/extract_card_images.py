@@ -37,6 +37,8 @@ DECKS = [
     ("warrior", "CARTE/Guerriero.pdf"),
     ("ronin", "CARTE/Ronin .pdf"),
     ("ferite", "CARTE/Ferite.pdf"),
+    ("master", "CARTE/Maestro .pdf"),
+    ("student", "CARTE/Allievo.pdf"),
 ]
 
 

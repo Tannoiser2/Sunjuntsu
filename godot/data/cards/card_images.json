@@ -25,6 +25,24 @@
     "89": "ronin/ronin_28.webp", "98": "ronin/ronin_21.webp",
     "102": "ronin/ronin_22.webp", "104": "ronin/ronin_15.webp",
     "107": "ronin/ronin_09.webp", "125": "ronin/ronin_16.webp",
-    "126": "ronin/ronin_31.webp", "127": "ronin/ronin_10.webp"
+    "126": "ronin/ronin_31.webp", "127": "ronin/ronin_10.webp",
+
+    "6": "master/master_01.webp", "7": "master/master_02.webp",
+    "8": "master/master_03.webp", "9": "master/master_24.webp",
+    "10": "master/master_25.webp", "11": "master/master_22.webp",
+    "12": "master/master_21.webp", "13": "master/master_23.webp",
+    "14": "master/master_07.webp", "15": "master/master_04.webp",
+    "16": "master/master_09.webp", "17": "master/master_05.webp",
+    "18": "master/master_15.webp", "19": "master/master_13.webp",
+    "20": "master/master_12.webp",
+
+    "36": "student/student_19.webp", "37": "student/student_20.webp",
+    "38": "student/student_02.webp", "39": "student/student_01.webp",
+    "40": "student/student_22.webp", "41": "student/student_08.webp",
+    "42": "student/student_23.webp", "43": "student/student_24.webp",
+    "44": "student/student_09.webp", "45": "student/student_10.webp",
+    "46": "student/student_12.webp", "47": "student/student_14.webp",
+    "48": "student/student_16.webp", "49": "student/student_03.webp",
+    "50": "student/student_05.webp"
   }
 }

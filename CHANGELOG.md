@@ -3,6 +3,24 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.63.0] — 2026-06-23
+### Dati carte: mazzi Maestro e Allievo + armi e abilità generiche
+- **Geometria trascritta da 54 a 140 carte** su 303 (`geometry.json`): mazzi
+  completi **Maestro** (Master, id 8–20) e **Allievo** (Student, id 38–50),
+  più **armi** (66–77/133–139) e **abilità generiche** (78–158) presenti nelle
+  scansioni `Tabelle_Materiali/Senjutsu/CARTE/`.
+- Aggiunti i **personaggi** Maestro ("Il Vecchio Dragone") e Allievo ("Impavido
+  come una Tigre") con armi e limiti; corretto: il numero grande sulle carte
+  personaggio è la **Rinomanza** (74/62), non il limite ferite (5/5).
+- **Alberi Kamae** Maestro e Allievo (`kamae_trees.json`), con mapping
+  icone→pose verificato sul Guerriero.
+- **Immagini carte** Master/Student estratte (`extract_card_images.py`, +79
+  webp, manifest a 162 carte) e collegate all'HUD (`card_images.json`).
+- Campi affidabili (tipo, movimento, effetti, focus) completi; archi
+  attacco/difesa best-effort con note `DA VERIFICARE`, da rifinire nell'editor.
+  Non presenti nelle scansioni (restano senza geometria): #103 Passo Aggraziato,
+  #110 Schivata Rapida e altre 9 generiche. Versione 0.63.0.
+
 ## [0.62.1] — 2026-06-21
 ### Menu: "Novità" dal CHANGELOG + immagine di sfondo
 - Il riquadro **Novità** dello splash ora **legge l'ultima voce del CHANGELOG**
