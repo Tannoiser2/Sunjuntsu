@@ -70,6 +70,22 @@ func _ready() -> void:
 	_check(_has(r8, "effect"), "verbo effetto sconosciuto -> warning")
 	_check(_has(r8, "effect_kamae") and _levels(r8, "effect_kamae") == "error", "kamae effetto non valido -> error")
 
+	# switch_kamae verso "neutral" e "any": NON sono errori (4 stance reali; "any"
+	# = qualsiasi, risolto da Duel.gd). Regressione: prima venivano marcati a torto.
+	var gneu := {"type": "defence", "defence": {"cells": [{"d": 0, "k": 1, "v": 1}]},
+		"effects": [{"do": "switch_kamae", "to": "neutral"}]}
+	_check(not _has(CardValidator.validate(ok_card, gneu, "x", {"known_keywords": kw}), "effect_kamae"),
+		"switch_kamae to:neutral -> nessun errore")
+	var gany := {"type": "defence", "defence": {"cells": [{"d": 0, "k": 1, "v": 1}]},
+		"effects": [{"do": "switch_kamae", "to": "any"}]}
+	_check(not _has(CardValidator.validate(ok_card, gany, "x", {"known_keywords": kw}), "effect_kamae"),
+		"switch_kamae to:any -> nessun errore")
+	# Ma un 'to' davvero fuori vocabolario resta un errore.
+	var gbad := {"type": "defence", "defence": {"cells": [{"d": 0, "k": 1, "v": 1}]},
+		"effects": [{"do": "switch_kamae", "to": "furia"}]}
+	_check(_has(CardValidator.validate(ok_card, gbad, "x", {"known_keywords": kw}), "effect_kamae"),
+		"switch_kamae to:furia -> error")
+
 	# Id duplicato -> errore.
 	var r9 := CardValidator.validate(ok_card, ok_geom, "x", {"known_keywords": kw, "duplicate": true})
 	_check(_has(r9, "dup_id") and _levels(r9, "dup_id") == "error", "id duplicato -> error")

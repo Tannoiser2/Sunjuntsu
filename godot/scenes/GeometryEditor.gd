@@ -29,7 +29,7 @@ extends VBoxContainer
 signal changed
 
 const RINGS := 2          ## anelli mostrati (vicinato completo entro distanza 2)
-const HEX_R := 21.0       ## raggio esagono in px
+const HEX_R := 16.0       ## raggio esagono in px
 
 # Colori icone.
 const COL_WOUND := Color(0.86, 0.30, 0.24)
@@ -41,15 +41,16 @@ const COL_TARGET := Color(0.45, 0.45, 0.5)
 const COL_PAWN := Color(0.85, 0.70, 0.30)
 
 const KAMAE_COLORS := {
-	"aggression": Color(0.86, 0.40, 0.30),
-	"balance": Color(0.40, 0.70, 0.45),
-	"determination": Color(0.45, 0.55, 0.85),
+	"aggression": Color(0.86, 0.35, 0.28),    # rosso
+	"balance": Color(0.38, 0.70, 0.42),       # verde
+	"determination": Color(0.90, 0.74, 0.18), # giallo
 }
 const KAMAE_LABELS := {
 	"aggression": "Aggressività", "balance": "Equilibrio", "determination": "Determinazione",
 }
+## Ordine fisso delle kamae nella barra colorata (selettore senza testo).
+const KAMAE_BAR := ["aggression", "balance", "determination"]
 const WHEN_OPTS := ["", "on_hit", "always"]
-const KAMAE_OPTS := ["", "aggression", "balance", "determination"]
 
 # Tipi di widget selezionabili e loro etichette.
 const WIDGET_TYPES := ["combat", "movement", "kamae", "effect", "counter", "note"]
@@ -616,6 +617,8 @@ func _build_list(parent: Node, siblings: Array) -> void:
 		parent.add_child(_build_widget(siblings, i))
 	var add := Button.new()
 	add.text = "+ aggiungi widget"
+	add.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	add.add_theme_font_size_override("font_size", 11)
 	add.tooltip_text = "Aggiunge un widget; scegline il tipo dal menu in cima"
 	add.pressed.connect(func():
 		siblings.append(_new_widget(""))
@@ -630,19 +633,19 @@ func _build_widget(siblings: Array, idx: int) -> Control:
 	panel.ed = self
 	panel.siblings = siblings
 	panel.widget = w
+	panel.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN   # hug content: box stretti
+	panel.add_theme_stylebox_override("panel", _slot_style())
 	var box := VBoxContainer.new()
-	box.add_theme_constant_override("separation", 3)
+	box.add_theme_constant_override("separation", 2)
 	panel.add_child(box)
 
 	# Intestazione: maniglia di trascinamento + TIPO + condizione + rimuovi.
 	var head := HBoxContainer.new()
 	head.add_theme_constant_override("separation", 3)
-	var grip := _lbl("⠿")
-	grip.tooltip_text = "Trascina per riposizionare il widget"
-	head.add_child(grip)
+	head.add_child(_grip())
 	var topt := OptionButton.new()
-	topt.add_theme_font_size_override("font_size", 12)
-	topt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	topt.add_theme_font_size_override("font_size", 11)
+	topt.custom_minimum_size = Vector2(150, 0)
 	topt.add_item("(tipo…)")
 	for t in MENU_TYPES:
 		topt.add_item(str(WIDGET_TITLES[t]))
@@ -651,7 +654,7 @@ func _build_widget(siblings: Array, idx: int) -> Control:
 	head.add_child(topt)
 	if str(w.get("type", "")) != "":
 		head.add_child(_lbl("se"))
-		head.add_child(_eff_opt(KAMAE_OPTS, str(w.get("cond", "")), func(val): w["cond"] = val; changed.emit()))
+		head.add_child(_kamae_bar(str(w.get("cond", "")), func(val): w["cond"] = val; changed.emit()))
 	var rm := _mini_btn("x", "Rimuovi widget")
 	rm.pressed.connect(func(): siblings.remove_at(idx); _rebuild_widgets(); changed.emit())
 	head.add_child(rm)
@@ -661,12 +664,41 @@ func _build_widget(siblings: Array, idx: int) -> Control:
 	return panel
 
 
+## Stile compatto del pannello-widget: margini piccoli, così i box sono corti.
+func _slot_style() -> StyleBoxFlat:
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.16, 0.16, 0.20)
+	sb.border_color = Color(0.30, 0.30, 0.36)
+	sb.set_border_width_all(1)
+	sb.set_corner_radius_all(3)
+	sb.content_margin_left = 5
+	sb.content_margin_right = 5
+	sb.content_margin_top = 3
+	sb.content_margin_bottom = 3
+	return sb
+
+
 func _mini_btn(txt: String, tip: String) -> Button:
 	var b := Button.new()
 	b.text = txt
 	b.tooltip_text = tip
-	b.add_theme_font_size_override("font_size", 11)
+	b.add_theme_font_size_override("font_size", 10)
 	return b
+
+
+## Maniglia di trascinamento disegnata (6 puntini) — evita glifi non resi dal
+## font (il vecchio "⠿" appariva come tofu).
+func _grip() -> Control:
+	var g := Control.new()
+	g.custom_minimum_size = Vector2(10, 16)
+	g.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	g.tooltip_text = "Trascina per riposizionare il widget"
+	g.draw.connect(func():
+		var col := Color(0.5, 0.5, 0.55)
+		for ry in range(3):
+			for cx in range(2):
+				g.draw_circle(Vector2(3 + cx * 4, 4 + ry * 4), 1.2, col))
+	return g
 
 
 ## Cambia il tipo del widget in `siblings[idx]`. I singleton (kamae/counter/note)
@@ -791,7 +823,7 @@ func _build_widget_body(w: Dictionary) -> Control:
 		"note": return _build_note_body(w)
 	var hint := Label.new()
 	hint.text = "Scegli un tipo dal menu in alto."
-	hint.add_theme_font_size_override("font_size", 11)
+	hint.add_theme_font_size_override("font_size", 10)
 	hint.add_theme_color_override("font_color", Color(0.6, 0.6, 0.66))
 	return hint
 
@@ -810,7 +842,8 @@ func _build_container_body(w: Dictionary) -> Control:
 		var le := LineEdit.new()
 		le.text = str(w.get("value", ""))
 		le.placeholder_text = "es. 8, 6/7, 5,4,3, ="
-		le.custom_minimum_size = Vector2(96, 0)
+		le.add_theme_font_size_override("font_size", 11)
+		le.custom_minimum_size = Vector2(64, 0)
 		le.text_changed.connect(func(t): w["value"] = t.strip_edges(); changed.emit())
 		row.add_child(le)
 		v.add_child(row)
@@ -916,7 +949,7 @@ func _build_movement_body(w: Dictionary) -> Control:
 	ar.pressed.connect(func(): atoms.append(_norm_atom({"t": "rot", "n": 1, "opt": false})); _rebuild_widgets(); changed.emit())
 	add.add_child(ar)
 	var an := Button.new()
-	an.text = "+ ❄ àncora"
+	an.text = "+ àncora"
 	an.tooltip_text = "Marcatore-àncora sulla Griglia di Posizione (collegabile a un asterisco da una carta Abilità) — non muove la pedina"
 	an.pressed.connect(func(): atoms.append(_norm_atom({"t": "anchor", "n": 1, "opt": false})); _rebuild_widgets(); changed.emit())
 	add.add_child(an)
@@ -927,7 +960,7 @@ func _build_movement_body(w: Dictionary) -> Control:
 func _build_atom_editor(w: Dictionary, ai: int) -> Control:
 	var a: Dictionary = w["atoms"][ai]
 	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 6)
+	row.add_theme_constant_override("separation", 4)
 	if a["t"] == "step":
 		var ros := DirRosette.new()
 		ros.setup(self, a.get("dirs", []), bool(a.get("free", false)),
@@ -935,14 +968,14 @@ func _build_atom_editor(w: Dictionary, ai: int) -> Control:
 		row.add_child(ros)
 	elif a["t"] == "anchor":
 		var anc := Control.new()
-		anc.custom_minimum_size = Vector2(46, 46)
-		anc.tooltip_text = "❄ àncora (Griglia di Posizione) — non muove la pedina"
-		anc.draw.connect(func(): GeometryEditor.draw_icon(anc, "anchor" if not a["opt"] else "anchor_opt", Vector2(23, 23), 20.0, 1))
+		anc.custom_minimum_size = Vector2(36, 36)
+		anc.tooltip_text = "àncora (Griglia di Posizione) — non muove la pedina"
+		anc.draw.connect(func(): GeometryEditor.draw_icon(anc, "anchor" if not a["opt"] else "anchor_opt", Vector2(18, 18), 16.0, 1))
 		row.add_child(anc)
 	else:
 		var rotc := Control.new()
-		rotc.custom_minimum_size = Vector2(46, 46)
-		rotc.draw.connect(func(): GeometryEditor.draw_icon(rotc, "rot" if not a["opt"] else "rot_opt", Vector2(23, 23), 20.0, 1))
+		rotc.custom_minimum_size = Vector2(36, 36)
+		rotc.draw.connect(func(): GeometryEditor.draw_icon(rotc, "rot" if not a["opt"] else "rot_opt", Vector2(18, 18), 16.0, 1))
 		row.add_child(rotc)
 
 	var col := VBoxContainer.new()
@@ -953,13 +986,13 @@ func _build_atom_editor(w: Dictionary, ai: int) -> Control:
 	r1.add_child(_lbl("passi" if a["t"] == "step" else "entità"))
 	var sp := SpinBox.new()
 	sp.min_value = 1; sp.max_value = 6; sp.value = a["n"]
-	sp.custom_minimum_size = Vector2(54, 0)
+	sp.custom_minimum_size = Vector2(42, 0)
 	sp.value_changed.connect(func(val): a["n"] = int(val); changed.emit())
 	r1.add_child(sp)
 	var chk := CheckBox.new()
 	chk.text = "facolt."
 	chk.button_pressed = a["opt"]
-	chk.add_theme_font_size_override("font_size", 11)
+	chk.add_theme_font_size_override("font_size", 10)
 	chk.toggled.connect(func(p): a["opt"] = p; _rebuild_widgets(); changed.emit())
 	r1.add_child(chk)
 	var rm := Button.new()
@@ -970,12 +1003,12 @@ func _build_atom_editor(w: Dictionary, ai: int) -> Control:
 	var r2 := HBoxContainer.new()
 	r2.add_theme_constant_override("separation", 3)
 	r2.add_child(_lbl("kamae"))
-	r2.add_child(_eff_opt(KAMAE_OPTS, str(a.get("kamae", "")), func(val): a["kamae"] = val))
+	r2.add_child(_kamae_bar(str(a.get("kamae", "")), func(val): a["kamae"] = val; changed.emit()))
 	if a["t"] == "step":
 		r2.add_child(_lbl("F"))
 		var fs := SpinBox.new()
 		fs.min_value = 0; fs.max_value = 3; fs.value = int(a.get("focus_cost", 0))
-		fs.custom_minimum_size = Vector2(48, 0)
+		fs.custom_minimum_size = Vector2(40, 0)
 		fs.value_changed.connect(func(val): a["focus_cost"] = int(val); changed.emit())
 		r2.add_child(fs)
 	col.add_child(r2)
@@ -1006,7 +1039,7 @@ func _build_kamae_body(w: Dictionary) -> Control:
 	var lbl := Label.new()
 	var req := str(w.get("req", ""))
 	lbl.text = "richiesto: %s" % (KAMAE_LABELS.get(req, req) if req != "" else "nessuno")
-	lbl.add_theme_font_size_override("font_size", 12)
+	lbl.add_theme_font_size_override("font_size", 10)
 	v.add_child(lbl)
 	return v
 
@@ -1014,6 +1047,8 @@ func _build_kamae_body(w: Dictionary) -> Control:
 func _build_counter_body(w: Dictionary) -> Control:
 	var le := LineEdit.new()
 	le.placeholder_text = "iniziative di contrattacco, es. 8, 6"
+	le.add_theme_font_size_override("font_size", 11)
+	le.custom_minimum_size = Vector2(180, 0)
 	le.text = ", ".join((w.get("values", []) as Array).map(func(x): return str(x)))
 	le.text_changed.connect(func(t: String):
 		var vals := []
@@ -1027,7 +1062,8 @@ func _build_counter_body(w: Dictionary) -> Control:
 
 func _build_note_body(w: Dictionary) -> Control:
 	var te := TextEdit.new()
-	te.custom_minimum_size = Vector2(0, 50)
+	te.custom_minimum_size = Vector2(220, 38)
+	te.add_theme_font_size_override("font_size", 11)
 	te.placeholder_text = "annotazioni / incertezze di trascrizione"
 	te.text = str(w.get("text", ""))
 	te.text_changed.connect(func(): w["text"] = te.text; changed.emit())
@@ -1042,7 +1078,8 @@ func _build_effect_body(w: Dictionary) -> Control:
 	r1.add_theme_constant_override("separation", 3)
 	var do_opt := OptionButton.new()
 	do_opt.clip_text = true
-	do_opt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	do_opt.add_theme_font_size_override("font_size", 11)
+	do_opt.custom_minimum_size = Vector2(150, 0)
 	do_opt.add_item("(verbo…)")
 	for v in CardValidator.EFFECT_VERBS:
 		do_opt.add_item(v)
@@ -1055,12 +1092,15 @@ func _build_effect_body(w: Dictionary) -> Control:
 	var r2 := HBoxContainer.new()
 	r2.add_theme_constant_override("separation", 3)
 	r2.add_child(_eff_opt(WHEN_OPTS, str(w.get("when", "")), func(val): w["when"] = val))
-	r2.add_child(_eff_opt(KAMAE_OPTS, str(w.get("kamae", "")), func(val): w["kamae"] = val))
-	r2.add_child(_eff_opt(KAMAE_OPTS, str(w.get("to", "")), func(val): w["to"] = val))
+	r2.add_child(_lbl("se"))
+	r2.add_child(_kamae_bar(str(w.get("kamae", "")), func(val): w["kamae"] = val; changed.emit()))
+	r2.add_child(_lbl("→"))
+	r2.add_child(_kamae_bar(str(w.get("to", "")), func(val): w["to"] = val; changed.emit()))
 	r2.add_child(_lbl("F"))
 	r2.add_child(_eff_spin(int(w.get("focus_cost", 0)), 0, 3, func(val): w["focus_cost"] = val))
 	var alt := LineEdit.new()
 	alt.custom_minimum_size = Vector2(34, 0)
+	alt.add_theme_font_size_override("font_size", 11)
 	alt.placeholder_text = "alt"
 	alt.text = str(w.get("alt", ""))
 	alt.text_changed.connect(func(t): w["alt"] = t.strip_edges(); changed.emit())
@@ -1075,13 +1115,14 @@ func _lbl(t: String) -> Label:
 	var l := Label.new()
 	l.text = t
 	l.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
-	l.add_theme_font_size_override("font_size", 11)
+	l.add_theme_font_size_override("font_size", 10)
 	return l
 
 
 func _eff_spin(val: int, mn: int, mx: int, on_set: Callable) -> SpinBox:
 	var sp := SpinBox.new()
 	sp.min_value = mn; sp.max_value = mx; sp.value = val
+	sp.custom_minimum_size = Vector2(44, 0)
 	sp.value_changed.connect(func(v): on_set.call(int(v)); changed.emit())
 	return sp
 
@@ -1095,9 +1136,19 @@ func _eff_opt(values: Array, cur: String, on_set: Callable) -> OptionButton:
 			found = i
 	o.selected = maxi(found, 0)
 	o.clip_text = true
-	o.custom_minimum_size = Vector2(62, 0)
+	o.add_theme_font_size_override("font_size", 10)
+	o.custom_minimum_size = Vector2(56, 0)
 	o.item_selected.connect(func(idx): on_set.call(values[idx]); changed.emit())
 	return o
+
+
+## Selettore Kamae a BARRA COLORATA (niente testo): tre segmenti
+## rosso/verde/giallo. Clic = seleziona; clic sul segmento già attivo = azzera.
+## Chiama on_set(slug) con "" quando nessuna kamae è scelta.
+func _kamae_bar(cur: String, on_set: Callable) -> Control:
+	var bar := KamaeBar.new()
+	bar.setup(self, cur, on_set)
+	return bar
 
 
 # ─── Geometria del nido d'ape ────────────────────────────────────────────────
@@ -1290,6 +1341,49 @@ class HexCell extends Control:
 			queue_redraw()
 
 
+# ─── Inner class: selettore Kamae a barra colorata (niente testo) ────────────
+
+## Tre segmenti colorati (rosso=aggressione, verde=equilibrio, giallo=
+## determinazione). Il segmento attivo è pieno e bordato; gli altri sono
+## attenuati. Clic = seleziona; clic sull'attivo = azzera.
+class KamaeBar extends Control:
+	var ed: GeometryEditor
+	var cur: String = ""
+	var on_set: Callable
+	const SEG_W := 17.0
+	const SEG_H := 15.0
+
+	func setup(editor: GeometryEditor, current: String, cb: Callable) -> void:
+		ed = editor
+		cur = current
+		on_set = cb
+		var n := GeometryEditor.KAMAE_BAR.size()
+		custom_minimum_size = Vector2(SEG_W * n + 2.0, SEG_H)
+		mouse_filter = Control.MOUSE_FILTER_STOP
+		tooltip_text = "Kamae: clic per scegliere, clic sull'attiva per azzerare"
+
+	func _draw() -> void:
+		for i in GeometryEditor.KAMAE_BAR.size():
+			var slug: String = GeometryEditor.KAMAE_BAR[i]
+			var col: Color = GeometryEditor.KAMAE_COLORS.get(slug, Color.GRAY)
+			var on := slug == cur
+			var rect := Rect2(i * SEG_W + 1.0, 0.0, SEG_W - 2.0, SEG_H)
+			draw_rect(rect, col if on else Color(col.r, col.g, col.b, 0.28))
+			if on:
+				draw_rect(rect, Color.WHITE, false, 1.5)
+
+	func _gui_input(event: InputEvent) -> void:
+		if not (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT):
+			return
+		var i := int(event.position.x / SEG_W)
+		if i < 0 or i >= GeometryEditor.KAMAE_BAR.size():
+			return
+		var slug: String = GeometryEditor.KAMAE_BAR[i]
+		cur = "" if cur == slug else slug
+		queue_redraw()
+		on_set.call(cur)
+
+
 # ─── Inner class: icona disegnata (token kamae) ──────────────────────────────
 
 class DragIcon extends Control:
@@ -1316,14 +1410,14 @@ class DirRosette extends Control:
 	var dirs: Array = []
 	var free: bool = false
 	var on_change: Callable
-	const RAD := 17.0
+	const RAD := 14.0
 
 	func setup(editor: GeometryEditor, initial_dirs: Array, is_free: bool, cb: Callable) -> void:
 		ed = editor
 		dirs = (initial_dirs as Array).duplicate()
 		free = is_free
 		on_change = cb
-		custom_minimum_size = Vector2(86, 86)
+		custom_minimum_size = Vector2(66, 66)
 		mouse_filter = Control.MOUSE_FILTER_STOP
 		tooltip_text = "Clic: attiva/disattiva direzione. Centro = passo libero."
 
@@ -1382,7 +1476,7 @@ class WidgetSlot extends PanelContainer:
 
 	func _get_drag_data(_at: Vector2):
 		var prev := Label.new()
-		prev.text = "⠿ " + ed._title_of(widget)
+		prev.text = ed._title_of(widget)
 		set_drag_preview(prev)
 		return {"slot": true, "w": widget, "src": siblings}
 
