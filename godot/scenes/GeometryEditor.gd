@@ -59,7 +59,7 @@ const CONTAINER_TYPES := ["initiative", "oppure"]
 ## Tutti i tipi offerti dal menu (contenitori in cima).
 const MENU_TYPES := ["initiative", "oppure", "combat", "movement", "kamae", "effect", "counter", "note"]
 const WIDGET_TITLES := {
-	"initiative": "——— Iniziativa", "oppure": "OPPURE (alternative)",
+	"initiative": "Iniziativa", "oppure": "OPPURE (alternative)",
 	"combat": "Combattimento (att./dif.)", "movement": "Movimento",
 	"kamae": "Kamae richiesto", "effect": "Effetto",
 	"counter": "Contrattacco", "note": "Nota",
@@ -599,7 +599,20 @@ func _effect_to(e: Dictionary) -> Dictionary:
 func _build_ui() -> void:
 	_built = true
 	add_theme_constant_override("separation", 6)
+	theme = _editor_theme()
 	_rebuild_widgets()
+
+
+## Tema dell'editor: una sola dimensione di testo per TUTTI i controlli dei
+## widget (il tema globale usa 16–18, qui uniformiamo a 12), così non ci sono
+## scritte di misure diverse tra un widget e l'altro.
+func _editor_theme() -> Theme:
+	const FS := 12
+	var th := Theme.new()
+	th.default_font_size = FS
+	for cls in ["Label", "Button", "OptionButton", "LineEdit", "SpinBox", "CheckBox", "TextEdit", "MenuButton"]:
+		th.set_font_size("font_size", cls, FS)
+	return th
 
 
 func _rebuild_widgets() -> void:
@@ -618,7 +631,6 @@ func _build_list(parent: Node, siblings: Array) -> void:
 	var add := Button.new()
 	add.text = "+ aggiungi widget"
 	add.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	add.add_theme_font_size_override("font_size", 11)
 	add.tooltip_text = "Aggiunge un widget; scegline il tipo dal menu in cima"
 	add.pressed.connect(func():
 		siblings.append(_new_widget(""))
@@ -633,7 +645,7 @@ func _build_widget(siblings: Array, idx: int) -> Control:
 	panel.ed = self
 	panel.siblings = siblings
 	panel.widget = w
-	panel.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN   # hug content: box stretti
+	panel.size_flags_horizontal = Control.SIZE_FILL   # tutti i widget alla stessa larghezza
 	panel.add_theme_stylebox_override("panel", _slot_style())
 	var box := VBoxContainer.new()
 	box.add_theme_constant_override("separation", 2)
@@ -644,9 +656,9 @@ func _build_widget(siblings: Array, idx: int) -> Control:
 	head.add_theme_constant_override("separation", 3)
 	head.add_child(_grip())
 	var topt := OptionButton.new()
-	topt.add_theme_font_size_override("font_size", 11)
+	topt.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	topt.custom_minimum_size = Vector2(150, 0)
-	topt.add_item("(tipo…)")
+	topt.add_item("(tipo...)")
 	for t in MENU_TYPES:
 		topt.add_item(str(WIDGET_TITLES[t]))
 	topt.selected = MENU_TYPES.find(str(w.get("type", ""))) + 1
@@ -661,7 +673,20 @@ func _build_widget(siblings: Array, idx: int) -> Control:
 	box.add_child(head)
 
 	box.add_child(_build_widget_body(w))
+	# Lo sfondo/etichette del widget non catturano il mouse: così il trascinamento
+	# parte da QUALSIASI zona non interattiva (campi e icone restano cliccabili).
+	_relax_mouse(box)
 	return panel
+
+
+## Rende "trasparenti al mouse" contenitori ed etichette (ma non i pannelli
+## annidati né i controlli interattivi), così il drag del widget parte ovunque.
+func _relax_mouse(node: Node) -> void:
+	for ch in node.get_children():
+		if (ch is Container and not (ch is PanelContainer)) or ch is Label:
+			(ch as Control).mouse_filter = Control.MOUSE_FILTER_PASS
+		if not (ch is PanelContainer):
+			_relax_mouse(ch)
 
 
 ## Stile compatto del pannello-widget: margini piccoli, così i box sono corti.
@@ -670,11 +695,11 @@ func _slot_style() -> StyleBoxFlat:
 	sb.bg_color = Color(0.16, 0.16, 0.20)
 	sb.border_color = Color(0.30, 0.30, 0.36)
 	sb.set_border_width_all(1)
-	sb.set_corner_radius_all(3)
-	sb.content_margin_left = 5
-	sb.content_margin_right = 5
-	sb.content_margin_top = 3
-	sb.content_margin_bottom = 3
+	sb.set_corner_radius_all(8)
+	sb.content_margin_left = 6
+	sb.content_margin_right = 6
+	sb.content_margin_top = 4
+	sb.content_margin_bottom = 4
 	return sb
 
 
@@ -682,7 +707,6 @@ func _mini_btn(txt: String, tip: String) -> Button:
 	var b := Button.new()
 	b.text = txt
 	b.tooltip_text = tip
-	b.add_theme_font_size_override("font_size", 10)
 	return b
 
 
@@ -823,7 +847,6 @@ func _build_widget_body(w: Dictionary) -> Control:
 		"note": return _build_note_body(w)
 	var hint := Label.new()
 	hint.text = "Scegli un tipo dal menu in alto."
-	hint.add_theme_font_size_override("font_size", 10)
 	hint.add_theme_color_override("font_color", Color(0.6, 0.6, 0.66))
 	return hint
 
@@ -842,7 +865,7 @@ func _build_container_body(w: Dictionary) -> Control:
 		var le := LineEdit.new()
 		le.text = str(w.get("value", ""))
 		le.placeholder_text = "es. 8, 6/7, 5,4,3, ="
-		le.add_theme_font_size_override("font_size", 11)
+		le.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		le.custom_minimum_size = Vector2(64, 0)
 		le.text_changed.connect(func(t): w["value"] = t.strip_edges(); changed.emit())
 		row.add_child(le)
@@ -871,8 +894,7 @@ func _build_combat_body(w: Dictionary) -> Control:
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 2)
 	var hint := Label.new()
-	hint.text = "clic = scorri icona · clic destro = svuota"
-	hint.add_theme_font_size_override("font_size", 10)
+	hint.text = "clic = scorri icona / clic destro = svuota"
 	hint.add_theme_color_override("font_color", Color(0.55, 0.6, 0.68))
 	v.add_child(hint)
 	v.add_child(_build_honey(w))
@@ -950,7 +972,7 @@ func _build_movement_body(w: Dictionary) -> Control:
 	add.add_child(ar)
 	var an := Button.new()
 	an.text = "+ àncora"
-	an.tooltip_text = "Marcatore-àncora sulla Griglia di Posizione (collegabile a un asterisco da una carta Abilità) — non muove la pedina"
+	an.tooltip_text = "Marcatore-àncora sulla Griglia di Posizione (collegabile a un asterisco da una carta Abilità) - non muove la pedina"
 	an.pressed.connect(func(): atoms.append(_norm_atom({"t": "anchor", "n": 1, "opt": false})); _rebuild_widgets(); changed.emit())
 	add.add_child(an)
 	v.add_child(add)
@@ -969,7 +991,7 @@ func _build_atom_editor(w: Dictionary, ai: int) -> Control:
 	elif a["t"] == "anchor":
 		var anc := Control.new()
 		anc.custom_minimum_size = Vector2(36, 36)
-		anc.tooltip_text = "àncora (Griglia di Posizione) — non muove la pedina"
+		anc.tooltip_text = "àncora (Griglia di Posizione) - non muove la pedina"
 		anc.draw.connect(func(): GeometryEditor.draw_icon(anc, "anchor" if not a["opt"] else "anchor_opt", Vector2(18, 18), 16.0, 1))
 		row.add_child(anc)
 	else:
@@ -987,12 +1009,13 @@ func _build_atom_editor(w: Dictionary, ai: int) -> Control:
 	var sp := SpinBox.new()
 	sp.min_value = 1; sp.max_value = 6; sp.value = a["n"]
 	sp.custom_minimum_size = Vector2(42, 0)
+	sp.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	sp.value_changed.connect(func(val): a["n"] = int(val); changed.emit())
 	r1.add_child(sp)
 	var chk := CheckBox.new()
 	chk.text = "facolt."
 	chk.button_pressed = a["opt"]
-	chk.add_theme_font_size_override("font_size", 10)
+	chk.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	chk.toggled.connect(func(p): a["opt"] = p; _rebuild_widgets(); changed.emit())
 	r1.add_child(chk)
 	var rm := Button.new()
@@ -1009,6 +1032,7 @@ func _build_atom_editor(w: Dictionary, ai: int) -> Control:
 		var fs := SpinBox.new()
 		fs.min_value = 0; fs.max_value = 3; fs.value = int(a.get("focus_cost", 0))
 		fs.custom_minimum_size = Vector2(40, 0)
+		fs.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		fs.value_changed.connect(func(val): a["focus_cost"] = int(val); changed.emit())
 		r2.add_child(fs)
 	col.add_child(r2)
@@ -1039,7 +1063,6 @@ func _build_kamae_body(w: Dictionary) -> Control:
 	var lbl := Label.new()
 	var req := str(w.get("req", ""))
 	lbl.text = "richiesto: %s" % (KAMAE_LABELS.get(req, req) if req != "" else "nessuno")
-	lbl.add_theme_font_size_override("font_size", 10)
 	v.add_child(lbl)
 	return v
 
@@ -1047,7 +1070,7 @@ func _build_kamae_body(w: Dictionary) -> Control:
 func _build_counter_body(w: Dictionary) -> Control:
 	var le := LineEdit.new()
 	le.placeholder_text = "iniziative di contrattacco, es. 8, 6"
-	le.add_theme_font_size_override("font_size", 11)
+	le.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	le.custom_minimum_size = Vector2(180, 0)
 	le.text = ", ".join((w.get("values", []) as Array).map(func(x): return str(x)))
 	le.text_changed.connect(func(t: String):
@@ -1062,8 +1085,8 @@ func _build_counter_body(w: Dictionary) -> Control:
 
 func _build_note_body(w: Dictionary) -> Control:
 	var te := TextEdit.new()
-	te.custom_minimum_size = Vector2(220, 38)
-	te.add_theme_font_size_override("font_size", 11)
+	te.custom_minimum_size = Vector2(220, 44)
+	te.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY   # va a capo da solo (niente scroll orizz.)
 	te.placeholder_text = "annotazioni / incertezze di trascrizione"
 	te.text = str(w.get("text", ""))
 	te.text_changed.connect(func(): w["text"] = te.text; changed.emit())
@@ -1078,9 +1101,9 @@ func _build_effect_body(w: Dictionary) -> Control:
 	r1.add_theme_constant_override("separation", 3)
 	var do_opt := OptionButton.new()
 	do_opt.clip_text = true
-	do_opt.add_theme_font_size_override("font_size", 11)
+	do_opt.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	do_opt.custom_minimum_size = Vector2(150, 0)
-	do_opt.add_item("(verbo…)")
+	do_opt.add_item("(verbo...)")
 	for v in CardValidator.EFFECT_VERBS:
 		do_opt.add_item(v)
 	do_opt.selected = CardValidator.EFFECT_VERBS.find(str(w.get("do", ""))) + 1
@@ -1094,13 +1117,13 @@ func _build_effect_body(w: Dictionary) -> Control:
 	r2.add_child(_eff_opt(WHEN_OPTS, str(w.get("when", "")), func(val): w["when"] = val))
 	r2.add_child(_lbl("se"))
 	r2.add_child(_kamae_bar(str(w.get("kamae", "")), func(val): w["kamae"] = val; changed.emit()))
-	r2.add_child(_lbl("→"))
+	r2.add_child(_lbl("a"))
 	r2.add_child(_kamae_bar(str(w.get("to", "")), func(val): w["to"] = val; changed.emit()))
 	r2.add_child(_lbl("F"))
 	r2.add_child(_eff_spin(int(w.get("focus_cost", 0)), 0, 3, func(val): w["focus_cost"] = val))
 	var alt := LineEdit.new()
 	alt.custom_minimum_size = Vector2(34, 0)
-	alt.add_theme_font_size_override("font_size", 11)
+	alt.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	alt.placeholder_text = "alt"
 	alt.text = str(w.get("alt", ""))
 	alt.text_changed.connect(func(t): w["alt"] = t.strip_edges(); changed.emit())
@@ -1115,7 +1138,6 @@ func _lbl(t: String) -> Label:
 	var l := Label.new()
 	l.text = t
 	l.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
-	l.add_theme_font_size_override("font_size", 10)
 	return l
 
 
@@ -1123,6 +1145,7 @@ func _eff_spin(val: int, mn: int, mx: int, on_set: Callable) -> SpinBox:
 	var sp := SpinBox.new()
 	sp.min_value = mn; sp.max_value = mx; sp.value = val
 	sp.custom_minimum_size = Vector2(44, 0)
+	sp.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	sp.value_changed.connect(func(v): on_set.call(int(v)); changed.emit())
 	return sp
 
@@ -1131,12 +1154,12 @@ func _eff_opt(values: Array, cur: String, on_set: Callable) -> OptionButton:
 	var o := OptionButton.new()
 	var found := -1
 	for i in values.size():
-		o.add_item("—" if values[i] == "" else str(values[i]))
+		o.add_item("-" if values[i] == "" else str(values[i]))
 		if values[i] == cur:
 			found = i
 	o.selected = maxi(found, 0)
 	o.clip_text = true
-	o.add_theme_font_size_override("font_size", 10)
+	o.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	o.custom_minimum_size = Vector2(56, 0)
 	o.item_selected.connect(func(idx): on_set.call(values[idx]); changed.emit())
 	return o
@@ -1291,7 +1314,7 @@ class HexCell extends Control:
 	func setup(editor: GeometryEditor, combat_widget: Dictionary, axial: Vector2i, rr: float, pawn: bool) -> void:
 		ed = editor; cw = combat_widget; ax = axial; r = rr; is_pawn = pawn
 		mouse_filter = Control.MOUSE_FILTER_STOP
-		tooltip_text = "pedina" if pawn else "q %d · r %d · dist %d" % [ax.x, ax.y, _hex_dist(ax)]
+		tooltip_text = "pedina" if pawn else "q %d / r %d / dist %d" % [ax.x, ax.y, _hex_dist(ax)]
 
 	static func _hex_dist(a: Vector2i) -> int:
 		return (absi(a.x) + absi(a.y) + absi(a.x + a.y)) / 2
@@ -1475,10 +1498,22 @@ class WidgetSlot extends PanelContainer:
 	var widget                ## il widget (Dictionary)
 
 	func _get_drag_data(_at: Vector2):
-		var prev := Label.new()
-		prev.text = ed._title_of(widget)
+		# Anteprima stilizzata che segue il cursore: si vede chiaramente che il
+		# widget si sta spostando. L'originale viene attenuato durante il drag.
+		var prev := PanelContainer.new()
+		prev.add_theme_stylebox_override("panel", ed._slot_style())
+		prev.custom_minimum_size = Vector2(maxf(140.0, size.x), 0)
+		var lab := Label.new()
+		lab.text = ed._title_of(widget)
+		prev.add_child(lab)
+		prev.modulate = Color(1, 1, 1, 0.9)
 		set_drag_preview(prev)
+		modulate = Color(1, 1, 1, 0.4)
 		return {"slot": true, "w": widget, "src": siblings}
+
+	func _notification(what: int) -> void:
+		if what == NOTIFICATION_DRAG_END:
+			modulate = Color.WHITE   # ripristina dopo il rilascio (anche se annullato)
 
 	func _can_drop_data(_at: Vector2, data) -> bool:
 		return data is Dictionary and data.get("slot", false) and ed._can_move(data["w"], siblings)
