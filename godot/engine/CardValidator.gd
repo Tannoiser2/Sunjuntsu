@@ -10,6 +10,9 @@ class_name CardValidator
 extends RefCounted
 
 const KAMAE := ["aggression", "balance", "determination"]
+## Stance bersaglio per gli effetti: include "neutral" (le stance reali sono 4,
+## vedi Kamae.gd). `kamae_req` resta sulle 3 stance "attive" (non si richiede neutral).
+const STANCES := ["aggression", "balance", "determination", "neutral"]
 const RANKS := ["Wood", "Steel", "Gold", "Jade", "-"]
 
 ## Verbi `effects[].do` noti (GEOMETRY_SCHEMA.md §Effetti).
@@ -93,12 +96,18 @@ static func validate(card: Dictionary, geom: Dictionary, image, ctx := {}) -> Ar
 			var verb := str(e.get("do", ""))
 			if verb != "" and not (verb in EFFECT_VERBS):
 				out.append(_issue("warning", "effect", "effetto sconosciuto: '%s'" % verb))
-			for fld in ["kamae", "to"]:
-				if e.has(fld):
-					var kv := str(e[fld])
-					if kv != "" and not (kv in KAMAE):
-						out.append(_issue("error", "effect_kamae",
-							"effetto '%s': %s non valido '%s'" % [verb, fld, kv]))
+			# Stance bersaglio = 4 stance reali; switch_kamae ammette anche "any"
+			# ("qualsiasi", risolto da Duel.gd). Niente falsi errori su neutral/any.
+			if e.has("kamae"):
+				var kv := str(e["kamae"])
+				if kv != "" and not (kv in STANCES):
+					out.append(_issue("error", "effect_kamae",
+						"effetto '%s': kamae non valido '%s'" % [verb, kv]))
+			if e.has("to"):
+				var tv := str(e["to"])
+				if tv != "" and tv != "any" and not (tv in STANCES):
+					out.append(_issue("error", "effect_kamae",
+						"effetto '%s': to non valido '%s'" % [verb, tv]))
 	return out
 
 
