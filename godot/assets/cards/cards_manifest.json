@@ -4,7 +4,6 @@
   463,
   645
  ],
- "note": "Indice immagini ritagliate dai PDF. Le statistiche sono leggibili sulla faccia della carta; i dati di gioco autorevoli sono in data/decks/ (foglio Custom Decks).",
  "cards": [
   {
    "deck": "warrior",
@@ -669,6 +668,638 @@
    "row": 2,
    "col": 2,
    "file": "ferite/ferite_09.webp"
+  },
+  {
+   "deck": "master",
+   "index": 1,
+   "page": 0,
+   "row": 0,
+   "col": 0,
+   "file": "master/master_01.webp"
+  },
+  {
+   "deck": "master",
+   "index": 2,
+   "page": 0,
+   "row": 0,
+   "col": 1,
+   "file": "master/master_02.webp"
+  },
+  {
+   "deck": "master",
+   "index": 3,
+   "page": 0,
+   "row": 0,
+   "col": 2,
+   "file": "master/master_03.webp"
+  },
+  {
+   "deck": "master",
+   "index": 4,
+   "page": 0,
+   "row": 1,
+   "col": 0,
+   "file": "master/master_04.webp"
+  },
+  {
+   "deck": "master",
+   "index": 5,
+   "page": 0,
+   "row": 1,
+   "col": 1,
+   "file": "master/master_05.webp"
+  },
+  {
+   "deck": "master",
+   "index": 6,
+   "page": 0,
+   "row": 1,
+   "col": 2,
+   "file": "master/master_06.webp"
+  },
+  {
+   "deck": "master",
+   "index": 7,
+   "page": 0,
+   "row": 2,
+   "col": 0,
+   "file": "master/master_07.webp"
+  },
+  {
+   "deck": "master",
+   "index": 8,
+   "page": 0,
+   "row": 2,
+   "col": 1,
+   "file": "master/master_08.webp"
+  },
+  {
+   "deck": "master",
+   "index": 9,
+   "page": 0,
+   "row": 2,
+   "col": 2,
+   "file": "master/master_09.webp"
+  },
+  {
+   "deck": "master",
+   "index": 10,
+   "page": 1,
+   "row": 0,
+   "col": 0,
+   "file": "master/master_10.webp"
+  },
+  {
+   "deck": "master",
+   "index": 11,
+   "page": 1,
+   "row": 0,
+   "col": 1,
+   "file": "master/master_11.webp"
+  },
+  {
+   "deck": "master",
+   "index": 12,
+   "page": 1,
+   "row": 0,
+   "col": 2,
+   "file": "master/master_12.webp"
+  },
+  {
+   "deck": "master",
+   "index": 13,
+   "page": 1,
+   "row": 1,
+   "col": 0,
+   "file": "master/master_13.webp"
+  },
+  {
+   "deck": "master",
+   "index": 14,
+   "page": 1,
+   "row": 1,
+   "col": 1,
+   "file": "master/master_14.webp"
+  },
+  {
+   "deck": "master",
+   "index": 15,
+   "page": 1,
+   "row": 1,
+   "col": 2,
+   "file": "master/master_15.webp"
+  },
+  {
+   "deck": "master",
+   "index": 16,
+   "page": 1,
+   "row": 2,
+   "col": 0,
+   "file": "master/master_16.webp"
+  },
+  {
+   "deck": "master",
+   "index": 17,
+   "page": 1,
+   "row": 2,
+   "col": 1,
+   "file": "master/master_17.webp"
+  },
+  {
+   "deck": "master",
+   "index": 18,
+   "page": 1,
+   "row": 2,
+   "col": 2,
+   "file": "master/master_18.webp"
+  },
+  {
+   "deck": "master",
+   "index": 19,
+   "page": 2,
+   "row": 0,
+   "col": 0,
+   "file": "master/master_19.webp"
+  },
+  {
+   "deck": "master",
+   "index": 20,
+   "page": 2,
+   "row": 0,
+   "col": 1,
+   "file": "master/master_20.webp"
+  },
+  {
+   "deck": "master",
+   "index": 21,
+   "page": 2,
+   "row": 0,
+   "col": 2,
+   "file": "master/master_21.webp"
+  },
+  {
+   "deck": "master",
+   "index": 22,
+   "page": 2,
+   "row": 1,
+   "col": 0,
+   "file": "master/master_22.webp"
+  },
+  {
+   "deck": "master",
+   "index": 23,
+   "page": 2,
+   "row": 1,
+   "col": 1,
+   "file": "master/master_23.webp"
+  },
+  {
+   "deck": "master",
+   "index": 24,
+   "page": 2,
+   "row": 1,
+   "col": 2,
+   "file": "master/master_24.webp"
+  },
+  {
+   "deck": "master",
+   "index": 25,
+   "page": 2,
+   "row": 2,
+   "col": 0,
+   "file": "master/master_25.webp"
+  },
+  {
+   "deck": "master",
+   "index": 26,
+   "page": 2,
+   "row": 2,
+   "col": 1,
+   "file": "master/master_26.webp"
+  },
+  {
+   "deck": "master",
+   "index": 27,
+   "page": 2,
+   "row": 2,
+   "col": 2,
+   "file": "master/master_27.webp"
+  },
+  {
+   "deck": "master",
+   "index": 28,
+   "page": 3,
+   "row": 0,
+   "col": 0,
+   "file": "master/master_28.webp"
+  },
+  {
+   "deck": "master",
+   "index": 29,
+   "page": 3,
+   "row": 0,
+   "col": 1,
+   "file": "master/master_29.webp"
+  },
+  {
+   "deck": "master",
+   "index": 30,
+   "page": 3,
+   "row": 0,
+   "col": 2,
+   "file": "master/master_30.webp"
+  },
+  {
+   "deck": "master",
+   "index": 31,
+   "page": 3,
+   "row": 1,
+   "col": 0,
+   "file": "master/master_31.webp"
+  },
+  {
+   "deck": "master",
+   "index": 32,
+   "page": 3,
+   "row": 1,
+   "col": 1,
+   "file": "master/master_32.webp"
+  },
+  {
+   "deck": "master",
+   "index": 33,
+   "page": 3,
+   "row": 1,
+   "col": 2,
+   "file": "master/master_33.webp"
+  },
+  {
+   "deck": "master",
+   "index": 34,
+   "page": 3,
+   "row": 2,
+   "col": 0,
+   "file": "master/master_34.webp"
+  },
+  {
+   "deck": "master",
+   "index": 35,
+   "page": 3,
+   "row": 2,
+   "col": 1,
+   "file": "master/master_35.webp"
+  },
+  {
+   "deck": "student",
+   "index": 1,
+   "page": 0,
+   "row": 0,
+   "col": 0,
+   "file": "student/student_01.webp"
+  },
+  {
+   "deck": "student",
+   "index": 2,
+   "page": 0,
+   "row": 0,
+   "col": 1,
+   "file": "student/student_02.webp"
+  },
+  {
+   "deck": "student",
+   "index": 3,
+   "page": 0,
+   "row": 0,
+   "col": 2,
+   "file": "student/student_03.webp"
+  },
+  {
+   "deck": "student",
+   "index": 4,
+   "page": 0,
+   "row": 1,
+   "col": 0,
+   "file": "student/student_04.webp"
+  },
+  {
+   "deck": "student",
+   "index": 5,
+   "page": 0,
+   "row": 1,
+   "col": 1,
+   "file": "student/student_05.webp"
+  },
+  {
+   "deck": "student",
+   "index": 6,
+   "page": 0,
+   "row": 1,
+   "col": 2,
+   "file": "student/student_06.webp"
+  },
+  {
+   "deck": "student",
+   "index": 7,
+   "page": 0,
+   "row": 2,
+   "col": 0,
+   "file": "student/student_07.webp"
+  },
+  {
+   "deck": "student",
+   "index": 8,
+   "page": 0,
+   "row": 2,
+   "col": 1,
+   "file": "student/student_08.webp"
+  },
+  {
+   "deck": "student",
+   "index": 9,
+   "page": 0,
+   "row": 2,
+   "col": 2,
+   "file": "student/student_09.webp"
+  },
+  {
+   "deck": "student",
+   "index": 10,
+   "page": 1,
+   "row": 0,
+   "col": 0,
+   "file": "student/student_10.webp"
+  },
+  {
+   "deck": "student",
+   "index": 11,
+   "page": 1,
+   "row": 0,
+   "col": 1,
+   "file": "student/student_11.webp"
+  },
+  {
+   "deck": "student",
+   "index": 12,
+   "page": 1,
+   "row": 0,
+   "col": 2,
+   "file": "student/student_12.webp"
+  },
+  {
+   "deck": "student",
+   "index": 13,
+   "page": 1,
+   "row": 1,
+   "col": 0,
+   "file": "student/student_13.webp"
+  },
+  {
+   "deck": "student",
+   "index": 14,
+   "page": 1,
+   "row": 1,
+   "col": 1,
+   "file": "student/student_14.webp"
+  },
+  {
+   "deck": "student",
+   "index": 15,
+   "page": 1,
+   "row": 1,
+   "col": 2,
+   "file": "student/student_15.webp"
+  },
+  {
+   "deck": "student",
+   "index": 16,
+   "page": 1,
+   "row": 2,
+   "col": 0,
+   "file": "student/student_16.webp"
+  },
+  {
+   "deck": "student",
+   "index": 17,
+   "page": 1,
+   "row": 2,
+   "col": 1,
+   "file": "student/student_17.webp"
+  },
+  {
+   "deck": "student",
+   "index": 18,
+   "page": 1,
+   "row": 2,
+   "col": 2,
+   "file": "student/student_18.webp"
+  },
+  {
+   "deck": "student",
+   "index": 19,
+   "page": 2,
+   "row": 0,
+   "col": 0,
+   "file": "student/student_19.webp"
+  },
+  {
+   "deck": "student",
+   "index": 20,
+   "page": 2,
+   "row": 0,
+   "col": 1,
+   "file": "student/student_20.webp"
+  },
+  {
+   "deck": "student",
+   "index": 21,
+   "page": 2,
+   "row": 0,
+   "col": 2,
+   "file": "student/student_21.webp"
+  },
+  {
+   "deck": "student",
+   "index": 22,
+   "page": 2,
+   "row": 1,
+   "col": 0,
+   "file": "student/student_22.webp"
+  },
+  {
+   "deck": "student",
+   "index": 23,
+   "page": 2,
+   "row": 1,
+   "col": 1,
+   "file": "student/student_23.webp"
+  },
+  {
+   "deck": "student",
+   "index": 24,
+   "page": 2,
+   "row": 1,
+   "col": 2,
+   "file": "student/student_24.webp"
+  },
+  {
+   "deck": "student",
+   "index": 25,
+   "page": 2,
+   "row": 2,
+   "col": 0,
+   "file": "student/student_25.webp"
+  },
+  {
+   "deck": "student",
+   "index": 26,
+   "page": 2,
+   "row": 2,
+   "col": 1,
+   "file": "student/student_26.webp"
+  },
+  {
+   "deck": "student",
+   "index": 27,
+   "page": 3,
+   "row": 0,
+   "col": 0,
+   "file": "student/student_27.webp"
+  },
+  {
+   "deck": "student",
+   "index": 28,
+   "page": 3,
+   "row": 0,
+   "col": 1,
+   "file": "student/student_28.webp"
+  },
+  {
+   "deck": "student",
+   "index": 29,
+   "page": 3,
+   "row": 0,
+   "col": 2,
+   "file": "student/student_29.webp"
+  },
+  {
+   "deck": "student",
+   "index": 30,
+   "page": 3,
+   "row": 1,
+   "col": 0,
+   "file": "student/student_30.webp"
+  },
+  {
+   "deck": "student",
+   "index": 31,
+   "page": 3,
+   "row": 1,
+   "col": 1,
+   "file": "student/student_31.webp"
+  },
+  {
+   "deck": "student",
+   "index": 32,
+   "page": 3,
+   "row": 1,
+   "col": 2,
+   "file": "student/student_32.webp"
+  },
+  {
+   "deck": "student",
+   "index": 33,
+   "page": 3,
+   "row": 2,
+   "col": 0,
+   "file": "student/student_33.webp"
+  },
+  {
+   "deck": "student",
+   "index": 34,
+   "page": 3,
+   "row": 2,
+   "col": 1,
+   "file": "student/student_34.webp"
+  },
+  {
+   "deck": "student",
+   "index": 35,
+   "page": 3,
+   "row": 2,
+   "col": 2,
+   "file": "student/student_35.webp"
+  },
+  {
+   "deck": "student",
+   "index": 36,
+   "page": 4,
+   "row": 0,
+   "col": 0,
+   "file": "student/student_36.webp"
+  },
+  {
+   "deck": "student",
+   "index": 37,
+   "page": 4,
+   "row": 0,
+   "col": 1,
+   "file": "student/student_37.webp"
+  },
+  {
+   "deck": "student",
+   "index": 38,
+   "page": 4,
+   "row": 0,
+   "col": 2,
+   "file": "student/student_38.webp"
+  },
+  {
+   "deck": "student",
+   "index": 39,
+   "page": 4,
+   "row": 1,
+   "col": 0,
+   "file": "student/student_39.webp"
+  },
+  {
+   "deck": "student",
+   "index": 40,
+   "page": 4,
+   "row": 1,
+   "col": 1,
+   "file": "student/student_40.webp"
+  },
+  {
+   "deck": "student",
+   "index": 41,
+   "page": 4,
+   "row": 1,
+   "col": 2,
+   "file": "student/student_41.webp"
+  },
+  {
+   "deck": "student",
+   "index": 42,
+   "page": 4,
+   "row": 2,
+   "col": 0,
+   "file": "student/student_42.webp"
+  },
+  {
+   "deck": "student",
+   "index": 43,
+   "page": 4,
+   "row": 2,
+   "col": 1,
+   "file": "student/student_43.webp"
+  },
+  {
+   "deck": "student",
+   "index": 44,
+   "page": 4,
+   "row": 2,
+   "col": 2,
+   "file": "student/student_44.webp"
   }
  ]
 }
