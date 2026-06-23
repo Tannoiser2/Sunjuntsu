@@ -3,6 +3,30 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.65.0] — 2026-06-23
+### Editor carte: interfaccia più compatta + selettore Kamae a barra colorata
+- **Selettore Kamae senza testo**: i menu a tendina della Kamae (condizione "se"
+  dei widget, kamae dell'atomo di movimento, campi `kamae`/`to` dell'Effetto)
+  sono ora una **barra a tre segmenti colorati** — 🔴 rosso = Aggressività,
+  🟢 verde = Equilibrio, 🟡 giallo = Determinazione. Clic per scegliere, clic sul
+  segmento attivo per azzerare. (Il colore della Determinazione passa da blu a
+  giallo, coerente con la barra.)
+- **Box più stretti e corti**: i pannelli-widget ora si adattano al contenuto
+  (non occupano più tutta la colonna), con uno stile a margini ridotti; font,
+  spaziature, esagono di combattimento (`HEX_R` 21→16), rosetta direzioni,
+  icone àncora/rotazione e campi numerici rimpiccioliti. Testo generalmente più
+  piccolo (label/menu/hint a 10–11 px).
+- **Glifi non resi dal font** rimossi/sostituiti: la maniglia di trascinamento
+  "⠿" (appariva come tofu) è ora **disegnata** a 6 puntini; tolto il "❄" dai
+  testi del pulsante/tooltip àncora (l'icona fiocco è comunque disegnata).
+- **CardValidator**: accetta le Kamae `neutral` e `any` nel campo `to` degli
+  effetti `switch_kamae` (le stance reali sono 4, vedi `Kamae.gd`; Duel.gd
+  risolve `any`). Prima 4 carte valide (23, 89, 118, 119) davano un falso
+  errore. Validazione strutturale delle 140 geometrie esistenti: **0 errori**.
+- ⚠️ Da verificare in Godot (suite `test_geometry_editor`, `test_cardvalidator`,
+  `test_cardeditor_smoke` e l'editor a video): la sessione di sviluppo non aveva
+  il binario per eseguirli. Versione 0.65.0.
+
 ## [0.64.0] — 2026-06-23
 ### Editor carte: il widget Iniziativa ora avvolge OGNI carta
 - Prima il contenitore **Iniziativa** veniva creato solo per le carte a più
