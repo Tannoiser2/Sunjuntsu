@@ -144,14 +144,15 @@ func _widgets_from(geom: Dictionary) -> Array:
 	if out.is_empty():
 		out = [_new_widget("combat")]   # carta nuova: parti dal Combattimento
 
-	# Carte a PIÙ iniziative (campo `split`): la parte ALTA va in un contenitore
-	# Iniziativa (valore dal card_pool) e lo split in una SECONDA Iniziativa con la
-	# propria velocità. Le carte a iniziativa singola restano una lista piatta.
+	# Ogni carta ha le sue azioni dentro un contenitore Iniziativa (valore dal
+	# card_pool), che indica a quale iniziativa sono attive. Le carte a PIÙ
+	# iniziative (campo `split`) hanno una SECONDA Iniziativa con la propria
+	# velocità (la parte bassa dello split).
 	if geom.has("split") and geom["split"] is Dictionary:
 		var sp: Dictionary = geom["split"]
 		return [_init_container(_main_init, out),
 			_init_container(_fmt_init(sp.get("initiative", "")), _split_to_children(sp))]
-	return out
+	return [_init_container(_main_init, out)]
 
 
 ## Iniziativa come testo pulito: i numeri (anche letti come float dal JSON)
@@ -430,12 +431,23 @@ func _node_to_widget(node: Dictionary) -> Dictionary:
 
 # ─── Mutatori pubblici (drag-drop / test headless) ───────────────────────────
 
+## Lista in cui aggiungere/cercare le azioni della carta: i figli del PRIMO
+## contenitore Iniziativa (la "parte alta"), se presente, altrimenti il livello
+## superiore. Da quando ogni carta è avvolta in un'Iniziativa, le azioni vivono
+## lì dentro: i mutatori devono operare su questa lista, non sul top-level.
+func _primary_children() -> Array:
+	if not _widgets.is_empty() and str(_widgets[0].get("type", "")) == "initiative":
+		return _widgets[0]["children"]
+	return _widgets
+
+
 func _first_combat() -> Dictionary:
-	for w in _widgets:
+	var host := _primary_children()
+	for w in host:
 		if w["type"] == "combat":
 			return w
 	var cw := _new_widget("combat")
-	_widgets.append(cw)
+	host.append(cw)
 	if _built:
 		_rebuild_widgets()
 	return cw
@@ -455,36 +467,39 @@ func clear_cell(q: int, r: int) -> void:
 	changed.emit()
 
 func add_opt() -> int:
-	_widgets.append(_new_widget("movement"))
+	var host := _primary_children()
+	host.append(_new_widget("movement"))
 	if _built:
 		_rebuild_widgets()
 	changed.emit()
-	return _widgets.size() - 1
+	return host.size() - 1
 
 func add_move_atom(widget_idx: int, atom: Dictionary) -> void:
-	if widget_idx < 0 or widget_idx >= _widgets.size():
+	var host := _primary_children()
+	if widget_idx < 0 or widget_idx >= host.size():
 		return
-	_widgets[widget_idx]["atoms"].append(_norm_atom(atom))
+	host[widget_idx]["atoms"].append(_norm_atom(atom))
 	if _built:
 		_rebuild_widgets()
 	changed.emit()
 
 func add_effect(e := {}) -> void:
-	_widgets.append(_effect_widget(e))
+	_primary_children().append(_effect_widget(e))
 	if _built:
 		_rebuild_widgets()
 	changed.emit()
 
 func set_kamae_req(slug: String) -> void:
+	var host := _primary_children()
 	var kw = null
-	for w in _widgets:
+	for w in host:
 		if w["type"] == "kamae":
 			kw = w; break
 	if kw == null:
 		if slug == "":
 			return
 		kw = _new_widget("kamae")
-		_widgets.append(kw)
+		host.append(kw)
 	kw["req"] = slug
 	if _built:
 		_rebuild_widgets()
