@@ -114,6 +114,8 @@ func _build_topbar() -> Control:
 	_btn_remove.tooltip_text = "Rimuovi override"
 	_btn_undo = _toolbar_button(bar, "Undo", _undo)
 	_btn_redo = _toolbar_button(bar, "Redo", _redo)
+	var btn_export := _toolbar_button(bar, "Esporta", _on_export)
+	btn_export.tooltip_text = "Scarica gli override (geometria/anagrafica/immagini) come JSON da committare nel repo"
 
 	bar.add_child(VSeparator.new())
 
@@ -412,8 +414,8 @@ func _build_form(id: int, c: Dictionary, geom_data = null) -> void:
 	save_geo.pressed.connect(_on_save_geometry)
 	geobtns.add_child(save_geo)
 	var sim := Button.new()
-	sim.text = "Simula carta"
-	sim.tooltip_text = "Risolve il gemello contro un avversario fittizio e mostra l'esito"
+	sim.text = "Spiega carta"
+	sim.tooltip_text = "Apre una finestra che spiega in italiano cosa fa la carta (movimento, arco, effetti)"
 	sim.pressed.connect(_on_simulate)
 	geobtns.add_child(sim)
 	_form.add_child(geobtns)
@@ -602,6 +604,49 @@ func _on_save_geometry() -> void:
 	var na: int = g.get("attack", {}).get("cells", []).size()
 	var nd: int = g.get("defence", {}).get("cells", []).size()
 	_status.text = "Geometria #%d salvata (%d celle att., %d dif.)" % [id, na, nd]
+
+
+## Esporta gli override correnti. Serve soprattutto nella build web (GitHub
+## Pages): le modifiche vivono nell'IndexedDB del browser e non tornano nel
+## repo, quindi le impacchettiamo in un JSON scaricabile da committare in
+## godot/data/cards/ per renderle permanenti per tutti.
+func _on_export() -> void:
+	var bundle := _store.export_bundle()
+	var text := JSON.stringify(bundle, "  ", true) + "\n"
+	var fname := "senjutsu_overrides.json"
+	if OS.has_feature("web"):
+		_browser_download(fname, text)
+		_status.text = "Override esportati: salva %s e committalo in godot/data/cards/" % fname
+		return
+	# Editor/desktop: scrivi su user:// e mostra il percorso reale su disco.
+	var path := "user://" + fname
+	var f := FileAccess.open(path, FileAccess.WRITE)
+	if f == null:
+		_status.text = "Errore export (%d)" % FileAccess.get_open_error()
+		return
+	f.store_string(text)
+	f.close()
+	_status.text = "Override esportati in %s" % ProjectSettings.globalize_path(path)
+
+
+## Avvia il download nel browser di un file di testo (solo build web). Usa un
+## Blob + ancora con attributo `download`; le stringhe sono passate via
+## JSON.stringify per gestire in sicurezza virgolette e a-capo.
+func _browser_download(filename: String, content: String) -> void:
+	if not OS.has_feature("web"):
+		return
+	var js := """
+	(function(name, text){
+		var blob = new Blob([text], {type: 'application/json'});
+		var url = URL.createObjectURL(blob);
+		var a = document.createElement('a');
+		a.href = url; a.download = name;
+		document.body.appendChild(a); a.click();
+		document.body.removeChild(a);
+		setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+	})(%s, %s);
+	""" % [JSON.stringify(filename), JSON.stringify(content)]
+	JavaScriptBridge.eval(js, true)
 	_run_validation()
 
 
@@ -612,10 +657,12 @@ func _on_simulate() -> void:
 		return
 	var card: Dictionary = _collect_fields() if _w.has("name") else CardDB.card(_current_id)
 	var geom := _geom_editor.to_geometry()
-	_show_sim_result(CardSimulator.simulate(card, geom))
+	_show_explanation(card, CardSimulator.explain(card, geom), CardSimulator.simulate(card, geom))
 
 
-func _show_sim_result(r: Dictionary) -> void:
+## Finestra "Spiega carta": elenco di frasi in italiano su cosa fa la carta,
+## più una riga di esito tattico di prova (contro un avversario fittizio).
+func _show_explanation(card: Dictionary, lines: Array, sim: Dictionary) -> void:
 	var pop := PopupPanel.new()
 	add_child(pop)
 	var vb := VBoxContainer.new()
@@ -624,48 +671,41 @@ func _show_sim_result(r: Dictionary) -> void:
 
 	var head := Label.new()
 	head.add_theme_font_size_override("font_size", 16)
-	if r.get("hit", false):
-		var tags = r.get("target_tags", [])
-		var suffix := ""
-		if tags is Array and not tags.is_empty():
-			suffix = " (%s)" % ", ".join(tags.map(func(x): return str(x)))
-		head.text = "COLPITO — %d ferita/e%s" % [int(r.get("target_wounds", 0)), suffix]
-		head.add_theme_color_override("font_color", Color(0.5, 0.8, 0.5))
-	else:
-		head.text = "Mancato (fuori arco / parato / carta non offensiva)"
-		head.add_theme_color_override("font_color", Color(0.9, 0.7, 0.4))
+	head.text = "Cosa fa: %s" % str(card.get("name", "carta #%d" % _current_id))
+	head.add_theme_color_override("font_color", Color(0.8, 0.85, 0.95))
+	head.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	vb.add_child(head)
-
-	var sub := Label.new()
-	sub.text = "Attaccante: cella %s · facing %d · focus %d   |   bersaglio in %s" % [
-		str(r.get("attacker_cell")), int(r.get("attacker_facing", 0)),
-		int(r.get("attacker_focus", 0)), str(r.get("target_cell"))]
-	sub.add_theme_font_size_override("font_size", 12)
-	sub.add_theme_color_override("font_color", Color(0.6, 0.66, 0.74))
-	vb.add_child(sub)
 
 	var sc := ScrollContainer.new()
 	sc.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	var logbox := VBoxContainer.new()
-	logbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var ll := Label.new()
-	ll.text = "Log di risoluzione:"
-	ll.add_theme_color_override("font_color", Color(0.7, 0.78, 0.9))
-	logbox.add_child(ll)
-	for line in r.get("log", []):
+	var box := VBoxContainer.new()
+	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	box.add_theme_constant_override("separation", 4)
+	for line in lines:
 		var l := Label.new()
-		l.text = "- " + str(line)
+		l.text = "• " + str(line)
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		logbox.add_child(l)
-	sc.add_child(logbox)
+		box.add_child(l)
+	sc.add_child(box)
 	vb.add_child(sc)
+
+	# Esito tattico di prova (secondario): conferma che l'arco colpisce davvero.
+	var foot := Label.new()
+	foot.add_theme_font_size_override("font_size", 11)
+	foot.add_theme_color_override("font_color", Color(0.6, 0.66, 0.74))
+	foot.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	if sim.get("hit", false):
+		foot.text = "Prova tattica: contro un avversario fittizio nell'arco infliggerebbe %d ferita/e." % int(sim.get("target_wounds", 0))
+	else:
+		foot.text = "Prova tattica: nessuna ferita inflitta (difensiva, a distanza, o avversario fuori arco)."
+	vb.add_child(foot)
 
 	var close := Button.new()
 	close.text = "Chiudi"
 	close.pressed.connect(pop.queue_free)
 	vb.add_child(close)
 	pop.add_child(vb)
-	pop.popup_centered(Vector2i(520, 440))
+	pop.popup_centered(Vector2i(540, 460))
 
 
 ## ─── Undo / Redo (Fase 6) ───────────────────────────────────────────────────

@@ -23,6 +23,7 @@ func _ready() -> void:
 	_test_compute_override()
 	_test_next_free_id()
 	_test_apply_override_carddb()
+	_test_export_bundle()
 
 	if _failures == 0:
 		print("CARDSTORE DONE ok")
@@ -145,3 +146,19 @@ func _test_apply_override_carddb() -> void:
 	_check(not CardDB.by_id[nid].has("char") or CardDB.by_id[nid]["char"] == "__OtherChar__", "char aggiornato")
 	_check(CardDB.by_char.get("__TestChar__", []).is_empty(), "bucket vecchio svuotato dopo cambio char")
 	_check(CardDB.by_char.get("__OtherChar__", []).size() == 1, "carta spostata nel nuovo bucket")
+
+
+func _test_export_bundle() -> void:
+	print("[export_bundle]")
+	var store := CardStore.new()
+	var bundle := store.export_bundle()
+	_check(typeof(bundle) == TYPE_DICTIONARY, "export_bundle è dict")
+	# In headless gira dall'editor: read_effective torna i base res:// (sempre presenti).
+	_check(bundle.has("geometry.json"), "bundle contiene geometry.json")
+	_check(bundle.has("card_pool_overrides.json"), "bundle contiene card_pool_overrides.json")
+	_check(bundle.has("card_images.json"), "bundle contiene card_images.json")
+	# Le chiavi-file devono mappare i percorsi reali su disco.
+	_check(bundle.keys().any(func(k): return str(k).ends_with(".json")), "le chiavi sono nomi file .json")
+	# Serializzabile senza perdite (è ciò che il pulsante scarica).
+	var text := JSON.stringify(bundle, "  ", true)
+	_check(JSON.parse_string(text) != null, "bundle serializza/riparse correttamente")
