@@ -122,9 +122,9 @@ const _VERB_IT := {
 static func explain(card: Dictionary, geom: Dictionary) -> Array:
 	var out: Array = []
 	var type := str(geom.get("type", card.get("type", "attack")))
-	var type_it := {"attack": "Attacco", "defence": "Difesa", "meditation": "Meditazione", "core": "Carta base"}.get(type, type)
+	var type_it: String = {"attack": "Attacco", "defence": "Difesa", "meditation": "Meditazione", "core": "Carta base"}.get(type, type)
 	# Intestazione: tipo, iniziativa, costo focus, kamae richiesto.
-	var head := type_it
+	var head: String = type_it
 	var init := str(card.get("initiative", "")).strip_edges()
 	if init != "" and init != "-":
 		head += " · iniziativa %s" % init
