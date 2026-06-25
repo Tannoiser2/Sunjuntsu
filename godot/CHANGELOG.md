@@ -15,6 +15,11 @@ versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
   Dall'editor Godot il comportamento è invariato (scrive in `res://`, per il
   commit nel repo). Nuovi helper `CardStore.writable_path()` / `read_effective()`
   e `CardDB._overlay()`/`_merge_*`.
+  - **Build web (GitHub Pages)**: `user://` mappa sull'**IndexedDB del browser**,
+    quindi le modifiche persistono tra i ricaricamenti **ma restano locali a quel
+    browser/dispositivo**: NON tornano nel repo. Per rendere un'edit permanente
+    nel gioco pubblicato va riportata in `geometry.json` (dall'editor desktop +
+    commit, o esportando l'overlay). Pulire i dati del sito azzera gli override.
 - **"Simula carta" → "Spiega carta"**: il pulsante apre ora una finestra che
   spiega **in italiano** cosa fa la carta — iniziativa, costo focus, Kamae
   richiesta, movimento ("muoverti di 2 in avanti, poi ruotare di 1 se in
