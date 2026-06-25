@@ -3,6 +3,28 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.68.0] — 2026-06-25
+### Editor carte: salvataggio nelle build + finestra "Spiega carta"
+- **Fix salvataggio (grave)**: "Salva geometria" (e gli override anagrafica/immagini)
+  fallivano in una **build esportata** con "tmp non scrivibile"/"rename fallita",
+  perché l'editor scriveva sotto `res://`, che è di **sola lettura** fuori
+  dall'editor Godot. Ora la scrittura va su un overlay **`user://`** (sempre
+  scrivibile) quando non si è nell'editor; `CardDB` **fonde** quegli overlay
+  (`geometry.json`, `card_pool_overrides.json`, `card_images.json`) sopra i dati
+  base al caricamento, così le modifiche **persistono** anche nel gioco esportato.
+  Dall'editor Godot il comportamento è invariato (scrive in `res://`, per il
+  commit nel repo). Nuovi helper `CardStore.writable_path()` / `read_effective()`
+  e `CardDB._overlay()`/`_merge_*`.
+- **"Simula carta" → "Spiega carta"**: il pulsante apre ora una finestra che
+  spiega **in italiano** cosa fa la carta — iniziativa, costo focus, Kamae
+  richiesta, movimento ("muoverti di 2 in avanti, poi ruotare di 1 se in
+  Aggressività"), arco/difesa, contrattacco ed effetti ("peschi 2 carte se
+  l'attacco va a segno") — invece del solo log tattico numerico. L'esito tattico
+  di prova resta come riga riassuntiva in fondo. Nuovo `CardSimulator.explain()`.
+- **Test**: `test_simulator.gd` con casi su `explain()` (frasi attese per
+  movimento, gate Kamae, effetto on_hit, e geometria assente).
+- ⚠️ Da verificare in Godot (la sessione non aveva il binario). Versione 0.68.0.
+
 ## [0.67.0] — 2026-06-23
 ### Gate Kamae in logica OR + editor più compatto
 - **Motore — gate Kamae OR**: il gate delle Kamae ora accetta un **Array di

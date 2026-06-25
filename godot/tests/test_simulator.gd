@@ -40,6 +40,26 @@ func _ready() -> void:
 	var r55 := CardSimulator.simulate(c55, g55)
 	_check(r55.has("log"), "simulazione carta reale #55 produce un esito")
 
+	# explain(): spiega la carta in frasi italiane leggibili.
+	var ex := CardSimulator.explain(
+		{"char": "Warrior", "type": "attack", "initiative": "7", "focus": 1},
+		{"type": "attack",
+		 "move": {"opts": [{"atoms": [
+			{"t": "step", "dir": 0, "n": 2, "opt": false},
+			{"t": "rot", "n": 1, "opt": false, "kamae": "aggression"}]}]},
+		 "attack": {"cells": [{"d": 0, "k": 1, "w": 1}]},
+		 "effects": [{"do": "draw", "n": 2, "when": "on_hit"}]})
+	var joined := "\n".join(ex.map(func(x): return str(x)))
+	_check(ex.size() >= 4, "explain produce piu' frasi (%d)" % ex.size())
+	_check("iniziativa 7" in joined, "explain cita l'iniziativa")
+	_check("muoverti di 2 in avanti" in joined, "explain descrive il passo")
+	_check("Aggressività" in joined, "explain cita il gate Kamae dell'atomo")
+	_check("peschi 2 carta/e" in joined and "se l'attacco va a segno" in joined, "explain descrive l'effetto on_hit")
+
+	# explain() su carta senza geometria: non crasha, dà almeno l'intestazione.
+	var ex0 := CardSimulator.explain({"type": "meditation"}, {"type": "meditation"})
+	_check(ex0.size() >= 1, "explain gestisce geometria assente")
+
 	if _failures == 0:
 		print("SIMULATOR DONE ok")
 		get_tree().quit(0)

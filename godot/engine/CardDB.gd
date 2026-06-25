@@ -37,9 +37,11 @@ func _ready() -> void:
 
 func _load_images() -> void:
 	var path := "res://data/cards/card_images.json"
-	if not FileAccess.file_exists(path):
-		return
-	var parsed = JSON.parse_string(FileAccess.get_file_as_string(path))
+	_merge_images(read_json_or_null(path))
+	_merge_images(_overlay(path))
+
+
+func _merge_images(parsed) -> void:
 	if typeof(parsed) != TYPE_DICTIONARY:
 		return
 	for k in parsed.get("by_id", {}).keys():
@@ -76,15 +78,38 @@ func kamae_tree_for(slug: String) -> Dictionary:
 	return kamae_trees.get(slug, {})
 
 
+## Overlay user:// scritto dall'editor nelle build esportate (dove res:// è di
+## sola lettura — vedi CardStore.writable_path). In editor restituisce `null`:
+## lì la fonte di verità è res://. `null` anche se l'overlay è assente/illeggibile.
+static func _overlay(res_path: String) -> Variant:
+	if OS.has_feature("editor"):
+		return null
+	var p := "user://" + res_path.get_file()
+	if not FileAccess.file_exists(p):
+		return null
+	return JSON.parse_string(FileAccess.get_file_as_string(p))
+
+
 func _load_geometry() -> void:
-	if not FileAccess.file_exists(GEOMETRY_PATH):
-		return
-	var parsed = JSON.parse_string(FileAccess.get_file_as_string(GEOMETRY_PATH))
+	_merge_geometry(read_json_or_null(GEOMETRY_PATH))
+	_merge_geometry(_overlay(GEOMETRY_PATH))
+
+
+func _merge_geometry(parsed) -> void:
 	if typeof(parsed) != TYPE_DICTIONARY:
 		return
 	for k in parsed.get("cards", {}).keys():
 		geom[int(k)] = parsed["cards"][k]
-	char_stats = parsed.get("characters", {})
+	var ch = parsed.get("characters", {})
+	if typeof(ch) == TYPE_DICTIONARY and not ch.is_empty():
+		char_stats = ch
+
+
+## Parse di un file JSON res://, o `null` se assente/illeggibile.
+static func read_json_or_null(path: String) -> Variant:
+	if not FileAccess.file_exists(path):
+		return null
+	return JSON.parse_string(FileAccess.get_file_as_string(path))
 
 
 ## Geometria/effetti trascritti per una carta (vuoto se non ancora trascritta).
@@ -172,9 +197,11 @@ func _load_pool() -> void:
 ## No-op se il file non esiste. I dict in `by_id` e `cards` sono gli stessi
 ## oggetti: fondere qui aggiorna entrambe le viste.
 func _load_overrides() -> void:
-	if not FileAccess.file_exists(POOL_OVERRIDES_PATH):
-		return
-	var parsed = JSON.parse_string(FileAccess.get_file_as_string(POOL_OVERRIDES_PATH))
+	_apply_overrides_from(read_json_or_null(POOL_OVERRIDES_PATH))
+	_apply_overrides_from(_overlay(POOL_OVERRIDES_PATH))
+
+
+func _apply_overrides_from(parsed) -> void:
 	if typeof(parsed) != TYPE_DICTIONARY:
 		return
 	var by = parsed.get("by_id", {})

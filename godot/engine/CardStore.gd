@@ -30,11 +30,33 @@ var _pristine: Dictionary = {}
 
 # ─── I/O di basso livello ────────────────────────────────────────────────────
 
+## Percorso EFFETTIVO di scrittura per un file-dati `res://`.
+## `res://` è scrivibile solo quando il progetto gira dall'editor Godot; in una
+## build esportata è di sola lettura (impacchettato nel .pck). Dalla build
+## scriviamo allora un overlay omonimo sotto `user://` (sempre scrivibile), che
+## CardDB fonde sopra i dati base al caricamento. Dall'editor scriviamo invece
+## direttamente in `res://`, così le modifiche finiscono nel repo e si committano.
+static func writable_path(res_path: String) -> String:
+	if OS.has_feature("editor"):
+		return res_path
+	return "user://" + res_path.get_file()
+
+
 ## Legge e fa il parse di un JSON. Restituisce `null` se assente o non valido.
 static func read_json(path: String) -> Variant:
 	if not FileAccess.file_exists(path):
 		return null
 	return JSON.parse_string(FileAccess.get_file_as_string(path))
+
+
+## Legge lo stato CORRENTE di un file-dati tenendo conto dell'overlay user://:
+## nelle build l'ultimo salvataggio sta in `user://<file>`; se esiste, è quello
+## la fonte aggiornata (è un file completo, non un delta), altrimenti il base res://.
+static func read_effective(res_path: String) -> Variant:
+	var target := writable_path(res_path)
+	if target != res_path and FileAccess.file_exists(target):
+		return read_json(target)
+	return read_json(res_path)
 
 
 ## Salva `data` come JSON in modo atomico:
@@ -44,6 +66,8 @@ static func read_json(path: String) -> Variant:
 ## `indent` = stringa di indentazione; `sort_keys` ordina le chiavi (diff stabili).
 ## Restituisce `{ ok: bool, error: String, backup: String }`.
 static func save_json(path: String, data, indent := "  ", sort_keys := false) -> Dictionary:
+	# In una build esportata res:// è di sola lettura: reindirizza su user://.
+	path = writable_path(path)
 	var text := JSON.stringify(data, indent, sort_keys) + "\n"
 	var backup := ""
 
@@ -204,7 +228,7 @@ func save_overrides() -> Dictionary:
 ## Riscrive l'intero geometry.json. `cards_by_id` ha chiavi String=id.
 ## NB: l'indentazione 1-spazio replica lo stile esistente per ridurre il churn.
 func save_geometry(cards_by_id: Dictionary, characters: Dictionary, note := "") -> Dictionary:
-	var existing = read_json(GEOMETRY_PATH)
+	var existing = read_effective(GEOMETRY_PATH)
 	if note == "" and typeof(existing) == TYPE_DICTIONARY:
 		note = existing.get("note", "")
 	# La geometria non contiene float legittimi (d/k/w/v/n/counter sono interi):
@@ -235,7 +259,7 @@ static func _intify(v):
 
 ## Riscrive card_images.json. `by_id` ha chiavi String=id -> path relativo.
 func save_images(by_id: Dictionary, note := "") -> Dictionary:
-	var existing = read_json(IMAGES_PATH)
+	var existing = read_effective(IMAGES_PATH)
 	if note == "" and typeof(existing) == TYPE_DICTIONARY:
 		note = existing.get("note", "")
 	var payload := {"note": note, "by_id": by_id}
@@ -245,7 +269,7 @@ func save_images(by_id: Dictionary, note := "") -> Dictionary:
 ## Associa (o azzera, con "") l'immagine di una carta in card_images.json,
 ## preservando le altre voci. `rel_path` è relativo a res://assets/cards/.
 func save_image_for(id: int, rel_path: String) -> Dictionary:
-	var parsed = read_json(IMAGES_PATH)
+	var parsed = read_effective(IMAGES_PATH)
 	var by := {}
 	var note := ""
 	if typeof(parsed) == TYPE_DICTIONARY:
@@ -319,7 +343,7 @@ static func crop_and_save_webp(src: Image, region: Rect2i, dest_rel: String, out
 ## Aggiorna la geometria di UNA carta preservando le altre, la nota e i
 ## `characters`, poi riscrive l'intero geometry.json (scrittura atomica + .bak).
 func save_card_geometry(id: int, geom: Dictionary) -> Dictionary:
-	var parsed = read_json(GEOMETRY_PATH)
+	var parsed = read_effective(GEOMETRY_PATH)
 	var cards := {}
 	var characters := {}
 	var note := ""
