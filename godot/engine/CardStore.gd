@@ -223,6 +223,23 @@ func save_overrides() -> Dictionary:
 	return save_json(POOL_OVERRIDES_PATH, payload, "  ", true)
 
 
+# ─── Export overlay (per riportare nel repo le edit fatte da build/web) ───────
+
+## Raccoglie in un unico bundle lo stato EFFETTIVO corrente dei tre file-dati
+## editabili (anagrafica overlay, geometria, immagini). Su build/web questo è
+## ciò che il giocatore vede: include sia il base `res://` sia l'ultimo
+## salvataggio `user://`. Esportandolo e committando i file in
+## `godot/data/cards/` le modifiche diventano permanenti per tutti.
+## Le voci assenti restano `null`.
+func export_bundle() -> Dictionary:
+	return {
+		"_note": "Bundle override editor Senjutsu. Ogni chiave è un file da scrivere in godot/data/cards/.",
+		"card_pool_overrides.json": read_effective(POOL_OVERRIDES_PATH),
+		"geometry.json": read_effective(GEOMETRY_PATH),
+		"card_images.json": read_effective(IMAGES_PATH),
+	}
+
+
 # ─── Geometria / immagini ────────────────────────────────────────────────────
 
 ## Riscrive l'intero geometry.json. `cards_by_id` ha chiavi String=id.

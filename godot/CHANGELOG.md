@@ -20,6 +20,13 @@ versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
     browser/dispositivo**: NON tornano nel repo. Per rendere un'edit permanente
     nel gioco pubblicato va riportata in `geometry.json` (dall'editor desktop +
     commit, o esportando l'overlay). Pulire i dati del sito azzera gli override.
+- **Esporta override**: nuovo pulsante "Esporta" nella toolbar dell'editor. Su
+  **web** scarica `senjutsu_overrides.json` (bundle con lo stato corrente di
+  `card_pool_overrides.json`, `geometry.json`, `card_images.json`); su desktop lo
+  scrive in `user://` e mostra il percorso. Serve a **riportare nel repo** le
+  modifiche fatte da Pages (committando i file in `godot/data/cards/`), rendendole
+  permanenti per tutti. Nuovo `CardStore.export_bundle()`; download via
+  `JavaScriptBridge` (Blob + ancora `download`).
 - **"Simula carta" → "Spiega carta"**: il pulsante apre ora una finestra che
   spiega **in italiano** cosa fa la carta — iniziativa, costo focus, Kamae
   richiesta, movimento ("muoverti di 2 in avanti, poi ruotare di 1 se in

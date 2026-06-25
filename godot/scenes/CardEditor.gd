@@ -114,6 +114,8 @@ func _build_topbar() -> Control:
 	_btn_remove.tooltip_text = "Rimuovi override"
 	_btn_undo = _toolbar_button(bar, "Undo", _undo)
 	_btn_redo = _toolbar_button(bar, "Redo", _redo)
+	var btn_export := _toolbar_button(bar, "Esporta", _on_export)
+	btn_export.tooltip_text = "Scarica gli override (geometria/anagrafica/immagini) come JSON da committare nel repo"
 
 	bar.add_child(VSeparator.new())
 
@@ -602,6 +604,49 @@ func _on_save_geometry() -> void:
 	var na: int = g.get("attack", {}).get("cells", []).size()
 	var nd: int = g.get("defence", {}).get("cells", []).size()
 	_status.text = "Geometria #%d salvata (%d celle att., %d dif.)" % [id, na, nd]
+
+
+## Esporta gli override correnti. Serve soprattutto nella build web (GitHub
+## Pages): le modifiche vivono nell'IndexedDB del browser e non tornano nel
+## repo, quindi le impacchettiamo in un JSON scaricabile da committare in
+## godot/data/cards/ per renderle permanenti per tutti.
+func _on_export() -> void:
+	var bundle := _store.export_bundle()
+	var text := JSON.stringify(bundle, "  ", true) + "\n"
+	var fname := "senjutsu_overrides.json"
+	if OS.has_feature("web"):
+		_browser_download(fname, text)
+		_status.text = "Override esportati: salva %s e committalo in godot/data/cards/" % fname
+		return
+	# Editor/desktop: scrivi su user:// e mostra il percorso reale su disco.
+	var path := "user://" + fname
+	var f := FileAccess.open(path, FileAccess.WRITE)
+	if f == null:
+		_status.text = "Errore export (%d)" % FileAccess.get_open_error()
+		return
+	f.store_string(text)
+	f.close()
+	_status.text = "Override esportati in %s" % ProjectSettings.globalize_path(path)
+
+
+## Avvia il download nel browser di un file di testo (solo build web). Usa un
+## Blob + ancora con attributo `download`; le stringhe sono passate via
+## JSON.stringify per gestire in sicurezza virgolette e a-capo.
+func _browser_download(filename: String, content: String) -> void:
+	if not OS.has_feature("web"):
+		return
+	var js := """
+	(function(name, text){
+		var blob = new Blob([text], {type: 'application/json'});
+		var url = URL.createObjectURL(blob);
+		var a = document.createElement('a');
+		a.href = url; a.download = name;
+		document.body.appendChild(a); a.click();
+		document.body.removeChild(a);
+		setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+	})(%s, %s);
+	""" % [JSON.stringify(filename), JSON.stringify(content)]
+	JavaScriptBridge.eval(js, true)
 	_run_validation()
 
 
