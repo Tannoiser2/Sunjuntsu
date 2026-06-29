@@ -3,6 +3,48 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.69.0] — 2026-06-29
+### Carte Solo AI estese + immagini personaggi aggiuntivi
+- **Immagini carte (nuovi personaggi)**: estratte via `tools/extract_card_images.py`
+  le carte WEBP dai PDF mancanti (`Assassino.pdf`, `Ninja.pdf`, `Onna Bugeisha.pdf`,
+  `Yojimbo.pdf`, `Altre carte.pdf`, `Altre carte 2.pdf`) in `assets/cards/`.
+  Nuove cartelle: `assassin/` (27 carte), `ninja/` (33), `onna_bugeisha/` (27),
+  `yojimbo/` (34), `altre_carte/` (36), `altre_carte_2/` (36).
+- **Solo AI estese (75 nuove carte)**: aggiunte a `card_pool.json` le carte Solo AI
+  dedicate per tutti i personaggi non ancora coperti, ricavate da
+  `Solo_AI_carte.xlsx` (Tabelle_Materiali). Nuovi mazzi:
+  - Yasuke Solo (916-920): Ankle Strike, Lion's Bite, Dual Blade Defence,
+    Charging Pride, Righteous Fury (incubo N920).
+  - Wakou Solo (921-924, 981): Staggering Hulk, Faster Legs, Headbutt,
+    Staggering Blow, Broadside Slam (incubo N981).
+  - Sailor Solo (925-928, 984): Carrack Plow, Roof Guard, Towering Strike,
+    Dreadnaught, Barbed Black Shot (incubo N984).
+  - Assassin Solo (929-932, 987): Shadow Strike, Venomous Slice, Penumbra Vault,
+    Sever Artery, Spider's Kiss (incubo N987).
+  - Hachiko Solo (933-937): Swipe, Feral Howl, Menacing Growl, Quick Bite, Jump.
+  - Kojiro Solo (938-942): Iron Block, Scornful Jab, Biting Remark, Close In,
+    Turning Swallow Cut (incubo).
+  - Master Solo (943-947): Dark Insight, Reposition, Masterful Cut, Idle Strike,
+    Hidden Victory (incubo).
+  - Monk Solo (948-953): Satori Smite, Enlighten, Palm Strike, Resolute Block,
+    Zen Wave Slash (incubo), Enlightened Path (carta persistente).
+  - Ninja Solo (954-957, 990): Smoke Screen, Ninja Slash, Shuriken Throw,
+    Metsubushi Pipe, Lunar Sniper Trap (incubo N990).
+  - Onna-Bugeisha Solo (958-962): Surging River, Falling Arc, Rage Guard,
+    Screaming Mind, Silent End (incubo).
+  - Yojimbo Solo (963-965): Leg Breaker, Scorpion Sting, Row.
+  - Student Solo (966-970): Obedience, Rock Strike, Mountain Swap, Insightful,
+    Lightning Tail (incubo).
+  - Musashi Solo (971-975): Rushing Water Slice, Dancing Fire Slash, Wind Slash,
+    Standing Earth, Dark Void (incubo).
+  - Ashigaru Solo (976-979): Scything Cleave, Skewer, Lunging Pierce,
+    Heaven's Descent (incubo).
+  - Generic nightmares (993-999): Rising Phoenix Arc, Wild Swing, Powerful Strike,
+    Dirt Throw, Blood Fury Cut, Dashdown Strike, Ancient Terror.
+- **CardDB.solo_deck_for()**: ora restituisce i mazzi dedicati per tutti i 16
+  personaggi (prima solo Ronin e Warrior); il fallback `draw_pile_for()` resta per
+  eventuali personaggi futuri.
+
 ## [0.68.0] — 2026-06-25
 ### Editor carte: salvataggio nelle build + finestra "Spiega carta"
 - **Fix salvataggio (grave)**: "Salva geometria" (e gli override anagrafica/immagini)

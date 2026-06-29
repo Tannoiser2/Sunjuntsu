@@ -6,7 +6,7 @@
   "Gold",
   "Jade"
  ],
- "count": 313,
+ "count": 388,
  "characters": [
   "Ashigaru",
   "Ashigaru/Hachiko",
@@ -4304,6 +4304,1081 @@
     "Nightmare"
    ],
    "type": "attack"
+  },
+  {
+   "id": 916,
+   "name": "Ankle Strike (solo)",
+   "char": "Yasuke Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "1",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 917,
+   "name": "Lion's Bite (solo)",
+   "char": "Yasuke Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "1",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 918,
+   "name": "Dual Blade Defence (solo)",
+   "char": "Yasuke Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "5,4",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 919,
+   "name": "Charging Pride (solo)",
+   "char": "Yasuke Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 920,
+   "name": "Righteous Fury (solo)",
+   "char": "Yasuke Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack",
+    "Nightmare"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 921,
+   "name": "Staggering Hulk (solo)",
+   "char": "Wakou Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "9",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 922,
+   "name": "Faster Legs (solo)",
+   "char": "Wakou Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "-",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 923,
+   "name": "Headbutt (solo)",
+   "char": "Wakou Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "-",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 924,
+   "name": "Staggering Blow (solo)",
+   "char": "Wakou Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 981,
+   "name": "Broadside Slam (solo)",
+   "char": "Wakou Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack",
+    "Nightmare"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 925,
+   "name": "Carrack Plow (solo)",
+   "char": "Sailor Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 926,
+   "name": "Roof Guard (solo)",
+   "char": "Sailor Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "8,7,6,5,4",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 927,
+   "name": "Towering Strike (solo)",
+   "char": "Sailor Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 928,
+   "name": "Dreadnaught (solo)",
+   "char": "Sailor Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 984,
+   "name": "Barbed Black Shot (solo)",
+   "char": "Sailor Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "3",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack",
+    "Range",
+    "Nightmare"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 929,
+   "name": "Shadow Strike (solo)",
+   "char": "Assassin Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "3",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 930,
+   "name": "Venomous Slice (solo)",
+   "char": "Assassin Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "9",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 931,
+   "name": "Penumbra Vault (solo)",
+   "char": "Assassin Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "-",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 932,
+   "name": "Sever Artery (solo)",
+   "char": "Assassin Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "1",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 987,
+   "name": "Spider's Kiss (solo)",
+   "char": "Assassin Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "1",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack",
+    "Nightmare"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 933,
+   "name": "Swipe (solo)",
+   "char": "Hachiko Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 934,
+   "name": "Feral Howl (solo)",
+   "char": "Hachiko Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Defence",
+    "Range"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 935,
+   "name": "Menacing Growl (solo)",
+   "char": "Hachiko Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Defence",
+    "Range"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 936,
+   "name": "Quick Bite (solo)",
+   "char": "Hachiko Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 937,
+   "name": "Jump (solo)",
+   "char": "Hachiko Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 938,
+   "name": "Iron Block (solo)",
+   "char": "Kojiro Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "3",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 939,
+   "name": "Scornful Jab (solo)",
+   "char": "Kojiro Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "1",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 940,
+   "name": "Biting Remark (solo)",
+   "char": "Kojiro Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "-",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 941,
+   "name": "Close In (solo)",
+   "char": "Kojiro Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "-",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 942,
+   "name": "Turning Swallow Cut (solo)",
+   "char": "Kojiro Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "9",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack",
+    "Nightmare"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 943,
+   "name": "Dark Insight (solo)",
+   "char": "Master Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 944,
+   "name": "Reposition (solo)",
+   "char": "Master Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 945,
+   "name": "Masterful Cut (solo)",
+   "char": "Master Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 946,
+   "name": "Idle Strike (solo)",
+   "char": "Master Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "3",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 947,
+   "name": "Hidden Victory (solo)",
+   "char": "Master Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack",
+    "Nightmare"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 948,
+   "name": "Satori Smite (solo)",
+   "char": "Monk Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "-",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 949,
+   "name": "Enlighten (solo)",
+   "char": "Monk Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "-",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 950,
+   "name": "Palm Strike (solo)",
+   "char": "Monk Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "8",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 951,
+   "name": "Resolute Block (solo)",
+   "char": "Monk Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "1",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 952,
+   "name": "Zen Wave Slash (solo)",
+   "char": "Monk Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "8",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack",
+    "Nightmare"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 953,
+   "name": "Enlightened Path (solo)",
+   "char": "Monk Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "-",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 954,
+   "name": "Smoke Screen (solo)",
+   "char": "Ninja Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 955,
+   "name": "Ninja Slash (solo)",
+   "char": "Ninja Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 956,
+   "name": "Shuriken Throw (solo)",
+   "char": "Ninja Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "1",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack",
+    "Range"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 957,
+   "name": "Metsubushi Pipe (solo)",
+   "char": "Ninja Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "-",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 990,
+   "name": "Lunar Sniper Trap (solo)",
+   "char": "Ninja Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack",
+    "Range",
+    "Nightmare"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 958,
+   "name": "Surging River (solo)",
+   "char": "Onna-Bugeisha Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 959,
+   "name": "Falling Arc (solo)",
+   "char": "Onna-Bugeisha Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "4",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 960,
+   "name": "Rage Guard (solo)",
+   "char": "Onna-Bugeisha Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "7,6,5,4,3",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 961,
+   "name": "Screaming Mind (solo)",
+   "char": "Onna-Bugeisha Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "4",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Meditation"
+   ],
+   "type": "meditation"
+  },
+  {
+   "id": 962,
+   "name": "Silent End (solo)",
+   "char": "Onna-Bugeisha Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack",
+    "Nightmare"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 963,
+   "name": "Leg Breaker (solo)",
+   "char": "Yojimbo Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 964,
+   "name": "Scorpion Sting (solo)",
+   "char": "Yojimbo Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "8",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 965,
+   "name": "Row (solo)",
+   "char": "Yojimbo Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "-",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack",
+    "Range"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 966,
+   "name": "Obedience (solo)",
+   "char": "Student Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "7,6,5,4,3",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 967,
+   "name": "Rock Strike (solo)",
+   "char": "Student Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "3",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 968,
+   "name": "Mountain Swap (solo)",
+   "char": "Student Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 969,
+   "name": "Insightful (solo)",
+   "char": "Student Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 970,
+   "name": "Lightning Tail (solo)",
+   "char": "Student Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "9",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack",
+    "Nightmare"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 971,
+   "name": "Rushing Water Slice (solo)",
+   "char": "Musashi Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 972,
+   "name": "Dancing Fire Slash (solo)",
+   "char": "Musashi Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 973,
+   "name": "Wind Slash (solo)",
+   "char": "Musashi Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 974,
+   "name": "Standing Earth (solo)",
+   "char": "Musashi Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "9,8,7,6",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Defence"
+   ],
+   "type": "defence"
+  },
+  {
+   "id": 975,
+   "name": "Dark Void (solo)",
+   "char": "Musashi Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "8",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack",
+    "Nightmare"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 976,
+   "name": "Scything Cleave (solo)",
+   "char": "Ashigaru Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "4",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 977,
+   "name": "Skewer (solo)",
+   "char": "Ashigaru Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "6",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 978,
+   "name": "Lunging Pierce (solo)",
+   "char": "Ashigaru Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "5",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 979,
+   "name": "Heaven's Descent (solo)",
+   "char": "Ashigaru Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "9,8,7,6,5,4,3,2",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack",
+    "Nightmare"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 993,
+   "name": "Rising Phoenix Arc (solo)",
+   "char": "Warrior Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "-",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack",
+    "Nightmare"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 994,
+   "name": "Wild Swing (solo)",
+   "char": "Generic Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "-",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack",
+    "Nightmare"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 995,
+   "name": "Powerful Strike (solo)",
+   "char": "Generic Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "-",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack",
+    "Nightmare"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 996,
+   "name": "Dirt Throw (solo)",
+   "char": "Generic Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "-",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack",
+    "Nightmare"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 997,
+   "name": "Blood Fury Cut (solo)",
+   "char": "Generic Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "8",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack",
+    "Nightmare"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 998,
+   "name": "Dashdown Strike (solo)",
+   "char": "Generic Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "7",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Attack",
+    "Nightmare"
+   ],
+   "type": "attack"
+  },
+  {
+   "id": 999,
+   "name": "Ancient Terror (solo)",
+   "char": "Generic Solo",
+   "amount": 1,
+   "rank": "-",
+   "initiative": "-",
+   "focus": 0,
+   "keywords": [
+    "Solo",
+    "Meditation",
+    "Nightmare"
+   ],
+   "type": "meditation"
   }
  ]
 }

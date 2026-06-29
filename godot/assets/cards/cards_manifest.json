@@ -1300,6 +1300,1550 @@
    "row": 2,
    "col": 2,
    "file": "student/student_44.webp"
+  },
+  {
+   "deck": "assassin",
+   "index": 1,
+   "page": 0,
+   "row": 0,
+   "col": 0,
+   "file": "assassin/assassin_01.webp"
+  },
+  {
+   "deck": "assassin",
+   "index": 2,
+   "page": 0,
+   "row": 0,
+   "col": 1,
+   "file": "assassin/assassin_02.webp"
+  },
+  {
+   "deck": "assassin",
+   "index": 3,
+   "page": 0,
+   "row": 0,
+   "col": 2,
+   "file": "assassin/assassin_03.webp"
+  },
+  {
+   "deck": "assassin",
+   "index": 4,
+   "page": 0,
+   "row": 1,
+   "col": 0,
+   "file": "assassin/assassin_04.webp"
+  },
+  {
+   "deck": "assassin",
+   "index": 5,
+   "page": 0,
+   "row": 1,
+   "col": 1,
+   "file": "assassin/assassin_05.webp"
+  },
+  {
+   "deck": "assassin",
+   "index": 6,
+   "page": 0,
+   "row": 1,
+   "col": 2,
+   "file": "assassin/assassin_06.webp"
+  },
+  {
+   "deck": "assassin",
+   "index": 7,
+   "page": 0,
+   "row": 2,
+   "col": 0,
+   "file": "assassin/assassin_07.webp"
+  },
+  {
+   "deck": "assassin",
+   "index": 8,
+   "page": 0,
+   "row": 2,
+   "col": 1,
+   "file": "assassin/assassin_08.webp"
+  },
+  {
+   "deck": "assassin",
+   "index": 9,
+   "page": 0,
+   "row": 2,
+   "col": 2,
+   "file": "assassin/assassin_09.webp"
+  },
+  {
+   "deck": "assassin",
+   "index": 10,
+   "page": 1,
+   "row": 0,
+   "col": 0,
+   "file": "assassin/assassin_10.webp"
+  },
+  {
+   "deck": "assassin",
+   "index": 11,
+   "page": 1,
+   "row": 0,
+   "col": 1,
+   "file": "assassin/assassin_11.webp"
+  },
+  {
+   "deck": "assassin",
+   "index": 12,
+   "page": 1,
+   "row": 0,
+   "col": 2,
+   "file": "assassin/assassin_12.webp"
+  },
+  {
+   "deck": "assassin",
+   "index": 13,
+   "page": 1,
+   "row": 1,
+   "col": 0,
+   "file": "assassin/assassin_13.webp"
+  },
+  {
+   "deck": "assassin",
+   "index": 14,
+   "page": 1,
+   "row": 1,
+   "col": 1,
+   "file": "assassin/assassin_14.webp"
+  },
+  {
+   "deck": "assassin",
+   "index": 15,
+   "page": 1,
+   "row": 1,
+   "col": 2,
+   "file": "assassin/assassin_15.webp"
+  },
+  {
+   "deck": "assassin",
+   "index": 16,
+   "page": 1,
+   "row": 2,
+   "col": 0,
+   "file": "assassin/assassin_16.webp"
+  },
+  {
+   "deck": "assassin",
+   "index": 17,
+   "page": 1,
+   "row": 2,
+   "col": 1,
+   "file": "assassin/assassin_17.webp"
+  },
+  {
+   "deck": "assassin",
+   "index": 18,
+   "page": 1,
+   "row": 2,
+   "col": 2,
+   "file": "assassin/assassin_18.webp"
+  },
+  {
+   "deck": "assassin",
+   "index": 19,
+   "page": 2,
+   "row": 0,
+   "col": 0,
+   "file": "assassin/assassin_19.webp"
+  },
+  {
+   "deck": "assassin",
+   "index": 20,
+   "page": 2,
+   "row": 0,
+   "col": 1,
+   "file": "assassin/assassin_20.webp"
+  },
+  {
+   "deck": "assassin",
+   "index": 21,
+   "page": 2,
+   "row": 0,
+   "col": 2,
+   "file": "assassin/assassin_21.webp"
+  },
+  {
+   "deck": "assassin",
+   "index": 22,
+   "page": 2,
+   "row": 1,
+   "col": 0,
+   "file": "assassin/assassin_22.webp"
+  },
+  {
+   "deck": "assassin",
+   "index": 23,
+   "page": 2,
+   "row": 1,
+   "col": 1,
+   "file": "assassin/assassin_23.webp"
+  },
+  {
+   "deck": "assassin",
+   "index": 24,
+   "page": 2,
+   "row": 1,
+   "col": 2,
+   "file": "assassin/assassin_24.webp"
+  },
+  {
+   "deck": "assassin",
+   "index": 25,
+   "page": 2,
+   "row": 2,
+   "col": 0,
+   "file": "assassin/assassin_25.webp"
+  },
+  {
+   "deck": "assassin",
+   "index": 26,
+   "page": 2,
+   "row": 2,
+   "col": 1,
+   "file": "assassin/assassin_26.webp"
+  },
+  {
+   "deck": "assassin",
+   "index": 27,
+   "page": 2,
+   "row": 2,
+   "col": 2,
+   "file": "assassin/assassin_27.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 1,
+   "page": 0,
+   "row": 0,
+   "col": 0,
+   "file": "ninja/ninja_01.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 2,
+   "page": 0,
+   "row": 0,
+   "col": 1,
+   "file": "ninja/ninja_02.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 3,
+   "page": 0,
+   "row": 0,
+   "col": 2,
+   "file": "ninja/ninja_03.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 4,
+   "page": 0,
+   "row": 1,
+   "col": 0,
+   "file": "ninja/ninja_04.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 5,
+   "page": 0,
+   "row": 1,
+   "col": 1,
+   "file": "ninja/ninja_05.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 6,
+   "page": 0,
+   "row": 1,
+   "col": 2,
+   "file": "ninja/ninja_06.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 7,
+   "page": 0,
+   "row": 2,
+   "col": 0,
+   "file": "ninja/ninja_07.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 8,
+   "page": 0,
+   "row": 2,
+   "col": 1,
+   "file": "ninja/ninja_08.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 9,
+   "page": 0,
+   "row": 2,
+   "col": 2,
+   "file": "ninja/ninja_09.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 10,
+   "page": 1,
+   "row": 0,
+   "col": 0,
+   "file": "ninja/ninja_10.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 11,
+   "page": 1,
+   "row": 0,
+   "col": 1,
+   "file": "ninja/ninja_11.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 12,
+   "page": 1,
+   "row": 0,
+   "col": 2,
+   "file": "ninja/ninja_12.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 13,
+   "page": 1,
+   "row": 1,
+   "col": 0,
+   "file": "ninja/ninja_13.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 14,
+   "page": 1,
+   "row": 1,
+   "col": 1,
+   "file": "ninja/ninja_14.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 15,
+   "page": 1,
+   "row": 1,
+   "col": 2,
+   "file": "ninja/ninja_15.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 16,
+   "page": 1,
+   "row": 2,
+   "col": 0,
+   "file": "ninja/ninja_16.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 17,
+   "page": 1,
+   "row": 2,
+   "col": 1,
+   "file": "ninja/ninja_17.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 18,
+   "page": 1,
+   "row": 2,
+   "col": 2,
+   "file": "ninja/ninja_18.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 19,
+   "page": 2,
+   "row": 0,
+   "col": 0,
+   "file": "ninja/ninja_19.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 20,
+   "page": 2,
+   "row": 0,
+   "col": 1,
+   "file": "ninja/ninja_20.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 21,
+   "page": 2,
+   "row": 0,
+   "col": 2,
+   "file": "ninja/ninja_21.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 22,
+   "page": 2,
+   "row": 1,
+   "col": 0,
+   "file": "ninja/ninja_22.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 23,
+   "page": 2,
+   "row": 1,
+   "col": 1,
+   "file": "ninja/ninja_23.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 24,
+   "page": 2,
+   "row": 1,
+   "col": 2,
+   "file": "ninja/ninja_24.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 25,
+   "page": 2,
+   "row": 2,
+   "col": 0,
+   "file": "ninja/ninja_25.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 26,
+   "page": 2,
+   "row": 2,
+   "col": 1,
+   "file": "ninja/ninja_26.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 27,
+   "page": 2,
+   "row": 2,
+   "col": 2,
+   "file": "ninja/ninja_27.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 28,
+   "page": 3,
+   "row": 0,
+   "col": 0,
+   "file": "ninja/ninja_28.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 29,
+   "page": 3,
+   "row": 0,
+   "col": 1,
+   "file": "ninja/ninja_29.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 30,
+   "page": 3,
+   "row": 0,
+   "col": 2,
+   "file": "ninja/ninja_30.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 31,
+   "page": 3,
+   "row": 1,
+   "col": 0,
+   "file": "ninja/ninja_31.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 32,
+   "page": 3,
+   "row": 1,
+   "col": 1,
+   "file": "ninja/ninja_32.webp"
+  },
+  {
+   "deck": "ninja",
+   "index": 33,
+   "page": 3,
+   "row": 1,
+   "col": 2,
+   "file": "ninja/ninja_33.webp"
+  },
+  {
+   "deck": "onna_bugeisha",
+   "index": 1,
+   "page": 0,
+   "row": 0,
+   "col": 0,
+   "file": "onna_bugeisha/onna_bugeisha_01.webp"
+  },
+  {
+   "deck": "onna_bugeisha",
+   "index": 2,
+   "page": 0,
+   "row": 0,
+   "col": 1,
+   "file": "onna_bugeisha/onna_bugeisha_02.webp"
+  },
+  {
+   "deck": "onna_bugeisha",
+   "index": 3,
+   "page": 0,
+   "row": 0,
+   "col": 2,
+   "file": "onna_bugeisha/onna_bugeisha_03.webp"
+  },
+  {
+   "deck": "onna_bugeisha",
+   "index": 4,
+   "page": 0,
+   "row": 1,
+   "col": 0,
+   "file": "onna_bugeisha/onna_bugeisha_04.webp"
+  },
+  {
+   "deck": "onna_bugeisha",
+   "index": 5,
+   "page": 0,
+   "row": 1,
+   "col": 1,
+   "file": "onna_bugeisha/onna_bugeisha_05.webp"
+  },
+  {
+   "deck": "onna_bugeisha",
+   "index": 6,
+   "page": 0,
+   "row": 1,
+   "col": 2,
+   "file": "onna_bugeisha/onna_bugeisha_06.webp"
+  },
+  {
+   "deck": "onna_bugeisha",
+   "index": 7,
+   "page": 0,
+   "row": 2,
+   "col": 0,
+   "file": "onna_bugeisha/onna_bugeisha_07.webp"
+  },
+  {
+   "deck": "onna_bugeisha",
+   "index": 8,
+   "page": 0,
+   "row": 2,
+   "col": 1,
+   "file": "onna_bugeisha/onna_bugeisha_08.webp"
+  },
+  {
+   "deck": "onna_bugeisha",
+   "index": 9,
+   "page": 0,
+   "row": 2,
+   "col": 2,
+   "file": "onna_bugeisha/onna_bugeisha_09.webp"
+  },
+  {
+   "deck": "onna_bugeisha",
+   "index": 10,
+   "page": 1,
+   "row": 0,
+   "col": 0,
+   "file": "onna_bugeisha/onna_bugeisha_10.webp"
+  },
+  {
+   "deck": "onna_bugeisha",
+   "index": 11,
+   "page": 1,
+   "row": 0,
+   "col": 1,
+   "file": "onna_bugeisha/onna_bugeisha_11.webp"
+  },
+  {
+   "deck": "onna_bugeisha",
+   "index": 12,
+   "page": 1,
+   "row": 0,
+   "col": 2,
+   "file": "onna_bugeisha/onna_bugeisha_12.webp"
+  },
+  {
+   "deck": "onna_bugeisha",
+   "index": 13,
+   "page": 1,
+   "row": 1,
+   "col": 0,
+   "file": "onna_bugeisha/onna_bugeisha_13.webp"
+  },
+  {
+   "deck": "onna_bugeisha",
+   "index": 14,
+   "page": 1,
+   "row": 1,
+   "col": 1,
+   "file": "onna_bugeisha/onna_bugeisha_14.webp"
+  },
+  {
+   "deck": "onna_bugeisha",
+   "index": 15,
+   "page": 1,
+   "row": 1,
+   "col": 2,
+   "file": "onna_bugeisha/onna_bugeisha_15.webp"
+  },
+  {
+   "deck": "onna_bugeisha",
+   "index": 16,
+   "page": 1,
+   "row": 2,
+   "col": 0,
+   "file": "onna_bugeisha/onna_bugeisha_16.webp"
+  },
+  {
+   "deck": "onna_bugeisha",
+   "index": 17,
+   "page": 1,
+   "row": 2,
+   "col": 1,
+   "file": "onna_bugeisha/onna_bugeisha_17.webp"
+  },
+  {
+   "deck": "onna_bugeisha",
+   "index": 18,
+   "page": 1,
+   "row": 2,
+   "col": 2,
+   "file": "onna_bugeisha/onna_bugeisha_18.webp"
+  },
+  {
+   "deck": "onna_bugeisha",
+   "index": 19,
+   "page": 2,
+   "row": 0,
+   "col": 0,
+   "file": "onna_bugeisha/onna_bugeisha_19.webp"
+  },
+  {
+   "deck": "onna_bugeisha",
+   "index": 20,
+   "page": 2,
+   "row": 0,
+   "col": 1,
+   "file": "onna_bugeisha/onna_bugeisha_20.webp"
+  },
+  {
+   "deck": "onna_bugeisha",
+   "index": 21,
+   "page": 2,
+   "row": 0,
+   "col": 2,
+   "file": "onna_bugeisha/onna_bugeisha_21.webp"
+  },
+  {
+   "deck": "onna_bugeisha",
+   "index": 22,
+   "page": 2,
+   "row": 1,
+   "col": 0,
+   "file": "onna_bugeisha/onna_bugeisha_22.webp"
+  },
+  {
+   "deck": "onna_bugeisha",
+   "index": 23,
+   "page": 2,
+   "row": 1,
+   "col": 1,
+   "file": "onna_bugeisha/onna_bugeisha_23.webp"
+  },
+  {
+   "deck": "onna_bugeisha",
+   "index": 24,
+   "page": 2,
+   "row": 1,
+   "col": 2,
+   "file": "onna_bugeisha/onna_bugeisha_24.webp"
+  },
+  {
+   "deck": "onna_bugeisha",
+   "index": 25,
+   "page": 2,
+   "row": 2,
+   "col": 0,
+   "file": "onna_bugeisha/onna_bugeisha_25.webp"
+  },
+  {
+   "deck": "onna_bugeisha",
+   "index": 26,
+   "page": 2,
+   "row": 2,
+   "col": 1,
+   "file": "onna_bugeisha/onna_bugeisha_26.webp"
+  },
+  {
+   "deck": "onna_bugeisha",
+   "index": 27,
+   "page": 2,
+   "row": 2,
+   "col": 2,
+   "file": "onna_bugeisha/onna_bugeisha_27.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 1,
+   "page": 0,
+   "row": 0,
+   "col": 0,
+   "file": "yojimbo/yojimbo_01.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 2,
+   "page": 0,
+   "row": 0,
+   "col": 1,
+   "file": "yojimbo/yojimbo_02.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 3,
+   "page": 0,
+   "row": 0,
+   "col": 2,
+   "file": "yojimbo/yojimbo_03.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 4,
+   "page": 0,
+   "row": 1,
+   "col": 0,
+   "file": "yojimbo/yojimbo_04.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 5,
+   "page": 0,
+   "row": 1,
+   "col": 1,
+   "file": "yojimbo/yojimbo_05.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 6,
+   "page": 0,
+   "row": 1,
+   "col": 2,
+   "file": "yojimbo/yojimbo_06.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 7,
+   "page": 0,
+   "row": 2,
+   "col": 0,
+   "file": "yojimbo/yojimbo_07.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 8,
+   "page": 0,
+   "row": 2,
+   "col": 1,
+   "file": "yojimbo/yojimbo_08.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 9,
+   "page": 0,
+   "row": 2,
+   "col": 2,
+   "file": "yojimbo/yojimbo_09.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 10,
+   "page": 1,
+   "row": 0,
+   "col": 0,
+   "file": "yojimbo/yojimbo_10.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 11,
+   "page": 1,
+   "row": 0,
+   "col": 1,
+   "file": "yojimbo/yojimbo_11.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 12,
+   "page": 1,
+   "row": 0,
+   "col": 2,
+   "file": "yojimbo/yojimbo_12.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 13,
+   "page": 1,
+   "row": 1,
+   "col": 0,
+   "file": "yojimbo/yojimbo_13.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 14,
+   "page": 1,
+   "row": 1,
+   "col": 1,
+   "file": "yojimbo/yojimbo_14.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 15,
+   "page": 1,
+   "row": 1,
+   "col": 2,
+   "file": "yojimbo/yojimbo_15.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 16,
+   "page": 1,
+   "row": 2,
+   "col": 0,
+   "file": "yojimbo/yojimbo_16.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 17,
+   "page": 1,
+   "row": 2,
+   "col": 1,
+   "file": "yojimbo/yojimbo_17.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 18,
+   "page": 1,
+   "row": 2,
+   "col": 2,
+   "file": "yojimbo/yojimbo_18.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 19,
+   "page": 2,
+   "row": 0,
+   "col": 0,
+   "file": "yojimbo/yojimbo_19.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 20,
+   "page": 2,
+   "row": 0,
+   "col": 1,
+   "file": "yojimbo/yojimbo_20.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 21,
+   "page": 2,
+   "row": 0,
+   "col": 2,
+   "file": "yojimbo/yojimbo_21.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 22,
+   "page": 2,
+   "row": 1,
+   "col": 0,
+   "file": "yojimbo/yojimbo_22.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 23,
+   "page": 2,
+   "row": 1,
+   "col": 1,
+   "file": "yojimbo/yojimbo_23.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 24,
+   "page": 2,
+   "row": 1,
+   "col": 2,
+   "file": "yojimbo/yojimbo_24.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 25,
+   "page": 2,
+   "row": 2,
+   "col": 0,
+   "file": "yojimbo/yojimbo_25.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 26,
+   "page": 2,
+   "row": 2,
+   "col": 1,
+   "file": "yojimbo/yojimbo_26.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 27,
+   "page": 2,
+   "row": 2,
+   "col": 2,
+   "file": "yojimbo/yojimbo_27.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 28,
+   "page": 3,
+   "row": 0,
+   "col": 0,
+   "file": "yojimbo/yojimbo_28.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 29,
+   "page": 3,
+   "row": 0,
+   "col": 1,
+   "file": "yojimbo/yojimbo_29.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 30,
+   "page": 3,
+   "row": 0,
+   "col": 2,
+   "file": "yojimbo/yojimbo_30.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 31,
+   "page": 3,
+   "row": 1,
+   "col": 0,
+   "file": "yojimbo/yojimbo_31.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 32,
+   "page": 3,
+   "row": 1,
+   "col": 1,
+   "file": "yojimbo/yojimbo_32.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 33,
+   "page": 3,
+   "row": 1,
+   "col": 2,
+   "file": "yojimbo/yojimbo_33.webp"
+  },
+  {
+   "deck": "yojimbo",
+   "index": 34,
+   "page": 3,
+   "row": 2,
+   "col": 0,
+   "file": "yojimbo/yojimbo_34.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 1,
+   "page": 0,
+   "row": 0,
+   "col": 0,
+   "file": "altre_carte/altre_carte_01.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 2,
+   "page": 0,
+   "row": 0,
+   "col": 1,
+   "file": "altre_carte/altre_carte_02.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 3,
+   "page": 0,
+   "row": 0,
+   "col": 2,
+   "file": "altre_carte/altre_carte_03.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 4,
+   "page": 0,
+   "row": 1,
+   "col": 0,
+   "file": "altre_carte/altre_carte_04.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 5,
+   "page": 0,
+   "row": 1,
+   "col": 1,
+   "file": "altre_carte/altre_carte_05.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 6,
+   "page": 0,
+   "row": 1,
+   "col": 2,
+   "file": "altre_carte/altre_carte_06.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 7,
+   "page": 0,
+   "row": 2,
+   "col": 0,
+   "file": "altre_carte/altre_carte_07.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 8,
+   "page": 0,
+   "row": 2,
+   "col": 1,
+   "file": "altre_carte/altre_carte_08.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 9,
+   "page": 0,
+   "row": 2,
+   "col": 2,
+   "file": "altre_carte/altre_carte_09.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 10,
+   "page": 1,
+   "row": 0,
+   "col": 0,
+   "file": "altre_carte/altre_carte_10.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 11,
+   "page": 1,
+   "row": 0,
+   "col": 1,
+   "file": "altre_carte/altre_carte_11.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 12,
+   "page": 1,
+   "row": 0,
+   "col": 2,
+   "file": "altre_carte/altre_carte_12.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 13,
+   "page": 1,
+   "row": 1,
+   "col": 0,
+   "file": "altre_carte/altre_carte_13.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 14,
+   "page": 1,
+   "row": 1,
+   "col": 1,
+   "file": "altre_carte/altre_carte_14.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 15,
+   "page": 1,
+   "row": 1,
+   "col": 2,
+   "file": "altre_carte/altre_carte_15.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 16,
+   "page": 1,
+   "row": 2,
+   "col": 0,
+   "file": "altre_carte/altre_carte_16.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 17,
+   "page": 1,
+   "row": 2,
+   "col": 1,
+   "file": "altre_carte/altre_carte_17.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 18,
+   "page": 1,
+   "row": 2,
+   "col": 2,
+   "file": "altre_carte/altre_carte_18.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 19,
+   "page": 2,
+   "row": 0,
+   "col": 0,
+   "file": "altre_carte/altre_carte_19.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 20,
+   "page": 2,
+   "row": 0,
+   "col": 1,
+   "file": "altre_carte/altre_carte_20.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 21,
+   "page": 2,
+   "row": 0,
+   "col": 2,
+   "file": "altre_carte/altre_carte_21.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 22,
+   "page": 2,
+   "row": 1,
+   "col": 0,
+   "file": "altre_carte/altre_carte_22.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 23,
+   "page": 2,
+   "row": 1,
+   "col": 1,
+   "file": "altre_carte/altre_carte_23.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 24,
+   "page": 2,
+   "row": 1,
+   "col": 2,
+   "file": "altre_carte/altre_carte_24.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 25,
+   "page": 2,
+   "row": 2,
+   "col": 0,
+   "file": "altre_carte/altre_carte_25.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 26,
+   "page": 2,
+   "row": 2,
+   "col": 1,
+   "file": "altre_carte/altre_carte_26.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 27,
+   "page": 2,
+   "row": 2,
+   "col": 2,
+   "file": "altre_carte/altre_carte_27.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 28,
+   "page": 3,
+   "row": 0,
+   "col": 0,
+   "file": "altre_carte/altre_carte_28.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 29,
+   "page": 3,
+   "row": 0,
+   "col": 1,
+   "file": "altre_carte/altre_carte_29.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 30,
+   "page": 3,
+   "row": 0,
+   "col": 2,
+   "file": "altre_carte/altre_carte_30.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 31,
+   "page": 3,
+   "row": 1,
+   "col": 0,
+   "file": "altre_carte/altre_carte_31.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 32,
+   "page": 3,
+   "row": 1,
+   "col": 1,
+   "file": "altre_carte/altre_carte_32.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 33,
+   "page": 3,
+   "row": 1,
+   "col": 2,
+   "file": "altre_carte/altre_carte_33.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 34,
+   "page": 3,
+   "row": 2,
+   "col": 0,
+   "file": "altre_carte/altre_carte_34.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 35,
+   "page": 3,
+   "row": 2,
+   "col": 1,
+   "file": "altre_carte/altre_carte_35.webp"
+  },
+  {
+   "deck": "altre_carte",
+   "index": 36,
+   "page": 3,
+   "row": 2,
+   "col": 2,
+   "file": "altre_carte/altre_carte_36.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 1,
+   "page": 0,
+   "row": 0,
+   "col": 0,
+   "file": "altre_carte_2/altre_carte_2_01.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 2,
+   "page": 0,
+   "row": 0,
+   "col": 1,
+   "file": "altre_carte_2/altre_carte_2_02.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 3,
+   "page": 0,
+   "row": 0,
+   "col": 2,
+   "file": "altre_carte_2/altre_carte_2_03.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 4,
+   "page": 0,
+   "row": 1,
+   "col": 0,
+   "file": "altre_carte_2/altre_carte_2_04.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 5,
+   "page": 0,
+   "row": 1,
+   "col": 1,
+   "file": "altre_carte_2/altre_carte_2_05.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 6,
+   "page": 0,
+   "row": 1,
+   "col": 2,
+   "file": "altre_carte_2/altre_carte_2_06.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 7,
+   "page": 0,
+   "row": 2,
+   "col": 0,
+   "file": "altre_carte_2/altre_carte_2_07.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 8,
+   "page": 0,
+   "row": 2,
+   "col": 1,
+   "file": "altre_carte_2/altre_carte_2_08.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 9,
+   "page": 0,
+   "row": 2,
+   "col": 2,
+   "file": "altre_carte_2/altre_carte_2_09.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 10,
+   "page": 1,
+   "row": 0,
+   "col": 0,
+   "file": "altre_carte_2/altre_carte_2_10.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 11,
+   "page": 1,
+   "row": 0,
+   "col": 1,
+   "file": "altre_carte_2/altre_carte_2_11.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 12,
+   "page": 1,
+   "row": 0,
+   "col": 2,
+   "file": "altre_carte_2/altre_carte_2_12.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 13,
+   "page": 1,
+   "row": 1,
+   "col": 0,
+   "file": "altre_carte_2/altre_carte_2_13.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 14,
+   "page": 1,
+   "row": 1,
+   "col": 1,
+   "file": "altre_carte_2/altre_carte_2_14.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 15,
+   "page": 1,
+   "row": 1,
+   "col": 2,
+   "file": "altre_carte_2/altre_carte_2_15.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 16,
+   "page": 1,
+   "row": 2,
+   "col": 0,
+   "file": "altre_carte_2/altre_carte_2_16.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 17,
+   "page": 1,
+   "row": 2,
+   "col": 1,
+   "file": "altre_carte_2/altre_carte_2_17.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 18,
+   "page": 1,
+   "row": 2,
+   "col": 2,
+   "file": "altre_carte_2/altre_carte_2_18.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 19,
+   "page": 2,
+   "row": 0,
+   "col": 0,
+   "file": "altre_carte_2/altre_carte_2_19.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 20,
+   "page": 2,
+   "row": 0,
+   "col": 1,
+   "file": "altre_carte_2/altre_carte_2_20.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 21,
+   "page": 2,
+   "row": 0,
+   "col": 2,
+   "file": "altre_carte_2/altre_carte_2_21.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 22,
+   "page": 2,
+   "row": 1,
+   "col": 0,
+   "file": "altre_carte_2/altre_carte_2_22.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 23,
+   "page": 2,
+   "row": 1,
+   "col": 1,
+   "file": "altre_carte_2/altre_carte_2_23.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 24,
+   "page": 2,
+   "row": 1,
+   "col": 2,
+   "file": "altre_carte_2/altre_carte_2_24.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 25,
+   "page": 2,
+   "row": 2,
+   "col": 0,
+   "file": "altre_carte_2/altre_carte_2_25.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 26,
+   "page": 2,
+   "row": 2,
+   "col": 1,
+   "file": "altre_carte_2/altre_carte_2_26.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 27,
+   "page": 2,
+   "row": 2,
+   "col": 2,
+   "file": "altre_carte_2/altre_carte_2_27.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 28,
+   "page": 3,
+   "row": 0,
+   "col": 0,
+   "file": "altre_carte_2/altre_carte_2_28.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 29,
+   "page": 3,
+   "row": 0,
+   "col": 1,
+   "file": "altre_carte_2/altre_carte_2_29.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 30,
+   "page": 3,
+   "row": 0,
+   "col": 2,
+   "file": "altre_carte_2/altre_carte_2_30.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 31,
+   "page": 3,
+   "row": 1,
+   "col": 0,
+   "file": "altre_carte_2/altre_carte_2_31.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 32,
+   "page": 3,
+   "row": 1,
+   "col": 1,
+   "file": "altre_carte_2/altre_carte_2_32.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 33,
+   "page": 3,
+   "row": 1,
+   "col": 2,
+   "file": "altre_carte_2/altre_carte_2_33.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 34,
+   "page": 3,
+   "row": 2,
+   "col": 0,
+   "file": "altre_carte_2/altre_carte_2_34.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 35,
+   "page": 3,
+   "row": 2,
+   "col": 1,
+   "file": "altre_carte_2/altre_carte_2_35.webp"
+  },
+  {
+   "deck": "altre_carte_2",
+   "index": 36,
+   "page": 3,
+   "row": 2,
+   "col": 2,
+   "file": "altre_carte_2/altre_carte_2_36.webp"
   }
  ]
 }
