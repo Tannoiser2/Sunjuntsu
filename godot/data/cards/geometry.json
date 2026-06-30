@@ -5,48 +5,48 @@
    "name": "CARTA SPECIALE GUERRIERO",
    "type": "core",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "anchor",
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 2,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "anchor",
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 2,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "discard_self",
-     "n": 1
-    },
-    {
-     "do": "draw",
-     "n": 2,
-     "alt": "a"
-    },
-    {
-     "do": "search_draw",
-     "n": 1,
-     "alt": "b"
-    },
-    {
-     "do": "focus",
-     "n": 1,
-     "alt": "b"
-    },
-    {
-     "do": "change_kamae",
-     "n": 1,
-     "alt": "c"
-    }
+	{
+	 "do": "discard_self",
+	 "n": 1
+	},
+	{
+	 "do": "draw",
+	 "n": 2,
+	 "alt": "a"
+	},
+	{
+	 "do": "search_draw",
+	 "n": 1,
+	 "alt": "b"
+	},
+	{
+	 "do": "focus",
+	 "n": 1,
+	 "alt": "b"
+	},
+	{
+	 "do": "change_kamae",
+	 "n": 1,
+	 "alt": "c"
+	}
    ],
    "note": "Costo: SCARTA 1 CARTA (discard_self). Movimento ❄1 ↻2 (❄ = marcatore-àncora, non un passo). OPPURE: pesca 2 / prendi 1 attacco + ottieni 1 🪷 / cambia Kamae fino a 1 ramo."
   },
@@ -54,24 +54,24 @@
    "name": "RUGGITO ARDENTE",
    "type": "meditation",
    "effects": [
-    {
-     "do": "push",
-     "n": 1,
-     "when": "on_hit",
-     "alt": "a"
-    },
-    {
-     "do": "swap_positions",
-     "when": "on_hit",
-     "focus_cost": 1,
-     "alt": "b"
-    },
-    {
-     "do": "link_anchor",
-     "when": "on_hit",
-     "focus_cost": 1,
-     "alt": "c"
-    }
+	{
+	 "do": "push",
+	 "n": 1,
+	 "when": "on_hit",
+	 "alt": "a"
+	},
+	{
+	 "do": "swap_positions",
+	 "when": "on_hit",
+	 "focus_cost": 1,
+	 "alt": "b"
+	},
+	{
+	 "do": "link_anchor",
+	 "when": "on_hit",
+	 "focus_cost": 1,
+	 "alt": "c"
+	}
    ],
    "note": "Istantanea: gioca se l'attacco è riuscito. SPINGI 1, OPPURE (barre viola = focus) scambia posizione, OPPURE \"SOSTITUISCE ! CON ❄\" = link_anchor."
   },
@@ -80,42 +80,42 @@
    "type": "attack",
    "kamae_req": "aggression",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 2
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": "exec"
-     },
-     {
-      "d": 1,
-      "k": 2,
-      "w": 1
-     },
-     {
-      "d": 2,
-      "k": 2,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 2
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "w": "exec"
+	 },
+	 {
+	  "d": 1,
+	  "k": 2,
+	  "w": 1
+	 },
+	 {
+	  "d": 2,
+	  "k": 2,
+	  "w": 1
+	 }
+	]
    },
    "note": "'Destra dist2' approssimata a Retro-Dx anello2. Fronte-Dx dist1 = ESECUZIONE."
   },
@@ -123,34 +123,34 @@
    "name": "PUNTO CIECO",
    "type": "meditation",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "search_draw",
-     "n": 1,
-     "alt": "a"
-    },
-    {
-     "do": "search_draw",
-     "n": 1,
-     "focus_cost": 1,
-     "alt": "b"
-    },
-    {
-     "do": "switch_kamae",
-     "to": "determination"
-    }
+	{
+	 "do": "search_draw",
+	 "n": 1,
+	 "alt": "a"
+	},
+	{
+	 "do": "search_draw",
+	 "n": 1,
+	 "focus_cost": 1,
+	 "alt": "b"
+	},
+	{
+	 "do": "switch_kamae",
+	 "to": "determination"
+	}
    ],
    "note": "Istantanea, dopo aver risolto la tua carta: ↻1; CERCA+PRENDI 1 attacco, OPPURE (barra viola = focus) 1 difesa; poi PASSA A Determinazione."
   },
@@ -158,49 +158,49 @@
    "name": "ISTINTO BRUCIANTE",
    "type": "meditation",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": false,
-        "kamae": "aggression"
-       }
-      ]
-     },
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": false,
-        "kamae": "determination"
-       }
-      ]
-     },
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 2,
-        "opt": false,
-        "kamae": "balance"
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 1,
+		"opt": false,
+		"kamae": "aggression"
+	   }
+	  ]
+	 },
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 1,
+		"opt": false,
+		"kamae": "determination"
+	   }
+	  ]
+	 },
+	 {
+	  "atoms": [
+	   {
+		"t": "rot",
+		"n": 2,
+		"opt": false,
+		"kamae": "balance"
+	   }
+	  ]
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "reset_deck"
-    },
-    {
-     "do": "draw",
-     "n": 5
-    }
+	{
+	 "do": "reset_deck"
+	},
+	{
+	 "do": "draw",
+	 "n": 5
+	}
    ],
    "note": "Movimento per posa (alternative): Aggressività ↥1 · Determinazione ↥1 · Equilibrio ↻2. Poi rimescola le carte abilità non-meditazione e pesca 5."
   },
@@ -208,55 +208,55 @@
    "name": "FINTA FALCIANTE",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 3,
-        "n": 1,
-        "opt": false
-       }
-      ]
-     },
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 3,
-        "n": 1,
-        "opt": false,
-        "kamae": "balance"
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 3,
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 },
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 3,
+		"n": 1,
+		"opt": false,
+		"kamae": "balance"
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 5,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "foe_lose_focus",
-     "n": 2,
-     "when": "on_hit"
-    }
+	{
+	 "do": "foe_lose_focus",
+	 "n": 2,
+	 "when": "on_hit"
+	}
    ],
    "note": "Movimento: ↧1 (senza gate) OPPURE ↧1 in Equilibrio (verde). Celle d5,d0,d1 (arco frontale). Se riuscito: SCARTA 2 🪷 = foe_lose_focus 2. Riquadro [3] arancio = iniziativa alternativa 3 in Aggressività (non modellata)."
   },
@@ -264,48 +264,48 @@
    "name": "CONCENTRAZIONE RITROVATA",
    "type": "meditation",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "anchor",
-        "n": 1,
-        "opt": false
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false
-       }
-      ]
-     },
-     {
-      "atoms": [
-       {
-        "t": "anchor",
-        "n": 2,
-        "opt": false,
-        "kamae": "balance"
-       },
-       {
-        "t": "rot",
-        "n": 2,
-        "opt": false,
-        "kamae": "balance"
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "anchor",
+		"n": 1,
+		"opt": false
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 },
+	 {
+	  "atoms": [
+	   {
+		"t": "anchor",
+		"n": 2,
+		"opt": false,
+		"kamae": "balance"
+	   },
+	   {
+		"t": "rot",
+		"n": 2,
+		"opt": false,
+		"kamae": "balance"
+	   }
+	  ]
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "focus",
-     "n": 1
-    },
-    {
-     "do": "switch_kamae",
-     "to": "aggression"
-    }
+	{
+	 "do": "focus",
+	 "n": 1
+	},
+	{
+	 "do": "switch_kamae",
+	 "to": "aggression"
+	}
    ],
    "note": "Movimento: ❄1 ↻1, OPPURE (verde = Equilibrio) ❄2 ↻2 — il ❄ è un marcatore-àncora, non un passo. \"OTTIENI 1 🪷\" = focus; \"PASSA A\" = switch_kamae aggression."
   },
@@ -313,59 +313,59 @@
    "name": "FALCIATA MONTANTE",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 3,
-        "n": 1,
-        "opt": false
-       }
-      ]
-     },
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 3,
-        "n": 1,
-        "opt": false,
-        "kamae": "balance"
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 3,
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 },
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 3,
+		"n": 1,
+		"opt": false,
+		"kamae": "balance"
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 4,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 4,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "link_anchor",
-     "when": "on_hit",
-     "focus_cost": 1
-    },
-    {
-     "do": "switch_kamae",
-     "to": "aggression"
-    }
+	{
+	 "do": "link_anchor",
+	 "when": "on_hit",
+	 "focus_cost": 1
+	},
+	{
+	 "do": "switch_kamae",
+	 "to": "aggression"
+	}
    ],
    "note": "Riquadro iniziativa [8] in Determinazione (gialla). Movimento: ↧1 (bianco, senza gate) OPPURE ↧1 in Equilibrio (verde). Barra viola (focus): \"SOSTITUISCI ! CON ❄\" = collega il marcatore-àncora ❄ all'asterisco (*) sulla Griglia di Posizione (gli effetti collegati si applicano al colpito). \"PASSA A\" = switch_kamae aggression."
   },
@@ -374,90 +374,90 @@
    "type": "attack",
    "kamae_req": "aggression",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dirs": [
-         0,
-         3
-        ],
-        "n": 1,
-        "opt": true,
-        "kamae": "aggression"
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dirs": [
+		 0,
+		 3
+		],
+		"n": 1,
+		"opt": true,
+		"kamae": "aggression"
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "foe_lose_focus",
-     "n": 1,
-     "when": "on_hit"
-    }
+	{
+	 "do": "foe_lose_focus",
+	 "n": 1,
+	 "when": "on_hit"
+	}
    ]
   },
   "62": {
    "name": "ARCO RESPINGENTE",
    "type": "attack",
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 5,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 4,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 2,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 4,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 2,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "push",
-     "n": 1,
-     "when": "on_hit"
-    },
-    {
-     "do": "foe_discard",
-     "n": 1,
-     "when": "on_hit",
-     "kamae": "balance",
-     "focus_cost": 1
-    },
-    {
-     "do": "switch_kamae",
-     "to": "aggression",
-     "when": "on_hit"
-    }
+	{
+	 "do": "push",
+	 "n": 1,
+	 "when": "on_hit"
+	},
+	{
+	 "do": "foe_discard",
+	 "n": 1,
+	 "when": "on_hit",
+	 "kamae": "balance",
+	 "focus_cost": 1
+	},
+	{
+	 "do": "switch_kamae",
+	 "to": "aggression",
+	 "when": "on_hit"
+	}
    ],
    "note": "Arco offensivo verificato (hi-res): d0,d1,d2,d4,d5 (arco frontale ampio, manca solo il dietro d3). Se riuscito: SPINGI 1; barra verde (Equilibrio) SCARTA 1 (con focus); \"PASSA A\" = switch_kamae aggression."
   },
@@ -465,42 +465,42 @@
    "name": "BLOCCO CINEREO",
    "type": "defence",
    "defence": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "v": 1
-     },
-     {
-      "d": 5,
-      "k": 1,
-      "v": 1
-     },
-     {
-      "d": 4,
-      "k": 1,
-      "v": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "v": 1
+	 },
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "v": 1
+	 },
+	 {
+	  "d": 4,
+	  "k": 1,
+	  "v": 1
+	 }
+	]
    },
    "counter": [
-    8
+	8
    ],
    "effects": [
-    {
-     "do": "push",
-     "n": 1,
-     "alt": "a"
-    },
-    {
-     "do": "swap_positions",
-     "alt": "b"
-    },
-    {
-     "do": "switch_kamae",
-     "to": "aggression",
-     "focus_cost": 1
-    }
+	{
+	 "do": "push",
+	 "n": 1,
+	 "alt": "a"
+	},
+	{
+	 "do": "swap_positions",
+	 "alt": "b"
+	},
+	{
+	 "do": "switch_kamae",
+	 "to": "aggression",
+	 "focus_cost": 1
+	}
    ],
    "note": "Difesa verificata (hi-res): scudi a d0,d5,d4 (fronte + lato sinistro). Counter 8. Se riuscito: SPINGI 1 OPPURE scambio; \"PASSA A\" aggression (focus)."
   },
@@ -508,45 +508,45 @@
    "name": "TESTATA",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false,
-        "kamae": "aggression"
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false,
+		"kamae": "aggression"
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "foe_stun",
-     "n": 1,
-     "when": "on_hit"
-    },
-    {
-     "do": "focus",
-     "n": 1,
-     "when": "on_hit"
-    }
+	{
+	 "do": "foe_stun",
+	 "n": 1,
+	 "when": "on_hit"
+	},
+	{
+	 "do": "focus",
+	 "n": 1,
+	 "when": "on_hit"
+	}
    ],
    "note": "Arco verificato (hi-res): singolo colpo frontale d0. Movimento ↥1 (senza gate) + ↻1 in Aggressività. Se riuscito: stordisci 1 e ottieni 1 🪷."
   },
@@ -554,71 +554,71 @@
    "name": "SPIRALE DI FIAMME",
    "type": "attack",
    "attacks": [
-    {
-     "cells": [
-      {
-       "d": 1,
-       "k": 1,
-       "w": 1
-      },
-      {
-       "d": 2,
-       "k": 1,
-       "w": 1
-      }
-     ],
-     "kamae": "aggression"
-    }
+	{
+	 "cells": [
+	  {
+	   "d": 1,
+	   "k": 1,
+	   "w": 1
+	  },
+	  {
+	   "d": 2,
+	   "k": 1,
+	   "w": 1
+	  }
+	 ],
+	 "kamae": "aggression"
+	}
    ],
    "split": {
-    "initiative": 5,
-    "move": {
-     "opts": [
-      {
-       "atoms": [
-        {
-         "t": "anchor",
-         "n": 1,
-         "opt": false,
-         "kamae": "balance"
-        },
-        {
-         "t": "rot",
-         "n": 1,
-         "opt": false,
-         "kamae": "balance"
-        }
-       ]
-      },
-      {
-       "atoms": [
-        {
-         "t": "step",
-         "dirs": [
-          0,
-          3
-         ],
-         "n": 1,
-         "opt": false,
-         "kamae": "determination"
-        },
-        {
-         "t": "rot",
-         "n": 1,
-         "opt": false,
-         "kamae": "determination"
-        }
-       ]
-      }
-     ]
-    }
+	"initiative": 5,
+	"move": {
+	 "opts": [
+	  {
+	   "atoms": [
+		{
+		 "t": "anchor",
+		 "n": 1,
+		 "opt": false,
+		 "kamae": "balance"
+		},
+		{
+		 "t": "rot",
+		 "n": 1,
+		 "opt": false,
+		 "kamae": "balance"
+		}
+	   ]
+	  },
+	  {
+	   "atoms": [
+		{
+		 "t": "step",
+		 "dirs": [
+		  0,
+		  3
+		 ],
+		 "n": 1,
+		 "opt": false,
+		 "kamae": "determination"
+		},
+		{
+		 "t": "rot",
+		 "n": 1,
+		 "opt": false,
+		 "kamae": "determination"
+		}
+	   ]
+	  }
+	 ]
+	}
    },
    "effects": [
-    {
-     "do": "rotate_target",
-     "n": 2,
-     "when": "on_hit"
-    }
+	{
+	 "do": "rotate_target",
+	 "n": 2,
+	 "when": "on_hit"
+	}
    ],
    "note": "Arco (Aggressività) verificato hi-res: d1,d2 (lato destro). Iniziativa alternativa 7 in Aggressività (con l'attacco). A iniziativa 5: riga VERDE (Equilibrio) = ❄1 ↻1 (❄ = marcatore-àncora, non un passo); riga GIALLA (Determinazione) = ↥1 ↻1."
   },
@@ -626,46 +626,46 @@
    "name": "SQUARCIO DI NODACHI",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dirs": [
-         0,
-         3
-        ],
-        "n": 1,
-        "opt": true,
-        "focus_cost": 1
-       }
-      ]
-     },
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dirs": [
+		 0,
+		 3
+		],
+		"n": 1,
+		"opt": true,
+		"focus_cost": 1
+	   }
+	  ]
+	 },
+	 {
+	  "atoms": [
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "discard_self",
-     "n": 1
-    }
+	{
+	 "do": "discard_self",
+	 "n": 1
+	}
    ],
    "note": "Movimento: barra viola (focus) ↥1 OPPURE ↻1 (senza gate). Colpo frontale d0. SCARTA 1 carta."
   },
@@ -673,10 +673,10 @@
    "name": "BLOCCO AMPIO",
    "type": "meditation",
    "effects": [
-    {
-     "do": "block_initiative",
-     "n": 1
-    }
+	{
+	 "do": "block_initiative",
+	 "n": 1
+	}
    ],
    "note": "Istantanea: gioca prima di scegliere l'iniziativa in un blocco."
   },
@@ -684,46 +684,46 @@
    "name": "COLPO IN AFFONDO",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dirs": [
-         0,
-         3
-        ],
-        "n": 1,
-        "opt": false
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false,
-        "kamae": "determination"
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dirs": [
+		 0,
+		 3
+		],
+		"n": 1,
+		"opt": false
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false,
+		"kamae": "determination"
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 0
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 0
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "switch_kamae",
-     "to": "determination"
-    },
-    {
-     "do": "draw",
-     "n": 1
-    }
+	{
+	 "do": "switch_kamae",
+	 "to": "determination"
+	},
+	{
+	 "do": "draw",
+	 "n": 1
+	}
    ],
    "note": "Asterisco Fronte: in Equilibrio 1 ferita. Iniziativa alt 7 in Aggressività."
   },
@@ -732,35 +732,35 @@
    "type": "attack",
    "non_blockable": true,
    "attack": {
-    "cells": [
-     {
-      "d": 5,
-      "k": 1,
-      "w": 0
-     },
-     {
-      "d": 0,
-      "k": 1,
-      "w": 0
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 0
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "w": 0
+	 },
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 0
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "w": 0
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "foe_lose_focus",
-     "n": 2,
-     "when": "on_hit"
-    },
-    {
-     "do": "change_kamae",
-     "n": 1,
-     "when": "on_hit"
-    }
+	{
+	 "do": "foe_lose_focus",
+	 "n": 2,
+	 "when": "on_hit"
+	},
+	{
+	 "do": "change_kamae",
+	 "n": 1,
+	 "when": "on_hit"
+	}
    ],
    "note": "Asterischi = avversario scarta 2 focus. 'avversario passa a Neutra' non modellato."
   },
@@ -769,41 +769,41 @@
    "type": "attack",
    "wound_kind": "bleed",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false
-       },
-       {
-        "t": "step",
-        "dirs": [
-         0,
-         3
-        ],
-        "n": 1,
-        "opt": true,
-        "kamae": "determination"
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false
+	   },
+	   {
+		"t": "step",
+		"dirs": [
+		 0,
+		 3
+		],
+		"n": 1,
+		"opt": true,
+		"kamae": "determination"
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 5,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 0,
-      "k": 1,
-      "w": 0
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 0
+	 }
+	]
    },
    "note": "Audit hi-res: ↻1 (senza kamae) + passo avanti/indietro in Determinazione (4 quadretti, non focus). Fronte-Sx sanguinante; asterisco Fronte +1 ferita in Aggressività."
   },
@@ -811,41 +811,41 @@
    "name": "MENTE RAPIDA",
    "type": "meditation",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "anchor",
-        "n": 2,
-        "opt": true
-       },
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": false,
-        "kamae": "aggression"
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false,
-        "kamae": "balance"
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "anchor",
+		"n": 2,
+		"opt": true
+	   },
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 1,
+		"opt": false,
+		"kamae": "aggression"
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false,
+		"kamae": "balance"
+	   }
+	  ]
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "draw",
-     "n": 2
-    },
-    {
-     "do": "change_kamae",
-     "n": 1,
-     "focus_cost": 1
-    }
+	{
+	 "do": "draw",
+	 "n": 2
+	},
+	{
+	 "do": "change_kamae",
+	 "n": 1,
+	 "focus_cost": 1
+	}
    ],
    "note": "Audit hi-res: ❄2 (àncora) + ⬆1 in Aggressività + ↻1 in Equilibrio (cerchio verde, non Determinazione). Pesca 2; cambia kamae 1 ramo (focus)."
   },
@@ -853,59 +853,59 @@
    "name": "BLOCCO SELVAGGIO",
    "type": "defence",
    "defence": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "v": 1
-     },
-     {
-      "d": 5,
-      "k": 1,
-      "v": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "v": 1
-     },
-     {
-      "d": 4,
-      "k": 1,
-      "v": 1
-     },
-     {
-      "d": 2,
-      "k": 1,
-      "v": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "v": 1
+	 },
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "v": 1
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "v": 1
+	 },
+	 {
+	  "d": 4,
+	  "k": 1,
+	  "v": 1
+	 },
+	 {
+	  "d": 2,
+	  "k": 1,
+	  "v": 1
+	 }
+	]
    },
    "counter": [
-    7,
-    6
+	7,
+	6
    ],
    "effects": [
-    {
-     "do": "discard_self",
-     "n": 2,
-     "kamae": "aggression"
-    },
-    {
-     "do": "spend_focus",
-     "all": true,
-     "alt": "a"
-    },
-    {
-     "do": "spend_focus",
-     "all_but": 1,
-     "kamae": "balance",
-     "alt": "b"
-    },
-    {
-     "do": "switch_kamae",
-     "to": "neutral"
-    }
+	{
+	 "do": "discard_self",
+	 "n": 2,
+	 "kamae": "aggression"
+	},
+	{
+	 "do": "spend_focus",
+	 "all": true,
+	 "alt": "a"
+	},
+	{
+	 "do": "spend_focus",
+	 "all_but": 1,
+	 "kamae": "balance",
+	 "alt": "b"
+	},
+	{
+	 "do": "switch_kamae",
+	 "to": "neutral"
+	}
    ],
    "note": "Audit hi-res: blocco 5 esagoni; scarta 2 carte (Aggressività); scarta tutto il focus / OPPURE tutto tranne 1 in Equilibrio (cerchio verde, non Determinazione); PASSA A Neutrale (⛩)."
   },
@@ -913,139 +913,139 @@
    "name": "FENDENTE SELVAGGIO",
    "type": "attack",
    "attack": {
-    "cells": [
-     {
-      "d": 5,
-      "k": 1,
-      "w": 2
-     },
-     {
-      "d": 0,
-      "k": 1,
-      "w": 2
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 2
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "w": 2
+	 },
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 2
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "w": 2
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "discard_self",
-     "n": 2
-    },
-    {
-     "do": "spend_focus",
-     "all": true
-    },
-    {
-     "do": "switch_kamae",
-     "to": "neutral"
-    }
+	{
+	 "do": "discard_self",
+	 "n": 2
+	},
+	{
+	 "do": "spend_focus",
+	 "all": true
+	},
+	{
+	 "do": "switch_kamae",
+	 "to": "neutral"
+	}
    ]
   },
   "123": {
    "name": "RESPINTA",
    "type": "defence",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false
-       },
-       {
-        "t": "step",
-        "dirs": [
-         0,
-         3
-        ],
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false
+	   },
+	   {
+		"t": "step",
+		"dirs": [
+		 0,
+		 3
+		],
+		"n": 1,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "defence": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "v": 1
-     },
-     {
-      "d": 5,
-      "k": 1,
-      "v": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "v": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "v": 1
+	 },
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "v": 1
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "v": 1
+	 }
+	]
    },
    "counter": [
-    1
+	1
    ],
    "effects": [
-    {
-     "do": "push",
-     "n": 1
-    }
+	{
+	 "do": "push",
+	 "n": 1
+	}
    ]
   },
   "23": {
    "name": "CARTA SPECIALE RONIN",
    "type": "core",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "anchor",
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 2,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "anchor",
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 2,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "discard_self",
-     "n": 1
-    },
-    {
-     "do": "draw",
-     "n": 2,
-     "alt": "a"
-    },
-    {
-     "do": "search_draw",
-     "n": 1,
-     "alt": "b"
-    },
-    {
-     "do": "switch_kamae",
-     "to": "any",
-     "alt": "b"
-    },
-    {
-     "do": "change_kamae",
-     "n": 1,
-     "alt": "c"
-    }
+	{
+	 "do": "discard_self",
+	 "n": 1
+	},
+	{
+	 "do": "draw",
+	 "n": 2,
+	 "alt": "a"
+	},
+	{
+	 "do": "search_draw",
+	 "n": 1,
+	 "alt": "b"
+	},
+	{
+	 "do": "switch_kamae",
+	 "to": "any",
+	 "alt": "b"
+	},
+	{
+	 "do": "change_kamae",
+	 "n": 1,
+	 "alt": "c"
+	}
    ],
    "note": "Costo: SCARTA 1 CARTA. Movimento ❄1 ↻2 (❄ = marcatore-àncora). OPPURE: pesca 2 / prendi 1 attacco + passa a una qualsiasi Kamae / cambia Kamae fino a 1 ramo."
   },
@@ -1053,67 +1053,67 @@
    "name": "VORTICE CREMISI",
    "type": "attack",
    "attacks": [
-    {
-     "cells": [
-      {
-       "d": 0,
-       "k": 2,
-       "w": 2
-      },
-      {
-       "d": 1,
-       "k": 2,
-       "w": 2
-      },
-      {
-       "d": 2,
-       "k": 2,
-       "w": 2
-      },
-      {
-       "d": 3,
-       "k": 2,
-       "w": 2
-      },
-      {
-       "d": 4,
-       "k": 2,
-       "w": 2
-      },
-      {
-       "d": 5,
-       "k": 2,
-       "w": 2
-      }
-     ],
-     "kamae": "aggression"
-    }
+	{
+	 "cells": [
+	  {
+	   "d": 0,
+	   "k": 2,
+	   "w": 2
+	  },
+	  {
+	   "d": 1,
+	   "k": 2,
+	   "w": 2
+	  },
+	  {
+	   "d": 2,
+	   "k": 2,
+	   "w": 2
+	  },
+	  {
+	   "d": 3,
+	   "k": 2,
+	   "w": 2
+	  },
+	  {
+	   "d": 4,
+	   "k": 2,
+	   "w": 2
+	  },
+	  {
+	   "d": 5,
+	   "k": 2,
+	   "w": 2
+	  }
+	 ],
+	 "kamae": "aggression"
+	}
    ],
    "split": {
-    "initiative": 5,
-    "move": {
-     "opts": [
-      {
-       "atoms": [
-        {
-         "t": "step",
-         "dir": 0,
-         "n": 1,
-         "opt": false
-        }
-       ]
-      }
-     ]
-    },
-    "attack": {
-     "cells": [
-      {
-       "d": 0,
-       "k": 1,
-       "w": 2
-      }
-     ]
-    }
+	"initiative": 5,
+	"move": {
+	 "opts": [
+	  {
+	   "atoms": [
+		{
+		 "t": "step",
+		 "dir": 0,
+		 "n": 1,
+		 "opt": false
+		}
+	   ]
+	  }
+	 ]
+	},
+	"attack": {
+	 "cells": [
+	  {
+	   "d": 0,
+	   "k": 1,
+	   "w": 2
+	  }
+	 ]
+	}
    },
    "note": "Top vel8: anello dist2 (12 celle fisiche → 6 raggi). Bottom vel5 Fronte 2 ferite."
   },
@@ -1121,19 +1121,19 @@
    "name": "ARMATURA PESANTE",
    "type": "defence",
    "effects": [
-    {
-     "do": "reduce_damage",
-     "n": 1
-    },
-    {
-     "do": "focus",
-     "n": 1,
-     "kamae": "aggression"
-    },
-    {
-     "do": "stun_self",
-     "n": 1
-    }
+	{
+	 "do": "reduce_damage",
+	 "n": 1
+	},
+	{
+	 "do": "focus",
+	 "n": 1,
+	 "kamae": "aggression"
+	},
+	{
+	 "do": "stun_self",
+	 "n": 1
+	}
    ],
    "note": "Persistente: riduce di 1 il danno subìto (min 1). Ogni volta che il danno è ridotto: OTTIENI 1 🪷 (barra arancio = Aggressività) e PRENDI 1 stordimento."
   },
@@ -1141,140 +1141,140 @@
    "name": "CARICA DEL TORO",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "attacks": [
-    {
-     "cells": [
-      {
-       "d": 5,
-       "k": 1,
-       "w": 2
-      },
-      {
-       "d": 1,
-       "k": 1,
-       "w": 2
-      }
-     ],
-     "kamae": "aggression"
-    }
+	{
+	 "cells": [
+	  {
+	   "d": 5,
+	   "k": 1,
+	   "w": 2
+	  },
+	  {
+	   "d": 1,
+	   "k": 1,
+	   "w": 2
+	  }
+	 ],
+	 "kamae": "aggression"
+	}
    ],
    "split": {
-    "initiative": 5,
-    "move": {
-     "opts": [
-      {
-       "atoms": [
-        {
-         "t": "step",
-         "dir": 0,
-         "n": 1,
-         "opt": false
-        }
-       ]
-      }
-     ]
-    },
-    "attack": {
-     "cells": [
-      {
-       "d": 5,
-       "k": 1,
-       "w": 1
-      },
-      {
-       "d": 0,
-       "k": 1,
-       "w": 1
-      }
-     ]
-    }
+	"initiative": 5,
+	"move": {
+	 "opts": [
+	  {
+	   "atoms": [
+		{
+		 "t": "step",
+		 "dir": 0,
+		 "n": 1,
+		 "opt": false
+		}
+	   ]
+	  }
+	 ]
+	},
+	"attack": {
+	 "cells": [
+	  {
+	   "d": 5,
+	   "k": 1,
+	   "w": 1
+	  },
+	  {
+	   "d": 0,
+	   "k": 1,
+	   "w": 1
+	  }
+	 ]
+	}
    }
   },
   "27": {
    "name": "AFFONDO INVERTITO DI ZANNA",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dirs": [
-         0,
-         3
-        ],
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dirs": [
+		 0,
+		 3
+		],
+		"n": 1,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 2
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 2
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "push",
-     "n": 1,
-     "when": "on_hit",
-     "kamae": "aggression"
-    }
+	{
+	 "do": "push",
+	 "n": 1,
+	 "when": "on_hit",
+	 "kamae": "aggression"
+	}
    ]
   },
   "28": {
    "name": "IL TERRORE",
    "type": "meditation",
    "split": {
-    "initiative": 3,
-    "move": {
-     "opts": [
-      {
-       "atoms": [
-        {
-         "t": "anchor",
-         "n": 2,
-         "opt": false,
-         "kamae": "aggression"
-        },
-        {
-         "t": "rot",
-         "n": 2,
-         "opt": false,
-         "kamae": "aggression"
-        }
-       ]
-      }
-     ]
-    }
+	"initiative": 3,
+	"move": {
+	 "opts": [
+	  {
+	   "atoms": [
+		{
+		 "t": "anchor",
+		 "n": 2,
+		 "opt": false,
+		 "kamae": "aggression"
+		},
+		{
+		 "t": "rot",
+		 "n": 2,
+		 "opt": false,
+		 "kamae": "aggression"
+		}
+	   ]
+	  }
+	 ]
+	}
    },
    "effects": [
-    {
-     "do": "cancel_abilities"
-    },
-    {
-     "do": "rotate_target",
-     "n": 1
-    }
+	{
+	 "do": "cancel_abilities"
+	},
+	{
+	 "do": "rotate_target",
+	 "n": 1
+	}
    ],
    "note": "Distanza 3; ogni avversario annulla abilità attive e cambia orientamento. Barra arancio (Aggressività): ❄2 ↻2 — il ❄ è un marcatore-àncora sulla Griglia di Posizione (non un movimento)."
   },
@@ -1282,55 +1282,55 @@
    "name": "SPAZZATA FEROCE",
    "type": "attack",
    "attack": {
-    "cells": [
-     {
-      "d": 5,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 2,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 2,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "split": {
-    "initiative": 1,
-    "move": {
-     "opts": [
-      {
-       "atoms": [
-        {
-         "t": "step",
-         "dirs": [
-          0,
-          3
-         ],
-         "n": 1,
-         "opt": false
-        }
-       ]
-      }
-     ]
-    }
+	"initiative": 1,
+	"move": {
+	 "opts": [
+	  {
+	   "atoms": [
+		{
+		 "t": "step",
+		 "dirs": [
+		  0,
+		  3
+		 ],
+		 "n": 1,
+		 "opt": false
+		}
+	   ]
+	  }
+	 ]
+	}
    },
    "effects": [
-    {
-     "do": "switch_kamae",
-     "to": "aggression",
-     "focus_cost": 1
-    }
+	{
+	 "do": "switch_kamae",
+	 "to": "aggression",
+	 "focus_cost": 1
+	}
    ]
   },
   "30": {
@@ -1338,10 +1338,10 @@
    "type": "meditation",
    "kamae_req": "aggression",
    "effects": [
-    {
-     "do": "replace_wound_bleed",
-     "when": "on_hit"
-    }
+	{
+	 "do": "replace_wound_bleed",
+	 "when": "on_hit"
+	}
    ],
    "note": "Istantanea: gioca se l'attacco è riuscito → 1 ferita diventa sanguinante."
   },
@@ -1349,39 +1349,39 @@
    "name": "DIFESA D'ACCIAIO",
    "type": "defence",
    "defence": {
-    "cells": [
-     {
-      "d": 5,
-      "k": 1,
-      "v": 1
-     },
-     {
-      "d": 0,
-      "k": 1,
-      "v": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "v": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "v": 1
+	 },
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "v": 1
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "v": 1
+	 }
+	]
    },
    "counter": [
-    6,
-    5,
-    4
+	6,
+	5,
+	4
    ],
    "effects": [
-    {
-     "do": "rotate_target",
-     "n": 1
-    },
-    {
-     "do": "change_kamae",
-     "n": 2,
-     "kamae": "determination"
-    }
+	{
+	 "do": "rotate_target",
+	 "n": 1
+	},
+	{
+	 "do": "change_kamae",
+	 "n": 2,
+	 "kamae": "determination"
+	}
    ],
    "note": "Difesa d0,d5,d1 (arco frontale); counter 6/5/4. Se riuscito: ruota bersaglio ↻1; barra arancio (Aggressività) ↥1 ↻1 (movimento in difesa, non modellato); barra gialla (Determinazione) cambia Kamae fino a 2 rami."
   },
@@ -1390,34 +1390,34 @@
    "type": "attack",
    "wound_kind": "bleed",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": -1,
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": -1,
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "push",
-     "n": 1,
-     "when": "on_hit"
-    }
+	{
+	 "do": "push",
+	 "n": 1,
+	 "when": "on_hit"
+	}
    ],
    "note": "Istantanea di sostituzione. 'avversario movimento' approssimato a spinta 1."
   },
@@ -1425,118 +1425,118 @@
    "name": "COLPO ALLE CAVIGLIE",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dirs": [
-         0,
-         3
-        ],
-        "n": 1,
-        "opt": false
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dirs": [
+		 0,
+		 3
+		],
+		"n": 1,
+		"opt": false
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "split": {
-    "initiative": 2,
-    "move": {
-     "opts": [
-      {
-       "atoms": [
-        {
-         "t": "rot",
-         "n": 1,
-         "opt": false
-        }
-       ]
-      }
-     ]
-    }
+	"initiative": 2,
+	"move": {
+	 "opts": [
+	  {
+	   "atoms": [
+		{
+		 "t": "rot",
+		 "n": 1,
+		 "opt": false
+		}
+	   ]
+	  }
+	 ]
+	}
    },
    "effects": [
-    {
-     "do": "draw",
-     "n": 1,
-     "alt": "a"
-    },
-    {
-     "do": "draw",
-     "n": 2,
-     "kamae": "balance",
-     "alt": "b"
-    }
+	{
+	 "do": "draw",
+	 "n": 1,
+	 "alt": "a"
+	},
+	{
+	 "do": "draw",
+	 "n": 2,
+	 "kamae": "balance",
+	 "alt": "b"
+	}
    ]
   },
   "34": {
    "name": "RITIRATA COMPOSTA",
    "type": "meditation",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 3,
-        "n": 1,
-        "opt": false
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false
-       }
-      ]
-     },
-     {
-      "atoms": [
-       {
-        "t": "anchor",
-        "n": 1,
-        "opt": false,
-        "kamae": "balance"
-       },
-       {
-        "t": "rot",
-        "n": 2,
-        "opt": false,
-        "kamae": "balance"
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 3,
+		"n": 1,
+		"opt": false
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 },
+	 {
+	  "atoms": [
+	   {
+		"t": "anchor",
+		"n": 1,
+		"opt": false,
+		"kamae": "balance"
+	   },
+	   {
+		"t": "rot",
+		"n": 2,
+		"opt": false,
+		"kamae": "balance"
+	   }
+	  ]
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "focus",
-     "n": 1
-    },
-    {
-     "do": "draw",
-     "n": 3
-    }
+	{
+	 "do": "focus",
+	 "n": 1
+	},
+	{
+	 "do": "draw",
+	 "n": 3
+	}
    ],
    "note": "Alternativa OPPURE verde (Equilibrio): ❄1 ↻2 — il ❄ è un marcatore-àncora sulla Griglia di Posizione (non un passo). \"OTTIENI 1 🪷\" = +1 focus."
   },
@@ -1545,55 +1545,55 @@
    "type": "attack",
    "non_blockable": true,
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": false
-       },
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": true,
-        "focus_cost": 1
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 1,
+		"opt": false
+	   },
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": true,
+		"focus_cost": 1
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 0
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 0
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "rotate_target",
-     "n": 1,
-     "when": "on_hit"
-    },
-    {
-     "do": "push",
-     "n": 1,
-     "when": "on_hit"
-    },
-    {
-     "do": "switch_kamae",
-     "to": "aggression"
-    }
+	{
+	 "do": "rotate_target",
+	 "n": 1,
+	 "when": "on_hit"
+	},
+	{
+	 "do": "push",
+	 "n": 1,
+	 "when": "on_hit"
+	},
+	{
+	 "do": "switch_kamae",
+	 "to": "aggression"
+	}
    ],
    "note": "Non bloccabile. Movimento ↥1 POI ↥1; barra viola (focus) ↻1. Cella d0 = asterisco (*). Se riuscito: ruota bersaglio ↻1 e SPINGI 1; \"PASSA A\" aggression."
   },
@@ -1601,50 +1601,50 @@
    "name": "SPAZZATA DI NAGINATA",
    "type": "attack",
    "attack": {
-    "cells": [
-     {
-      "d": 5,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 4,
-      "k": 1,
-      "w": 0
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 4,
+	  "k": 1,
+	  "w": 0
+	 }
+	]
    },
    "split": {
-    "initiative": 2,
-    "move": {
-     "opts": [
-      {
-       "atoms": [
-        {
-         "t": "anchor",
-         "n": 1,
-         "opt": false
-        },
-        {
-         "t": "rot",
-         "n": 1,
-         "opt": false
-        }
-       ]
-      }
-     ]
-    }
+	"initiative": 2,
+	"move": {
+	 "opts": [
+	  {
+	   "atoms": [
+		{
+		 "t": "anchor",
+		 "n": 1,
+		 "opt": false
+		},
+		{
+		 "t": "rot",
+		 "n": 1,
+		 "opt": false
+		}
+	   ]
+	  }
+	 ]
+	}
    },
    "effects": [
-    {
-     "do": "discard_self",
-     "n": 1
-    }
+	{
+	 "do": "discard_self",
+	 "n": 1
+	}
    ],
    "note": "Split init 2: ❄1 ↻1 (❄ = marcatore-àncora, non un passo). Celle: d0,d5 ferite, d4 asterisco (*). Barra viola (focus) sull'asterisco. SCARTA 1 carta."
   },
@@ -1652,43 +1652,43 @@
    "name": "BLOCCO D'EMERGENZA",
    "type": "defence",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false,
-        "kamae": "balance"
-       }
-      ]
-     },
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 2,
-        "opt": false,
-        "kamae": "determination"
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false,
+		"kamae": "balance"
+	   }
+	  ]
+	 },
+	 {
+	  "atoms": [
+	   {
+		"t": "rot",
+		"n": 2,
+		"opt": false,
+		"kamae": "determination"
+	   }
+	  ]
+	 }
+	]
    },
    "defence": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "v": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "v": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "switch_kamae",
-     "to": "neutral"
-    }
+	{
+	 "do": "switch_kamae",
+	 "to": "neutral"
+	}
    ],
    "note": "Audit hi-res: ↻1 in Equilibrio (cerchio verde), ↻2 in Determinazione (4 quadretti) — non focus. PASSA A Neutrale (⛩)."
   },
@@ -1696,93 +1696,93 @@
    "name": "GRIDO DI GUERRA",
    "type": "meditation",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": false
-       },
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false,
-        "kamae": "determination"
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 1,
+		"opt": false
+	   },
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false,
+		"kamae": "determination"
+	   }
+	  ]
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "cancel_movement"
-    },
-    {
-     "do": "draw",
-     "n": 2,
-     "focus_cost": 1
-    },
-    {
-     "do": "switch_kamae",
-     "to": "aggression"
-    }
+	{
+	 "do": "cancel_movement"
+	},
+	{
+	 "do": "draw",
+	 "n": 2,
+	 "focus_cost": 1
+	},
+	{
+	 "do": "switch_kamae",
+	 "to": "aggression"
+	}
    ]
   },
   "102": {
    "name": "MENTE RISOLUTA",
    "type": "meditation",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "anchor",
-        "n": 2,
-        "opt": false
-       },
-       {
-        "t": "rot",
-        "n": 2,
-        "opt": false
-       }
-      ]
-     },
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false,
-        "kamae": "determination"
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "anchor",
+		"n": 2,
+		"opt": false
+	   },
+	   {
+		"t": "rot",
+		"n": 2,
+		"opt": false
+	   }
+	  ]
+	 },
+	 {
+	  "atoms": [
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false,
+		"kamae": "determination"
+	   }
+	  ]
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "change_kamae",
-     "n": 1
-    },
-    {
-     "do": "draw",
-     "n": 2,
-     "alt": "a"
-    },
-    {
-     "do": "draw",
-     "n": 3,
-     "kamae": "balance",
-     "alt": "b"
-    }
+	{
+	 "do": "change_kamae",
+	 "n": 1
+	},
+	{
+	 "do": "draw",
+	 "n": 2,
+	 "alt": "a"
+	},
+	{
+	 "do": "draw",
+	 "n": 3,
+	 "kamae": "balance",
+	 "alt": "b"
+	}
    ],
    "note": "Audit hi-res: movimento ❄2 ↻2 (❄=àncora); barra arancio ↻1 in Determinazione. Pesca 3 carte = barra verde in Equilibrio (cerchio), non Determinazione."
   },
@@ -1790,17 +1790,17 @@
    "name": "COLPO AZZOPPANTE",
    "type": "meditation",
    "effects": [
-    {
-     "do": "hobble",
-     "n": 1,
-     "when": "on_hit"
-    },
-    {
-     "do": "push",
-     "n": 1,
-     "when": "on_hit",
-     "kamae": "aggression"
-    }
+	{
+	 "do": "hobble",
+	 "n": 1,
+	 "when": "on_hit"
+	},
+	{
+	 "do": "push",
+	 "n": 1,
+	 "when": "on_hit",
+	 "kamae": "aggression"
+	}
    ],
    "note": "Istantanea: gioca se l'attacco è riuscito."
   },
@@ -1808,44 +1808,44 @@
    "name": "AFFONDO IN SPINTA",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false,
-        "focus_cost": 1
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false,
+		"focus_cost": 1
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 2
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 2
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "hobble",
-     "n": 1,
-     "when": "on_hit"
-    },
-    {
-     "do": "switch_kamae",
-     "to": "aggression"
-    }
+	{
+	 "do": "hobble",
+	 "n": 1,
+	 "when": "on_hit"
+	},
+	{
+	 "do": "switch_kamae",
+	 "to": "aggression"
+	}
    ],
    "note": "Iniziativa alternativa 6 in Aggressività."
   },
@@ -1853,59 +1853,59 @@
    "name": "CALCIO DEL CAVALLO",
    "type": "attack",
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 0
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 0
+	 }
+	]
    },
    "split": {
-    "initiative": 5,
-    "move": {
-     "opts": [
-      {
-       "atoms": [
-        {
-         "t": "step",
-         "dir": 0,
-         "n": 1,
-         "opt": false
-        }
-       ]
-      },
-      {
-       "atoms": [
-        {
-         "t": "anchor",
-         "n": 1,
-         "opt": false,
-         "kamae": "balance"
-        }
-       ]
-      }
-     ]
-    }
+	"initiative": 5,
+	"move": {
+	 "opts": [
+	  {
+	   "atoms": [
+		{
+		 "t": "step",
+		 "dir": 0,
+		 "n": 1,
+		 "opt": false
+		}
+	   ]
+	  },
+	  {
+	   "atoms": [
+		{
+		 "t": "anchor",
+		 "n": 1,
+		 "opt": false,
+		 "kamae": "balance"
+		}
+	   ]
+	  }
+	 ]
+	}
    },
    "effects": [
-    {
-     "do": "swap_positions",
-     "when": "on_hit"
-    },
-    {
-     "do": "push",
-     "n": 1,
-     "when": "on_hit",
-     "alt": "a"
-    },
-    {
-     "do": "push",
-     "n": 2,
-     "when": "on_hit",
-     "kamae": "aggression",
-     "alt": "b"
-    }
+	{
+	 "do": "swap_positions",
+	 "when": "on_hit"
+	},
+	{
+	 "do": "push",
+	 "n": 1,
+	 "when": "on_hit",
+	 "alt": "a"
+	},
+	{
+	 "do": "push",
+	 "n": 2,
+	 "when": "on_hit",
+	 "kamae": "aggression",
+	 "alt": "b"
+	}
    ],
    "note": "Audit hi-res: split ⬆1 OPPURE ❄1 in Equilibrio (❄=àncora, alternativa). SE RIUSCITO: scambio posizioni, SPINGI 1 / SPINGI 2 (Aggressività)."
   },
@@ -1913,55 +1913,55 @@
    "name": "COLPO D'ELSA",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dirs": [
-         0,
-         3
-        ],
-        "n": 1,
-        "opt": false
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false,
-        "kamae": "balance"
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dirs": [
+		 0,
+		 3
+		],
+		"n": 1,
+		"opt": false
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false,
+		"kamae": "balance"
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "rotate_target",
-     "n": 1,
-     "when": "on_hit"
-    },
-    {
-     "do": "foe_lose_focus",
-     "n": 1,
-     "when": "on_hit",
-     "focus_cost": 1
-    },
-    {
-     "do": "focus",
-     "n": 1,
-     "when": "on_hit",
-     "kamae": "aggression"
-    }
+	{
+	 "do": "rotate_target",
+	 "n": 1,
+	 "when": "on_hit"
+	},
+	{
+	 "do": "foe_lose_focus",
+	 "n": 1,
+	 "when": "on_hit",
+	 "focus_cost": 1
+	},
+	{
+	 "do": "focus",
+	 "n": 1,
+	 "when": "on_hit",
+	 "kamae": "aggression"
+	}
    ],
    "note": "Audit hi-res: passo (avanti/indietro) + ↻1 in Equilibrio (cerchio verde), non Determinazione."
   },
@@ -1969,33 +1969,33 @@
    "name": "SPINTA INDIETRO",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 0
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 0
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "push",
-     "n": 2,
-     "when": "on_hit"
-    }
+	{
+	 "do": "push",
+	 "n": 2,
+	 "when": "on_hit"
+	}
    ]
   },
   "901": {
@@ -2003,58 +2003,58 @@
    "type": "attack",
    "non_blockable": true,
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "split": {
-    "initiative": 2,
-    "move": {
-     "opts": [
-      {
-       "atoms": [
-        {
-         "t": "step",
-         "dir": 0,
-         "n": 1,
-         "opt": false
-        }
-       ]
-      }
-     ]
-    },
-    "attack": {
-     "cells": [
-      {
-       "d": 0,
-       "k": 1,
-       "w": 1
-      }
-     ]
-    },
-    "effects": [
-     {
-      "do": "push",
-      "n": 1
-     }
-    ]
+	"initiative": 2,
+	"move": {
+	 "opts": [
+	  {
+	   "atoms": [
+		{
+		 "t": "step",
+		 "dir": 0,
+		 "n": 1,
+		 "opt": false
+		}
+	   ]
+	  }
+	 ]
+	},
+	"attack": {
+	 "cells": [
+	  {
+	   "d": 0,
+	   "k": 1,
+	   "w": 1
+	  }
+	 ]
+	},
+	"effects": [
+	 {
+	  "do": "push",
+	  "n": 1
+	 }
+	]
    },
    "note": "Solo Ronin 001 (trascrizione parziale)."
   },
@@ -2062,35 +2062,35 @@
    "name": "STEEL BLOCK (Solo)",
    "type": "defence",
    "defence": {
-    "cells": [
-     {
-      "d": 5,
-      "k": 1,
-      "v": 1
-     },
-     {
-      "d": 0,
-      "k": 1,
-      "v": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "v": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "v": 1
+	 },
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "v": 1
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "v": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "rotate_target",
-     "n": 1
-    },
-    {
-     "do": "change_ai_behaviour"
-    },
-    {
-     "do": "reset_deck"
-    }
+	{
+	 "do": "rotate_target",
+	 "n": 1
+	},
+	{
+	 "do": "change_ai_behaviour"
+	},
+	{
+	 "do": "reset_deck"
+	}
    ],
    "note": "Solo Ronin 002. Griglia difesa approssimata."
   },
@@ -2098,27 +2098,27 @@
    "name": "REVERSE CARVED FANG (Solo)",
    "type": "attack",
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 2
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 2
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "push",
-     "n": 1,
-     "when": "on_hit",
-     "alt": "a"
-    },
-    {
-     "do": "rotate_target",
-     "n": 1,
-     "when": "on_hit",
-     "alt": "b"
-    }
+	{
+	 "do": "push",
+	 "n": 1,
+	 "when": "on_hit",
+	 "alt": "a"
+	},
+	{
+	 "do": "rotate_target",
+	 "n": 1,
+	 "when": "on_hit",
+	 "alt": "b"
+	}
    ],
    "note": "Solo Ronin 003."
   },
@@ -2126,45 +2126,45 @@
    "name": "FERAL SWEEP (Solo)",
    "type": "attack",
    "attack": {
-    "cells": [
-     {
-      "d": 5,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "split": {
-    "initiative": 2,
-    "move": {
-     "opts": [
-      {
-       "atoms": [
-        {
-         "t": "step",
-         "dir": 0,
-         "n": 1,
-         "opt": false
-        }
-       ]
-      }
-     ]
-    }
+	"initiative": 2,
+	"move": {
+	 "opts": [
+	  {
+	   "atoms": [
+		{
+		 "t": "step",
+		 "dir": 0,
+		 "n": 1,
+		 "opt": false
+		}
+	   ]
+	  }
+	 ]
+	}
    },
    "effects": [
-    {
-     "do": "change_ai_behaviour"
-    }
+	{
+	 "do": "change_ai_behaviour"
+	}
    ],
    "note": "Solo Ronin 004."
   },
@@ -2172,37 +2172,37 @@
    "name": "THE TERROR (Solo)",
    "type": "meditation",
    "effects": [
-    {
-     "do": "change_ai_behaviour"
-    },
-    {
-     "do": "cancel_abilities"
-    }
+	{
+	 "do": "change_ai_behaviour"
+	},
+	{
+	 "do": "cancel_abilities"
+	}
    ],
    "split": {
-    "initiative": 3,
-    "move": {
-     "opts": [
-      {
-       "atoms": [
-        {
-         "t": "rot",
-         "n": 2,
-         "opt": false
-        }
-       ]
-      }
-     ]
-    },
-    "effects": [
-     {
-      "do": "rotate_target",
-      "n": 1
-     },
-     {
-      "do": "reset_deck"
-     }
-    ]
+	"initiative": 3,
+	"move": {
+	 "opts": [
+	  {
+	   "atoms": [
+		{
+		 "t": "rot",
+		 "n": 2,
+		 "opt": false
+		}
+	   ]
+	  }
+	 ]
+	},
+	"effects": [
+	 {
+	  "do": "rotate_target",
+	  "n": 1
+	 },
+	 {
+	  "do": "reset_deck"
+	 }
+	]
    },
    "note": "Solo Ronin Nightmare. RANGE/ALL approssimato."
   },
@@ -2210,35 +2210,35 @@
    "name": "EMBER BLOCK (Solo)",
    "type": "defence",
    "defence": {
-    "cells": [
-     {
-      "d": 5,
-      "k": 1,
-      "v": 1
-     },
-     {
-      "d": 0,
-      "k": 1,
-      "v": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "v": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "v": 1
+	 },
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "v": 1
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "v": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "push",
-     "n": 1
-    },
-    {
-     "do": "change_ai_behaviour"
-    },
-    {
-     "do": "reset_deck"
-    }
+	{
+	 "do": "push",
+	 "n": 1
+	},
+	{
+	 "do": "change_ai_behaviour"
+	},
+	{
+	 "do": "reset_deck"
+	}
    ],
    "note": "Solo Warrior 001. Difesa 8 approssimata."
   },
@@ -2246,47 +2246,47 @@
    "name": "SCYTHING UPPERCUT (Solo)",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 5,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 0,
-      "k": 2,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 0,
+	  "k": 2,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "change_ai_behaviour"
-    }
+	{
+	 "do": "change_ai_behaviour"
+	}
    ],
    "note": "Solo Warrior."
   },
@@ -2294,33 +2294,33 @@
    "name": "WARDING ARC (Solo)",
    "type": "attack",
    "attack": {
-    "cells": [
-     {
-      "d": 5,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "foe_discard",
-     "n": 1,
-     "when": "on_hit"
-    },
-    {
-     "do": "change_ai_behaviour"
-    }
+	{
+	 "do": "foe_discard",
+	 "n": 1,
+	 "when": "on_hit"
+	},
+	{
+	 "do": "change_ai_behaviour"
+	}
    ],
    "note": "Solo Warrior 002."
   },
@@ -2328,31 +2328,31 @@
    "name": "REFOCUSED MIND (Solo)",
    "type": "meditation",
    "effects": [
-    {
-     "do": "change_ai_behaviour"
-    }
+	{
+	 "do": "change_ai_behaviour"
+	}
    ],
    "split": {
-    "initiative": 3,
-    "move": {
-     "opts": [
-      {
-       "atoms": [
-        {
-         "t": "step",
-         "dir": -1,
-         "n": 2,
-         "opt": false
-        }
-       ]
-      }
-     ]
-    },
-    "effects": [
-     {
-      "do": "reset_deck"
-     }
-    ]
+	"initiative": 3,
+	"move": {
+	 "opts": [
+	  {
+	   "atoms": [
+		{
+		 "t": "step",
+		 "dir": -1,
+		 "n": 2,
+		 "opt": false
+		}
+	   ]
+	  }
+	 ]
+	},
+	"effects": [
+	 {
+	  "do": "reset_deck"
+	 }
+	]
    },
    "note": "Solo Warrior 003."
   },
@@ -2360,21 +2360,21 @@
    "name": "FLAMING PHOENIX ARC (Solo)",
    "type": "attack",
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "change_ai_behaviour"
-    },
-    {
-     "do": "reset_deck"
-    }
+	{
+	 "do": "change_ai_behaviour"
+	},
+	{
+	 "do": "reset_deck"
+	}
    ],
    "note": "Solo Warrior Nightmare."
   },
@@ -2382,43 +2382,43 @@
    "name": "CARTA SPECIALE MAESTRO",
    "type": "core",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "anchor",
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 2,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "anchor",
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 2,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "discard_self",
-     "n": 1
-    },
-    {
-     "do": "draw",
-     "n": 2,
-     "alt": "a"
-    },
-    {
-     "do": "search_draw",
-     "n": 1,
-     "alt": "b"
-    },
-    {
-     "do": "change_kamae",
-     "n": 1,
-     "alt": "c"
-    }
+	{
+	 "do": "discard_self",
+	 "n": 1
+	},
+	{
+	 "do": "draw",
+	 "n": 2,
+	 "alt": "a"
+	},
+	{
+	 "do": "search_draw",
+	 "n": 1,
+	 "alt": "b"
+	},
+	{
+	 "do": "change_kamae",
+	 "n": 1,
+	 "alt": "c"
+	}
    ],
    "note": "Costo: SCARTA 1 CARTA (discard_self). Movimento ❄1 ↻2 (❄=àncora). OPPURE: pesca fino a 2 / scarta 1 poi cerca negli scarti e prendi 1 attacco / cambia Kamae fino a 1 ramo."
   },
@@ -2426,15 +2426,15 @@
    "name": "RIFLESSIONE DEL DRAGO",
    "type": "meditation",
    "effects": [
-    {
-     "do": "change_kamae",
-     "n": 1
-    },
-    {
-     "do": "search_draw",
-     "n": 1,
-     "focus_cost": 1
-    }
+	{
+	 "do": "change_kamae",
+	 "n": 1
+	},
+	{
+	 "do": "search_draw",
+	 "n": 1,
+	 "focus_cost": 1
+	}
    ],
    "note": "Passa a una qualsiasi Kamae. Cerca negli scarti (costo 1🪷 oppure 0 a una condizione) una carta e GIOCALA COME meditazione. DA VERIFICARE costo focus."
   },
@@ -2442,39 +2442,39 @@
    "name": "ZANNA CELATA DELLA VIPERA",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 3,
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 3,
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "change_kamae",
-     "n": 1,
-     "when": "on_hit"
-    }
+	{
+	 "do": "change_kamae",
+	 "n": 1,
+	 "when": "on_hit"
+	}
    ],
    "note": "Movimento ↓1 ↻1. SE RIUSCITO: passa a una qualsiasi Kamae. Arco d'attacco (honeycomb fronte) DA VERIFICARE."
   },
@@ -2482,11 +2482,11 @@
    "name": "ECO DELLA LAMA",
    "type": "meditation",
    "effects": [
-    {
-     "do": "search_draw",
-     "n": 1,
-     "focus_cost": 1
-    }
+	{
+	 "do": "search_draw",
+	 "n": 1,
+	 "focus_cost": 1
+	}
    ],
    "note": "Aggiunta istantanea. Più righe 'CERCA + PRENDI 1' (OPPURE) per prendere 1 carta di un tipo a scelta, gating per tipo/costo focus. Alternative DA DETTAGLIARE."
   },
@@ -2494,18 +2494,18 @@
    "name": "INTUIZIONE OSCURA",
    "type": "meditation",
    "effects": [
-    {
-     "do": "draw",
-     "n": 3
-    },
-    {
-     "do": "reset_deck",
-     "n": 1
-    },
-    {
-     "do": "change_kamae",
-     "n": 1
-    }
+	{
+	 "do": "draw",
+	 "n": 3
+	},
+	{
+	 "do": "reset_deck",
+	 "n": 1
+	},
+	{
+	 "do": "change_kamae",
+	 "n": 1
+	}
    ],
    "note": "GUARDA LA MANO DI [avversario]; MISCHIA 1 carta NEL MAZZO (fino a 3 volte); PESCA 3 CARTE; PASSA A UNA QUALSIASI KAMAE. 'guarda mano' e 'mischia nel mazzo' approssimati. DA VERIFICARE."
   },
@@ -2513,16 +2513,16 @@
    "name": "OCCHIO DEL DRAGONE",
    "type": "meditation",
    "effects": [
-    {
-     "do": "draw",
-     "n": 2,
-     "alt": "a"
-    },
-    {
-     "do": "push",
-     "n": 1,
-     "alt": "b"
-    }
+	{
+	 "do": "draw",
+	 "n": 2,
+	 "alt": "a"
+	},
+	{
+	 "do": "push",
+	 "n": 1,
+	 "alt": "b"
+	}
    ],
    "note": "Aggiunta istantanea. Righe alternative (gating focus): SCARTA 2 / PESCA 2 CARTE / ❄1 / PESCA FINO A 2 CARTE / TIRA O SPINGI 1. Mappatura effetti DA DETTAGLIARE."
   },
@@ -2530,34 +2530,34 @@
    "name": "PATTO OSCURO",
    "type": "meditation",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "anchor",
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "anchor",
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "search_draw",
-     "n": 1,
-     "alt": "a"
-    },
-    {
-     "do": "foe_discard",
-     "n": 1,
-     "alt": "b"
-    }
+	{
+	 "do": "search_draw",
+	 "n": 1,
+	 "alt": "a"
+	},
+	{
+	 "do": "foe_discard",
+	 "n": 1,
+	 "alt": "b"
+	}
    ],
    "note": "❄1 ↻1. CERCA TRA LE PRIME 3 CARTE + PRENDI 1 carta abilità. OPPURE cerca tra le prime 3 carte dell'avversario, scegli 1 carta abilità e prendila. Distanza 3. 'foe_discard' approssima il furto. DA VERIFICARE."
   },
@@ -2565,38 +2565,38 @@
    "name": "CODA DEL DRAGONE",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": false
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 1,
+		"opt": false
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "change_kamae",
-     "n": 1
-    }
+	{
+	 "do": "change_kamae",
+	 "n": 1
+	}
    ],
    "note": "Sostituzione istantanea. PASSA A UNA QUALSIASI KAMAE. Movimento ↑1 ↻1 (+ opzione passo ↕). SE RIUSCITO: effetto viola. Arco d'attacco DA VERIFICARE."
   },
@@ -2604,34 +2604,34 @@
    "name": "SESTO SENSO",
    "type": "defence",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 3,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "rot",
+		"n": 3,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "defence": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "v": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "v": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "foe_discard",
-     "n": 1,
-     "when": "on_hit",
-     "focus_cost": 1
-    }
+	{
+	 "do": "foe_discard",
+	 "n": 1,
+	 "when": "on_hit",
+	 "focus_cost": 1
+	}
    ],
    "note": "↻3. Blocco (honeycomb). SE RIUSCITO: SCARTA 1 (costo 🪷) e GUARDA LA MANO DI [avversario]. Celle di blocco e 'guarda mano' DA VERIFICARE."
   },
@@ -2639,10 +2639,10 @@
    "name": "SAGGEZZA CORROTTA",
    "type": "meditation",
    "effects": [
-    {
-     "do": "draw",
-     "n": 2
-    }
+	{
+	 "do": "draw",
+	 "n": 2
+	}
    ],
    "note": "Aggiunta istantanea. GIOCA SE IL BLOCCO È RIUSCITO. Bande iniziativa 9/8–7/6–5/4 (archi arancio/verde/rosso). Effetto: TUTTI I GIOCATORI PESCANO 2 CARTE. Gating iniziativa DA VERIFICARE."
   },
@@ -2650,40 +2650,40 @@
    "name": "COLPO INDOLENTE",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 1,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "link_anchor",
-     "n": 1,
-     "when": "on_hit",
-     "focus_cost": 1
-    },
-    {
-     "do": "discard_self",
-     "n": 1,
-     "when": "on_hit"
-    }
+	{
+	 "do": "link_anchor",
+	 "n": 1,
+	 "when": "on_hit",
+	 "focus_cost": 1
+	},
+	{
+	 "do": "discard_self",
+	 "n": 1,
+	 "when": "on_hit"
+	}
    ],
    "note": "Honeycomb (fronte ↕) + ↑1. SE RIUSCITO: SOSTITUISCI ! CON ❄ (link_anchor, costo 🪷); SCARTA 1 CARTA. Arco d'attacco DA VERIFICARE."
   },
@@ -2691,36 +2691,36 @@
    "name": "TAGLIO MAGISTRALE",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "anchor",
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "anchor",
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 0,
-      "k": 2,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 0,
+	  "k": 2,
+	  "w": 1
+	 }
+	]
    },
    "note": "❄1 ↻1. Honeycomb a più anelli (4 righe colorate con frecce ↕). Arco d'attacco multi-riga DA VERIFICARE."
   },
@@ -2728,46 +2728,46 @@
    "name": "RIPOSIZIONAMENTO",
    "type": "meditation",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 3,
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 2,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 3,
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 2,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "draw",
-     "n": 2,
-     "alt": "a"
-    },
-    {
-     "do": "search_draw",
-     "n": 1,
-     "alt": "b"
-    },
-    {
-     "do": "change_kamae",
-     "n": 1,
-     "alt": "c"
-    }
+	{
+	 "do": "draw",
+	 "n": 2,
+	 "alt": "a"
+	},
+	{
+	 "do": "search_draw",
+	 "n": 1,
+	 "alt": "b"
+	},
+	{
+	 "do": "change_kamae",
+	 "n": 1,
+	 "alt": "c"
+	}
    ],
    "note": "Movimento ↓1 ↑1 ↻2. PESCA FINO A 2 CARTE / CERCA + PRENDI 1 (meditazione) / CAMBIA KAMAE FINO A 1 RAMO."
   },
@@ -2775,43 +2775,43 @@
    "name": "CARTA SPECIALE ALLIEVO",
    "type": "core",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "anchor",
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 2,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "anchor",
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 2,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "discard_self",
-     "n": 1
-    },
-    {
-     "do": "draw",
-     "n": 2,
-     "alt": "a"
-    },
-    {
-     "do": "search_draw",
-     "n": 1,
-     "alt": "b"
-    },
-    {
-     "do": "change_kamae",
-     "n": 1,
-     "alt": "c"
-    }
+	{
+	 "do": "discard_self",
+	 "n": 1
+	},
+	{
+	 "do": "draw",
+	 "n": 2,
+	 "alt": "a"
+	},
+	{
+	 "do": "search_draw",
+	 "n": 1,
+	 "alt": "b"
+	},
+	{
+	 "do": "change_kamae",
+	 "n": 1,
+	 "alt": "c"
+	}
    ],
    "note": "Costo SCARTA 1 CARTA. Movimento ❄1 ↻2. OPPURE pesca fino a 2 / cerca e prendi 1 / cambia Kamae fino a 1 ramo. Gemella della Carta Speciale Maestro (8)."
   },
@@ -2819,48 +2819,48 @@
    "name": "PRENDERE FIATO",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 3,
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 3,
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 0,
-      "k": 2,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 0,
+	  "k": 2,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "change_kamae",
-     "n": 1,
-     "when": "on_hit"
-    },
-    {
-     "do": "search_draw",
-     "n": 1
-    }
+	{
+	 "do": "change_kamae",
+	 "n": 1,
+	 "when": "on_hit"
+	},
+	{
+	 "do": "search_draw",
+	 "n": 1
+	}
    ],
    "note": "Attacco a colonna frontale (honeycomb). SE RIUSCITO: passa a una qualsiasi Kamae. Movimento ↓1 ↻1; CERCA+PRENDI 1. Focus 2. Arco DA VERIFICARE."
   },
@@ -2868,39 +2868,39 @@
    "name": "CODA FULMINEA",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 3,
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 3,
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "change_kamae",
-     "n": 1,
-     "to": "aggression"
-    }
+	{
+	 "do": "change_kamae",
+	 "n": 1,
+	 "to": "aggression"
+	}
    ],
    "note": "Movimento ↓1 (poi ↓1 ↻1). PASSA A [Kamae aggression]. Focus 2. Arco frontale DA VERIFICARE."
   },
@@ -2908,18 +2908,18 @@
    "name": "INTUIZIONE ARDENTE",
    "type": "meditation",
    "effects": [
-    {
-     "do": "reset_deck",
-     "n": 1
-    },
-    {
-     "do": "draw",
-     "n": 3
-    },
-    {
-     "do": "change_kamae",
-     "n": 1
-    }
+	{
+	 "do": "reset_deck",
+	 "n": 1
+	},
+	{
+	 "do": "draw",
+	 "n": 3
+	},
+	{
+	 "do": "change_kamae",
+	 "n": 1
+	}
    ],
    "note": "MISCHIA NEL MAZZO fino a 1 carta per tipo (attacco/meditazione/difesa); PESCA FINO A 3 CARTE; PASSA A UNA QUALSIASI KAMAE. 'reset_deck' approssima i rimescolamenti per tipo. DA VERIFICARE."
   },
@@ -2927,16 +2927,16 @@
    "name": "SPECCHIO D'ACQUA",
    "type": "meditation",
    "effects": [
-    {
-     "do": "search_draw",
-     "n": 1,
-     "alt": "a"
-    },
-    {
-     "do": "search_draw",
-     "n": 1,
-     "alt": "b"
-    }
+	{
+	 "do": "search_draw",
+	 "n": 1,
+	 "alt": "a"
+	},
+	{
+	 "do": "search_draw",
+	 "n": 1,
+	 "alt": "b"
+	}
    ],
    "note": "CERCA NEGLI SCARTI + PRENDI 1 (meditazione) OPPURE 1 (attacco); GIOCA LA CARTA PESCATA COME [...]. DA VERIFICARE i tipi."
   },
@@ -2944,33 +2944,33 @@
    "name": "TIGRE APPOSTATA",
    "type": "meditation",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 1,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "discard_self",
-     "n": 1
-    },
-    {
-     "do": "change_kamae",
-     "n": 1
-    }
+	{
+	 "do": "discard_self",
+	 "n": 1
+	},
+	{
+	 "do": "change_kamae",
+	 "n": 1
+	}
    ],
    "note": "Aggiunta istantanea. GIOCA SE IL BLOCCO È RIUSCITO. ↻1 ↑1; SCARTA 1 CARTA; PASSA A UNA QUALSIASI KAMAE."
   },
@@ -2978,42 +2978,42 @@
    "name": "COLPO ASTUTO",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "anchor",
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "anchor",
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "discard_self",
-     "n": 1,
-     "when": "on_hit"
-    },
-    {
-     "do": "foe_discard",
-     "n": 1
-    }
+	{
+	 "do": "discard_self",
+	 "n": 1,
+	 "when": "on_hit"
+	},
+	{
+	 "do": "foe_discard",
+	 "n": 1
+	}
    ],
    "note": "Preparata. Honeycomb frontale. SE RIUSCITO: SCARTA 1 CARTA; GUARDA LA MANO DI [avversario]. Movimento ❄1 ↻1. 'foe_discard' approssima 'guarda mano'. Arco DA VERIFICARE."
   },
@@ -3021,30 +3021,30 @@
    "name": "OBBEDIENZA",
    "type": "defence",
    "defence": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "v": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "v": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "change_kamae",
-     "n": 1,
-     "alt": "a"
-    },
-    {
-     "do": "foe_discard",
-     "n": 1,
-     "alt": "b"
-    },
-    {
-     "do": "change_kamae",
-     "n": 1,
-     "alt": "c"
-    }
+	{
+	 "do": "change_kamae",
+	 "n": 1,
+	 "alt": "a"
+	},
+	{
+	 "do": "foe_discard",
+	 "n": 1,
+	 "alt": "b"
+	},
+	{
+	 "do": "change_kamae",
+	 "n": 1,
+	 "alt": "c"
+	}
    ],
    "note": "Preparata. Blocco (honeycomb). SE RIUSCITO: fai passare l'avversario a una qualsiasi Kamae; RUBA 1 carta DA [avversario]; CAMBIA KAMAE FINO A 1 RAMO. Celle blocco e furto DA VERIFICARE."
   },
@@ -3052,41 +3052,41 @@
    "name": "COLPO DELLA ROCCIA",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false
-       }
-      ]
-     },
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 3,
-        "n": 1,
-        "opt": false
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 },
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 3,
+		"n": 1,
+		"opt": false
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "note": "Movimento ↻1 OPPURE ↓1 ↻1. Honeycomb frontale. Arco DA VERIFICARE."
   },
@@ -3094,33 +3094,33 @@
    "name": "SQUARCIO ROTANTE",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "change_kamae",
-     "n": 1,
-     "when": "on_hit"
-    }
+	{
+	 "do": "change_kamae",
+	 "n": 1,
+	 "when": "on_hit"
+	}
    ],
    "note": "Sostituzione istantanea. ↻1. Honeycomb frontale. SE RIUSCITO: ↻1 (rotazione, modellata come effetto). Arco DA VERIFICARE."
   },
@@ -3128,37 +3128,37 @@
    "name": "CASCATA FENDENTE",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 0,
-      "k": 2,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 0,
+	  "k": 2,
+	  "w": 1
+	 }
+	]
    },
    "note": "↑1 ↻1. Attacco a colonna frontale. Barra viola (effetto/❄). Arco DA VERIFICARE."
   },
@@ -3166,43 +3166,43 @@
    "name": "SCAMBIO DELLA MONTAGNA",
    "type": "defence",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 3,
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 2,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 3,
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 2,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "defence": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "v": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "v": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "swap_positions",
-     "n": 1
-    },
-    {
-     "do": "focus",
-     "n": 1,
-     "when": "on_hit"
-    }
+	{
+	 "do": "swap_positions",
+	 "n": 1
+	},
+	{
+	 "do": "focus",
+	 "n": 1,
+	 "when": "on_hit"
+	}
    ],
    "note": "Blocco (honeycomb). ★ SCAMBIA POSIZIONE CON [avversario]. SE RIUSCITO: OTTIENI 1 🪷; movimento ↘1 ↻2. Celle blocco DA VERIFICARE."
   },
@@ -3210,37 +3210,37 @@
    "name": "MENTE PLACIDA",
    "type": "meditation",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "anchor",
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 2,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "anchor",
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 2,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "change_kamae",
-     "n": 1
-    },
-    {
-     "do": "search_draw",
-     "n": 1
-    }
+	{
+	 "do": "change_kamae",
+	 "n": 1
+	},
+	{
+	 "do": "search_draw",
+	 "n": 1
+	}
    ],
    "note": "❄1 ↻1. CAMBIA KAMAE FINO A 1 RAMO; CERCA TRA LE PRIME 3 CARTE DEL MAZZO + PRENDI 1; ↻2."
   },
@@ -3248,41 +3248,41 @@
    "name": "TAGLIO DI TANTO",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": "exec"
-     },
-     {
-      "d": 5,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": "exec"
+	 },
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "discard_self"
-    }
+	{
+	 "do": "discard_self"
+	}
    ],
    "note": "Arma Tanto (#138). SCARTA 1 CARTA = discard_self. Movimento mostra freccia di passo + barra viola (focus) con rotazione 1 facoltativa. Honeycomb: cella frontale exec con due celle laterali da 1 ferita. Arco DA VERIFICARE."
   },
@@ -3290,46 +3290,46 @@
    "name": "FENDENTE DI KATANA",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "anchor",
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "anchor",
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": "exec"
-     },
-     {
-      "d": 5,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": "exec"
+	 },
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "discard_self"
-    }
+	{
+	 "do": "discard_self"
+	}
    ],
    "note": "Arma Katana (#136 Katana Slash, init 4). SCARTA 1 CARTA = discard_self. Barra viola con ↻2 (focus). In basso ❄1 ↻1. Arco DA VERIFICARE."
   },
@@ -3337,46 +3337,46 @@
    "name": "AFFONDO DI BASTONE BO",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": false
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 1,
+		"opt": false
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": "exec"
-     },
-     {
-      "d": 0,
-      "k": 2,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": "exec"
+	 },
+	 {
+	  "d": 0,
+	  "k": 2,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "discard_self"
-    },
-    {
-     "do": "link_anchor",
-     "focus_cost": 1
-    }
+	{
+	 "do": "discard_self"
+	},
+	{
+	 "do": "link_anchor",
+	 "focus_cost": 1
+	}
    ],
    "note": "Arma Bo (#67 Bo Staff Thrust, init 3). SCARTA 1 CARTA = discard_self. Move ↑1 ↻1. Honeycomb in colonna frontale (range 2): cella frontale exec + cella frontale anello 2. In basso simbolo * + armatura/saetta = link_anchor/push. Arco DA VERIFICARE."
   },
@@ -3384,46 +3384,46 @@
    "name": "FENDENTE DI KATANA",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "anchor",
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "anchor",
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": "exec"
-     },
-     {
-      "d": 5,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": "exec"
+	 },
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "discard_self"
-    }
+	{
+	 "do": "discard_self"
+	}
    ],
    "note": "Arma Katana (#70 Katana Swing, init 4). SCARTA 1 CARTA = discard_self. Barra viola ↻2. In basso ❄1 ↻1. Honeycomb a rombo con exec frontale. Arco DA VERIFICARE."
   },
@@ -3431,51 +3431,51 @@
    "name": "AFFONDO DI NAGINATA",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "anchor",
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "anchor",
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": "exec"
-     },
-     {
-      "d": 5,
-      "k": 1,
-      "w": "exec"
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": "exec"
-     },
-     {
-      "d": 0,
-      "k": 2,
-      "w": "exec"
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": "exec"
+	 },
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "w": "exec"
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "w": "exec"
+	 },
+	 {
+	  "d": 0,
+	  "k": 2,
+	  "w": "exec"
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "discard_self"
-    }
+	{
+	 "do": "discard_self"
+	}
    ],
    "note": "Arma Naginata (#137 Naginata Carve, init 4). SCARTA 1 CARTA = discard_self. Ampia honeycomb con piu' celle (!). In basso barra focus con ❄1 ↻1. Arco DA VERIFICARE."
   },
@@ -3483,51 +3483,51 @@
    "name": "TAGLIO DI TACHI",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": false
-       }
-      ]
-     },
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 2,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 },
+	 {
+	  "atoms": [
+	   {
+		"t": "rot",
+		"n": 2,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": "exec"
-     },
-     {
-      "d": 5,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": "exec"
+	 },
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "discard_self"
-    }
+	{
+	 "do": "discard_self"
+	}
    ],
    "note": "Arma Tachi (#75 Tachi Cut, init 5). SCARTA 1 CARTA = discard_self. Move: ↑1 OPPURE ↻2. Honeycomb a rombo con exec frontale. Arco DA VERIFICARE."
   },
@@ -3535,41 +3535,41 @@
    "name": "TAGLIO DI WAKIZASHI",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "anchor",
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 2,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "anchor",
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 2,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": "exec"
-     },
-     {
-      "d": 0,
-      "k": 2,
-      "w": "exec"
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": "exec"
+	 },
+	 {
+	  "d": 0,
+	  "k": 2,
+	  "w": "exec"
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "discard_self"
-    }
+	{
+	 "do": "discard_self"
+	}
    ],
    "note": "Arma Wakizashi (#77 Wakizashi Slice, init 4). SCARTA 1 CARTA = discard_self. Honeycomb in colonna frontale con due celle exec (range 2). In basso ❄1 ↻2. Arco DA VERIFICARE."
   },
@@ -3577,41 +3577,41 @@
    "name": "IMPALAMENTO DI YARI",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "anchor",
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "anchor",
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": "exec"
-     },
-     {
-      "d": 0,
-      "k": 2,
-      "w": "exec"
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": "exec"
+	 },
+	 {
+	  "d": 0,
+	  "k": 2,
+	  "w": "exec"
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "discard_self"
-    }
+	{
+	 "do": "discard_self"
+	}
    ],
    "note": "Arma Yari (#139 Yari Impale, init 1). SCARTA 1 CARTA = discard_self. Honeycomb frontale in colonna (range 2). In basso barra focus ❄1 ↻. Arco DA VERIFICARE."
   },
@@ -3619,51 +3619,51 @@
    "name": "COLPO DI KANABO",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": false
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 1,
+		"opt": false
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": "exec"
-     },
-     {
-      "d": 5,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": "exec"
+	 },
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "discard_self"
-    },
-    {
-     "do": "push",
-     "n": 1
-    }
+	{
+	 "do": "discard_self"
+	},
+	{
+	 "do": "push",
+	 "n": 1
+	}
    ],
    "note": "Arma Kanabo (#134 Kanabo Smash, init 4). SCARTA 1 CARTA = discard_self. In basso barra focus con 🪷 ↑1 ↻1 e simbolo * + armatura/saetta (link/push). Arco DA VERIFICARE."
   },
@@ -3671,47 +3671,47 @@
    "name": "BLOCCO DI BASTONE BO",
    "type": "defence",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "defence": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "v": 1
-     },
-     {
-      "d": 5,
-      "k": 1,
-      "v": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "v": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "v": 1
+	 },
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "v": 1
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "v": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "discard_self"
-    },
-    {
-     "do": "change_kamae",
-     "n": 1,
-     "when": "on_hit",
-     "focus_cost": 1
-    }
+	{
+	 "do": "discard_self"
+	},
+	{
+	 "do": "change_kamae",
+	 "n": 1,
+	 "when": "on_hit",
+	 "focus_cost": 1
+	}
    ],
    "note": "Arma Bo difesa (#66 Bo Staff Block, init 5,4,3). SCARTA 1 CARTA = discard_self. Move ↻1. Honeycomb difensivo a rombo con valori blocco. SE RIUSCITO (barra focus): CAMBIA KAMAE FINO A 1 RAMO = change_kamae. In basso ❄1. Arco DA VERIFICARE."
   },
@@ -3719,41 +3719,41 @@
    "name": "INCROCIO DI DOPPIO SAI",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "anchor",
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "anchor",
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": "exec"
-     },
-     {
-      "d": 0,
-      "k": 2,
-      "w": "exec"
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": "exec"
+	 },
+	 {
+	  "d": 0,
+	  "k": 2,
+	  "w": "exec"
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "discard_self"
-    }
+	{
+	 "do": "discard_self"
+	}
    ],
    "note": "Arma Sai (#68 Dual Sai Cross, init 6). SCARTA 1 CARTA = discard_self. Honeycomb frontale in colonna con celle exec; sotto barra focus ❄ e seconda honeycomb (range/incrocio). Arco DA VERIFICARE."
   },
@@ -3761,42 +3761,42 @@
    "name": "STOCCATA DI JUMONJI YARI",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": "exec"
-     },
-     {
-      "d": 5,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": "exec"
+	 },
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "discard_self"
-    }
+	{
+	 "do": "discard_self"
+	}
    ],
    "note": "Arma Yari (#133 Jumonji Yari Pierce, init 2). SCARTA 1 CARTA = discard_self. Move ↑1. Honeycomb a rombo con exec frontale. Arco DA VERIFICARE."
   },
@@ -3804,57 +3804,57 @@
    "name": "AGGANCIO DI KAMA",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": false
-       }
-      ]
-     },
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 },
+	 {
+	  "atoms": [
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": "exec"
-     },
-     {
-      "d": 5,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": "exec"
+	 },
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "discard_self"
-    },
-    {
-     "do": "push",
-     "n": -1,
-     "when": "on_hit",
-     "focus_cost": 1
-    }
+	{
+	 "do": "discard_self"
+	},
+	{
+	 "do": "push",
+	 "n": -1,
+	 "when": "on_hit",
+	 "focus_cost": 1
+	}
    ],
    "note": "Arma Kama (#69 Kama Hook, init 4). SCARTA 1 CARTA = discard_self. Move ↑1 OPPURE ↻1. Honeycomb a rombo exec. SE RIUSCITO (barra focus): icona TIRA bersaglio (push verso il giocatore) = push n negativo, DA VERIFICARE. Arco DA VERIFICARE."
   },
@@ -3862,51 +3862,51 @@
    "name": "AFFONDO DI NODACHI",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": false
-       }
-      ]
-     },
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 },
+	 {
+	  "atoms": [
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": "exec"
-     },
-     {
-      "d": 5,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": "exec"
+	 },
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "discard_self"
-    }
+	{
+	 "do": "discard_self"
+	}
    ],
    "note": "Arma Nodachi (#73 Nodachi Thrust, init 4). SCARTA 1 CARTA = discard_self. Move ↑1 OPPURE ↻1. Honeycomb a rombo con exec frontale. Arco DA VERIFICARE."
   },
@@ -3914,46 +3914,46 @@
    "name": "PARATA DI SHIKOMIZUE",
    "type": "defence",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "anchor",
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 2,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "anchor",
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 2,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "defence": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "v": 1
-     },
-     {
-      "d": 5,
-      "k": 1,
-      "v": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "v": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "v": 1
+	 },
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "v": 1
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "v": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "discard_self"
-    }
+	{
+	 "do": "discard_self"
+	}
    ],
    "note": "Arma Shikomizue difesa (#74 Shikomizue Parry, init 5,4,3). SCARTA 1 CARTA = discard_self. Honeycomb difensivo a rombo. Sotto barra focus con freccia e ❄1 ↻2. Arco DA VERIFICARE."
   },
@@ -3961,47 +3961,47 @@
    "name": "TAGLIO DI KATANA",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": false
-       },
-       {
-        "t": "rot",
-        "n": 2,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 1,
+		"opt": false
+	   },
+	   {
+		"t": "rot",
+		"n": 2,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": "exec"
-     },
-     {
-      "d": 5,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": "exec"
+	 },
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "discard_self"
-    }
+	{
+	 "do": "discard_self"
+	}
    ],
    "note": "Arma Katana (#135 Katana Cut, init 5). SCARTA 1 CARTA = discard_self. Move ↑1 + barra focus ↻2. Honeycomb a rombo con exec frontale. Arco DA VERIFICARE."
   },
@@ -4009,20 +4009,20 @@
    "name": "TAGLIO DI FINTA",
    "type": "attack",
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "change_kamae",
-     "n": 1,
-     "when": "on_hit"
-    }
+	{
+	 "do": "change_kamae",
+	 "n": 1,
+	 "when": "on_hit"
+	}
    ],
    "note": "Gen. Ability (#101 Feint Cut, init 6, Sostituzione Istantanea = Instant Replacement). Bordo verde/arancio. Ferita 1 sul fronte. SE RIUSCITO: bande arancioni cambia/PASSA A kamae = change_kamae. Arco e effetti DA VERIFICARE."
   },
@@ -4030,49 +4030,49 @@
    "name": "COLPO A RUOTA",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": false
-       },
-       {
-        "t": "rot",
-        "n": 2,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 1,
+		"opt": false
+	   },
+	   {
+		"t": "rot",
+		"n": 2,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 5,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "w": 1
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "discard_self",
-     "when": "on_hit",
-     "focus_cost": 1
-    }
+	{
+	 "do": "discard_self",
+	 "when": "on_hit",
+	 "focus_cost": 1
+	}
    ],
    "note": "Gen. Ability (#158 Wheel Strike, init 5). Bordo verde. Move ↑1 + barra focus ↻2. Honeycomb a rombo. SE RIUSCITO (barra focus): SCARTA 1 = discard (avversario?) DA VERIFICARE. Arco DA VERIFICARE."
   },
@@ -4080,39 +4080,39 @@
    "name": "MEDITAZIONE PROFONDA",
    "type": "meditation",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "anchor",
-        "n": 1,
-        "opt": false
-       },
-       {
-        "t": "rot",
-        "n": 2,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "anchor",
+		"n": 1,
+		"opt": false
+	   },
+	   {
+		"t": "rot",
+		"n": 2,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "focus",
-     "n": 1
-    },
-    {
-     "do": "draw",
-     "n": 2
-    },
-    {
-     "do": "foe_discard"
-    },
-    {
-     "do": "change_kamae",
-     "n": 1
-    }
+	{
+	 "do": "focus",
+	 "n": 1
+	},
+	{
+	 "do": "draw",
+	 "n": 2
+	},
+	{
+	 "do": "foe_discard"
+	},
+	{
+	 "do": "change_kamae",
+	 "n": 1
+	}
    ],
    "note": "Meditazione. Init 1 focus 0 Wood. ID 122. ❄1 POI ↻2; 'OTTIENI 1 [focus] / PESCA FINO A 2 CARTE / OPPURE GUARDA LA MANO DI [avversario] / PASSA A [kamae]'. foe_discard e' segnaposto per 'GUARDA LA MANO DI' (vedi nota). Atomi/arco DA VERIFICARE."
   },
@@ -4120,40 +4120,40 @@
    "name": "FASCIATURE DA CAMPO",
    "type": "defence",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "anchor",
-        "n": 1,
-        "opt": false
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "anchor",
+		"n": 1,
+		"opt": false
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "link_anchor",
-     "alt": "a"
-    },
-    {
-     "do": "draw",
-     "n": 1,
-     "alt": "b",
-     "focus_cost": 1
-    },
-    {
-     "do": "draw",
-     "n": 2,
-     "alt": "b",
-     "focus_cost": 1
-    }
+	{
+	 "do": "link_anchor",
+	 "alt": "a"
+	},
+	{
+	 "do": "draw",
+	 "n": 1,
+	 "alt": "b",
+	 "focus_cost": 1
+	},
+	{
+	 "do": "draw",
+	 "n": 2,
+	 "alt": "b",
+	 "focus_cost": 1
+	}
    ],
    "note": "Gen. Ability (#124 Field Bandages, init 1). Difesa/Prepared. ❄1 ↻1. Testo: SCARTA FINO A 2 OPPURE SOSTITUISCI TUTTE LE ! CON ! (link_anchor); PESCA FINO A 1 CARTA / PESCA FINO A 2 CARTE (bonus). 'SCARTA FINO A 2' (cura ferite) e 'SOSTITUISCI ! CON !' DA VERIFICARE."
   },
@@ -4161,40 +4161,40 @@
    "name": "STOCCATA RAPIDA",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": false
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 1,
+		"opt": false
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "focus",
-     "n": 1,
-     "when": "on_hit",
-     "focus_cost": 1
-    }
+	{
+	 "do": "focus",
+	 "n": 1,
+	 "when": "on_hit",
+	 "focus_cost": 1
+	}
    ],
    "note": "Gen. Ability (#128 Quick Stab, init 8, focus 1). Bordo arancio. Move ↑1 ↻1. Ferita 1 sul fronte. SE RIUSCITO (barra arancio): OTTIENI 1 🪷 = focus. Arco DA VERIFICARE."
   },
@@ -4202,13 +4202,13 @@
    "name": "TAGLIO SANGUINANTE",
    "type": "attack",
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": "bleed"
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": "bleed"
+	 }
+	]
    },
    "effects": [],
    "note": "Gen. Ability (#154 Bleeding Slice, init 4). Bordo arancio. Ferita sanguinante (bleed) sul fronte. Testo di colore (CON MENTE CHIARA E LA SPADA INCERTA SCORRE IL SANGUE). Move non visibile nel ritaglio. Arco/movimento DA VERIFICARE."
@@ -4217,10 +4217,10 @@
    "name": "VANTAGGIO",
    "type": "meditation",
    "effects": [
-    {
-     "do": "draw",
-     "when": "on_hit"
-    }
+	{
+	 "do": "draw",
+	 "when": "on_hit"
+	}
    ],
    "note": "Gen. Ability (#153 Advantage, init =, Meditation Instant Additional). GIOCA SE L'ATTACCO O IL BLOCCO E' RIUSCITO. Testo di colore (LUCI DELL'ALBA / OMBRE DAGLI ALBERI / FRESCA RUGIADA). Effetto preciso DA VERIFICARE (ritaglio parziale)."
   },
@@ -4228,16 +4228,16 @@
    "name": "FURIA CRESCENTE",
    "type": "meditation",
    "effects": [
-    {
-     "do": "push",
-     "n": 1,
-     "when": "on_hit"
-    },
-    {
-     "do": "change_kamae",
-     "to": "aggression",
-     "when": "on_hit"
-    }
+	{
+	 "do": "push",
+	 "n": 1,
+	 "when": "on_hit"
+	},
+	{
+	 "do": "change_kamae",
+	 "to": "aggression",
+	 "when": "on_hit"
+	}
    ],
    "note": "Gen. Ability (#150 Rising Fury, init =, Meditation Instant Additional Prepared). GIOCA SE L'ATTACCO O IL BLOCCO E' RIUSCITO: SPINGI 1 = push n1; PASSA A [rosso] = change_kamae to aggression. DA VERIFICARE."
   },
@@ -4246,20 +4246,20 @@
    "type": "attack",
    "kamae_req": "aggression",
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "draw",
-     "n": 1,
-     "when": "on_hit"
-    }
+	{
+	 "do": "draw",
+	 "n": 1,
+	 "when": "on_hit"
+	}
    ],
    "note": "Init 6, focus 3, Jade. Kamae rosso (aggression) richiesto. 1 ferita fronte; SE RIUSCITO effetto (pesca/icone). Arco e dettaglio effetto DA VERIFICARE."
   },
@@ -4267,22 +4267,22 @@
    "name": "ISPIRAZIONE DIVINA",
    "type": "meditation",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "anchor",
-        "n": 1,
-        "opt": false
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "anchor",
+		"n": 1,
+		"opt": false
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "note": "Meditazione, Aggiunta Istantanea. Init = , focus 3. 'GIOCA PRIMA DI RISOLVERE LA TUA CARTA ABILITA ATTIVA / RISOLVI PRIMA QUESTA CARTA'. Mostra ❄1 ↻1. Arco/atomi DA VERIFICARE."
   },
@@ -4290,44 +4290,44 @@
    "name": "DIFESA DEL GUARDIANO",
    "type": "defence",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "defence": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "v": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "v": 1
-     },
-     {
-      "d": 5,
-      "k": 1,
-      "v": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "v": 1
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "v": 1
+	 },
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "v": 1
+	 }
+	]
    },
    "counter": [
-    8,
-    7,
-    6,
-    5,
-    4,
-    3
+	8,
+	7,
+	6,
+	5,
+	4,
+	3
    ],
    "note": "Difesa, Sostituzione Istantanea. Init 8,7,6,5,4,3 focus 3 Jade. ↻1 e arco difensivo frontale. Valori/arco difesa DA VERIFICARE."
   },
@@ -4335,17 +4335,17 @@
    "name": "TEMPRA LEGGENDARIA",
    "type": "meditation",
    "effects": [
-    {
-     "do": "replace_wound_bleed",
-     "n": 1
-    },
-    {
-     "do": "link_anchor"
-    },
-    {
-     "do": "draw",
-     "n": 5
-    }
+	{
+	 "do": "replace_wound_bleed",
+	 "n": 1
+	},
+	{
+	 "do": "link_anchor"
+	},
+	{
+	 "do": "draw",
+	 "n": 5
+	}
    ],
    "note": "Meditazione. Init 3 focus 3 Jade. 'SCARTA TUTTI GLI EFFETTI DI STATO / SOSTITUISCI TUTTE LE ! CON ❄ / PESCA FINO A 5 CARTE'. Mostra anche ❄1 ↻1 in basso. Mappatura verbi (scarta stati, link_anchor, pesca a mano piena) DA VERIFICARE."
   },
@@ -4353,13 +4353,13 @@
    "name": "DOVERE",
    "type": "meditation",
    "effects": [
-    {
-     "do": "foe_discard"
-    },
-    {
-     "do": "change_kamae",
-     "to": "aggression"
-    }
+	{
+	 "do": "foe_discard"
+	},
+	{
+	 "do": "change_kamae",
+	 "to": "aggression"
+	}
    ],
    "note": "Meditazione, Istantanea, Bushido. Init - focus 1. 'GIOCA ALL'INIZIO DEL TURNO PRIMA CHE VENGANO SCELTE LE CARTE / TUTTI I GIOCATORI SCARTANO TUTTA LA [mano] / TUTTI I GIOCATORI PASSANO A [aggression] / TUTTI I GIOCATORI MISCHIANO NEI LORO MAZZI TUTTE LE CARTE ABILITA NON-[...] E PESCANO 5 CARTE'. Effetto globale Bushido: verbi sono segnaposto, vedi nota. reset_deck implicito. DA VERIFICARE."
   },
@@ -4367,10 +4367,10 @@
    "name": "ONESTA",
    "type": "meditation",
    "effects": [
-    {
-     "do": "spend_focus",
-     "n": 2
-    }
+	{
+	 "do": "spend_focus",
+	 "n": 2
+	}
    ],
    "note": "Meditazione, Istantanea, Bushido. Init - focus 2. 'GIOCA ALL'INIZIO DEL TURNO ... RIMANE IN GIOCO / FINCHE E ATTIVA NESSUN GIOCATORE PUO GIOCARE CARTE [...] COME ISTANTANEE / ALLA FINE DEL TURNO QUALSIASI GIOCATORE PUO SPENDERE 2 [focus] PER SCARTARE QUESTA CARTA'. Effetto persistente Bushido; verbi segnaposto. DA VERIFICARE."
   },
@@ -4378,9 +4378,9 @@
    "name": "ONORE",
    "type": "meditation",
    "effects": [
-    {
-     "do": "block_initiative"
-    }
+	{
+	 "do": "block_initiative"
+	}
    ],
    "note": "Meditazione, Istantanea, Bushido. Init - focus 2. 'GIOCA ALL'INIZIO DEL TURNO ... / SCEGLI [focus] 0 [tipo carta] / NESSUN GIOCATORE IN QUESTO TURNO PUO GIOCARE IL TIPO DI CARTA SCELTO'. Blocca un tipo di carta scelto; verbo segnaposto block_initiative. DA VERIFICARE."
   },
@@ -4388,10 +4388,10 @@
    "name": "RISPETTO",
    "type": "meditation",
    "effects": [
-    {
-     "do": "spend_focus",
-     "n": 2
-    }
+	{
+	 "do": "spend_focus",
+	 "n": 2
+	}
    ],
    "note": "Meditazione, Istantanea, Bushido. Init - focus 2. 'GIOCA ALL'INIZIO DEL TURNO ... RIMANE IN GIOCO / FINCHE E ATTIVA NESSUN GIOCATORE PUO GIOCARE COPIE DI CARTE A FACCIA IN SU NELLA PROPRIA PILA DEGLI SCARTI / ALLA FINE DEL TURNO QUALSIASI GIOCATORE PUO SPENDERE 2 [focus] PER SCARTARE QUESTA CARTA'. Effetto persistente Bushido; verbi segnaposto. DA VERIFICARE."
   },
@@ -4399,9 +4399,9 @@
    "name": "RETTITUDINE",
    "type": "meditation",
    "effects": [
-    {
-     "do": "cancel_abilities"
-    }
+	{
+	 "do": "cancel_abilities"
+	}
    ],
    "note": "Meditazione, Istantanea, Bushido. Init - focus 1. 'GIOCA ALL'INIZIO DEL TURNO ... / IN ORDINE DI VANTAGGIO, CIASCUN GIOCATORE NOMINA UNA CARTA ABILITA / LE CARTE ABILITA NOMINATE NON POSSONO ESSERE GIOCATE IN QUESTO TURNO'. Verbo segnaposto cancel_abilities. DA VERIFICARE."
   },
@@ -4409,13 +4409,13 @@
    "name": "AUTOCONTROLLO",
    "type": "meditation",
    "effects": [
-    {
-     "do": "foe_discard"
-    },
-    {
-     "do": "spend_focus",
-     "n": 2
-    }
+	{
+	 "do": "foe_discard"
+	},
+	{
+	 "do": "spend_focus",
+	 "n": 2
+	}
    ],
    "note": "Meditazione, Istantanea, Bushido. Init - focus 1. 'GIOCA ALL'INIZIO DEL TURNO ... RIMANE IN GIOCO / FINCHE E ATTIVA NESSUN GIOCATORE PUO GUARDARE LA MANO DI UN ALTRO O OBBLIGARE ALTRI GIOCATORI A SCARTARE CARTE / ALLA FINE DEL TURNO QUALSIASI GIOCATORE PUO SPENDERE 2 [focus] PER SCARTARE QUESTA CARTA'. Effetto persistente Bushido; verbi segnaposto. DA VERIFICARE."
   },
@@ -4423,34 +4423,34 @@
    "name": "PASSO EVASIVO",
    "type": "defence",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": false
-       }
-      ]
-     },
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": -1,
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 },
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": -1,
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "change_kamae",
-     "to": "aggression"
-    }
+	{
+	 "do": "change_kamae",
+	 "to": "aggression"
+	}
    ],
    "note": "Difesa, Sostituzione Istantanea. Init 9,8,7,6 (mostrato 9-6) focus 0 Gold. ID stampato 090 confermato. Movimento: passo 1 OPPURE passo 1, poi PASSA A [aggression]. 'FATO NEL VENTO / ONDE MI TRATTENGONO O MI SCAGLIANO'. Direzioni passi DA VERIFICARE."
   },
@@ -4458,18 +4458,18 @@
    "name": "CALMA COMPOSTA",
    "type": "meditation",
    "effects": [
-    {
-     "do": "draw",
-     "n": 2
-    },
-    {
-     "do": "focus",
-     "n": 1
-    },
-    {
-     "do": "change_kamae",
-     "n": 1
-    }
+	{
+	 "do": "draw",
+	 "n": 2
+	},
+	{
+	 "do": "focus",
+	 "n": 1
+	},
+	{
+	 "do": "change_kamae",
+	 "n": 1
+	}
    ],
    "note": "Meditazione, Aggiunta Istantanea. Init = focus 0 Gold. 'PESCA FINO A 2 CARTE / OTTIENI 1 [focus] / PASSA A UNA QUALSIASI KAMAE'. ID 084."
   },
@@ -4477,14 +4477,14 @@
    "name": "BENEVOLENZA",
    "type": "meditation",
    "effects": [
-    {
-     "do": "search_draw",
-     "n": 1
-    },
-    {
-     "do": "search_draw",
-     "n": 1
-    }
+	{
+	 "do": "search_draw",
+	 "n": 1
+	},
+	{
+	 "do": "search_draw",
+	 "n": 1
+	}
    ],
    "note": "Meditazione, Istantanea, Bushido. Init - focus 0 Gold. 'GIOCA ALL'INIZIO DEL TURNO ... / CERCA + PRENDI 1 NON-[...] / TUTTI GLI ALTRI GIOCATORI POSSONO CERCARE + PRENDERE 1 NON-[...]'. ID 082. Secondo search_draw e' per gli avversari (nota)."
   },
@@ -4492,10 +4492,10 @@
    "name": "CORAGGIO",
    "type": "meditation",
    "effects": [
-    {
-     "do": "spend_focus",
-     "n": 2
-    }
+	{
+	 "do": "spend_focus",
+	 "n": 2
+	}
    ],
    "note": "Meditazione, Istantanea, Bushido. Init - focus 1 Gold. 'GIOCA ALL'INIZIO DEL TURNO ... RIMANE IN GIOCO / TUTTI I GIOCATORI VOLTANO A FACCIA IN SU LE PILE DEGLI SCARTI / FINCHE E ATTIVA TUTTE LE CARTE SONO SCARTATE A FACCIA IN SU / ALLA FINE DEL TURNO QUALSIASI GIOCATORE PUO SPENDERE 2 [focus] PER SCARTARE QUESTA CARTA'. ID 085. Effetto persistente Bushido; verbi segnaposto. DA VERIFICARE."
   },
@@ -4503,29 +4503,29 @@
    "name": "CONTRATTACCO",
    "type": "attack",
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "counter": [
-    1
+	1
    ],
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "note": "Attacco. Init 2 focus 0 Wood. Mostra [spada]1 ↻1 e arco frontale (1 ferita). 'CADE UN FIORE / UNA LAMA FENDE L'ARIA / FATO DI MORTE'. ID 155. Counter=2? init stampata 2; counter icona indica ↻1. Arco DA VERIFICARE."
   },
@@ -4533,36 +4533,36 @@
    "name": "SFORZO CONCENTRATO",
    "type": "other",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "anchor",
-        "n": 2,
-        "opt": false
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "anchor",
+		"n": 2,
+		"opt": false
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "draw",
-     "n": 3
-    },
-    {
-     "do": "foe_discard",
-     "n": 2
-    },
-    {
-     "do": "change_kamae",
-     "n": 1
-    }
+	{
+	 "do": "draw",
+	 "n": 3
+	},
+	{
+	 "do": "foe_discard",
+	 "n": 2
+	},
+	{
+	 "do": "change_kamae",
+	 "n": 1
+	}
    ],
    "note": "Meditazione (pool type 'other'), Prepared. Init 5 focus 0 Wood. ID 156. ❄2 ↻1; 'PESCA FINO A 3 CARTE / SCARTA FINO A 2 [carte] / PASSA A UNA QUALSIASI KAMAE'. 'SCARTA FINO A 2' = scarto proprio: foe_discard usato come segnaposto, vedi nota. Atomi DA VERIFICARE."
   },
@@ -4570,32 +4570,32 @@
    "name": "TAGLIO ORIZZONTALE",
    "type": "attack",
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "change_kamae",
-     "n": 1
-    }
+	{
+	 "do": "change_kamae",
+	 "n": 1
+	}
    ],
    "note": "Attacco. Init 6 focus 0 Steel. ID 105. 8 ferite fronte OPPURE varianti (icone), poi PASSA A [kamae]. Arco/valori multipli DA VERIFICARE. Valore ferite '8' anomalo: w=1 provvisorio."
   },
@@ -4603,22 +4603,22 @@
    "name": "VOLONTA DI FERRO",
    "type": "meditation",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "anchor",
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "anchor",
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "reduce_damage"
-    }
+	{
+	 "do": "reduce_damage"
+	}
    ],
    "note": "Meditazione. Init 7 focus 2 Steel. ID 106. ❄1. 'RIMANE IN GIOCO / FINCHE E ATTIVA NON PRENDI FERITE SE NON PUOI PESCARE CARTE / ALLA FINE DEL TURNO RUOTA QUESTA CARTA DI 90 IN SENSO ORARIO POI, SE LA CARTA E DIRITTA, SCARTALA'. reduce_damage segnaposto. DA VERIFICARE."
   },
@@ -4626,32 +4626,32 @@
    "name": "DIFESA ACCENNANTE",
    "type": "defence",
    "defence": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "v": 2
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "v": 2
-     },
-     {
-      "d": 5,
-      "k": 1,
-      "v": 2
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "v": 2
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "v": 2
+	 },
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "v": 2
+	 }
+	]
    },
    "counter": [
-    1
+	1
    ],
    "effects": [
-    {
-     "do": "cancel_movement",
-     "when": "on_hit"
-    }
+	{
+	 "do": "cancel_movement",
+	 "when": "on_hit"
+	}
    ],
    "note": "Difesa. Init 8 focus 1 Steel. ID 108. Arco difensivo frontale, ↻1; 'SE RIUSCITO: CANCELLA LA ROTAZIONE ATTIVA DI [bersaglio]' init 7, v2. Carta ideata da Clint Hewson. 'cancella la rotazione attiva' = cancel_movement segnaposto. Arco/valori DA VERIFICARE."
   },
@@ -4659,53 +4659,53 @@
    "name": "MENTE APERTA",
    "type": "meditation",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": false
-       }
-      ]
-     },
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 2,
-        "opt": false
-       }
-      ]
-     },
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 3,
-        "n": 1,
-        "opt": false
-       }
-      ]
-     },
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 2,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 },
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 2,
+		"opt": false
+	   }
+	  ]
+	 },
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 3,
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 },
+	 {
+	  "atoms": [
+	   {
+		"t": "rot",
+		"n": 2,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "change_kamae",
-     "n": 1
-    }
+	{
+	 "do": "change_kamae",
+	 "n": 1
+	}
    ],
    "note": "Meditazione. Init 4 focus 0 Steel. ID 109. Barre movimento per kamae: 6[balance?] avanti1 / avanti2 / indietro1 / ↻2; 'PASSA A UNA QUALSIASI KAMAE'. Carta ideata da George Stanforth. Direzioni/atomi gated per kamae DA VERIFICARE."
   },
@@ -4713,56 +4713,56 @@
    "name": "SQUARCIO ROTANTE",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 1,
-        "n": 1,
-        "opt": false
-       },
-       {
-        "t": "step",
-        "dir": 5,
-        "n": 1,
-        "opt": true
-       }
-      ]
-     },
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 1,
-        "n": 1,
-        "opt": false
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 1,
+		"n": 1,
+		"opt": false
+	   },
+	   {
+		"t": "step",
+		"dir": 5,
+		"n": 1,
+		"opt": true
+	   }
+	  ]
+	 },
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 1,
+		"n": 1,
+		"opt": false
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "counter": [
-    1
+	1
    ],
    "effects": [
-    {
-     "do": "focus",
-     "n": 1,
-     "when": "on_hit",
-     "alt": "a"
-    },
-    {
-     "do": "change_kamae",
-     "n": 1,
-     "when": "on_hit",
-     "alt": "b"
-    }
+	{
+	 "do": "focus",
+	 "n": 1,
+	 "when": "on_hit",
+	 "alt": "a"
+	},
+	{
+	 "do": "change_kamae",
+	 "n": 1,
+	 "when": "on_hit",
+	 "alt": "b"
+	}
    ],
    "note": "Attacco. Init focus 0 Steel. ID 112. Movimento diagonale (passo POI passo/rot) ↻1; 'SE RIUSCITO: OTTIENI 1 [focus] / CAMBIA KAMAE FINO A 1 RAMO'. Atomi/direzioni e arco DA VERIFICARE."
   },
@@ -4770,37 +4770,37 @@
    "name": "DIFESA DI ROCCIA",
    "type": "defence",
    "defence": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "v": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "v": 1
-     },
-     {
-      "d": 5,
-      "k": 1,
-      "v": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "v": 1
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "v": 1
+	 },
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "v": 1
+	 }
+	]
    },
    "counter": [
-    1
+	1
    ],
    "effects": [
-    {
-     "do": "focus",
-     "n": 1,
-     "when": "on_hit"
-    },
-    {
-     "do": "change_kamae",
-     "n": 1
-    }
+	{
+	 "do": "focus",
+	 "n": 1,
+	 "when": "on_hit"
+	},
+	{
+	 "do": "change_kamae",
+	 "n": 1
+	}
    ],
    "note": "Difesa. Init 6,5,4,3,2 focus 0 Steel. ID 114 (mappata a Stone Block). Arco difensivo frontale; 'SE RIUSCITO: [valore] / OTTIENI 1 [focus] / ↻1 / PASSA A [kamae]'. Arco/valori difesa DA VERIFICARE."
   },
@@ -4808,42 +4808,42 @@
    "name": "BLOCCO RAPIDO",
    "type": "defence",
    "defence": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "v": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "v": 1
-     },
-     {
-      "d": 5,
-      "k": 1,
-      "v": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "v": 1
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "v": 1
+	 },
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "v": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "push",
-     "n": 1,
-     "when": "on_hit"
-    },
-    {
-     "do": "focus",
-     "n": 1,
-     "when": "on_hit"
-    },
-    {
-     "do": "link_anchor"
-    },
-    {
-     "do": "change_kamae",
-     "to": "aggression"
-    }
+	{
+	 "do": "push",
+	 "n": 1,
+	 "when": "on_hit"
+	},
+	{
+	 "do": "focus",
+	 "n": 1,
+	 "when": "on_hit"
+	},
+	{
+	 "do": "link_anchor"
+	},
+	{
+	 "do": "change_kamae",
+	 "to": "aggression"
+	}
    ],
    "note": "Difesa, Sostituzione Istantanea. Init 8,7,6 focus 0 Steel. ID 115. 'SE RIUSCITO: SPINGI [bersaglio] 1 / OTTIENI 1 [focus] / ❄1 / PASSA A [aggression]'. Arco difensivo e atomi DA VERIFICARE."
   },
@@ -4851,42 +4851,42 @@
    "name": "MENTE ADDESTRATA",
    "type": "meditation",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false
-       }
-      ]
-     },
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 3,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 },
+	 {
+	  "atoms": [
+	   {
+		"t": "rot",
+		"n": 3,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "change_kamae",
-     "n": 2
-    },
-    {
-     "do": "search_draw",
-     "n": 1,
-     "alt": "a"
-    },
-    {
-     "do": "foe_discard",
-     "alt": "b",
-     "focus_cost": 0
-    }
+	{
+	 "do": "change_kamae",
+	 "n": 2
+	},
+	{
+	 "do": "search_draw",
+	 "n": 1,
+	 "alt": "a"
+	},
+	{
+	 "do": "foe_discard",
+	 "alt": "b",
+	 "focus_cost": 0
+	}
    ],
    "note": "Meditazione. Init 2 focus 0 Steel. ID 117. '↻ ... 1 OPPURE ↻ ... 3 / CAMBIA KAMAE FINO A 2 RAMI / OPPURE CERCA + PRENDI 1 [focus]0 [...] / OPPURE GUARDA LA MANO DI [avversario]'. 'GUARDA LA MANO DI' = foe_discard segnaposto (vedi nota). Atomi/direzioni DA VERIFICARE."
   },
@@ -4894,26 +4894,26 @@
    "name": "BLOCCO DI VENTO",
    "type": "defence",
    "defence": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "v": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "v": 1
-     },
-     {
-      "d": 5,
-      "k": 1,
-      "v": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "v": 1
+	 },
+	 {
+	  "d": 1,
+	  "k": 1,
+	  "v": 1
+	 },
+	 {
+	  "d": 5,
+	  "k": 1,
+	  "v": 1
+	 }
+	]
    },
    "counter": [
-    1
+	1
    ],
    "note": "Difesa. Init 8,7,6,5 (mostrato 8-5) focus 0 Steel. ID 120. ↻1 e arco difensivo frontale con due righe di valori (varianti). Arco/valori difesa DA VERIFICARE."
   },
@@ -4921,34 +4921,34 @@
    "name": "SQUARCIO DI ROVESCIO",
    "type": "attack",
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "counter": [
-    1
+	1
    ],
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "anchor",
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "anchor",
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "discard_self"
-    }
+	{
+	 "do": "discard_self"
+	}
    ],
    "note": "Attacco. Init 6 focus 0 Steel. ID 140 (Backhand Slash). [2 ferite?] ❄1 ↻1, arco frontale; 'SE RIUSCITO: SCARTA 1 CARTA'. Arco/valori DA VERIFICARE."
   },
@@ -4956,15 +4956,15 @@
    "name": "CALMA CONVINZIONE",
    "type": "meditation",
    "effects": [
-    {
-     "do": "focus",
-     "n": 1,
-     "when": "on_hit"
-    },
-    {
-     "do": "change_kamae",
-     "n": 1
-    }
+	{
+	 "do": "focus",
+	 "n": 1,
+	 "when": "on_hit"
+	},
+	{
+	 "do": "change_kamae",
+	 "n": 1
+	}
    ],
    "note": "Meditazione, Aggiunta Istantanea, Prepared. Init = focus 0 Steel. ID 142. 'GIOCA SE L'ATTACCO O IL BLOCCO E RIUSCITO: OTTIENI 1 [focus] / [valore] / PASSA A [kamae]'. DA VERIFICARE."
   },
@@ -4972,29 +4972,29 @@
    "name": "CALCIO INCROCIATO",
    "type": "attack",
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "counter": [
-    1
+	1
    ],
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "note": "Attacco. Init 7 focus 1 Steel. ID 143. Mostra [4] (focus/valore) [passo]1 ↻1 e arco frontale; 'SE RIUSCITO:' con icone. Arco/valori ed effetto on_hit DA VERIFICARE."
   },
@@ -5002,29 +5002,29 @@
    "name": "COLPO DI GRANDINE",
    "type": "attack",
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "counter": [
-    1
+	1
    ],
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "anchor",
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "anchor",
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "note": "Attacco. Init 3 focus 1 Steel. ID 148. ❄1 OPPURE ❄1 ↻1, arco frontale. Arco/valori DA VERIFICARE."
   },
@@ -5032,45 +5032,45 @@
    "name": "AFFONDO DALL'ALTO",
    "type": "attack",
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": false
-       }
-      ]
-     },
-     {
-      "atoms": [
-       {
-        "t": "anchor",
-        "n": 1,
-        "opt": false
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 },
+	 {
+	  "atoms": [
+	   {
+		"t": "anchor",
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "link_anchor"
-    },
-    {
-     "do": "change_kamae",
-     "n": 1
-    }
+	{
+	 "do": "link_anchor"
+	},
+	{
+	 "do": "change_kamae",
+	 "n": 1
+	}
    ],
    "note": "Attacco. Init 5 focus 0 Steel. ID 149 (mappata a Overhead Carve). [passo]1 OPPURE ❄1, arco frontale, '* !' (link_anchor), 'PASSA A [kamae]'. Atomi/arco DA VERIFICARE."
   },
@@ -5078,37 +5078,37 @@
    "name": "BLOCCO DI TONFA",
    "type": "defence",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "anchor",
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 2,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "anchor",
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 2,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "defence": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "v": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "v": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "discard_self",
-     "n": 1
-    }
+	{
+	 "do": "discard_self",
+	 "n": 1
+	}
    ],
    "note": "Arma Tonfa (parata). SCARTA 1 CARTA (costo). ❄1 ↻2. SE RIUSCITO: SCARTA 1 CARTA. Init 5,4,3. Arco difesa DA VERIFICARE."
   },
@@ -5116,39 +5116,39 @@
    "name": "COLPO SQUARCIANTE",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 2,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 2,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "push",
-     "n": 1,
-     "when": "on_hit"
-    }
+	{
+	 "do": "push",
+	 "n": 1,
+	 "when": "on_hit"
+	}
    ],
    "note": "Init 6. ↻1 ↑2 ↻1. Honeycomb frontale. SE RIUSCITO: spingi/effetto (barra arancio). Arco DA VERIFICARE."
   },
@@ -5156,19 +5156,19 @@
    "name": "PROVOCAZIONE",
    "type": "meditation",
    "effects": [
-    {
-     "do": "change_ai_behaviour",
-     "n": 1
-    },
-    {
-     "do": "change_kamae",
-     "n": 1,
-     "to": "determination"
-    },
-    {
-     "do": "discard_self",
-     "n": 1
-    }
+	{
+	 "do": "change_ai_behaviour",
+	 "n": 1
+	},
+	{
+	 "do": "change_kamae",
+	 "n": 1,
+	 "to": "determination"
+	},
+	{
+	 "do": "discard_self",
+	 "n": 1
+	}
    ],
    "note": "Aggiunta istantanea, distanza. GIOCA SE L'ATTACCO O IL BLOCCO È RIUSCITO. PASSA A [Kamae torii=determination?]; icona occhio; SCARTA 1 CARTA. 'provocazione' = change_ai_behaviour (segnaposto). Kamae bersaglio DA VERIFICARE."
   },
@@ -5176,42 +5176,42 @@
    "name": "BLOCCO DI FIUME",
    "type": "defence",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "anchor",
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "anchor",
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "defence": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "v": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "v": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "focus",
-     "n": 1,
-     "when": "on_hit"
-    },
-    {
-     "do": "change_kamae",
-     "n": 1
-    }
+	{
+	 "do": "focus",
+	 "n": 1,
+	 "when": "on_hit"
+	},
+	{
+	 "do": "change_kamae",
+	 "n": 1
+	}
    ],
    "note": "Init 7,6,5,4. Honeycomb difesa frontale (valori ~6/5). ❄ POI ↻1. SE RIUSCITO: OTTIENI 1 🪷; PASSA A [kamae]. Celle/valori difesa DA VERIFICARE."
   },
@@ -5219,43 +5219,43 @@
    "name": "DIFESA TRANQUILLA",
    "type": "defence",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 4,
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 4,
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "defence": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "v": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "v": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "focus",
-     "n": 1,
-     "when": "on_hit"
-    },
-    {
-     "do": "change_kamae",
-     "n": 1
-    }
+	{
+	 "do": "focus",
+	 "n": 1,
+	 "when": "on_hit"
+	},
+	{
+	 "do": "change_kamae",
+	 "n": 1
+	}
    ],
    "note": "Init 6,5,4,3,2. ↻1; honeycomb difesa. SE RIUSCITO: OTTIENI 1 🪷; ↙1 POI ↻1; CAMBIA KAMAE FINO A 1 RAMO. Celle difesa DA VERIFICARE."
   },
@@ -5263,40 +5263,40 @@
    "name": "SQUARCIO DIAGONALE",
    "type": "attack",
    "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 3,
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 3,
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": true
+	   }
+	  ]
+	 }
+	]
    },
    "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
+	"cells": [
+	 {
+	  "d": 0,
+	  "k": 1,
+	  "w": 1
+	 }
+	]
    },
    "effects": [
-    {
-     "do": "link_anchor",
-     "n": 1,
-     "when": "on_hit",
-     "focus_cost": 1
-    }
+	{
+	 "do": "link_anchor",
+	 "n": 1,
+	 "when": "on_hit",
+	 "focus_cost": 1
+	}
    ],
    "note": "Init 5. ↓1 ↻1. Honeycomb frontale. Barra arancio ★! = SOSTITUISCI ! CON ❄ (link_anchor). Arco DA VERIFICARE."
   }
@@ -5308,9 +5308,9 @@
    "wound_limit": 5,
    "hand_limit": 5,
    "weapons": [
-    "Kanabo",
-    "Naginata",
-    "Nodachi",
+	"Kanabo",
+	"Naginata",
+	"Nodachi",
     "Yari"
    ]
   },
@@ -5320,9 +5320,9 @@
    "wound_limit": 5,
    "hand_limit": 5,
    "weapons": [
-    "Kanabo",
-    "Naginata",
-    "Nodachi",
+	"Kanabo",
+	"Naginata",
+	"Nodachi",
     "Yari"
    ]
   },
@@ -5332,9 +5332,9 @@
    "wound_limit": 5,
    "hand_limit": 5,
    "weapons": [
-    "Katana",
-    "Tachi",
-    "Shikomizue",
+	"Katana",
+	"Tachi",
+	"Shikomizue",
     "Wakizashi"
    ],
    "note": "Rinomanza stampata 74 (icona ventaglio). Ferite 5 / mano 5."
@@ -5345,9 +5345,9 @@
    "wound_limit": 5,
    "hand_limit": 5,
    "weapons": [
-    "Katana",
-    "Tanto",
-    "Shikomizue",
+	"Katana",
+	"Tanto",
+	"Shikomizue",
     "Wakizashi"
    ],
    "note": "Rinomanza stampata 62 (icona ventaglio). Ferite 5 / mano 5."

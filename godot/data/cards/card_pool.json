@@ -45,7 +45,7 @@
    "initiative": "=",
    "focus": 0,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Instant Additional"
    ],
    "type": "meditation"
@@ -85,7 +85,7 @@
    "initiative": "6/7",
    "focus": 0,
    "keywords": [
-    "Attack/Defence",
+	"Attack/Defence",
     "Range2"
    ],
    "type": "attack"
@@ -99,7 +99,7 @@
    "initiative": "-",
    "focus": 0,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Instant"
    ],
    "type": "meditation"
@@ -113,7 +113,7 @@
    "initiative": "-",
    "focus": 0,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Instant"
    ],
    "type": "meditation"
@@ -205,8 +205,8 @@
    "initiative": "-",
    "focus": 0,
    "keywords": [
-    "Meditation",
-    "Instant",
+	"Meditation",
+	"Instant",
     "Bushido"
    ],
    "type": "meditation"
@@ -246,7 +246,7 @@
    "initiative": "=",
    "focus": 1,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Instant Additional"
    ],
    "type": "meditation"
@@ -273,7 +273,7 @@
    "initiative": "=",
    "focus": 2,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Instant Additional"
    ],
    "type": "meditation"
@@ -300,8 +300,8 @@
    "initiative": "=",
    "focus": 0,
    "keywords": [
-    "Meditation",
-    "Instant Additional",
+	"Meditation",
+	"Instant Additional",
     "Prepared"
    ],
    "type": "meditation"
@@ -328,9 +328,9 @@
    "initiative": "5,4,3",
    "focus": 0,
    "keywords": [
-    "Bo",
-    "Core",
-    "Defence",
+	"Bo",
+	"Core",
+	"Defence",
     "Weapon"
    ],
    "type": "defence"
@@ -344,9 +344,9 @@
    "initiative": "3",
    "focus": 0,
    "keywords": [
-    "Bo",
-    "Core",
-    "Attack",
+	"Bo",
+	"Core",
+	"Attack",
     "Weapon"
    ],
    "type": "attack"
@@ -360,9 +360,9 @@
    "initiative": "=",
    "focus": 0,
    "keywords": [
-    "Bokken",
-    "Core",
-    "Weapon",
+	"Bokken",
+	"Core",
+	"Weapon",
     "Instant Additional"
    ],
    "type": "core"
@@ -376,7 +376,7 @@
    "initiative": "=",
    "focus": 1,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Instant Additional"
    ],
    "type": "meditation"
@@ -442,7 +442,7 @@
    "initiative": "=",
    "focus": 0,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Instant Additional"
    ],
    "type": "meditation"
@@ -456,7 +456,7 @@
    "initiative": "6,5,4,3,2",
    "focus": 0,
    "keywords": [
-    "Defence",
+	"Defence",
     "Prepared"
    ],
    "type": "defence"
@@ -483,8 +483,8 @@
    "initiative": "=",
    "focus": 0,
    "keywords": [
-    "Meditation",
-    "Instant Additional",
+	"Meditation",
+	"Instant Additional",
     "Prepared"
    ],
    "type": "meditation"
@@ -498,7 +498,7 @@
    "initiative": "3",
    "focus": 0,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Prepared"
    ],
    "type": "meditation"
@@ -512,9 +512,9 @@
    "initiative": "4",
    "focus": 0,
    "keywords": [
-    "Carrack",
-    "Core",
-    "Attack",
+	"Carrack",
+	"Core",
+	"Attack",
     "Weapon"
    ],
    "type": "attack"
@@ -619,7 +619,7 @@
    "initiative": "1",
    "focus": 0,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Instant Replacement"
    ],
    "type": "meditation"
@@ -659,7 +659,7 @@
    "initiative": "=",
    "focus": 0,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Instant Additional"
    ],
    "type": "meditation"
@@ -673,8 +673,8 @@
    "initiative": "-",
    "focus": 1,
    "keywords": [
-    "Meditation",
-    "Instant",
+	"Meditation",
+	"Instant",
     "Bushido"
    ],
    "type": "meditation"
@@ -688,7 +688,7 @@
    "initiative": "6",
    "focus": 1,
    "keywords": [
-    "Attack",
+	"Attack",
     "Instant Replacement"
    ],
    "type": "attack"
@@ -741,7 +741,7 @@
    "initiative": "6",
    "focus": 0,
    "keywords": [
-    "Attack",
+	"Attack",
     "Instant Replacement"
    ],
    "type": "attack"
@@ -755,7 +755,7 @@
    "initiative": "5",
    "focus": 0,
    "keywords": [
-    "Attack",
+	"Attack",
     "Range3"
    ],
    "type": "attack"
@@ -782,7 +782,7 @@
    "initiative": "2",
    "focus": 0,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Range3"
    ],
    "type": "meditation"
@@ -796,7 +796,7 @@
    "initiative": "1",
    "focus": 1,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Range3"
    ],
    "type": "meditation"
@@ -862,8 +862,8 @@
    "initiative": "=",
    "focus": 0,
    "keywords": [
-    "Meditation",
-    "Instant Additional",
+	"Meditation",
+	"Instant Additional",
     "Prepared"
    ],
    "type": "meditation"
@@ -903,7 +903,7 @@
    "initiative": "5",
    "focus": 0,
    "keywords": [
-    "Attack",
+	"Attack",
     "Instant Replacement"
    ],
    "type": "attack"
@@ -917,7 +917,7 @@
    "initiative": "=",
    "focus": 0,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Instant Additional"
    ],
    "type": "meditation"
@@ -944,7 +944,7 @@
    "initiative": "=",
    "focus": 3,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Instant Additional"
    ],
    "type": "meditation"
@@ -997,7 +997,7 @@
    "initiative": "6",
    "focus": 0,
    "keywords": [
-    "Attack",
+	"Attack",
     "Instant Replacement"
    ],
    "type": "attack"
@@ -1024,7 +1024,7 @@
    "initiative": "4",
    "focus": 1,
    "keywords": [
-    "Attack",
+	"Attack",
     "Range6"
    ],
    "type": "attack"
@@ -1051,9 +1051,9 @@
    "initiative": "6",
    "focus": 0,
    "keywords": [
-    "Sai",
-    "Core",
-    "Attack",
+	"Sai",
+	"Core",
+	"Attack",
     "Weapon"
    ],
    "type": "attack"
@@ -1080,8 +1080,8 @@
    "initiative": "-",
    "focus": 1,
    "keywords": [
-    "Meditation",
-    "Instant",
+	"Meditation",
+	"Instant",
     "Bushido"
    ],
    "type": "meditation"
@@ -1121,7 +1121,7 @@
    "initiative": "=",
    "focus": 0,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Instant Additional"
    ],
    "type": "meditation"
@@ -1148,7 +1148,7 @@
    "initiative": "9,8,7,6,5,4,3,2",
    "focus": 1,
    "keywords": [
-    "Defence",
+	"Defence",
     "Instant Replacement"
    ],
    "type": "defence"
@@ -1175,7 +1175,7 @@
    "initiative": "-",
    "focus": 2,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Instant"
    ],
    "type": "meditation"
@@ -1228,7 +1228,7 @@
    "initiative": "9,8,7,6",
    "focus": 0,
    "keywords": [
-    "Defence",
+	"Defence",
     "Instant Replacement"
    ],
    "type": "defence"
@@ -1242,7 +1242,7 @@
    "initiative": "=",
    "focus": 1,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Instant Additional"
    ],
    "type": "meditation"
@@ -1256,8 +1256,8 @@
    "initiative": "=",
    "focus": 0,
    "keywords": [
-    "Meditation",
-    "Instant Additional",
+	"Meditation",
+	"Instant Additional",
     "Prepared"
    ],
    "type": "meditation"
@@ -1271,7 +1271,7 @@
    "initiative": "4",
    "focus": 0,
    "keywords": [
-    "Attack",
+	"Attack",
     "Instant Replacement"
    ],
    "type": "attack"
@@ -1311,7 +1311,7 @@
    "initiative": "5",
    "focus": 1,
    "keywords": [
-    "Mediation",
+	"Mediation",
     "Range1"
    ],
    "type": "other"
@@ -1325,7 +1325,7 @@
    "initiative": "6",
    "focus": 0,
    "keywords": [
-    "Attack",
+	"Attack",
     "Instant Replacement"
    ],
    "type": "attack"
@@ -1365,7 +1365,7 @@
    "initiative": "1",
    "focus": 0,
    "keywords": [
-    "Defence",
+	"Defence",
     "Prepared"
    ],
    "type": "defence"
@@ -1405,7 +1405,7 @@
    "initiative": "5",
    "focus": 0,
    "keywords": [
-    "Mediation",
+	"Mediation",
     "Prepared"
    ],
    "type": "other"
@@ -1445,7 +1445,7 @@
    "initiative": "=",
    "focus": 2,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Instant Additional"
    ],
    "type": "meditation"
@@ -1498,8 +1498,8 @@
    "initiative": "4",
    "focus": 0,
    "keywords": [
-    "Attack",
-    "Range4",
+	"Attack",
+	"Range4",
     "Prepared"
    ],
    "type": "attack"
@@ -1513,7 +1513,7 @@
    "initiative": "4",
    "focus": 1,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Instant Replacement"
    ],
    "type": "meditation"
@@ -1566,7 +1566,7 @@
    "initiative": "8,7,6,5,4,3",
    "focus": 3,
    "keywords": [
-    "Defence",
+	"Defence",
     "Instant Replacement"
    ],
    "type": "defence"
@@ -1619,7 +1619,7 @@
    "initiative": "=",
    "focus": 0,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Instant Additional"
    ],
    "type": "meditation"
@@ -1646,8 +1646,8 @@
    "initiative": "=",
    "focus": 1,
    "keywords": [
-    "Defence",
-    "Instant Additional",
+	"Defence",
+	"Instant Additional",
     "Prepared"
    ],
    "type": "defence"
@@ -1687,7 +1687,7 @@
    "initiative": "7,6,5,4",
    "focus": 1,
    "keywords": [
-    "Defence",
+	"Defence",
     "Instant Replacement"
    ],
    "type": "defence"
@@ -1701,8 +1701,8 @@
    "initiative": "-",
    "focus": 0,
    "keywords": [
-    "Meditation",
-    "Instant",
+	"Meditation",
+	"Instant",
     "Prepared"
    ],
    "type": "meditation"
@@ -1716,7 +1716,7 @@
    "initiative": "=",
    "focus": 0,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Instant Additional"
    ],
    "type": "meditation"
@@ -1730,8 +1730,8 @@
    "initiative": "-",
    "focus": 2,
    "keywords": [
-    "Meditation",
-    "Instant",
+	"Meditation",
+	"Instant",
     "Bushido"
    ],
    "type": "meditation"
@@ -1745,8 +1745,8 @@
    "initiative": "-",
    "focus": 2,
    "keywords": [
-    "Meditation",
-    "Instant",
+	"Meditation",
+	"Instant",
     "Bushido"
    ],
    "type": "meditation"
@@ -1786,7 +1786,7 @@
    "initiative": "=",
    "focus": 0,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Instant Additional"
    ],
    "type": "meditation"
@@ -1800,7 +1800,7 @@
    "initiative": "=",
    "focus": 0,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Instant Additional"
    ],
    "type": "meditation"
@@ -1853,7 +1853,7 @@
    "initiative": "5",
    "focus": 0,
    "keywords": [
-    "Attack",
+	"Attack",
     "Prepared"
    ],
    "type": "attack"
@@ -1893,7 +1893,7 @@
    "initiative": "5",
    "focus": 0,
    "keywords": [
-    "Attack",
+	"Attack",
     "Range2"
    ],
    "type": "attack"
@@ -1907,9 +1907,9 @@
    "initiative": "2",
    "focus": 0,
    "keywords": [
-    "Yari",
-    "Core",
-    "Attack",
+	"Yari",
+	"Core",
+	"Attack",
     "Weapon"
    ],
    "type": "attack"
@@ -1936,9 +1936,9 @@
    "initiative": "4",
    "focus": 0,
    "keywords": [
-    "Kama",
-    "Core",
-    "Attack",
+	"Kama",
+	"Core",
+	"Attack",
     "Weapon"
    ],
    "type": "attack"
@@ -1965,9 +1965,9 @@
    "initiative": "4",
    "focus": 0,
    "keywords": [
-    "Kanabo",
-    "Core",
-    "Attack",
+	"Kanabo",
+	"Core",
+	"Attack",
     "Weapon"
    ],
    "type": "attack"
@@ -1981,9 +1981,9 @@
    "initiative": "5",
    "focus": 0,
    "keywords": [
-    "Katana",
-    "Core",
-    "Attack",
+	"Katana",
+	"Core",
+	"Attack",
     "Weapon"
    ],
    "type": "attack"
@@ -1997,9 +1997,9 @@
    "initiative": "4",
    "focus": 0,
    "keywords": [
-    "Katana",
-    "Core",
-    "Attack",
+	"Katana",
+	"Core",
+	"Attack",
     "Weapon"
    ],
    "type": "attack"
@@ -2013,9 +2013,9 @@
    "initiative": "4",
    "focus": 0,
    "keywords": [
-    "Katana",
-    "Core",
-    "Attack",
+	"Katana",
+	"Core",
+	"Attack",
     "Weapon"
    ],
    "type": "attack"
@@ -2042,9 +2042,9 @@
    "initiative": "4",
    "focus": 0,
    "keywords": [
-    "Kusarigama",
-    "Core",
-    "Attack",
+	"Kusarigama",
+	"Core",
+	"Attack",
     "Weapon"
    ],
    "type": "attack"
@@ -2110,7 +2110,7 @@
    "initiative": "5",
    "focus": 1,
    "keywords": [
-    "Attack",
+	"Attack",
     "Instant Replacement"
    ],
    "type": "attack"
@@ -2124,7 +2124,7 @@
    "initiative": "9,8,7,6",
    "focus": 0,
    "keywords": [
-    "Defence",
+	"Defence",
     "Attack"
    ],
    "type": "attack"
@@ -2190,7 +2190,7 @@
    "initiative": "=",
    "focus": 0,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Instant Additional"
    ],
    "type": "meditation"
@@ -2230,7 +2230,7 @@
    "initiative": "6",
    "focus": 1,
    "keywords": [
-    "Attack",
+	"Attack",
     "Prepared"
    ],
    "type": "attack"
@@ -2348,9 +2348,9 @@
    "initiative": "4",
    "focus": 0,
    "keywords": [
-    "Nagamaki",
-    "Core",
-    "Attack",
+	"Nagamaki",
+	"Core",
+	"Attack",
     "Weapon"
    ],
    "type": "attack"
@@ -2364,9 +2364,9 @@
    "initiative": "4",
    "focus": 0,
    "keywords": [
-    "Naginata",
-    "Core",
-    "Attack",
+	"Naginata",
+	"Core",
+	"Attack",
     "Weapon"
    ],
    "type": "attack"
@@ -2380,9 +2380,9 @@
    "initiative": "5",
    "focus": 0,
    "keywords": [
-    "Naginata",
-    "Core",
-    "Attack",
+	"Naginata",
+	"Core",
+	"Attack",
     "Weapon"
    ],
    "type": "attack"
@@ -2409,9 +2409,9 @@
    "initiative": "4",
    "focus": 0,
    "keywords": [
-    "Nodachi",
-    "Core",
-    "Attack",
+	"Nodachi",
+	"Core",
+	"Attack",
     "Weapon"
    ],
    "type": "attack"
@@ -2425,9 +2425,9 @@
    "initiative": "4",
    "focus": 0,
    "keywords": [
-    "Nodachi",
-    "Core",
-    "Attack",
+	"Nodachi",
+	"Core",
+	"Attack",
     "Weapon"
    ],
    "type": "attack"
@@ -2441,7 +2441,7 @@
    "initiative": "7,6,5,4,3",
    "focus": 0,
    "keywords": [
-    "Defence",
+	"Defence",
     "Prepared"
    ],
    "type": "defence"
@@ -2468,9 +2468,9 @@
    "initiative": "1",
    "focus": 0,
    "keywords": [
-    "Wakizashi",
-    "Core",
-    "Attack",
+	"Wakizashi",
+	"Core",
+	"Attack",
     "Weapon"
    ],
    "type": "attack"
@@ -2549,7 +2549,7 @@
    "initiative": "5",
    "focus": 0,
    "keywords": [
-    "Attack",
+	"Attack",
     "Instant Replacement"
    ],
    "type": "attack"
@@ -2563,9 +2563,9 @@
    "initiative": "4",
    "focus": 0,
    "keywords": [
-    "Pistol",
-    "Core",
-    "Attack",
+	"Pistol",
+	"Core",
+	"Attack",
     "Weapon"
    ],
    "type": "attack"
@@ -2605,7 +2605,7 @@
    "initiative": "5",
    "focus": 2,
    "keywords": [
-    "Attack",
+	"Attack",
     "Range6"
    ],
    "type": "attack"
@@ -2632,7 +2632,7 @@
    "initiative": "7/6",
    "focus": 0,
    "keywords": [
-    "Attack/Defence",
+	"Attack/Defence",
     "Range2"
    ],
    "type": "attack"
@@ -2685,7 +2685,7 @@
    "initiative": "5",
    "focus": 1,
    "keywords": [
-    "Attack",
+	"Attack",
     "Instant Replacement"
    ],
    "type": "attack"
@@ -2751,8 +2751,8 @@
    "initiative": "-",
    "focus": 2,
    "keywords": [
-    "Meditation",
-    "Instant",
+	"Meditation",
+	"Instant",
     "Bushido"
    ],
    "type": "meditation"
@@ -2792,8 +2792,8 @@
    "initiative": "-",
    "focus": 1,
    "keywords": [
-    "Meditation",
-    "Instant",
+	"Meditation",
+	"Instant",
     "Bushido"
    ],
    "type": "meditation"
@@ -2807,7 +2807,7 @@
    "initiative": "=",
    "focus": 0,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Instant Additional"
    ],
    "type": "meditation"
@@ -2821,8 +2821,8 @@
    "initiative": "=",
    "focus": 0,
    "keywords": [
-    "Meditation",
-    "Instant Additional",
+	"Meditation",
+	"Instant Additional",
     "Prepared"
    ],
    "type": "meditation"
@@ -3044,7 +3044,7 @@
    "initiative": "9",
    "focus": 0,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Instant Replacement"
    ],
    "type": "meditation"
@@ -3058,8 +3058,8 @@
    "initiative": "-",
    "focus": 1,
    "keywords": [
-    "Meditation",
-    "Instant",
+	"Meditation",
+	"Instant",
     "Bushido"
    ],
    "type": "meditation"
@@ -3073,7 +3073,7 @@
    "initiative": "4",
    "focus": 0,
    "keywords": [
-    "Attack",
+	"Attack",
     "Range2"
    ],
    "type": "attack"
@@ -3152,9 +3152,9 @@
    "initiative": "5,4,3",
    "focus": 0,
    "keywords": [
-    "Shikomizue",
-    "Core",
-    "Defence",
+	"Shikomizue",
+	"Core",
+	"Defence",
     "Weapon"
    ],
    "type": "defence"
@@ -3168,7 +3168,7 @@
    "initiative": "5",
    "focus": 0,
    "keywords": [
-    "Attack",
+	"Attack",
     "Instant Replacement"
    ],
    "type": "attack"
@@ -3182,8 +3182,8 @@
    "initiative": "4",
    "focus": 1,
    "keywords": [
-    "Attack",
-    "Range4",
+	"Attack",
+	"Range4",
     "Prepared"
    ],
    "type": "attack"
@@ -3210,9 +3210,9 @@
    "initiative": "5",
    "focus": 0,
    "keywords": [
-    "Silver Frost",
-    "Core",
-    "Attack",
+	"Silver Frost",
+	"Core",
+	"Attack",
     "Weapon"
    ],
    "type": "attack"
@@ -3265,7 +3265,7 @@
    "initiative": "7",
    "focus": 1,
    "keywords": [
-    "Defence",
+	"Defence",
     "Prepared"
    ],
    "type": "defence"
@@ -3279,7 +3279,7 @@
    "initiative": "7",
    "focus": 1,
    "keywords": [
-    "Defence",
+	"Defence",
     "Prepared"
    ],
    "type": "defence"
@@ -3358,7 +3358,7 @@
    "initiative": "=",
    "focus": 1,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Instant Additional"
    ],
    "type": "meditation"
@@ -3372,7 +3372,7 @@
    "initiative": "=",
    "focus": 1,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Instant Additional"
    ],
    "type": "meditation"
@@ -3451,7 +3451,7 @@
    "initiative": "-",
    "focus": 2,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Instant"
    ],
    "type": "meditation"
@@ -3478,7 +3478,7 @@
    "initiative": "=",
    "focus": 2,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Instant Additional"
    ],
    "type": "meditation"
@@ -3518,7 +3518,7 @@
    "initiative": "8,7,6",
    "focus": 0,
    "keywords": [
-    "Defence",
+	"Defence",
     "Instant Replacement"
    ],
    "type": "defence"
@@ -3558,9 +3558,9 @@
    "initiative": "5",
    "focus": 0,
    "keywords": [
-    "Tachi",
-    "Core",
-    "Attack",
+	"Tachi",
+	"Core",
+	"Attack",
     "Weapon"
    ],
    "type": "attack"
@@ -3574,7 +3574,7 @@
    "initiative": "=",
    "focus": 0,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Instant Additional"
    ],
    "type": "meditation"
@@ -3588,9 +3588,9 @@
    "initiative": "5",
    "focus": 0,
    "keywords": [
-    "Tanto",
-    "Core",
-    "Attack",
+	"Tanto",
+	"Core",
+	"Attack",
     "Weapon"
    ],
    "type": "attack"
@@ -3604,8 +3604,8 @@
    "initiative": "=",
    "focus": 0,
    "keywords": [
-    "Meditation",
-    "Instant Additional",
+	"Meditation",
+	"Instant Additional",
     "Range5"
    ],
    "type": "meditation"
@@ -3619,7 +3619,7 @@
    "initiative": "=",
    "focus": 0,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Instant Additional"
    ],
    "type": "meditation"
@@ -3633,9 +3633,9 @@
    "initiative": "9,8,7",
    "focus": 0,
    "keywords": [
-    "Tessen",
-    "Core",
-    "Defence",
+	"Tessen",
+	"Core",
+	"Defence",
     "Weapon"
    ],
    "type": "defence"
@@ -3675,7 +3675,7 @@
    "initiative": "5",
    "focus": 2,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Range3"
    ],
    "type": "meditation"
@@ -3702,9 +3702,9 @@
    "initiative": "5,4,3",
    "focus": 0,
    "keywords": [
-    "Tonfa",
-    "Core",
-    "Defence",
+	"Tonfa",
+	"Core",
+	"Defence",
     "Weapon"
    ],
    "type": "defence"
@@ -3783,7 +3783,7 @@
    "initiative": "6",
    "focus": 0,
    "keywords": [
-    "Attack",
+	"Attack",
     "Instant Replacement"
    ],
    "type": "attack"
@@ -3810,7 +3810,7 @@
    "initiative": "=",
    "focus": 0,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Instant Additional"
    ],
    "type": "meditation"
@@ -3824,7 +3824,7 @@
    "initiative": "5",
    "focus": 1,
    "keywords": [
-    "Attack",
+	"Attack",
     "Instant Replacement"
    ],
    "type": "attack"
@@ -3864,7 +3864,7 @@
    "initiative": "3",
    "focus": 3,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Range3"
    ],
    "type": "meditation"
@@ -3891,9 +3891,9 @@
    "initiative": "4",
    "focus": 0,
    "keywords": [
-    "Wakizashi",
-    "Core",
-    "Attack",
+	"Wakizashi",
+	"Core",
+	"Attack",
     "Weapon"
    ],
    "type": "attack"
@@ -3946,7 +3946,7 @@
    "initiative": "7",
    "focus": 0,
    "keywords": [
-    "Meditation",
+	"Meditation",
     "Range5"
    ],
    "type": "meditation"
@@ -4090,7 +4090,7 @@
    "initiative": "7",
    "focus": 1,
    "keywords": [
-    "Attack",
+	"Attack",
     "Instant Replacement"
    ],
    "type": "attack"
@@ -4104,9 +4104,9 @@
    "initiative": "1",
    "focus": 0,
    "keywords": [
-    "Yari",
-    "Core",
-    "Attack",
+	"Yari",
+	"Core",
+	"Attack",
     "Weapon"
    ],
    "type": "attack"
@@ -4172,7 +4172,7 @@
    "initiative": "1",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -4186,7 +4186,7 @@
    "initiative": "6,5,4",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Defence"
    ],
    "type": "defence"
@@ -4200,7 +4200,7 @@
    "initiative": "1",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -4214,7 +4214,7 @@
    "initiative": "3",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -4228,8 +4228,8 @@
    "initiative": "7",
    "focus": 0,
    "keywords": [
-    "Solo",
-    "Meditation",
+	"Solo",
+	"Meditation",
     "Nightmare"
    ],
    "type": "meditation"
@@ -4243,7 +4243,7 @@
    "initiative": "9,8,7,6,5",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Defence"
    ],
    "type": "defence"
@@ -4257,7 +4257,7 @@
    "initiative": "8",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -4271,7 +4271,7 @@
    "initiative": "7",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -4285,7 +4285,7 @@
    "initiative": "5",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Meditation"
    ],
    "type": "meditation"
@@ -4299,8 +4299,8 @@
    "initiative": "6",
    "focus": 0,
    "keywords": [
-    "Solo",
-    "Attack",
+	"Solo",
+	"Attack",
     "Nightmare"
    ],
    "type": "attack"
@@ -4314,7 +4314,7 @@
    "initiative": "1",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -4328,7 +4328,7 @@
    "initiative": "1",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -4342,7 +4342,7 @@
    "initiative": "5,4",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Defence"
    ],
    "type": "defence"
@@ -4356,7 +4356,7 @@
    "initiative": "5",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -4370,8 +4370,8 @@
    "initiative": "6",
    "focus": 0,
    "keywords": [
-    "Solo",
-    "Attack",
+	"Solo",
+	"Attack",
     "Nightmare"
    ],
    "type": "attack"
@@ -4385,7 +4385,7 @@
    "initiative": "9",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -4399,7 +4399,7 @@
    "initiative": "-",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Meditation"
    ],
    "type": "meditation"
@@ -4413,7 +4413,7 @@
    "initiative": "-",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -4427,7 +4427,7 @@
    "initiative": "7",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -4441,8 +4441,8 @@
    "initiative": "6",
    "focus": 0,
    "keywords": [
-    "Solo",
-    "Attack",
+	"Solo",
+	"Attack",
     "Nightmare"
    ],
    "type": "attack"
@@ -4456,7 +4456,7 @@
    "initiative": "5",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -4470,7 +4470,7 @@
    "initiative": "8,7,6,5,4",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Defence"
    ],
    "type": "defence"
@@ -4484,7 +4484,7 @@
    "initiative": "7",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -4498,7 +4498,7 @@
    "initiative": "7",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -4512,9 +4512,9 @@
    "initiative": "3",
    "focus": 0,
    "keywords": [
-    "Solo",
-    "Attack",
-    "Range",
+	"Solo",
+	"Attack",
+	"Range",
     "Nightmare"
    ],
    "type": "attack"
@@ -4528,7 +4528,7 @@
    "initiative": "3",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -4542,7 +4542,7 @@
    "initiative": "9",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -4556,7 +4556,7 @@
    "initiative": "-",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Defence"
    ],
    "type": "defence"
@@ -4570,7 +4570,7 @@
    "initiative": "1",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -4584,8 +4584,8 @@
    "initiative": "1",
    "focus": 0,
    "keywords": [
-    "Solo",
-    "Attack",
+	"Solo",
+	"Attack",
     "Nightmare"
    ],
    "type": "attack"
@@ -4599,7 +4599,7 @@
    "initiative": "6",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -4613,8 +4613,8 @@
    "initiative": "6",
    "focus": 0,
    "keywords": [
-    "Solo",
-    "Defence",
+	"Solo",
+	"Defence",
     "Range"
    ],
    "type": "defence"
@@ -4628,8 +4628,8 @@
    "initiative": "7",
    "focus": 0,
    "keywords": [
-    "Solo",
-    "Defence",
+	"Solo",
+	"Defence",
     "Range"
    ],
    "type": "defence"
@@ -4643,7 +4643,7 @@
    "initiative": "7",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -4657,7 +4657,7 @@
    "initiative": "7",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -4671,7 +4671,7 @@
    "initiative": "3",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Defence"
    ],
    "type": "defence"
@@ -4685,7 +4685,7 @@
    "initiative": "1",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -4699,7 +4699,7 @@
    "initiative": "-",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -4713,7 +4713,7 @@
    "initiative": "-",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Meditation"
    ],
    "type": "meditation"
@@ -4727,8 +4727,8 @@
    "initiative": "9",
    "focus": 0,
    "keywords": [
-    "Solo",
-    "Attack",
+	"Solo",
+	"Attack",
     "Nightmare"
    ],
    "type": "attack"
@@ -4742,7 +4742,7 @@
    "initiative": "7",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Meditation"
    ],
    "type": "meditation"
@@ -4756,7 +4756,7 @@
    "initiative": "7",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Meditation"
    ],
    "type": "meditation"
@@ -4770,7 +4770,7 @@
    "initiative": "6",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -4784,7 +4784,7 @@
    "initiative": "3",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -4798,8 +4798,8 @@
    "initiative": "7",
    "focus": 0,
    "keywords": [
-    "Solo",
-    "Attack",
+	"Solo",
+	"Attack",
     "Nightmare"
    ],
    "type": "attack"
@@ -4813,7 +4813,7 @@
    "initiative": "-",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -4827,7 +4827,7 @@
    "initiative": "-",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Meditation"
    ],
    "type": "meditation"
@@ -4841,7 +4841,7 @@
    "initiative": "8",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -4855,7 +4855,7 @@
    "initiative": "1",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Defence"
    ],
    "type": "defence"
@@ -4869,8 +4869,8 @@
    "initiative": "8",
    "focus": 0,
    "keywords": [
-    "Solo",
-    "Attack",
+	"Solo",
+	"Attack",
     "Nightmare"
    ],
    "type": "attack"
@@ -4884,7 +4884,7 @@
    "initiative": "-",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Meditation"
    ],
    "type": "meditation"
@@ -4898,7 +4898,7 @@
    "initiative": "7",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Defence"
    ],
    "type": "defence"
@@ -4912,7 +4912,7 @@
    "initiative": "7",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -4926,8 +4926,8 @@
    "initiative": "1",
    "focus": 0,
    "keywords": [
-    "Solo",
-    "Attack",
+	"Solo",
+	"Attack",
     "Range"
    ],
    "type": "attack"
@@ -4941,7 +4941,7 @@
    "initiative": "-",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -4955,9 +4955,9 @@
    "initiative": "7",
    "focus": 0,
    "keywords": [
-    "Solo",
-    "Attack",
-    "Range",
+	"Solo",
+	"Attack",
+	"Range",
     "Nightmare"
    ],
    "type": "attack"
@@ -4971,7 +4971,7 @@
    "initiative": "6",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -4985,7 +4985,7 @@
    "initiative": "4",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -4999,7 +4999,7 @@
    "initiative": "7,6,5,4,3",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Defence"
    ],
    "type": "defence"
@@ -5013,7 +5013,7 @@
    "initiative": "4",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Meditation"
    ],
    "type": "meditation"
@@ -5027,8 +5027,8 @@
    "initiative": "7",
    "focus": 0,
    "keywords": [
-    "Solo",
-    "Attack",
+	"Solo",
+	"Attack",
     "Nightmare"
    ],
    "type": "attack"
@@ -5042,7 +5042,7 @@
    "initiative": "7",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -5056,7 +5056,7 @@
    "initiative": "8",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -5070,8 +5070,8 @@
    "initiative": "-",
    "focus": 0,
    "keywords": [
-    "Solo",
-    "Attack",
+	"Solo",
+	"Attack",
     "Range"
    ],
    "type": "attack"
@@ -5085,7 +5085,7 @@
    "initiative": "7,6,5,4,3",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Defence"
    ],
    "type": "defence"
@@ -5099,7 +5099,7 @@
    "initiative": "3",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -5113,7 +5113,7 @@
    "initiative": "7",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Defence"
    ],
    "type": "defence"
@@ -5127,7 +5127,7 @@
    "initiative": "7",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -5141,8 +5141,8 @@
    "initiative": "9",
    "focus": 0,
    "keywords": [
-    "Solo",
-    "Attack",
+	"Solo",
+	"Attack",
     "Nightmare"
    ],
    "type": "attack"
@@ -5156,7 +5156,7 @@
    "initiative": "7",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -5170,7 +5170,7 @@
    "initiative": "5",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -5184,7 +5184,7 @@
    "initiative": "5",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -5198,7 +5198,7 @@
    "initiative": "9,8,7,6",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Defence"
    ],
    "type": "defence"
@@ -5212,8 +5212,8 @@
    "initiative": "8",
    "focus": 0,
    "keywords": [
-    "Solo",
-    "Attack",
+	"Solo",
+	"Attack",
     "Nightmare"
    ],
    "type": "attack"
@@ -5227,7 +5227,7 @@
    "initiative": "4",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -5241,7 +5241,7 @@
    "initiative": "6",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -5255,7 +5255,7 @@
    "initiative": "5",
    "focus": 0,
    "keywords": [
-    "Solo",
+	"Solo",
     "Attack"
    ],
    "type": "attack"
@@ -5269,8 +5269,8 @@
    "initiative": "9,8,7,6,5,4,3,2",
    "focus": 0,
    "keywords": [
-    "Solo",
-    "Attack",
+	"Solo",
+	"Attack",
     "Nightmare"
    ],
    "type": "attack"
@@ -5284,8 +5284,8 @@
    "initiative": "-",
    "focus": 0,
    "keywords": [
-    "Solo",
-    "Attack",
+	"Solo",
+	"Attack",
     "Nightmare"
    ],
    "type": "attack"
@@ -5299,8 +5299,8 @@
    "initiative": "-",
    "focus": 0,
    "keywords": [
-    "Solo",
-    "Attack",
+	"Solo",
+	"Attack",
     "Nightmare"
    ],
    "type": "attack"
@@ -5314,8 +5314,8 @@
    "initiative": "-",
    "focus": 0,
    "keywords": [
-    "Solo",
-    "Attack",
+	"Solo",
+	"Attack",
     "Nightmare"
    ],
    "type": "attack"
@@ -5329,8 +5329,8 @@
    "initiative": "-",
    "focus": 0,
    "keywords": [
-    "Solo",
-    "Attack",
+	"Solo",
+	"Attack",
     "Nightmare"
    ],
    "type": "attack"
@@ -5344,8 +5344,8 @@
    "initiative": "8",
    "focus": 0,
    "keywords": [
-    "Solo",
-    "Attack",
+	"Solo",
+	"Attack",
     "Nightmare"
    ],
    "type": "attack"
@@ -5359,8 +5359,8 @@
    "initiative": "7",
    "focus": 0,
    "keywords": [
-    "Solo",
-    "Attack",
+	"Solo",
+	"Attack",
     "Nightmare"
    ],
    "type": "attack"
@@ -5374,8 +5374,8 @@
    "initiative": "-",
    "focus": 0,
    "keywords": [
-    "Solo",
-    "Meditation",
+	"Solo",
+	"Meditation",
     "Nightmare"
    ],
    "type": "meditation"
