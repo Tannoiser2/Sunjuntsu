@@ -1647,11 +1647,17 @@
    },
    "effects": [
 	{
+	 "do": "foe_stun",
+	 "n": 1,
+	 "when": "on_hit",
+	 "focus_cost": 1
+	},
+	{
 	 "do": "discard_self",
 	 "n": 1
 	}
    ],
-   "note": "Split init 2: ❄1 ↻1 (❄ = marcatore-àncora, non un passo). Celle: d0,d5 ferite, d4 asterisco (*). Barra viola (focus) sull'asterisco. SCARTA 1 carta."
+   "note": "Split init 2: ❄1 ↻1 (❄ = marcatore-àncora, non un passo). Celle: d0,d5 ferite, d4 asterisco (*) = stordimento bersaglio con 1 focus (barra viola). SCARTA 1 carta."
   },
   "89": {
    "name": "BLOCCO D'EMERGENZA",
