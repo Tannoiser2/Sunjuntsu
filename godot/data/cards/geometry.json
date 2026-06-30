@@ -1033,9 +1033,16 @@
 	  "atoms": [
 	   {
 		"t": "step",
+		"dirs": [
+		 0,
+		 1,
+		 2,
+		 3,
+		 4,
+		 5
+		],
 		"n": 1,
-		"opt": true,
-		"dir": -1
+		"opt": true
 	   },
 	   {
 		"t": "rot",
@@ -1048,31 +1055,84 @@
    },
    "effects": [
 	{
-	 "do": "discard_self",
-	 "n": 1
-	},
-	{
 	 "do": "draw",
 	 "n": 2,
 	 "alt": "a"
 	},
 	{
-	 "do": "search_draw",
-	 "n": 1,
-	 "alt": "b"
+	 "do": "stun_self",
+	 "n": 1
 	},
 	{
-	 "do": "switch_kamae",
+	 "do": "change_kamae",
 	 "to": "any",
 	 "alt": "b"
 	},
 	{
-	 "do": "change_kamae",
+	 "do": "switch_kamae",
 	 "n": 1,
-	 "alt": "c"
+	 "alt": "b"
 	}
    ],
-   "note": "Costo: SCARTA 1 CARTA. Movimento ❄1 ↻2 (❄ = marcatore-àncora). OPPURE: pesca 2 / prendi 1 attacco + passa a una qualsiasi Kamae / cambia Kamae fino a 1 ramo."
+   "layout": [
+	{
+	 "type": "initiative",
+	 "value": "0",
+	 "children": [
+	  {
+	   "type": "movement",
+	   "atoms": [
+		{
+		 "t": "step",
+		 "dirs": [
+		  0,
+		  1,
+		  2,
+		  3,
+		  4,
+		  5
+		 ],
+		 "n": 1,
+		 "opt": true
+		},
+		{
+		 "t": "rot",
+		 "n": 2,
+		 "opt": true
+		}
+	   ]
+	  },
+	  {
+	   "type": "oppure",
+	   "children": [
+		{
+		 "type": "effect",
+		 "do": "draw",
+		 "n": 2,
+		 "alt": "a"
+		},
+		{
+		 "type": "effect",
+		 "do": "stun_self",
+		 "n": 1
+		},
+		{
+		 "type": "effect",
+		 "do": "change_kamae",
+		 "to": "any",
+		 "alt": "b"
+		},
+		{
+		 "type": "effect",
+		 "do": "switch_kamae",
+		 "n": 1,
+		 "alt": "b"
+		}
+	   ]
+	  }
+	 ]
+	}
+   ]
   },
   "24": {
    "name": "VORTICE CREMISI",
@@ -1148,19 +1208,49 @@
    "effects": [
 	{
 	 "do": "reduce_damage",
-	 "n": 1
+	 "n": 1,
+	 "when": "always"
 	},
 	{
 	 "do": "focus",
 	 "n": 1,
-	 "kamae": "aggression"
+	 "when": "on_hit",
+	 "kamae": "determination"
 	},
 	{
 	 "do": "stun_self",
-	 "n": 1
+	 "n": 1,
+	 "when": "on_hit"
 	}
    ],
-   "note": "Persistente: riduce di 1 il danno subìto (min 1). Ogni volta che il danno è ridotto: OTTIENI 1 🪷 (barra arancio = Aggressività) e PRENDI 1 stordimento."
+   "layout": [
+	{
+	 "type": "initiative",
+	 "value": "=",
+	 "children": [
+	  {
+	   "type": "effect",
+	   "do": "reduce_damage",
+	   "n": 1,
+	   "when": "always"
+	  },
+	  {
+	   "type": "effect",
+	   "cond": "determination",
+	   "do": "focus",
+	   "n": 1,
+	   "when": "on_hit",
+	   "kamae": "determination"
+	  },
+	  {
+	   "type": "effect",
+	   "do": "stun_self",
+	   "n": 1,
+	   "when": "on_hit"
+	  }
+	 ]
+	}
+   ]
   },
   "26": {
    "name": "CARICA DEL TORO",
@@ -1183,13 +1273,13 @@
 	{
 	 "cells": [
 	  {
-	   "d": 5,
-	   "k": 1,
+	   "q": 1,
+	   "r": -1,
 	   "w": 2
 	  },
 	  {
-	   "d": 1,
-	   "k": 1,
+	   "q": 1,
+	   "r": 0,
 	   "w": 2
 	  }
 	 ],
@@ -1197,7 +1287,6 @@
 	}
    ],
    "split": {
-	"initiative": 5,
 	"move": {
 	 "opts": [
 	  {
@@ -1215,18 +1304,98 @@
 	"attack": {
 	 "cells": [
 	  {
-	   "d": 5,
-	   "k": 1,
+	   "q": 1,
+	   "r": 0,
 	   "w": 1
 	  },
 	  {
-	   "d": 0,
-	   "k": 1,
+	   "q": 0,
+	   "r": 1,
 	   "w": 1
 	  }
 	 ]
+	},
+	"initiative": 5
+   },
+   "layout": [
+	{
+	 "type": "initiative",
+	 "cond": "aggression",
+	 "value": "7",
+	 "children": [
+	  {
+	   "type": "movement",
+	   "cond": "aggression",
+	   "atoms": [
+		{
+		 "t": "step",
+		 "dir": 0,
+		 "n": 1,
+		 "opt": false
+		}
+	   ]
+	  },
+	  {
+	   "type": "combat",
+	   "cond": "aggression",
+	   "attack": {
+		"cells": [
+		 {
+		  "q": 1,
+		  "r": -1,
+		  "w": 2
+		 },
+		 {
+		  "q": 1,
+		  "r": 0,
+		  "w": 2
+		 }
+		]
+	   },
+	   "defence": {
+		"cells": []
+	   }
+	  }
+	 ]
+	},
+	{
+	 "type": "initiative",
+	 "value": "5",
+	 "children": [
+	  {
+	   "type": "movement",
+	   "atoms": [
+		{
+		 "t": "step",
+		 "dir": 0,
+		 "n": 1,
+		 "opt": false
+		}
+	   ]
+	  },
+	  {
+	   "type": "combat",
+	   "attack": {
+		"cells": [
+		 {
+		  "q": 1,
+		  "r": 0,
+		  "w": 1
+		 },
+		 {
+		  "q": 0,
+		  "r": 1,
+		  "w": 1
+		 }
+		]
+	   },
+	   "defence": {
+		"cells": []
+	   }
+	  }
+	 ]
 	}
-   }
+   ]
   },
   "27": {
    "name": "AFFONDO INVERTITO DI ZANNA",
@@ -1238,11 +1407,12 @@
 	   {
 		"t": "step",
 		"dirs": [
-		 0,
-		 3
+		 2,
+		 3,
+		 4
 		],
 		"n": 1,
-		"opt": true
+		"opt": false
 	   }
 	  ]
 	 }
@@ -1251,8 +1421,8 @@
    "attack": {
 	"cells": [
 	 {
-	  "d": 0,
-	  "k": 1,
+	  "q": 2,
+	  "r": 0,
 	  "w": 2
 	 }
 	]
@@ -1264,75 +1434,68 @@
 	 "when": "on_hit",
 	 "kamae": "aggression"
 	}
+   ],
+   "layout": [
+	{
+	 "type": "initiative",
+	 "value": "7",
+	 "children": [
+	  {
+	   "type": "movement",
+	   "atoms": [
+		{
+		 "t": "step",
+		 "dirs": [
+		  2,
+		  3,
+		  4
+		 ],
+		 "n": 1,
+		 "opt": false
+		}
+	   ]
+	  },
+	  {
+	   "type": "combat",
+	   "attack": {
+		"cells": [
+		 {
+		  "q": 2,
+		  "r": 0,
+		  "w": 2
+		 }
+		]
+	   },
+	   "defence": {
+		"cells": []
+	   }
+	  },
+	  {
+	   "type": "effect",
+	   "cond": "aggression",
+	   "do": "push",
+	   "n": 1,
+	   "when": "on_hit",
+	   "kamae": "aggression"
+	  }
+	 ]
+	}
    ]
   },
   "28": {
    "name": "IL TERRORE",
    "type": "meditation",
-   "split": {
-	"initiative": 3,
-	"move": {
-	 "opts": [
-	  {
-	   "atoms": [
-		{
-		 "t": "step",
-		 "n": 2,
-		 "opt": false,
-		 "kamae": "aggression",
-		 "dir": -1
-		},
-		{
-		 "t": "rot",
-		 "n": 2,
-		 "opt": false,
-		 "kamae": "aggression"
-		}
-	   ]
-	  }
-	 ]
-	}
-   },
    "effects": [
 	{
 	 "do": "cancel_abilities"
 	},
 	{
-	 "do": "rotate_target",
+	 "do": "foe_stun",
 	 "n": 1
 	}
    ],
-   "note": "Distanza 3; ogni avversario annulla abilità attive e cambia orientamento. Barra arancio (Aggressività): ❄2 ↻2 — il ❄ è un marcatore-àncora sulla Griglia di Posizione (non un movimento)."
-  },
-  "29": {
-   "name": "SPAZZATA FEROCE",
-   "type": "attack",
-   "attack": {
-	"cells": [
-	 {
-	  "d": 5,
-	  "k": 1,
-	  "w": 1
-	 },
-	 {
-	  "d": 0,
-	  "k": 1,
-	  "w": 1
-	 },
-	 {
-	  "d": 1,
-	  "k": 1,
-	  "w": 1
-	 },
-	 {
-	  "d": 2,
-	  "k": 1,
-	  "w": 1
-	 }
-	]
-   },
+   "note": "Distanza 3; ogni avversario annulla abilità attive e cambia orientamento. Barra arancio (Aggressività): ❄2 ↻2 — il ❄ è un marcatore-àncora sulla Griglia di Posizione (non un movimento).",
    "split": {
-	"initiative": 1,
 	"move": {
 	 "opts": [
 	  {
@@ -1341,21 +1504,201 @@
 		 "t": "step",
 		 "dirs": [
 		  0,
-		  3
+		  1,
+		  2,
+		  3,
+		  4,
+		  5
 		 ],
-		 "n": 1,
-		 "opt": false
+		 "n": 2,
+		 "opt": true,
+		 "kamae": "aggression"
+		},
+		{
+		 "t": "rot",
+		 "n": 2,
+		 "opt": true,
+		 "kamae": "aggression"
+		}
+	   ]
+	  }
+	 ]
+	},
+	"initiative": 3
+   },
+   "layout": [
+	{
+	 "type": "initiative",
+	 "value": "5",
+	 "children": [
+	  {
+	   "type": "effect",
+	   "do": "cancel_abilities"
+	  },
+	  {
+	   "type": "effect",
+	   "do": "foe_stun",
+	   "n": 1
+	  },
+	  {
+	   "type": "note",
+	   "text": "Distanza 3; ogni avversario annulla abilità attive e cambia orientamento. Barra arancio (Aggressività): ❄2 ↻2 — il ❄ è un marcatore-àncora sulla Griglia di Posizione (non un movimento)."
+	  }
+	 ]
+	},
+	{
+	 "type": "initiative",
+	 "cond": "aggression",
+	 "value": "3",
+	 "children": [
+	  {
+	   "type": "movement",
+	   "atoms": [
+		{
+		 "t": "step",
+		 "dirs": [
+		  0,
+		  1,
+		  2,
+		  3,
+		  4,
+		  5
+		 ],
+		 "n": 2,
+		 "opt": true,
+		 "kamae": "aggression"
+		},
+		{
+		 "t": "rot",
+		 "n": 2,
+		 "opt": true,
+		 "kamae": "aggression"
 		}
 	   ]
 	  }
 	 ]
 	}
+   ]
+  },
+  "29": {
+   "name": "SPAZZATA FEROCE",
+   "type": "attack",
+   "attack": {
+	"cells": [
+	 {
+	  "q": 0,
+	  "r": -1,
+	  "w": 1
+	 },
+	 {
+	  "q": 1,
+	  "r": -1,
+	  "w": 1
+	 },
+	 {
+	  "q": 2,
+	  "r": -1,
+	  "w": 1
+	 },
+	 {
+	  "q": 2,
+	  "r": 0,
+	  "w": 1
+	 }
+	]
    },
-   "effects": [
+   "split": {
+	"move": {
+	 "opts": [
+	  {
+	   "atoms": [
+		{
+		 "t": "step",
+		 "dirs": [
+		  2,
+		  3,
+		  4
+		 ],
+		 "n": 1,
+		 "opt": true
+		}
+	   ]
+	  }
+	 ]
+	},
+	"effects": [
+	 {
+	  "do": "change_kamae",
+	  "kamae": "determination",
+	  "to": "aggression"
+	 }
+	],
+	"initiative": 1
+   },
+   "layout": [
 	{
-	 "do": "switch_kamae",
-	 "to": "aggression",
-	 "focus_cost": 1
+	 "type": "initiative",
+	 "value": "6",
+	 "children": [
+	  {
+	   "type": "combat",
+	   "attack": {
+		"cells": [
+		 {
+		  "q": 0,
+		  "r": -1,
+		  "w": 1
+		 },
+		 {
+		  "q": 1,
+		  "r": -1,
+		  "w": 1
+		 },
+		 {
+		  "q": 2,
+		  "r": -1,
+		  "w": 1
+		 },
+		 {
+		  "q": 2,
+		  "r": 0,
+		  "w": 1
+		 }
+		]
+	   },
+	   "defence": {
+		"cells": []
+	   }
+	  }
+	 ]
+	},
+	{
+	 "type": "initiative",
+	 "value": "1",
+	 "children": [
+	  {
+	   "type": "movement",
+	   "atoms": [
+		{
+		 "t": "step",
+		 "dirs": [
+		  2,
+		  3,
+		  4
+		 ],
+		 "n": 1,
+		 "opt": true
+		}
+	   ]
+	  },
+	  {
+	   "type": "effect",
+	   "cond": "determination",
+	   "do": "change_kamae",
+	   "kamae": "determination",
+	   "to": "aggression"
+	  }
+	 ]
 	}
    ]
   },
@@ -1369,26 +1712,63 @@
 	 "when": "on_hit"
 	}
    ],
-   "note": "Istantanea: gioca se l'attacco è riuscito → 1 ferita diventa sanguinante."
+   "layout": [
+	{
+	 "type": "initiative",
+	 "cond": "aggression",
+	 "value": "=",
+	 "children": [
+	  {
+	   "type": "kamae",
+	   "cond": "aggression",
+	   "req": "aggression"
+	  },
+	  {
+	   "type": "effect",
+	   "do": "replace_wound_bleed",
+	   "when": "on_hit"
+	  }
+	 ]
+	}
+   ]
   },
   "31": {
    "name": "DIFESA D'ACCIAIO",
    "type": "defence",
+   "move": {
+	"opts": [
+	 {
+	  "atoms": [
+	   {
+		"t": "step",
+		"dir": 0,
+		"n": 1,
+		"opt": true
+	   },
+	   {
+		"t": "rot",
+		"n": 1,
+		"opt": false
+	   }
+	  ]
+	 }
+	]
+   },
    "defence": {
 	"cells": [
 	 {
-	  "d": 5,
-	  "k": 1,
+	  "q": 1,
+	  "r": -1,
 	  "v": 1
 	 },
 	 {
-	  "d": 0,
-	  "k": 1,
+	  "q": 1,
+	  "r": 0,
 	  "v": 1
 	 },
 	 {
-	  "d": 1,
-	  "k": 1,
+	  "q": 0,
+	  "r": 1,
 	  "v": 1
 	 }
 	]
@@ -1401,7 +1781,8 @@
    "effects": [
 	{
 	 "do": "rotate_target",
-	 "n": 1
+	 "n": 1,
+	 "when": "on_hit"
 	},
 	{
 	 "do": "change_kamae",
@@ -1409,19 +1790,92 @@
 	 "kamae": "determination"
 	}
    ],
-   "note": "Difesa d0,d5,d1 (arco frontale); counter 6/5/4. Se riuscito: ruota bersaglio ↻1; barra arancio (Aggressività) ↥1 ↻1 (movimento in difesa, non modellato); barra gialla (Determinazione) cambia Kamae fino a 2 rami."
+   "layout": [
+	{
+	 "type": "initiative",
+	 "value": "7,6,5,4,3",
+	 "children": [
+	  {
+	   "type": "combat",
+	   "attack": {
+		"cells": []
+	   },
+	   "defence": {
+		"cells": [
+		 {
+		  "q": 1,
+		  "r": -1,
+		  "v": 1
+		 },
+		 {
+		  "q": 1,
+		  "r": 0,
+		  "v": 1
+		 },
+		 {
+		  "q": 0,
+		  "r": 1,
+		  "v": 1
+		 }
+		]
+	   }
+	  },
+	  {
+	   "type": "counter",
+	   "values": [
+		6,
+		5,
+		4
+	   ]
+	  },
+	  {
+	   "type": "effect",
+	   "do": "rotate_target",
+	   "n": 1,
+	   "when": "on_hit"
+	  },
+	  {
+	   "type": "effect",
+	   "cond": "determination",
+	   "do": "change_kamae",
+	   "n": 2,
+	   "kamae": "determination"
+	  },
+	  {
+	   "type": "movement",
+	   "cond": "determination",
+	   "atoms": [
+		{
+		 "t": "step",
+		 "dir": 0,
+		 "n": 1,
+		 "opt": true
+		},
+		{
+		 "t": "rot",
+		 "n": 1,
+		 "opt": false
+		}
+	   ]
+	  }
+	 ]
+	}
+   ]
   },
   "32": {
    "name": "BALZO DEL LUPO",
    "type": "attack",
-   "wound_kind": "bleed",
    "move": {
 	"opts": [
 	 {
 	  "atoms": [
 	   {
 		"t": "step",
-		"dir": -1,
+		"dirs": [
+		 0,
+		 1,
+		 5
+		],
 		"n": 1,
 		"opt": false
 	   }
@@ -1432,20 +1886,63 @@
    "attack": {
 	"cells": [
 	 {
-	  "d": 0,
-	  "k": 1,
-	  "w": 1
+	  "q": 1,
+	  "r": 0,
+	  "w": "bleed"
 	 }
 	]
    },
    "effects": [
 	{
-	 "do": "push",
+	 "do": "foe_stun",
 	 "n": 1,
 	 "when": "on_hit"
 	}
    ],
-   "note": "Istantanea di sostituzione. 'avversario movimento' approssimato a spinta 1."
+   "layout": [
+	{
+	 "type": "initiative",
+	 "value": "7",
+	 "children": [
+	  {
+	   "type": "movement",
+	   "atoms": [
+		{
+		 "t": "step",
+		 "dirs": [
+		  0,
+		  1,
+		  5
+		 ],
+		 "n": 1,
+		 "opt": false
+		}
+	   ]
+	  },
+	  {
+	   "type": "combat",
+	   "attack": {
+		"cells": [
+		 {
+		  "q": 1,
+		  "r": 0,
+		  "w": "bleed"
+		 }
+		]
+	   },
+	   "defence": {
+		"cells": []
+	   }
+	  },
+	  {
+	   "type": "effect",
+	   "do": "foe_stun",
+	   "n": 1,
+	   "when": "on_hit"
+	  }
+	 ]
+	}
+   ]
   },
   "33": {
    "name": "COLPO ALLE CAVIGLIE",
@@ -1458,7 +1955,8 @@
 		"t": "step",
 		"dirs": [
 		 0,
-		 3
+		 1,
+		 5
 		],
 		"n": 1,
 		"opt": false
@@ -1475,19 +1973,18 @@
    "attack": {
 	"cells": [
 	 {
-	  "d": 0,
-	  "k": 1,
+	  "q": 2,
+	  "r": -1,
 	  "w": 1
 	 },
 	 {
-	  "d": 1,
-	  "k": 1,
+	  "q": 2,
+	  "r": 0,
 	  "w": 1
 	 }
 	]
    },
    "split": {
-	"initiative": 2,
 	"move": {
 	 "opts": [
 	  {
@@ -1495,24 +1992,103 @@
 		{
 		 "t": "rot",
 		 "n": 1,
-		 "opt": false
+		 "opt": true
 		}
 	   ]
 	  }
 	 ]
-	}
+	},
+	"effects": [
+	 {
+	  "do": "draw",
+	  "n": 1,
+	  "alt": "a"
+	 },
+	 {
+	  "do": "draw",
+	  "n": 2,
+	  "kamae": "balance",
+	  "alt": "b"
+	 }
+	],
+	"initiative": 2
    },
-   "effects": [
+   "layout": [
 	{
-	 "do": "draw",
-	 "n": 1,
-	 "alt": "a"
+	 "type": "initiative",
+	 "value": "3",
+	 "children": [
+	  {
+	   "type": "movement",
+	   "atoms": [
+		{
+		 "t": "step",
+		 "dirs": [
+		  0,
+		  1,
+		  5
+		 ],
+		 "n": 1,
+		 "opt": false
+		},
+		{
+		 "t": "rot",
+		 "n": 1,
+		 "opt": false
+		}
+	   ]
+	  },
+	  {
+	   "type": "combat",
+	   "attack": {
+		"cells": [
+		 {
+		  "q": 2,
+		  "r": -1,
+		  "w": 1
+		 },
+		 {
+		  "q": 2,
+		  "r": 0,
+		  "w": 1
+		 }
+		]
+	   },
+	   "defence": {
+		"cells": []
+	   }
+	  }
+	 ]
 	},
 	{
-	 "do": "draw",
-	 "n": 2,
-	 "kamae": "balance",
-	 "alt": "b"
+	 "type": "initiative",
+	 "value": "2",
+	 "children": [
+	  {
+	   "type": "movement",
+	   "atoms": [
+		{
+		 "t": "rot",
+		 "n": 1,
+		 "opt": true
+		}
+	   ]
+	  },
+	  {
+	   "type": "effect",
+	   "do": "draw",
+	   "n": 1,
+	   "alt": "a"
+	  },
+	  {
+	   "type": "effect",
+	   "cond": "balance",
+	   "do": "draw",
+	   "n": 2,
+	   "kamae": "balance",
+	   "alt": "b"
+	  }
+	 ]
 	}
    ]
   },
@@ -1525,14 +2101,18 @@
 	  "atoms": [
 	   {
 		"t": "step",
-		"dir": 3,
+		"dirs": [
+		 2,
+		 3,
+		 4
+		],
 		"n": 1,
-		"opt": false
+		"opt": true
 	   },
 	   {
 		"t": "rot",
 		"n": 1,
-		"opt": false
+		"opt": true
 	   }
 	  ]
 	 },
@@ -1540,15 +2120,22 @@
 	  "atoms": [
 	   {
 		"t": "step",
+		"dirs": [
+		 0,
+		 1,
+		 2,
+		 3,
+		 4,
+		 5
+		],
 		"n": 1,
-		"opt": false,
-		"kamae": "balance",
-		"dir": -1
+		"opt": true,
+		"kamae": "balance"
 	   },
 	   {
 		"t": "rot",
 		"n": 2,
-		"opt": false,
+		"opt": true,
 		"kamae": "balance"
 	   }
 	  ]
@@ -1565,12 +2152,79 @@
 	 "n": 3
 	}
    ],
-   "note": "Alternativa OPPURE verde (Equilibrio): ❄1 ↻2 — il ❄ è un marcatore-àncora sulla Griglia di Posizione (non un passo). \"OTTIENI 1 🪷\" = +1 focus."
+   "layout": [
+	{
+	 "type": "initiative",
+	 "value": "3",
+	 "children": [
+	  {
+	   "type": "initiative",
+	   "cond": "aggression",
+	   "value": "5",
+	   "children": []
+	  },
+	  {
+	   "type": "movement",
+	   "atoms": [
+		{
+		 "t": "step",
+		 "dirs": [
+		  2,
+		  3,
+		  4
+		 ],
+		 "n": 1,
+		 "opt": true
+		},
+		{
+		 "t": "rot",
+		 "n": 1,
+		 "opt": true
+		}
+	   ]
+	  },
+	  {
+	   "type": "movement",
+	   "atoms": [
+		{
+		 "t": "step",
+		 "dirs": [
+		  0,
+		  1,
+		  2,
+		  3,
+		  4,
+		  5
+		 ],
+		 "n": 1,
+		 "opt": true,
+		 "kamae": "balance"
+		},
+		{
+		 "t": "rot",
+		 "n": 2,
+		 "opt": true,
+		 "kamae": "balance"
+		}
+	   ]
+	  },
+	  {
+	   "type": "effect",
+	   "do": "focus",
+	   "n": 1
+	  },
+	  {
+	   "type": "effect",
+	   "do": "draw",
+	   "n": 3
+	  }
+	 ]
+	}
+   ]
   },
   "35": {
    "name": "CHIATTA DI BUOI",
    "type": "attack",
-   "non_blockable": true,
    "move": {
 	"opts": [
 	 {
@@ -1600,8 +2254,8 @@
    "attack": {
 	"cells": [
 	 {
-	  "d": 0,
-	  "k": 1,
+	  "q": 1,
+	  "r": 0,
 	  "w": 0
 	 }
 	]
@@ -1627,7 +2281,75 @@
 	 "to": "aggression"
 	}
    ],
-   "note": "Non bloccabile. Movimento ↥1 POI ↥1; barra viola (focus) ↻1. Cella d0 = asterisco (*) = stordimento bersaglio (0 ferite). Se riuscito: stordisce, ruota bersaglio ↻1 e SPINGI 1; \"PASSA A\" aggression."
+   "layout": [
+	{
+	 "type": "initiative",
+	 "value": "5",
+	 "children": [
+	  {
+	   "type": "movement",
+	   "atoms": [
+		{
+		 "t": "step",
+		 "dir": 0,
+		 "n": 1,
+		 "opt": false
+		},
+		{
+		 "t": "step",
+		 "dir": 0,
+		 "n": 1,
+		 "opt": true
+		},
+		{
+		 "t": "rot",
+		 "n": 1,
+		 "opt": true,
+		 "focus_cost": 1
+		}
+	   ]
+	  },
+	  {
+	   "type": "combat",
+	   "attack": {
+		"cells": [
+		 {
+		  "q": 1,
+		  "r": 0,
+		  "w": 0
+		 }
+		]
+	   },
+	   "defence": {
+		"cells": []
+	   }
+	  },
+	  {
+	   "type": "effect",
+	   "do": "foe_stun",
+	   "n": 1,
+	   "when": "on_hit"
+	  },
+	  {
+	   "type": "effect",
+	   "do": "rotate_target",
+	   "n": 1,
+	   "when": "on_hit"
+	  },
+	  {
+	   "type": "effect",
+	   "do": "push",
+	   "n": 1,
+	   "when": "on_hit"
+	  },
+	  {
+	   "type": "effect",
+	   "do": "switch_kamae",
+	   "to": "aggression"
+	  }
+	 ]
+	}
+   ]
   },
   "71": {
    "name": "SPAZZATA DI NAGINATA",
