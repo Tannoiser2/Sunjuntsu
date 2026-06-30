@@ -711,7 +711,9 @@
 	 {
 	  "d": 0,
 	  "k": 1,
-	  "w": 0
+	  "w": 0,
+	  "focus_cost": 1,
+	  "w_focus": 1
 	 }
 	]
    },
@@ -725,7 +727,7 @@
 	 "n": 1
 	}
    ],
-   "note": "Asterisco Fronte: 1 ferita spendendo 1 focus (barra viola) — DA IMPLEMENTARE (focus_cost su celle attacco non supportato dal motore). Iniziativa alt 7 in Aggressività."
+   "note": "Asterisco Fronte: 0 ferite automatiche, +1 ferita spendendo 1 focus (barra viola). Iniziativa alt 7 in Aggressività."
   },
   "87": {
    "name": "SABBIA NEGLI OCCHI",
