@@ -1581,6 +1581,11 @@
    },
    "effects": [
 	{
+	 "do": "foe_stun",
+	 "n": 1,
+	 "when": "on_hit"
+	},
+	{
 	 "do": "rotate_target",
 	 "n": 1,
 	 "when": "on_hit"
@@ -1595,7 +1600,7 @@
 	 "to": "aggression"
 	}
    ],
-   "note": "Non bloccabile. Movimento ↥1 POI ↥1; barra viola (focus) ↻1. Cella d0 = asterisco (*). Se riuscito: ruota bersaglio ↻1 e SPINGI 1; \"PASSA A\" aggression."
+   "note": "Non bloccabile. Movimento ↥1 POI ↥1; barra viola (focus) ↻1. Cella d0 = asterisco (*) = stordimento bersaglio (0 ferite). Se riuscito: stordisce, ruota bersaglio ↻1 e SPINGI 1; \"PASSA A\" aggression."
   },
   "71": {
    "name": "SPAZZATA DI NAGINATA",
