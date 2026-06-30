@@ -711,7 +711,9 @@
 	 {
 	  "d": 0,
 	  "k": 1,
-	  "w": 0
+	  "w": 0,
+	  "focus_cost": 1,
+	  "w_focus": 1
 	 }
 	]
    },
@@ -725,7 +727,7 @@
 	 "n": 1
 	}
    ],
-   "note": "Asterisco Fronte: in Equilibrio 1 ferita. Iniziativa alt 7 in Aggressività."
+   "note": "Asterisco Fronte: 0 ferite automatiche, +1 ferita spendendo 1 focus (barra viola). Iniziativa alt 7 in Aggressività."
   },
   "87": {
    "name": "SABBIA NEGLI OCCHI",
@@ -791,21 +793,38 @@
 	 }
 	]
    },
-   "attack": {
-	"cells": [
-	 {
-	  "d": 5,
-	  "k": 1,
-	  "w": 1
-	 },
-	 {
-	  "d": 0,
-	  "k": 1,
-	  "w": 0
-	 }
-	]
-   },
-   "note": "Audit hi-res: ↻1 (senza kamae) + passo avanti/indietro in Determinazione (4 quadretti, non focus). Fronte-Sx sanguinante; asterisco Fronte +1 ferita in Aggressività."
+   "attacks": [
+	{
+	 "cells": [
+	  {
+	   "d": 5,
+	   "k": 1,
+	   "w": 1
+	  },
+	  {
+	   "d": 0,
+	   "k": 1,
+	   "w": 0
+	  }
+	 ]
+	},
+	{
+	 "kamae": "aggression",
+	 "cells": [
+	  {
+	   "d": 5,
+	   "k": 1,
+	   "w": 1
+	  },
+	  {
+	   "d": 0,
+	   "k": 1,
+	   "w": 1
+	  }
+	 ]
+	}
+   ],
+   "note": "Audit hi-res: ↻1 (senza kamae) + passo avanti/indietro in Determinazione (4 quadretti, non focus). Fronte-Sx sanguinante; asterisco Fronte = +1 ferita in Aggressività (variante kamae)."
   },
   "116": {
    "name": "MENTE RAPIDA",
@@ -1581,6 +1600,11 @@
    },
    "effects": [
 	{
+	 "do": "foe_stun",
+	 "n": 1,
+	 "when": "on_hit"
+	},
+	{
 	 "do": "rotate_target",
 	 "n": 1,
 	 "when": "on_hit"
@@ -1595,7 +1619,7 @@
 	 "to": "aggression"
 	}
    ],
-   "note": "Non bloccabile. Movimento ↥1 POI ↥1; barra viola (focus) ↻1. Cella d0 = asterisco (*). Se riuscito: ruota bersaglio ↻1 e SPINGI 1; \"PASSA A\" aggression."
+   "note": "Non bloccabile. Movimento ↥1 POI ↥1; barra viola (focus) ↻1. Cella d0 = asterisco (*) = stordimento bersaglio (0 ferite). Se riuscito: stordisce, ruota bersaglio ↻1 e SPINGI 1; \"PASSA A\" aggression."
   },
   "71": {
    "name": "SPAZZATA DI NAGINATA",
@@ -1642,11 +1666,17 @@
    },
    "effects": [
 	{
+	 "do": "foe_stun",
+	 "n": 1,
+	 "when": "on_hit",
+	 "focus_cost": 1
+	},
+	{
 	 "do": "discard_self",
 	 "n": 1
 	}
    ],
-   "note": "Split init 2: ❄1 ↻1 (❄ = marcatore-àncora, non un passo). Celle: d0,d5 ferite, d4 asterisco (*). Barra viola (focus) sull'asterisco. SCARTA 1 carta."
+   "note": "Split init 2: ❄1 ↻1 (❄ = marcatore-àncora, non un passo). Celle: d0,d5 ferite, d4 asterisco (*) = stordimento bersaglio con 1 focus (barra viola). SCARTA 1 carta."
   },
   "89": {
    "name": "BLOCCO D'EMERGENZA",

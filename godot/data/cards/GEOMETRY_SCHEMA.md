@@ -105,7 +105,9 @@ sulla pedina (▲ = fronte). Ogni cella colpita/protetta:
 | Campo cella | Tipo | Significato |
 |-------------|------|-------------|
 | `q`, `r` | int | **Coordinate assiali** dell'esagono relativo alla pedina con fronte = `DIRS[0]` (qualsiasi esagono del vicinato, non solo i 6 raggi). Fronte adiacente = `(1,0)`. |
-| `w` | int \| string | *(attacco)* ferite: intero, oppure `"exec"` (esecuzione) o `"bleed"` (sanguinante). |
+| `w` | int \| string | *(attacco)* ferite automatiche: intero, oppure `"exec"` (esecuzione) o `"bleed"` (sanguinante). `0` = nessuna ferita automatica. |
+| `focus_cost` | int (opz.) | *(attacco)* Costo in focus per sbloccare le ferite bonus `w_focus`. Se il giocatore non paga, la cella colpisce comunque per `w` ferire (spesso 0). Saltato in auto-risoluzione. |
+| `w_focus` | int (opz.) | *(attacco)* Ferite aggiuntive applicate se il giocatore paga `focus_cost`. Default `1` quando `focus_cost > 0`. |
 | `v` | int | *(difesa)* valore di blocco della cella. |
 
 > **Schema celle.** L'editor scrive le celle in **coordinate assiali piene** `{q,r}`,

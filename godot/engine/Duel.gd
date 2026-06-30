@@ -686,6 +686,9 @@ func _resolve_attack_top(i: int, g: Dictionary, name: String, log: Array, chosen
 		var tag := "bleed" if kind == "bleed" else "wound"
 		for _w in range(n):
 			foe.wounds.append(tag)
+	# Ferite gated da focus: cella con focus_cost/w_focus (es. asterisco viola).
+	# Saltate in auto-risoluzione come i bonus-effetti a pagamento (riga ~1056).
+	# TODO: quando la UI espone la scelta focus, chiamare qui _apply_focus_wound().
 	_attack_ok[i] = true   # attacco a segno (reazioni "se attacco riuscito")
 	combat_event.emit("hit", i, foe_idx, {"n": n})
 	_apply_if_success(i, foe_idx, g, log)
