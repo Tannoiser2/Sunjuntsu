@@ -84,18 +84,16 @@ una. Ogni opzione è una sequenza ordinata di **atomi**:
 
 | Campo atomo | Tipo | Significato |
 |-------------|------|-------------|
-| `t` | string | `step` (passo) \| `rot` (rotazione) \| `anchor` (❄ àncora). |
-| `dir` | int | Direzione del passo: `0`=fronte, senso **orario** 0–5; `-1`=qualsiasi direzione. Solo per `step`. |
-| `n` | int | Quantità (passi · scatti di rotazione · numero stampato accanto al ❄). |
+| `t` | string | `step` (passo) \| `rot` (rotazione). |
+| `dir` | int | Direzione del passo: `0`=fronte, senso **orario** 0–5; **`-1`=qualsiasi direzione** (❄ fiocco di neve sulla carta fisica). Solo per `step`. |
+| `n` | int | Quantità (passi · scatti di rotazione). |
 | `opt` | bool | `true` = atomo **facoltativo** (bonus). |
 
-> **❄ Àncora (`t: "anchor"`).** Il fiocco di neve **non è un movimento**: è un
-> marcatore-àncora sulla **Griglia di Posizione**. Una carta Abilità può
-> *connettere* questo simbolo a un asterisco (`*`) sulla griglia, applicando
-> quegli effetti al **personaggio colpito**. Il motore lo tratta come atomo
-> "neutro": non sposta né ruota la pedina (vedi `Move.gd`). Compare nelle barre
-> di movimento gated da Kamae (es. `❄2 ↻2`); l'azione esplicita "sostituisci
-> `!` con ❄" è invece l'effetto `link_anchor` (vedi sotto).
+> **❄ Fiocco di neve (`t: "step", dir: -1`).** Il simbolo ❄ nella barra
+> movimento di una carta significa **passo libero verso uno qualsiasi dei 6
+> esagoni adiacenti**. Si trascrive come `{ "t": "step", "dir": -1, "n": 1 }`.
+> Da non confondere con l'effetto `link_anchor` in `effects[]`, che è il
+> meccanismo separato della Griglia di Posizione (asterisco `*`).
 
 ### Celle attacco/difesa — `attack.cells[]` / `defence.cells[]`
 

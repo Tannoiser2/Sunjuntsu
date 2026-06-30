@@ -80,12 +80,6 @@ static func _enum(state: Vector3i, remaining: Array, ordered: bool, is_blocked: 
 
 static func _apply(atom: Dictionary, state: Vector3i, is_blocked: Callable) -> Array:
 	var out: Array = []
-	if atom.get("t", "") == "anchor":
-		# ❄ Fiocco di neve: NON è un movimento. È un marcatore-àncora sulla
-		# Griglia di Posizione; una carta Abilità può collegarlo a un asterisco
-		# (*) e applicare quegli effetti al personaggio colpito. Di per sé non
-		# sposta la pedina: l'atomo è "soddisfatto" senza cambiare stato.
-		return [state]
 	if atom.get("t", "") == "rot":
 		var n: int = int(atom.get("n", 1))
 		for k in range(-n, n + 1):
