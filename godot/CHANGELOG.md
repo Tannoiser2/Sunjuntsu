@@ -3,6 +3,16 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.70.0] — 2026-06-30
+### Fix geometria carte + miglioramenti editor
+- **❄ passo libero**: 34 atomi `t:"anchor"` convertiti in `t:"step", dir:-1` su 30 carte — il simbolo ❄ nella barra movimento ora muove davvero la pedina in qualsiasi direzione adiacente; rimosso il no-op in `Move.gd`.
+- **Asterisco (*) nell'esagono**: corrette 4 carte con significato errato — #35 CHIATTA DI BUOI (stun del bersaglio), #71 SPAZZATA DI NAGINATA (stun con 1 focus), #86 COLPO IN AFFONDO (ferita se spendi 1 focus), #113 TAGLIO TRONCANTE (ferita aggiuntiva in Aggressività via variante `attacks`).
+- **Schema celle attacco** (`focus_cost`/`w_focus`): nuovo schema per ferite condizionali al costo di focus; ferite gated saltate nell'auto-risoluzione come gli effetti a pagamento.
+- **Editor — Salva unificato**: il pulsante "Salva" ora salva sia l'anagrafica sia la geometria in un unico clic (prima richiedeva un secondo pulsante "Salva geometria" separato).
+- **Editor — Cambia immagine**: il picker ora mostra una lista testuale invece della griglia di miniature, eliminando il freeze nel browser causato dal caricamento sincrono di centinaia di texture.
+- **Editor — Esporta**: popup con istruzioni chiare dopo il download del bundle JSON.
+- **Spiega carta**: la finestra di spiegazione mostra ora anche la seconda iniziativa (campo `split`) con movimento, attacco ed effetti della parte bassa.
+
 ## [0.69.0] — 2026-06-29
 ### Carte Solo AI estese + immagini personaggi aggiuntivi
 - **Immagini carte (nuovi personaggi)**: estratte via `tools/extract_card_images.py`
