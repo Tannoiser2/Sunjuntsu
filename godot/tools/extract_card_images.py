@@ -34,11 +34,17 @@ WEBP_Q = 80
 BLANK_STD = 10.0  # sotto questa deviazione standard la cella è considerata vuota
 
 DECKS = [
-    ("warrior", "CARTE/Guerriero.pdf"),
-    ("ronin", "CARTE/Ronin .pdf"),
-    ("ferite", "CARTE/Ferite.pdf"),
-    ("master", "CARTE/Maestro .pdf"),
-    ("student", "CARTE/Allievo.pdf"),
+    ("warrior",       "CARTE/Guerriero.pdf"),
+    ("ronin",         "CARTE/Ronin .pdf"),
+    ("ferite",        "CARTE/Ferite.pdf"),
+    ("master",        "CARTE/Maestro .pdf"),
+    ("student",       "CARTE/Allievo.pdf"),
+    ("assassin",      "CARTE/Assassino.pdf"),
+    ("ninja",         "CARTE/Ninja.pdf"),
+    ("onna_bugeisha", "CARTE/Onna Bugeisha.pdf"),
+    ("yojimbo",       "CARTE/Yojimbo.pdf"),
+    ("altre_carte",   "CARTE/Altre carte.pdf"),
+    ("altre_carte_2", "CARTE/Altre carte 2.pdf"),
 ]
 
 

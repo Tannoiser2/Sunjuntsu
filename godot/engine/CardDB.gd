@@ -163,13 +163,37 @@ func draw_pile_for(slug: String) -> Array:
 func solo_deck_for(slug: String) -> Array:
 	match slug:
 		"ronin":
-			# Mazzo SOLO dedicato dell'avversario Ronin (carte "SOLO" con la meccanica
-			# CHANGE AI BEHAVIOUR / RESET DECK): Charge, Steel Block, Reverse Carved Fang,
-			# Feral Sweep, The Terror (incubo).
 			return [901, 902, 903, 904, 905]
 		"warrior":
-			# Mazzo SOLO dedicato dell'avversario Guerriero.
-			return [911, 912, 913, 914, 915]
+			return [911, 912, 913, 914, 915, 993]
+		"yasuke":
+			return [916, 917, 918, 919, 920]
+		"wakou":
+			return [921, 922, 923, 924, 981]
+		"sailor":
+			return [925, 926, 927, 928, 984]
+		"assassin":
+			return [929, 930, 931, 932, 987]
+		"hachiko":
+			return [933, 934, 935, 936, 937]
+		"kojiro":
+			return [938, 939, 940, 941, 942]
+		"master":
+			return [943, 944, 945, 946, 947]
+		"monk":
+			return [948, 949, 950, 951, 952, 953]
+		"ninja":
+			return [954, 955, 956, 957, 990]
+		"onna_bugeisha":
+			return [958, 959, 960, 961, 962]
+		"yojimbo":
+			return [963, 964, 965]
+		"student":
+			return [966, 967, 968, 969, 970]
+		"musashi":
+			return [971, 972, 973, 974, 975]
+		"ashigaru":
+			return [976, 977, 978, 979]
 	return draw_pile_for(slug)
 
 
