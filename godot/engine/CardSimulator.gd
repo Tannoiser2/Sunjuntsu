@@ -173,6 +173,23 @@ static func explain(card: Dictionary, geom: Dictionary) -> Array:
 		if s != "":
 			out.append(s)
 
+	# Seconda iniziativa (carta split: parte bassa).
+	if geom.has("split") and geom["split"] is Dictionary:
+		var sp: Dictionary = geom["split"]
+		var sp_init := str(sp.get("initiative", "?"))
+		out.append("— Seconda iniziativa (%s) —" % sp_init)
+		for opt in sp.get("move", {}).get("opts", []):
+			var phrase := _atoms_phrase(opt.get("atoms", []))
+			if phrase != "":
+				out.append("Movimento: " + phrase + ".")
+		if sp.has("attack"):
+			out.append(_attack_phrase(sp["attack"].get("cells", []), ""))
+		for e in sp.get("effects", []):
+			if e is Dictionary:
+				var s := _effect_phrase(e)
+				if s != "":
+					out.append(s)
+
 	if out.size() <= 1:
 		out.append("(Nessun effetto geometrico trascritto: solo anagrafica.)")
 	return out

@@ -517,6 +517,7 @@ func _collect_fields() -> Dictionary:
 func _on_save() -> void:
 	if _current_id < 0:
 		return
+	# Anagrafica
 	var fields := _collect_fields()
 	var ov := _store.compute_override(_current_id, fields)
 	_store.set_override(_current_id, ov)
@@ -525,15 +526,23 @@ func _on_save() -> void:
 		_status.text = "Errore salvataggio: %s" % str(res.get("error", ""))
 		return
 	CardDB.apply_override(_current_id, fields)
+	# Geometria (salvata assieme all'anagrafica)
+	if _geom_editor != null:
+		var g := _geom_editor.to_geometry()
+		var gres := _store.save_card_geometry(_current_id, g)
+		if not gres.get("ok", false):
+			_status.text = "Errore geometria: %s" % str(gres.get("error", ""))
+			return
+		CardDB.set_geometry(_current_id, g)
 	var saved_id := _current_id
 	_pending_new = false
 	_refresh_list()
 	_select_in_list(saved_id)
 	_load_card(saved_id, false)
 	if ov.is_empty():
-		_status.text = "Salvato #%d (override rimosso: identica all'Excel)" % saved_id
+		_status.text = "Salvato #%d (geometria + anagrafica invariata dall'Excel)" % saved_id
 	else:
-		_status.text = "Salvato #%d (%d campi nell'overlay)" % [saved_id, ov.size()]
+		_status.text = "Salvato #%d (%d campi override + geometria)" % [saved_id, ov.size()]
 
 
 func _on_new() -> void:
@@ -616,7 +625,7 @@ func _on_export() -> void:
 	var fname := "senjutsu_overrides.json"
 	if OS.has_feature("web"):
 		_browser_download(fname, text)
-		_status.text = "Override esportati: salva %s e committalo in godot/data/cards/" % fname
+		_show_export_popup(fname)
 		return
 	# Editor/desktop: scrivi su user:// e mostra il percorso reale su disco.
 	var path := "user://" + fname
@@ -627,6 +636,23 @@ func _on_export() -> void:
 	f.store_string(text)
 	f.close()
 	_status.text = "Override esportati in %s" % ProjectSettings.globalize_path(path)
+
+
+func _show_export_popup(fname: String) -> void:
+	var pop := AcceptDialog.new()
+	pop.title = "Esporta override"
+	pop.dialog_text = (
+		"Download avviato: %s\n\n" % fname +
+		"Questo file contiene tutte le modifiche fatte nell'editor\n" +
+		"(geometria, anagrafica, immagini).\n\n" +
+		"Per renderle permanenti per tutti:\n" +
+		"  1. Apri il file scaricato\n" +
+		"  2. Copia le chiavi che vuoi aggiornare in\n" +
+		"     godot/data/cards/ (geometry.json, card_pool_overrides.json…)\n" +
+		"  3. Committalo nel repo"
+	)
+	add_child(pop)
+	pop.popup_centered(Vector2i(480, 340))
 
 
 ## Avvia il download nel browser di un file di testo (solo build web). Usa un
@@ -854,17 +880,27 @@ func _set_image(rel: String) -> void:
 	_status.text = "Immagine #%d %s" % [_current_id, "rimossa" if rel == "" else rel]
 
 
-## Picker delle immagini già presenti in assets/cards (cartella del personaggio
-## in cima), come griglia di miniature.
+## Picker delle immagini già presenti in assets/cards.
+## Usa una lista testuale (niente caricamento texture) per evitare il freeze
+## dovuto al caricamento sincrono di centinaia di immagini nel browser.
+## Le immagini del personaggio corrente compaiono per prime.
 func _open_image_picker() -> void:
 	if _current_id < 0:
 		return
 	var pop := PopupPanel.new()
 	add_child(pop)
+	var vb := VBoxContainer.new()
+	vb.custom_minimum_size = Vector2(420, 520)
+	vb.add_theme_constant_override("separation", 2)
+	var title := Label.new()
+	title.text = "Seleziona immagine  (cartella %s in cima)" % CardStore.char_slug(_current_char())
+	title.add_theme_font_size_override("font_size", 11)
+	title.add_theme_color_override("font_color", Color(0.6, 0.66, 0.74))
+	vb.add_child(title)
 	var scroll := ScrollContainer.new()
-	scroll.custom_minimum_size = Vector2(540, 480)
-	var grid := GridContainer.new()
-	grid.columns = 4
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	var list := VBoxContainer.new()
+	list.add_theme_constant_override("separation", 2)
 	var slug := CardStore.char_slug(_current_char())
 	var imgs := CardStore.list_card_images()
 	imgs.sort_custom(func(a, b):
@@ -875,17 +911,27 @@ func _open_image_picker() -> void:
 		return a < b)
 	for rel in imgs:
 		var b := Button.new()
-		b.custom_minimum_size = Vector2(120, 165)
-		b.icon = CardView._load_texture("res://assets/cards/" + rel)
-		b.expand_icon = true
-		b.tooltip_text = rel
+		b.text = rel
+		b.flat = true
+		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		b.add_theme_font_size_override("font_size", 12)
 		b.pressed.connect(func():
 			pop.queue_free()
 			_set_image(rel))
-		grid.add_child(b)
-	scroll.add_child(grid)
-	pop.add_child(scroll)
-	pop.popup_centered(Vector2i(580, 540))
+		list.add_child(b)
+	if imgs.is_empty():
+		var empty := Label.new()
+		empty.text = "(nessuna immagine disponibile)"
+		empty.add_theme_color_override("font_color", Color(0.55, 0.55, 0.6))
+		list.add_child(empty)
+	scroll.add_child(list)
+	vb.add_child(scroll)
+	var close := Button.new()
+	close.text = "Annulla"
+	close.pressed.connect(pop.queue_free)
+	vb.add_child(close)
+	pop.add_child(vb)
+	pop.popup_centered(Vector2i(460, 560))
 
 
 ## Importa un file immagine dal disco e apre il dialog di ritaglio.
