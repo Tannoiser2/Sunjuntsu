@@ -126,6 +126,11 @@ func _who(i: int) -> String:
 	return "TU" if i == 0 else "IA"
 
 
+func _card_type_it(t: String) -> String:
+	return {"attack": "Attacco", "defence": "Difesa", "meditation": "Meditazione",
+		"core": "Carta base", "other": "Speciale"}.get(t, t)
+
+
 ## Carica nell'HUD la carta Kamae del combattente `i` e posiziona il segnalino.
 func _setup_kamae_for(i: int) -> void:
 	_kamae_shown = i
@@ -251,17 +256,21 @@ func _show_reveal_panel() -> void:
 	_hud.hide_kamae(); _hud.hide_options(); _hud.hide_instant()
 	if not _versus:
 		_hud.show_played_card(CardDB.image_for(mine), CardDB.card(mine).get("name", "?"))
-	_hud.set_info("Rivelazione — %s: %s   ·   %s: %s" % [
-		_who(0), CardDB.card(mine).get("name", "—"), _who(1), CardDB.card(theirs).get("name", "—")])
 	# Ordine d'iniziativa (alta → bassa).
 	var parts: Array = []
 	var n := 1
 	for o in _reveal_order:
 		var sp := int(o.get("speed", -1))
-		parts.append("%d) %s%s" % [n, _who(int(o.get("i", 0))), (" ⚡%d" % sp) if sp >= 0 else ""])
+		parts.append("%d) %s ⚡%s" % [n, _who(int(o.get("i", 0))), str(sp) if sp >= 0 else "—"])
 		n += 1
-	var ordtxt := ("  ·  Ordine: " + " → ".join(parts)) if not parts.is_empty() else ""
-	_hud.set_hint("RIVELAZIONE: si risolve per iniziativa (alta → bassa).%s  ·  Premi «Avanti» per iniziare." % ordtxt)
+	var ord_line := ("Ordine di risoluzione: " + "  →  ".join(parts)) if not parts.is_empty() else ""
+	var mine_c := CardDB.card(mine)
+	var theirs_c := CardDB.card(theirs)
+	_hud.show_phase("RIVELAZIONE — Round %d" % state.round_num, Color(0.75, 0.75, 0.75))
+	_hud.set_hint("%s: %s (%s)\n%s: %s (%s)\n%s\nPremi «Avanti ▶» per iniziare." % [
+		_who(0), mine_c.get("name", "—"), _card_type_it(mine_c.get("type", "")),
+		_who(1), theirs_c.get("name", "—"), _card_type_it(theirs_c.get("type", "")),
+		ord_line])
 	_hud.show_confirm("Avanti ▶ — risolvi")
 
 
@@ -270,6 +279,10 @@ func _drive_resolution(i: int) -> void:
 	_resolving_index = i
 	_instant_mode = ""
 	_hud.hide_instant()
+	var ini := _duel._speed_of(i) if _duel != null else -1
+	var ini_str := str(ini) if ini >= 0 else "—"
+	var card_name := CardDB.card(state.fighters[i].planned).get("name", "?")
+	var card_type := CardDB.card(state.fighters[i].planned).get("type", "")
 	if not state.fighters[i].is_ai:
 		# Umano (giocatore solo, oppure entrambi in 1v1): risoluzione interattiva.
 		# Sequenza: 1) movimento+rotazione  2) scelte (Kamae/OPPURE)  3) conferma.
@@ -289,17 +302,16 @@ func _drive_resolution(i: int) -> void:
 			_show_choosers()
 		_refresh_status()
 		_hud.show_confirm("Fine ▶")
-		var ini := _duel._speed_of(i) if _duel != null else -1
-		var step := "muovi (giallo) e ruota, poi tocca il bersaglio rosso o «Fine»" if _movable_cells_exist() else "tocca il bersaglio rosso o «Fine»"
-		_hud.set_info("⚔ Iniziativa %s — %s: %s · %s" % [
-			(str(ini) if ini >= 0 else "—"), _who(i), step, _selected_card.get("name", "?")])
+		_hud.show_phase("⚡ Iniziativa %s  ·  %s  ·  %s  (%s)" % [
+			ini_str, _who(i), card_name, _card_type_it(card_type)])
 	else:
 		_phase_mode = "ai"
 		_clear_overlays()
 		_hud.hide_kamae()
 		_hud.hide_options()
 		_hud.hide_confirm()
-		_hud.set_info("L'avversario agisce…")
+		_hud.show_phase("⚡ Iniziativa %s  ·  %s  ·  %s  (%s)  — l'avversario agisce…" % [
+			ini_str, _who(i), card_name, _card_type_it(card_type)], Color(0.7, 0.7, 0.7))
 		_run_ai_resolution(i)
 
 
@@ -390,11 +402,14 @@ func _enter_split_stage() -> void:
 	_hud.hide_kamae()
 	_hud.hide_options()
 	var g := _duel.pending_split_geom()
+	var sp_ini := _duel.pending_split_initiative()
+	var main_card_name := CardDB.card(state.fighters[_resolving_index].planned).get("name", "?")
 	_selected_card = {"id": -1, "type": "attack", "name": "Parte bassa", "geom_override": g}
 	_refresh_overlays()
 	_hud.show_confirm("Conferma parte bassa ▶")
-	var sp_ini := _duel.pending_split_initiative()
-	_hud.set_info("⚔ Parte bassa (iniziativa %d): muovi e attacca" % sp_ini)
+	_hud.show_phase("⚡ Iniziativa %d  ·  %s  ·  %s  (PARTE BASSA)" % [
+		sp_ini, _who(_resolving_index), main_card_name], Color(0.5, 0.75, 1.0))
+	_hud.set_hint("PARTE BASSA: questa carta agisce una seconda volta all'iniziativa %d.\nMuovi (giallo) verso il bersaglio, poi attacca (rosso)." % sp_ini)
 
 
 func _on_turn_resolved(log: Array) -> void:
@@ -404,6 +419,7 @@ func _on_turn_resolved(log: Array) -> void:
 	_planning_player = 0
 	_selected_card = {}
 	_clear_overlays()
+	_hud.hide_phase()
 	_hud.hide_kamae()
 	_hud.hide_confirm()
 	_hud.hide_options()
@@ -413,7 +429,7 @@ func _on_turn_resolved(log: Array) -> void:
 	_refresh_hand()
 	_refresh_status()
 	if not log.is_empty():
-		_hud.set_hint(String("\n").join(log).left(220) + "\n— Programma la prossima carta —")
+		_hud.set_hint(String("\n").join(log).left(420) + "\n— Programma la prossima carta —")
 
 
 func _on_duel_over(winner: int) -> void:
@@ -714,16 +730,16 @@ func _draw_overlays_for(card: Dictionary, move_used: bool) -> void:
 			_highlighted.append(cell)
 			if _tiles.has(cell):
 				(_tiles[cell] as MeshInstance3D).material_override = _tile_mat(cell, "move")
-		_hud.set_hint("Muovi (giallo) · Q/E ruota · SPAZIO = non muovere · INVIO = risolvi" + sfx)
+		_hud.set_hint("FASE 1 — MOVIMENTO: tocca un esagono giallo · Q/E per ruotare · SPAZIO = resta fermo · INVIO = risolvi" + sfx)
 	elif card.get("type", "") == "attack":
 		# FASE 2 — bersagli attaccabili (rosso). Schema v2 (celle per-esagono).
 		for cell in Duel.attack_v2_cells(f.cell, f.facing, g, 1, f.stance):
 			if _tiles.has(cell):
 				_attack_preview.append(cell)
 				(_tiles[cell] as MeshInstance3D).material_override = _tile_mat(cell, "attack")
-		_hud.set_hint("Bersagli (rosso) · click sul rosso o INVIO = attacca · Q/E ruota" + sfx)
+		_hud.set_hint("FASE 2 — ATTACCO: tocca un esagono rosso per colpire · INVIO per saltare · Q/E per ruotare" + sfx)
 	else:
-		_hud.set_hint("INVIO = risolvi · Q/E ruota" + sfx)
+		_hud.set_hint("Nessun movimento disponibile — INVIO per risolvere gli effetti · Q/E per ruotare" + sfx)
 
 
 ## Indica quali Kamae sbloccherebbero ulteriori movimenti della carta selezionata.
@@ -770,7 +786,10 @@ func _on_card_selected(card_data: Dictionary) -> void:
 		_hud.show_confirm("✓ Conferma carta")
 	else:
 		_hud.hide_confirm()
-	_hud.set_hint("Anteprima: giallo = mosse, rosso = arco. Premi «Conferma carta» per programmarla (coperta).")
+	var ct := _card_type_it(card_data.get("type", ""))
+	var ini_v := str(card_data.get("initiative", "-"))
+	_hud.set_hint("Selezionata: %s · %s · iniziativa %s\nGiallo = movimenti possibili · Rosso = arco d'attacco\nPremi «Conferma carta» per programmarla (coperta)." % [
+		card_data.get("name", "?"), ct, ini_v])
 
 
 ## Passaggio del mouse su una carta in mano: la carta si alza (CardView) e qui
