@@ -34,6 +34,9 @@ var _played_panel: Control
 var _played_rect: TextureRect
 var _played_label: Label
 
+var _phase_banner: PanelContainer
+var _phase_lbl: Label
+
 
 func _ready() -> void:
 	hand.card_played.connect(func(d):
@@ -53,6 +56,7 @@ func _ready() -> void:
 	_build_rotation_controls()
 	_build_focus_widget()
 	_build_instant_chooser()
+	_build_phase_banner()
 
 
 ## Riquadro "carta giocata": mostra la carta programmata finché non è scartata a
@@ -499,6 +503,35 @@ func show_instant(title: String, options: Array) -> void:
 
 func hide_instant() -> void:
 	_inst_box.visible = false
+
+
+## Banner prominente al top-center: indica iniziativa corrente, chi agisce, carta.
+## Mostrato durante rivelazione, risoluzione e fase split; nascosto in pianificazione.
+func _build_phase_banner() -> void:
+	_phase_banner = PanelContainer.new()
+	_phase_banner.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	_phase_banner.anchor_left = 0.5; _phase_banner.anchor_right = 0.5
+	_phase_banner.offset_left = -360; _phase_banner.offset_right = 360
+	_phase_banner.offset_top = 4; _phase_banner.offset_bottom = 48
+	_phase_banner.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_phase_lbl = Label.new()
+	_phase_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_phase_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_phase_lbl.add_theme_font_size_override("font_size", 17)
+	_phase_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_phase_banner.add_child(_phase_lbl)
+	add_child(_phase_banner)
+	_phase_banner.visible = false
+
+
+func show_phase(text: String, col := Color(1.0, 0.85, 0.3)) -> void:
+	_phase_lbl.text = text
+	_phase_lbl.add_theme_color_override("font_color", col)
+	_phase_banner.visible = true
+
+
+func hide_phase() -> void:
+	_phase_banner.visible = false
 
 
 func set_info(text: String) -> void:
