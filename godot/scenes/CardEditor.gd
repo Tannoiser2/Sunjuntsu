@@ -64,6 +64,8 @@ var _pending_new: bool = false   ## carta creata/duplicata non ancora salvata
 var _history: Array = []
 var _hist_idx: int = 0
 var _suspend_record: bool = false   ## true durante (ri)costruzione del form
+var _validate_timer: Timer = null   ## coalizza la validazione live (una per raffica)
+const HISTORY_CAP := 100            ## snapshot massimi in cronologia
 
 
 func _ready() -> void:
@@ -408,11 +410,9 @@ func _build_form(id: int, c: Dictionary, geom_data = null) -> void:
 	var geom_src: Dictionary = geom_data if geom_data != null else CardDB.geometry(id)
 	_geom_editor.load_geometry(str(c.get("type", "attack")), geom_src, _card_initiative)
 	_geom_editor.changed.connect(func(): _on_edit())
+	# "Salva" (toolbar) salva già anagrafica + geometria insieme: un solo
+	# percorso di salvataggio, niente pulsante separato che desincronizza.
 	var geobtns := HBoxContainer.new()
-	var save_geo := Button.new()
-	save_geo.text = "Salva geometria"
-	save_geo.pressed.connect(_on_save_geometry)
-	geobtns.add_child(save_geo)
 	var sim := Button.new()
 	sim.text = "Spiega carta"
 	sim.tooltip_text = "Apre una finestra che spiega in italiano cosa fa la carta (movimento, arco, effetti)"
@@ -598,23 +598,6 @@ func _on_remove_override() -> void:
 	_status.text = "Override rimosso #%d (tornato all'Excel)" % id
 
 
-func _on_save_geometry() -> void:
-	if _current_id < 0 or _geom_editor == null:
-		return
-	var g := _geom_editor.to_geometry()
-	var res := _store.save_card_geometry(_current_id, g)
-	if not res.get("ok", false):
-		_status.text = "Errore geometria: %s" % str(res.get("error", ""))
-		return
-	CardDB.set_geometry(_current_id, g)
-	var id := _current_id
-	_refresh_list()
-	_select_in_list(id)
-	var na: int = g.get("attack", {}).get("cells", []).size()
-	var nd: int = g.get("defence", {}).get("cells", []).size()
-	_status.text = "Geometria #%d salvata (%d celle att., %d dif.)" % [id, na, nd]
-
-
 ## Esporta gli override correnti. Serve soprattutto nella build web (GitHub
 ## Pages): le modifiche vivono nell'IndexedDB del browser e non tornano nel
 ## repo, quindi le impacchettiamo in un JSON scaricabile da committare in
@@ -737,8 +720,20 @@ func _show_explanation(card: Dictionary, lines: Array, sim: Dictionary) -> void:
 ## ─── Undo / Redo (Fase 6) ───────────────────────────────────────────────────
 
 func _on_edit() -> void:
-	_run_validation()
+	# Lo snapshot per l'undo è immediato (economico e atteso dai test); la
+	# validazione — la parte costosa — è coalizzata: durante una raffica di
+	# tasti gira una volta sola, a raffica finita.
 	_record()
+	if _validate_timer == null:
+		_validate_timer = Timer.new()
+		_validate_timer.one_shot = true
+		_validate_timer.wait_time = 0.3
+		_validate_timer.timeout.connect(_run_validation)
+		add_child(_validate_timer)
+	if is_inside_tree():
+		_validate_timer.start()
+	else:
+		_run_validation()
 
 
 func _snapshot() -> Dictionary:
@@ -758,6 +753,8 @@ func _record() -> void:
 		return   # nessun cambiamento effettivo
 	_history.resize(_hist_idx + 1)   # tronca il "redo" oltre il punto corrente
 	_history.append(snap)
+	if _history.size() > HISTORY_CAP:
+		_history.pop_front()   # cronologia limitata: dimentica il passo più vecchio
 	_hist_idx = _history.size() - 1
 	_update_undo_buttons()
 
@@ -1034,49 +1031,6 @@ func _update_indicators(g: Dictionary, img: String) -> void:
 	_orig_indicators.text = "  ·  ".join(lines)
 
 
-func _geometry_summary(g: Dictionary) -> String:
-	var lines: Array = []
-	lines.append("tipo: %s" % str(g.get("type", "?")))
-	if g.has("kamae_req"):
-		lines.append("kamae richiesto: %s" % str(g["kamae_req"]))
-	if g.has("move"):
-		var parts: Array = []
-		for opt in g.get("move", {}).get("opts", []):
-			var atoms: Array = []
-			for a in opt.get("atoms", []):
-				var s := "passo" if a.get("t", "") == "step" else "rotazione"
-				if a.get("t", "") == "step":
-					s += " dir%s" % str(a.get("dir", "?"))
-				s += " x%s" % str(a.get("n", 1))
-				if a.get("opt", false):
-					s += " (opz.)"
-				atoms.append(s)
-			parts.append(" + ".join(atoms))
-		lines.append("movimento: %s" % " OPPURE ".join(parts))
-	if g.has("attack"):
-		var cells: Array = g.get("attack", {}).get("cells", [])
-		var cs: Array = []
-		for cell in cells:
-			cs.append("dir%s/anello%s→%s" % [str(cell.get("d", "?")), str(cell.get("k", "?")), str(cell.get("w", "?"))])
-		lines.append("attacco (%d celle): %s" % [cells.size(), ", ".join(cs)])
-	if g.has("defence"):
-		var cells: Array = g.get("defence", {}).get("cells", [])
-		var cs: Array = []
-		for cell in cells:
-			cs.append("dir%s/anello%s blocco%s" % [str(cell.get("d", "?")), str(cell.get("k", "?")), str(cell.get("v", "?"))])
-		lines.append("difesa (%d celle): %s" % [cells.size(), ", ".join(cs)])
-	if g.has("counter"):
-		lines.append("contrattacco a iniziative: %s" % str(g.get("counter")))
-	if g.has("effects"):
-		var es: Array = []
-		for e in g.get("effects", []):
-			es.append(str(e.get("do", "?")))
-		lines.append("effetti (%d): %s" % [g.get("effects", []).size(), ", ".join(es)])
-	if g.has("note") and str(g.get("note", "")) != "":
-		lines.append("nota: %s" % str(g.get("note")))
-	return "\n".join(lines)
-
-
 # ─── Helper di layout ────────────────────────────────────────────────────────
 
 func _add_section(text: String) -> void:
@@ -1088,53 +1042,6 @@ func _add_section(text: String) -> void:
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	l.custom_minimum_size = Vector2(120, 0)
 	_form.add_child(l)
-
-
-func _edit_row(key: String, widget: Control) -> void:
-	var hb := HBoxContainer.new()
-	var k := Label.new()
-	k.text = key
-	k.custom_minimum_size = Vector2(78, 0)
-	k.add_theme_font_size_override("font_size", 11)
-	k.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
-	hb.add_child(k)
-	widget.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	hb.add_child(widget)
-	_form.add_child(hb)
-
-
-func _add_edit_text(key: String, val: String) -> LineEdit:
-	var le := LineEdit.new()
-	le.text = val
-	_edit_row(key, le)
-	return le
-
-
-func _add_edit_spin(key: String, mn: int, mx: int, val: int) -> SpinBox:
-	var sb := SpinBox.new()
-	sb.min_value = mn
-	sb.max_value = mx
-	sb.step = 1
-	sb.value = clampi(val, mn, mx)
-	_edit_row(key, sb)
-	return sb
-
-
-func _add_edit_option(key: String, values: Array, current: String) -> OptionButton:
-	var opt := OptionButton.new()
-	var found := -1
-	for i in values.size():
-		opt.add_item(str(values[i]))
-		if str(values[i]) == current:
-			found = i
-	if found == -1 and current != "":
-		opt.add_item(current)
-		found = opt.item_count - 1
-	opt.selected = maxi(found, 0)
-	opt.clip_text = true
-	opt.custom_minimum_size = Vector2(80, 0)
-	_edit_row(key, opt)
-	return opt
 
 
 func _selected_text(opt: OptionButton) -> String:
@@ -1182,35 +1089,6 @@ func _field(label: String, widget: Control) -> HBoxContainer:
 	widget.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	h.add_child(widget)
 	return h
-
-
-func _add_readonly_field(key: String, value: String) -> void:
-	var hb := HBoxContainer.new()
-	var k := Label.new()
-	k.text = key
-	k.custom_minimum_size = Vector2(110, 0)
-	k.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
-	hb.add_child(k)
-	var v := Label.new()
-	v.text = value
-	v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	v.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	hb.add_child(v)
-	_form.add_child(hb)
-
-
-func _add_multiline(key: String, value: String) -> void:
-	var k := Label.new()
-	k.text = key
-	k.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
-	_form.add_child(k)
-	var te := TextEdit.new()
-	te.text = value
-	te.editable = false
-	te.scroll_fit_content_height = true
-	te.custom_minimum_size = Vector2(0, 60)
-	te.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_form.add_child(te)
 
 
 func _as_strings(arr) -> Array:

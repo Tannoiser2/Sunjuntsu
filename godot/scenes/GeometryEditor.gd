@@ -474,9 +474,7 @@ func clear_cell(q: int, r: int) -> void:
 func add_opt() -> int:
 	var host := _primary_children()
 	host.append(_new_widget("movement"))
-	if _built:
-		_rebuild_widgets()
-	changed.emit()
+	_commit()
 	return host.size() - 1
 
 func add_move_atom(widget_idx: int, atom: Dictionary) -> void:
@@ -484,15 +482,11 @@ func add_move_atom(widget_idx: int, atom: Dictionary) -> void:
 	if widget_idx < 0 or widget_idx >= host.size():
 		return
 	host[widget_idx]["atoms"].append(_norm_atom(atom))
-	if _built:
-		_rebuild_widgets()
-	changed.emit()
+	_commit()
 
 func add_effect(e := {}) -> void:
 	_primary_children().append(_effect_widget(e))
-	if _built:
-		_rebuild_widgets()
-	changed.emit()
+	_commit()
 
 func set_kamae_req(slug: String) -> void:
 	var host := _primary_children()
@@ -506,6 +500,12 @@ func set_kamae_req(slug: String) -> void:
 		kw = _new_widget("kamae")
 		host.append(kw)
 	kw["req"] = slug
+	_commit()
+
+
+## Chiusura standard di ogni mutazione STRUTTURALE dell'albero dei widget:
+## ricostruisce la UI (se già costruita) e notifica il cambiamento.
+func _commit() -> void:
 	if _built:
 		_rebuild_widgets()
 	changed.emit()
@@ -616,14 +616,19 @@ func _build_ui() -> void:
 
 ## Tema dell'editor: una sola dimensione di testo per TUTTI i controlli dei
 ## widget (il tema globale usa 16–18, qui uniformiamo a 12), così non ci sono
-## scritte di misure diverse tra un widget e l'altro.
+## scritte di misure diverse tra un widget e l'altro. Theme e StyleBox sono
+## condivisibili fra Control: una sola istanza per tutta la sessione.
+static var _theme_cache: Theme
+
 func _editor_theme() -> Theme:
-	const FS := 12
-	var th := Theme.new()
-	th.default_font_size = FS
-	for cls in ["Label", "Button", "OptionButton", "LineEdit", "SpinBox", "CheckBox", "TextEdit", "MenuButton"]:
-		th.set_font_size("font_size", cls, FS)
-	return th
+	if _theme_cache == null:
+		const FS := 12
+		var th := Theme.new()
+		th.default_font_size = FS
+		for cls in ["Label", "Button", "OptionButton", "LineEdit", "SpinBox", "CheckBox", "TextEdit", "MenuButton"]:
+			th.set_font_size("font_size", cls, FS)
+		_theme_cache = th
+	return _theme_cache
 
 
 func _rebuild_widgets() -> void:
@@ -635,18 +640,26 @@ func _rebuild_widgets() -> void:
 
 
 ## Popola `parent` con i widget di `siblings` (ricorsivo per i contenitori) e un
-## pulsante "+ aggiungi widget" che inserisce in QUESTA lista.
+## menu "+ aggiungi" che crea il widget già del tipo scelto in QUESTA lista.
 func _build_list(parent: Node, siblings: Array) -> void:
 	for i in siblings.size():
 		parent.add_child(_build_widget(siblings, i))
-	var add := Button.new()
+	var add := MenuButton.new()
 	add.text = "+ aggiungi widget"
+	add.flat = false
 	add.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	add.tooltip_text = "Aggiunge un widget; scegline il tipo dal menu in cima"
-	add.pressed.connect(func():
-		siblings.append(_new_widget(""))
-		_rebuild_widgets()
-		changed.emit())
+	add.tooltip_text = "Aggiunge un widget del tipo scelto"
+	var pm := add.get_popup()
+	for t in MENU_TYPES:
+		pm.add_item(str(WIDGET_TITLES[t]))
+	pm.index_pressed.connect(func(i: int):
+		var type: String = MENU_TYPES[i]
+		if type in SINGLETON_TYPES:
+			for other in _all_widgets():
+				if str(other.get("type", "")) == type:
+					return   # singleton già presente sulla carta
+		siblings.append(_new_widget(type))
+		_commit())
 	parent.add_child(add)
 
 
@@ -679,7 +692,7 @@ func _build_widget(siblings: Array, idx: int) -> Control:
 		head.add_child(_lbl("se"))
 		head.add_child(_kamae_bar(w.get("cond", ""), func(val): w["cond"] = val; changed.emit()))
 	var rm := _mini_btn("x", "Rimuovi widget")
-	rm.pressed.connect(func(): siblings.remove_at(idx); _rebuild_widgets(); changed.emit())
+	rm.pressed.connect(func(): siblings.remove_at(idx); _commit())
 	head.add_child(rm)
 	box.add_child(head)
 
@@ -701,17 +714,21 @@ func _relax_mouse(node: Node) -> void:
 
 
 ## Stile compatto del pannello-widget: margini piccoli, così i box sono corti.
+static var _slot_style_cache: StyleBoxFlat
+
 func _slot_style() -> StyleBoxFlat:
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0.16, 0.16, 0.20)
-	sb.border_color = Color(0.30, 0.30, 0.36)
-	sb.set_border_width_all(1)
-	sb.set_corner_radius_all(8)
-	sb.content_margin_left = 6
-	sb.content_margin_right = 6
-	sb.content_margin_top = 4
-	sb.content_margin_bottom = 4
-	return sb
+	if _slot_style_cache == null:
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = Color(0.16, 0.16, 0.20)
+		sb.border_color = Color(0.30, 0.30, 0.36)
+		sb.set_border_width_all(1)
+		sb.set_corner_radius_all(8)
+		sb.content_margin_left = 6
+		sb.content_margin_right = 6
+		sb.content_margin_top = 4
+		sb.content_margin_bottom = 4
+		_slot_style_cache = sb
+	return _slot_style_cache
 
 
 func _mini_btn(txt: String, tip: String) -> Button:
@@ -746,8 +763,7 @@ func _set_type_in(siblings: Array, idx: int, type: String) -> void:
 				_rebuild_widgets()   # singleton già presente: annulla la scelta
 				return
 	siblings[idx] = _new_widget(type)
-	_rebuild_widgets()
-	changed.emit()
+	_commit()
 
 
 func _move_in(siblings: Array, idx: int, delta: int) -> void:
@@ -757,8 +773,7 @@ func _move_in(siblings: Array, idx: int, delta: int) -> void:
 	var tmp = siblings[idx]
 	siblings[idx] = siblings[j]
 	siblings[j] = tmp
-	_rebuild_widgets()
-	changed.emit()
+	_commit()
 
 
 ## Tutti i widget dell'albero (foglie + contenitori), per i controlli singleton.
@@ -817,8 +832,7 @@ func _reorder(w: Dictionary, src: Array, dst: Array, target_w, before: bool) -> 
 	if is_same(src, dst) and src_idx < insert_at:
 		insert_at -= 1
 	dst.insert(clampi(insert_at, 0, dst.size()), w)
-	_rebuild_widgets()
-	changed.emit()
+	_commit()
 
 
 ## Sposta `w` in fondo alla lista `dst` (drop su contenitore vuoto).
@@ -830,8 +844,7 @@ func _move_to_end(w: Dictionary, src: Array, dst: Array) -> void:
 		return
 	src.remove_at(src_idx)
 	dst.append(w)
-	_rebuild_widgets()
-	changed.emit()
+	_commit()
 
 
 func _title_of(w: Dictionary) -> String:
@@ -973,19 +986,18 @@ func _build_movement_body(w: Dictionary) -> Control:
 		v.add_child(_build_atom_editor(w, ai))
 	var add := HBoxContainer.new()
 	add.add_theme_constant_override("separation", 4)
-	var ap := Button.new()
-	ap.text = "+ passo"
-	ap.pressed.connect(func(): atoms.append(_norm_atom({"t": "step", "dir": 0, "n": 1, "opt": false})); _rebuild_widgets(); changed.emit())
-	add.add_child(ap)
-	var ar := Button.new()
-	ar.text = "+ rotazione"
-	ar.pressed.connect(func(): atoms.append(_norm_atom({"t": "rot", "n": 1, "opt": false})); _rebuild_widgets(); changed.emit())
-	add.add_child(ar)
-	var an := Button.new()
-	an.text = "+ àncora"
-	an.tooltip_text = "Marcatore-àncora sulla Griglia di Posizione (collegabile a un asterisco da una carta Abilità) - non muove la pedina"
-	an.pressed.connect(func(): atoms.append(_norm_atom({"t": "anchor", "n": 1, "opt": false})); _rebuild_widgets(); changed.emit())
-	add.add_child(an)
+	for spec in [
+		["+ passo", "", {"t": "step", "dir": 0, "n": 1, "opt": false}],
+		["+ rotazione", "", {"t": "rot", "n": 1, "opt": false}],
+		["+ àncora", "Marcatore-àncora sulla Griglia di Posizione (collegabile a un asterisco da una carta Abilità) - non muove la pedina",
+			{"t": "anchor", "n": 1, "opt": false}],
+	]:
+		var b := Button.new()
+		b.text = str(spec[0])
+		b.tooltip_text = str(spec[1])
+		var atom: Dictionary = spec[2]
+		b.pressed.connect(func(): atoms.append(_norm_atom(atom)); _commit())
+		add.add_child(b)
 	v.add_child(add)
 	return v
 
@@ -994,6 +1006,7 @@ func _build_atom_editor(w: Dictionary, ai: int) -> Control:
 	var a: Dictionary = w["atoms"][ai]
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 4)
+	var opt_icon: Control = null   # icona da ridisegnare quando cambia "facolt."
 	if a["t"] == "step":
 		var ros := DirRosette.new()
 		ros.setup(self, a.get("dirs", []), bool(a.get("free", false)),
@@ -1005,42 +1018,40 @@ func _build_atom_editor(w: Dictionary, ai: int) -> Control:
 		anc.tooltip_text = "àncora (Griglia di Posizione) - non muove la pedina"
 		anc.draw.connect(func(): GeometryEditor.draw_icon(anc, "anchor" if not a["opt"] else "anchor_opt", Vector2(18, 18), 16.0, 1))
 		row.add_child(anc)
+		opt_icon = anc
 	else:
 		var rotc := Control.new()
 		rotc.custom_minimum_size = Vector2(36, 36)
 		rotc.draw.connect(func(): GeometryEditor.draw_icon(rotc, "rot" if not a["opt"] else "rot_opt", Vector2(18, 18), 16.0, 1))
 		row.add_child(rotc)
+		opt_icon = rotc
 
 	# Tutto su una riga: passi/entità, kamae (gate per-atomo), Focus, facolt, x.
 	var line := HBoxContainer.new()
 	line.add_theme_constant_override("separation", 3)
 	line.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	line.add_child(_lbl("passi" if a["t"] == "step" else "entità"))
-	var sp := SpinBox.new()
-	sp.min_value = 1; sp.max_value = 6; sp.value = a["n"]
-	sp.custom_minimum_size = Vector2(42, 0)
-	sp.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	sp.value_changed.connect(func(val): a["n"] = int(val); changed.emit())
-	line.add_child(sp)
+	line.add_child(_eff_spin(int(a["n"]), 1, 6, func(val): a["n"] = val))
 	line.add_child(_lbl("kamae"))
 	line.add_child(_kamae_bar(a.get("kamae", ""), func(val): a["kamae"] = val; changed.emit()))
 	if a["t"] == "step":
 		line.add_child(_lbl("F"))
-		var fs := SpinBox.new()
-		fs.min_value = 0; fs.max_value = 3; fs.value = int(a.get("focus_cost", 0))
-		fs.custom_minimum_size = Vector2(40, 0)
-		fs.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		fs.value_changed.connect(func(val): a["focus_cost"] = int(val); changed.emit())
-		line.add_child(fs)
+		line.add_child(_eff_spin(int(a.get("focus_cost", 0)), 0, 3, func(val): a["focus_cost"] = val))
 	var chk := CheckBox.new()
 	chk.text = "facolt."
 	chk.button_pressed = a["opt"]
 	chk.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	chk.toggled.connect(func(p): a["opt"] = p; _rebuild_widgets(); changed.emit())
+	# Modifica cosmetica: basta ridisegnare l'icona, niente rebuild (che farebbe
+	# perdere focus e posizione di scroll).
+	chk.toggled.connect(func(p):
+		a["opt"] = p
+		if opt_icon != null:
+			opt_icon.queue_redraw()
+		changed.emit())
 	line.add_child(chk)
 	var rm := Button.new()
 	rm.text = "x"
-	rm.pressed.connect(func(): w["atoms"].remove_at(ai); _rebuild_widgets(); changed.emit())
+	rm.pressed.connect(func(): w["atoms"].remove_at(ai); _commit())
 	line.add_child(rm)
 	row.add_child(line)
 	return row
@@ -1052,6 +1063,9 @@ func _build_kamae_body(w: Dictionary) -> Control:
 	var v := VBoxContainer.new()
 	var krow := HBoxContainer.new()
 	krow.add_theme_constant_override("separation", 6)
+	# Etichetta aggiornata in place a ogni clic: niente rebuild dell'albero.
+	var lbl := Label.new()
+	lbl.text = "richiesto: %s" % _gate_label(w.get("req", ""))
 	for slug in ["aggression", "balance", "determination"]:
 		var tok := DragIcon.new()
 		tok.setup(self, "kamae_" + slug, slug)
@@ -1069,15 +1083,17 @@ func _build_kamae_body(w: Dictionary) -> Control:
 				else:
 					cur_set.append(slug)
 				w["req"] = _gate_value(cur_set)
-				_rebuild_widgets(); changed.emit())
+				lbl.text = "richiesto: %s" % _gate_label(w["req"])
+				changed.emit())
 		krow.add_child(tok)
 	var az := Button.new()
 	az.text = "azzera"
-	az.pressed.connect(func(): w["req"] = ""; _rebuild_widgets(); changed.emit())
+	az.pressed.connect(func():
+		w["req"] = ""
+		lbl.text = "richiesto: %s" % _gate_label("")
+		changed.emit())
 	krow.add_child(az)
 	v.add_child(krow)
-	var lbl := Label.new()
-	lbl.text = "richiesto: %s" % _gate_label(w.get("req", ""))
 	v.add_child(lbl)
 	return v
 
@@ -1118,16 +1134,9 @@ func _build_effect_body(w: Dictionary) -> Control:
 	row.add_child(_lbl("F"))
 	row.add_child(_eff_spin(int(w.get("focus_cost", 0)), 0, 3, func(val): w["focus_cost"] = val))
 	# Verbo + quantità.
-	var do_opt := OptionButton.new()
-	do_opt.clip_text = true
-	do_opt.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	do_opt.custom_minimum_size = Vector2(150, 0)
-	do_opt.add_item("(verbo...)")
-	for v in CardValidator.EFFECT_VERBS:
-		do_opt.add_item(v)
-	do_opt.selected = CardValidator.EFFECT_VERBS.find(str(w.get("do", ""))) + 1
-	do_opt.item_selected.connect(func(i): w["do"] = "" if i == 0 else CardValidator.EFFECT_VERBS[i - 1]; changed.emit())
-	row.add_child(do_opt)
+	var verbs := [""]
+	verbs.append_array(CardValidator.EFFECT_VERBS)
+	row.add_child(_eff_opt(verbs, str(w.get("do", "")), func(val): w["do"] = val, 150, "(verbo...)"))
 	row.add_child(_lbl("n"))
 	row.add_child(_eff_spin(int(w.get("n", 0)), 0, 9, func(val): w["n"] = val))
 	# Quando.
@@ -1165,17 +1174,17 @@ func _eff_spin(val: int, mn: int, mx: int, on_set: Callable) -> SpinBox:
 	return sp
 
 
-func _eff_opt(values: Array, cur: String, on_set: Callable) -> OptionButton:
+func _eff_opt(values: Array, cur: String, on_set: Callable, width := 56, empty_label := "-") -> OptionButton:
 	var o := OptionButton.new()
 	var found := -1
 	for i in values.size():
-		o.add_item("-" if values[i] == "" else str(values[i]))
+		o.add_item(empty_label if values[i] == "" else str(values[i]))
 		if values[i] == cur:
 			found = i
 	o.selected = maxi(found, 0)
 	o.clip_text = true
 	o.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	o.custom_minimum_size = Vector2(56, 0)
+	o.custom_minimum_size = Vector2(width, 0)
 	o.item_selected.connect(func(idx): on_set.call(values[idx]); changed.emit())
 	return o
 

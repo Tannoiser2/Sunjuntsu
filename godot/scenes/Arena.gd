@@ -127,8 +127,8 @@ func _who(i: int) -> String:
 
 
 func _card_type_it(t: String) -> String:
-	return {"attack": "Attacco", "defence": "Difesa", "meditation": "Meditazione",
-		"core": "Carta base", "other": "Speciale"}.get(t, t)
+	return str({"attack": "Attacco", "defence": "Difesa", "meditation": "Meditazione",
+		"core": "Carta base", "other": "Speciale"}.get(t, t))
 
 
 ## Carica nell'HUD la carta Kamae del combattente `i` e posiziona il segnalino.
@@ -268,8 +268,8 @@ func _show_reveal_panel() -> void:
 	var theirs_c := CardDB.card(theirs)
 	_hud.show_phase("RIVELAZIONE — Round %d" % state.round_num, Color(0.75, 0.75, 0.75))
 	_hud.set_hint("%s: %s (%s)\n%s: %s (%s)\n%s\nPremi «Avanti ▶» per iniziare." % [
-		_who(0), mine_c.get("name", "—"), _card_type_it(mine_c.get("type", "")),
-		_who(1), theirs_c.get("name", "—"), _card_type_it(theirs_c.get("type", "")),
+		_who(0), mine_c.get("name", "—"), _card_type_it(str(mine_c.get("type", ""))),
+		_who(1), theirs_c.get("name", "—"), _card_type_it(str(theirs_c.get("type", ""))),
 		ord_line])
 	_hud.show_confirm("Avanti ▶ — risolvi")
 
@@ -281,8 +281,8 @@ func _drive_resolution(i: int) -> void:
 	_hud.hide_instant()
 	var ini := _duel._speed_of(i) if _duel != null else -1
 	var ini_str := str(ini) if ini >= 0 else "—"
-	var card_name := CardDB.card(state.fighters[i].planned).get("name", "?")
-	var card_type := CardDB.card(state.fighters[i].planned).get("type", "")
+	var card_name: String = str(CardDB.card(state.fighters[i].planned).get("name", "?"))
+	var card_type: String = str(CardDB.card(state.fighters[i].planned).get("type", ""))
 	if not state.fighters[i].is_ai:
 		# Umano (giocatore solo, oppure entrambi in 1v1): risoluzione interattiva.
 		# Sequenza: 1) movimento+rotazione  2) scelte (Kamae/OPPURE)  3) conferma.
@@ -403,7 +403,7 @@ func _enter_split_stage() -> void:
 	_hud.hide_options()
 	var g := _duel.pending_split_geom()
 	var sp_ini := _duel.pending_split_initiative()
-	var main_card_name := CardDB.card(state.fighters[_resolving_index].planned).get("name", "?")
+	var main_card_name: String = str(CardDB.card(state.fighters[_resolving_index].planned).get("name", "?"))
 	_selected_card = {"id": -1, "type": "attack", "name": "Parte bassa", "geom_override": g}
 	_refresh_overlays()
 	_hud.show_confirm("Conferma parte bassa ▶")
@@ -786,7 +786,7 @@ func _on_card_selected(card_data: Dictionary) -> void:
 		_hud.show_confirm("✓ Conferma carta")
 	else:
 		_hud.hide_confirm()
-	var ct := _card_type_it(card_data.get("type", ""))
+	var ct := _card_type_it(str(card_data.get("type", "")))
 	var ini_v := str(card_data.get("initiative", "-"))
 	_hud.set_hint("Selezionata: %s · %s · iniziativa %s\nGiallo = movimenti possibili · Rosso = arco d'attacco\nPremi «Conferma carta» per programmarla (coperta)." % [
 		card_data.get("name", "?"), ct, ini_v])

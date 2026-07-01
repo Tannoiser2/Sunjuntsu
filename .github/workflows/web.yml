@@ -53,6 +53,21 @@ jobs:
           godot --headless --path godot --export-release "Web" ../build/index.html
           test -f build/index.html
 
+      - name: Cache-busting (rinomina i file con lo SHA del commit)
+        run: |
+          # I browser tengono in cache index.pck/index.wasm anche per giorni:
+          # rinominando i file a ogni deploy la copia vecchia non è mai riusabile.
+          set -euxo pipefail
+          cd build
+          STAMP="${GITHUB_SHA::8}"
+          for f in index.*; do
+            [ "$f" = "index.html" ] && continue
+            mv "$f" "index.$STAMP.${f#index.}"
+          done
+          sed -i "s/\"executable\":\"index\"/\"executable\":\"index.$STAMP\"/" index.html
+          sed -i "s/index\.\(audio\.position\.worklet\.js\|audio\.worklet\.js\|apple-touch-icon\.png\|side\.wasm\|icon\.png\|wasm\|pck\|js\|png\)/index.$STAMP.\1/g" index.html
+          grep -q "index.$STAMP" index.html
+
       - name: Carica artifact per Pages
         uses: actions/upload-pages-artifact@v3
         with:
