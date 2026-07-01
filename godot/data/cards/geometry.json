@@ -1033,14 +1033,7 @@
 	  "atoms": [
 	   {
 		"t": "step",
-		"dirs": [
-		 0,
-		 1,
-		 2,
-		 3,
-		 4,
-		 5
-		],
+		"dir": -1,
 		"n": 1,
 		"opt": true
 	   },
@@ -1084,14 +1077,7 @@
 	   "atoms": [
 		{
 		 "t": "step",
-		 "dirs": [
-		  0,
-		  1,
-		  2,
-		  3,
-		  4,
-		  5
-		 ],
+		 "dir": -1,
 		 "n": 1,
 		 "opt": true
 		},
@@ -1502,14 +1488,7 @@
 	   "atoms": [
 		{
 		 "t": "step",
-		 "dirs": [
-		  0,
-		  1,
-		  2,
-		  3,
-		  4,
-		  5
-		 ],
+		 "dir": -1,
 		 "n": 2,
 		 "opt": true,
 		 "kamae": "aggression"
@@ -1556,14 +1535,7 @@
 	   "atoms": [
 		{
 		 "t": "step",
-		 "dirs": [
-		  0,
-		  1,
-		  2,
-		  3,
-		  4,
-		  5
-		 ],
+		 "dir": -1,
 		 "n": 2,
 		 "opt": true,
 		 "kamae": "aggression"
@@ -2120,14 +2092,7 @@
 	  "atoms": [
 	   {
 		"t": "step",
-		"dirs": [
-		 0,
-		 1,
-		 2,
-		 3,
-		 4,
-		 5
-		],
+		"dir": -1,
 		"n": 1,
 		"opt": true,
 		"kamae": "balance"
@@ -2188,14 +2153,7 @@
 	   "atoms": [
 		{
 		 "t": "step",
-		 "dirs": [
-		  0,
-		  1,
-		  2,
-		  3,
-		  4,
-		  5
-		 ],
+		 "dir": -1,
 		 "n": 1,
 		 "opt": true,
 		 "kamae": "balance"
@@ -4988,7 +4946,6 @@
 	 }
 	]
    },
-   "effects": [],
    "note": "Gen. Ability (#154 Bleeding Slice, init 4). Bordo arancio. Ferita sanguinante (bleed) sul fronte. Testo di colore (CON MENTE CHIARA E LA SPADA INCERTA SCORRE IL SANGUE). Move non visibile nel ritaglio. Arco/movimento DA VERIFICARE."
   },
   "153": {

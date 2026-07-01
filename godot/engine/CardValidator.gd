@@ -17,9 +17,10 @@ const RANKS := ["Wood", "Steel", "Gold", "Jade", "-"]
 
 ## Verbi `effects[].do` noti (GEOMETRY_SCHEMA.md §Effetti).
 const EFFECT_VERBS := [
-	"block_initiative", "cancel_abilities", "cancel_movement", "change_ai_behaviour",
-	"change_kamae", "discard_self", "draw", "focus", "foe_discard", "foe_lose_focus",
-	"foe_stun", "hobble", "link_anchor", "push", "reduce_damage", "replace_wound_bleed",
+	"bleed", "block_initiative", "cancel_abilities", "cancel_movement",
+	"change_ai_behaviour", "change_approach", "change_kamae", "discard_self",
+	"draw", "focus", "foe_discard", "foe_lose_focus", "foe_stun", "hobble",
+	"link_anchor", "pull", "push", "reduce_damage", "replace_wound_bleed",
 	"reset_deck", "rotate_target", "search_draw", "spend_focus", "stun_self",
 	"swap_positions", "switch_kamae",
 ]
@@ -81,16 +82,18 @@ static func validate(card: Dictionary, geom: Dictionary, image, ctx := {}) -> Ar
 			out.append(_issue("error", "kamae_req", "kamae_req non valido: '%s'" % kr))
 		# Le verifiche "senza celle" valgono solo se la geometria è stata avviata
 		# (altrimenti è semplicemente "senza geometria", segnalato dall'indicatore ◇).
-		var has_content := not (geom.get("attack", {}).get("cells", []) as Array).is_empty() \
-			or not (geom.get("defence", {}).get("cells", []) as Array).is_empty() \
+		var has_atk := _has_combat_cells(geom, "attack", "attacks")
+		var has_def := _has_combat_cells(geom, "defence", "defences")
+		var has_content := has_atk or has_def \
 			or not (geom.get("move", {}).get("opts", []) as Array).is_empty() \
 			or not (geom.get("effects", []) as Array).is_empty() \
 			or not (geom.get("counter", []) as Array).is_empty() \
 			or str(geom.get("kamae_req", "")) != ""
 		if has_content:
-			if gt == "attack" and (geom.get("attack", {}).get("cells", []) as Array).is_empty():
+			if gt == "attack" and not has_atk \
+					and not _has_combat_cells(geom.get("split", {}), "attack", "attacks"):
 				out.append(_issue("warning", "no_attack", "carta d'attacco senza celle/ferite"))
-			if gt == "defence" and (geom.get("defence", {}).get("cells", []) as Array).is_empty():
+			if gt == "defence" and not has_def:
 				out.append(_issue("warning", "no_defence", "carta di difesa senza celle di blocco"))
 		for e in geom.get("effects", []):
 			var verb := str(e.get("do", ""))
@@ -109,6 +112,18 @@ static func validate(card: Dictionary, geom: Dictionary, image, ctx := {}) -> Ar
 					out.append(_issue("error", "effect_kamae",
 						"effetto '%s': to non valido '%s'" % [verb, tv]))
 	return out
+
+
+## Celle di combattimento presenti in forma singola (`attack`) O plurale
+## gated-da-kamae (`attacks[]`) — il vecchio controllo guardava solo la singola
+## e dava falsi "senza celle" sulle carte a varianti.
+static func _has_combat_cells(geom: Dictionary, single: String, plural: String) -> bool:
+	if not (geom.get(single, {}).get("cells", []) as Array).is_empty():
+		return true
+	for v in geom.get(plural, []):
+		if v is Dictionary and not (v.get("cells", []) as Array).is_empty():
+			return true
+	return false
 
 
 static func _static_kw_set() -> Dictionary:

@@ -3,6 +3,38 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.71.0] — 2026-07-01
+### Turno di gioco più chiaro + editor ottimizzato + fix
+- **Banner di fase in partita**: banner in alto al centro che mostra sempre
+  iniziativa corrente, chi agisce e la carta giocata (tipo compreso) —
+  rivelazione (grigio), risoluzione (oro), parte bassa split (blu), turno IA.
+  Suggerimenti rietichettati «FASE 1 — MOVIMENTO» / «FASE 2 — ATTACCO»; la
+  selezione carta mostra nome, tipo e iniziativa.
+- **Fix avvio partita**: errore GDScript "variable typed as Variant" in
+  `Arena.gd` (righe 284/285/406) — dichiarazioni tipizzate esplicite.
+- **Fix pagina web ferma a versioni vecchie**: il deploy su GitHub Pages ora
+  rinomina i file esportati (pck/wasm/js) con lo SHA del commit — i browser
+  non possono più riusare una build in cache.
+- **Editor — meno ricostruzioni**: la spunta «facolt.» e i clic sulla barra
+  Kamae aggiornano solo il controllo toccato (prima ricostruivano l'intero
+  albero dei widget perdendo focus e scroll); tema e stile dei pannelli
+  condivisi in cache; validazione live coalizzata (una per raffica di tasti);
+  cronologia undo limitata a 100 passi.
+- **Editor — «+ aggiungi widget» diretto**: menu che crea subito il widget del
+  tipo scelto (prima: pannello vuoto + tendina, doppio passaggio).
+- **Editor — pulizia**: rimosse ~190 righe di codice morto in `CardEditor.gd`
+  e il pulsante «Salva geometria» ridondante (il «Salva» della barra salva già
+  tutto); helper `_commit()`/`_eff_spin`/`_eff_opt` riusati al posto di ~20
+  blocchi duplicati in `GeometryEditor.gd`.
+- **Validatore**: aggiunti i verbi `pull`, `bleed`, `change_approach` (già
+  gestiti dal motore); i controlli "senza celle" ora vedono anche le varianti
+  plurali `attacks`/`defences` e la parte `split` (niente più falsi avvisi su
+  #24, #26, #65, #113).
+- **Geometria dati**: audit completo delle 140 carte (schema pulito, nessun
+  errore bloccante); normalizzati 6 atomi `dirs:[0..5]` → `dir:-1` (#23, #28,
+  #34) e rimosso un `effects:[]` vuoto (#154); documentazione `layout`
+  aggiornata alla forma ad albero. Restano 77 carte con nota «DA VERIFICARE».
+
 ## [0.70.0] — 2026-06-30
 ### Fix geometria carte + miglioramenti editor
 - **❄ passo libero**: 34 atomi `t:"anchor"` convertiti in `t:"step", dir:-1` su 30 carte — il simbolo ❄ nella barra movimento ora muove davvero la pedina in qualsiasi direzione adiacente; rimosso il no-op in `Move.gd`.
