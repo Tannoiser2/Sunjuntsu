@@ -1028,165 +1028,207 @@
    "name": "CARTA SPECIALE RONIN",
    "type": "core",
    "move": {
-	"opts": [
-	 {
-	  "atoms": [
-	   {
-		"t": "step",
-		"dir": -1,
-		"n": 1,
-		"opt": true
-	   },
-	   {
-		"t": "rot",
-		"n": 2,
-		"opt": true
-	   }
-	  ]
-	 }
-	]
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": -1,
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 2,
+        "opt": true
+       }
+      ]
+     }
+    ]
    },
    "effects": [
-	{
-	 "do": "draw",
-	 "n": 2,
-	 "alt": "a"
-	},
-	{
-	 "do": "stun_self",
-	 "n": 1
-	},
-	{
-	 "do": "change_kamae",
-	 "to": "any",
-	 "alt": "b"
-	},
-	{
-	 "do": "switch_kamae",
-	 "n": 1,
-	 "alt": "b"
-	}
+    {
+     "do": "discard_self",
+     "n": 1
+    },
+    {
+     "do": "draw",
+     "n": 2,
+     "alt": "a"
+    },
+    {
+     "do": "focus",
+     "n": 1,
+     "alt": "b"
+    },
+    {
+     "do": "switch_kamae",
+     "to": "any",
+     "alt": "b"
+    },
+    {
+     "do": "change_kamae",
+     "n": 1,
+     "alt": "c"
+    }
    ],
    "layout": [
-	{
-	 "type": "initiative",
-	 "value": "0",
-	 "children": [
-	  {
-	   "type": "movement",
-	   "atoms": [
-		{
-		 "t": "step",
-		 "dir": -1,
-		 "n": 1,
-		 "opt": true
-		},
-		{
-		 "t": "rot",
-		 "n": 2,
-		 "opt": true
-		}
-	   ]
-	  },
-	  {
-	   "type": "oppure",
-	   "children": [
-		{
-		 "type": "effect",
-		 "do": "draw",
-		 "n": 2,
-		 "alt": "a"
-		},
-		{
-		 "type": "effect",
-		 "do": "stun_self",
-		 "n": 1
-		},
-		{
-		 "type": "effect",
-		 "do": "change_kamae",
-		 "to": "any",
-		 "alt": "b"
-		},
-		{
-		 "type": "effect",
-		 "do": "switch_kamae",
-		 "n": 1,
-		 "alt": "b"
-		}
-	   ]
-	  }
-	 ]
-	}
-   ]
+    {
+     "type": "initiative",
+     "value": "0",
+     "children": [
+      {
+       "type": "movement",
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1,
+         "opt": true
+        },
+        {
+         "t": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "type": "effect",
+       "do": "discard_self",
+       "n": 1
+      },
+      {
+       "type": "oppure",
+       "children": [
+        {
+         "type": "effect",
+         "do": "draw",
+         "n": 2,
+         "alt": "a"
+        },
+        {
+         "type": "effect",
+         "do": "focus",
+         "n": 1,
+         "alt": "b"
+        },
+        {
+         "type": "effect",
+         "do": "switch_kamae",
+         "to": "any",
+         "alt": "b"
+        },
+        {
+         "type": "effect",
+         "do": "change_kamae",
+         "n": 1,
+         "alt": "c"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "note": "Costo: SCARTA 1 CARTA. Movimento ❆1 ⟳2. OPPURE: pesca fino a 2 / prendi 1 focus + passa a una qualsiasi Kamae / cambia Kamae fino a 1 ramo. Verificata su ronin_04.webp."
   },
   "24": {
    "name": "VORTICE CREMISI",
    "type": "attack",
    "attacks": [
-	{
-	 "cells": [
-	  {
-	   "d": 0,
-	   "k": 2,
-	   "w": 2
-	  },
-	  {
-	   "d": 1,
-	   "k": 2,
-	   "w": 2
-	  },
-	  {
-	   "d": 2,
-	   "k": 2,
-	   "w": 2
-	  },
-	  {
-	   "d": 3,
-	   "k": 2,
-	   "w": 2
-	  },
-	  {
-	   "d": 4,
-	   "k": 2,
-	   "w": 2
-	  },
-	  {
-	   "d": 5,
-	   "k": 2,
-	   "w": 2
-	  }
-	 ],
-	 "kamae": "aggression"
-	}
+    {
+     "cells": [
+      {
+       "q": 2,
+       "r": 0,
+       "w": 2
+      },
+      {
+       "q": 2,
+       "r": -1,
+       "w": 2
+      },
+      {
+       "q": 2,
+       "r": -2,
+       "w": 2
+      },
+      {
+       "q": 1,
+       "r": -2,
+       "w": 2
+      },
+      {
+       "q": 0,
+       "r": -2,
+       "w": 2
+      },
+      {
+       "q": -1,
+       "r": -1,
+       "w": 2
+      },
+      {
+       "q": -2,
+       "r": 0,
+       "w": 2
+      },
+      {
+       "q": -2,
+       "r": 1,
+       "w": 2
+      },
+      {
+       "q": -2,
+       "r": 2,
+       "w": 2
+      },
+      {
+       "q": -1,
+       "r": 2,
+       "w": 2
+      },
+      {
+       "q": 0,
+       "r": 2,
+       "w": 2
+      },
+      {
+       "q": 1,
+       "r": 1,
+       "w": 2
+      }
+     ],
+     "kamae": "aggression"
+    }
    ],
    "split": {
-	"initiative": 5,
-	"move": {
-	 "opts": [
-	  {
-	   "atoms": [
-		{
-		 "t": "step",
-		 "dir": 0,
-		 "n": 1,
-		 "opt": false
-		}
-	   ]
-	  }
-	 ]
-	},
-	"attack": {
-	 "cells": [
-	  {
-	   "d": 0,
-	   "k": 1,
-	   "w": 2
-	  }
-	 ]
-	}
+    "initiative": 5,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    },
+    "attack": {
+     "cells": [
+      {
+       "d": 0,
+       "k": 1,
+       "w": 2
+      }
+     ]
+    }
    },
-   "note": "Top vel8: anello dist2 (12 celle fisiche → 6 raggi). Bottom vel5 Fronte 2 ferite."
+   "note": "Top vel8: TUTTE le 12 celle dell'anello 2 con 2 ferite (assiali q,r; il vecchio formato d,k copriva solo 6 raggi). Bottom vel5: avanti 1, fronte 2 ferite. Verificata su ronin_38.webp."
   },
   "25": {
    "name": "ARMATURA PESANTE",
