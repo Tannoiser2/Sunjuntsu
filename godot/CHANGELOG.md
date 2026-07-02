@@ -3,6 +3,35 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.76.0] — 2026-07-02
+### Verifica adversariale dei 10 nuovi personaggi + fix ordine "spiega carta"
+- **Gioco base completato**: con Musashi e Kojiro esclusi dallo scope (nessuna
+  espansione disponibile), tutte le carte del gioco base caricato hanno ora
+  geometria trascritta — mancavano solo 2 carte, entrambe divisori di mazzo
+  senza contenuto di gioco (215, 234), ora documentate come tali.
+- **Verifica sistematica delle 137 carte trascritte nella 0.74.0/0.75.0**:
+  confrontate una a una con le scansioni reali (10 agenti indipendenti, uno
+  per personaggio). Su 137 carte, ~20 correzioni applicate:
+  - Direzioni di movimento invertite o incomplete (Assassino #219/#229,
+    Ninja #172, Monaco #266)
+  - Celle d'attacco sull'anello sbagliato: tre carte Onna-Bugeisha
+    (#297, #304, #306) avevano ferite sull'anello 1 quando in realtà
+    l'anello 1 è vuoto e il colpo è sull'anello 2; Yasuke #352 aveva le
+    coordinate delle celle laterali invertite
+    - Costo "SCARTA 1 CARTA" mancante (Yojimbo #317); `type` errato
+    "other"→"meditation" (Yojimbo #321, causato da un refuso "Mediation"
+    nell'anagrafica sorgente)
+  - Effetti indipendenti erroneamente resi alternativi con "OPPURE"
+    (Ashigaru #240)
+  - Icona Kamae "Distanza" del Navigatore scambiata per Neutrale (#276)
+  - Varie correzioni di nota (Hachikō, Wakou, Altre carte 3 #146)
+- **Fix CardSimulator.explain()**: il costo iniziale "SCARTA 1 CARTA" (47
+  carte nel dataset) veniva spiegato per ultimo invece che per primo, perché
+  `effects[]` era sempre stampato dopo movimento e attacco. Ora il costo
+  incondizionato viene estratto e mostrato subito dopo l'intestazione,
+  rispecchiando l'ordine reale sulla carta stampata.
+- Validazione automatica: zero errori su tutte le 281 carte.
+
 ## [0.75.0] — 2026-07-02
 ### 10 nuovi personaggi: geometria completata (fase 2, tutte le 137 carte)
 - Trascritte le ultime 45 carte rimaste in coda dalla 0.74.0: **Ninja** (14),
