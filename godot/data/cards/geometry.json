@@ -7560,12 +7560,12 @@
     "effects": [
      {
       "do": "state_set",
-      "state": "ombra",
+      "state": "occultato",
       "n": 1
      }
     ]
    },
-   "note": "DIFESA senza griglia di blocco stampata. Tutto il contenuto reale (❄ 1 POI ❄ 1, ↻1, ENTRA IN stato Ombra → state_set) è sotto la barra split [9]; l'iniziativa primaria 7 (da card_pool) risulta priva di contenuto proprio sulla carta fisica — DA VERIFICARE sul gioco fisico. Come si ESCE dallo stato Ombra (consumo/durata) è regola dell'espansione, non ancora cablata. Verificata su assassin_06.webp."
+   "note": "DIFESA senza griglia di blocco stampata. Tutto il contenuto reale (❄ 1 POI ❄ 1, ↻1, ENTRA IN stato Occultato → state_set) è sotto la barra split [9]; l'iniziativa primaria 7 (da card_pool) risulta priva di contenuto proprio sulla carta fisica — DA VERIFICARE sul gioco fisico. Come si ESCE dallo stato Occultato (consumo/durata) è regola dell'espansione, non ancora cablata. Verificata su assassin_06.webp."
   },
  "222": {
    "name": "BACIO DEL RAGNO",
@@ -7752,12 +7752,12 @@
     "effects": [
      {
       "do": "state_set",
-      "state": "ombra",
+      "state": "occultato",
       "n": 1
      }
     ]
    },
-   "note": "keyword Prepared. Le 6 celle attorno al combattente sono marcate con asterisco (v:0, cella-ancora) collegate a '* SPINGI 1' — DA VERIFICARE se vadano trattate come blocco v:1 a 360 gradi. Split [6]: ↻1 poi passo indietro 1 in sequenza, OPPURE (Determinazione) tridente basso 1; in fondo ENTRA IN stato Ombra (state_set nello split). Verificata su assassin_09.webp."
+   "note": "keyword Prepared. Le 6 celle attorno al combattente sono marcate con asterisco (v:0, cella-ancora) collegate a '* SPINGI 1' — DA VERIFICARE se vadano trattate come blocco v:1 a 360 gradi. Split [6]: ↻1 poi passo indietro 1 in sequenza, OPPURE (Determinazione) tridente basso 1; in fondo ENTRA IN stato Occultato (state_set nello split). Verificata su assassin_09.webp."
   },
  "225": {
    "name": "COLTELLO NELLA PIAGA",
@@ -7788,11 +7788,11 @@
     },
     {
      "do": "state_set",
-     "state": "ombra",
+     "state": "occultato",
      "n": 1
     }
    ],
-   "note": "Aggiunta Istantanea: GIOCA SE L'ATTACCO È RIUSCITO condiziona l'intera carta. L'avversario scarta dalla CIMA del mazzo (mill) un numero pari a ferite+sanguinanti attuali +1 — nessun verbo dedicato (roadmap §3.16), approssimato con foe_discard senza 'n' fisso, DA VERIFICARE. ENTRA IN stato Ombra → state_set. Verificata su assassin_11.webp."
+   "note": "Aggiunta Istantanea: GIOCA SE L'ATTACCO È RIUSCITO condiziona l'intera carta. L'avversario scarta dalla CIMA del mazzo (mill) un numero pari a ferite+sanguinanti attuali +1 — nessun verbo dedicato (roadmap §3.16), approssimato con foe_discard senza 'n' fisso, DA VERIFICARE. ENTRA IN stato Occultato → state_set. Verificata su assassin_11.webp."
   },
  "226": {
    "name": "BALZO NELL'OMBRA",
@@ -7858,11 +7858,11 @@
     },
     {
      "do": "state_set",
-     "state": "ombra",
+     "state": "occultato",
      "n": 1
     }
    ],
-   "note": "Tridente alto (fronte/fronte-dx/fronte-sx) 1 in testa. Cella fronte con asterisco (v:0) collegata a '* SCAMBIA POSIZIONE CON [avversario]'. SE RIUSCITO: SPINGI 1 e due bonus di movimento gated (Equilibrio ↻2, Determinazione tridente alto 1) trascritti come opts aggiuntive per assenza di campo dedicato, DA VERIFICARE. ENTRA IN stato Ombra → state_set. Verificata su assassin_13.webp."
+   "note": "Tridente alto (fronte/fronte-dx/fronte-sx) 1 in testa. Cella fronte con asterisco (v:0) collegata a '* SCAMBIA POSIZIONE CON [avversario]'. SE RIUSCITO: SPINGI 1 e due bonus di movimento gated (Equilibrio ↻2, Determinazione tridente alto 1) trascritti come opts aggiuntive per assenza di campo dedicato, DA VERIFICARE. ENTRA IN stato Occultato → state_set. Verificata su assassin_13.webp."
   },
  "227": {
    "name": "COLPO DELLA VIPERA",
@@ -7932,11 +7932,11 @@
     },
     {
      "do": "state_set",
-     "state": "ombra",
+     "state": "occultato",
      "n": 1
     }
    ],
-   "note": "Aggiunta Istantanea: GIOCA SE L'ATTACCO O IL BLOCCO È RIUSCITO condiziona l'intera carta. L'avversario scarta 1 carta (l'icona montagna dopo potrebbe filtrare il tipo, DA VERIFICARE). Equilibrio: OTTIENI 1 focus. ENTRA IN stato Ombra → state_set. Verificata su assassin_17.webp."
+   "note": "Aggiunta Istantanea: GIOCA SE L'ATTACCO O IL BLOCCO È RIUSCITO condiziona l'intera carta. L'avversario scarta 1 carta (l'icona montagna dopo potrebbe filtrare il tipo, DA VERIFICARE). Equilibrio: OTTIENI 1 focus. ENTRA IN stato Occultato → state_set. Verificata su assassin_17.webp."
   },
  "229": {
    "name": "ARTERIA RECISA",
@@ -7965,7 +7965,7 @@
          5
         ],
         "n": 2,
-        "state": "ombra"
+        "state": "occultato"
        }
       ]
      }
@@ -7998,7 +7998,7 @@
      "kamae": "aggression"
     }
    ],
-   "note": "Movimento: bidente basso 1 OPPURE lo stesso passo con n:2 in stato Ombra (gate state sull'atomo). Arco frontale completo a distanza 1 applica SANGUINANTE invece di ferite dirette. SE RIUSCITO (Aggressività): l'avversario scarta 1 carta. Verificata su assassin_20.webp."
+   "note": "Movimento: bidente basso 1 OPPURE lo stesso passo con n:2 in stato Occultato (gate state sull'atomo). Arco frontale completo a distanza 1 applica SANGUINANTE invece di ferite dirette. SE RIUSCITO (Aggressività): l'avversario scarta 1 carta. Verificata su assassin_20.webp."
   },
  "230": {
    "name": "TAGLIO VELENOSO",
@@ -11428,18 +11428,18 @@
     "effects": [
      {
       "do": "state_set",
-      "state": "ninja",
+      "state": "occultato",
       "n": 1
      }
     ]
    },
-   "note": "5 scudi su ring1 (dorso vuoto). Split [1]: ENTRA IN stato Ninja mascherato → state_set. Movimento: ❄2+⟳2 base, OPPURE (1 focus stimato) ❄3+⟳3. Come si ESCE dallo stato (consumo/durata) è regola dell'espansione, non ancora cablata. Verificata su ninja_04.webp."
+   "note": "5 scudi su ring1 (dorso vuoto). Split [1]: ENTRA IN stato Occultato → state_set. Movimento: ❄2+⟳2 base, OPPURE (1 focus stimato) ❄3+⟳3. Come si ESCE dallo stato (consumo/durata) è regola dell'espansione, non ancora cablata. Verificata su ninja_04.webp."
   },
  "166": {
    "name": "TRAPPOLA DEL TIRATORE LUNARE",
    "type": "meditation",
-   "note": "Meccanica trappola non rappresentabile (roadmap §3.4/§3.28: nessun verbo per 'ferisci l'avversario se la sua iniziativa è inferiore a N'). Banda blu stato Ninja in testa → giocabile solo in stato Ninja (state_req). Banda viola [7] = soglia iniziativa <7 (costo focus non stampato); COLPISCI l'avversario con iniziativa inferiore: 1 ferita; ulteriore banda viola trasforma la ferita in esecuzione pagando altro focus. DA VERIFICARE per intero. Verificata su ninja_31.webp.",
-   "state_req": "ninja"
+   "note": "Meccanica trappola non rappresentabile (roadmap §3.4/§3.28: nessun verbo per 'ferisci l'avversario se la sua iniziativa è inferiore a N'). Banda blu stato Occultato in testa → giocabile solo in stato Occultato (state_req). Banda viola [7] = soglia iniziativa <7 (costo focus non stampato); COLPISCI l'avversario con iniziativa inferiore: 1 ferita; ulteriore banda viola trasforma la ferita in esecuzione pagando altro focus. DA VERIFICARE per intero. Verificata su ninja_31.webp.",
+   "state_req": "occultato"
   },
  "167": {
    "name": "CERBOTTANA FUKIYA",
@@ -11595,7 +11595,7 @@
      "alt": "b"
     }
    ],
-   "note": "Passo indietro 1 obbligatorio. 3 celle vuote indicano solo dove piazzare trappole (nessuna ferita). OPPURE tra due effetti di piazzamento non modellabili coi verbi esistenti (approssimati con link_anchor, DA VERIFICARE): metti 1 Piede di Corvo, oppure metti 3 segnalini trappola a faccia in giù. Verificata su ninja_12.webp."
+   "note": "Passo indietro 1 obbligatorio. 3 celle vuote indicano solo dove piazzare trappole (nessuna ferita). OPPURE tra due effetti di piazzamento non modellabili coi verbi esistenti (approssimati con link_anchor). Regola confermata dalla carta fisica #160 PIEDI DI CORVO: se lanciati da NON Occultato, miniatura visibile — chi entra nella casella riceve 1 ferita + AZZOPPATO, poi si rimuove; se lanciati da Occultato, segnalini trappola '?' coperti — chi entra li volta: piede di corvo = ferita+azzoppato, diversivo = nessun effetto. Marcatori su griglia ancora non modellati (roadmap §3.28). Verificata su ninja_11.webp e sulla carta-regola #160."
   },
  "171": {
    "name": "CATENA E UNCINO",
@@ -11642,10 +11642,10 @@
     {
      "do": "hobble",
      "when": "on_hit",
-     "state": "ninja"
+     "state": "occultato"
     }
    ],
-   "note": "4 celle-àncora asimmetriche (solo lato sinistro/centrale). '* TIRA 1' collegato. SE RIUSCITO: CANCELLA MOVIMENTO ATTIVO incondizionato; Equilibrio RUOTA bersaglio 2; AZZOPPA in stato Ninja (gate state). Verificata su ninja_14.webp."
+   "note": "4 celle-àncora asimmetriche (solo lato sinistro/centrale). '* TIRA 1' collegato. SE RIUSCITO: CANCELLA MOVIMENTO ATTIVO incondizionato; Equilibrio RUOTA bersaglio 2; AZZOPPA in stato Occultato (gate state). Verificata su ninja_14.webp."
   },
  "172": {
    "name": "BOMBA FUMOGENA",
@@ -11728,12 +11728,12 @@
     "effects": [
      {
       "do": "state_set",
-      "state": "ninja",
+      "state": "occultato",
       "n": 1
      }
     ]
    },
-   "note": "6 celle-àncora asterisco, anello completo attorno al personaggio (incluso il dorso, verificato). '* SPINGI 1' collegato. Split [6]: rotazione 1 opzionale + passo indietro 1 obbligatorio, OPPURE (Determinazione) passo a scelta tra fronte/dorso-dx/dorso/dorso-sx (verificato su icona); in fondo ENTRA IN stato Ninja (state_set nello split). Verificata su ninja_16.webp."
+   "note": "6 celle-àncora asterisco, anello completo attorno al personaggio (incluso il dorso, verificato). '* SPINGI 1' collegato. Split [6]: rotazione 1 opzionale + passo indietro 1 obbligatorio, OPPURE (Determinazione) passo a scelta tra fronte/dorso-dx/dorso/dorso-sx (verificato su icona); in fondo ENTRA IN stato Occultato (state_set nello split). Verificata su ninja_16.webp."
   },
  "173": {
    "name": "FLAGELLO SFERZANTE",
@@ -11842,11 +11842,11 @@
      }
     ]
    },
-   "note": "Aggiunta Istantanea, carta intera condizionata: ramo 1 GIOCA SE L'ATTACCO È RIUSCITO (tridente frontale 2) OPPURE ramo 2 GIOCA SE IL BLOCCO È RIUSCITO (bidente posteriore 1 + ⟳1); entrambi i rami terminano con ENTRA IN stato Ninja (state_set, reso una sola volta). La condizione di gioco e il gate delle singole opzioni di movimento non sono modellabili (roadmap §3.3), DA VERIFICARE. Verificata su ninja_18.webp.",
+   "note": "Aggiunta Istantanea, carta intera condizionata: ramo 1 GIOCA SE L'ATTACCO È RIUSCITO (tridente frontale 2) OPPURE ramo 2 GIOCA SE IL BLOCCO È RIUSCITO (bidente posteriore 1 + ⟳1); entrambi i rami terminano con ENTRA IN stato Occultato (state_set, reso una sola volta). La condizione di gioco e il gate delle singole opzioni di movimento non sono modellabili (roadmap §3.3), DA VERIFICARE. Verificata su ninja_18.webp.",
    "effects": [
     {
      "do": "state_set",
-     "state": "ninja",
+     "state": "occultato",
      "n": 1
     }
    ]
@@ -11894,10 +11894,10 @@
      "when": "on_hit"
     }
    ],
-   "note": "Banda blu 'stato Ninja' con [7] in testa = iniziativa alternativa 7 in stato Ninja (alt_initiative gated state; non è uno split, DA VERIFICARE). ⟳2 gated Equilibrio. Fronte/fronte-sx 1 ferita ciascuna. SE RIUSCITO: Aggressività sostituisci ! con sanguinante; banda viola PASSA A UNA QUALSIASI KAMAE (1 focus stimato). Verificata su ninja_21.webp.",
+   "note": "Banda blu 'stato Occultato' con [7] in testa = iniziativa alternativa 7 in stato Occultato (alt_initiative gated state; non è uno split, DA VERIFICARE). ⟳2 gated Equilibrio. Fronte/fronte-sx 1 ferita ciascuna. SE RIUSCITO: Aggressività sostituisci ! con sanguinante; banda viola PASSA A UNA QUALSIASI KAMAE (1 focus stimato). Verificata su ninja_21.webp.",
    "alt_initiative": {
     "value": 7,
-    "state": "ninja"
+    "state": "occultato"
    }
   },
  "176": {
@@ -11938,7 +11938,7 @@
     },
     {
      "do": "state_set",
-     "state": "ninja",
+     "state": "occultato",
      "n": 1
     },
     {
@@ -11946,7 +11946,7 @@
      "n": 1
     }
    ],
-   "note": "Movimento con 3 punte (fronte-dx/fronte-sx/dorso) 2, icona non standard, set esatto DA VERIFICARE. ⟳1 opzionale in Equilibrio. Determinazione: PESCA FINO A 1. Poi ungated: OTTIENI 1 focus; ENTRA IN stato Ninja (state_set); CAMBIA KAMAE FINO A 1 RAMO. Nessuno scudo: difesa di riposizionamento puro. Verificata su ninja_06.webp."
+   "note": "Movimento con 3 punte (fronte-dx/fronte-sx/dorso) 2, icona non standard, set esatto DA VERIFICARE. ⟳1 opzionale in Equilibrio. Determinazione: PESCA FINO A 1. Poi ungated: OTTIENI 1 focus; ENTRA IN stato Occultato (state_set); CAMBIA KAMAE FINO A 1 RAMO. Nessuno scudo: difesa di riposizionamento puro. Verificata su ninja_06.webp."
   },
  "260": {
    "name": "CARTA SPECIALE MONACO",

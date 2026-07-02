@@ -36,6 +36,13 @@ signal resolution_order(order: Array)
 
 var state: GameState
 
+## Stato di occultamento (carta-regola #161 RIVELATO/OCCULTATO, unico per
+## Assassino e Ninja — icona incappucciata "ENTRA IN"): si esce ("VOLTA
+## QUESTA CARTA") dopo un attacco riuscito, un blocco riuscito, ferite
+## subite o un altro effetto di stato ricevuto — salvo re-ingresso nello
+## stesso turno. Vedi _cleanup.
+const STEALTH_STATE := "occultato"
+
 ## Modalità interattiva: la risoluzione avviene a passi guidati dalla scena
 ## (programma → rivela → risolvi in ordine d'iniziativa). Se false, la
 ## risoluzione è sincrona (usata dai test headless).
@@ -60,6 +67,12 @@ var _block_ok: Dictionary = {}        ## indice → il suo blocco è riuscito
 ## (indice → valore). Le difese a iniziativa variabile scelgono il valore che
 ## aggancia l'attacco avversario, così il blocco scatta alla stessa velocità.
 var _chosen: Dictionary = {}
+
+## Fotografia di ferite/stati a inizio turno (indice → {wounds, stun,
+## hobbles, poison}) per le condizioni di uscita da Occultato.
+var _turn_baseline: Dictionary = {}
+## Chi è ENTRATO in Occultato durante questo turno (non esce subito).
+var _stealth_entered: Dictionary = {}
 
 
 func _init(initial_state: GameState) -> void:
@@ -141,6 +154,11 @@ func start() -> void:
 ## vuoto ⇒ ferita). Restituisce true se il duello continua.
 func _begin_turn() -> bool:
 	# Azzera gli stati "una tantum" del turno (la riduzione danno persistente NO).
+	_turn_baseline = {}
+	for i in range(state.fighters.size()):
+		var fb := state.fighters[i]
+		_turn_baseline[i] = {"wounds": fb.wounds.size(), "stun": fb.stun,
+			"hobbles": fb.hobbles.size(), "poison": fb.poison}
 	for f in state.fighters:
 		f.movement_cancelled = false
 		f.block_initiative_bonus = 0
@@ -263,6 +281,7 @@ func _pay_costs() -> void:
 	_instant_used = {}
 	_attack_ok = {}
 	_block_ok = {}
+	_stealth_entered = {}
 	# Paga i costi di focus obbligatori; se non basta, la carta "svanisce".
 	for i in range(state.fighters.size()):
 		var f := state.fighters[i]
@@ -1363,11 +1382,15 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 				var sn := str(e.get("state", ""))
 				if sn != "":
 					f.state_add(sn, n_eff)
+					if sn == STEALTH_STATE and f.state_get(sn) > 0:
+						_stealth_entered[i] = true
 					log.append("%s: stato '%s' → %d" % [f.character, sn, f.state_get(sn)])
 			"state_set":
 				var sn := str(e.get("state", ""))
 				if sn != "":
 					f.state_set(sn, n_eff)
+					if sn == STEALTH_STATE and f.state_get(sn) > 0:
+						_stealth_entered[i] = true
 					log.append("%s: stato '%s' = %d" % [f.character, sn, f.state_get(sn)])
 			"state_clear":
 				var sn := str(e.get("state", ""))
@@ -1518,6 +1541,23 @@ func remove_from_play(i: int, cid: int) -> bool:
 
 func _cleanup(log: Array) -> void:
 	_set_phase(Domain.Phase.CLEANUP)
+	# Uscita da Occultato (carta-regola #161): "volta questa carta dopo che
+	# hai effettuato un attacco riuscito O un blocco riuscito O hai subito
+	# una o più ferite O hai ottenuto un effetto di stato diverso da
+	# Occultato" — salvo esserci ENTRATI durante questo stesso turno.
+	for i in range(state.fighters.size()):
+		var fs := state.fighters[i]
+		if fs.state_get(STEALTH_STATE) <= 0 or bool(_stealth_entered.get(i, false)):
+			continue
+		var base: Dictionary = _turn_baseline.get(i, {})
+		var wounded: bool = fs.wounds.size() > int(base.get("wounds", fs.wounds.size()))
+		var statused: bool = fs.stun > int(base.get("stun", fs.stun)) \
+				or fs.hobbles.size() > int(base.get("hobbles", fs.hobbles.size())) \
+				or fs.poison > int(base.get("poison", fs.poison))
+		if bool(_attack_ok.get(i, false)) or bool(_block_ok.get(i, false)) or wounded or statused:
+			fs.state_set(STEALTH_STATE, 0)
+			log.append("%s è rivelato (esce da Occultato)" % fs.character)
+			fighter_updated.emit(i)
 	# Passo "Discard": la carta giocata va negli scarti, MA le core tornano in mano
 	# (non si scartano mai, regolamento p.10). Poi rientra nel limite di mano.
 	for f in state.fighters:

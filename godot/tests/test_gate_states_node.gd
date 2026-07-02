@@ -308,5 +308,30 @@ func _ready() -> void:
 	d10._apply_effects(0, 1, {"effects": [{"do": "foe_mill", "n": 3}]}, "always", [])
 	_check(m10b.draw_pile.is_empty() and m10b.discard.size() == 1, "foe_mill si ferma a mazzo vuoto")
 
+	# ── Occultato: condizioni di uscita (carta-regola #161) ─────────────────
+	var s11 := GameState.new()
+	var n11 := _mk("Ninja"); var n11b := _mk("Warrior")
+	n11.draw_pile = [10, 11]; n11b.is_ai = true; n11b.draw_pile = [30]
+	s11.fighters = [n11, n11b]
+	var d11 := Duel.new(s11)
+	d11._begin_turn()   # fotografa la baseline
+	n11.state_set("occultato", 1)
+	d11._stealth_entered = {}   # simulare uno stato preso nei turni scorsi
+	d11._cleanup([])
+	_check(n11.state_get("occultato") == 1, "occultato: resta senza eventi di uscita")
+	n11.wounds.append("wound")   # subisce una ferita nel turno
+	d11._cleanup([])
+	_check(n11.state_get("occultato") == 0, "occultato: esce dopo una ferita subita")
+	n11.state_set("occultato", 1)
+	d11._attack_ok[0] = true
+	d11._stealth_entered = {}
+	d11._cleanup([])
+	_check(n11.state_get("occultato") == 0, "occultato: esce dopo un attacco riuscito")
+	n11.state_set("occultato", 1)
+	d11._attack_ok[0] = true
+	d11._stealth_entered = {0: true}   # ENTRATO in questo turno: non esce
+	d11._cleanup([])
+	_check(n11.state_get("occultato") == 1, "occultato: il re-ingresso nel turno prevale")
+
 	print("RISULTATO: ", "PASS" if ok else "FAIL")
 	get_tree().quit(0 if ok else 1)

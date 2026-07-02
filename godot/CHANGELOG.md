@@ -3,6 +3,28 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.81.0] — 2026-07-02
+### Occultato: stato unico Assassino/Ninja con condizioni di uscita (da carte-regola fisiche)
+- L'utente ha fornito le foto delle carte-regola **#160 PIEDI DI CORVO** e
+  **#161 RIVELATO/OCCULTATO**: lo "stato Ombra" (Assassino) e lo "stato
+  Ninja" sono **lo stesso stato ufficiale, "Occultato"** (stessa carta a
+  doppia faccia, stessa icona incappucciata di "ENTRA IN").
+- **Nomi unificati nei dati**: `ombra`/`ninja` → `occultato` su 13 carte
+  (state/state_req/alt_initiative.state) + note aggiornate.
+- **Condizioni di USCITA cablate** in `Duel._cleanup` (dalla faccia
+  OCCULTATO di #161): si torna Rivelati dopo un attacco riuscito, un
+  blocco riuscito, ferite subite o un altro effetto di stato ricevuto
+  (stordito/azzoppato/veleno) — salvo esserci ENTRATI nello stesso turno
+  (le carte Assassino/Ninja tipicamente attaccano E entrano in Occultato:
+  l'ingresso a fine carta prevale). Fotografia di ferite/stati a inizio
+  turno (`_turn_baseline`) + tracking dell'ingresso (`_stealth_entered`).
+- **#170 LANCIO DI PIEDI DI CORVO**: nota aggiornata con la regola
+  confermata di #160 (miniatura visibile se lanciati da Rivelato,
+  segnalini '?' coperti con diversivi se da Occultato). I marcatori su
+  griglia restano da modellare (roadmap §3.28).
+- Test: 4 casi nuovi sulle condizioni di uscita. ⚠️ Suite ancora NON
+  eseguita in remoto; gdparse ok.
+
 ## [0.80.0] — 2026-07-02
 ### Fase 4 (parte 1) — zona "in gioco", trigger a inizio turno, bersaglio per confronto d'iniziativa, mill
 - **Zona "in gioco" per-fighter** (roadmap §3.2): `Fighter.in_play`; le carte

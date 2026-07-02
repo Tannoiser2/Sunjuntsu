@@ -75,7 +75,7 @@ agganciata al **numero stampato sulla carta** (= Card ID).
 | `name` | string | Nome stampato sulla carta (riferimento, ridondante con `card_pool`). |
 | `type` | string (enum) | `attack` \| `defence` \| `meditation` \| `core`. |
 | `kamae_req` | string (enum, opz.) | Kamae richiesto: `aggression` \| `balance` \| `determination`. |
-| `state_req` | string \| object (opz.) | Giocabilità gated dallo **stato persistente** (vedi §Stati persistenti): `"ombra"` (richiede ≥ 1) oppure `{ "contratti": 2 }` (nome → minimo, AND fra le chiavi). |
+| `state_req` | string \| object (opz.) | Giocabilità gated dallo **stato persistente** (vedi §Stati persistenti): `"occultato"` (richiede ≥ 1) oppure `{ "contratti": 2 }` (nome → minimo, AND fra le chiavi). |
 | `move` | object (opz.) | `{ "opts": [ Opzione, … ] }` — vedi **Movimento**. |
 | `attack` | object (opz.) | `{ "cells": [ Cella, … ] }` — celle offensive (variante unica). |
 | `attacks` | array[object] (opz.) | **Più varianti d'attacco**, ciascuna `{ "cells": […], "kamae": "<slug>"? }`. Il motore usa la variante il cui `kamae` combacia con la posa (stance) dell'attaccante; in mancanza, quella senza `kamae`. In alternativa a `attack`. Se più varianti condividono lo stesso `kamae` (incluso nessuno, cioè libere/OPPURE non gated), sono opzioni scelte liberamente dal giocatore, non alternative gated — pattern raro (es. #164, #344), l'editor le mostra come widget "Combattimento" separati. |
@@ -171,15 +171,23 @@ foe_stun, foe_switch_kamae` e `heal` (rimozione ferite/stati propri).
 
 Sottosistema unico per le risorse/stati di personaggio che sopravvivono tra i
 turni (roadmap meccaniche §4): **Disperazione** (Onna-Bugeisha), **Contratti**
-(Yojimbo), **stato Ombra** (Assassino), **stato Ninja**, ciclo **Illuminata**
+(Yojimbo), **Occultato** (Assassino e Ninja), ciclo **Illuminata**
 (Monaco), carte "**RIMANE IN GIOCO**". Runtime: `Fighter.states`
 (dizionario libero nome → int, decisione §5.1); flag = assente/0 (off) o ≥ 1.
+
+> **`occultato`** è il nome ufficiale (carta-regola #161 RIVELATO/OCCULTATO,
+> unica per Assassino e Ninja — l'icona incappucciata di "ENTRA IN"). Le
+> condizioni di USCITA sono cablate in `Duel._cleanup`: si torna Rivelati
+> dopo un attacco riuscito, un blocco riuscito, ferite subite o un altro
+> effetto di stato ricevuto — salvo re-ingresso nello stesso turno. La
+> carta-regola #160 PIEDI DI CORVO (segnalini trappola, roadmap §3.28) non
+> è ancora modellata.
 
 - **Scrittura** (effetti): `{ "do": "state_add", "state": "contratti", "n": 1 }`
   somma `n` (anche negativo, per spendere; a ≤ 0 lo stato si rimuove);
   `state_set` imposta il valore assoluto; `state_clear` lo azzera.
 - **Lettura** (gate): campo `state` su un effetto/parte, o `state_req` a
-  livello carta — `"ombra"` (≥ 1) o `{ "contratti": 2 }` (nome → minimo, AND).
+  livello carta — `"occultato"` (≥ 1) o `{ "contratti": 2 }` (nome → minimo, AND).
 
 ### Gate unificato (`engine/Gate.gd` — vedi `docs/GATE_AUDIT.md`)
 

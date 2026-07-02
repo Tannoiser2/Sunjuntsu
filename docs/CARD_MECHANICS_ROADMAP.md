@@ -397,9 +397,13 @@ pena chiuderle insieme in una sessione di lavoro dedicata e corta.
       (§3.8), ciclo Illuminata (§3.12) — 25 carte, verificate sugli scan.
       **Contratti (§3.11) rinviati a Fase 3** (serve `n_source`, il
       conteggio moltiplica effetti); "rimane in gioco" (§3.2/§3.17) resta
-      per la Fase 4 (trigger per-turno). Aperto: attivazione Disperazione
-      (regola espansione), possibile unificazione Ombra=Ninja
-      ("Occultamento"), uscita/durata degli stati.
+      per la Fase 4 (trigger per-turno). **Risolto (carte-regola fisiche
+      #160/#161 fornite dall'utente, 2026-07-02): Ombra e Ninja sono lo
+      stesso stato ufficiale "Occultato"** — nomi unificati nei dati e
+      condizioni di uscita cablate in Duel._cleanup (attacco/blocco
+      riuscito, ferite o altro stato ricevuto, salvo re-ingresso nel
+      turno). Ancora aperto: attivazione Disperazione, completamento
+      Contratti (regole espansione).
 - [x] Test headless dedicati (`tests/test_gate_states.tscn`) + re-verifica
       delle carte toccate contro gli scan reali. ⚠️ Suite NON eseguita:
       binario Godot non disponibile nella sessione remota (vedi Fase 0).
