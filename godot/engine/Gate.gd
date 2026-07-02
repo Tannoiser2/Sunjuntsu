@@ -49,6 +49,18 @@ static func allows(part: Dictionary, stance_slug: String, states: Dictionary = {
 	return kamae_ok(part, stance_slug) and state_ok(part, states)
 
 
+## Parte di gate di un EFFETTO: sui verbi `state_*` il campo `state` è il
+## NOME dello stato bersaglio, non una condizione — va escluso dal gate,
+## altrimenti "ENTRA IN Occultato" richiederebbe di essere già Occultato
+## (bug scovato dal primo giro di test reali su Godot 4.6.3).
+static func effect_gate(e: Dictionary) -> Dictionary:
+	if str(e.get("do", "")).begins_with("state_") and e.has("state"):
+		var copy := e.duplicate()
+		copy.erase("state")
+		return copy
+	return e
+
+
 ## Costo in focus della parte (0 se assente).
 static func cost(part: Dictionary) -> int:
 	return int(part.get("focus_cost", 0))

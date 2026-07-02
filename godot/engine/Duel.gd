@@ -1178,7 +1178,7 @@ func _resolve_option(i: int, geom: Dictionary):
 		for e in effs:
 			if e.get("alt", null) != ak:
 				continue
-			if not Gate.auto_allows(e, Domain.STANCE_SLUG[f.stance], f.states):
+			if not Gate.auto_allows(Gate.effect_gate(e), Domain.STANCE_SLUG[f.stance], f.states):
 				continue
 			return ak
 	return keys[0]
@@ -1194,8 +1194,10 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 		if str(e.get("when", "always")) != when:
 			continue
 		# Gate unificato (Gate.gd): Kamae + stato persistente; i bonus opzionali
-		# a pagamento (focus_cost > 0) si saltano in auto-risoluzione.
-		if not Gate.auto_allows(e, Domain.STANCE_SLUG[f.stance], f.states):
+		# a pagamento (focus_cost > 0) si saltano in auto-risoluzione. Sui
+		# verbi state_* il campo `state` è il bersaglio, non un gate
+		# (Gate.effect_gate lo esclude).
+		if not Gate.auto_allows(Gate.effect_gate(e), Domain.STANCE_SLUG[f.stance], f.states):
 			continue
 		# Gruppi "OPPURE": applica solo gli effetti dell'opzione scelta (chosen_alt).
 		# Gli effetti senza 'alt' valgono sempre.
