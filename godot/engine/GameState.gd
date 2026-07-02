@@ -32,6 +32,10 @@ class Fighter:
 	var hand_limit: int = 5                    ## limite carte in mano
 	var advantage: bool = false                ## possiede il segnalino vantaggio
 	var planned: int = -1                      ## carta programmata (id int, -1 = nessuna)
+	## Faccia scelta per una carta a doppia faccia (Hachikō, §3.14):
+	## "" = normale/attacco (comportamento classico), "defence" = usa il
+	## blocco `face_defence` della geometria (iniziativa/movimento/effetti propri).
+	var planned_face: String = ""
 	var is_ai: bool = false
 	## Carte "RIMANE IN GIOCO" (roadmap §3.2): id delle carte a faccia in su
 	## davanti al combattente. Entrano da _cleanup/_resolve_instant_card
@@ -51,6 +55,22 @@ class Fighter:
 	var states: Dictionary = {}
 
 	const MAX_FOCUS := 3
+
+	## Stati per la valutazione dei GATE: quelli persistenti più i DERIVATI
+	## dalla scheda personaggio (`characters.<nome>.derived_states` in
+	## geometry.json). Caso reale: Disperazione dell'Onna-Bugeisha —
+	## carta-regola #292: "FINCHÉ ha 3 o più ferite/sanguinanti la
+	## Disperazione è attiva" → { "disperazione": { "wounds_min": 3 } }.
+	func gate_states() -> Dictionary:
+		var ds: Dictionary = CardDB.character_stats(character).get("derived_states", {})
+		if ds.is_empty():
+			return states
+		var out := states.duplicate()
+		for state_name in ds:
+			var rule: Dictionary = ds[state_name]
+			if rule.has("wounds_min") and wounds.size() >= int(rule["wounds_min"]):
+				out[state_name] = maxi(1, int(out.get(state_name, 0)))
+		return out
 
 	# ── Stati persistenti (contatori/flag nominati) ──────────────────────────
 	## Valore corrente dello stato `state_name` (0 se assente).
@@ -149,6 +169,10 @@ var phase: int = Domain.Phase.SETUP
 var round_num: int = 1
 var map_radius: int = 6                         ## arena esagonale di raggio N
 var blocked_cells: Dictionary = {}              ## Vector2i -> true (ostacoli)
+## Segnalini trappola sulla griglia (piedi di corvo, carta-regola #160, §3.28):
+## Vector2i -> { kind: "caltrop"|"decoy", owner: int, hidden: bool }.
+## Piazzati dal verbo effetto `place_traps` (Duel); scattano con spring_traps.
+var traps: Dictionary = {}
 
 
 func add_fighter(character: String, cell: Vector2i) -> Fighter:
@@ -183,6 +207,23 @@ func is_blocked(cell: Vector2i) -> bool:
 	if blocked_cells.has(cell):
 		return true
 	return fighter_at(cell) != null
+
+
+## Scatta l'eventuale trappola nella cella di `f` (carta-regola #160):
+## piede di corvo = 1 ferita + AZZOPPATO; diversivo = nessun effetto.
+## In entrambi i casi il segnalino si rimuove. Ritorna le righe di log.
+## Da chiamare a ogni ingresso in cella (motore: push/pull/mosse obbligatorie;
+## scena: conferma del movimento del giocatore).
+func spring_traps(f: Fighter) -> Array:
+	if not traps.has(f.cell):
+		return []
+	var t: Dictionary = traps[f.cell]
+	traps.erase(f.cell)
+	if str(t.get("kind", "")) == "decoy":
+		return ["%s scopre un diversivo (nessun effetto)" % f.character]
+	f.wounds.append("wound")
+	f.add_hobble(1)
+	return ["%s calpesta i piedi di corvo: 1 ferita e AZZOPPATO" % f.character]
 
 
 func opponent_of(f: Fighter) -> Fighter:

@@ -120,6 +120,7 @@ const _VERB_IT := {
 	"foe_switch_kamae": "forzi l'avversario in una Kamae",
 	"foe_change_kamae": "sposti l'avversario lungo il suo albero Kamae",
 	"heal": "rimuovi ferite/stati", "mill": "scarti dalla cima del mazzo",
+	"place_traps": "piazzi segnalini trappola sulla griglia",
 	"foe_mill": "l'avversario scarta dalla cima del mazzo",
 	"state_add": "aggiungi allo stato persistente",
 	"state_set": "imposti lo stato persistente", "state_clear": "azzeri lo stato persistente",

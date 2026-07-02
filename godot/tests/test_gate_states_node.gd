@@ -333,5 +333,91 @@ func _ready() -> void:
 	d11._cleanup([])
 	_check(n11.state_get("occultato") == 1, "occultato: il re-ingresso nel turno prevale")
 
+	# ═══ Fase 4 parte 2 ═══════════════════════════════════════════════════
+
+	# ── Doppia faccia (§3.14): faccia difesa con iniziativa/effetti propri ──
+	const DFID := 90008
+	CardDB.set_geometry(DFID, {"name": "T-DUAL", "type": "attack",
+		"attack": {"cells": [{"d": 0, "k": 1, "w": 2}]},
+		"face_defence": {"initiative": 9,
+			"defence": {"cells": [{"d": 0, "k": 1, "v": 1}]},
+			"effects": [{"do": "focus", "n": 1}]}})
+	var s12 := GameState.new()
+	var h12 := _mk("Hachiko"); var w12 := _mk("Warrior")
+	s12.fighters = [h12, w12]
+	var d12 := Duel.new(s12)
+	s12.phase = Domain.Phase.PLANNING
+	h12.hand = [DFID]
+	w12.hand = [64]   # mano non vuota: la risoluzione non parte subito dopo plan_card
+	_check(d12.plan_card(0, DFID, "defence"), "dual: pianificazione faccia difesa accettata")
+	_check(h12.planned_face == "defence", "dual: faccia registrata")
+	_check(d12._planned_type(0) == "defence", "dual: tipo effettivo = defence")
+	_check(d12._raw_ini(0) == "9", "dual: iniziativa della faccia difesa")
+	var g12 := d12._planned_geom(0)
+	_check(not (g12.get("defence", {}).get("cells", []) as Array).is_empty()
+		and not g12.has("attack"), "dual: geometria = faccia difesa (niente attacco)")
+	_check(d12._alt_initiative_value(0) == -1, "dual: alt_initiative non vale sulla faccia difesa")
+	CardDB.set_geometry(DFID, {})
+
+	# ── Disperazione derivata (carta-regola #292): 3+ ferite la attivano ─────
+	var o13 := _mk("Onna-Bugeisha")
+	_check(o13.gate_states().get("disperazione", 0) == 0, "disperazione: spenta senza ferite")
+	o13.wounds = ["wound", "bleed", "wound"]
+	_check(o13.gate_states().get("disperazione", 0) >= 1, "disperazione: attiva con 3 ferite")
+	o13.wounds = ["wound"]
+	_check(o13.gate_states().get("disperazione", 0) == 0, "disperazione: si spegne sotto la soglia")
+	var w13 := _mk("Warrior")
+	w13.wounds = ["wound", "wound", "wound"]
+	_check(w13.gate_states().get("disperazione", 0) == 0, "disperazione: solo Onna-Bugeisha")
+
+	# ── Anti-sconfitta (§3.26): play_when 'defeated' ─────────────────────────
+	const SVID := 90009
+	CardDB.set_geometry(SVID, {"name": "T-SAVE", "type": "meditation",
+		"play_when": "defeated", "stays_in_play": true, "limit_set": {"wound": 1}})
+	var s14 := GameState.new()
+	var y14 := _mk("Yojimbo"); y14.wound_limit = 3; y14.hand = [SVID]
+	y14.wounds = ["wound", "wound", "wound"]
+	var w14 := _mk("Warrior")
+	s14.fighters = [y14, w14]
+	var d14 := Duel.new(s14)
+	_check(d14._check_winner() == -2, "anti-sconfitta: il duello continua")
+	_check(y14.wounds.is_empty() and y14.wound_limit == 1, "anti-sconfitta: ferite azzerate, limite = 1")
+	_check(y14.in_play.has(SVID), "anti-sconfitta: la carta resta in gioco")
+	CardDB.set_geometry(SVID, {})
+
+	# ── Ricorsione da scarto (§3.27): on_foe_discard return_to_play ─────────
+	const RPID := 90010
+	CardDB.set_geometry(RPID, {"name": "T-RITORNO", "type": "meditation",
+		"on_foe_discard": "return_to_play"})
+	var s15 := GameState.new()
+	var a15 := _mk("Assassino"); var m15 := _mk("Monaco")
+	m15.hand = [RPID]; m15.focus = 2
+	s15.fighters = [a15, m15]
+	var d15 := Duel.new(s15)
+	d15._apply_effects(0, 1, {"effects": [{"do": "foe_discard", "n": 1}]}, "always", [])
+	_check(m15.in_play.has(RPID) and m15.focus == 1 and m15.discard.is_empty(),
+		"on_foe_discard: paga 1 focus e torna in gioco")
+	d15.remove_from_play(1, RPID)
+	m15.hand = [RPID]; m15.focus = 0; m15.discard = []
+	d15._apply_effects(0, 1, {"effects": [{"do": "foe_discard", "n": 1}]}, "always", [])
+	_check(m15.discard.has(RPID), "on_foe_discard: senza focus finisce negli scarti")
+	CardDB.set_geometry(RPID, {})
+
+	# ── Trappole (§3.28): place_traps + spring su push ───────────────────────
+	var s16 := GameState.new()
+	var n16 := _mk("Ninja"); var v16 := _mk("Warrior")
+	n16.facing = 0; v16.cell = HexGrid.DIRS[0] * 2
+	s16.fighters = [n16, v16]
+	var d16 := Duel.new(s16)
+	d16._apply_effects(0, 1, {"effects": [{"do": "place_traps",
+		"cells": [{"d": 0, "k": 3, "kind": "caltrop"}, {"d": 0, "k": 4, "kind": "decoy"}]}]}, "always", [])
+	_check(s16.traps.size() == 2, "place_traps: 2 segnalini sulla griglia")
+	var log16: Array = []
+	d16._push(0, 1, 1, log16)   # spinge il Warrior sulla cella k=3 (piede di corvo)
+	_check(v16.wounds.size() == 1 and v16.hobbles.size() == 1, "trappola: ferita + azzoppato entrando nella cella")
+	_check(s16.traps.size() == 1, "trappola: il segnalino scattato si rimuove")
+	d16._push(0, 1, 1, log16)   # spinge sul diversivo (k=4)
+	_check(v16.wounds.size() == 1 and s16.traps.is_empty(), "diversivo: nessun effetto, segnalino rimosso")
+
 	print("RISULTATO: ", "PASS" if ok else "FAIL")
 	get_tree().quit(0 if ok else 1)

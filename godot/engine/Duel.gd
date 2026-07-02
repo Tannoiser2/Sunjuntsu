@@ -196,8 +196,10 @@ func _set_phase(p: int) -> void:
 
 # ─── Programmazione ──────────────────────────────────────────────────────────
 
-## Il giocatore (umano) programma una carta dalla propria mano.
-func plan_card(fighter_index: int, card_id: int) -> bool:
+## Il giocatore (umano) programma una carta dalla propria mano. Per le carte
+## a doppia faccia (Hachikō, §3.14) `face` sceglie la faccia: "" = attacco
+## (classica), "defence" = usa il blocco `face_defence` della geometria.
+func plan_card(fighter_index: int, card_id: int, face: String = "") -> bool:
 	if state.phase != Domain.Phase.PLANNING:
 		return false
 	var f := state.fighters[fighter_index]
@@ -206,6 +208,7 @@ func plan_card(fighter_index: int, card_id: int) -> bool:
 	if not playable(f, card_id):
 		return false   # carta non giocabile nella Kamae attuale
 	f.planned = card_id
+	f.planned_face = "defence" if (face == "defence" and CardDB.geometry(card_id).has("face_defence")) else ""
 	f.hand.erase(card_id)
 	_autoplan_ai()
 	if _all_planned():
@@ -224,7 +227,33 @@ static func playable(f: GameState.Fighter, card_id: int) -> bool:
 	var g := CardDB.geometry(card_id)
 	if not Kamae.gate_allows(g.get("kamae_req", ""), Domain.STANCE_SLUG[f.stance]):
 		return false
-	return Gate.state_req_ok(g.get("state_req", null), f.states)
+	return Gate.state_req_ok(g.get("state_req", null), f.gate_states())
+
+
+## Tipo effettivo della carta programmata di `i`: "defence" se è stata
+## scelta la faccia difesa di una carta a doppia faccia (§3.14), altrimenti
+## il type dell'anagrafica.
+func _planned_type(i: int) -> String:
+	var f := state.fighters[i]
+	if f.planned_face == "defence" and CardDB.geometry(f.planned).has("face_defence"):
+		return "defence"
+	return str(CardDB.card(f.planned).get("type", ""))
+
+
+## Geometria attiva della carta programmata di `i`: con la faccia difesa i
+## campi di `face_defence` SOSTITUISCONO quelli della faccia attacco (il
+## campo `initiative` della faccia è gestito da _raw_ini).
+func _planned_geom(i: int) -> Dictionary:
+	var f := state.fighters[i]
+	var g := CardDB.geometry(f.planned)
+	if f.planned_face != "defence" or not (g.get("face_defence", null) is Dictionary):
+		return g
+	var fd: Dictionary = g["face_defence"]
+	var out := {"name": g.get("name", ""), "type": "defence"}
+	for k in fd:
+		if str(k) != "initiative":
+			out[k] = fd[k]
+	return out
 
 
 ## Regole solo (rulebook p.20–22): gli avversari NON pescano, NON scelgono e NON
@@ -316,7 +345,7 @@ func _finalize_resolution_setup() -> void:
 	for i in range(state.fighters.size()):
 		var f := state.fighters[i]
 		if f.planned != -1 and not _fizzled.has(i):
-			if CardDB.card(f.planned).get("type", "") == "defence":
+			if _planned_type(i) == "defence":
 				_block_ready[i] = _chosen.get(i, -1)
 
 	_order = _initiative_order()
@@ -325,7 +354,7 @@ func _finalize_resolution_setup() -> void:
 	for i in _order:
 		if state.fighters[i].planned == -1 or _fizzled.has(i):
 			continue
-		ord.append({"i": i, "speed": _speed_of(i), "type": str(CardDB.card(state.fighters[i].planned).get("type", ""))})
+		ord.append({"i": i, "speed": _speed_of(i), "type": _planned_type(i)})
 	resolution_order.emit(ord)
 
 
@@ -415,6 +444,7 @@ func apply_instant_replace(i: int, new_id: int) -> void:
 		f.discard.append(orig)        # la carta originale viene scartata
 		f.hand.erase(new_id)
 		f.planned = new_id
+		f.planned_face = ""
 		_fizzled.erase(i)
 		_res_log.append("%s sostituisce %s con %s (istantanea)" % [
 			f.character, CardDB.card(orig).get("name", "?"), CardDB.card(new_id).get("name", "?")])
@@ -572,7 +602,7 @@ func _resolve_chosen_speeds(fizzled: Dictionary) -> void:
 		var f := state.fighters[i]
 		if f.planned == -1 or fizzled.has(i):
 			continue
-		if CardDB.card(f.planned).get("type", "") == "defence":
+		if _planned_type(i) == "defence":
 			continue
 		var sp := Domain.pick_initiative(_raw_ini(i), true)
 		var altv := _alt_initiative_value(i)
@@ -584,7 +614,7 @@ func _resolve_chosen_speeds(fizzled: Dictionary) -> void:
 		var f := state.fighters[i]
 		if f.planned == -1 or fizzled.has(i):
 			continue
-		if CardDB.card(f.planned).get("type", "") != "defence":
+		if _planned_type(i) != "defence":
 			continue
 		var opts: Array = Domain.initiative_options(_raw_ini(i))
 		var altv := _alt_initiative_value(i)
@@ -618,7 +648,12 @@ func _resolve_chosen_speeds(fizzled: Dictionary) -> void:
 
 
 func _raw_ini(i: int) -> String:
-	return str(CardDB.card(state.fighters[i].planned).get("initiative", ""))
+	var f := state.fighters[i]
+	if f.planned_face == "defence":
+		var fd: Dictionary = CardDB.geometry(f.planned).get("face_defence", {})
+		if fd.has("initiative"):
+			return str(fd["initiative"])
+	return str(CardDB.card(f.planned).get("initiative", ""))
 
 
 ## Iniziativa alternativa (roadmap §3.1): riquadro [N] extra stampato sulla
@@ -629,8 +664,10 @@ func _raw_ini(i: int) -> String:
 ## scelta interattiva del giocatore arriverà con la UI. -1 = non disponibile.
 func _alt_initiative_value(i: int) -> int:
 	var f := state.fighters[i]
+	if f.planned_face == "defence":
+		return -1   # l'alternativa stampata appartiene alla faccia attacco
 	var alt = CardDB.geometry(f.planned).get("alt_initiative", null)
-	if alt is Dictionary and Gate.auto_allows(alt, Domain.STANCE_SLUG[f.stance], f.states):
+	if alt is Dictionary and Gate.auto_allows(alt, Domain.STANCE_SLUG[f.stance], f.gate_states()):
 		return int(alt.get("value", -1))
 	return -1
 
@@ -681,17 +718,16 @@ func _speed_of(i: int) -> int:
 
 
 func _type_rank(i: int) -> int:
-	var t: String = CardDB.card(state.fighters[i].planned).get("type", "")
-	return int(Domain.TYPE_RESOLVE_ORDER.get(t, 4))
+	return int(Domain.TYPE_RESOLVE_ORDER.get(_planned_type(i), 4))
 
 
 func _resolve_card(i: int, block_ready: Dictionary, log: Array) -> void:
 	var f := state.fighters[i]
 	var c := CardDB.card(f.planned)
-	var g := CardDB.geometry(f.planned)   ## geometria/effetti trascritti (può essere vuota)
+	var g := _planned_geom(i)   ## geometria della faccia attiva (può essere vuota)
 	var name: String = c.get("name", "?")
 	var chosen_alt = _resolve_option(i, g)   ## "OPPURE": opzione scelta (una sola)
-	match c.get("type", ""):
+	match _planned_type(i):
 		"attack":
 			_resolve_attack_top(i, g, name, log, chosen_alt)
 			if g.has("split"):
@@ -895,6 +931,7 @@ func _auto_move_mandatory(i: int, move_spec: Dictionary) -> void:
 				var dest: Vector2i = f.cell + HexGrid.DIRS[ad]
 				if not state.is_blocked(dest):
 					f.cell = dest
+					state.spring_traps(f)   # piedi di corvo (carta-regola #160)
 
 
 ## Applica gli effetti "se riuscito" trascritti (push, focus, bleed).
@@ -922,7 +959,7 @@ func _apply_if_success(att_idx: int, foe_idx: int, g: Dictionary, log: Array) ->
 ## L'attacco programmato di `i` colpisce il bersaglio dalla posizione ATTUALE?
 func attack_hits_now(i: int) -> bool:
 	var f := state.fighters[i]
-	if f.planned == -1:
+	if f.planned == -1 or f.planned_face == "defence":
 		return false
 	var c := CardDB.card(f.planned)
 	if c.get("type", "") != "attack":
@@ -937,7 +974,7 @@ func attack_hits_now(i: int) -> bool:
 ## colpirebbe il bersaglio? (Commit To Hit: se sì, devi colpire.)
 func attack_can_hit(i: int) -> bool:
 	var f := state.fighters[i]
-	if f.planned == -1:
+	if f.planned == -1 or f.planned_face == "defence":
 		return false
 	var c := CardDB.card(f.planned)
 	if c.get("type", "") != "attack":
@@ -951,7 +988,7 @@ func attack_can_hit(i: int) -> bool:
 		return true
 	if not g.has("move"):
 		return false
-	var reach := Move.reachable_by_cell(f.cell, f.facing, g["move"], state.is_blocked, Domain.STANCE_SLUG[f.stance], f.states)
+	var reach := Move.reachable_by_cell(f.cell, f.facing, g["move"], state.is_blocked, Domain.STANCE_SLUG[f.stance], f.gate_states())
 	for cell in reach.keys():
 		for fc in reach[cell]:
 			if attack_v2_cells(cell, fc, g, 1, f.stance).has(foe_cell):
@@ -976,8 +1013,8 @@ func _collect_block_hexes(def_idx: int, atk_speed: int) -> Dictionary:
 	var matches: bool = ready_sp != -1 and absi(ready_sp - atk_speed) <= bonus
 	if dfn.planned != -1 and not _fizzled.has(def_idx) \
 			and matches \
-			and CardDB.card(dfn.planned).get("type", "") == "defence":
-		for cell in defence_v2_cells(dfn.cell, dfn.facing, CardDB.geometry(dfn.planned), dfn.stance).keys():
+			and _planned_type(def_idx) == "defence":
+		for cell in defence_v2_cells(dfn.cell, dfn.facing, _planned_geom(def_idx), dfn.stance).keys():
 			blocks[cell] = true
 		from_def = true
 	return {"blocks": blocks, "from_def": from_def}
@@ -1028,7 +1065,7 @@ func _attack_blocked(att_idx: int, def_idx: int, atk_speed: int, atk_geom: Dicti
 ## attacco non-core; l'avversario solo non scarta).
 func _try_counter(def_idx: int, att_idx: int, atk_speed: int, log: Array) -> void:
 	var dfn := state.fighters[def_idx]
-	var counter = CardDB.geometry(dfn.planned).get("counter", null)
+	var counter = _planned_geom(def_idx).get("counter", null)
 	if counter == null:
 		return
 	# Le voci della lista possono essere int (sempre attive) oppure oggetti
@@ -1038,7 +1075,7 @@ func _try_counter(def_idx: int, att_idx: int, atk_speed: int, log: Array) -> voi
 	if typeof(counter) == TYPE_ARRAY:
 		for entry in counter:
 			if entry is Dictionary:
-				if Gate.auto_allows(entry, Domain.STANCE_SLUG[dfn.stance], dfn.states):
+				if Gate.auto_allows(entry, Domain.STANCE_SLUG[dfn.stance], dfn.gate_states()):
 					for v in entry.get("on", []):
 						speeds.append(int(v))
 			else:
@@ -1150,7 +1187,7 @@ func set_option_choice(i: int, alt) -> void:
 ## Opzioni "OPPURE" disponibili per il combattente `i` (chiavi alt in ordine), o [].
 func option_keys(i: int) -> Array:
 	var keys := []
-	for e in CardDB.geometry(state.fighters[i].planned).get("effects", []):
+	for e in _planned_geom(i).get("effects", []):
 		var ak = e.get("alt", null)
 		if ak != null and not keys.has(ak):
 			keys.append(ak)
@@ -1178,7 +1215,7 @@ func _resolve_option(i: int, geom: Dictionary):
 		for e in effs:
 			if e.get("alt", null) != ak:
 				continue
-			if not Gate.auto_allows(Gate.effect_gate(e), Domain.STANCE_SLUG[f.stance], f.states):
+			if not Gate.auto_allows(Gate.effect_gate(e), Domain.STANCE_SLUG[f.stance], f.gate_states()):
 				continue
 			return ak
 	return keys[0]
@@ -1197,7 +1234,7 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 		# a pagamento (focus_cost > 0) si saltano in auto-risoluzione. Sui
 		# verbi state_* il campo `state` è il bersaglio, non un gate
 		# (Gate.effect_gate lo esclude).
-		if not Gate.auto_allows(Gate.effect_gate(e), Domain.STANCE_SLUG[f.stance], f.states):
+		if not Gate.auto_allows(Gate.effect_gate(e), Domain.STANCE_SLUG[f.stance], f.gate_states()):
 			continue
 		# Gruppi "OPPURE": applica solo gli effetti dell'opzione scelta (chosen_alt).
 		# Gli effetti senza 'alt' valgono sempre.
@@ -1235,6 +1272,8 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 				if foe != null:
 					var tmp := f.cell; f.cell = foe.cell; foe.cell = tmp
 					log.append("%s scambia posizione con %s" % [f.character, foe.character])
+					for line in state.spring_traps(f) + state.spring_traps(foe):
+						log.append(line)
 			"rotate_target":
 				if foe != null: foe.facing = (foe.facing + n_eff) % 6
 			"draw":
@@ -1290,8 +1329,19 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 						# `random: true` = scarto a caso (roadmap §3.19), altrimenti
 						# dall'ultima pescata (comportamento storico).
 						var k := (randi() % foe.hand.size()) if bool(e.get("random", false)) else foe.hand.size() - 1
-						foe.discard.append(foe.hand[k])
+						var lost: int = foe.hand[k]
 						foe.hand.remove_at(k)
+						# Ricorsione da scarto (§3.27, #264): se la carta scartata
+						# da un effetto avversario lo prevede, il proprietario può
+						# pagare 1 focus per metterla IN GIOCO invece che negli
+						# scarti (auto: paga se può).
+						if str(CardDB.geometry(lost).get("on_foe_discard", "")) == "return_to_play" and foe.focus >= 1:
+							foe.focus -= 1
+							_enter_play(foe_idx, lost)
+							log.append("%s paga 1 focus: %s torna in gioco invece di finire negli scarti" % [
+								foe.character, CardDB.card(lost).get("name", "?")])
+						else:
+							foe.discard.append(lost)
 			"foe_draw":
 				# Fa pescare l'avversario (roadmap §3.18).
 				if foe != null:
@@ -1379,6 +1429,15 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 			"block_initiative":
 				f.block_initiative_bonus += maxi(1, n_eff)
 				log.append("%s: intervallo blocco +%d" % [f.character, maxi(1, n_eff)])
+			"place_traps":
+				# Piazza segnalini trappola sulla griglia (carta-regola #160):
+				# celle relative al facing; kind per cella ("caltrop"/"decoy").
+				# Coperti (hidden) se il posatore è Occultato.
+				for cdef in e.get("cells", []):
+					var tcell: Vector2i = f.cell + _cell_offset(cdef, f.facing)
+					state.traps[tcell] = {"kind": str(cdef.get("kind", "caltrop")),
+						"owner": i, "hidden": f.state_get(STEALTH_STATE) > 0}
+				log.append("%s piazza %d segnalini trappola" % [f.character, (e.get("cells", []) as Array).size()])
 			"state_add":
 				# Stato persistente per-fighter: somma n (anche negativo, per spendere).
 				var sn := str(e.get("state", ""))
@@ -1467,6 +1526,8 @@ func _forced_move(att_idx: int, victim_idx: int, n: int, pull: bool, log: Array)
 			_resolve_collision(victim_idx, dest, log)
 			return
 		v.cell = dest
+		for line in state.spring_traps(v):
+			log.append(line)   # piedi di corvo (carta-regola #160)
 	fighter_updated.emit(victim_idx)
 
 
@@ -1572,6 +1633,7 @@ func _cleanup(log: Array) -> void:
 			else:
 				f.discard.append(f.planned)
 			f.planned = -1
+			f.planned_face = ""
 		# Se gli slot di mano usati (abilità + stordimenti) superano il limite, scarta
 		# carte abilità (lo stordimento non si scarta mai dalla mano).
 		while _hand_used(f) > f.hand_limit:
@@ -1614,8 +1676,46 @@ func _opponent_index(i: int) -> int:
 	return -1
 
 
+## Anti-sconfitta (§3.26, #318 RISOLUTEZZA OSTINATA): se `i` sta per essere
+## sconfitto per FERITE e ha in mano una carta con play_when=="defeated",
+## la gioca d'ufficio: rimuove tutte le ferite, ricostruisce il mazzo se
+## vuoto (3 carte a caso dagli scarti), entra in gioco (stays_in_play) e
+## applica `limit_set` (valori ASSOLUTI dei limiti, es. {"wound": 1}).
+func _try_defeat_save(i: int) -> void:
+	var f := state.fighters[i]
+	if f.is_ai or not f.is_defeated() or f.wounds.size() < f.effective_wound_limit():
+		return
+	for cid in f.hand.duplicate():
+		var g := CardDB.geometry(cid)
+		if str(g.get("play_when", "")) != "defeated":
+			continue
+		f.hand.erase(cid)
+		f.wounds.clear()
+		if f.draw_pile.is_empty() and not f.discard.is_empty():
+			for _k in range(mini(3, f.discard.size())):
+				var idx := randi() % f.discard.size()
+				f.draw_pile.append(f.discard[idx])
+				f.discard.remove_at(idx)
+			f.draw_pile.shuffle()
+		var ls: Dictionary = g.get("limit_set", {})
+		if ls.has("wound"):
+			f.wound_limit = int(ls["wound"])
+		if ls.has("hand"):
+			f.hand_limit = int(ls["hand"])
+		if bool(g.get("stays_in_play", false)):
+			_enter_play(i, cid)
+		else:
+			f.discard.append(cid)
+		_res_log.append("%s gioca %s: la sconfitta è annullata" % [
+			f.character, CardDB.card(cid).get("name", "?")])
+		fighter_updated.emit(i)
+		return
+
+
 ## -2 = nessun vincitore ancora; altrimenti indice del vincitore (o -1 = pari).
 func _check_winner() -> int:
+	for i in range(state.fighters.size()):
+		_try_defeat_save(i)
 	var alive: Array = []
 	for i in range(state.fighters.size()):
 		if not state.fighters[i].is_defeated():

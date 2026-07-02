@@ -425,8 +425,10 @@ pena chiuderle insieme in una sessione di lavoro dedicata e corta.
       `random: true` (§3.19).
 
 ### Fase 4 — Gruppo strutturale rimanente
-- [ ] Doppia faccia Hachikō (§3.14) + "gira la carta" (§3.15) — richiede
-      scelta della faccia in pianificazione (UI/protocollo), prossimo giro.
+- [x] Doppia faccia Hachikō (§3.14): campo `face_defence` + scelta faccia
+      in `plan_card` (v0.82.0, 9 carte ristrutturate). "Gira la carta"
+      (§3.15) resta approssimato con switch_kamae to:any: serve la
+      carta-regola Kamae di Hachikō (foto!). UI di scelta faccia da fare.
 - [x] Bersaglio per confronto iniziativa (§3.4) — campo `targeting`
       (v0.80.0): #167 #169 #279 #280 #281 #325 #336; #166 resta (trappola
       §3.28).
@@ -439,10 +441,18 @@ pena chiuderle insieme in una sessione di lavoro dedicata e corta.
       (usati da #280). Reveal+filtra (#339) e mill variabile (#225) in nota.
 - [x] Requisiti su conteggio carte in gioco (§3.21): coperti da
       `in_play_state` + `state_req` (ciclo Illuminata #261/#262 vivo).
-- [ ] Marcatori trappola su griglia (§3.28).
-- [ ] I casi isolati (1-2 carte ciascuno): giocare carta pescata come
-      istantanea (§3.23), IA muovi-verso (§3.24), adiacenza a terzo pezzo
-      (§3.25), anti-sconfitta (§3.26), ricorsione da scarto (§3.27).
+- [x] Marcatori trappola su griglia (§3.28): place_traps + GameState.traps/
+      spring_traps (v0.82.0, regola #160); la ripartizione caltrop/decoy
+      delle due opzioni di #170 è ipotizzata, DA VERIFICARE; la scena deve
+      chiamare spring_traps alla conferma del movimento.
+- [x] Anti-sconfitta (§3.26, #318: play_when/limit_set) e ricorsione da
+      scarto (§3.27, #264: on_foe_discard) — v0.82.0.
+- [ ] Casi isolati restanti: giocare carta pescata come istantanea
+      (§3.23), IA muovi-verso (§3.24), adiacenza a terzo pezzo (§3.25).
+- [x] **Disperazione RISOLTA** (carta-regola #292, 2026-07-02): stato
+      DERIVATO, attivo con 3+ ferite dell'Onna-Bugeisha → `derived_states`
+      sulla scheda personaggio + `Fighter.gate_states()`. Resta aperto solo
+      il completamento dei Contratti (Yojimbo).
 
 ### Fase 5 — Refactor di semplificazione (obiettivo B, esecuzione)
 - [ ] Applicare il concetto di "gate" unificato deciso in Fase 1, ora che
