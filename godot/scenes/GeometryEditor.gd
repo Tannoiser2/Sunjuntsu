@@ -159,10 +159,14 @@ func _widgets_from(geom: Dictionary) -> Array:
 		if typeof(e) == TYPE_DICTIONARY:
 			pool["effect"].append(_effect_widget(e))
 	var cvals := []
+	var cgated := []
 	for x in geom.get("counter", []):
-		cvals.append(int(x))
-	if not cvals.is_empty():
-		pool["counter"].append({"type": "counter", "values": cvals})
+		if x is Dictionary:
+			cgated.append((x as Dictionary).duplicate(true))   # voce gated: passthrough
+		else:
+			cvals.append(int(x))
+	if not cvals.is_empty() or not cgated.is_empty():
+		pool["counter"].append({"type": "counter", "values": cvals, "gated": cgated})
 	if str(geom.get("note", "")) != "":
 		pool["note"].append({"type": "note", "text": str(geom["note"])})
 
@@ -361,10 +365,18 @@ func _emit_part(g: Dictionary, flat: Array) -> void:
 	_write_variants(g, "attack", "attacks", atk_vars)
 	_write_variants(g, "defence", "defences", dfn_vars)
 
-	# Contrattacco (primo widget counter).
+	# Contrattacco (primo widget counter): iniziative int + voci gated
+	# (oggetti { on, kamae/state/focus_cost }, non editabili in UI: passthrough).
 	for w in flat:
-		if w["type"] == "counter" and not (w.get("values", []) as Array).is_empty():
-			g["counter"] = (w["values"] as Array).duplicate(); break
+		if w["type"] != "counter":
+			continue
+		var cvals: Array = (w.get("values", []) as Array).duplicate()
+		var cout: Array = cvals.duplicate()
+		for entry in w.get("gated", []):
+			cout.append(entry)
+		if not cout.is_empty():
+			g["counter"] = cout
+		break
 
 	# Effetti (ogni widget effect con verbo).
 	var effs := []
@@ -438,6 +450,8 @@ func _widget_to_node(w: Dictionary) -> Dictionary:
 			node.merge(_effect_to(w))
 		"counter":
 			node["values"] = (w.get("values", []) as Array).duplicate()
+			if not (w.get("gated", []) as Array).is_empty():
+				node["gated"] = (w["gated"] as Array).duplicate(true)
 		"note":
 			node["text"] = str(w.get("text", ""))
 	return node
@@ -483,7 +497,8 @@ func _node_to_widget(node: Dictionary) -> Dictionary:
 			var vals := []
 			for x in node.get("values", []):
 				vals.append(int(x))
-			return {"type": "counter", "cond": cond, "values": vals}
+			return {"type": "counter", "cond": cond, "values": vals,
+				"gated": (node.get("gated", []) as Array).duplicate(true)}
 		"note":
 			return {"type": "note", "cond": cond, "text": str(node.get("text", ""))}
 	return _new_widget("")
@@ -583,7 +598,7 @@ func _new_widget_base(type: String) -> Dictionary:
 		"movement": return {"type": "movement", "atoms": []}
 		"kamae": return {"type": "kamae", "req": ""}
 		"effect": return _effect_widget({})
-		"counter": return {"type": "counter", "values": []}
+		"counter": return {"type": "counter", "values": [], "gated": []}
 		"note": return {"type": "note", "text": ""}
 	return {"type": ""}
 

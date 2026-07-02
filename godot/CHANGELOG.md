@@ -3,6 +3,45 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.79.0] — 2026-07-02
+### Fase 3 — gruppo "schema+motore": alt_initiative, famiglia foe_*, counter gated, n_from_state, heal, scarto casuale
+- **`alt_initiative`** (roadmap §3.1): nuovo campo `{ value, kamae?/focus_cost?/state? }`
+  — iniziativa alternativa AL POSTO di quella stampata quando il gate è
+  soddisfatto (non è uno split). In auto-risoluzione si usa solo se gratis
+  e più veloce; le difese la includono tra le velocità che agganciano
+  l'attacco avversario. Applicata a **16 carte** (#44 #58 #60 #65 #77 #86
+  #100 #105 #109 #140 #143 #149 #175 #303 #324 #325); #146 ha un *range*
+  alternativo (8-3), non un valore: resta in nota.
+- **`counter` gated** (§3.10): le voci della lista possono essere oggetti
+  `{ on: [7,6], kamae/state/focus_cost }` valutati col gate del difensore.
+  Applicato a #111 #118 #120 #141 #151 e al counter in Disperazione di #299.
+  L'editor preserva le voci gated (passthrough nel widget counter).
+- **Famiglia `foe_*`** (§3.5/§3.7/§3.18): nuovi verbi `foe_switch_kamae`
+  (7 carte usavano `switch_kamae to:neutral` che spostava il GIOCATORE
+  invece dell'avversario — bug di dati corretto su #97 #145 #240 #301 #326
+  #336 #362), `foe_change_kamae` (#45 #66 #87), `foe_draw` (#12 #13 #17),
+  `foe_reveal_hand` (10 carte; su #117 e #122 sostituisce il segnaposto
+  errato `foe_discard`, su #153 il vecchio `draw` errato). #87 aveva anche
+  NON BLOCCABILE stampato ma non trascritto (`non_blockable` aggiunto).
+- **`n_from_state`** (§3.13): quantità a entità variabile — `n` effettivo =
+  n × valore di uno stato persistente. Sblocca i **Contratti** di #322
+  ("per ogni contratto completato" su focus/pesca/ricerca + `state_clear`
+  finale); #319/#321/#328 restano in nota (bonus iniziativa/raggio e
+  finestre di gioco, fasi successive).
+- **`heal`** (§3.20): rimozione ferite/stati propri (`what`: wound/bleed/
+  stun/hobble/poison, `all: true` per "tutti"). Applicato a #81 #124 #249
+  #261 (su #249 e #261 sostituisce le approssimazioni reduce_damage/
+  discard_self annotate come errate).
+- **Scarto casuale** (§3.19): flag `random: true` su `discard_self`/
+  `foe_discard`. Applicato a #242 e #327.
+- Quinta Kamae "Distanza" (§3.22) **rinviata**: tocca gli enum di stance in
+  tutto il progetto e senza suite eseguibile il rischio di regressione è
+  alto — da fare con Godot a disposizione.
+- Validatore e simulatore aggiornati ai campi/verbi nuovi; schema
+  documentato in GEOMETRY_SCHEMA.md; test estesi in test_gate_states.
+  ⚠️ Suite ancora NON eseguita (binario Godot non disponibile in sessione
+  remota); sintassi verificata con gdparse su tutti i file toccati.
+
 ## [0.78.0] — 2026-07-02
 ### Stati persistenti per-fighter + gate unificato (roadmap meccaniche, Fase 2)
 - **Nuovo sottosistema di stato persistente** (`Fighter.states`, dizionario

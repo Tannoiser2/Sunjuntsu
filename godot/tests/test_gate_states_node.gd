@@ -121,5 +121,96 @@ func _ready() -> void:
 		"editor preserva i campi sconosciuti dentro split")
 	_check(int(out.get("split", {}).get("initiative", 0)) == 3, "split.initiative invariata")
 
+	# ═══ Fase 3 ═══════════════════════════════════════════════════════════
+
+	# ── n_from_state: quantità moltiplicata da uno stato (es. Contratti) ─────
+	var s4 := GameState.new()
+	var y := _mk("Yojimbo"); var w := _mk("Warrior")
+	s4.fighters = [y, w]
+	var d4 := Duel.new(s4)
+	y.focus = 0
+	d4._apply_effects(0, 1, {"effects": [{"do": "focus", "n_from_state": "contratti"}]}, "always", [])
+	_check(y.focus == 0, "n_from_state: a 0 istanze l'effetto non scatta")
+	y.state_set("contratti", 2)
+	d4._apply_effects(0, 1, {"effects": [{"do": "focus", "n_from_state": "contratti"}]}, "always", [])
+	_check(y.focus == 2, "n_from_state: focus x contratti (2)")
+
+	# ── foe_draw / foe_reveal_hand / foe_switch_kamae ────────────────────────
+	w.draw_pile = [10, 11, 12]; w.hand = []
+	d4._apply_effects(0, 1, {"effects": [{"do": "foe_draw", "n": 2}]}, "always", [])
+	_check(w.hand.size() == 2, "foe_draw fa pescare l'avversario")
+	var log4: Array = []
+	d4._apply_effects(0, 1, {"effects": [{"do": "foe_reveal_hand"}]}, "always", log4)
+	_check(not log4.is_empty() and "mano" in str(log4[0]), "foe_reveal_hand registra l'evento")
+	w.stance = Domain.Stance.AGGRESSION
+	d4._apply_effects(0, 1, {"effects": [{"do": "foe_switch_kamae", "to": "balance"}]}, "always", [])
+	_check(w.stance == Domain.Stance.BALANCE, "foe_switch_kamae forza la Kamae avversaria")
+
+	# ── heal: rimozione ferite/stati propri ─────────────────────────────────
+	y.wounds = ["wound", "bleed", "wound"]; y.stun = 2
+	d4._apply_effects(0, 1, {"effects": [{"do": "heal", "n": 1, "what": "bleed"}]}, "always", [])
+	_check(not y.wounds.has("bleed"), "heal what=bleed rimuove il sanguinante")
+	d4._apply_effects(0, 1, {"effects": [{"do": "heal", "n": 2, "what": "stun"}]}, "always", [])
+	_check(y.stun == 0, "heal what=stun rimuove gli stordimenti")
+	d4._apply_effects(0, 1, {"effects": [{"do": "heal", "n": 1}]}, "always", [])
+	_check(y.wounds.size() == 1, "heal default rimuove 1 ferita")
+
+	# ── discard casuale: conta giusta, pesca casuale ─────────────────────────
+	w.hand = [10, 11, 12]; w.discard = []
+	d4._apply_effects(0, 1, {"effects": [{"do": "foe_discard", "n": 2, "random": true}]}, "always", [])
+	_check(w.hand.size() == 1 and w.discard.size() == 2, "foe_discard random scarta il numero giusto")
+
+	# ── counter gated (§3.10): voce int sempre attiva + voce gated ──────────
+	const CID := 90002
+	CardDB.set_geometry(CID, {"name": "T-COUNTER", "type": "defence",
+		"counter": [5, {"on": [8, 7], "kamae": "determination"}]})
+	var s5 := GameState.new()
+	var att5 := _mk("Warrior"); att5.cell = Vector2i(0, 0)
+	var def5 := _mk("Ronin"); def5.cell = HexGrid.DIRS[0]; def5.planned = CID
+	def5.hand = [64]   # attacco non-core da scartare per il counter
+	s5.fighters = [att5, def5]
+	var d5 := Duel.new(s5)
+	d5._try_counter(1, 0, 8, [])   # vel 8: gated Determinazione, def5 è NEUTRAL
+	_check(att5.wounds.is_empty(), "counter gated: NON scatta fuori Kamae")
+	def5.stance = Domain.Stance.DETERMINATION
+	d5._try_counter(1, 0, 8, [])
+	_check(att5.wounds.size() == 1, "counter gated: scatta nella Kamae giusta")
+	def5.hand = [64]
+	d5._try_counter(1, 0, 5, [])
+	_check(att5.wounds.size() == 2, "counter: voce int sempre attiva")
+	CardDB.set_geometry(CID, {})
+
+	# ── alt_initiative (§3.1): gate su kamae/focus/state ─────────────────────
+	const AID := 90003
+	CardDB.set_geometry(AID, {"name": "T-ALT", "type": "attack",
+		"alt_initiative": {"value": 8, "state": "disperazione"}})
+	var s6 := GameState.new()
+	var f6 := _mk("Onna-Bugeisha"); f6.planned = AID
+	s6.fighters = [f6, _mk("Warrior")]
+	var d6 := Duel.new(s6)
+	_check(d6._alt_initiative_value(0) == -1, "alt_initiative: -1 senza lo stato richiesto")
+	f6.state_set("disperazione", 1)
+	_check(d6._alt_initiative_value(0) == 8, "alt_initiative: valore col gate soddisfatto")
+	CardDB.set_geometry(AID, {"name": "T-ALT", "type": "attack",
+		"alt_initiative": {"value": 8, "focus_cost": 1}})
+	_check(d6._alt_initiative_value(0) == -1, "alt_initiative: a pagamento si salta in auto")
+	CardDB.set_geometry(AID, {})
+
+	# ── editor: passthrough voci counter gated ───────────────────────────────
+	var ge2 := GeometryEditor.new()
+	add_child(ge2)
+	ge2.load_geometry("defence", {"name": "T", "type": "defence",
+		"counter": [5, {"on": [8, 7], "kamae": "determination"}]}, "5")
+	var out2 := ge2.to_geometry()
+	var cvals: Array = out2.get("counter", [])
+	var has_int := false
+	var has_gated := false
+	for entry in cvals:
+		if entry is Dictionary and (entry.get("on", []) as Array).size() == 2:
+			has_gated = true
+		elif int(entry) == 5:
+			has_int = true
+	_check(has_int and has_gated, "editor preserva le voci counter gated")
+
 	print("RISULTATO: ", "PASS" if ok else "FAIL")
 	get_tree().quit(0 if ok else 1)

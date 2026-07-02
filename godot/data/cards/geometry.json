@@ -274,7 +274,11 @@
      "when": "on_hit"
     }
    ],
-   "note": "Movimento: ⬇1 OPPURE tridente frontale (dirs 0,1,5) in Equilibrio. Ferite: fronte, fronte-dx, diagonale anello2 fronte-sx (d5 adiacente VUOTA). SE RIUSCITO: l'avversario perde 2 focus. Riquadro [3] su barra GIALLA = iniziativa alternativa 3 in Determinazione (non modellata). Verificata su warrior_23.webp."
+   "note": "Movimento: ⬇1 OPPURE tridente frontale (dirs 0,1,5) in Equilibrio. Ferite: fronte, fronte-dx, diagonale anello2 fronte-sx (d5 adiacente VUOTA). SE RIUSCITO: l'avversario perde 2 focus. Riquadro [3] su barra GIALLA = iniziativa alternativa 3 in Determinazione (alt_initiative). Verificata su warrior_23.webp.",
+   "alt_initiative": {
+    "value": 3,
+    "kamae": "determination"
+   }
   },
   "59": {
    "name": "CONCENTRAZIONE RITROVATA",
@@ -388,7 +392,11 @@
      "to": "aggression"
     }
    ],
-   "note": "Riquadro [8] = iniziativa alternativa in Determinazione (non modellata). Movimento: ⬇1 OPPURE tridente frontale in Equilibrio. Ferite: fronte-sx, fronte, diagonale anello2 fronte-dx. Barra viola 2 loti: SOSTITUISCI ! CON GOCCIA (sanguinante) pagando 2 focus. PASSA A Aggressività. Verificata su warrior_19.webp."
+   "note": "Riquadro [8] = iniziativa alternativa 8 in Determinazione (alt_initiative). Movimento: ⬇1 OPPURE tridente frontale in Equilibrio. Ferite: fronte-sx, fronte, diagonale anello2 fronte-dx. Barra viola 2 loti: SOSTITUISCI ! CON GOCCIA (sanguinante) pagando 2 focus. PASSA A Aggressività. Verificata su warrior_19.webp.",
+   "alt_initiative": {
+    "value": 8,
+    "kamae": "determination"
+   }
   },
   "61": {
    "name": "COLPO CORTO",
@@ -636,7 +644,7 @@
      "when": "on_hit"
     }
    ],
-   "note": "Arco d1,d2 SENZA gate (il nido d'ape è fuori dalla barra arancio; la barra contiene solo il riquadro [7] = iniziativa alternativa 7 in Aggressività, non modellata). Split [5]: Equilibrio ❄1 ⟳1; Determinazione tridente frontale 1 + ⟳1. SE RIUSCITO: ruota l'avversario di 2. Verificata su warrior_13.webp.",
+   "note": "Arco d1,d2 SENZA gate (il nido d'ape è fuori dalla barra arancio; la barra contiene solo il riquadro [7] = iniziativa alternativa 7 in Aggressività (alt_initiative)). Split [5]: Equilibrio ❄1 ⟳1; Determinazione tridente frontale 1 + ⟳1. SE RIUSCITO: ruota l'avversario di 2. Verificata su warrior_13.webp.",
    "attack": {
     "cells": [
      {
@@ -650,6 +658,10 @@
       "w": 1
      }
     ]
+   },
+   "alt_initiative": {
+    "value": 7,
+    "kamae": "aggression"
    }
   },
   "72": {
@@ -762,44 +774,53 @@
      "n": 1
     }
    ],
-   "note": "Fronte: '!*' = 1 ferita automatica +1 pagando 1 focus. ⟳1 e PASSA A su cerchio VERDE = Equilibrio (non Determinazione). Iniziativa alt 7 in Aggressività (non modellata). Verificata su warrior_04.webp."
+   "note": "Fronte: '!*' = 1 ferita automatica +1 pagando 1 focus. ⟳1 e PASSA A su cerchio VERDE = Equilibrio (non Determinazione). Iniziativa alternativa 7 in Aggressività (alt_initiative). Verificata su warrior_04.webp.",
+   "alt_initiative": {
+    "value": 7,
+    "kamae": "aggression"
+   }
   },
   "87": {
    "name": "SABBIA NEGLI OCCHI",
    "type": "attack",
    "non_blockable": true,
    "attack": {
-	"cells": [
-	 {
-	  "d": 5,
-	  "k": 1,
-	  "w": 0
-	 },
-	 {
-	  "d": 0,
-	  "k": 1,
-	  "w": 0
-	 },
-	 {
-	  "d": 1,
-	  "k": 1,
-	  "w": 0
-	 }
-	]
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 0
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "w": 0
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 0
+     }
+    ]
    },
    "effects": [
-	{
-	 "do": "foe_lose_focus",
-	 "n": 2,
-	 "when": "on_hit"
-	},
-	{
-	 "do": "change_kamae",
-	 "n": 1,
-	 "when": "on_hit"
-	}
+    {
+     "do": "foe_lose_focus",
+     "n": 2,
+     "when": "on_hit"
+    },
+    {
+     "do": "change_kamae",
+     "n": 1,
+     "when": "on_hit"
+    },
+    {
+     "do": "foe_switch_kamae",
+     "to": "neutral",
+     "when": "on_hit"
+    }
    ],
-   "note": "Asterischi = avversario scarta 2 focus. 'avversario passa a Neutra' non modellato."
+   "note": "NON BLOCCABILE (non_blockable, dalla scritta stampata). Asterischi = avversario scarta 2 focus. SE RIUSCITO: l'avversario passa a Neutrale (foe_switch_kamae); CAMBIA KAMAE FINO A 1 RAMO su di sé. Verificata su warrior_10.webp."
   },
   "113": {
    "name": "TAGLIO TRONCANTE",
@@ -926,8 +947,13 @@
     ]
    },
    "counter": [
-    7,
-    6
+    {
+     "on": [
+      7,
+      6
+     ],
+     "kamae": "aggression"
+    }
    ],
    "effects": [
     {
@@ -946,7 +972,7 @@
      "n": 2
     }
    ],
-   "note": "Blocco 5 esagoni (d3 vuoto). Counter [7,6] DENTRO la banda Aggressività (gate sul counter non modellabile); SCARTA 2 CARTE senza gate. Scarta tutto il focus OPPURE tutto tranne 1 in Equilibrio. Split [1]: PASSA A Neutrale. Verificata su warrior_02.webp.",
+   "note": "Blocco 5 esagoni (d3 vuoto). Counter [7,6] in Aggressività (counter gated); SCARTA 2 CARTE senza gate. Scarta tutto il focus OPPURE tutto tranne 1 in Equilibrio. Split [1]: PASSA A Neutrale. Verificata su warrior_02.webp.",
    "split": {
     "initiative": 1,
     "effects": [
@@ -3361,15 +3387,22 @@
    "type": "meditation",
    "effects": [
     {
+     "do": "foe_reveal_hand"
+    },
+    {
      "do": "reset_deck",
      "n": 1
     },
     {
      "do": "switch_kamae",
      "to": "any"
+    },
+    {
+     "do": "foe_draw",
+     "n": 3
     }
    ],
-   "note": "GUARDA LA MANO DI [avversario] (non modellato); l'AVVERSARIO mischia nel mazzo 1 carta per ciascuna Kamae (approssimato con reset_deck); l'AVVERSARIO PESCA 3 CARTE (verbo assente, non modellato); PASSA A UNA QUALSIASI KAMAE. Verificata su master_21.webp."
+   "note": "GUARDA LA MANO DI [avversario] (foe_reveal_hand); l'AVVERSARIO mischia nel mazzo 1 carta per ciascuna Kamae (approssimato con reset_deck); l'AVVERSARIO PESCA 3 CARTE (foe_draw); PASSA A UNA QUALSIASI KAMAE. Verificata su master_21.webp."
   },
   "13": {
    "name": "OCCHIO DEL DRAGONE",
@@ -3377,6 +3410,11 @@
    "effects": [
     {
      "do": "foe_lose_focus",
+     "n": 2,
+     "focus_cost": 1
+    },
+    {
+     "do": "foe_draw",
      "n": 2,
      "focus_cost": 1
     },
@@ -3391,7 +3429,7 @@
      "kamae": "balance"
     }
    ],
-   "note": "Aggiunta istantanea. Righe gated (NON alternative): loto: l'avversario perde 2 focus (costo 1 focus); loto: l'AVVERSARIO pesca 2 (verbo assente, non modellato); rosso: ❄1; giallo: pesca fino a 2; verde: TIRA O SPINGI 1 (il 'tira' non è modellato). Verificata su master_23.webp.",
+   "note": "Aggiunta istantanea. Righe gated (NON alternative): loto: l'avversario perde 2 focus (costo 1 focus); loto: l'AVVERSARIO pesca 2 (foe_draw, 1 focus); rosso: ❄1; giallo: pesca fino a 2; verde: TIRA O SPINGI 1 (il 'tira' non è modellato). Verificata su master_23.webp.",
    "move": {
     "opts": [
      {
@@ -3525,9 +3563,13 @@
      "do": "foe_lose_focus",
      "n": 1,
      "when": "on_hit"
+    },
+    {
+     "do": "foe_reveal_hand",
+     "when": "on_hit"
     }
    ],
-   "note": "⟳3. Blocco su fronte-sx, fronte, fronte-dx. SE RIUSCITO: l'avversario perde 1 FOCUS e GUARDI LA SUA MANO (non modellato). Giocabile in Equilibrio O Determinazione (kamae_req come array, gate OR). Verificata su master_09.webp.",
+   "note": "⟳3. Blocco su fronte-sx, fronte, fronte-dx. SE RIUSCITO: l'avversario perde 1 FOCUS e GUARDI LA SUA MANO (foe_reveal_hand). Giocabile in Equilibrio O Determinazione (kamae_req come array, gate OR). Verificata su master_09.webp.",
    "kamae_req": [
     "balance",
     "determination"
@@ -3540,9 +3582,13 @@
     {
      "do": "draw",
      "n": 2
+    },
+    {
+     "do": "foe_draw",
+     "n": 2
     }
    ],
-   "note": "Aggiunta istantanea. GIOCA SE IL BLOCCO È RIUSCITO. TUTTI i giocatori pescano 2 (la pesca dell'avversario non è modellata; barra viola = probabile costo 1 focus, DA VERIFICARE). Bande kamae→iniziativa non modellate: GIALLA scudi 9/8, VERDE 7/6, ROSSA 5/4. Verificata su master_05.webp."
+   "note": "Aggiunta istantanea. GIOCA SE IL BLOCCO È RIUSCITO. TUTTI i giocatori pescano 2 (draw + foe_draw; barra viola = probabile costo 1 focus, DA VERIFICARE). Bande kamae→iniziativa non modellate: GIALLA scudi 9/8, VERDE 7/6, ROSSA 5/4. Verificata su master_05.webp."
   },
   "18": {
    "name": "COLPO INDOLENTE",
@@ -3998,7 +4044,7 @@
      "kamae": "determination"
     }
    ],
-   "note": "Preparata; banner [7] = iniziativa alternativa 7 in Aggressività (non modellata). Ferite fronte-sx/fronte/fronte-dx. SE RIUSCITO (barra gialla=Determinazione): l'AVVERSARIO scarta 1. Split [3]: ❄1 ⟳1 e GUARDA LA MANO dell'avversario (non modellato). Verificata su student_09.webp.",
+   "note": "Preparata; banner [7] = iniziativa alternativa 7 in Aggressività (alt_initiative). Ferite fronte-sx/fronte/fronte-dx. SE RIUSCITO (barra gialla=Determinazione): l'AVVERSARIO scarta 1. Split [3]: ❄1 ⟳1 e GUARDA LA MANO dell'avversario (foe_reveal_hand nello split). Verificata su student_09.webp.",
    "split": {
     "initiative": 3,
     "move": {
@@ -4019,7 +4065,16 @@
        ]
       }
      ]
-    }
+    },
+    "effects": [
+     {
+      "do": "foe_reveal_hand"
+     }
+    ]
+   },
+   "alt_initiative": {
+    "value": 7,
+    "kamae": "aggression"
    }
   },
   "45": {
@@ -4046,6 +4101,11 @@
    },
    "effects": [
     {
+     "do": "foe_switch_kamae",
+     "to": "any",
+     "when": "on_hit"
+    },
+    {
      "do": "foe_lose_focus",
      "n": 1,
      "when": "on_hit"
@@ -4061,7 +4121,7 @@
      "when": "on_hit"
     }
    ],
-   "note": "Preparata. Scudi su fronte, fronte-dx, retro-dx. SE RIUSCITO (tutti, nessun OPPURE): fai passare l'AVVERSARIO a una qualsiasi Kamae (verbo assente, non modellato); RUBI 1 focus (foe_lose_focus+focus); cambi Kamae fino a 1 ramo. Gate in alto Equilibrio/Determinazione (kamae_req come array, gate OR). Verificata su student_10.webp.",
+   "note": "Preparata. Scudi su fronte, fronte-dx, retro-dx. SE RIUSCITO (tutti, nessun OPPURE): fai passare l'AVVERSARIO a una qualsiasi Kamae (foe_switch_kamae to:any — in auto va a Neutrale, DA VERIFICARE chi sceglie); RUBI 1 focus (foe_lose_focus+focus); cambi Kamae fino a 1 ramo. Gate in alto Equilibrio/Determinazione (kamae_req come array, gate OR). Verificata su student_10.webp.",
    "kamae_req": [
     "balance",
     "determination"
@@ -4625,7 +4685,7 @@
      "do": "discard_self"
     }
    ],
-   "note": "SCARTA 1 CARTA. Ferite su fronte-sx e fronte (d1 vuota, nessuna esecuzione). Barra viola con [6] = iniziativa alternativa 6 pagando 1 focus (non modellata, DA VERIFICARE). Split [3]: ❄1 ⟳2. Verificata su altre_carte_07.webp.",
+   "note": "SCARTA 1 CARTA. Ferite su fronte-sx e fronte (d1 vuota, nessuna esecuzione). Barra viola con [6] = iniziativa alternativa 6 pagando 1 focus (alt_initiative). Split [3]: ❄1 ⟳2. Verificata su altre_carte_07.webp.",
    "split": {
     "initiative": 3,
     "move": {
@@ -4647,6 +4707,10 @@
       }
      ]
     }
+   },
+   "alt_initiative": {
+    "value": 6,
+    "focus_cost": 1
    }
   },
   "139": {
@@ -4782,9 +4846,15 @@
    "effects": [
     {
      "do": "discard_self"
+    },
+    {
+     "do": "foe_change_kamae",
+     "n": 1,
+     "focus_cost": 1,
+     "when": "on_hit"
     }
    ],
-   "note": "SCARTA 1 CARTA. ⟳1. Scudi su fronte e fronte-sx (d1 vuota). SE RIUSCITO (viola, 1 focus): cambia la Kamae dell'AVVERSARIO fino a 1 ramo — verbo assente, non modellato. Split [1]: ❄1. Verificata su altre_carte_11.webp.",
+   "note": "SCARTA 1 CARTA. ⟳1. Scudi su fronte e fronte-sx (d1 vuota). SE RIUSCITO (viola, 1 focus): cambia la Kamae dell'AVVERSARIO fino a 1 ramo (foe_change_kamae). Split [1]: ❄1. Verificata su altre_carte_11.webp.",
    "split": {
     "initiative": 1,
     "move": {
@@ -5191,7 +5261,7 @@
      "alt": "a"
     },
     {
-     "do": "foe_discard",
+     "do": "foe_reveal_hand",
      "alt": "b"
     },
     {
@@ -5199,7 +5269,7 @@
      "to": "determination"
     }
    ],
-   "note": "❄1 POI ⟳2. OTTIENI 1 focus su barra gialla = Determinazione. PESCA FINO A 2 OPPURE GUARDA LA MANO dell'avversario (foe_discard segnaposto). PASSA A Determinazione (icona 4 quadretti). Verificata su altre_carte_2_17.webp."
+   "note": "❄1 POI ⟳2. OTTIENI 1 focus su barra gialla = Determinazione. PESCA FINO A 2 OPPURE GUARDA LA MANO dell'avversario (foe_reveal_hand). PASSA A Determinazione (icona 4 quadretti). Verificata su altre_carte_2_17.webp."
   },
   "124": {
    "name": "FASCIATURE DA CAMPO",
@@ -5225,6 +5295,12 @@
    },
    "effects": [
     {
+     "do": "heal",
+     "what": "stun",
+     "n": 2,
+     "alt": "a"
+    },
+    {
      "do": "replace_wound_bleed",
      "alt": "b"
     },
@@ -5239,7 +5315,7 @@
      "kamae": "determination"
     }
    ],
-   "note": "❄1 ⟳1. SCARTA FINO A 2 STORDIMENTI (alt a — verbo assente, non modellato) OPPURE SOSTITUISCI TUTTE LE sanguinanti CON ferite normali (direzione INVERSA di replace_wound_bleed). PESCA FINO A 1 in Equilibrio; PESCA FINO A 2 in Determinazione (gated, nessun costo focus). Verificata su altre_carte_31.webp."
+   "note": "❄1 ⟳1. SCARTA FINO A 2 STORDIMENTI (heal stun, alt a) OPPURE SOSTITUISCI TUTTE LE sanguinanti CON ferite normali (direzione INVERSA di replace_wound_bleed). PESCA FINO A 1 in Equilibrio; PESCA FINO A 2 in Determinazione (gated, nessun costo focus). Verificata su altre_carte_31.webp."
   },
   "128": {
    "name": "STOCCATA RAPIDA",
@@ -5324,8 +5400,12 @@
   "153": {
    "name": "VANTAGGIO",
    "type": "meditation",
-   "effects": [],
-   "note": "Aggiunta istantanea. GIOCA SE L'ATTACCO O IL BLOCCO È RIUSCITO: icona OCCHIO = GUARDA LA MANO dell'avversario (verbo assente, non modellato — il vecchio 'draw' era errato). Verificata su altre_carte_35.webp."
+   "effects": [
+    {
+     "do": "foe_reveal_hand"
+    }
+   ],
+   "note": "Aggiunta istantanea. GIOCA SE L'ATTACCO O IL BLOCCO È RIUSCITO: icona OCCHIO = GUARDA LA MANO dell'avversario (foe_reveal_hand). Verificata su altre_carte_35.webp."
   },
   "150": {
    "name": "FURIA CRESCENTE",
@@ -5468,6 +5548,21 @@
    "type": "meditation",
    "effects": [
     {
+     "do": "heal",
+     "what": "stun",
+     "all": true
+    },
+    {
+     "do": "heal",
+     "what": "hobble",
+     "all": true
+    },
+    {
+     "do": "heal",
+     "what": "poison",
+     "all": true
+    },
+    {
      "do": "replace_wound_bleed"
     },
     {
@@ -5475,7 +5570,7 @@
      "n": 5
     }
    ],
-   "note": "Richiede Equilibrio (banda verde, DA VERIFICARE). SCARTA TUTTI GLI EFFETTI DI STATO (verbo assente, non modellato); SOSTITUISCI TUTTE le sanguinanti CON ferite normali (replace_wound_bleed usato in direzione INVERSA, tutte); PESCA FINO A 5. ❄1 ⟳1. Verificata su altre_carte_2_04.webp.",
+   "note": "Richiede Equilibrio (banda verde, DA VERIFICARE). SCARTA TUTTI GLI EFFETTI DI STATO (heal all su stun/hobble/poison); SOSTITUISCI TUTTE le sanguinanti CON ferite normali (replace_wound_bleed usato in direzione INVERSA, tutte); PESCA FINO A 5. ❄1 ⟳1. Verificata su altre_carte_2_04.webp.",
    "move": {
     "opts": [
      {
@@ -5797,7 +5892,11 @@
      "to": "balance"
     }
    ],
-   "note": "Ferite su fronte, fronte-dx e fronte-sx. Passo diagonale frontale (dir 1 O 5) OPPURE in Aggressività passo in una delle 4 diagonali. Nessuna rotazione. Riquadro [8] su barra verde = iniziativa alternativa 8 in Equilibrio (non modellata). PASSA A Equilibrio. Verificata su altre_carte_2_20.webp."
+   "note": "Ferite su fronte, fronte-dx e fronte-sx. Passo diagonale frontale (dir 1 O 5) OPPURE in Aggressività passo in una delle 4 diagonali. Nessuna rotazione. Riquadro [8] su barra verde = iniziativa alternativa 8 in Equilibrio (alt_initiative). PASSA A Equilibrio. Verificata su altre_carte_2_20.webp.",
+   "alt_initiative": {
+    "value": 8,
+    "kamae": "balance"
+   }
   },
   "106": {
    "name": "VOLONTA DI FERRO",
@@ -5935,7 +6034,11 @@
      "to": "any"
     }
    ],
-   "note": "Movimenti gated: ⬆1 base; ⬆2 in Aggressività; diagonale frontale (dir 1 O 5) in Determinazione; ⟳2 in Equilibrio. Riquadro [6] su barra viola con loto = iniziativa alternativa 6 pagando 1 focus (non modellata, DA VERIFICARE). PASSA A UNA QUALSIASI KAMAE. Verificata su altre_carte_2_23.webp."
+   "note": "Movimenti gated: ⬆1 base; ⬆2 in Aggressività; diagonale frontale (dir 1 O 5) in Determinazione; ⟳2 in Equilibrio. Riquadro [6] su barra viola con loto = iniziativa alternativa 6 pagando 1 focus (alt_initiative). PASSA A UNA QUALSIASI KAMAE. Verificata su altre_carte_2_23.webp.",
+   "alt_initiative": {
+    "value": 6,
+    "focus_cost": 1
+   }
   },
   "112": {
    "name": "SQUARCIO ROTANTE",
@@ -6189,11 +6292,11 @@
      "alt": "b"
     },
     {
-     "do": "foe_discard",
+     "do": "foe_reveal_hand",
      "kamae": "determination"
     }
    ],
-   "note": "Movimento: passo frontale a 3 punte di 2 POI ⟳1; OPPURE (Equilibrio) lo stesso passo 2 POI ⟳3. CAMBIA KAMAE FINO A 2 RAMI OPPURE CERCA+PRENDI 1 (carta scura O chiara). GUARDA LA MANO dell'avversario su barra gialla = Determinazione (foe_discard segnaposto). Verificata su altre_carte_2_29.webp."
+   "note": "Movimento: passo frontale a 3 punte di 2 POI ⟳1; OPPURE (Equilibrio) lo stesso passo 2 POI ⟳3. CAMBIA KAMAE FINO A 2 RAMI OPPURE CERCA+PRENDI 1 (carta scura O chiara). GUARDA LA MANO dell'avversario in Determinazione (foe_reveal_hand). Verificata su altre_carte_2_29.webp."
   },
   "120": {
    "name": "BLOCCO DI VENTO",
@@ -6213,12 +6316,22 @@
     ]
    },
    "counter": [
-    8,
-    7,
-    6,
-    5
+    {
+     "on": [
+      8,
+      7
+     ],
+     "kamae": "balance"
+    },
+    {
+     "on": [
+      6,
+      5
+     ],
+     "kamae": "determination"
+    }
    ],
-   "note": "⟳1. DUE scudi (fronte e fronte-dx; d5 vuota, valore non stampato). Contrattacco: scudi in rombo 8/7 su barra verde (Equilibrio) e 6/5 su barra gialla (Determinazione) — il gate kamae sul counter non è modellabile, DA VERIFICARE. Verificata su altre_carte_2_31.webp.",
+   "note": "⟳1. DUE scudi (fronte e fronte-dx; d5 vuota, valore non stampato). Contrattacco: 8/7 in Equilibrio e 6/5 in Determinazione (counter gated). Verificata su altre_carte_2_31.webp.",
    "move": {
     "opts": [
      {
@@ -6272,7 +6385,11 @@
      "when": "on_hit"
     }
    ],
-   "note": "❄1 + ⟳1 su barra verde (Equilibrio). 1 ferita sul fronte. SE RIUSCITO: l'AVVERSARIO scarta 1 carta. Barra gialla con [2] in testa = probabile iniziativa alternativa 2 in Determinazione (non modellata, DA VERIFICARE). Verificata su altre_carte_2_32.webp."
+   "note": "❄1 + ⟳1 su barra verde (Equilibrio). 1 ferita sul fronte. SE RIUSCITO: l'AVVERSARIO scarta 1 carta. Barra gialla con [2] in testa = iniziativa alternativa 2 in Determinazione (alt_initiative, probabile, DA VERIFICARE). Verificata su altre_carte_2_32.webp.",
+   "alt_initiative": {
+    "value": 2,
+    "kamae": "determination"
+   }
   },
   "142": {
    "name": "CALMA CONVINZIONE",
@@ -6328,14 +6445,18 @@
      }
     ]
    },
-   "note": "⬆1 + ⟳1 in Aggressività. 1 ferita sul fronte. SE RIUSCITO: AZZOPPA (elmo+zigzag). Riquadro [4] su barra gialla = iniziativa alternativa 4 in Determinazione (non modellata). Verificata su altre_carte_2_34.webp.",
+   "note": "⬆1 + ⟳1 in Aggressività. 1 ferita sul fronte. SE RIUSCITO: AZZOPPA (elmo+zigzag). Riquadro [4] su barra gialla = iniziativa alternativa 4 in Determinazione (alt_initiative). Verificata su altre_carte_2_34.webp.",
    "effects": [
     {
      "do": "hobble",
      "n": 1,
      "when": "on_hit"
     }
-   ]
+   ],
+   "alt_initiative": {
+    "value": 4,
+    "kamae": "determination"
+   }
   },
   "148": {
    "name": "COLPO DI GRANDINE",
@@ -6438,7 +6559,11 @@
      "to": "determination"
     }
    ],
-   "note": "Iniziativa stampata 4; il [5] sulla barra viola col loto = iniziativa alternativa 5 pagando 1 focus (non modellata, DA VERIFICARE). Tridente frontale 1 OPPURE ❄1 in Equilibrio. Fronte '!*'. '* !' in Aggressività (link_anchor gated). PASSA A Determinazione. Verificata su altre_carte_2_36.webp."
+   "note": "Iniziativa stampata 4; il [5] sulla barra viola col loto = iniziativa alternativa 5 pagando 1 focus (alt_initiative). Tridente frontale 1 OPPURE ❄1 in Equilibrio. Fronte '!*'. '* !' in Aggressività (link_anchor gated). PASSA A Determinazione. Verificata su altre_carte_2_36.webp.",
+   "alt_initiative": {
+    "value": 5,
+    "focus_cost": 1
+   }
   },
   "76": {
    "name": "BLOCCO DI TONFA",
@@ -6550,7 +6675,7 @@
    "type": "meditation",
    "effects": [
     {
-     "do": "switch_kamae",
+     "do": "foe_switch_kamae",
      "to": "neutral",
      "when": "on_hit"
     },
@@ -6559,9 +6684,13 @@
      "n": 1,
      "when": "on_hit",
      "focus_cost": 1
+    },
+    {
+     "do": "foe_reveal_hand",
+     "kamae": "determination"
     }
    ],
-   "note": "Iniziativa =, Aggiunta Istantanea, Distanza 5. GIOCA SE L'ATTACCO O IL BLOCCO È RIUSCITO: l'AVVERSARIO passa a Neutrale (bersaglio avversario, non distinguibile nello schema). Determinazione: GUARDA LA MANO avversaria (non modellato). Banda viola: l'avversario scarta 1 carta pagando 1 focus. Verificata su altre_carte_3_11.webp."
+   "note": "Iniziativa =, Aggiunta Istantanea, Distanza 5. GIOCA SE L'ATTACCO O IL BLOCCO È RIUSCITO: l'AVVERSARIO passa a Neutrale (foe_switch_kamae). Determinazione: GUARDA LA MANO avversaria (foe_reveal_hand). Banda viola: l'avversario scarta 1 carta pagando 1 focus. Verificata su altre_carte_3_11.webp."
   },
   "111": {
    "name": "BLOCCO DI FIUME",
@@ -6593,8 +6722,13 @@
     ]
    },
    "counter": [
-    6,
-    5
+    {
+     "on": [
+      6,
+      5
+     ],
+     "kamae": "determination"
+    }
    ],
    "split": {
     "initiative": 3,
@@ -6627,7 +6761,7 @@
      }
     ]
    },
-   "note": "Iniziativa 7-4. ⟳1 sempre. Scudi fronte/fronte-dx. Contrattacco 6/5 dentro banda Determinazione (gate non modellabile, come id 118/120). Split [3]: ❄1 POI ⟳1. OTTIENI 1 focus in Equilibrio; PASSA A Equilibrio (senza gate). Verificata su altre_carte_3_16.webp."
+   "note": "Iniziativa 7-4. ⟳1 sempre. Scudi fronte/fronte-dx. Contrattacco 6/5 in Determinazione (counter gated). Split [3]: ❄1 POI ⟳1. OTTIENI 1 focus in Equilibrio; PASSA A Equilibrio (senza gate). Verificata su altre_carte_3_16.webp."
   },
   "121": {
    "name": "DIFESA TRANQUILLA",
@@ -6764,7 +6898,11 @@
      "kamae": "aggression"
     }
    ],
-   "note": "Iniziativa 5. Banda Equilibrio [7] = iniziativa alternativa 7, non modellata. Movimento: passo indietro opzionale + ⟳1 opzionale in Determinazione. Fronte-dx/retro-dx 2 ferite; fronte è cella-àncora con bonus 1 ferita in Aggressività. Verificata su altre_carte_3_13.webp."
+   "note": "Iniziativa 5. Banda Equilibrio [7] = iniziativa alternativa 7 (alt_initiative). Movimento: passo indietro opzionale + ⟳1 opzionale in Determinazione. Fronte-dx/retro-dx 2 ferite; fronte è cella-àncora con bonus 1 ferita in Aggressività. Verificata su altre_carte_3_13.webp.",
+   "alt_initiative": {
+    "value": 7,
+    "kamae": "balance"
+   }
   }
  ,
  "99": {
@@ -6960,9 +7098,16 @@
    },
    "counter": [
     5,
-    4
+    4,
+    {
+     "on": [
+      3,
+      2
+     ],
+     "kamae": "determination"
+    }
    ],
-   "note": "Iniziativa 5-2. ⟳1 sempre. Scudi fronte/fronte-dx. Contrattacco 5/4 sempre; Determinazione aggiunge anche 3/2 (gate sul counter non modellabile, come id 111/118/120). Verificata su altre_carte_3_09.webp."
+   "note": "Iniziativa 5-2. ⟳1 sempre. Scudi fronte/fronte-dx. Contrattacco 5/4 sempre; 3/2 in Determinazione (counter gated). Verificata su altre_carte_3_09.webp."
   },
  "144": {
    "name": "DETERMINAZIONE",
@@ -7025,12 +7170,12 @@
    },
    "effects": [
     {
-     "do": "switch_kamae",
+     "do": "foe_switch_kamae",
      "to": "neutral",
      "when": "on_hit"
     }
    ],
-   "note": "Iniziativa 3. Movimento gated su bande diverse senza OPPURE: ↑1 in Determinazione, ⟳1 in Equilibrio. Fronte/fronte-dx 1 ferita. SE RIUSCITO: l'avversario passa a Neutrale (bersaglio avversario, non distinguibile). Verificata su altre_carte_3_07.webp."
+   "note": "Iniziativa 3. Movimento gated su bande diverse senza OPPURE: ↑1 in Determinazione, ⟳1 in Equilibrio. Fronte/fronte-dx 1 ferita. SE RIUSCITO: l'avversario passa a Neutrale (foe_switch_kamae). Verificata su altre_carte_3_07.webp."
   },
  "146": {
    "name": "GUARDIA CONCENTRATA",
@@ -7180,12 +7325,22 @@
     ]
    },
    "counter": [
-    8,
-    7,
-    6,
-    5
+    {
+     "on": [
+      8,
+      7
+     ],
+     "kamae": "determination"
+    },
+    {
+     "on": [
+      6,
+      5
+     ],
+     "kamae": "balance"
+    }
    ],
-   "note": "Iniziativa 8-5. ⟳1 sempre. Scudi fronte/fronte-sx. Contrattacco: 8/7 in Determinazione, 6/5 in Equilibrio (gate non modellabile, come id 111/118/120/141). Verificata su altre_carte_3_03.webp."
+   "note": "Iniziativa 8-5. ⟳1 sempre. Scudi fronte/fronte-sx. Contrattacco: 8/7 in Determinazione, 6/5 in Equilibrio (counter gated). Verificata su altre_carte_3_03.webp."
   },
  "152": {
    "name": "COLPO STORDENTE",
@@ -8109,13 +8264,13 @@
      "when": "on_hit"
     },
     {
-     "do": "switch_kamae",
+     "do": "foe_switch_kamae",
      "to": "neutral",
      "focus_cost": 1,
      "when": "on_hit"
     }
    ],
-   "note": "Meditazione, Aggiunta Istantanea. GIOCA SE L'ATTACCO O IL BLOCCO È RIUSCITO condiziona l'intera carta. Effetto base: elmo+zigzag = AZZOPPA l'avversario (gratis). Riga viola (1 focus): elmo + ellisse tratteggiata con puntini = STORDISCI l'avversario. Riga viola (1 focus): elmo + 'PASSA A' torii = l'avversario è forzato verso Kamae neutrale. Le tre righe sono indipendenti (nessun OPPURE): AZZOPPA si applica sempre, STORDISCI e PASSA A Neutrale sono bonus aggiuntivi attivabili pagando ciascuno 1 focus. DA VERIFICARE: nessun verbo 'foe_switch_kamae' in whitelist. Verificata su ashigaru_07.webp."
+   "note": "Meditazione, Aggiunta Istantanea. GIOCA SE L'ATTACCO O IL BLOCCO È RIUSCITO condiziona l'intera carta. Effetto base: elmo+zigzag = AZZOPPA l'avversario (gratis). Riga viola (1 focus): elmo + ellisse tratteggiata con puntini = STORDISCI l'avversario. Riga viola (1 focus): elmo + 'PASSA A' torii = l'avversario è forzato a Neutrale (foe_switch_kamae) verso Kamae neutrale. Le tre righe sono indipendenti (nessun OPPURE): AZZOPPA si applica sempre, STORDISCI e PASSA A Neutrale sono bonus aggiuntivi attivabili pagando ciascuno 1 focus. DA VERIFICARE: nessun verbo 'foe_switch_kamae' in whitelist. Verificata su ashigaru_07.webp."
   },
  "241": {
    "name": "STOCCATA IN AFFONDO",
@@ -8186,13 +8341,14 @@
     },
     {
      "do": "foe_discard",
-     "n": 1
+     "n": 1,
+     "random": true
     },
     {
      "do": "hobble"
     }
    ],
-   "note": "Meditazione, Aggiunta Istantanea. GIOCA SE L'ATTACCO È RIUSCITO + SE L'ATTACCO [icona non identificata, forse riferita a Hachikō] È RIUSCITO — doppia condizione, DA VERIFICARE. Effetti in sequenza (nessuna banda/OPPURE): OTTIENI 1 focus; l'avversario scarta 1 carta a caso; AZZOPPA; icona 'ventaglio/gunbai' finale non identificata, non trascritta. Verificata su ashigaru_09.webp."
+   "note": "Meditazione, Aggiunta Istantanea. GIOCA SE L'ATTACCO È RIUSCITO + SE L'ATTACCO [icona non identificata, forse riferita a Hachikō] È RIUSCITO — doppia condizione, DA VERIFICARE. Effetti in sequenza (nessuna banda/OPPURE): OTTIENI 1 focus; l'avversario scarta 1 carta a caso (foe_discard random); AZZOPPA; icona 'ventaglio/gunbai' finale non identificata, non trascritta. Verificata su ashigaru_09.webp."
   },
  "243": {
    "name": "ACCERCHIAMENTO",
@@ -8407,7 +8563,8 @@
    },
    "effects": [
     {
-     "do": "reduce_damage",
+     "do": "heal",
+     "what": "wound",
      "n": 1,
      "alt": "a",
      "focus_cost": 1
@@ -8418,7 +8575,7 @@
      "focus_cost": 1
     }
    ],
-   "note": "Attacco iniziativa 7, Difesa iniziativa 1. ATTACCO 'Morso Selvaggio': bidente frontale 1 POI ⟳1; 2 ferite sul fronte. DIFESA 'Leccarsi le Ferite': bidente frontale 1 (non rappresentato nel campo move condiviso); OPPURE (1 focus) rimuovi 1 ferita (nessun verbo di guarigione in whitelist, approssimato con reduce_damage, DA VERIFICARE) OPPURE (1 focus) sostituisci 1 sanguinante con ferita normale (direzione inversa di replace_wound_bleed, DA VERIFICARE). Verificata su hachiko_09.webp."
+   "note": "Attacco iniziativa 7, Difesa iniziativa 1. ATTACCO 'Morso Selvaggio': bidente frontale 1 POI ⟳1; 2 ferite sul fronte. DIFESA 'Leccarsi le Ferite': bidente frontale 1 (non rappresentato nel campo move condiviso); OPPURE (1 focus) rimuovi 1 ferita (heal) OPPURE (1 focus) sostituisci 1 sanguinante con ferita normale (direzione inversa di replace_wound_bleed, DA VERIFICARE). Verificata su hachiko_09.webp."
   },
  "250": {
    "name": "MORSO ALLA CAVIGLIA / RINGHIO MINACCIOSO",
@@ -9568,9 +9725,14 @@
     ]
    },
    "counter": [
-    7,
-    6,
-    5
+    {
+     "on": [
+      7,
+      6,
+      5
+     ],
+     "state": "disperazione"
+    }
    ],
    "split": {
     "initiative": 1,
@@ -9609,7 +9771,7 @@
      }
     ]
    },
-   "note": "Iniziativa card_pool 8-2 (non replicata). 3 scudi (fronte/fronte-dx/fronte-sx); celle retro-dx/retro-sx sono ancore senza effetto base, probabile bonus scudo solo in Disperazione (non modellato). Counter [7,6,5] gated Disperazione (icona fiamma): il gate sul counter arriva in Fase 3 (roadmap §3.10), DA MODELLARE. Split [1]: passo indietro 1 OPPURE (Determinazione) tridente posteriore 1. PESCA 2 CARTE gated Disperazione (state). Verificata su onna_bugeisha_08.webp."
+   "note": "Iniziativa card_pool 8-2 (non replicata). 3 scudi (fronte/fronte-dx/fronte-sx); celle retro-dx/retro-sx sono ancore senza effetto base, probabile bonus scudo solo in Disperazione (non modellato). Counter [7,6,5] in Disperazione (counter gated state). Split [1]: passo indietro 1 OPPURE (Determinazione) tridente posteriore 1. PESCA 2 CARTE gated Disperazione (state). Verificata su onna_bugeisha_08.webp."
   },
  "300": {
    "name": "COLPO IN CADUTA",
@@ -9677,12 +9839,12 @@
      "focus_cost": 1
     },
     {
-     "do": "switch_kamae",
+     "do": "foe_switch_kamae",
      "to": "neutral",
      "focus_cost": 1
     }
    ],
-   "note": "Aggiunta Istantanea: GIOCA SE L'ATTACCO O IL BLOCCO È RIUSCITO condiziona l'intera carta (non un'altra carta). AZZOPPA senza costo; STORDISCI pagando 1 focus; l'avversario passa a Neutrale pagando 1 focus (bersaglio avversario, non distinguibile nello schema). Nessun OPPURE tra le due righe viola: indipendenti. Verificata su onna_bugeisha_11.webp."
+   "note": "Aggiunta Istantanea: GIOCA SE L'ATTACCO O IL BLOCCO È RIUSCITO condiziona l'intera carta (non un'altra carta). AZZOPPA senza costo; STORDISCI pagando 1 focus; l'avversario passa a Neutrale pagando 1 focus (foe_switch_kamae). Nessun OPPURE tra le due righe viola: indipendenti. Verificata su onna_bugeisha_11.webp."
   },
  "302": {
    "name": "SCHIVATA DI URAGANO",
@@ -9785,7 +9947,11 @@
      "to": "determination"
     }
    ],
-   "note": "Banda con riquadro [8] preceduta da icona fiamma = iniziativa alternativa 8 in Disperazione: campo alt_initiative in arrivo in Fase 3 (roadmap §3.1), DA MODELLARE. Movimento: passo indietro 1 + ⟳1 in Aggressività. Diagonale anello2 fronte-sx 1 ferita; fronte dist2 1 ferita; cella ancora estrema (diagonale fronte-sx dist2, w:0) con bonus a 2 ferite SOLO in Disperazione (gate di cella non ancora modellabile). PASSA A Determinazione incondizionato. Verificata su onna_bugeisha_15.webp."
+   "note": "Banda con riquadro [8] preceduta da icona fiamma = iniziativa alternativa 8 in Disperazione (alt_initiative gated state). Movimento: passo indietro 1 + ⟳1 in Aggressività. Diagonale anello2 fronte-sx 1 ferita; fronte dist2 1 ferita; cella ancora estrema (diagonale fronte-sx dist2, w:0) con bonus a 2 ferite SOLO in Disperazione (gate di cella non ancora modellabile). PASSA A Determinazione incondizionato. Verificata su onna_bugeisha_15.webp.",
+   "alt_initiative": {
+    "value": 8,
+    "state": "disperazione"
+   }
   },
  "304": {
    "name": "COLPO ALLE CAVIGLIE",
@@ -9899,6 +10065,9 @@
    },
    "effects": [
     {
+     "do": "foe_reveal_hand"
+    },
+    {
      "do": "draw",
      "n": 2,
      "state": "disperazione"
@@ -9909,7 +10078,7 @@
      "kamae": "determination"
     }
    ],
-   "note": "Tre righe cumulative ❄1+↻1: prima senza gate, seconda in Equilibrio, terza in Disperazione (state sugli atomi). GUARDA LA MANO dell'avversario: nessun verbo disponibile (roadmap §3.5), non modellato. PESCA 2 gated Disperazione (state). CAMBIA KAMAE FINO A 1 RAMO gated Determinazione. Verificata su onna_bugeisha_20.webp."
+   "note": "Tre righe cumulative ❄1+↻1: prima senza gate, seconda in Equilibrio, terza in Disperazione (state sugli atomi). GUARDA LA MANO dell'avversario (foe_reveal_hand). PESCA 2 gated Disperazione (state). CAMBIA KAMAE FINO A 1 RAMO gated Determinazione. Verificata su onna_bugeisha_20.webp."
   },
  "306": {
    "name": "FIUME IN PIENA",
@@ -10145,12 +10314,16 @@
    },
    "effects": [
     {
+     "do": "foe_reveal_hand",
+     "when": "on_hit"
+    },
+    {
      "do": "change_kamae",
      "n": 1,
      "when": "on_hit"
     }
    ],
-   "note": "Movimento su due righe: banda Aggressività = passo avanti alternativo; riga sempre disponibile = tridente frontale + rotazione — trascritte come opzioni alternative, DA VERIFICARE se vadano composte in sequenza. Fronte-sx 2 ferite, fronte 1 ferita. SE RIUSCITO: GUARDA LA MANO dell'avversario (non modellato, DA VERIFICARE), poi CAMBIA KAMAE FINO A 1 RAMO. Verificata su yojimbo_18.webp."
+   "note": "Movimento su due righe: banda Aggressività = passo avanti alternativo; riga sempre disponibile = tridente frontale + rotazione — trascritte come opzioni alternative, DA VERIFICARE se vadano composte in sequenza. Fronte-sx 2 ferite, fronte 1 ferita. SE RIUSCITO: GUARDA LA MANO dell'avversario (foe_reveal_hand), poi CAMBIA KAMAE FINO A 1 RAMO. Verificata su yojimbo_18.webp."
   },
  "321": {
    "name": "REPUTAZIONE SPAVENTOSA",
@@ -10186,18 +10359,25 @@
    "effects": [
     {
      "do": "focus",
-     "n": 1
+     "n": 1,
+     "n_from_state": "contratti"
     },
     {
      "do": "draw",
-     "n": 1
+     "n": 1,
+     "n_from_state": "contratti"
     },
     {
      "do": "search_draw",
-     "n": 1
+     "n": 1,
+     "n_from_state": "contratti"
+    },
+    {
+     "do": "state_clear",
+     "state": "contratti"
     }
    ],
-   "note": "Nessun movimento. Tutti gli effetti sono ripetuti PER OGNI CONTRATTO COMPLETATO (moltiplicatore non modellato, trascritti una sola volta): OTTIENI 1 focus; PESCA 1; CERCA NEGLI SCARTI + MISCHIA 1 CARTA NEL MAZZO (approssimato con search_draw, ma si rimette nel mazzo non in mano, DA VERIFICARE); poi SCARTA TUTTI I CONTRATTI IN GIOCO (non modellato). Verificata su yojimbo_16.webp."
+   "note": "Nessun movimento. Tutti gli effetti sono ripetuti PER OGNI CONTRATTO COMPLETATO (n_from_state 'contratti'; come i Contratti si completino è regola del personaggio, DA CABLARE): OTTIENI 1 focus; PESCA 1; CERCA NEGLI SCARTI + MISCHIA 1 CARTA NEL MAZZO (approssimato con search_draw, ma si rimette nel mazzo non in mano, DA VERIFICARE); poi SCARTA TUTTI I CONTRATTI IN GIOCO (state_clear). Verificata su yojimbo_16.webp."
   },
  "323": {
    "name": "GUARDIA DI FERRO",
@@ -10297,7 +10477,11 @@
      "when": "on_hit"
     }
    ],
-   "note": "Copia con testo stampato in inglese (Scorpion Sting/Attack/If successful/Discard 1 card), tradotto. Banda Aggressività con [8] = iniziativa alternativa 8, non modellata. Movimento: passo avanti + rotazione. Fronte 1 ferita. Banda viola con icone elmo+teschio senza testo proprio sopra 'SCARTA 1 CARTA': probabile effetto letale aggiuntivo pagando 1 focus, non modellato, DA VERIFICARE (stesso pattern di id 10). Verificata su yojimbo_23.webp."
+   "note": "Copia con testo stampato in inglese (Scorpion Sting/Attack/If successful/Discard 1 card), tradotto. Banda Aggressività con [8] = iniziativa alternativa 8 (alt_initiative). Movimento: passo avanti + rotazione. Fronte 1 ferita. Banda viola con icone elmo+teschio senza testo proprio sopra 'SCARTA 1 CARTA': probabile effetto letale aggiuntivo pagando 1 focus, non modellato, DA VERIFICARE (stesso pattern di id 10). Verificata su yojimbo_23.webp.",
+   "alt_initiative": {
+    "value": 8,
+    "kamae": "aggression"
+   }
   },
  "325": {
    "name": "LANCIO DI SENBON",
@@ -10315,7 +10499,11 @@
      "kamae": "determination"
     }
    ],
-   "note": "ATTACCO. DISTANZA (Range2). COLPISCI l'avversario con iniziativa inferiore: bersaglio scelto per stato di gioco, non da una cella, DA VERIFICARE come modellare la selezione. Ferita di tipo sanguinante (icona goccia). Banda Aggressività [6] = iniziativa alternativa, non modellata. SE RIUSCITO: OTTIENI 1 focus; Determinazione PESCA FINO A 2. Verificata su yojimbo_21.webp."
+   "note": "ATTACCO. DISTANZA (Range2). COLPISCI l'avversario con iniziativa inferiore: bersaglio scelto per stato di gioco, non da una cella, DA VERIFICARE come modellare la selezione. Ferita di tipo sanguinante (icona goccia). Banda Aggressività [6] = iniziativa alternativa 6 (alt_initiative). SE RIUSCITO: OTTIENI 1 focus; Determinazione PESCA FINO A 2. Verificata su yojimbo_21.webp.",
+   "alt_initiative": {
+    "value": 6,
+    "kamae": "aggression"
+   }
   },
  "326": {
    "name": "CRANIOTOMIA",
@@ -10363,7 +10551,7 @@
      "kamae": "determination"
     },
     {
-     "do": "switch_kamae",
+     "do": "foe_switch_kamae",
      "to": "neutral",
      "when": "on_hit",
      "kamae": "aggression"
@@ -10374,7 +10562,7 @@
      "when": "on_hit"
     }
    ],
-   "note": "Movimento: tridente frontale + rotazione. Fronte/fronte-dx (1 ferita ciascuna). SE RIUSCITO: Determinazione STORDISCI; Aggressività l'AVVERSARIO passa a Neutrale (bersaglio avversario non distinguibile nello schema, DA VERIFICARE); poi CAMBIA KAMAE FINO A 1 RAMO su se stessi. Verificata su yojimbo_19.webp."
+   "note": "Movimento: tridente frontale + rotazione. Fronte/fronte-dx (1 ferita ciascuna). SE RIUSCITO: Determinazione STORDISCI; Aggressività l'AVVERSARIO passa a Neutrale (foe_switch_kamae); poi CAMBIA KAMAE FINO A 1 RAMO su se stessi. Verificata su yojimbo_19.webp."
   },
  "327": {
    "name": "AURA OSCURA",
@@ -10405,10 +10593,11 @@
     {
      "do": "foe_discard",
      "n": 1,
-     "focus_cost": 2
+     "focus_cost": 2,
+     "random": true
     }
    ],
-   "note": "MEDITAZIONE. DISTANZA (Range3). Nessun SE RIUSCITO. Banda viola 1 loto: l'avversario scarta 2; banda 2 loti: l'avversario scarta 1 A CASO (scelta casuale non modellabile con flag dedicato, DA VERIFICARE). Movimento: passo avanti x2 + rotazione, obbligatori. Verificata su yojimbo_10.webp."
+   "note": "MEDITAZIONE. DISTANZA (Range3). Nessun SE RIUSCITO. Banda viola 1 loto: l'avversario scarta 2; banda 2 loti: l'avversario scarta 1 A CASO (foe_discard random). Movimento: passo avanti x2 + rotazione, obbligatori. Verificata su yojimbo_10.webp."
   },
  "328": {
    "name": "SICARIO A PAGAMENTO",
@@ -10685,12 +10874,12 @@
      "kamae": "aggression"
     },
     {
-     "do": "switch_kamae",
+     "do": "foe_switch_kamae",
      "to": "neutral",
      "when": "on_hit"
     }
    ],
-   "note": "ATTACCO DISTANZA, Range2. Nessun movimento/nido d'ape: COLPISCI l'avversario con iniziativa inferiore (non rappresentabile con attack.cells, campo omesso, DA VERIFICARE). Se colpito: 1 ferita sanguinante + AZZOPPA. Aggressività: STORDISCI. Poi PASSA A Neutrale (incondizionato rispetto al kamae, DA VERIFICARE il timing). Costo 0 focus. Verificata su wakou_06.webp."
+   "note": "ATTACCO DISTANZA, Range2. Nessun movimento/nido d'ape: COLPISCI l'avversario con iniziativa inferiore (non rappresentabile con attack.cells, campo omesso, DA VERIFICARE). Se colpito: 1 ferita sanguinante + AZZOPPA. Aggressività: STORDISCI. Poi l'avversario passa a Neutrale (foe_switch_kamae; DA VERIFICARE il timing e il bersaglio). Costo 0 focus. Verificata su wakou_06.webp."
   },
  "337": {
    "name": "ARIETE BUKAN",
@@ -11656,7 +11845,11 @@
      "when": "on_hit"
     }
    ],
-   "note": "Banda blu 'stato Ninja' con [7] in testa: probabile iniziativa alternativa legata allo stato speciale, non uno split classico (card_pool riporta solo iniziativa 5), non trascritta come split, DA VERIFICARE. ⟳2 gated Equilibrio. Fronte/fronte-sx 1 ferita ciascuna. SE RIUSCITO: Aggressività sostituisci ! con sanguinante; banda viola PASSA A UNA QUALSIASI KAMAE (1 focus stimato). Verificata su ninja_21.webp."
+   "note": "Banda blu 'stato Ninja' con [7] in testa = iniziativa alternativa 7 in stato Ninja (alt_initiative gated state; non è uno split, DA VERIFICARE). ⟳2 gated Equilibrio. Fronte/fronte-sx 1 ferita ciascuna. SE RIUSCITO: Aggressività sostituisci ! con sanguinante; banda viola PASSA A UNA QUALSIASI KAMAE (1 focus stimato). Verificata su ninja_21.webp.",
+   "alt_initiative": {
+    "value": 7,
+    "state": "ninja"
+   }
   },
  "176": {
    "name": "RITIRATA",
@@ -11766,12 +11959,14 @@
      "to": "any"
     },
     {
-     "do": "discard_self",
+     "do": "heal",
+     "what": "stun",
      "n": 1,
      "alt": "a"
     },
     {
-     "do": "discard_self",
+     "do": "heal",
+     "what": "hobble",
      "n": 1,
      "alt": "b"
     },
@@ -11788,7 +11983,7 @@
      "n": 1
     }
    ],
-   "note": "REQUISITO 3 carte Illuminata in gioco → state_req {illuminata:3} (contatore incrementato da #263/#264/#265 quando entrano in gioco; la RIMOZIONE dal gioco non è ancora tracciata, DA VERIFICARE). RIMANE IN GIOCO (roadmap §3.2, non modellato). ALL'INIZIO DEL TURNO: OTTIENI 1 focus; PASSA A UNA QUALSIASI KAMAE; SCARTA 1 stordito O 1 azzoppato (rimozione stati propri, approssimata con discard_self, DA VERIFICARE); SOSTITUISCI 1 sanguinante con 1 ferita (direzione inversa, DA VERIFICARE); SCARTA 1 gettone non standard; PESCA FINO A 1. Verificata su monk_03.webp.",
+   "note": "REQUISITO 3 carte Illuminata in gioco → state_req {illuminata:3} (contatore incrementato da #263/#264/#265 quando entrano in gioco; la RIMOZIONE dal gioco non è ancora tracciata, DA VERIFICARE). RIMANE IN GIOCO (roadmap §3.2, non modellato). ALL'INIZIO DEL TURNO: OTTIENI 1 focus; PASSA A UNA QUALSIASI KAMAE; SCARTA 1 stordito O 1 azzoppato (heal stun/hobble in OPPURE); SOSTITUISCI 1 sanguinante con 1 ferita (direzione inversa, DA VERIFICARE); SCARTA 1 gettone non standard; PESCA FINO A 1. Verificata su monk_03.webp.",
    "state_req": {
     "illuminata": 3
    }
@@ -12956,7 +13151,7 @@
      "n": 1
     },
     {
-     "do": "switch_kamae",
+     "do": "foe_switch_kamae",
      "to": "neutral"
     },
     {
@@ -12964,7 +13159,7 @@
      "to": "any"
     }
    ],
-   "note": "PUÒ ESSERE GIOCATO SOLO DOPO UNA REAZIONE RIUSCITA (condizione non modellata). Nessun diagramma. OTTIENI 1 focus; PESCA FINO A 1; l'avversario scarta 1 carta; l'avversario passa a Neutrale (bersaglio avversario, nessun verbo 'foe_switch_kamae', DA VERIFICARE); PASSA A UNA QUALSIASI KAMAE su te stesso. Verificata su yasuke_24.webp."
+   "note": "PUÒ ESSERE GIOCATO SOLO DOPO UNA REAZIONE RIUSCITA (condizione non modellata). Nessun diagramma. OTTIENI 1 focus; PESCA FINO A 1; l'avversario scarta 1 carta; l'avversario passa a Neutrale (foe_switch_kamae); PASSA A UNA QUALSIASI KAMAE su te stesso. Verificata su yasuke_24.webp."
   }
 ,
  "215": {

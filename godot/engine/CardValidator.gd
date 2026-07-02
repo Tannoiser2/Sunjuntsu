@@ -19,8 +19,10 @@ const RANKS := ["Wood", "Steel", "Gold", "Jade", "-"]
 const EFFECT_VERBS := [
 	"bleed", "block_initiative", "cancel_abilities", "cancel_movement",
 	"change_ai_behaviour", "change_approach", "change_kamae", "discard_self",
-	"draw", "focus", "foe_discard", "foe_lose_focus", "foe_stun", "hobble",
-	"link_anchor", "pull", "push", "reduce_damage", "replace_wound_bleed",
+	"draw", "focus", "foe_change_kamae", "foe_discard", "foe_draw",
+	"foe_lose_focus", "foe_reveal_hand", "foe_stun", "foe_switch_kamae",
+	"heal", "hobble", "link_anchor", "pull", "push", "reduce_damage",
+	"replace_wound_bleed",
 	"reset_deck", "rotate_target", "search_draw", "spend_focus",
 	"state_add", "state_clear", "state_set", "stun_self",
 	"swap_positions", "switch_kamae",
@@ -28,6 +30,9 @@ const EFFECT_VERBS := [
 
 ## Verbi che richiedono il campo `state` (nome dello stato persistente).
 const STATE_VERBS := ["state_add", "state_clear", "state_set"]
+
+## Bersagli ammessi per `heal.what` (rimozione ferite/stati, §3.20).
+const HEAL_WHAT := ["wound", "bleed", "stun", "hobble", "poison"]
 
 ## Keyword note "statiche" (oltre a quelle presenti nei dati reali).
 const STATIC_KEYWORDS := [
@@ -105,6 +110,31 @@ static func validate(card: Dictionary, geom: Dictionary, image, ctx := {}) -> Ar
 		# del campo `state` dei gate (Gate.gd) — stringa o dizionario nome→minimo.
 		if geom.has("state_req"):
 			out.append_array(_check_state_req(geom["state_req"], "state_req"))
+		# `alt_initiative` (§3.1): { value: int > 0, kamae?/focus_cost?/state? }.
+		if geom.has("alt_initiative"):
+			var ai = geom["alt_initiative"]
+			if not (ai is Dictionary) or int((ai as Dictionary).get("value", 0)) < 1:
+				out.append(_issue("error", "alt_initiative",
+					"alt_initiative non valido: atteso { value: int >= 1, gate opzionale }"))
+			else:
+				for kv in Kamae.gate_values(ai.get("kamae", "")):
+					if not (str(kv) in KAMAE):
+						out.append(_issue("error", "alt_initiative",
+							"alt_initiative: kamae non valido '%s'" % str(kv)))
+				if ai.has("state"):
+					out.append_array(_check_state_req(ai["state"], "alt_initiative.state"))
+		# `counter`: int (sempre attivo) o oggetto gated { on: [..], gate }.
+		for entry in geom.get("counter", []):
+			if entry is Dictionary:
+				if (entry.get("on", []) as Array).is_empty():
+					out.append(_issue("error", "counter",
+						"voce counter gated senza lista 'on' di iniziative"))
+				for kv in Kamae.gate_values(entry.get("kamae", "")):
+					if not (str(kv) in KAMAE):
+						out.append(_issue("error", "counter",
+							"counter: kamae non valido '%s'" % str(kv)))
+				if entry.has("state"):
+					out.append_array(_check_state_req(entry["state"], "counter.state"))
 		for e in geom.get("effects", []):
 			var verb := str(e.get("do", ""))
 			if verb != "" and not (verb in EFFECT_VERBS):
@@ -118,6 +148,14 @@ static func validate(card: Dictionary, geom: Dictionary, image, ctx := {}) -> Ar
 					if str(kv) != "" and not (str(kv) in STANCES):
 						out.append(_issue("error", "effect_kamae",
 							"effetto '%s': kamae non valido '%s'" % [verb, str(kv)]))
+			# heal: bersaglio `what` nel vocabolario.
+			if verb == "heal" and not (str(e.get("what", "wound")) in HEAL_WHAT):
+				out.append(_issue("error", "effect",
+					"heal: what non valido '%s'" % str(e.get("what", ""))))
+			# n_from_state: nome di stato non vuoto.
+			if e.has("n_from_state") and str(e["n_from_state"]) == "":
+				out.append(_issue("error", "effect",
+					"effetto '%s': n_from_state vuoto" % verb))
 			# Verbi di stato persistente: serve il nome dello stato.
 			if (verb in STATE_VERBS) and str(e.get("state", "")) == "":
 				out.append(_issue("error", "effect_state",

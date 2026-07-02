@@ -90,6 +90,20 @@ func _hand_used(f: GameState.Fighter) -> int:
 	return _noncore_in_hand(f) + f.stun
 
 
+## Scarta UNA carta non-core A CASO dalla mano (selezione casuale, §3.19).
+func _discard_random_noncore(f: GameState.Fighter) -> bool:
+	var idxs: Array = []
+	for k in range(f.hand.size()):
+		if not is_core(f.hand[k]):
+			idxs.append(k)
+	if idxs.is_empty():
+		return false
+	var k: int = idxs[randi() % idxs.size()]
+	f.discard.append(f.hand[k])
+	f.hand.remove_at(k)
+	return true
+
+
 ## Scarta UNA carta non-core dalla mano (le core non si scartano). True se riuscito.
 func _discard_one_noncore(f: GameState.Fighter) -> bool:
 	for k in range(f.hand.size() - 1, -1, -1):
@@ -524,7 +538,11 @@ func _resolve_chosen_speeds(fizzled: Dictionary) -> void:
 			continue
 		if CardDB.card(f.planned).get("type", "") == "defence":
 			continue
-		_chosen[i] = _hobbled(i, Domain.pick_initiative(_raw_ini(i), true))
+		var sp := Domain.pick_initiative(_raw_ini(i), true)
+		var altv := _alt_initiative_value(i)
+		if altv > sp:
+			sp = altv   # auto-risoluzione: usa l'alternativa se più veloce
+		_chosen[i] = _hobbled(i, sp)
 	# 2ª passata: le difese agganciano la velocità dell'attacco avversario.
 	for i in range(state.fighters.size()):
 		var f := state.fighters[i]
@@ -533,6 +551,9 @@ func _resolve_chosen_speeds(fizzled: Dictionary) -> void:
 		if CardDB.card(f.planned).get("type", "") != "defence":
 			continue
 		var opts: Array = Domain.initiative_options(_raw_ini(i))
+		var altv := _alt_initiative_value(i)
+		if altv != -1 and not opts.has(altv):
+			opts.append(altv)   # l'alternativa può agganciare l'attacco avversario
 		if opts.is_empty():
 			# Iniziativa "=" (istantanea) o assente: blocco a velocità massima.
 			_chosen[i] = _hobbled(i, Domain.pick_initiative(_raw_ini(i), true))
@@ -552,13 +573,30 @@ func _resolve_chosen_speeds(fizzled: Dictionary) -> void:
 					pick = _hobbled(i, int(v))
 					break
 		if pick == -999:
-			# Nessun aggancio: prendi la più alta.
-			pick = _hobbled(i, Domain.pick_initiative(_raw_ini(i), true))
+			# Nessun aggancio: prendi la più alta (alternativa inclusa).
+			var base := Domain.pick_initiative(_raw_ini(i), true)
+			if altv > base:
+				base = altv
+			pick = _hobbled(i, base)
 		_chosen[i] = pick
 
 
 func _raw_ini(i: int) -> String:
 	return str(CardDB.card(state.fighters[i].planned).get("initiative", ""))
+
+
+## Iniziativa alternativa (roadmap §3.1): riquadro [N] extra stampato sulla
+## carta, utilizzabile AL POSTO di quella stampata se il gate (kamae/focus/
+## state, vedi Gate.gd) è soddisfatto. NON è uno split (che è una seconda
+## azione): è una velocità diversa per la stessa azione. In auto-risoluzione
+## vale la regola dei bonus: si usa solo se gratis (Gate.auto_allows); la
+## scelta interattiva del giocatore arriverà con la UI. -1 = non disponibile.
+func _alt_initiative_value(i: int) -> int:
+	var f := state.fighters[i]
+	var alt = CardDB.geometry(f.planned).get("alt_initiative", null)
+	if alt is Dictionary and Gate.auto_allows(alt, Domain.STANCE_SLUG[f.stance], f.states):
+		return int(alt.get("value", -1))
+	return -1
 
 
 func _hobbled(i: int, sp: int) -> int:
@@ -905,7 +943,20 @@ func _try_counter(def_idx: int, att_idx: int, atk_speed: int, log: Array) -> voi
 	var counter = CardDB.geometry(dfn.planned).get("counter", null)
 	if counter == null:
 		return
-	var speeds: Array = counter if typeof(counter) == TYPE_ARRAY else [atk_speed]
+	# Le voci della lista possono essere int (sempre attive) oppure oggetti
+	# gated { "on": [7,6], "kamae"/"state"/"focus_cost" } (roadmap §3.10):
+	# la voce vale solo se il gate del difensore è soddisfatto (Gate.gd).
+	var speeds: Array = []
+	if typeof(counter) == TYPE_ARRAY:
+		for entry in counter:
+			if entry is Dictionary:
+				if Gate.auto_allows(entry, Domain.STANCE_SLUG[dfn.stance], dfn.states):
+					for v in entry.get("on", []):
+						speeds.append(int(v))
+			else:
+				speeds.append(int(entry))
+	else:
+		speeds = [atk_speed]
 	if not speeds.has(atk_speed):
 		return
 	if not dfn.is_ai:
@@ -1063,40 +1114,54 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 		var alt = e.get("alt", null)
 		if alt != null and alt != chosen_alt:
 			continue
+		# Quantità a entità variabile (roadmap §3.13): `n_from_state` moltiplica
+		# `n` per il valore di uno stato persistente (es. "PER OGNI CONTRATTO
+		# COMPLETATO"). A zero istanze l'effetto non scatta.
+		var n_eff := int(e.get("n", 1))
+		var nsrc := str(e.get("n_from_state", ""))
+		if nsrc != "":
+			n_eff *= f.state_get(nsrc)
+			if n_eff <= 0:
+				continue
 		match str(e.get("do", "")):
 			"push":
-				if foe != null: _push(i, foe_idx, int(e.get("n", 1)), log)
+				if foe != null: _push(i, foe_idx, n_eff, log)
 			"pull":
-				if foe != null: _pull(i, foe_idx, int(e.get("n", 1)), log)
+				if foe != null: _pull(i, foe_idx, n_eff, log)
 			"bleed":
 				if foe != null: foe.wounds.append("bleed")
 			"replace_wound_bleed":
 				if foe != null and not foe.wounds.is_empty():
 					foe.wounds[foe.wounds.size() - 1] = "bleed"
 			"focus":
-				f.gain_focus(int(e.get("n", 1)))
+				f.gain_focus(n_eff)
 			"hobble":
-				if foe != null: foe.add_hobble(maxi(1, int(e.get("n", 1))))
+				if foe != null: foe.add_hobble(maxi(1, n_eff))
 			"foe_stun":
 				if foe != null:
-					foe.stun += maxi(1, int(e.get("n", 1)))
-					log.append("%s: %s subisce %d stordimento" % [f.character, foe.character, maxi(1, int(e.get("n", 1)))])
+					foe.stun += maxi(1, n_eff)
+					log.append("%s: %s subisce %d stordimento" % [f.character, foe.character, maxi(1, n_eff)])
 			"swap_positions":
 				if foe != null:
 					var tmp := f.cell; f.cell = foe.cell; foe.cell = tmp
 					log.append("%s scambia posizione con %s" % [f.character, foe.character])
 			"rotate_target":
-				if foe != null: foe.facing = (foe.facing + int(e.get("n", 1))) % 6
+				if foe != null: foe.facing = (foe.facing + n_eff) % 6
 			"draw":
-				for _d in range(maxi(0, int(e.get("n", 1)))): f.draw_one()
+				for _d in range(maxi(0, n_eff)): f.draw_one()
 			"search_draw":
-				for _d in range(maxi(0, int(e.get("n", 1)))): f.draw_one()
+				for _d in range(maxi(0, n_eff)): f.draw_one()
 			"stun_self":
-				f.stun += maxi(1, int(e.get("n", 1)))   # "PRENDI 1 stordito"
-				log.append("%s subisce %d stordimento" % [f.character, maxi(1, int(e.get("n", 1)))])
+				f.stun += maxi(1, n_eff)   # "PRENDI 1 stordito"
+				log.append("%s subisce %d stordimento" % [f.character, maxi(1, n_eff)])
 			"discard_self":
-				for _d in range(maxi(1, int(e.get("n", 1)))):
-					if not _discard_one_noncore(f): break
+				for _d in range(maxi(1, n_eff)):
+					var random_pick := bool(e.get("random", false))
+					if random_pick:
+						if not _discard_random_noncore(f):
+							break
+					elif not _discard_one_noncore(f):
+						break
 			"switch_kamae":
 				# "Passa a Y": spostamento diretto (nessun ramo, nessun focus).
 				var to_slug := str(e.get("to", ""))
@@ -1111,7 +1176,7 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 				# dai rami rosa). L'IA traversa l'albero in automatico (ignora il focus).
 				if f.is_ai:
 					var tree := CardDB.kamae_tree_for(f.character.to_lower())
-					var targets := Kamae.change_targets(tree, Domain.STANCE_SLUG[f.stance], int(e.get("n", 1)))
+					var targets := Kamae.change_targets(tree, Domain.STANCE_SLUG[f.stance], n_eff)
 					for pref in ["aggression", "determination", "balance"]:
 						if targets.has(pref):
 							f.stance = Domain.STANCE_FROM_SLUG[pref]
@@ -1124,17 +1189,78 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 				elif e.has("all_but"):
 					f.focus = mini(f.focus, int(e.get("all_but", 0)))
 				else:
-					f.focus = maxi(0, f.focus - int(e.get("n", 1)))
+					f.focus = maxi(0, f.focus - n_eff)
 			"foe_lose_focus":
-				if foe != null: foe.focus = maxi(0, foe.focus - int(e.get("n", 1)))
+				if foe != null: foe.focus = maxi(0, foe.focus - n_eff)
 			"foe_discard":
 				if foe != null:
-					for _d in range(maxi(1, int(e.get("n", 1)))):
-						if not foe.hand.is_empty(): foe.discard.append(foe.hand.pop_back())
+					for _d in range(maxi(1, n_eff)):
+						if foe.hand.is_empty():
+							break
+						# `random: true` = scarto a caso (roadmap §3.19), altrimenti
+						# dall'ultima pescata (comportamento storico).
+						var k := (randi() % foe.hand.size()) if bool(e.get("random", false)) else foe.hand.size() - 1
+						foe.discard.append(foe.hand[k])
+						foe.hand.remove_at(k)
+			"foe_draw":
+				# Fa pescare l'avversario (roadmap §3.18).
+				if foe != null:
+					for _d in range(maxi(0, n_eff)):
+						foe.draw_one()
+			"foe_reveal_hand":
+				# Effetto informativo (roadmap §3.5): la UI mostrerà la mano;
+				# qui si registra solo l'evento.
+				if foe != null:
+					log.append("%s guarda la mano di %s (%d carte)" % [f.character, foe.character, foe.hand.size()])
+			"foe_switch_kamae":
+				# Forza la Kamae dell'AVVERSARIO (roadmap §3.7). "any" non ha una
+				# scelta sensata forzata: prudenzialmente porta a Neutrale.
+				if foe != null:
+					var fslug := str(e.get("to", ""))
+					if fslug == "any":
+						fslug = "neutral"
+					var fto: int = Domain.STANCE_FROM_SLUG.get(fslug, -1)
+					if fto != -1:
+						foe.stance = fto
+						log.append("%s forza %s in Kamae %s" % [f.character, foe.character, Domain.STANCE_NAMES[fto]])
+			"foe_change_kamae":
+				# Sposta l'avversario lungo il suo albero fino a n rami
+				# (approssimazione auto: stessa preferenza di change_kamae).
+				if foe != null:
+					var ftree := CardDB.kamae_tree_for(foe.character.to_lower())
+					var ftargets := Kamae.change_targets(ftree, Domain.STANCE_SLUG[foe.stance], n_eff)
+					for pref in ["neutral", "balance", "determination", "aggression"]:
+						if ftargets.has(pref):
+							foe.stance = Domain.STANCE_FROM_SLUG[pref]
+							log.append("%s sposta %s in Kamae %s" % [f.character, foe.character, Domain.STANCE_NAMES[foe.stance]])
+							break
+			"heal":
+				# Guarigione/rimozione stato (roadmap §3.20): `what` indica cosa
+				# rimuovere (wound/bleed/stun/hobble/poison), n quante istanze;
+				# `all: true` = tutte ("SCARTA TUTTI GLI EFFETTI DI STATO").
+				var what := str(e.get("what", "wound"))
+				var n_heal := 99 if bool(e.get("all", false)) else maxi(1, n_eff)
+				match what:
+					"stun":
+						f.stun = maxi(0, f.stun - n_heal)
+					"poison":
+						f.poison = maxi(0, f.poison - n_heal)
+					"hobble":
+						for _h in range(n_heal):
+							if f.hobbles.is_empty():
+								break
+							f.hobbles.pop_back()
+					_:
+						for _h in range(n_heal):
+							var widx: int = f.wounds.rfind(what)
+							if widx == -1:
+								break
+							f.wounds.remove_at(widx)
+				log.append("%s rimuove %s %s" % [f.character, "tutti" if bool(e.get("all", false)) else str(n_heal), what])
 			"reduce_damage":
 				# Persistente (carta "rimane in gioco"): riduce ogni attacco subito.
-				f.damage_reduction += maxi(1, int(e.get("n", 1)))
-				log.append("%s: riduzione danno +%d (persistente)" % [f.character, maxi(1, int(e.get("n", 1)))])
+				f.damage_reduction += maxi(1, n_eff)
+				log.append("%s: riduzione danno +%d (persistente)" % [f.character, maxi(1, n_eff)])
 			"reset_deck":
 				# Rimescola nel mazzo le carte abilità NON-meditazione (mano + scarti) e rimescola.
 				_reset_deck(f, log)
@@ -1148,18 +1274,18 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 					foe.block_initiative_bonus = 0
 					log.append("%s annulla le abilità attive di %s" % [f.character, foe.character])
 			"block_initiative":
-				f.block_initiative_bonus += maxi(1, int(e.get("n", 1)))
-				log.append("%s: intervallo blocco +%d" % [f.character, maxi(1, int(e.get("n", 1)))])
+				f.block_initiative_bonus += maxi(1, n_eff)
+				log.append("%s: intervallo blocco +%d" % [f.character, maxi(1, n_eff)])
 			"state_add":
 				# Stato persistente per-fighter: somma n (anche negativo, per spendere).
 				var sn := str(e.get("state", ""))
 				if sn != "":
-					f.state_add(sn, int(e.get("n", 1)))
+					f.state_add(sn, n_eff)
 					log.append("%s: stato '%s' → %d" % [f.character, sn, f.state_get(sn)])
 			"state_set":
 				var sn := str(e.get("state", ""))
 				if sn != "":
-					f.state_set(sn, int(e.get("n", 1)))
+					f.state_set(sn, n_eff)
 					log.append("%s: stato '%s' = %d" % [f.character, sn, f.state_get(sn)])
 			"state_clear":
 				var sn := str(e.get("state", ""))

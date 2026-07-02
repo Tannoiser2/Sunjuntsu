@@ -81,7 +81,8 @@ agganciata al **numero stampato sulla carta** (= Card ID).
 | `attacks` | array[object] (opz.) | **Più varianti d'attacco**, ciascuna `{ "cells": […], "kamae": "<slug>"? }`. Il motore usa la variante il cui `kamae` combacia con la posa (stance) dell'attaccante; in mancanza, quella senza `kamae`. In alternativa a `attack`. Se più varianti condividono lo stesso `kamae` (incluso nessuno, cioè libere/OPPURE non gated), sono opzioni scelte liberamente dal giocatore, non alternative gated — pattern raro (es. #164, #344), l'editor le mostra come widget "Combattimento" separati. |
 | `defence` | object (opz.) | `{ "cells": [ Cella, … ] }` — celle protette (variante unica). |
 | `defences` | array[object] (opz.) | Più varianti di difesa gated da `kamae`, come `attacks`. |
-| `counter` | array[int] (opz.) | Iniziative a cui scatta il contrattacco. |
+| `counter` | array (opz.) | Iniziative a cui scatta il contrattacco. Ogni voce è un **int** (sempre attiva) oppure un **oggetto gated** `{ "on": [7,6], "kamae"/"state"/"focus_cost" }` (attiva solo se il gate del difensore è soddisfatto — vedi §Gate unificato). |
+| `alt_initiative` | object (opz.) | **Iniziativa alternativa** (roadmap §3.1): riquadro `[N]` extra sulla carta, usabile AL POSTO di quella stampata se il gate è soddisfatto. `{ "value": 8, "kamae"?/"focus_cost"?/"state"? }`. Non è uno `split` (che è una *seconda azione*). In auto-risoluzione si usa solo se gratis e più veloce. |
 | `effects` | array[object] (opz.) | Effetti ordinati — vedi **Effetti**. |
 | `note` | string (opz.) | Note di trascrizione / incertezze (es. `"… DA VERIFICARE"`). |
 | `layout` | array[object] (opz.) | **Estetico, ignorato dal motore.** Albero dei widget dell'editor (nodi `{type, …, children[]}`, dalla v0.61): conserva annidamento (Iniziativa/OPPURE) e ordine come sulla carta fisica. In lettura resta supportata la forma storica `array[string]`. |
@@ -142,13 +143,18 @@ contestuali:
 | `to` | string (opz.) | Kamae di destinazione (per cambi di kamae): `aggression` \| `balance` \| `determination` \| `neutral` (torii ⛩, quasi sempre come destinazione, mai come gate) \| `any` (PASSA A UNA QUALSIASI KAMAE). |
 | `focus_cost` | int (opz.) | Costo in focus dell'effetto (bonus opzionali). |
 | `state` | string \| object (opz.) | Gate di **stato persistente** per l'effetto (sui verbi non-`state_*`): stessa forma di `state_req`. Per i verbi `state_*` è invece il **nome** dello stato da modificare. |
+| `n_from_state` | string (opz.) | **Quantità a entità variabile** (roadmap §3.13): `n` effettivo = `n` (default 1) × valore dello stato indicato (es. "PER OGNI CONTRATTO COMPLETATO" → `"n_from_state": "contratti"`). A zero istanze l'effetto non scatta. |
+| `random` | bool (opz.) | Su `discard_self`/`foe_discard`: la carta da scartare è scelta **a caso** (roadmap §3.19) invece che dall'ultima. |
+| `what` | string (opz.) | Solo per `heal` (roadmap §3.20): cosa rimuovere — `wound` (default), `bleed`, `stun`, `hobble`, `poison`. |
 
 **Verbi `do` presenti nei dati** (usare come autocomplete; estendibile):
 `block_initiative, cancel_abilities, cancel_movement, change_ai_behaviour,
 change_kamae, discard_self, draw, focus, foe_discard, foe_lose_focus, foe_stun,
 hobble, link_anchor, push, reduce_damage, replace_wound_bleed, reset_deck,
 rotate_target, search_draw, spend_focus, state_add, state_clear, state_set,
-stun_self, swap_positions, switch_kamae`.
+stun_self, swap_positions, switch_kamae`, più la famiglia sull'avversario
+`foe_change_kamae, foe_discard, foe_draw, foe_lose_focus, foe_reveal_hand,
+foe_stun, foe_switch_kamae` e `heal` (rimozione ferite/stati propri).
 
 > **`link_anchor`** (azione "SOSTITUISCI ! CON ❄", barra viola = focus): collega
 > il marcatore-àncora ❄ all'asterisco (`*`) sulla Griglia di Posizione; gli

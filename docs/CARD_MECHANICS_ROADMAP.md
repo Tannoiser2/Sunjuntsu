@@ -405,13 +405,20 @@ pena chiuderle insieme in una sessione di lavoro dedicata e corta.
       binario Godot non disponibile nella sessione remota (vedi Fase 0).
 
 ### Fase 3 — Gruppo economico "schema+motore"
-- [ ] `alt_initiative` (§3.1, ~20 carte).
-- [ ] `foe_switch_kamae`/`foe_change_kamae` (§3.7), `foe_draw` (§3.18),
-      `foe_reveal_hand` (§3.5) — famiglia `foe_*`, insieme.
-- [ ] `counter` gated da Kamae (§3.10).
-- [ ] Effetti a entità variabile / `n_source` (§3.13).
-- [ ] Quinta Kamae "Distanza" (§3.22, dopo la decisione §5.4).
-- [ ] Guarigione/rimozione stato (§3.20), selezione casuale (§3.19).
+- [x] `alt_initiative` (§3.1) — 16 carte (v0.79.0); #146 ha un *range*
+      alternativo, non un valore: in nota. #166/#169/#279 erano soglie
+      trappola (§3.4), non alt initiative.
+- [x] `foe_switch_kamae`/`foe_change_kamae` (§3.7), `foe_draw` (§3.18),
+      `foe_reveal_hand` (§3.5) — fatti insieme; corretti 7 dati che
+      spostavano il GIOCATORE invece dell'avversario e 3 segnaposto errati.
+- [x] `counter` gated da Kamae/stato (§3.10) — 6 carte (#299 inclusa).
+- [x] Effetti a entità variabile: `n_from_state` (§3.13) — sblocca #322
+      (Contratti); #319/#321/#328 restano per fasi successive (bonus
+      iniziativa/raggio variabile, finestre di gioco).
+- [ ] Quinta Kamae "Distanza" (§3.22): **rinviata** — tocca gli enum di
+      stance ovunque; da fare quando la suite di test è eseguibile.
+- [x] Guarigione/rimozione stato `heal` (§3.20), selezione casuale
+      `random: true` (§3.19).
 
 ### Fase 4 — Gruppo strutturale rimanente
 - [ ] Doppia faccia Hachikō (§3.14) + "gira la carta" (§3.15).

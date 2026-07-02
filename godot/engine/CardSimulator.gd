@@ -116,6 +116,13 @@ const _VERB_IT := {
 	"cancel_movement": "annulli il movimento avversario", "change_ai_behaviour": "cambi il comportamento del nemico",
 	"search_draw": "cerchi nel mazzo e peschi", "spend_focus": "spendi focus",
 	"reset_deck": "rimescoli il mazzo", "foe_discard_hand": "l'avversario scarta la mano",
+	"foe_draw": "l'avversario pesca", "foe_reveal_hand": "guardi la mano dell'avversario",
+	"foe_switch_kamae": "forzi l'avversario in una Kamae",
+	"foe_change_kamae": "sposti l'avversario lungo il suo albero Kamae",
+	"heal": "rimuovi ferite/stati", "state_add": "aggiungi allo stato persistente",
+	"state_set": "imposti lo stato persistente", "state_clear": "azzeri lo stato persistente",
+	"bleed": "infliggi un sanguinante", "pull": "attiri il bersaglio",
+	"change_approach": "sposti l'approccio del nemico",
 }
 
 
@@ -285,7 +292,7 @@ static func _defence_phrase(cells: Array, kamae) -> String:
 
 ## Verbi la cui quantità si legge come "carte" / "focus" / "di N"; gli altri
 ## non usano `n`. Default: nessuna quantità.
-const _QTY_CARDS := ["draw", "foe_discard", "search_draw"]
+const _QTY_CARDS := ["draw", "foe_discard", "foe_draw", "search_draw"]
 const _QTY_FOCUS := ["focus", "spend_focus", "foe_lose_focus"]
 const _QTY_DI := ["push", "rotate_target", "reduce_damage", "change_kamae", "block_initiative"]
 
