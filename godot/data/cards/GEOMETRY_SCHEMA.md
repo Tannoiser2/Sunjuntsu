@@ -89,6 +89,10 @@ agganciata al **numero stampato sulla carta** (= Card ID).
 | `limit_mod` | object (opz.) | Con `stays_in_play`: modifica i limiti finché la carta è in gioco — `{ "hand": +3, "wound": +1, "focus": +1 }` (§3.17). |
 | `turn_start` | array[object] (opz.) | Con `stays_in_play`: effetti applicati **a inizio turno, prima del passo Draw**, finché la carta è in gioco (finestre di trigger, §3.3 — es. il mill forzato di #280). Stessa forma di `effects`. |
 | `expires` | object (opz.) | Con `stays_in_play`: `{ "turns": N }` — la carta si scarta da sola dopo N fine-turno (es. #106 che ruota di 90°). |
+| `face_defence` | object (opz.) | **Carta a doppia faccia** (Hachikō, §3.14): la faccia DIFESA della carta — `{ "initiative": N, "move"?/"defence"?/"counter"?/"effects"?/"kamae_req"? }`. La faccia attacco resta nei campi normali della carta. In partita si sceglie la faccia in pianificazione (`Duel.plan_card(i, id, "defence")`); con la faccia difesa i campi di `face_defence` SOSTITUISCONO quelli della carta e il tipo diventa `defence`. UI di scelta faccia non ancora presente. |
+| `play_when` | string (opz.) | **Finestra di gioco speciale** (§3.26): `"defeated"` — la carta si gioca d'ufficio dalla mano quando il proprietario sta per essere sconfitto per ferite (#318): ferite azzerate, mazzo ricostruito se vuoto (3 a caso dagli scarti), poi `stays_in_play`/`limit_set`. |
+| `limit_set` | object (opz.) | Valori **assoluti** dei limiti applicati al momento del gioco (≠ `limit_mod` che è relativo e reversibile): `{ "wound": 1 }` (#318 "il limite ferite diventa 1"). |
+| `on_foe_discard` | string (opz.) | `"return_to_play"` (§3.27, #264): se la carta viene scartata dalla mano da un EFFETTO AVVERSARIO, il proprietario paga 1 focus (se può) e la mette in gioco invece che negli scarti. |
 | `targeting` | object (opz.) | **Bersaglio per confronto d'iniziativa** (§3.4), per armi a distanza senza diagramma: `{ "mode": "initiative", "threshold"?: N, "w"?: int\|"bleed"\|"exec", "w_from_gap"?: true }`. Colpisce se l'avversario è in gittata (keyword RangeN) e la sua velocità è inferiore alla propria (e sotto `threshold` se posto); `w_from_gap` = ferite pari al divario di velocità (#279). Le eventuali `cells` restano come placeholder di gittata per la UI. |
 | `note` | string (opz.) | Note di trascrizione / incertezze (es. `"… DA VERIFICARE"`). |
 | `layout` | array[object] (opz.) | **Estetico, ignorato dal motore.** Albero dei widget dell'editor (nodi `{type, …, children[]}`, dalla v0.61): conserva annidamento (Iniziativa/OPPURE) e ordine come sulla carta fisica. In lettura resta supportata la forma storica `array[string]`. |
@@ -167,6 +171,19 @@ foe_stun, foe_switch_kamae` e `heal` (rimozione ferite/stati propri).
 > effetti collegati si applicano al personaggio colpito. Di norma con
 > `focus_cost` (bonus a pagamento), quindi saltato nell'auto-risoluzione.
 
+## Trappole sulla griglia (`place_traps`, §3.28)
+
+Verbo effetto `{ "do": "place_traps", "cells": [ { "d": 0, "k": 1, "kind": "caltrop" }, … ] }`
+(carta-regola **#160 PIEDI DI CORVO**): piazza un segnalino per cella (relativa
+al facing, stesso formato delle celle d'attacco; `kind`: `caltrop` = piede di
+corvo, `decoy` = diversivo). I segnalini sono **coperti** se il posatore è
+Occultato. Runtime: `GameState.traps`; chi ENTRA in una cella con segnalino lo
+fa scattare (`GameState.spring_traps`): piede di corvo = 1 ferita + AZZOPPATO,
+diversivo = nessun effetto — in entrambi i casi il segnalino si rimuove. Il
+motore scatta le trappole su push/pull, mosse obbligatorie e scambi di
+posizione; la scena deve chiamare `spring_traps` alla conferma del movimento
+del giocatore.
+
 ## Stati persistenti (contatori/flag per-combattente)
 
 Sottosistema unico per le risorse/stati di personaggio che sopravvivono tra i
@@ -175,6 +192,12 @@ turni (roadmap meccaniche §4): **Disperazione** (Onna-Bugeisha), **Contratti**
 (Monaco), carte "**RIMANE IN GIOCO**". Runtime: `Fighter.states`
 (dizionario libero nome → int, decisione §5.1); flag = assente/0 (off) o ≥ 1.
 
+> **`disperazione`** è uno stato **DERIVATO** (carta-regola #292): attivo
+> finché l'Onna-Bugeisha ha **3 o più ferite/sanguinanti**. Non lo impostano
+> le carte: è dichiarato sulla scheda personaggio in `characters` come
+> `"derived_states": { "disperazione": { "wounds_min": 3 } }` e calcolato da
+> `Fighter.gate_states()` a ogni valutazione di gate.
+>
 > **`occultato`** è il nome ufficiale (carta-regola #161 RIVELATO/OCCULTATO,
 > unica per Assassino e Ninja — l'icona incappucciata di "ENTRA IN"). Le
 > condizioni di USCITA sono cablate in `Duel._cleanup`: si torna Rivelati

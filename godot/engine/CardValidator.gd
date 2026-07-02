@@ -21,7 +21,8 @@ const EFFECT_VERBS := [
 	"change_ai_behaviour", "change_approach", "change_kamae", "discard_self",
 	"draw", "focus", "foe_change_kamae", "foe_discard", "foe_draw",
 	"foe_lose_focus", "foe_reveal_hand", "foe_stun", "foe_switch_kamae",
-	"foe_mill", "heal", "hobble", "link_anchor", "mill", "pull", "push", "reduce_damage",
+	"foe_mill", "heal", "hobble", "link_anchor", "mill", "place_traps",
+	"pull", "push", "reduce_damage",
 	"replace_wound_bleed",
 	"reset_deck", "rotate_target", "search_draw", "spend_focus",
 	"state_add", "state_clear", "state_set", "stun_self",
@@ -142,6 +143,28 @@ static func validate(card: Dictionary, geom: Dictionary, image, ctx := {}) -> Ar
 		if has_in_play_fields and not bool(geom.get("stays_in_play", false)):
 			out.append(_issue("warning", "in_play",
 				"campi in-gioco presenti ma stays_in_play assente (non entreranno mai in gioco)"))
+		# `face_defence` (doppia faccia Hachikō, §3.14): oggetto con la parte
+		# della faccia difesa; senza `initiative` la faccia userebbe quella
+		# dell'anagrafica (quasi certamente una dimenticanza di trascrizione).
+		if geom.has("face_defence"):
+			var fdv = geom["face_defence"]
+			if not (fdv is Dictionary):
+				out.append(_issue("error", "face", "face_defence deve essere un oggetto"))
+			elif not (fdv as Dictionary).has("initiative"):
+				out.append(_issue("warning", "face", "face_defence senza initiative propria"))
+		# `play_when` (§3.26): finestre di gioco speciali supportate.
+		if geom.has("play_when") and str(geom["play_when"]) != "defeated":
+			out.append(_issue("error", "play_when",
+				"play_when non valido: '%s' (supportato: defeated)" % str(geom["play_when"])))
+		# `limit_set` (§3.26): valori assoluti dei limiti.
+		for lsk in geom.get("limit_set", {}):
+			if not (str(lsk) in ["wound", "hand"]) or int(geom["limit_set"][lsk]) < 1:
+				out.append(_issue("error", "limit_set",
+					"limit_set: chiave/valore non validi ('%s')" % str(lsk)))
+		# `on_foe_discard` (§3.27).
+		if geom.has("on_foe_discard") and str(geom["on_foe_discard"]) != "return_to_play":
+			out.append(_issue("error", "on_foe_discard",
+				"on_foe_discard non valido: '%s' (supportato: return_to_play)" % str(geom["on_foe_discard"])))
 		# `targeting` (§3.4): mode "initiative", threshold int >= 1 se presente.
 		if geom.has("targeting"):
 			var tg = geom["targeting"]
@@ -174,6 +197,14 @@ static func validate(card: Dictionary, geom: Dictionary, image, ctx := {}) -> Ar
 					if str(kv) != "" and not (str(kv) in STANCES):
 						out.append(_issue("error", "effect_kamae",
 							"effetto '%s': kamae non valido '%s'" % [verb, str(kv)]))
+			# place_traps: servono le celle, kind nel vocabolario.
+			if verb == "place_traps":
+				if (e.get("cells", []) as Array).is_empty():
+					out.append(_issue("error", "effect", "place_traps senza celle"))
+				for cdef in e.get("cells", []):
+					if not (str(cdef.get("kind", "caltrop")) in ["caltrop", "decoy"]):
+						out.append(_issue("error", "effect",
+							"place_traps: kind non valido '%s'" % str(cdef.get("kind", ""))))
 			# heal: bersaglio `what` nel vocabolario.
 			if verb == "heal" and not (str(e.get("what", "wound")) in HEAL_WHAT):
 				out.append(_issue("error", "effect",

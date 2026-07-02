@@ -3,6 +3,44 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.82.0] — 2026-07-02
+### Fase 4 (parte 2) — doppia faccia Hachikō, Disperazione derivata, anti-sconfitta, trappole, ricorsione
+- **Carte a doppia faccia** (§3.14, Hachikō): nuovo campo `face_defence`
+  — la faccia DIFESA con iniziativa/movimento/effetti propri. Scelta in
+  pianificazione (`Duel.plan_card(i, id, "defence")`): con la faccia
+  difesa i campi sostituiscono quelli della carta e il tipo diventa
+  `defence` (`_planned_type`/`_planned_geom` usati in tutta la
+  risoluzione: velocità, blocchi, counter, effetti, ordine). Ristrutturate
+  le **9 carte Hachikō #248–#256**: gli effetti/movimenti della faccia
+  difesa, prima schiacciati nei campi condivisi o solo in nota, ora sono
+  al posto giusto. UI di scelta faccia non ancora presente ("VOLTA LA
+  CARTA KAMAE" resta approssimato: serve la carta-regola Kamae di Hachikō).
+- **Disperazione = stato DERIVATO** (carta-regola #292 fornita
+  dall'utente): attiva finché l'Onna-Bugeisha ha **3+ ferite/sanguinanti**.
+  Dichiarata sulla scheda personaggio (`derived_states`) e calcolata da
+  `Fighter.gate_states()` a ogni valutazione di gate — chiude la domanda
+  aperta n.1: nessuna carta la attiva, deriva dal conteggio ferite.
+- **Anti-sconfitta** (§3.26, #318): `play_when: "defeated"` — la carta si
+  gioca d'ufficio quando la sconfitta arriverebbe dalle ferite: ferite
+  azzerate, mazzo ricostruito se vuoto (3 a caso dagli scarti),
+  `limit_set {"wound": 1}` (valori assoluti), resta in gioco.
+- **Ricorsione da scarto** (§3.27, #264): `on_foe_discard:
+  "return_to_play"` — scartata da un effetto avversario, il proprietario
+  paga 1 focus e la mette in gioco.
+- **Trappole sulla griglia** (§3.28, #170 + carta-regola #160): verbo
+  `place_traps` (celle relative al facing, `caltrop`/`decoy`, coperte se
+  Occultato), `GameState.traps` + `spring_traps` (1 ferita + AZZOPPATO,
+  diversivo = nulla); il motore le fa scattare su push/pull, mosse
+  obbligatorie e scambi di posizione — la scena deve chiamare
+  `spring_traps` alla conferma del movimento del giocatore.
+- **Rinviati**: atomo "muovi verso" (§3.24) e adiacenza al terzo pezzo
+  (§3.25) di #251/#254 (implicano pathing e 3 pedine); Kamae "Distanza"
+  (§3.22) — richiede prima la trascrizione degli alberi Kamae dei 10
+  personaggi nuovi (kamae_trees.json ne ha solo 4); restrizioni globali
+  Bushido; "gioca la carta pescata subito" (§3.23).
+- Validatore/simulatore/schema aggiornati; test estesi (dual, derivata,
+  anti-sconfitta, ricorsione, trappole). Suite da rilanciare in locale.
+
 ## [0.81.0] — 2026-07-02
 ### Occultato: stato unico Assassino/Ninja con condizioni di uscita (da carte-regola fisiche)
 - L'utente ha fornito le foto delle carte-regola **#160 PIEDI DI CORVO** e

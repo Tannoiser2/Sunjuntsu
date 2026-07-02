@@ -8486,25 +8486,6 @@
  "248": {
    "name": "MORSO FEROCE / BALZO DI LATO",
    "type": "attack",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": -1,
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
-   },
    "attack": {
     "cells": [
      {
@@ -8524,16 +8505,41 @@
      }
     ]
    },
-   "defence": {
-    "cells": []
-   },
    "effects": [
     {
      "do": "switch_kamae",
      "to": "any"
     }
    ],
-   "note": "Attacco iniziativa 8, Difesa iniziativa 9. ATTACCO 'Morso Feroce': nessun movimento; 3 celle 2 ferite (fronte/fronte-dx/fronte-sx); poi 'VOLTA LA CARTA KAMAE' (meccanica specifica di Hachikō, non modellata, qui approssimata con switch_kamae to:any, DA VERIFICARE). DIFESA 'Balzo di Lato': nessuna cella di blocco, solo ❄1 opzionale POI ↻1 opzionale (non rappresentato nel campo move condiviso, occupato dall'attacco — vedi nota), poi la stessa 'VOLTA LA CARTA KAMAE'. Verificata su hachiko_08.webp."
+   "note": "Doppia faccia (§3.14). ATTACCO [8] 'Morso Feroce': nessun movimento; 3 celle 2 ferite (fronte/fronte-dx/fronte-sx); poi VOLTA LA CARTA KAMAE (meccanica Hachikō approssimata con switch_kamae to:any, serve la carta-regola, DA VERIFICARE). DIFESA [9] 'Balzo di Lato': ❄1 opz POI ↻1 opz, poi la stessa VOLTA LA CARTA KAMAE. La faccia DIFESA è in face_defence (iniziativa/movimento/effetti propri); scelta in pianificazione via plan_card(..., \"defence\"), UI non ancora presente. Verificata su hachiko_08.webp.",
+   "face_defence": {
+    "initiative": 9,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1,
+         "opt": true
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ]
+    },
+    "effects": [
+     {
+      "do": "switch_kamae",
+      "to": "any"
+     }
+    ]
+   }
   },
  "249": {
    "name": "MORSO SELVAGGIO / LECCARSI LE FERITE",
@@ -8567,24 +8573,40 @@
      }
     ]
    },
-   "defence": {
-    "cells": []
-   },
-   "effects": [
-    {
-     "do": "heal",
-     "what": "wound",
-     "n": 1,
-     "alt": "a",
-     "focus_cost": 1
+   "note": "Doppia faccia (§3.14). ATTACCO [7] 'Morso Selvaggio': bidente frontale 1 POI ⟳1; 2 ferite sul fronte. DIFESA [1] 'Leccarsi le Ferite': bidente frontale 1; OPPURE (1 focus) rimuovi 1 ferita (heal) OPPURE (1 focus) sostituisci 1 sanguinante con ferita normale (direzione inversa di replace_wound_bleed, DA VERIFICARE). La faccia DIFESA è in face_defence (iniziativa/movimento/effetti propri); scelta in pianificazione via plan_card(..., \"defence\"), UI non ancora presente. Verificata su hachiko_09.webp.",
+   "face_defence": {
+    "initiative": 1,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "n": 1,
+         "dirs": [
+          1,
+          5
+         ]
+        }
+       ]
+      }
+     ]
     },
-    {
-     "do": "replace_wound_bleed",
-     "alt": "b",
-     "focus_cost": 1
-    }
-   ],
-   "note": "Attacco iniziativa 7, Difesa iniziativa 1. ATTACCO 'Morso Selvaggio': bidente frontale 1 POI ⟳1; 2 ferite sul fronte. DIFESA 'Leccarsi le Ferite': bidente frontale 1 (non rappresentato nel campo move condiviso); OPPURE (1 focus) rimuovi 1 ferita (heal) OPPURE (1 focus) sostituisci 1 sanguinante con ferita normale (direzione inversa di replace_wound_bleed, DA VERIFICARE). Verificata su hachiko_09.webp."
+    "effects": [
+     {
+      "do": "heal",
+      "what": "wound",
+      "n": 1,
+      "alt": "a",
+      "focus_cost": 1
+     },
+     {
+      "do": "replace_wound_bleed",
+      "alt": "b",
+      "focus_cost": 1
+     }
+    ]
+   }
   },
  "250": {
    "name": "MORSO ALLA CAVIGLIA / RINGHIO MINACCIOSO",
@@ -8620,9 +8642,6 @@
      }
     ]
    },
-   "defence": {
-    "cells": []
-   },
    "effects": [
     {
      "do": "link_anchor"
@@ -8630,12 +8649,34 @@
     {
      "do": "hobble",
      "when": "on_hit"
-    },
-    {
-     "do": "cancel_movement"
     }
    ],
-   "note": "Attacco iniziativa 6, Difesa iniziativa 7. Keyword card_pool: Range2. ATTACCO 'Morso alla Caviglia': bidente frontale 1 (facoltativo) POI ⟳1 (facoltativo); cella-àncora fronte (w:0) collegata ad AZZOPPA. DIFESA 'Ringhio Minaccioso' (Distanza, Range2): bidente[1,5] opzionale con valore 2 seguito da CANCELLA IL MOVIMENTO ATTIVO dell'avversario — ambiguo se passo o raggio d'azione, non modellato come vero passo. Verificata su hachiko_14.webp."
+   "note": "Doppia faccia (§3.14). ATTACCO [6] 'Morso alla Caviglia': bidente frontale 1 opz POI ⟳1 opz; cella-àncora fronte (w:0) collegata ad AZZOPPA. DIFESA [7] 'Ringhio Minaccioso' (Distanza, Range2): bidente[1,5] opzionale valore 2 (ambiguo se passo o raggio, DA VERIFICARE) e CANCELLA IL MOVIMENTO ATTIVO. La faccia DIFESA è in face_defence (iniziativa/movimento/effetti propri); scelta in pianificazione via plan_card(..., \"defence\"), UI non ancora presente. Verificata su hachiko_14.webp.",
+   "face_defence": {
+    "initiative": 7,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "n": 2,
+         "dirs": [
+          1,
+          5
+         ],
+         "opt": true
+        }
+       ]
+      }
+     ]
+    },
+    "effects": [
+     {
+      "do": "cancel_movement"
+     }
+    ]
+   }
   },
  "251": {
    "name": "ATTACCA / AL PIEDE",
@@ -8643,15 +8684,15 @@
    "attack": {
     "cells": []
    },
-   "defence": {
-    "cells": []
-   },
    "effects": [
     {
      "do": "change_ai_behaviour"
     }
    ],
-   "note": "Attacco iniziativa 7, Difesa iniziativa 5. Priva di geometria classica: direttive di comportamento IA per Hachikō. ATTACCO 'Attacca': DEVE MUOVERSI VERSO l'avversario (icona 'muovi verso bersaglio' dedicata, non un passo standard) valore 2 poi 1, poi ⟳1. DIFESA 'Al Piede': DEVE MUOVERSI VERSO L'ASHIGARU, stessa icona 1+1+1, poi ⟳1. Schema privo di atomo 'move toward target', non modellato. Verificata su hachiko_15.webp."
+   "note": "Doppia faccia (§3.14). Direttive IA per Hachikō, prive di geometria classica. ATTACCO [7] 'Attacca': DEVE MUOVERSI VERSO l'avversario 2 poi 1, poi ⟳1 (atomo 'muovi verso', roadmap §3.24, non modellato). DIFESA [5] 'Al Piede': DEVE MUOVERSI VERSO L'ASHIGARU 1+1+1, poi ⟳1 (idem, più terzo pezzo §3.25). La faccia DIFESA è in face_defence (iniziativa/movimento/effetti propri); scelta in pianificazione via plan_card(..., \"defence\"), UI non ancora presente. Verificata su hachiko_12.webp.",
+   "face_defence": {
+    "initiative": 5
+   }
   },
  "252": {
    "name": "MORSO RAPIDO / ULULATO FEROCE",
@@ -8683,26 +8724,42 @@
      }
     ]
    },
-   "defence": {
-    "cells": []
-   },
    "effects": [
     {
      "do": "switch_kamae",
      "to": "any"
-    },
-    {
-     "do": "foe_discard",
-     "n": 1,
-     "alt": "a"
-    },
-    {
-     "do": "foe_lose_focus",
-     "n": 1,
-     "alt": "b"
     }
    ],
-   "note": "Attacco iniziativa 7, Difesa iniziativa 6. Keyword card_pool: Range2. ATTACCO 'Morso Rapido': passo avanti 1 POI ⟳1 opzionale; 1 ferita sul fronte; poi 'VOLTA LA CARTA KAMAE' (vedi 248, non modellato). DIFESA 'Ululato Feroce' (Distanza, Range2): passo avanti 1 opzionale (non rappresentato nel campo move condiviso); OPPURE l'avversario scarta 1 carta OPPURE l'avversario perde 1 focus. Verificata su hachiko_16.webp."
+   "note": "Doppia faccia (§3.14). ATTACCO [7] 'Morso Rapido': passo avanti 1 POI ⟳1 opz; 1 ferita sul fronte; poi VOLTA LA CARTA KAMAE (vedi 248, DA VERIFICARE). DIFESA [6] 'Ululato Feroce' (Distanza, Range2): passo avanti 1 opz; OPPURE l'avversario scarta 1 carta OPPURE perde 1 focus. La faccia DIFESA è in face_defence (iniziativa/movimento/effetti propri); scelta in pianificazione via plan_card(..., \"defence\"), UI non ancora presente. Verificata su hachiko_16.webp.",
+   "face_defence": {
+    "initiative": 6,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "n": 1,
+         "dir": 0,
+         "opt": true
+        }
+       ]
+      }
+     ]
+    },
+    "effects": [
+     {
+      "do": "foe_discard",
+      "n": 1,
+      "alt": "a"
+     },
+     {
+      "do": "foe_lose_focus",
+      "n": 1,
+      "alt": "b"
+     }
+    ]
+   }
   },
  "253": {
    "name": "MORSO ALLA GOLA / ALL'ANGOLO",
@@ -8729,16 +8786,33 @@
      }
     ]
    },
-   "defence": {
-    "cells": []
-   },
-   "effects": [
-    {
-     "do": "switch_kamae",
-     "to": "any"
-    }
-   ],
-   "note": "Attacco iniziativa 5, Difesa iniziativa 7. ATTACCO 'Morso alla Gola': nessun passo, solo ⟳1 opzionale; ferita sanguinante sul fronte. DIFESA 'all'Angolo': nessuna cella di blocco; movimento bidente[1,5] opzionale n2 (non rappresentato nel campo move condiviso); poi 'VOLTA LA CARTA KAMAE' (vedi 248, non modellato). Verificata su hachiko_17.webp. Movimento difesa 'all'Angolo': l'icona (ventaglio 3 punte verso il basso) potrebbe indicare un passo verso il RETRO (coerente col nome 'arretrare') invece del bidente frontale ipotizzato inizialmente — INCERTO, non modellato nel campo move condiviso."
+   "note": "Doppia faccia (§3.14). ATTACCO [5] 'Morso alla Gola': solo ⟳1 opz; ferita sanguinante sul fronte. DIFESA [7] 'all'Angolo': movimento bidente[1,5] opz n2 (l'icona a 3 punte verso il basso potrebbe indicare passo verso il RETRO, INCERTO — DA VERIFICARE) poi VOLTA LA CARTA KAMAE (vedi 248). La faccia DIFESA è in face_defence (iniziativa/movimento/effetti propri); scelta in pianificazione via plan_card(..., \"defence\"), UI non ancora presente. Verificata su hachiko_17.webp.",
+   "face_defence": {
+    "initiative": 7,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "n": 2,
+         "dirs": [
+          1,
+          5
+         ],
+         "opt": true
+        }
+       ]
+      }
+     ]
+    },
+    "effects": [
+     {
+      "do": "switch_kamae",
+      "to": "any"
+     }
+    ]
+   }
   },
  "254": {
    "name": "RIPORTA LA PREDA / BRAVO CANE",
@@ -8752,9 +8826,6 @@
      }
     ]
    },
-   "defence": {
-    "cells": []
-   },
    "effects": [
     {
      "do": "link_anchor"
@@ -8763,13 +8834,18 @@
      "do": "pull",
      "n": 1,
      "when": "on_hit"
-    },
-    {
-     "do": "focus",
-     "n": 1
     }
    ],
-   "note": "Attacco iniziativa 7, Difesa iniziativa 9. ATTACCO 'Riporta la Preda': nessun movimento; cella-àncora fronte (w:0), poi 'SE RIUSCITO: * (freccia giù 1) POI TIRA (avversario) 1' — sequenza incerta (singolo pull o doppia azione), modellata come singolo pull n:1 on_hit, DA VERIFICARE. DIFESA 'Bravo Cane': nessuna cella/movimento; SE ADIACENTE ALL'ASHIGARU OTTIENI 1 focus — condizione di adiacenza non modellabile, annotata solo qui. Verificata su hachiko_07.webp."
+   "note": "Doppia faccia (§3.14). ATTACCO [7] 'Riporta la Preda': cella-àncora fronte (w:0); 'SE RIUSCITO: * 1 POI TIRA 1' — sequenza incerta, modellata come singolo pull n:1 on_hit, DA VERIFICARE. DIFESA [9] 'Bravo Cane': OTTIENI 1 focus SE ADIACENTE ALL'ASHIGARU — la condizione di adiacenza al terzo pezzo (§3.25) non è modellata: l'effetto focus è nella faccia difesa senza gate, DA VERIFICARE. La faccia DIFESA è in face_defence (iniziativa/movimento/effetti propri); scelta in pianificazione via plan_card(..., \"defence\"), UI non ancora presente. Verificata su hachiko_07.webp.",
+   "face_defence": {
+    "initiative": 9,
+    "effects": [
+     {
+      "do": "focus",
+      "n": 1
+     }
+    ]
+   }
   },
  "255": {
    "name": "SALTA / GIÙ",
@@ -8797,9 +8873,6 @@
      }
     ]
    },
-   "defence": {
-    "cells": []
-   },
    "effects": [
     {
      "do": "link_anchor"
@@ -8810,7 +8883,24 @@
      "when": "on_hit"
     }
    ],
-   "note": "Attacco iniziativa 7, Difesa iniziativa 6. ATTACCO 'Salta': passo avanti 1 opzionale; cella-àncora fronte (w:0) con '* SPINGI 1' collegato. DIFESA 'Giù': nessuna cella di blocco; solo ❄1 opzionale (non rappresentato nel campo move condiviso, occupato dall'attacco) — schivata pura. Verificata su hachiko_05.webp."
+   "note": "Doppia faccia (§3.14). ATTACCO [7] 'Salta': passo avanti 1 opz; cella-àncora fronte (w:0) con '* SPINGI 1'. DIFESA [6] 'Giù': ❄1 opzionale, schivata pura. La faccia DIFESA è in face_defence (iniziativa/movimento/effetti propri); scelta in pianificazione via plan_card(..., \"defence\"), UI non ancora presente. Verificata su hachiko_05.webp.",
+   "face_defence": {
+    "initiative": 6,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "n": 1,
+         "dir": -1,
+         "opt": true
+        }
+       ]
+      }
+     ]
+    }
+   }
   },
  "256": {
    "name": "STRISCIATA / IN CACCIA",
@@ -8843,10 +8933,44 @@
      }
     ]
    },
-   "defence": {
-    "cells": []
-   },
-   "note": "Attacco iniziativa 6, Difesa iniziativa 3. ATTACCO 'Strisciata': passo avanti 1 opzionale; fronte e fronte-dx (1 ferita ciascuna). DIFESA 'in Caccia': nessuna cella di blocco; due righe di movimento sovrapposte (bidente posteriore[2,4] + ⟳1, una obbligatoria e una facoltativa identica sotto), non rappresentabile nel campo move condiviso (occupato dall'attacco) — schema non modella la doppia riga di movimento sullo stesso lato, DA VERIFICARE. Verificata su hachiko_06.webp. Movimento difesa 'in Caccia': l'icona (V a 2 punte verso l'alto) è visivamente identica al bidente FRONTALE usato altrove (dirs 1,5), non ha un segnale grafico di 'posteriore' — INCERTO se le direzioni [2,4] ipotizzate siano corrette, non modellato nel campo move condiviso."
+   "note": "Doppia faccia (§3.14). ATTACCO [6] 'Strisciata': passo avanti 1 opz; fronte e fronte-dx (1 ferita ciascuna). DIFESA [3] 'in Caccia': bidente[2,4] + ⟳1 obbligatori POI la stessa sequenza facoltativa (l'icona è visivamente identica al bidente FRONTALE [1,5]: direzioni INCERTE, DA VERIFICARE). La faccia DIFESA è in face_defence (iniziativa/movimento/effetti propri); scelta in pianificazione via plan_card(..., \"defence\"), UI non ancora presente. Verificata su hachiko_06.webp.",
+   "face_defence": {
+    "initiative": 3,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "n": 1,
+         "dirs": [
+          2,
+          4
+         ]
+        },
+        {
+         "t": "rot",
+         "n": 1
+        },
+        {
+         "t": "step",
+         "n": 1,
+         "dirs": [
+          2,
+          4
+         ],
+         "opt": true
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ]
+    }
+   }
   },
  "276": {
    "name": "CARTA SPECIALE NAVIGATORE",
@@ -10262,7 +10386,12 @@
  "318": {
    "name": "RISOLUTEZZA OSTINATA",
    "type": "meditation",
-   "note": "Iniziativa '-'. GIOCA SE VIENI SCONFITTO (condizione sull'intera carta). NON VIENI SCONFITTO; scarta ogni ferita subita; se senza carte nel mazzo prendi 3 a caso dagli scarti e mischia; RIMANE IN GIOCO; limite ferite diventa 1 — nessun verbo whitelist copre questi effetti (prevenzione sconfitta, scarto token-ferita, ricostruzione mazzo, modifica limite), non modellata alcuna geometria. Verificata su yojimbo_15.webp."
+   "note": "Iniziativa '-'. GIOCA SE VIENI SCONFITTO → play_when 'defeated' (motore: si gioca d'ufficio dalla mano quando la sconfitta arriverebbe dalle FERITE): NON VIENI SCONFITTO e scarta ogni ferita (cablati); se senza carte nel mazzo prendi 3 a caso dagli scarti e mischia (cablato); RIMANE IN GIOCO (stays_in_play); limite ferite diventa 1 (limit_set). La sconfitta per stordimento non è salvabile da questa carta, DA VERIFICARE. Verificata su yojimbo_15.webp.",
+   "play_when": "defeated",
+   "stays_in_play": true,
+   "limit_set": {
+    "wound": 1
+   }
   },
  "319": {
    "name": "ZANMATO",
@@ -11587,15 +11716,49 @@
    },
    "effects": [
     {
-     "do": "link_anchor",
-     "alt": "a"
+     "do": "place_traps",
+     "alt": "a",
+     "cells": [
+      {
+       "d": 0,
+       "k": 1,
+       "kind": "caltrop"
+      },
+      {
+       "d": 1,
+       "k": 1,
+       "kind": "caltrop"
+      },
+      {
+       "d": 5,
+       "k": 1,
+       "kind": "caltrop"
+      }
+     ]
     },
     {
-     "do": "link_anchor",
-     "alt": "b"
+     "do": "place_traps",
+     "alt": "b",
+     "cells": [
+      {
+       "d": 0,
+       "k": 1,
+       "kind": "caltrop"
+      },
+      {
+       "d": 1,
+       "k": 1,
+       "kind": "decoy"
+      },
+      {
+       "d": 5,
+       "k": 1,
+       "kind": "decoy"
+      }
+     ]
     }
    ],
-   "note": "Passo indietro 1 obbligatorio. 3 celle vuote indicano solo dove piazzare trappole (nessuna ferita). OPPURE tra due effetti di piazzamento non modellabili coi verbi esistenti (approssimati con link_anchor). Regola confermata dalla carta fisica #160 PIEDI DI CORVO: se lanciati da NON Occultato, miniatura visibile — chi entra nella casella riceve 1 ferita + AZZOPPATO, poi si rimuove; se lanciati da Occultato, segnalini trappola '?' coperti — chi entra li volta: piede di corvo = ferita+azzoppato, diversivo = nessun effetto. Marcatori su griglia ancora non modellati (roadmap §3.28). Verificata su ninja_11.webp e sulla carta-regola #160."
+   "note": "Passo indietro 1 obbligatorio. 3 celle frontali di piazzamento (le vecchie attack.cells w:0 restano come riferimento visivo). OPPURE tra due piazzamenti (place_traps): la ripartizione piedi di corvo/diversivi delle due opzioni è IPOTIZZATA (a: 3 veri; b: 1 vero + 2 diversivi) — DA VERIFICARE sulla carta fisica. Regola #160: da Rivelato miniature visibili, da Occultato segnalini coperti; chi entra: piede di corvo = 1 ferita + AZZOPPATO, diversivo = nulla (motore: GameState.spring_traps; la scena deve chiamarlo alla conferma del movimento). Verificata su ninja_11.webp e sulla carta-regola #160."
   },
  "171": {
    "name": "CATENA E UNCINO",
@@ -12102,12 +12265,13 @@
      "opt": true
     }
    ],
-   "note": "Iniziativa '-'. NON PUÒ ESSERE GIOCATA COME CARTA ABILITÀ (non modellabile). SE SCARTATA da un effetto avversario, spendi 1 focus per riportarla in gioco (roadmap §3.27, non modellato). QUANDO ENTRA IN GIOCO: PUOI spendere risorsa non standard per CERCARE+PRENDERE 1 (search_draw opzionale, ciclo Illuminata). RIMANE IN GIOCO (stays_in_play, in_play_state 'illuminata'), AUMENTA LIMITE MANO +1 (limit_mod). Verificata su monk_07.webp.",
+   "note": "Iniziativa '-'. NON PUÒ ESSERE GIOCATA COME CARTA ABILITÀ (non modellabile). SE SCARTATA da un effetto avversario, spendi 1 focus per riportarla in gioco → on_foe_discard 'return_to_play' (auto: paga se ha focus). QUANDO ENTRA IN GIOCO: PUOI spendere risorsa non standard per CERCARE+PRENDERE 1 (search_draw opzionale, ciclo Illuminata). RIMANE IN GIOCO (stays_in_play, in_play_state 'illuminata'), AUMENTA LIMITE MANO +1 (limit_mod). Verificata su monk_07.webp.",
    "stays_in_play": true,
    "in_play_state": "illuminata",
    "limit_mod": {
     "hand": 1
-   }
+   },
+   "on_foe_discard": "return_to_play"
   },
  "265": {
    "name": "ANIMA ILLUMINATA",
@@ -13314,7 +13478,12 @@
     "Nodachi",
     "Yari"
    ],
-   "note": "Rinomanza stampata 50. Regola: Disperazione (carta doppia faccia, inizia con questo lato in alto)."
+   "note": "Rinomanza stampata 50. Disperazione (carta-regola #292): ATTIVA finché ha 3 o più ferite/sanguinanti (derived_states, calcolata da Fighter.gate_states); consente le abilità aggiuntive 🔥, cumulabili con le abilità Kamae; gli effetti di classe che fanno pescare sono OBBLIGATORI (regola di regia, non cablata).",
+   "derived_states": {
+    "disperazione": {
+     "wounds_min": 3
+    }
+   }
   },
  "Yojimbo": {
    "card_id": 307,
