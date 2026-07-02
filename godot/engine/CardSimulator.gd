@@ -138,6 +138,19 @@ static func explain(card: Dictionary, geom: Dictionary) -> Array:
 	elif req is Array and not (req as Array).is_empty():
 		out.append("Giocabile solo in Kamae: %s." % _gate_join(req))
 
+	# Costo iniziale (es. "SCARTA 1 CARTA"): sulla carta stampata precede
+	# sempre il movimento, ma è salvato in effects[] insieme al resto — va
+	# estratto e mostrato qui, altrimenti finisce spiegato per ultimo.
+	var effects: Array = (geom.get("effects", []) as Array).duplicate()
+	for i in effects.size():
+		var e = effects[i]
+		if e is Dictionary and e.get("do", "") == "discard_self" and not e.has("when") and not e.has("alt"):
+			var s := _effect_phrase(e)
+			if s != "":
+				out.append(s)
+			effects.remove_at(i)
+			break
+
 	# Movimento (opzioni alternative).
 	var mv = geom.get("move", {})
 	var opts: Array = mv.get("opts", []) if typeof(mv) == TYPE_DICTIONARY else []
@@ -167,8 +180,8 @@ static func explain(card: Dictionary, geom: Dictionary) -> Array:
 	if counter is Array and not (counter as Array).is_empty():
 		out.append("Contrattacco se pari l'attacco a iniziativa %s." % ", ".join((counter as Array).map(func(x): return str(x))))
 
-	# Effetti (ordinati).
-	for e in geom.get("effects", []):
+	# Effetti (ordinati) — il costo iniziale, se presente, è già stato estratto sopra.
+	for e in effects:
 		var s := _effect_phrase(e)
 		if s != "":
 			out.append(s)

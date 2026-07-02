@@ -3,6 +3,92 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.76.0] — 2026-07-02
+### Verifica adversariale dei 10 nuovi personaggi + fix ordine "spiega carta"
+- **Gioco base completato**: con Musashi e Kojiro esclusi dallo scope (nessuna
+  espansione disponibile), tutte le carte del gioco base caricato hanno ora
+  geometria trascritta — mancavano solo 2 carte, entrambe divisori di mazzo
+  senza contenuto di gioco (215, 234), ora documentate come tali.
+- **Verifica sistematica delle 137 carte trascritte nella 0.74.0/0.75.0**:
+  confrontate una a una con le scansioni reali (10 agenti indipendenti, uno
+  per personaggio). Su 137 carte, ~20 correzioni applicate:
+  - Direzioni di movimento invertite o incomplete (Assassino #219/#229,
+    Ninja #172, Monaco #266)
+  - Celle d'attacco sull'anello sbagliato: tre carte Onna-Bugeisha
+    (#297, #304, #306) avevano ferite sull'anello 1 quando in realtà
+    l'anello 1 è vuoto e il colpo è sull'anello 2; Yasuke #352 aveva le
+    coordinate delle celle laterali invertite
+    - Costo "SCARTA 1 CARTA" mancante (Yojimbo #317); `type` errato
+    "other"→"meditation" (Yojimbo #321, causato da un refuso "Mediation"
+    nell'anagrafica sorgente)
+  - Effetti indipendenti erroneamente resi alternativi con "OPPURE"
+    (Ashigaru #240)
+  - Icona Kamae "Distanza" del Navigatore scambiata per Neutrale (#276)
+  - Varie correzioni di nota (Hachikō, Wakou, Altre carte 3 #146)
+- **Fix CardSimulator.explain()**: il costo iniziale "SCARTA 1 CARTA" (47
+  carte nel dataset) veniva spiegato per ultimo invece che per primo, perché
+  `effects[]` era sempre stampato dopo movimento e attacco. Ora il costo
+  incondizionato viene estratto e mostrato subito dopo l'intestazione,
+  rispecchiando l'ordine reale sulla carta stampata.
+- Validazione automatica: zero errori su tutte le 281 carte.
+
+## [0.75.0] — 2026-07-02
+### 10 nuovi personaggi: geometria completata (fase 2, tutte le 137 carte)
+- Trascritte le ultime 45 carte rimaste in coda dalla 0.74.0: **Ninja** (14),
+  **Monaco** (13), **Yasuke** (14) e le prime 4 carte di **Wakou** (333-336,
+  sostituiscono i segnaposto temporanei).
+- Tutti e 10 i personaggi caricati in questa tornata (Assassino, Ninja,
+  Onna-Bugeisha, Yojimbo, Ashigaru, Hachikō, Monaco, Navigatore, Wakou,
+  Yasuke) hanno ora la geometria completa: **279 carte totali** in
+  geometry.json (era 140 prima di questa fase).
+- **Nuove meccaniche scoperte e documentate in nota** (non ancora
+  modellabili con lo schema attuale, coerentemente con l'approccio
+  "non inventare" delle fasi precedenti):
+  - **Stato "Ombra"** dell'Assassino e **stato speciale del Ninja mascherato**
+    ricorrono su più carte (probabile stessa meccanica "Occultamento" delle
+    due carte-personaggio) — nessuna quinta kamae nello schema.
+  - **Ciclo "Illuminata"** del Monaco: risorsa/costo non standard per
+    "cerca carta specifica", buff permanenti al limite ferite/mano/focus.
+  - **Attacchi "trappola"** del Ninja (166, 167, 169): bersaglio scelto per
+    confronto di iniziativa invece che per cella, con soglie a pagamento.
+  - Scaling di effetti "per casella mossa" (Yasuke 353, 355) non
+    rappresentabile come intero fisso.
+- Validazione automatica sull'intero file: zero verbi/kamae/direzioni fuori
+  vocabolario su tutte le 279 carte.
+- **Ancora bloccati**: Musashi e Kojiro (nessun PDF caricato).
+
+## [0.74.0] — 2026-07-02
+### 10 nuovi personaggi: anagrafica, immagini, geometria (fase 1)
+- **10 nuovi personaggi caricati**: Assassino, Ninja, Onna-Bugeisha, Yojimbo
+  (immagini già presenti ma senza geometria), Ashigaru, Hachikō, Monaco,
+  Navigatore, Wakou, Yasuke (PDF nuovi). Musashi e Kojiro restano bloccati:
+  nessun PDF caricato.
+- **Statistiche personaggio** (ferite/mano/armi/rinomanza) aggiunte a
+  `geometry.characters` per tutti e 10, lette dalle carte-personaggio
+  stampate. Scoperta: Assassino e Ninja hanno mano 6/ferite 4 (diverso dal
+  5/5 standard); il Navigatore possiede una **quinta Kamae "Distanza"** non
+  presente nell'enum standard (non modellata, richiede estensione schema).
+- **137 carte tradotte in italiano** in `card_pool.json` (erano in inglese,
+  importate dall'Excel) + 145 nuove mappature immagine in `card_images.json`
+  (qui il numero stampato = id pool direttamente, a differenza delle armi).
+- **Geometria trascritta per 104/137 carte** (Assassino, Onna-Bugeisha,
+  Yojimbo, Ashigaru, Hachikō, Navigatore, Wakou 9/13, più le 17 «Altre
+  carte 3» che completano i buchi Gen. Ability lasciati aperti nella 0.73.0:
+  96, 97, 100, 111, 121, 136 e altri nuovi 99, 103, 110, 141, 144-147, 151,
+  152, 157).
+  - **Hachikō**: formato inedito, carte a due facce Attacco/Difesa con
+    iniziative separate sulla stessa carta — lo schema attuale non supporta
+    due movimenti paralleli, gestito con `attack`+`defence` sulla stessa
+    entry e note esplicite.
+  - **Meccaniche scoperte e non ancora modellabili** (documentate in nota
+    carta per carta): stato "Ombra" dell'Assassino, "Disperazione"
+    dell'Onna-Bugeisha, "Contratti" dello Yojimbo, "Ubriaco" del Wakou,
+    attacchi a "Distanza" con bersaglio scelto per confronto d'iniziativa
+    invece che per cella.
+- **Ancora da fare**: Ninja (14), Monaco (13), Yasuke (14) e le prime 4
+  carte di Wakou (333-336) — trascrizione interrotta da un limite di
+  sessione, in coda per la prossima fase.
+
 ## [0.73.0] — 2026-07-02
 ### Armi, Gen. Ability e Bushido: immagini collegate e geometria verificata
 - **Mappatura id→immagine**: catalogate le 72 scansioni di altre_carte/
