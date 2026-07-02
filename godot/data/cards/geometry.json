@@ -4351,8 +4351,8 @@
         "t": "step",
         "n": 1,
         "dirs": [
-         2,
-         4
+         1,
+         5
         ],
         "opt": true,
         "focus_cost": 1
@@ -4381,7 +4381,7 @@
      "n": 1
     }
    ],
-   "note": "Arma Katana, iniziativa 4. SCARTA 1 CARTA. Movimento opzionale: bidente basso pagando 1 focus POI ⟳1 opzionale gratuito. Fronte 1 ferita. Verificata su altre_carte_3_17.webp."
+   "note": "Arma Katana, iniziativa 4. SCARTA 1 CARTA. Movimento opzionale: bidente avanti (dir 1/5, corretto: era invertito come su Assassino #219/#229) pagando 1 focus POI ⟳1 opzionale gratuito. Fronte 1 ferita. Immagine aggiornata a weapon_01.webp (ritaglio migliore, sostituisce altre_carte_3_17.webp)."
   },
   "67": {
    "name": "AFFONDO DI BASTONE BO",
