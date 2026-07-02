@@ -427,8 +427,9 @@ pena chiuderle insieme in una sessione di lavoro dedicata e corta.
 ### Fase 4 — Gruppo strutturale rimanente
 - [x] Doppia faccia Hachikō (§3.14): campo `face_defence` + scelta faccia
       in `plan_card` (v0.82.0, 9 carte ristrutturate). "Gira la carta"
-      (§3.15) resta approssimato con switch_kamae to:any: serve la
-      carta-regola Kamae di Hachikō (foto!). UI di scelta faccia da fare.
+      (§3.15) RISOLTO in v0.83.0 (carte-regola #245/#247 dal PDF): verbo
+      `flip_kamae` (Determinazione↔Aggressività) + `immunities` sulla
+      scheda personaggio. UI di scelta faccia da fare.
 - [x] Bersaglio per confronto iniziativa (§3.4) — campo `targeting`
       (v0.80.0): #167 #169 #279 #280 #281 #325 #336; #166 resta (trappola
       §3.28).

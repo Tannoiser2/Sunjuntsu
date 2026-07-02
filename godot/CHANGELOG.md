@@ -3,6 +3,27 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.83.0] — 2026-07-03
+### Regola Hachikō completa: flip_kamae e immunità (carte-regola #245/#233/#247)
+- **`flip_kamae`** (§3.15, "VOLTA LA CARTA KAMAE"): la carta Kamae di
+  Hachikō (#247) ha due facce — **Determinazione e Aggressività** (scan
+  forniti dall'utente) — e si cambia solo voltandola. Nuovo verbo che
+  alterna le due facce dichiarate sulla scheda personaggio
+  (`kamae_flip`); sostituisce l'approssimazione `switch_kamae to:any` su
+  #248/#252/#253 (faccia attacco e difesa). Chiude §3.15.
+- **Immunità di personaggio** (`immunities` sulla scheda): Hachikō non
+  può essere obbligato a scartare carte/focus, a cambiare Kamae, né a
+  farsi guardare la mano — i verbi foe_* indicati non hanno effetto su
+  di lui (generico: vale per qualsiasi personaggio futuro).
+- Registrate in nota le regole non ancora cablate (compagno a 2 pedine,
+  #233): mazzo esaurito → rimescola senza ferita; stordimenti mischiati
+  nel mazzo e messi in gioco alla pescata; sconfitta a 2 stordimenti in
+  gioco; risolve solo carte abilità; Kamae iniziale scelta dall'Ashigaru.
+- Nota su CardStore: il presunto bug dei diff-fantasma a tab NON è
+  riproducibile col codice attuale (save_geometry scrive già 1-spazio,
+  formato del repo) — probabile artefatto di una build vecchia; da
+  riverificare solo se ricompare.
+
 ## [0.82.0] — 2026-07-02
 ### Fase 4 (parte 2) — doppia faccia Hachikō, Disperazione derivata, anti-sconfitta, trappole, ricorsione
 - **Carte a doppia faccia** (§3.14, Hachikō): nuovo campo `face_defence`

@@ -8507,11 +8507,10 @@
    },
    "effects": [
     {
-     "do": "switch_kamae",
-     "to": "any"
+     "do": "flip_kamae"
     }
    ],
-   "note": "Doppia faccia (§3.14). ATTACCO [8] 'Morso Feroce': nessun movimento; 3 celle 2 ferite (fronte/fronte-dx/fronte-sx); poi VOLTA LA CARTA KAMAE (meccanica Hachikō approssimata con switch_kamae to:any, serve la carta-regola, DA VERIFICARE). DIFESA [9] 'Balzo di Lato': ❄1 opz POI ↻1 opz, poi la stessa VOLTA LA CARTA KAMAE. La faccia DIFESA è in face_defence (iniziativa/movimento/effetti propri); scelta in pianificazione via plan_card(..., \"defence\"), UI non ancora presente. Verificata su hachiko_08.webp.",
+   "note": "Doppia faccia (§3.14). ATTACCO [8] 'Morso Feroce': nessun movimento; 3 celle 2 ferite (fronte/fronte-dx/fronte-sx); poi VOLTA LA CARTA KAMAE (flip_kamae: Determinazione↔Aggressività, carta #247). DIFESA [9] 'Balzo di Lato': ❄1 opz POI ↻1 opz, poi la stessa VOLTA LA CARTA KAMAE (flip_kamae). La faccia DIFESA è in face_defence (iniziativa/movimento/effetti propri); scelta in pianificazione via plan_card(..., \"defence\"), UI non ancora presente. Verificata su hachiko_08.webp.",
    "face_defence": {
     "initiative": 9,
     "move": {
@@ -8535,8 +8534,7 @@
     },
     "effects": [
      {
-      "do": "switch_kamae",
-      "to": "any"
+      "do": "flip_kamae"
      }
     ]
    }
@@ -8726,11 +8724,10 @@
    },
    "effects": [
     {
-     "do": "switch_kamae",
-     "to": "any"
+     "do": "flip_kamae"
     }
    ],
-   "note": "Doppia faccia (§3.14). ATTACCO [7] 'Morso Rapido': passo avanti 1 POI ⟳1 opz; 1 ferita sul fronte; poi VOLTA LA CARTA KAMAE (vedi 248, DA VERIFICARE). DIFESA [6] 'Ululato Feroce' (Distanza, Range2): passo avanti 1 opz; OPPURE l'avversario scarta 1 carta OPPURE perde 1 focus. La faccia DIFESA è in face_defence (iniziativa/movimento/effetti propri); scelta in pianificazione via plan_card(..., \"defence\"), UI non ancora presente. Verificata su hachiko_16.webp.",
+   "note": "Doppia faccia (§3.14). ATTACCO [7] 'Morso Rapido': passo avanti 1 POI ⟳1 opz; 1 ferita sul fronte; poi VOLTA LA CARTA KAMAE (flip_kamae). DIFESA [6] 'Ululato Feroce' (Distanza, Range2): passo avanti 1 opz; OPPURE l'avversario scarta 1 carta OPPURE perde 1 focus. La faccia DIFESA è in face_defence (iniziativa/movimento/effetti propri); scelta in pianificazione via plan_card(..., \"defence\"), UI non ancora presente. Verificata su hachiko_16.webp.",
    "face_defence": {
     "initiative": 6,
     "move": {
@@ -8786,7 +8783,7 @@
      }
     ]
    },
-   "note": "Doppia faccia (§3.14). ATTACCO [5] 'Morso alla Gola': solo ⟳1 opz; ferita sanguinante sul fronte. DIFESA [7] 'all'Angolo': movimento bidente[1,5] opz n2 (l'icona a 3 punte verso il basso potrebbe indicare passo verso il RETRO, INCERTO — DA VERIFICARE) poi VOLTA LA CARTA KAMAE (vedi 248). La faccia DIFESA è in face_defence (iniziativa/movimento/effetti propri); scelta in pianificazione via plan_card(..., \"defence\"), UI non ancora presente. Verificata su hachiko_17.webp.",
+   "note": "Doppia faccia (§3.14). ATTACCO [5] 'Morso alla Gola': solo ⟳1 opz; ferita sanguinante sul fronte. DIFESA [7] 'all'Angolo': movimento bidente[1,5] opz n2 (l'icona a 3 punte verso il basso potrebbe indicare passo verso il RETRO, INCERTO — DA VERIFICARE) poi VOLTA LA CARTA KAMAE (flip_kamae). La faccia DIFESA è in face_defence (iniziativa/movimento/effetti propri); scelta in pianificazione via plan_card(..., \"defence\"), UI non ancora presente. Verificata su hachiko_17.webp.",
    "face_defence": {
     "initiative": 7,
     "move": {
@@ -8808,8 +8805,7 @@
     },
     "effects": [
      {
-      "do": "switch_kamae",
-      "to": "any"
+      "do": "flip_kamae"
      }
     ]
    }
@@ -13518,7 +13514,18 @@
    "wound_limit": 2,
    "hand_limit": 2,
    "weapons": [],
-   "note": "Rinomanza '=' (companion, non ha armi). Icona 'mano' sostituita da stelle (significato DA VERIFICARE, forse limite azioni). Retro di Ashigaru: se Ashigaru viene sconfitto, si volta questa carta. Le 9 carte azione sono doppia-faccia Attacco/Difesa con due iniziative distinte sulla stessa carta — schema geometry.json non ancora esteso per questo formato, vedi note per-carta."
+   "note": "Carte-regola #245/#233 (dal PDF, 2026-07-03): la Kamae iniziale è scelta dal giocatore dell'Ashigaru; la carta Kamae #247 ha DUE facce (Determinazione/Aggressività) e si cambia solo VOLTANDOLA (verbo flip_kamae). Hachikō risolve solo carte abilità ed effetti di stato; NON può essere obbligato a scartare carte/focus, a cambiare Kamae, né a farsi guardare la mano (immunities). Regole non ancora cablate (compagno a 2 pedine): mazzo esaurito → rimescola gli scarti (niente ferita da decking-out); gli stordimenti si mischiano nel SUO mazzo e vanno in gioco quando pescati; sconfitto con 2 stordimenti in gioco.",
+   "kamae_flip": [
+    "determination",
+    "aggression"
+   ],
+   "immunities": [
+    "foe_discard",
+    "foe_lose_focus",
+    "foe_switch_kamae",
+    "foe_change_kamae",
+    "foe_reveal_hand"
+   ]
   },
  "Monk": {
    "card_id": 257,
