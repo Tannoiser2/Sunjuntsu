@@ -171,6 +171,20 @@ foe_stun, foe_switch_kamae` e `heal` (rimozione ferite/stati propri).
 > effetti collegati si applicano al personaggio colpito. Di norma con
 > `focus_cost` (bonus a pagamento), quindi saltato nell'auto-risoluzione.
 
+## Contratti (Yojimbo, carta-regola "Sicario a Contratto")
+
+Dichiarati sulla scheda personaggio (`characters.Yojimbo.contracts`, 6 voci
+`{ id, name, trigger, turns? }`): in preparazione se ne mettono 5 a faccia in
+su (auto: i primi 5). `Duel._update_contracts` li completa a fine turno
+(trigger: `attack_or_block_success`, `first_blood`, `reaction_success`,
+`wounds_dealt_2`, `focus_spent` ×4 rotazioni, `status_inflicted` ×4 tipi).
+Al completamento: `states["contratti"]` +1 (in gioco — letto da
+`n_from_state`/`state_req`, es. #322/#328) e `states["contratti_totali"]` +1 —
+**a 5 la partita è vinta** (controllo in `_check_winner`). Prima di pescare il
+giocatore può scartare un completato per pescare 1 o +1 focus
+(`Duel.spend_completed_contract`; l'auto-risoluzione non lo usa). Il verbo
+`state_clear` su "contratti" scarta anche le carte contratto completate (#322).
+
 ## Trappole sulla griglia (`place_traps`, §3.28)
 
 Verbo effetto `{ "do": "place_traps", "cells": [ { "d": 0, "k": 1, "kind": "caltrop" }, … ] }`

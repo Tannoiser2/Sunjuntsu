@@ -417,8 +417,11 @@ pena chiuderle insieme in una sessione di lavoro dedicata e corta.
       spostavano il GIOCATORE invece dell'avversario e 3 segnaposto errati.
 - [x] `counter` gated da Kamae/stato (§3.10) — 6 carte (#299 inclusa).
 - [x] Effetti a entità variabile: `n_from_state` (§3.13) — sblocca #322
-      (Contratti); #319/#321/#328 restano per fasi successive (bonus
-      iniziativa/raggio variabile, finestre di gioco).
+      (Contratti); #319/#321 restano in nota (bonus iniziativa/raggio
+      variabile). §3.11 CHIUSO in v0.86.0: sottosistema Contratti completo
+      dalla carta-regola 'Sicario a Contratto' (trovata nel PDF Yojimbo) —
+      5 in gioco, trigger cablati, spesa pre-pesca, vittoria a 5; #328 con
+      state_req.
 - [x] Quinta Kamae "Distanza" (§3.22): CHIUSA in v0.85.0 insieme alla
       trascrizione di TUTTI gli alberi Kamae (13 personaggi, archi a
       senso unico col campo `dir`, arco fantasma del Ronin rimosso,

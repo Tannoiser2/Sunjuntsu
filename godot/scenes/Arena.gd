@@ -987,10 +987,8 @@ func _rotate_player(delta: int) -> void:
 	var idx_f := _active()
 	var f := state.fighters[idx_f]
 	var g: Dictionary = _selected_card.get("geom_override", CardDB.geometry(int(_selected_card.get("id", -1))))
-	var facings: Array = (_move_states.get(f.cell, []) as Array).duplicate()
-	# Includi anche il facing attuale tra le scelte (se la rotazione è opzionale lo è già;
-	# se è obbligatoria resta escluso). Serve a ciclare correttamente con un solo valore.
-	if facings.size() <= 1:
+	var facings: Array = (_move_states.get(f.cell, []) as Array)
+	if facings.is_empty() or (facings.size() == 1 and facings.has(f.facing)):
 		# Rotazione libera legacy (carte senza spec move ma con 'rotates').
 		if not g.has("move") and int(g.get("rotates", 0)) > 0:
 			f.facing = (f.facing + delta + 6) % 6
@@ -998,13 +996,18 @@ func _rotate_player(delta: int) -> void:
 			_refresh_overlays()
 			return
 		# Nessuna rotazione disponibile: spiega perché.
-		_hud.set_hint("⟳ Rotazione non disponibile con questa carta" + _rotation_gate_hint(g))
+		_hud.set_hint("Rotazione non disponibile con questa carta" + _rotation_gate_hint(g))
 		return
-	facings.sort()
-	var idx: int = facings.find(f.facing)
-	if idx == -1:
-		idx = 0
-	f.facing = int(facings[(idx + delta + facings.size()) % facings.size()])
+	# Un tocco = UN lato nella direzione scelta, fino al primo facing legale
+	# (il set legale arriva dal motore, che include già tutti gli scatti
+	# intermedi "fino a N": si salta un lato solo se la carta lo vieta).
+	# Il vecchio ciclo sull'elenco ORDINATO faceva saltare la pedina di più
+	# lati per volta (es. legali [3,5]: da 3 balzava a 5 anche verso sinistra).
+	for k in range(1, 7):
+		var cand := (f.facing + delta * k + 12) % 6
+		if facings.has(cand):
+			f.facing = cand
+			break
 	_apply_pawn_facing(idx_f)
 	_refresh_overlays()
 

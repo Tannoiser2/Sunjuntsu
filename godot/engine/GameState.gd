@@ -47,6 +47,13 @@ class Fighter:
 	## Limite focus corrente (di norma MAX_FOCUS; le carte in gioco possono
 	## alzarlo via `limit_mod`, es. Anima Illuminata #265).
 	var focus_limit: int = 3
+	## CONTRATTI (Yojimbo, carta-regola "Sicario a Contratto"): lista di
+	## dizionari { id, name, trigger, turns?, progress, seen?, done } iniziata
+	## da Duel.start() dalla scheda personaggio (5 dei 6, scelta in
+	## preparazione — auto: i primi 5). Contatori collegati in `states`:
+	## "contratti" = completati IN GIOCO (letto da n_from_state/state_req),
+	## "contratti_totali" = completati nella partita (a 5 si VINCE).
+	var contracts: Array = []
 	## Stati/risorse persistenti per-fighter (decisione §5.1 roadmap meccaniche):
 	## dizionario libero nome → int, che sopravvive tra i turni finché una carta
 	## non lo modifica. Copre Disperazione, Contratti, stato Ombra/Ninja, ciclo
@@ -169,6 +176,10 @@ var phase: int = Domain.Phase.SETUP
 var round_num: int = 1
 var map_radius: int = 6                         ## arena esagonale di raggio N
 var blocked_cells: Dictionary = {}              ## Vector2i -> true (ostacoli)
+## Chi ha inflitto la PRIMA ferita della partita (contratto "Primo Sangue"):
+## -1 = nessuno ancora, -2 = ambiguo (entrambi nello stesso turno), altrimenti
+## l'indice del combattente. Impostato da Duel a fine turno.
+var first_blood_by: int = -1
 ## Segnalini trappola sulla griglia (piedi di corvo, carta-regola #160, §3.28):
 ## Vector2i -> { kind: "caltrop"|"decoy", owner: int, hidden: bool }.
 ## Piazzati dal verbo effetto `place_traps` (Duel); scattano con spring_traps.

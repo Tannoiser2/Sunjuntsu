@@ -296,10 +296,10 @@ func _build_kamae_chooser() -> void:
 	wrap.anchor_right = 0.5
 	wrap.offset_left = -240
 	wrap.offset_right = 240
-	wrap.offset_top = 44
+	wrap.offset_top = 92   # sotto la top bar E il banner di fase
 	add_child(wrap)
 	var lbl := Label.new()
-	lbl.text = "Cambia Kamae — scegli la posizione:"
+	lbl.text = "Cambia Kamae — scegli sull'albero (o qui):"
 	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	wrap.add_child(lbl)
 	_kamae_box = HBoxContainer.new()
@@ -319,7 +319,9 @@ func _build_kamae_chooser() -> void:
 var _kamae_hl: Array = []   ## pannelli che illuminano i nodi raggiungibili sulla carta Kamae
 
 
-## Illumina sulla carta Kamae i nodi (caselle) raggiungibili dalla posizione attuale.
+## Evidenzia sulla carta Kamae i nodi raggiungibili come PULSANTI cliccabili
+## (verde, col focus guadagnato dai rami rosa scritto dentro): si sceglie la
+## destinazione direttamente sull'albero, come sul tavolo fisico.
 func _highlight_kamae_nodes(reachable: Dictionary) -> void:
 	for p in _kamae_hl:
 		p.queue_free()
@@ -327,16 +329,28 @@ func _highlight_kamae_nodes(reachable: Dictionary) -> void:
 	for slug in reachable:
 		if not _tree_nodes.has(slug):
 			continue
-		var n: Array = _tree_nodes[slug]
-		var hl := Panel.new()
-		hl.size = Vector2(34, 34)
-		hl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var sl := str(slug)
+		var n: Array = _tree_nodes[sl]
+		var focus_gain := int(reachable[sl])
+		var hl := Button.new()
+		hl.size = Vector2(40, 40)
+		hl.z_index = 210
+		hl.text = ("+%d◈" % focus_gain) if focus_gain > 0 else ""
+		hl.add_theme_font_size_override("font_size", 11)
+		hl.tooltip_text = "%s%s" % [_STANCE_LABEL.get(sl, sl),
+			(" (+%d focus)" % focus_gain) if focus_gain > 0 else ""]
 		var sb := StyleBoxFlat.new()
 		sb.bg_color = Color(0.3, 0.95, 0.45, 0.32)
 		sb.set_border_width_all(3)
 		sb.border_color = Color(0.45, 1, 0.55)
-		sb.set_corner_radius_all(17)
-		hl.add_theme_stylebox_override("panel", sb)
+		sb.set_corner_radius_all(20)
+		var sbh: StyleBoxFlat = sb.duplicate()
+		sbh.bg_color = Color(0.35, 1.0, 0.5, 0.55)
+		hl.add_theme_stylebox_override("normal", sb)
+		hl.add_theme_stylebox_override("hover", sbh)
+		hl.add_theme_stylebox_override("pressed", sbh)
+		hl.add_theme_stylebox_override("focus", sb)
+		hl.pressed.connect(func(): kamae_chosen.emit(sl))
 		_tree_panel.add_child(hl)
 		hl.position = Vector2(float(n[0]) * _tree_panel.size.x, float(n[1]) * _tree_panel.size.y) - hl.size * 0.5
 		_kamae_hl.append(hl)
@@ -442,20 +456,22 @@ func _build_rotation_controls() -> void:
 	_rot_box = Control.new()
 	_rot_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_rot_box)
+	# Testo ASCII ("<Q" / "E>"): i glifi ⟲/⟳ non esistono nel font di
+	# progetto e comparivano come rettangoli incomprensibili.
 	var bl := Button.new()
-	bl.text = "⟲"
-	bl.custom_minimum_size = Vector2(50, 50)
-	bl.position = Vector2(-96, -25)
-	bl.tooltip_text = "Ruota a sinistra"
-	bl.add_theme_font_size_override("font_size", 24)
+	bl.text = "< Q"
+	bl.custom_minimum_size = Vector2(56, 50)
+	bl.position = Vector2(-102, -25)
+	bl.tooltip_text = "Ruota di un lato a sinistra (tasto Q)"
+	bl.add_theme_font_size_override("font_size", 20)
 	bl.pressed.connect(func(): rotate_requested.emit(-1))
 	_rot_box.add_child(bl)
 	var br := Button.new()
-	br.text = "⟳"
-	br.custom_minimum_size = Vector2(50, 50)
+	br.text = "E >"
+	br.custom_minimum_size = Vector2(56, 50)
 	br.position = Vector2(46, -25)
-	br.tooltip_text = "Ruota a destra"
-	br.add_theme_font_size_override("font_size", 24)
+	br.tooltip_text = "Ruota di un lato a destra (tasto E)"
+	br.add_theme_font_size_override("font_size", 20)
 	br.pressed.connect(func(): rotate_requested.emit(1))
 	_rot_box.add_child(br)
 	_rot_box.visible = false
@@ -562,7 +578,8 @@ func _build_phase_banner() -> void:
 	_phase_banner.set_anchors_preset(Control.PRESET_CENTER_TOP)
 	_phase_banner.anchor_left = 0.5; _phase_banner.anchor_right = 0.5
 	_phase_banner.offset_left = -360; _phase_banner.offset_right = 360
-	_phase_banner.offset_top = 4; _phase_banner.offset_bottom = 48
+	# Sotto la barra in alto (alta 40 px), non sopra.
+	_phase_banner.offset_top = 44; _phase_banner.offset_bottom = 88
 	_phase_banner.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_phase_lbl = Label.new()
 	_phase_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
