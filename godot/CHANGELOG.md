@@ -3,6 +3,33 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.73.0] — 2026-07-02
+### Armi, Gen. Ability e Bushido: immagini collegate e geometria verificata
+- **Mappatura id→immagine**: catalogate le 72 scansioni di altre_carte/
+  altre_carte_2 (nome + numero di collezione stampato) → 54 nuove voci in
+  card_images.json (copertura 78→132 carte). Senza scansione restano 96, 97,
+  100, 111, 121, 136 e le 10 carte Solo.
+- **Verifica visiva delle 54 carte appena mappate**: 46 corrette, 8 già giuste
+  (le Bushido 79/82/85/91/93/94/95 e la 106).
+  - **Armi (66-77, 133-139)**: la trascrizione originale aveva esecuzioni
+    inventate su quasi tutte — le carte reali hanno ferite semplici (Yari e
+    Jumonji Yari colpiscono a distanza 3-4, il Kanabo stordisce con celle
+    asterisco); seconde iniziative [1]-[3] aggiunte su 8 carte; costi focus
+    delle barre viola sui movimenti.
+  - **counter:[1] fantasma rimossi** da 7 carte (108, 112, 114→[5,4,3],
+    120→[8,7,6,5], 140, 143, 148, 155); su 80 il counter era la copia
+    dell'iniziativa (→[8,7,6,5]).
+  - **#88 DOVERE**: «tutti scartano tutto il focus» (era: la mano) e
+    «passano a Neutrale» (era: Aggressività, il torii ⛩ = Neutrale).
+  - **#153 VANTAGGIO**: l'icona occhio = guarda la mano (il 'pesca' era
+    inventato); **#108** si chiama DISTRAZIONE (non 'Difesa Accennante');
+    **#156** è una Meditazione (era type 'other').
+  - Gate kamae ricostruiti su movimenti ed effetti (barre rossa/verde/gialla)
+    e celle di difesa corrette (80, 114, 115, 120 avevano scudi in più o in
+    meno).
+- Iniziative alternative «[N] su barra kamae/focus» documentate nelle note
+  (non ancora modellate dallo schema).
+
 ## [0.72.0] — 2026-07-01
 ### Verifica visiva della geometria contro le carte reali (56 carte corrette)
 - **Verifica sistematica**: le 70 carte di geometry.json con immagine collegata
