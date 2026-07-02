@@ -33,8 +33,32 @@ class Fighter:
 	var advantage: bool = false                ## possiede il segnalino vantaggio
 	var planned: int = -1                      ## carta programmata (id int, -1 = nessuna)
 	var is_ai: bool = false
+	## Stati/risorse persistenti per-fighter (decisione §5.1 roadmap meccaniche):
+	## dizionario libero nome → int, che sopravvive tra i turni finché una carta
+	## non lo modifica. Copre Disperazione, Contratti, stato Ombra/Ninja, ciclo
+	## Illuminata, carte "rimangono in gioco". Flag = 0/assente (off) o >=1 (on).
+	## Letto dai gate (Gate.state_ok) e scritto dai verbi state_* (Duel.gd).
+	var states: Dictionary = {}
 
 	const MAX_FOCUS := 3
+
+	# ── Stati persistenti (contatori/flag nominati) ──────────────────────────
+	## Valore corrente dello stato `state_name` (0 se assente).
+	func state_get(state_name: String) -> int:
+		return int(states.get(state_name, 0))
+
+	## Somma `n` (anche negativo, per spendere) allo stato; a <=0 lo rimuove.
+	func state_add(state_name: String, n: int) -> void:
+		state_set(state_name, state_get(state_name) + n)
+
+	## Imposta lo stato al valore assoluto `n`; a <=0 lo rimuove.
+	func state_set(state_name: String, n: int) -> void:
+		if state_name == "":
+			return
+		if n <= 0:
+			states.erase(state_name)
+		else:
+			states[state_name] = n
 
 	func gain_focus(n: int) -> void:
 		focus = clampi(focus + n, 0, MAX_FOCUS)

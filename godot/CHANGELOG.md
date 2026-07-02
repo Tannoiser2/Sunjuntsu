@@ -3,6 +3,39 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.78.0] — 2026-07-02
+### Stati persistenti per-fighter + gate unificato (roadmap meccaniche, Fase 2)
+- **Nuovo sottosistema di stato persistente** (`Fighter.states`, dizionario
+  libero nome → int, decisione §5.1 della roadmap): copre come UN SOLO
+  meccanismo Disperazione (Onna-Bugeisha), Contratti (Yojimbo), stato Ombra
+  (Assassino), stato Ninja, ciclo Illuminata (Monaco) e le carte "RIMANE IN
+  GIOCO" (~40 carte del catalogo §3). Verbi effetto nuovi: `state_add`
+  (anche negativo, per spendere), `state_set`, `state_clear`; gate di
+  lettura: campo `state` sugli effetti e `state_req` sulla giocabilità
+  (stringa = flag ≥ 1, dizionario nome → minimo in AND).
+- **Nuovo `engine/Gate.gd`** (da `docs/GATE_AUDIT.md`): helper unico per il
+  gate ricorrente kamae + focus_cost + state. `Duel._apply_effects`,
+  `_resolve_option` e `playable()` ora passano da qui invece di ripetere il
+  controllo a mano; il resto dei siti duplicati migra in Fase 5.
+- **GeometryEditor: passthrough dei campi non modellati.** L'editor
+  ricostruiva la geometria da zero al salvataggio: i campi che la UI non
+  modella (`non_blockable`, `play_cost`, `wound_kind` dello split, `all`/
+  `all_but` di spend_focus, e i nuovi `state`/`state_req`) sparivano al primo
+  giro apri → salva (stessa classe di bug della 0.77.0). Ora le chiavi
+  sconosciute a livello carta/split/effetto/atomo sono preservate com'erano.
+- **CardValidator**: fix falso errore sul gate `kamae` in forma Array di un
+  effetto (probabile causa del fail pre-esistente di `test_kamae` — da
+  riverificare col binario); nuovi verbi `state_*` nel vocabolario e
+  validazione delle forme di `state`/`state_req`.
+- **`GEOMETRY_SCHEMA.md`**: documentati stati persistenti, gate unificato,
+  `state_req` e i tre verbi nuovi. Nuovo report `docs/GATE_AUDIT.md` (censimento
+  dei gate su tutte le 281 carte) e aggiornamento roadmap (decisioni §5 fissate).
+- **Test**: nuova scena `tests/test_gate_states.tscn` (Gate, helper Fighter,
+  verbi state_*, gate su effetti, state_req su playable, round-trip
+  passthrough editor). ⚠️ Non ancora eseguita: il binario Godot 4.6 non è
+  scaricabile dalla sessione remota corrente (policy di rete) — da lanciare
+  alla prima occasione insieme alla baseline (4 fail pre-esistenti attesi).
+
 ## [0.77.0] — 2026-07-02
 ### Fix perdita dati nell'editor geometria + audit meccaniche mancanti
 - **3 bug di perdita dati silenziosa in GeometryEditor.gd**, trovati da una

@@ -75,6 +75,17 @@ var _name: String = ""
 var _main_init: String = ""   ## iniziativa della parte ALTA (dal card_pool)
 var _widgets: Array = []   ## lista ordinata di widget (Dictionary con "type" + dati)
 var _built := false
+## Campi della geometria che l'editor NON modella (es. non_blockable, play_cost,
+## state_req, alt_initiative…): preservati com'erano al load e ri-emessi al save,
+## altrimenti ogni salvataggio li perderebbe (stessa classe di bug di PR #82).
+var _extra: Dictionary = {}         ## chiavi sconosciute al livello carta
+var _split_extra: Dictionary = {}   ## chiavi sconosciute dentro `split`
+
+## Chiavi top-level e di split modellate dall'editor (tutto il resto → _extra).
+const _TOP_KEYS := ["name", "type", "kamae_req", "move", "attack", "attacks",
+	"defence", "defences", "counter", "effects", "note", "layout", "split"]
+const _SPLIT_KEYS := ["initiative", "kamae_req", "move", "attack", "attacks",
+	"defence", "defences", "counter", "effects", "note"]
 
 
 # ─── API pubblica ────────────────────────────────────────────────────────────
@@ -83,11 +94,25 @@ func load_geometry(card_type: String, geom: Dictionary, main_init := "") -> void
 	_type = card_type if card_type != "" else str(geom.get("type", "attack"))
 	_name = str(geom.get("name", ""))
 	_main_init = main_init
+	_extra = _unknown_keys(geom, _TOP_KEYS)
+	_split_extra = _unknown_keys(geom.get("split", {}), _SPLIT_KEYS)
 	_widgets = _widgets_from(geom)
 	if not _built:
 		_build_ui()
 	else:
 		_rebuild_widgets()
+
+
+## Copia (deep) delle chiavi di `src` NON in `known` — il passthrough dei campi
+## che l'editor non modella. Statica e riusata anche per effetti e atomi.
+static func _unknown_keys(src: Dictionary, known: Array) -> Dictionary:
+	var out := {}
+	for k in src:
+		if str(k) in known:
+			continue
+		var v = src[k]
+		out[k] = (v.duplicate(true) if (v is Dictionary or v is Array) else v)
+	return out
 
 
 ## Ricostruisce la lista di widget dalla geometria (raggruppa le varianti di
@@ -250,7 +275,16 @@ func to_geometry() -> Dictionary:
 		_emit_part(sp, part["split"])
 		var iv: String = part["split_value"]
 		sp["initiative"] = int(iv) if iv.is_valid_int() else iv
+		for k in _split_extra:
+			if not sp.has(k):
+				sp[k] = _split_extra[k]
 		g["split"] = sp
+
+	# Passthrough dei campi non modellati (vedi _extra): i widget hanno la
+	# precedenza, gli extra riempiono solo le chiavi non riscritte.
+	for k in _extra:
+		if not g.has(k):
+			g[k] = _extra[k]
 
 	var layout := _nodes_to(_widgets)
 	if not layout.is_empty():
@@ -558,7 +592,7 @@ func _new_widget_base(type: String) -> Dictionary:
 ## "se" dell'intestazione), non un campo separato nel corpo. Lo carichiamo dal
 ## campo `kamae` dei dati motore (retro-compatibile) e lo riscriviamo da `cond`.
 static func _effect_widget(e: Dictionary) -> Dictionary:
-	return {
+	var w := {
 		"type": "effect",
 		"cond": e.get("kamae", ""),
 		"do": str(e.get("do", "")), "n": int(e.get("n", 0)),
@@ -566,6 +600,10 @@ static func _effect_widget(e: Dictionary) -> Dictionary:
 		"to": str(e.get("to", "")), "focus_cost": int(e.get("focus_cost", 0)),
 		"alt": str(e.get("alt", "")),
 	}
+	# Campi effetto non modellati dalla UI (state, all, all_but, …): preservati.
+	w["extra"] = _unknown_keys(e, ["do", "n", "when", "kamae", "to",
+		"focus_cost", "alt", "type", "cond", "extra"])
+	return w
 
 
 ## Normalizza un atomo di movimento (preserva dirs/kamae/focus_cost; lo step
@@ -578,6 +616,8 @@ static func _norm_atom(a: Dictionary) -> Dictionary:
 		"kamae": a.get("kamae", ""),
 		"focus_cost": int(a.get("focus_cost", 0)),
 	}
+	atom["extra"] = _unknown_keys(a, ["t", "dir", "dirs", "n", "opt", "kamae",
+		"focus_cost", "free", "extra"])
 	if atom["t"] == "step":
 		if a.has("dirs"):
 			var ds := []
@@ -594,6 +634,8 @@ static func _norm_atom(a: Dictionary) -> Dictionary:
 
 func _atom_to(a: Dictionary) -> Dictionary:
 	var atom := {"t": a["t"]}
+	for k in a.get("extra", {}):
+		atom[k] = a["extra"][k]
 	if a["t"] == "step":
 		if bool(a.get("free", false)):
 			atom["dir"] = -1
@@ -614,7 +656,10 @@ func _atom_to(a: Dictionary) -> Dictionary:
 
 
 func _effect_to(e: Dictionary) -> Dictionary:
-	var ce := {"do": str(e.get("do", ""))}
+	var ce := {}
+	for k in e.get("extra", {}):
+		ce[k] = e["extra"][k]
+	ce["do"] = str(e.get("do", ""))
 	if int(e.get("n", 0)) > 0: ce["n"] = int(e["n"])
 	if str(e.get("when", "")) != "": ce["when"] = str(e["when"])
 	# Il gate dell'effetto è la condizione del widget (header "se").

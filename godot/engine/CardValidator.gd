@@ -21,9 +21,13 @@ const EFFECT_VERBS := [
 	"change_ai_behaviour", "change_approach", "change_kamae", "discard_self",
 	"draw", "focus", "foe_discard", "foe_lose_focus", "foe_stun", "hobble",
 	"link_anchor", "pull", "push", "reduce_damage", "replace_wound_bleed",
-	"reset_deck", "rotate_target", "search_draw", "spend_focus", "stun_self",
+	"reset_deck", "rotate_target", "search_draw", "spend_focus",
+	"state_add", "state_clear", "state_set", "stun_self",
 	"swap_positions", "switch_kamae",
 ]
+
+## Verbi che richiedono il campo `state` (nome dello stato persistente).
+const STATE_VERBS := ["state_add", "state_clear", "state_set"]
 
 ## Keyword note "statiche" (oltre a quelle presenti nei dati reali).
 const STATIC_KEYWORDS := [
@@ -97,22 +101,54 @@ static func validate(card: Dictionary, geom: Dictionary, image, ctx := {}) -> Ar
 				out.append(_issue("warning", "no_attack", "carta d'attacco senza celle/ferite"))
 			if gt == "defence" and not has_def:
 				out.append(_issue("warning", "no_defence", "carta di difesa senza celle di blocco"))
+		# `state_req` (giocabilità gated dallo stato persistente): stessa forma
+		# del campo `state` dei gate (Gate.gd) — stringa o dizionario nome→minimo.
+		if geom.has("state_req"):
+			out.append_array(_check_state_req(geom["state_req"], "state_req"))
 		for e in geom.get("effects", []):
 			var verb := str(e.get("do", ""))
 			if verb != "" and not (verb in EFFECT_VERBS):
 				out.append(_issue("warning", "effect", "effetto sconosciuto: '%s'" % verb))
 			# Stance bersaglio = 4 stance reali; switch_kamae ammette anche "any"
 			# ("qualsiasi", risolto da Duel.gd). Niente falsi errori su neutral/any.
+			# Il gate può essere anche un Array in OR (Kamae.gate_values): si
+			# valida ogni voce, senza str() sull'Array intero (falso errore).
 			if e.has("kamae"):
-				var kv := str(e["kamae"])
-				if kv != "" and not (kv in STANCES):
-					out.append(_issue("error", "effect_kamae",
-						"effetto '%s': kamae non valido '%s'" % [verb, kv]))
+				for kv in Kamae.gate_values(e["kamae"]):
+					if str(kv) != "" and not (str(kv) in STANCES):
+						out.append(_issue("error", "effect_kamae",
+							"effetto '%s': kamae non valido '%s'" % [verb, str(kv)]))
+			# Verbi di stato persistente: serve il nome dello stato.
+			if (verb in STATE_VERBS) and str(e.get("state", "")) == "":
+				out.append(_issue("error", "effect_state",
+					"effetto '%s' senza campo state (nome dello stato)" % verb))
+			# Gate di stato su un effetto qualsiasi (campo `state` non-verbo).
+			elif e.has("state") and not (verb in STATE_VERBS):
+				out.append_array(_check_state_req(e["state"], "effetto '%s'.state" % verb))
 			if e.has("to"):
 				var tv := str(e["to"])
 				if tv != "" and tv != "any" and not (tv in STANCES):
 					out.append(_issue("error", "effect_kamae",
 						"effetto '%s': to non valido '%s'" % [verb, tv]))
+	return out
+
+
+## Valida un requisito di stato persistente (forma del campo `state`/`state_req`
+## dei gate, vedi Gate.gd): stringa non vuota, oppure Dictionary nome→minimo
+## intero >= 1. `where` è l'etichetta del campo per il messaggio.
+static func _check_state_req(req, where: String) -> Array:
+	var out: Array = []
+	if req is Dictionary:
+		if (req as Dictionary).is_empty():
+			out.append(_issue("warning", "state_req", "%s: dizionario vuoto" % where))
+		for state_name in req:
+			if str(state_name) == "":
+				out.append(_issue("error", "state_req", "%s: nome di stato vuoto" % where))
+			if int(req[state_name]) < 1:
+				out.append(_issue("error", "state_req",
+					"%s: minimo non valido per '%s' (%s, atteso >= 1)" % [where, str(state_name), str(req[state_name])]))
+	elif str(req) == "":
+		out.append(_issue("warning", "state_req", "%s: vuoto" % where))
 	return out
 
 

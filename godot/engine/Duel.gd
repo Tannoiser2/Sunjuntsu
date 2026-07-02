@@ -171,10 +171,14 @@ func plan_card(fighter_index: int, card_id: int) -> bool:
 
 
 ## Una carta è giocabile solo se la sua Kamae richiesta (kamae_req) corrisponde
-## alla posizione attuale del combattente.
+## alla posizione attuale del combattente e l'eventuale requisito di stato
+## persistente (`state_req`, stessa forma del campo `state` dei gate — vedi
+## Gate.gd) è soddisfatto dai suoi Fighter.states.
 static func playable(f: GameState.Fighter, card_id: int) -> bool:
-	var req = CardDB.geometry(card_id).get("kamae_req", "")
-	return Kamae.gate_allows(req, Domain.STANCE_SLUG[f.stance])
+	var g := CardDB.geometry(card_id)
+	if not Kamae.gate_allows(g.get("kamae_req", ""), Domain.STANCE_SLUG[f.stance]):
+		return false
+	return Gate.state_req_ok(g.get("state_req", null), f.states)
 
 
 ## Regole solo (rulebook p.20–22): gli avversari NON pescano, NON scelgono e NON
@@ -1035,10 +1039,7 @@ func _resolve_option(i: int, geom: Dictionary):
 		for e in effs:
 			if e.get("alt", null) != ak:
 				continue
-			var gate = e.get("kamae", "")
-			if not Kamae.gate_allows(gate, Domain.STANCE_SLUG[f.stance]):
-				continue
-			if int(e.get("focus_cost", 0)) > 0:
+			if not Gate.auto_allows(e, Domain.STANCE_SLUG[f.stance], f.states):
 				continue
 			return ak
 	return keys[0]
@@ -1053,11 +1054,10 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 	for e in effs:
 		if str(e.get("when", "always")) != when:
 			continue
-		var gate = e.get("kamae", "")
-		if not Kamae.gate_allows(gate, Domain.STANCE_SLUG[f.stance]):
+		# Gate unificato (Gate.gd): Kamae + stato persistente; i bonus opzionali
+		# a pagamento (focus_cost > 0) si saltano in auto-risoluzione.
+		if not Gate.auto_allows(e, Domain.STANCE_SLUG[f.stance], f.states):
 			continue
-		if int(e.get("focus_cost", 0)) > 0:
-			continue   # bonus opzionale a pagamento: saltato in auto-risoluzione
 		# Gruppi "OPPURE": applica solo gli effetti dell'opzione scelta (chosen_alt).
 		# Gli effetti senza 'alt' valgono sempre.
 		var alt = e.get("alt", null)
@@ -1150,6 +1150,22 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 			"block_initiative":
 				f.block_initiative_bonus += maxi(1, int(e.get("n", 1)))
 				log.append("%s: intervallo blocco +%d" % [f.character, maxi(1, int(e.get("n", 1)))])
+			"state_add":
+				# Stato persistente per-fighter: somma n (anche negativo, per spendere).
+				var sn := str(e.get("state", ""))
+				if sn != "":
+					f.state_add(sn, int(e.get("n", 1)))
+					log.append("%s: stato '%s' → %d" % [f.character, sn, f.state_get(sn)])
+			"state_set":
+				var sn := str(e.get("state", ""))
+				if sn != "":
+					f.state_set(sn, int(e.get("n", 1)))
+					log.append("%s: stato '%s' = %d" % [f.character, sn, f.state_get(sn)])
+			"state_clear":
+				var sn := str(e.get("state", ""))
+				if sn != "" and f.state_get(sn) > 0:
+					f.state_set(sn, 0)
+					log.append("%s: stato '%s' rimosso" % [f.character, sn])
 			"change_ai_behaviour":
 				# Carta solo: l'IA cambia atteggiamento (offensivo <-> difensivo).
 				if f.is_ai:
