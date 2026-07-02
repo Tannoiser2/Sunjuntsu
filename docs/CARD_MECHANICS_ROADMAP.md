@@ -76,10 +76,10 @@ meno che non richiesto esplicitamente.
 - **Test headless** (Godot 4.6): 27 scene in `godot/tests/*.tscn`.
   **4 test falliscono già in partenza, in modo pre-esistente e NON
   collegato a questo lavoro** — confermato più volte con `git stash` +
-  ri-esecuzione sul commit precedente: `test_kamae` (OR-gate sul campo
-  `kamae` di un *effetto*, non su `kamae_req` — nota: potrebbe essere
-  proprio uno dei buchi di questo catalogo, vedi §3.7), `test_blocks`,
-  `test_combat2`, `test_options`. Non provare a "sistemarli" a meno che il
+  ri-esecuzione sul commit precedente: `test_kamae` (RISOLTO 2026-07-02:
+  il test usava il verbo inesistente "gain_focus" al posto di "focus" —
+  bug del test, non del motore), `test_blocks`,
+  `test_combat2`, `test_options` (questi 3 restano, fuori scope). Non provare a "sistemarli" a meno che il
   task specifico li riguardi.
 - ⚠️ **Il binario Godot 4.6 headless linux NON è incluso nel repo.** La
   sessione precedente ne aveva scaricato una copia locale in

@@ -94,8 +94,11 @@ func _ready() -> void:
 	var s3 := GameState.new(); s3.fighters = [p2, _mk("Ronin")]
 	var duel3 := Duel.new(s3)
 	# effetto con gate OR ["aggression","balance"] su fighter in AGGRESSION → deve applicarsi
+	# Verbo reale del motore: "focus" (il vecchio "gain_focus" non esiste nel
+	# vocabolario e rendeva l'effetto un no-op: il test falliva per questo,
+	# non per il gate OR — vedi CardValidator.EFFECT_VERBS).
 	var geom_or := {"effects": [
-		{"do": "gain_focus", "n": 1, "when": "always",
+		{"do": "focus", "n": 1, "when": "always",
 		 "kamae": ["aggression", "balance"]}
 	]}
 	var focus_before := p2.focus
