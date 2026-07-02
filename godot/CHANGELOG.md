@@ -3,6 +3,29 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.84.0] — 2026-07-03
+### Selezione dei combattenti con ritratti + ritratti nell'HUD
+- **13 ritratti ufficiali** (da Tabelle_Materiali/Senjutsu/Personaggi,
+  rinominati dall'utente) processati in `assets/portraits/<slug>.webp`
+  (512px, alpha). Hachikō non ha ritratto nei materiali: la UI mostra
+  l'iniziale. Musashi/Kojiro esclusi (fuori scope permanente).
+- **Menu → selezione combattenti**: premendo Solo o 1v1 si apre la
+  griglia dei 14 personaggi (ritratto + nome italiano); si sceglie prima
+  il combattente del Giocatore 1 e poi quello del Giocatore 2/IA, con
+  "Indietro" per annullare. La scelta finisce in `Domain.selected_chars`;
+  vuota = coppia storica Warrior/Ronin (test e avvii diretti invariati).
+- **HUD**: ritratti dei contendenti agli angoli in alto (P1 a sinistra
+  bordo vermiglio, P2 a destra bordo blu, stessa convenzione del
+  controller telefono), tooltip col nome; testo della barra centrato.
+- **Slug unificati**: nuovo `CardDB.deck_slug_for` (Onna-Bugeisha →
+  onna_bugeisha, Hachiko → hachik) usato da Arena per mazzi/miniature —
+  prima i personaggi non-base avrebbero caricato un mazzo VUOTO
+  (to_lower non combaciava con lo slug del mazzo). `portrait_for` per i
+  ritratti. Pedine senza miniatura → placeholder già esistente.
+- **Controller telefono**: `portraitFile` esteso a tutto il roster
+  (prima solo Ronin/Guerriero); rimossi i vecchi png duplicati.
+- Rimosso il commento obsoleto "Jin Sakai da aggiungere" (fuori scope).
+
 ## [0.83.0] — 2026-07-03
 ### Regola Hachikō completa: flip_kamae e immunità (carte-regola #245/#233/#247)
 - **`flip_kamae`** (§3.15, "VOLTA LA CARTA KAMAE"): la carta Kamae di

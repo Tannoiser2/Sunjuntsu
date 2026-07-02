@@ -31,6 +31,7 @@ var _cam_dist: float = 34.0
 var _dragging := false
 
 var _hud: CanvasLayer
+var _chars: Array = []   ## personaggi delle due pedine (per i ritratti HUD)
 var _duel: Duel
 var _attack_preview: Array[Vector2i] = []
 var _selected_card: Dictionary = {}
@@ -74,6 +75,8 @@ func _build_hud() -> void:
 	_hud = preload("res://scenes/HUD.tscn").instantiate()
 	add_child(_hud)
 	_hud.card_played.connect(_on_card_played)
+	# Ritratti dei contendenti agli angoli dello schermo (assets/portraits).
+	_hud.set_fighter_portraits(_chars)
 
 
 func _start_duel() -> void:
@@ -627,7 +630,8 @@ static func _load_texture(path: String) -> Texture2D:
 func _spawn_pawns() -> void:
 	var Pawn := preload("res://scenes/Pawn.gd")
 	var starts := [Vector2i(-3, 1), Vector2i(3, -1)]
-	var chars := Domain.PLAYABLE   ## ["Warrior", "Ronin"]
+	# Combattenti scelti dal menu (fallback: coppia storica di default).
+	var chars: Array = Domain.selected_chars if Domain.selected_chars.size() == 2 else Domain.PLAYABLE
 	var colors := [Color(0.85, 0.2, 0.2), Color(0.2, 0.4, 0.9)]
 	for i in range(2):
 		var f := state.add_fighter(chars[i], starts[i])
@@ -635,13 +639,13 @@ func _spawn_pawns() -> void:
 		f.is_ai = (i == 1) and not _versus
 		if f.is_ai:
 			# Mazzo SOLO dell'avversario (sottoinsieme curato) + parametri IA.
-			f.draw_pile = CardDB.solo_deck_for(chars[i].to_lower())
+			f.draw_pile = CardDB.solo_deck_for(CardDB.deck_slug_for(chars[i]))
 			f.ai_stance = "offensive"
 			f.ai_preferred_range = 1
 			f.ai_approach = "front"
 		else:
 			# Mazzo del giocatore dai dati autorevoli (foglio Custom Decks).
-			f.draw_pile = CardDB.draw_pile_for(chars[i].to_lower())
+			f.draw_pile = CardDB.draw_pile_for(CardDB.deck_slug_for(chars[i]))
 		f.draw_pile.shuffle()
 		# Limiti dalla carta personaggio (se trascritta).
 		var cs := CardDB.character_stats(chars[i])
@@ -651,7 +655,7 @@ func _spawn_pawns() -> void:
 		var pawn: Node3D = Pawn.new()
 		pawn.set("tint", colors[i])
 		# Miniatura a colori (.glb con texture) se presente, altrimenti il vecchio .obj.
-		var slug: String = String(chars[i]).to_lower()
+		var slug: String = CardDB.deck_slug_for(String(chars[i]))
 		var glb: String = "res://assets/miniatures/%s.glb" % slug
 		pawn.set("mesh_path", glb if ResourceLoader.exists(glb) else "res://assets/miniatures/%s.obj" % slug)
 		pawn.set("cell_size", hex_size)
@@ -659,6 +663,7 @@ func _spawn_pawns() -> void:
 		pawn.position = HexGrid.hex_to_world(f.cell, hex_size)
 		pawn.set_meta("fighter_index", i)
 		_pawns.append(pawn)
+	_chars = chars.duplicate()   # per i ritratti nell'HUD (costruito dopo)
 	# Orientamento iniziale: ciascuno verso l'avversario.
 	state.fighters[0].facing = AI.facing_toward(state.fighters[0].cell, state.fighters[1].cell)
 	state.fighters[1].facing = AI.facing_toward(state.fighters[1].cell, state.fighters[0].cell)

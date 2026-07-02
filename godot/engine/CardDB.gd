@@ -149,6 +149,27 @@ func _load_decks() -> void:
 
 
 ## Mazzo autorevole per slug (es. "warrior", "ronin"). Espande le copie (amount).
+## Slug del mazzo/asset per un personaggio (chiavi di data/decks/index.json e
+## assets/portraits): quasi sempre il nome minuscolo, con le eccezioni storiche.
+func deck_slug_for(character: String) -> String:
+	match character:
+		"Onna-Bugeisha":
+			return "onna_bugeisha"
+		"Hachiko":
+			return "hachik"
+		_:
+			return character.to_lower()
+
+
+## Ritratto del personaggio (assets/portraits/<slug>.webp), null se assente
+## (es. Hachikō: nessun ritratto nei materiali — la UI mostra l'iniziale).
+func portrait_for(character: String) -> Texture2D:
+	var path := "res://assets/portraits/%s.webp" % deck_slug_for(character)
+	if ResourceLoader.exists(path):
+		return load(path)
+	return null
+
+
 func draw_pile_for(slug: String) -> Array:
 	var pile: Array = []
 	for c in decks.get(slug, []):

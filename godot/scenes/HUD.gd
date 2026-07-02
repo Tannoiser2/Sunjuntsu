@@ -59,6 +59,55 @@ func _ready() -> void:
 	_build_phase_banner()
 
 
+## Ritratti dei contendenti agli angoli in alto (P1 a sinistra col bordo
+## vermiglio, P2/avversario a destra col bordo blu — stessa convenzione del
+## controller telefono). Se il ritratto manca (es. Hachikō) mostra l'iniziale.
+func set_fighter_portraits(chars: Array) -> void:
+	const SIZE := 56.0
+	var colors := [Color(0.85, 0.2, 0.2), Color(0.2, 0.4, 0.9)]
+	for i in range(mini(2, chars.size())):
+		var holder := PanelContainer.new()
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = Color(0.08, 0.08, 0.1, 0.85)
+		sb.set_corner_radius_all(int(SIZE / 2.0))
+		sb.set_border_width_all(3)
+		sb.border_color = colors[i]
+		holder.add_theme_stylebox_override("panel", sb)
+		holder.custom_minimum_size = Vector2(SIZE, SIZE)
+		holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		if i == 0:
+			holder.set_anchors_preset(Control.PRESET_TOP_LEFT)
+			holder.position = Vector2(8, 2)
+		else:
+			holder.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+			holder.anchor_left = 1.0
+			holder.anchor_right = 1.0
+			holder.offset_left = -SIZE - 8
+			holder.offset_right = -8
+			holder.offset_top = 2
+			holder.offset_bottom = 2 + SIZE
+		holder.tooltip_text = str(Domain.CHAR_NAMES_IT.get(chars[i], chars[i]))
+		var tex := CardDB.portrait_for(str(chars[i]))
+		if tex != null:
+			var tr := TextureRect.new()
+			tr.texture = tex
+			tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			holder.add_child(tr)
+		else:
+			var init := Label.new()
+			init.text = str(Domain.CHAR_NAMES_IT.get(chars[i], chars[i])).substr(0, 1)
+			init.add_theme_font_size_override("font_size", 28)
+			init.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			init.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+			init.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			holder.add_child(init)
+		add_child(holder)
+	# Il testo della barra in alto si centra, così non finisce sotto i ritratti.
+	info.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+
+
 ## Riquadro "carta giocata": mostra la carta programmata finché non è scartata a
 ## fine turno (sotto l'albero Kamae).
 func _build_played_slot() -> void:
