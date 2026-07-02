@@ -1,5 +1,5 @@
 {
- "note": "Alberi Kamae trascritti dalle carte fisiche (una per personaggio, scan _02/_20/_36; Hachiko non ha albero: la sua carta Kamae #247 è a due facce, verbo flip_kamae). Mapping icone: mon rosso=aggression, griglia gialla=determination, fiore verde=balance, torii=neutral, loto rosa=focus (ramo rosa attraversato = +1 focus), onda blu=distance (quinta Kamae, solo Navigatore). Gli archi con doppie frecce sulla carta sono A SENSO UNICO: campo dir=true = percorribile solo da a verso b. Ri-verifica 2026-07-03 sugli scan: corretti il ramo fantasma determination-aggression del Ronin, i balance-determination mancanti di Guerriero/Maestro e le direzioni ovunque.",
+ "note": "Alberi Kamae trascritti dalle carte fisiche (una per personaggio, scan _02/_20/_36; Hachiko non ha albero: la sua carta Kamae #247 è a due facce, verbo flip_kamae). Mapping icone: mon rosso=aggression, griglia gialla=determination, fiore verde=balance, torii=neutral, loto rosa=focus (ramo rosa attraversato = +1 focus), onda blu=distance (quinta Kamae, solo Navigatore). Gli archi con doppie frecce sulla carta sono A SENSO UNICO: campo dir=true = percorribile solo da a verso b. Ri-verifica 2026-07-03 sugli scan webp + controprova sui PDF ad alta risoluzione: corretti il ramo fantasma determination-aggression del Ronin, il balance-determination mancante del Guerriero e le direzioni ovunque. Le giunzioni a Y appartengono al nodo da cui parte il gambo (Maestro: loto->det e loto->bal; Yasuke: det->agg e det->bal). Yojimbo NON ha frecce (verificato su PDF).",
  "trees": {
   "warrior": {
    "start": "neutral",
@@ -156,11 +156,6 @@
      "a": "focus",
      "b": "balance",
      "pink": true
-    },
-    {
-     "a": "determination",
-     "b": "balance",
-     "pink": false
     }
    ]
   },
@@ -416,8 +411,7 @@
     {
      "a": "balance",
      "b": "focus",
-     "pink": true,
-     "dir": true
+     "pink": true
     },
     {
      "a": "balance",
@@ -717,16 +711,16 @@
     },
     {
      "a": "determination",
+     "b": "balance",
+     "pink": false
+    },
+    {
+     "a": "determination",
      "b": "neutral",
      "pink": false
     },
     {
      "a": "neutral",
-     "b": "balance",
-     "pink": false
-    },
-    {
-     "a": "aggression",
      "b": "balance",
      "pink": false
     }

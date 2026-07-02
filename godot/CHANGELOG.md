@@ -28,6 +28,12 @@ versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
   `deck_slug_for` ovunque (Arena, Duel, MatchProtocol).
 - L'HUD mostra già lo scan dell'albero con i marcatori dai dati: la
   Distanza appare da sola; selettore Kamae esteso alla quinta stance.
+- **Controprova sui PDF ad alta risoluzione** (Tabelle_Materiali/CARTE):
+  3 correzioni rispetto alla prima lettura dagli scan webp — Yojimbo non
+  ha frecce (era il disegno della tigre), la giunzione del Maestro è una
+  Y dal loto (niente det—balance diretto), il gambo di Yasuke si biforca
+  da Determinazione (det—agg e det—bal, non agg—bal). Gli altri 10
+  alberi confermati.
 - Test: 9 casi nuovi su direzioni/fantasma/focus/Distanza/roster.
 
 ## [0.84.0] — 2026-07-03
