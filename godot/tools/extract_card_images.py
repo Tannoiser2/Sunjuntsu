@@ -37,7 +37,7 @@ DECKS = [
     ("warrior",       "CARTE/Guerriero.pdf"),
     ("ronin",         "CARTE/Ronin .pdf"),
     ("ferite",        "CARTE/Ferite.pdf"),
-    ("master",        "CARTE/Maestro .pdf"),
+    ("master",        "CARTE/Maestro.pdf"),
     ("student",       "CARTE/Allievo.pdf"),
     ("assassin",      "CARTE/Assassino.pdf"),
     ("ninja",         "CARTE/Ninja.pdf"),
@@ -45,6 +45,13 @@ DECKS = [
     ("yojimbo",       "CARTE/Yojimbo.pdf"),
     ("altre_carte",   "CARTE/Altre carte.pdf"),
     ("altre_carte_2", "CARTE/Altre carte 2.pdf"),
+    ("altre_carte_3", "CARTE/Altre carte 3.pdf"),
+    ("ashigaru",      "CARTE/Ashigaru.pdf"),
+    ("hachiko",       "CARTE/Hachiko.pdf"),
+    ("monk",          "CARTE/Monaco.pdf"),
+    ("sailor",        "CARTE/Navigatore.pdf"),
+    ("wakou",         "CARTE/Wakou.pdf"),
+    ("yasuke",        "CARTE/Yasuke.pdf"),
 ]
 
 

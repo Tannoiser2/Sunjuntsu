@@ -670,286 +670,6 @@
    "file": "ferite/ferite_09.webp"
   },
   {
-   "deck": "master",
-   "index": 1,
-   "page": 0,
-   "row": 0,
-   "col": 0,
-   "file": "master/master_01.webp"
-  },
-  {
-   "deck": "master",
-   "index": 2,
-   "page": 0,
-   "row": 0,
-   "col": 1,
-   "file": "master/master_02.webp"
-  },
-  {
-   "deck": "master",
-   "index": 3,
-   "page": 0,
-   "row": 0,
-   "col": 2,
-   "file": "master/master_03.webp"
-  },
-  {
-   "deck": "master",
-   "index": 4,
-   "page": 0,
-   "row": 1,
-   "col": 0,
-   "file": "master/master_04.webp"
-  },
-  {
-   "deck": "master",
-   "index": 5,
-   "page": 0,
-   "row": 1,
-   "col": 1,
-   "file": "master/master_05.webp"
-  },
-  {
-   "deck": "master",
-   "index": 6,
-   "page": 0,
-   "row": 1,
-   "col": 2,
-   "file": "master/master_06.webp"
-  },
-  {
-   "deck": "master",
-   "index": 7,
-   "page": 0,
-   "row": 2,
-   "col": 0,
-   "file": "master/master_07.webp"
-  },
-  {
-   "deck": "master",
-   "index": 8,
-   "page": 0,
-   "row": 2,
-   "col": 1,
-   "file": "master/master_08.webp"
-  },
-  {
-   "deck": "master",
-   "index": 9,
-   "page": 0,
-   "row": 2,
-   "col": 2,
-   "file": "master/master_09.webp"
-  },
-  {
-   "deck": "master",
-   "index": 10,
-   "page": 1,
-   "row": 0,
-   "col": 0,
-   "file": "master/master_10.webp"
-  },
-  {
-   "deck": "master",
-   "index": 11,
-   "page": 1,
-   "row": 0,
-   "col": 1,
-   "file": "master/master_11.webp"
-  },
-  {
-   "deck": "master",
-   "index": 12,
-   "page": 1,
-   "row": 0,
-   "col": 2,
-   "file": "master/master_12.webp"
-  },
-  {
-   "deck": "master",
-   "index": 13,
-   "page": 1,
-   "row": 1,
-   "col": 0,
-   "file": "master/master_13.webp"
-  },
-  {
-   "deck": "master",
-   "index": 14,
-   "page": 1,
-   "row": 1,
-   "col": 1,
-   "file": "master/master_14.webp"
-  },
-  {
-   "deck": "master",
-   "index": 15,
-   "page": 1,
-   "row": 1,
-   "col": 2,
-   "file": "master/master_15.webp"
-  },
-  {
-   "deck": "master",
-   "index": 16,
-   "page": 1,
-   "row": 2,
-   "col": 0,
-   "file": "master/master_16.webp"
-  },
-  {
-   "deck": "master",
-   "index": 17,
-   "page": 1,
-   "row": 2,
-   "col": 1,
-   "file": "master/master_17.webp"
-  },
-  {
-   "deck": "master",
-   "index": 18,
-   "page": 1,
-   "row": 2,
-   "col": 2,
-   "file": "master/master_18.webp"
-  },
-  {
-   "deck": "master",
-   "index": 19,
-   "page": 2,
-   "row": 0,
-   "col": 0,
-   "file": "master/master_19.webp"
-  },
-  {
-   "deck": "master",
-   "index": 20,
-   "page": 2,
-   "row": 0,
-   "col": 1,
-   "file": "master/master_20.webp"
-  },
-  {
-   "deck": "master",
-   "index": 21,
-   "page": 2,
-   "row": 0,
-   "col": 2,
-   "file": "master/master_21.webp"
-  },
-  {
-   "deck": "master",
-   "index": 22,
-   "page": 2,
-   "row": 1,
-   "col": 0,
-   "file": "master/master_22.webp"
-  },
-  {
-   "deck": "master",
-   "index": 23,
-   "page": 2,
-   "row": 1,
-   "col": 1,
-   "file": "master/master_23.webp"
-  },
-  {
-   "deck": "master",
-   "index": 24,
-   "page": 2,
-   "row": 1,
-   "col": 2,
-   "file": "master/master_24.webp"
-  },
-  {
-   "deck": "master",
-   "index": 25,
-   "page": 2,
-   "row": 2,
-   "col": 0,
-   "file": "master/master_25.webp"
-  },
-  {
-   "deck": "master",
-   "index": 26,
-   "page": 2,
-   "row": 2,
-   "col": 1,
-   "file": "master/master_26.webp"
-  },
-  {
-   "deck": "master",
-   "index": 27,
-   "page": 2,
-   "row": 2,
-   "col": 2,
-   "file": "master/master_27.webp"
-  },
-  {
-   "deck": "master",
-   "index": 28,
-   "page": 3,
-   "row": 0,
-   "col": 0,
-   "file": "master/master_28.webp"
-  },
-  {
-   "deck": "master",
-   "index": 29,
-   "page": 3,
-   "row": 0,
-   "col": 1,
-   "file": "master/master_29.webp"
-  },
-  {
-   "deck": "master",
-   "index": 30,
-   "page": 3,
-   "row": 0,
-   "col": 2,
-   "file": "master/master_30.webp"
-  },
-  {
-   "deck": "master",
-   "index": 31,
-   "page": 3,
-   "row": 1,
-   "col": 0,
-   "file": "master/master_31.webp"
-  },
-  {
-   "deck": "master",
-   "index": 32,
-   "page": 3,
-   "row": 1,
-   "col": 1,
-   "file": "master/master_32.webp"
-  },
-  {
-   "deck": "master",
-   "index": 33,
-   "page": 3,
-   "row": 1,
-   "col": 2,
-   "file": "master/master_33.webp"
-  },
-  {
-   "deck": "master",
-   "index": 34,
-   "page": 3,
-   "row": 2,
-   "col": 0,
-   "file": "master/master_34.webp"
-  },
-  {
-   "deck": "master",
-   "index": 35,
-   "page": 3,
-   "row": 2,
-   "col": 1,
-   "file": "master/master_35.webp"
-  },
-  {
    "deck": "student",
    "index": 1,
    "page": 0,
@@ -2844,6 +2564,1158 @@
    "row": 2,
    "col": 2,
    "file": "altre_carte_2/altre_carte_2_36.webp"
+  },
+  {
+   "deck": "altre_carte_3",
+   "index": 1,
+   "page": 0,
+   "row": 0,
+   "col": 0,
+   "file": "altre_carte_3/altre_carte_3_01.webp"
+  },
+  {
+   "deck": "altre_carte_3",
+   "index": 2,
+   "page": 0,
+   "row": 0,
+   "col": 1,
+   "file": "altre_carte_3/altre_carte_3_02.webp"
+  },
+  {
+   "deck": "altre_carte_3",
+   "index": 3,
+   "page": 0,
+   "row": 0,
+   "col": 2,
+   "file": "altre_carte_3/altre_carte_3_03.webp"
+  },
+  {
+   "deck": "altre_carte_3",
+   "index": 4,
+   "page": 0,
+   "row": 1,
+   "col": 0,
+   "file": "altre_carte_3/altre_carte_3_04.webp"
+  },
+  {
+   "deck": "altre_carte_3",
+   "index": 5,
+   "page": 0,
+   "row": 1,
+   "col": 1,
+   "file": "altre_carte_3/altre_carte_3_05.webp"
+  },
+  {
+   "deck": "altre_carte_3",
+   "index": 6,
+   "page": 0,
+   "row": 1,
+   "col": 2,
+   "file": "altre_carte_3/altre_carte_3_06.webp"
+  },
+  {
+   "deck": "altre_carte_3",
+   "index": 7,
+   "page": 0,
+   "row": 2,
+   "col": 0,
+   "file": "altre_carte_3/altre_carte_3_07.webp"
+  },
+  {
+   "deck": "altre_carte_3",
+   "index": 8,
+   "page": 0,
+   "row": 2,
+   "col": 1,
+   "file": "altre_carte_3/altre_carte_3_08.webp"
+  },
+  {
+   "deck": "altre_carte_3",
+   "index": 9,
+   "page": 0,
+   "row": 2,
+   "col": 2,
+   "file": "altre_carte_3/altre_carte_3_09.webp"
+  },
+  {
+   "deck": "altre_carte_3",
+   "index": 10,
+   "page": 1,
+   "row": 0,
+   "col": 0,
+   "file": "altre_carte_3/altre_carte_3_10.webp"
+  },
+  {
+   "deck": "altre_carte_3",
+   "index": 11,
+   "page": 1,
+   "row": 0,
+   "col": 1,
+   "file": "altre_carte_3/altre_carte_3_11.webp"
+  },
+  {
+   "deck": "altre_carte_3",
+   "index": 12,
+   "page": 1,
+   "row": 0,
+   "col": 2,
+   "file": "altre_carte_3/altre_carte_3_12.webp"
+  },
+  {
+   "deck": "altre_carte_3",
+   "index": 13,
+   "page": 1,
+   "row": 1,
+   "col": 0,
+   "file": "altre_carte_3/altre_carte_3_13.webp"
+  },
+  {
+   "deck": "altre_carte_3",
+   "index": 14,
+   "page": 1,
+   "row": 1,
+   "col": 1,
+   "file": "altre_carte_3/altre_carte_3_14.webp"
+  },
+  {
+   "deck": "altre_carte_3",
+   "index": 15,
+   "page": 1,
+   "row": 1,
+   "col": 2,
+   "file": "altre_carte_3/altre_carte_3_15.webp"
+  },
+  {
+   "deck": "altre_carte_3",
+   "index": 16,
+   "page": 1,
+   "row": 2,
+   "col": 0,
+   "file": "altre_carte_3/altre_carte_3_16.webp"
+  },
+  {
+   "deck": "altre_carte_3",
+   "index": 17,
+   "page": 1,
+   "row": 2,
+   "col": 1,
+   "file": "altre_carte_3/altre_carte_3_17.webp"
+  },
+  {
+   "deck": "ashigaru",
+   "index": 1,
+   "page": 0,
+   "row": 0,
+   "col": 0,
+   "file": "ashigaru/ashigaru_01.webp"
+  },
+  {
+   "deck": "ashigaru",
+   "index": 2,
+   "page": 0,
+   "row": 0,
+   "col": 1,
+   "file": "ashigaru/ashigaru_02.webp"
+  },
+  {
+   "deck": "ashigaru",
+   "index": 3,
+   "page": 0,
+   "row": 0,
+   "col": 2,
+   "file": "ashigaru/ashigaru_03.webp"
+  },
+  {
+   "deck": "ashigaru",
+   "index": 4,
+   "page": 0,
+   "row": 1,
+   "col": 0,
+   "file": "ashigaru/ashigaru_04.webp"
+  },
+  {
+   "deck": "ashigaru",
+   "index": 5,
+   "page": 0,
+   "row": 1,
+   "col": 1,
+   "file": "ashigaru/ashigaru_05.webp"
+  },
+  {
+   "deck": "ashigaru",
+   "index": 6,
+   "page": 0,
+   "row": 1,
+   "col": 2,
+   "file": "ashigaru/ashigaru_06.webp"
+  },
+  {
+   "deck": "ashigaru",
+   "index": 7,
+   "page": 0,
+   "row": 2,
+   "col": 0,
+   "file": "ashigaru/ashigaru_07.webp"
+  },
+  {
+   "deck": "ashigaru",
+   "index": 8,
+   "page": 0,
+   "row": 2,
+   "col": 1,
+   "file": "ashigaru/ashigaru_08.webp"
+  },
+  {
+   "deck": "ashigaru",
+   "index": 9,
+   "page": 0,
+   "row": 2,
+   "col": 2,
+   "file": "ashigaru/ashigaru_09.webp"
+  },
+  {
+   "deck": "ashigaru",
+   "index": 10,
+   "page": 1,
+   "row": 0,
+   "col": 0,
+   "file": "ashigaru/ashigaru_10.webp"
+  },
+  {
+   "deck": "ashigaru",
+   "index": 11,
+   "page": 1,
+   "row": 0,
+   "col": 1,
+   "file": "ashigaru/ashigaru_11.webp"
+  },
+  {
+   "deck": "ashigaru",
+   "index": 12,
+   "page": 1,
+   "row": 0,
+   "col": 2,
+   "file": "ashigaru/ashigaru_12.webp"
+  },
+  {
+   "deck": "ashigaru",
+   "index": 13,
+   "page": 1,
+   "row": 1,
+   "col": 0,
+   "file": "ashigaru/ashigaru_13.webp"
+  },
+  {
+   "deck": "hachiko",
+   "index": 1,
+   "page": 0,
+   "row": 0,
+   "col": 0,
+   "file": "hachiko/hachiko_01.webp"
+  },
+  {
+   "deck": "hachiko",
+   "index": 2,
+   "page": 0,
+   "row": 0,
+   "col": 1,
+   "file": "hachiko/hachiko_02.webp"
+  },
+  {
+   "deck": "hachiko",
+   "index": 3,
+   "page": 0,
+   "row": 0,
+   "col": 2,
+   "file": "hachiko/hachiko_03.webp"
+  },
+  {
+   "deck": "hachiko",
+   "index": 4,
+   "page": 0,
+   "row": 1,
+   "col": 0,
+   "file": "hachiko/hachiko_04.webp"
+  },
+  {
+   "deck": "hachiko",
+   "index": 5,
+   "page": 0,
+   "row": 1,
+   "col": 1,
+   "file": "hachiko/hachiko_05.webp"
+  },
+  {
+   "deck": "hachiko",
+   "index": 6,
+   "page": 0,
+   "row": 1,
+   "col": 2,
+   "file": "hachiko/hachiko_06.webp"
+  },
+  {
+   "deck": "hachiko",
+   "index": 7,
+   "page": 0,
+   "row": 2,
+   "col": 0,
+   "file": "hachiko/hachiko_07.webp"
+  },
+  {
+   "deck": "hachiko",
+   "index": 8,
+   "page": 0,
+   "row": 2,
+   "col": 1,
+   "file": "hachiko/hachiko_08.webp"
+  },
+  {
+   "deck": "hachiko",
+   "index": 9,
+   "page": 0,
+   "row": 2,
+   "col": 2,
+   "file": "hachiko/hachiko_09.webp"
+  },
+  {
+   "deck": "hachiko",
+   "index": 10,
+   "page": 1,
+   "row": 0,
+   "col": 0,
+   "file": "hachiko/hachiko_10.webp"
+  },
+  {
+   "deck": "hachiko",
+   "index": 11,
+   "page": 1,
+   "row": 0,
+   "col": 1,
+   "file": "hachiko/hachiko_11.webp"
+  },
+  {
+   "deck": "hachiko",
+   "index": 12,
+   "page": 1,
+   "row": 0,
+   "col": 2,
+   "file": "hachiko/hachiko_12.webp"
+  },
+  {
+   "deck": "hachiko",
+   "index": 13,
+   "page": 1,
+   "row": 1,
+   "col": 0,
+   "file": "hachiko/hachiko_13.webp"
+  },
+  {
+   "deck": "hachiko",
+   "index": 14,
+   "page": 1,
+   "row": 1,
+   "col": 1,
+   "file": "hachiko/hachiko_14.webp"
+  },
+  {
+   "deck": "hachiko",
+   "index": 15,
+   "page": 1,
+   "row": 1,
+   "col": 2,
+   "file": "hachiko/hachiko_15.webp"
+  },
+  {
+   "deck": "hachiko",
+   "index": 16,
+   "page": 1,
+   "row": 2,
+   "col": 0,
+   "file": "hachiko/hachiko_16.webp"
+  },
+  {
+   "deck": "hachiko",
+   "index": 17,
+   "page": 1,
+   "row": 2,
+   "col": 1,
+   "file": "hachiko/hachiko_17.webp"
+  },
+  {
+   "deck": "monk",
+   "index": 1,
+   "page": 0,
+   "row": 0,
+   "col": 0,
+   "file": "monk/monk_01.webp"
+  },
+  {
+   "deck": "monk",
+   "index": 2,
+   "page": 0,
+   "row": 0,
+   "col": 1,
+   "file": "monk/monk_02.webp"
+  },
+  {
+   "deck": "monk",
+   "index": 3,
+   "page": 0,
+   "row": 0,
+   "col": 2,
+   "file": "monk/monk_03.webp"
+  },
+  {
+   "deck": "monk",
+   "index": 4,
+   "page": 0,
+   "row": 1,
+   "col": 0,
+   "file": "monk/monk_04.webp"
+  },
+  {
+   "deck": "monk",
+   "index": 5,
+   "page": 0,
+   "row": 1,
+   "col": 1,
+   "file": "monk/monk_05.webp"
+  },
+  {
+   "deck": "monk",
+   "index": 6,
+   "page": 0,
+   "row": 1,
+   "col": 2,
+   "file": "monk/monk_06.webp"
+  },
+  {
+   "deck": "monk",
+   "index": 7,
+   "page": 0,
+   "row": 2,
+   "col": 0,
+   "file": "monk/monk_07.webp"
+  },
+  {
+   "deck": "monk",
+   "index": 8,
+   "page": 0,
+   "row": 2,
+   "col": 1,
+   "file": "monk/monk_08.webp"
+  },
+  {
+   "deck": "monk",
+   "index": 9,
+   "page": 0,
+   "row": 2,
+   "col": 2,
+   "file": "monk/monk_09.webp"
+  },
+  {
+   "deck": "monk",
+   "index": 10,
+   "page": 1,
+   "row": 0,
+   "col": 0,
+   "file": "monk/monk_10.webp"
+  },
+  {
+   "deck": "monk",
+   "index": 11,
+   "page": 1,
+   "row": 0,
+   "col": 1,
+   "file": "monk/monk_11.webp"
+  },
+  {
+   "deck": "monk",
+   "index": 12,
+   "page": 1,
+   "row": 0,
+   "col": 2,
+   "file": "monk/monk_12.webp"
+  },
+  {
+   "deck": "monk",
+   "index": 13,
+   "page": 1,
+   "row": 1,
+   "col": 0,
+   "file": "monk/monk_13.webp"
+  },
+  {
+   "deck": "monk",
+   "index": 14,
+   "page": 1,
+   "row": 1,
+   "col": 1,
+   "file": "monk/monk_14.webp"
+  },
+  {
+   "deck": "monk",
+   "index": 15,
+   "page": 1,
+   "row": 1,
+   "col": 2,
+   "file": "monk/monk_15.webp"
+  },
+  {
+   "deck": "monk",
+   "index": 16,
+   "page": 1,
+   "row": 2,
+   "col": 0,
+   "file": "monk/monk_16.webp"
+  },
+  {
+   "deck": "monk",
+   "index": 17,
+   "page": 1,
+   "row": 2,
+   "col": 1,
+   "file": "monk/monk_17.webp"
+  },
+  {
+   "deck": "monk",
+   "index": 18,
+   "page": 1,
+   "row": 2,
+   "col": 2,
+   "file": "monk/monk_18.webp"
+  },
+  {
+   "deck": "monk",
+   "index": 19,
+   "page": 2,
+   "row": 0,
+   "col": 0,
+   "file": "monk/monk_19.webp"
+  },
+  {
+   "deck": "monk",
+   "index": 20,
+   "page": 2,
+   "row": 0,
+   "col": 1,
+   "file": "monk/monk_20.webp"
+  },
+  {
+   "deck": "monk",
+   "index": 21,
+   "page": 2,
+   "row": 0,
+   "col": 2,
+   "file": "monk/monk_21.webp"
+  },
+  {
+   "deck": "monk",
+   "index": 22,
+   "page": 2,
+   "row": 1,
+   "col": 0,
+   "file": "monk/monk_22.webp"
+  },
+  {
+   "deck": "monk",
+   "index": 23,
+   "page": 2,
+   "row": 1,
+   "col": 1,
+   "file": "monk/monk_23.webp"
+  },
+  {
+   "deck": "monk",
+   "index": 24,
+   "page": 2,
+   "row": 1,
+   "col": 2,
+   "file": "monk/monk_24.webp"
+  },
+  {
+   "deck": "monk",
+   "index": 25,
+   "page": 2,
+   "row": 2,
+   "col": 0,
+   "file": "monk/monk_25.webp"
+  },
+  {
+   "deck": "monk",
+   "index": 26,
+   "page": 2,
+   "row": 2,
+   "col": 1,
+   "file": "monk/monk_26.webp"
+  },
+  {
+   "deck": "sailor",
+   "index": 1,
+   "page": 0,
+   "row": 0,
+   "col": 0,
+   "file": "sailor/sailor_01.webp"
+  },
+  {
+   "deck": "sailor",
+   "index": 2,
+   "page": 0,
+   "row": 0,
+   "col": 1,
+   "file": "sailor/sailor_02.webp"
+  },
+  {
+   "deck": "sailor",
+   "index": 3,
+   "page": 0,
+   "row": 0,
+   "col": 2,
+   "file": "sailor/sailor_03.webp"
+  },
+  {
+   "deck": "sailor",
+   "index": 4,
+   "page": 0,
+   "row": 1,
+   "col": 0,
+   "file": "sailor/sailor_04.webp"
+  },
+  {
+   "deck": "sailor",
+   "index": 5,
+   "page": 0,
+   "row": 1,
+   "col": 1,
+   "file": "sailor/sailor_05.webp"
+  },
+  {
+   "deck": "sailor",
+   "index": 6,
+   "page": 0,
+   "row": 1,
+   "col": 2,
+   "file": "sailor/sailor_06.webp"
+  },
+  {
+   "deck": "sailor",
+   "index": 7,
+   "page": 0,
+   "row": 2,
+   "col": 0,
+   "file": "sailor/sailor_07.webp"
+  },
+  {
+   "deck": "sailor",
+   "index": 8,
+   "page": 0,
+   "row": 2,
+   "col": 1,
+   "file": "sailor/sailor_08.webp"
+  },
+  {
+   "deck": "sailor",
+   "index": 9,
+   "page": 0,
+   "row": 2,
+   "col": 2,
+   "file": "sailor/sailor_09.webp"
+  },
+  {
+   "deck": "sailor",
+   "index": 10,
+   "page": 1,
+   "row": 0,
+   "col": 0,
+   "file": "sailor/sailor_10.webp"
+  },
+  {
+   "deck": "sailor",
+   "index": 11,
+   "page": 1,
+   "row": 0,
+   "col": 1,
+   "file": "sailor/sailor_11.webp"
+  },
+  {
+   "deck": "sailor",
+   "index": 12,
+   "page": 1,
+   "row": 0,
+   "col": 2,
+   "file": "sailor/sailor_12.webp"
+  },
+  {
+   "deck": "sailor",
+   "index": 13,
+   "page": 1,
+   "row": 1,
+   "col": 0,
+   "file": "sailor/sailor_13.webp"
+  },
+  {
+   "deck": "sailor",
+   "index": 14,
+   "page": 1,
+   "row": 1,
+   "col": 1,
+   "file": "sailor/sailor_14.webp"
+  },
+  {
+   "deck": "sailor",
+   "index": 15,
+   "page": 1,
+   "row": 1,
+   "col": 2,
+   "file": "sailor/sailor_15.webp"
+  },
+  {
+   "deck": "sailor",
+   "index": 16,
+   "page": 1,
+   "row": 2,
+   "col": 0,
+   "file": "sailor/sailor_16.webp"
+  },
+  {
+   "deck": "sailor",
+   "index": 17,
+   "page": 1,
+   "row": 2,
+   "col": 1,
+   "file": "sailor/sailor_17.webp"
+  },
+  {
+   "deck": "sailor",
+   "index": 18,
+   "page": 1,
+   "row": 2,
+   "col": 2,
+   "file": "sailor/sailor_18.webp"
+  },
+  {
+   "deck": "wakou",
+   "index": 1,
+   "page": 0,
+   "row": 0,
+   "col": 0,
+   "file": "wakou/wakou_01.webp"
+  },
+  {
+   "deck": "wakou",
+   "index": 2,
+   "page": 0,
+   "row": 0,
+   "col": 1,
+   "file": "wakou/wakou_02.webp"
+  },
+  {
+   "deck": "wakou",
+   "index": 3,
+   "page": 0,
+   "row": 0,
+   "col": 2,
+   "file": "wakou/wakou_03.webp"
+  },
+  {
+   "deck": "wakou",
+   "index": 4,
+   "page": 0,
+   "row": 1,
+   "col": 0,
+   "file": "wakou/wakou_04.webp"
+  },
+  {
+   "deck": "wakou",
+   "index": 5,
+   "page": 0,
+   "row": 1,
+   "col": 1,
+   "file": "wakou/wakou_05.webp"
+  },
+  {
+   "deck": "wakou",
+   "index": 6,
+   "page": 0,
+   "row": 1,
+   "col": 2,
+   "file": "wakou/wakou_06.webp"
+  },
+  {
+   "deck": "wakou",
+   "index": 7,
+   "page": 0,
+   "row": 2,
+   "col": 0,
+   "file": "wakou/wakou_07.webp"
+  },
+  {
+   "deck": "wakou",
+   "index": 8,
+   "page": 0,
+   "row": 2,
+   "col": 1,
+   "file": "wakou/wakou_08.webp"
+  },
+  {
+   "deck": "wakou",
+   "index": 9,
+   "page": 0,
+   "row": 2,
+   "col": 2,
+   "file": "wakou/wakou_09.webp"
+  },
+  {
+   "deck": "wakou",
+   "index": 10,
+   "page": 1,
+   "row": 0,
+   "col": 0,
+   "file": "wakou/wakou_10.webp"
+  },
+  {
+   "deck": "wakou",
+   "index": 11,
+   "page": 1,
+   "row": 0,
+   "col": 1,
+   "file": "wakou/wakou_11.webp"
+  },
+  {
+   "deck": "wakou",
+   "index": 12,
+   "page": 1,
+   "row": 0,
+   "col": 2,
+   "file": "wakou/wakou_12.webp"
+  },
+  {
+   "deck": "wakou",
+   "index": 13,
+   "page": 1,
+   "row": 1,
+   "col": 0,
+   "file": "wakou/wakou_13.webp"
+  },
+  {
+   "deck": "wakou",
+   "index": 14,
+   "page": 1,
+   "row": 1,
+   "col": 1,
+   "file": "wakou/wakou_14.webp"
+  },
+  {
+   "deck": "wakou",
+   "index": 15,
+   "page": 1,
+   "row": 1,
+   "col": 2,
+   "file": "wakou/wakou_15.webp"
+  },
+  {
+   "deck": "wakou",
+   "index": 16,
+   "page": 1,
+   "row": 2,
+   "col": 0,
+   "file": "wakou/wakou_16.webp"
+  },
+  {
+   "deck": "wakou",
+   "index": 17,
+   "page": 1,
+   "row": 2,
+   "col": 1,
+   "file": "wakou/wakou_17.webp"
+  },
+  {
+   "deck": "wakou",
+   "index": 18,
+   "page": 1,
+   "row": 2,
+   "col": 2,
+   "file": "wakou/wakou_18.webp"
+  },
+  {
+   "deck": "wakou",
+   "index": 19,
+   "page": 2,
+   "row": 0,
+   "col": 0,
+   "file": "wakou/wakou_19.webp"
+  },
+  {
+   "deck": "wakou",
+   "index": 20,
+   "page": 2,
+   "row": 0,
+   "col": 1,
+   "file": "wakou/wakou_20.webp"
+  },
+  {
+   "deck": "wakou",
+   "index": 21,
+   "page": 2,
+   "row": 0,
+   "col": 2,
+   "file": "wakou/wakou_21.webp"
+  },
+  {
+   "deck": "wakou",
+   "index": 22,
+   "page": 2,
+   "row": 1,
+   "col": 0,
+   "file": "wakou/wakou_22.webp"
+  },
+  {
+   "deck": "wakou",
+   "index": 23,
+   "page": 2,
+   "row": 1,
+   "col": 1,
+   "file": "wakou/wakou_23.webp"
+  },
+  {
+   "deck": "wakou",
+   "index": 24,
+   "page": 2,
+   "row": 1,
+   "col": 2,
+   "file": "wakou/wakou_24.webp"
+  },
+  {
+   "deck": "wakou",
+   "index": 25,
+   "page": 2,
+   "row": 2,
+   "col": 0,
+   "file": "wakou/wakou_25.webp"
+  },
+  {
+   "deck": "wakou",
+   "index": 26,
+   "page": 2,
+   "row": 2,
+   "col": 1,
+   "file": "wakou/wakou_26.webp"
+  },
+  {
+   "deck": "yasuke",
+   "index": 1,
+   "page": 0,
+   "row": 0,
+   "col": 0,
+   "file": "yasuke/yasuke_01.webp"
+  },
+  {
+   "deck": "yasuke",
+   "index": 2,
+   "page": 0,
+   "row": 0,
+   "col": 1,
+   "file": "yasuke/yasuke_02.webp"
+  },
+  {
+   "deck": "yasuke",
+   "index": 3,
+   "page": 0,
+   "row": 0,
+   "col": 2,
+   "file": "yasuke/yasuke_03.webp"
+  },
+  {
+   "deck": "yasuke",
+   "index": 4,
+   "page": 0,
+   "row": 1,
+   "col": 0,
+   "file": "yasuke/yasuke_04.webp"
+  },
+  {
+   "deck": "yasuke",
+   "index": 5,
+   "page": 0,
+   "row": 1,
+   "col": 1,
+   "file": "yasuke/yasuke_05.webp"
+  },
+  {
+   "deck": "yasuke",
+   "index": 6,
+   "page": 0,
+   "row": 1,
+   "col": 2,
+   "file": "yasuke/yasuke_06.webp"
+  },
+  {
+   "deck": "yasuke",
+   "index": 7,
+   "page": 0,
+   "row": 2,
+   "col": 0,
+   "file": "yasuke/yasuke_07.webp"
+  },
+  {
+   "deck": "yasuke",
+   "index": 8,
+   "page": 0,
+   "row": 2,
+   "col": 1,
+   "file": "yasuke/yasuke_08.webp"
+  },
+  {
+   "deck": "yasuke",
+   "index": 9,
+   "page": 0,
+   "row": 2,
+   "col": 2,
+   "file": "yasuke/yasuke_09.webp"
+  },
+  {
+   "deck": "yasuke",
+   "index": 10,
+   "page": 1,
+   "row": 0,
+   "col": 0,
+   "file": "yasuke/yasuke_10.webp"
+  },
+  {
+   "deck": "yasuke",
+   "index": 11,
+   "page": 1,
+   "row": 0,
+   "col": 1,
+   "file": "yasuke/yasuke_11.webp"
+  },
+  {
+   "deck": "yasuke",
+   "index": 12,
+   "page": 1,
+   "row": 0,
+   "col": 2,
+   "file": "yasuke/yasuke_12.webp"
+  },
+  {
+   "deck": "yasuke",
+   "index": 13,
+   "page": 1,
+   "row": 1,
+   "col": 0,
+   "file": "yasuke/yasuke_13.webp"
+  },
+  {
+   "deck": "yasuke",
+   "index": 14,
+   "page": 1,
+   "row": 1,
+   "col": 1,
+   "file": "yasuke/yasuke_14.webp"
+  },
+  {
+   "deck": "yasuke",
+   "index": 15,
+   "page": 1,
+   "row": 1,
+   "col": 2,
+   "file": "yasuke/yasuke_15.webp"
+  },
+  {
+   "deck": "yasuke",
+   "index": 16,
+   "page": 1,
+   "row": 2,
+   "col": 0,
+   "file": "yasuke/yasuke_16.webp"
+  },
+  {
+   "deck": "yasuke",
+   "index": 17,
+   "page": 1,
+   "row": 2,
+   "col": 1,
+   "file": "yasuke/yasuke_17.webp"
+  },
+  {
+   "deck": "yasuke",
+   "index": 18,
+   "page": 1,
+   "row": 2,
+   "col": 2,
+   "file": "yasuke/yasuke_18.webp"
+  },
+  {
+   "deck": "yasuke",
+   "index": 19,
+   "page": 2,
+   "row": 0,
+   "col": 0,
+   "file": "yasuke/yasuke_19.webp"
+  },
+  {
+   "deck": "yasuke",
+   "index": 20,
+   "page": 2,
+   "row": 0,
+   "col": 1,
+   "file": "yasuke/yasuke_20.webp"
+  },
+  {
+   "deck": "yasuke",
+   "index": 21,
+   "page": 2,
+   "row": 0,
+   "col": 2,
+   "file": "yasuke/yasuke_21.webp"
+  },
+  {
+   "deck": "yasuke",
+   "index": 22,
+   "page": 2,
+   "row": 1,
+   "col": 0,
+   "file": "yasuke/yasuke_22.webp"
+  },
+  {
+   "deck": "yasuke",
+   "index": 23,
+   "page": 2,
+   "row": 1,
+   "col": 1,
+   "file": "yasuke/yasuke_23.webp"
+  },
+  {
+   "deck": "yasuke",
+   "index": 24,
+   "page": 2,
+   "row": 1,
+   "col": 2,
+   "file": "yasuke/yasuke_24.webp"
+  },
+  {
+   "deck": "yasuke",
+   "index": 25,
+   "page": 2,
+   "row": 2,
+   "col": 0,
+   "file": "yasuke/yasuke_25.webp"
+  },
+  {
+   "deck": "yasuke",
+   "index": 26,
+   "page": 2,
+   "row": 2,
+   "col": 1,
+   "file": "yasuke/yasuke_26.webp"
+  },
+  {
+   "deck": "yasuke",
+   "index": 27,
+   "page": 2,
+   "row": 2,
+   "col": 2,
+   "file": "yasuke/yasuke_27.webp"
   }
  ]
 }
