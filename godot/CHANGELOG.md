@@ -3,6 +3,38 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.74.0] — 2026-07-02
+### 10 nuovi personaggi: anagrafica, immagini, geometria (fase 1)
+- **10 nuovi personaggi caricati**: Assassino, Ninja, Onna-Bugeisha, Yojimbo
+  (immagini già presenti ma senza geometria), Ashigaru, Hachikō, Monaco,
+  Navigatore, Wakou, Yasuke (PDF nuovi). Musashi e Kojiro restano bloccati:
+  nessun PDF caricato.
+- **Statistiche personaggio** (ferite/mano/armi/rinomanza) aggiunte a
+  `geometry.characters` per tutti e 10, lette dalle carte-personaggio
+  stampate. Scoperta: Assassino e Ninja hanno mano 6/ferite 4 (diverso dal
+  5/5 standard); il Navigatore possiede una **quinta Kamae "Distanza"** non
+  presente nell'enum standard (non modellata, richiede estensione schema).
+- **137 carte tradotte in italiano** in `card_pool.json` (erano in inglese,
+  importate dall'Excel) + 145 nuove mappature immagine in `card_images.json`
+  (qui il numero stampato = id pool direttamente, a differenza delle armi).
+- **Geometria trascritta per 104/137 carte** (Assassino, Onna-Bugeisha,
+  Yojimbo, Ashigaru, Hachikō, Navigatore, Wakou 9/13, più le 17 «Altre
+  carte 3» che completano i buchi Gen. Ability lasciati aperti nella 0.73.0:
+  96, 97, 100, 111, 121, 136 e altri nuovi 99, 103, 110, 141, 144-147, 151,
+  152, 157).
+  - **Hachikō**: formato inedito, carte a due facce Attacco/Difesa con
+    iniziative separate sulla stessa carta — lo schema attuale non supporta
+    due movimenti paralleli, gestito con `attack`+`defence` sulla stessa
+    entry e note esplicite.
+  - **Meccaniche scoperte e non ancora modellabili** (documentate in nota
+    carta per carta): stato "Ombra" dell'Assassino, "Disperazione"
+    dell'Onna-Bugeisha, "Contratti" dello Yojimbo, "Ubriaco" del Wakou,
+    attacchi a "Distanza" con bersaglio scelto per confronto d'iniziativa
+    invece che per cella.
+- **Ancora da fare**: Ninja (14), Monaco (13), Yasuke (14) e le prime 4
+  carte di Wakou (333-336) — trascrizione interrotta da un limite di
+  sessione, in coda per la prossima fase.
+
 ## [0.73.0] — 2026-07-02
 ### Armi, Gen. Ability e Bushido: immagini collegate e geometria verificata
 - **Mappatura id→immagine**: catalogate le 72 scansioni di altre_carte/
