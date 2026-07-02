@@ -52,7 +52,7 @@
   },
   {
    "id": 304,
-   "name": "Ankle Biter",
+   "name": "Colpo alle Caviglie",
    "char": "Onna-Bugeisha",
    "amount": 3,
    "rank": "Wood",
@@ -78,7 +78,7 @@
   },
   {
    "id": 250,
-   "name": "Ankle Rip/Menacing Growl",
+   "name": "Morso alla Caviglia / Ringhio Minaccioso",
    "char": "Hachiko",
    "amount": 2,
    "rank": "Steel",
@@ -120,7 +120,7 @@
   },
   {
    "id": 236,
-   "name": "Ashigaru Core Card",
+   "name": "Carta Speciale Ashigaru",
    "char": "Ashigaru",
    "amount": 1,
    "rank": "-",
@@ -146,7 +146,7 @@
   },
   {
    "id": 218,
-   "name": "Assassin Core Card",
+   "name": "Carta Speciale Assassino",
    "char": "Assassin",
    "amount": 1,
    "rank": "-",
@@ -172,7 +172,7 @@
   },
   {
    "id": 251,
-   "name": "Attack/Heel",
+   "name": "Attacca / Al Piede",
    "char": "Hachiko",
    "amount": 2,
    "rank": "Steel",
@@ -213,7 +213,7 @@
   },
   {
    "id": 297,
-   "name": "Biting Heaven",
+   "name": "Morso del Cielo",
    "char": "Onna-Bugeisha",
    "amount": 1,
    "rank": "Gold",
@@ -383,7 +383,7 @@
   },
   {
    "id": 334,
-   "name": "Broadside Slam",
+   "name": "Schianto di Bordata",
    "char": "Wakou",
    "amount": 1,
    "rank": "Jade",
@@ -396,7 +396,7 @@
   },
   {
    "id": 320,
-   "name": "Brutal Strike",
+   "name": "Colpo Brutale",
    "char": "Yojimbo",
    "amount": 1,
    "rank": "Gold",
@@ -463,7 +463,7 @@
   },
   {
    "id": 141,
-   "name": "Calm Parry",
+   "name": "Parata Tranquilla",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -491,7 +491,7 @@
   },
   {
    "id": 170,
-   "name": "Caltrop Scatter",
+   "name": "Lancio di Piedi di Corvo",
    "char": "Ninja",
    "amount": 2,
    "rank": "Steel",
@@ -505,7 +505,7 @@
   },
   {
    "id": 277,
-   "name": "Carrack Blacksword",
+   "name": "Granchio",
    "char": "Sailor/Weapon",
    "amount": 1,
    "rank": "-",
@@ -521,7 +521,7 @@
   },
   {
    "id": 288,
-   "name": "Carrack Plow",
+   "name": "Spazzata di Granchio",
    "char": "Sailor",
    "amount": 3,
    "rank": "Wood",
@@ -534,7 +534,7 @@
   },
   {
    "id": 171,
-   "name": "Chain Hook",
+   "name": "Catena e Uncino",
    "char": "Ninja",
    "amount": 2,
    "rank": "Steel",
@@ -547,7 +547,7 @@
   },
   {
    "id": 353,
-   "name": "Charging Pride",
+   "name": "Carica del Branco",
    "char": "Yasuke",
    "amount": 1,
    "rank": "Gold",
@@ -560,7 +560,7 @@
   },
   {
    "id": 99,
-   "name": "Circling Defence",
+   "name": "Difesa Accerchiante",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -573,7 +573,7 @@
   },
   {
    "id": 266,
-   "name": "Clarity of Purpose",
+   "name": "Chiarezza di Intenti",
    "char": "Monk",
    "amount": 2,
    "rank": "Steel",
@@ -586,7 +586,7 @@
   },
   {
    "id": 267,
-   "name": "Clear Mind",
+   "name": "Mente Serena",
    "char": "Monk",
    "amount": 2,
    "rank": "Steel",
@@ -626,7 +626,7 @@
   },
   {
    "id": 356,
-   "name": "Close the Gap",
+   "name": "Chiudere la Distanza",
    "char": "Yasuke",
    "amount": 2,
    "rank": "Steel",
@@ -695,7 +695,7 @@
   },
   {
    "id": 270,
-   "name": "Cresting Wave",
+   "name": "Cresta dell'Onda",
    "char": "Monk",
    "amount": 3,
    "rank": "Wood",
@@ -748,7 +748,7 @@
   },
   {
    "id": 281,
-   "name": "Dagger Throw",
+   "name": "Lancio di Pugnale",
    "char": "Sailor",
    "amount": 1,
    "rank": "Gold",
@@ -775,7 +775,7 @@
   },
   {
    "id": 327,
-   "name": "Dark Aura",
+   "name": "Aura Oscura",
    "char": "Yojimbo",
    "amount": 3,
    "rank": "Wood",
@@ -855,7 +855,7 @@
   },
   {
    "id": 144,
-   "name": "Determination",
+   "name": "Determinazione",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -870,7 +870,7 @@
   },
   {
    "id": 354,
-   "name": "Devoted Soul",
+   "name": "Anima Devota",
    "char": "Yasuke",
    "amount": 1,
    "rank": "Gold",
@@ -910,7 +910,7 @@
   },
   {
    "id": 228,
-   "name": "Disarming Grace",
+   "name": "Sguardo Disarmante",
    "char": "Assassin",
    "amount": 3,
    "rank": "Wood",
@@ -924,7 +924,7 @@
   },
   {
    "id": 145,
-   "name": "Disorientating Blow",
+   "name": "Colpo Disorientante",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -951,7 +951,7 @@
   },
   {
    "id": 357,
-   "name": "Double Strike",
+   "name": "Colpo Doppio",
    "char": "Yasuke",
    "amount": 2,
    "rank": "Steel",
@@ -964,7 +964,7 @@
   },
   {
    "id": 254,
-   "name": "Drag Prey/Good Boy",
+   "name": "Riporta la Preda / Bravo Cane",
    "char": "Hachiko",
    "amount": 3,
    "rank": "Wood",
@@ -1017,7 +1017,7 @@
   },
   {
    "id": 279,
-   "name": "Dreaded Black Shot",
+   "name": "La Temuta Polvere Nera",
    "char": "Sailor",
    "amount": 1,
    "rank": "Jade",
@@ -1031,7 +1031,7 @@
   },
   {
    "id": 360,
-   "name": "Dual Blade Defence",
+   "name": "Difesa a Due Lame",
    "char": "Yasuke",
    "amount": 3,
    "rank": "Wood",
@@ -1060,7 +1060,7 @@
   },
   {
    "id": 289,
-   "name": "Duelling Advance",
+   "name": "Avanzata in Duello",
    "char": "Sailor",
    "amount": 3,
    "rank": "Wood",
@@ -1088,7 +1088,7 @@
   },
   {
    "id": 358,
-   "name": "Eagle's Talons",
+   "name": "Artigli dell'Aquila",
    "char": "Yasuke",
    "amount": 2,
    "rank": "Steel",
@@ -1114,7 +1114,7 @@
   },
   {
    "id": 355,
-   "name": "Elephant Slam",
+   "name": "Schianto dell'Elefante",
    "char": "Yasuke",
    "amount": 1,
    "rank": "Gold",
@@ -1155,7 +1155,7 @@
   },
   {
    "id": 243,
-   "name": "Encircle",
+   "name": "Accerchiamento",
    "char": "Ashigaru",
    "amount": 3,
    "rank": "Wood",
@@ -1168,7 +1168,7 @@
   },
   {
    "id": 263,
-   "name": "Enlightened Body",
+   "name": "Corpo Illuminato",
    "char": "Monk",
    "amount": 1,
    "rank": "Gold",
@@ -1182,7 +1182,7 @@
   },
   {
    "id": 264,
-   "name": "Enlightened Mind",
+   "name": "Mente Illuminata",
    "char": "Monk",
    "amount": 1,
    "rank": "Gold",
@@ -1195,7 +1195,7 @@
   },
   {
    "id": 265,
-   "name": "Enlightened Soul",
+   "name": "Anima Illuminata",
    "char": "Monk",
    "amount": 1,
    "rank": "Gold",
@@ -1208,7 +1208,7 @@
   },
   {
    "id": 219,
-   "name": "Envenom Blades",
+   "name": "Lame Avvelenate",
    "char": "Assassin",
    "amount": 1,
    "rank": "Jade",
@@ -1249,7 +1249,7 @@
   },
   {
    "id": 174,
-   "name": "Fading Shadow",
+   "name": "Ombra Evanescente",
    "char": "Ninja",
    "amount": 3,
    "rank": "Wood",
@@ -1264,7 +1264,7 @@
   },
   {
    "id": 300,
-   "name": "Falling Arc",
+   "name": "Colpo in Caduta",
    "char": "Onna-Bugeisha",
    "amount": 2,
    "rank": "Steel",
@@ -1291,7 +1291,7 @@
   },
   {
    "id": 335,
-   "name": "Falling Tsunami",
+   "name": "Tsunami in Caduta",
    "char": "Wakou",
    "amount": 1,
    "rank": "Jade",
@@ -1304,7 +1304,7 @@
   },
   {
    "id": 321,
-   "name": "Fearsome Reputation",
+   "name": "Reputazione Spaventosa",
    "char": "Yojimbo",
    "amount": 1,
    "rank": "Gold",
@@ -1412,7 +1412,7 @@
   },
   {
    "id": 146,
-   "name": "Focused Guard",
+   "name": "Guardia Concentrata",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -1438,7 +1438,7 @@
   },
   {
    "id": 284,
-   "name": "Fool's Counter",
+   "name": "Reazione dello Sciocco",
    "char": "Sailor",
    "amount": 2,
    "rank": "Steel",
@@ -1452,7 +1452,7 @@
   },
   {
    "id": 238,
-   "name": "For the Daimyo",
+   "name": "Per il Daimyo",
    "char": "Ashigaru",
    "amount": 1,
    "rank": "Gold",
@@ -1465,7 +1465,7 @@
   },
   {
    "id": 147,
-   "name": "Forest Step",
+   "name": "Passo di Foresta",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -1491,7 +1491,7 @@
   },
   {
    "id": 167,
-   "name": "Fukiya Dart Pipe",
+   "name": "Cerbottana Fukiya",
    "char": "Ninja",
    "amount": 1,
    "rank": "Gold",
@@ -1506,7 +1506,7 @@
   },
   {
    "id": 298,
-   "name": "Furious Instinct",
+   "name": "Istinto Furioso",
    "char": "Onna-Bugeisha",
    "amount": 1,
    "rank": "Gold",
@@ -1533,7 +1533,7 @@
   },
   {
    "id": 165,
-   "name": "Ghost Moon Step",
+   "name": "Passo della Luna Fantasma",
    "char": "Ninja",
    "amount": 1,
    "rank": "Jade",
@@ -1546,7 +1546,7 @@
   },
   {
    "id": 103,
-   "name": "Graceful Step",
+   "name": "Passo Aggraziato",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -1586,7 +1586,7 @@
   },
   {
    "id": 343,
-   "name": "Headbutt",
+   "name": "Testata",
    "char": "Wakou",
    "amount": 3,
    "rank": "Wood",
@@ -1612,7 +1612,7 @@
   },
   {
    "id": 295,
-   "name": "Heart of the Oni",
+   "name": "Cuore dell'Oni",
    "char": "Onna-Bugeisha",
    "amount": 1,
    "rank": "Jade",
@@ -1626,7 +1626,7 @@
   },
   {
    "id": 237,
-   "name": "Heaven's Castle",
+   "name": "Castello del Cielo",
    "char": "Ashigaru",
    "amount": 1,
    "rank": "Jade",
@@ -1654,7 +1654,7 @@
   },
   {
    "id": 282,
-   "name": "Heavy Slash",
+   "name": "Squarcio Profondo",
    "char": "Sailor",
    "amount": 1,
    "rank": "Gold",
@@ -1694,7 +1694,7 @@
   },
   {
    "id": 328,
-   "name": "Hired Killer",
+   "name": "Sicario a Pagamento",
    "char": "Yojimbo",
    "amount": 3,
    "rank": "Wood",
@@ -1779,7 +1779,7 @@
   },
   {
    "id": 240,
-   "name": "Horse Trip",
+   "name": "Inciampo del Cavallo",
    "char": "Ashigaru",
    "amount": 2,
    "rank": "Steel",
@@ -1793,7 +1793,7 @@
   },
   {
    "id": 301,
-   "name": "Horse Trip",
+   "name": "Inciampo del Cavallo",
    "char": "Onna-Bugeisha",
    "amount": 2,
    "rank": "Steel",
@@ -1807,7 +1807,7 @@
   },
   {
    "id": 302,
-   "name": "Hurricane Dodge",
+   "name": "Schivata di Uragano",
    "char": "Onna-Bugeisha",
    "amount": 2,
    "rank": "Steel",
@@ -1833,7 +1833,7 @@
   },
   {
    "id": 339,
-   "name": "Inebriated Fumble",
+   "name": "Gesticolare da Ubriaco",
    "char": "Wakou",
    "amount": 2,
    "rank": "Steel",
@@ -1860,7 +1860,7 @@
   },
   {
    "id": 323,
-   "name": "Iron Guard",
+   "name": "Guardia di Ferro",
    "char": "Yojimbo",
    "amount": 2,
    "rank": "Steel",
@@ -1886,7 +1886,7 @@
   },
   {
    "id": 336,
-   "name": "Jug Smash",
+   "name": "Lancio della Brocca",
    "char": "Wakou",
    "amount": 1,
    "rank": "Gold",
@@ -1916,7 +1916,7 @@
   },
   {
    "id": 255,
-   "name": "Jump/Down",
+   "name": "Salta / Giù",
    "char": "Hachiko",
    "amount": 3,
    "rank": "Wood",
@@ -1945,7 +1945,7 @@
   },
   {
    "id": 175,
-   "name": "Kama Slash",
+   "name": "Squarcio di Kama",
    "char": "Ninja",
    "amount": 3,
    "rank": "Wood",
@@ -1990,7 +1990,7 @@
   },
   {
    "id": 136,
-   "name": "Fendente di Katana",
+   "name": "Squarcio di Katana",
    "char": "Weapon",
    "amount": 2,
    "rank": "-",
@@ -2035,7 +2035,7 @@
   },
   {
    "id": 164,
-   "name": "Kusarigama Strike",
+   "name": "Colpo di Kusarigama",
    "char": "Ninja/Weapon",
    "amount": 1,
    "rank": "-",
@@ -2051,7 +2051,7 @@
   },
   {
    "id": 329,
-   "name": "Leg Breaker",
+   "name": "Spezzare le Gambe",
    "char": "Yojimbo",
    "amount": 3,
    "rank": "Wood",
@@ -2090,7 +2090,7 @@
   },
   {
    "id": 361,
-   "name": "Lion's Bite",
+   "name": "Morso del Leone",
    "char": "Yasuke",
    "amount": 3,
    "rank": "Wood",
@@ -2103,7 +2103,7 @@
   },
   {
    "id": 359,
-   "name": "Lion's Fangs",
+   "name": "Zanne del Leone",
    "char": "Yasuke",
    "amount": 2,
    "rank": "Steel",
@@ -2117,7 +2117,7 @@
   },
   {
    "id": 351,
-   "name": "Lion's Honour",
+   "name": "Onore del Leone",
    "char": "Yasuke",
    "amount": 1,
    "rank": "Jade",
@@ -2131,7 +2131,7 @@
   },
   {
    "id": 285,
-   "name": "Longpoint Thrust",
+   "name": "Affondo di Punta",
    "char": "Sailor",
    "amount": 2,
    "rank": "Steel",
@@ -2144,7 +2144,7 @@
   },
   {
    "id": 166,
-   "name": "Lunar Sniper Trap",
+   "name": "Trappola del Tiratore Lunare",
    "char": "Ninja",
    "amount": 1,
    "rank": "Jade",
@@ -2157,7 +2157,7 @@
   },
   {
    "id": 241,
-   "name": "Lunging Pierce",
+   "name": "Stoccata in Affondo",
    "char": "Ashigaru",
    "amount": 2,
    "rank": "Steel",
@@ -2183,7 +2183,7 @@
   },
   {
    "id": 242,
-   "name": "Man's Best Friend",
+   "name": "Il Miglior Amico dell'Uomo",
    "char": "Ashigaru",
    "amount": 2,
    "rank": "Steel",
@@ -2223,7 +2223,7 @@
   },
   {
    "id": 168,
-   "name": "Metsubushi Pipe",
+   "name": "Soffio di Metsubushi",
    "char": "Ninja",
    "amount": 1,
    "rank": "Gold",
@@ -2263,7 +2263,7 @@
   },
   {
    "id": 260,
-   "name": "Monk Core Card",
+   "name": "Carta Speciale Monaco",
    "char": "Monk",
    "amount": 1,
    "rank": "-",
@@ -2276,7 +2276,7 @@
   },
   {
    "id": 303,
-   "name": "Mountain Carve",
+   "name": "Affondo di Montagna",
    "char": "Onna-Bugeisha",
    "amount": 2,
    "rank": "Steel",
@@ -2302,7 +2302,7 @@
   },
   {
    "id": 344,
-   "name": "Mule Kick",
+   "name": "Calcio del Mulo",
    "char": "Wakou",
    "amount": 3,
    "rank": "Wood",
@@ -2341,7 +2341,7 @@
   },
   {
    "id": 317,
-   "name": "Nagamaki Thrust",
+   "name": "Affondo di Nagamaki",
    "char": "Yojimbo/Weapon",
    "amount": 1,
    "rank": "-",
@@ -2389,7 +2389,7 @@
   },
   {
    "id": 163,
-   "name": "Ninja Core Card",
+   "name": "Carta Speciale Ninja",
    "char": "Ninja",
    "amount": 1,
    "rank": "-",
@@ -2448,7 +2448,7 @@
   },
   {
    "id": 362,
-   "name": "Off Balance",
+   "name": "Sbilanciamento",
    "char": "Yasuke",
    "amount": 3,
    "rank": "Wood",
@@ -2461,7 +2461,7 @@
   },
   {
    "id": 350,
-   "name": "Off-Hand Cut",
+   "name": "Taglio Mancino",
    "char": "Yasuke/Weapon",
    "amount": 1,
    "rank": "-",
@@ -2477,7 +2477,7 @@
   },
   {
    "id": 294,
-   "name": "Onna-Bugeisha Core Card",
+   "name": "Carta Speciale Onna-Bugeisha",
    "char": "Onna-Bugeisha",
    "amount": 1,
    "rank": "-",
@@ -2516,7 +2516,7 @@
   },
   {
    "id": 290,
-   "name": "Ox Guard",
+   "name": "Guardia del Bue",
    "char": "Sailor",
    "amount": 3,
    "rank": "Wood",
@@ -2542,7 +2542,7 @@
   },
   {
    "id": 271,
-   "name": "Palm Strike",
+   "name": "Colpo del Palmo",
    "char": "Monk",
    "amount": 3,
    "rank": "Wood",
@@ -2556,7 +2556,7 @@
   },
   {
    "id": 278,
-   "name": "Pistol Whip",
+   "name": "Calcio della Pistola",
    "char": "Sailor/Weapon",
    "amount": 1,
    "rank": "-",
@@ -2585,7 +2585,7 @@
   },
   {
    "id": 157,
-   "name": "Practiced Strike",
+   "name": "Colpo Esperto",
    "char": "Gen. Ability",
    "amount": 6,
    "rank": "Wood",
@@ -2598,7 +2598,7 @@
   },
   {
    "id": 280,
-   "name": "Precise Shot",
+   "name": "Tiro Preciso",
    "char": "Sailor",
    "amount": 1,
    "rank": "Jade",
@@ -2625,7 +2625,7 @@
   },
   {
    "id": 252,
-   "name": "Quick Bite/Feral Howl",
+   "name": "Morso Rapido / Ululato Feroce",
    "char": "Hachiko",
    "amount": 2,
    "rank": "Steel",
@@ -2639,7 +2639,7 @@
   },
   {
    "id": 110,
-   "name": "Quick Dodge",
+   "name": "Schivata Rapida",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -2665,7 +2665,7 @@
   },
   {
    "id": 299,
-   "name": "Rage Guard",
+   "name": "Guardia Furente",
    "char": "Onna-Bugeisha",
    "amount": 1,
    "rank": "Gold",
@@ -2678,7 +2678,7 @@
   },
   {
    "id": 337,
-   "name": "Ramming Bukan",
+   "name": "Ariete Bukan",
    "char": "Wakou",
    "amount": 1,
    "rank": "Gold",
@@ -2731,7 +2731,7 @@
   },
   {
    "id": 272,
-   "name": "Resolute Block",
+   "name": "Blocco Risoluto",
    "char": "Monk",
    "amount": 3,
    "rank": "Wood",
@@ -2772,7 +2772,7 @@
   },
   {
    "id": 352,
-   "name": "Righteous Fury",
+   "name": "Furia Giusta",
    "char": "Yasuke",
    "amount": 1,
    "rank": "Jade",
@@ -2881,7 +2881,7 @@
   },
   {
    "id": 283,
-   "name": "Roof Guard",
+   "name": "Guardia Alta",
    "char": "Sailor",
    "amount": 1,
    "rank": "Gold",
@@ -2907,7 +2907,7 @@
   },
   {
    "id": 276,
-   "name": "Sailor Core Card",
+   "name": "Carta Speciale Navigatore",
    "char": "Sailor",
    "amount": 1,
    "rank": "-",
@@ -2920,7 +2920,7 @@
   },
   {
    "id": 286,
-   "name": "Salvage",
+   "name": "Recupero",
    "char": "Sailor",
    "amount": 2,
    "rank": "Steel",
@@ -2933,7 +2933,7 @@
   },
   {
    "id": 268,
-   "name": "Satori Smite",
+   "name": "Distruzione Satori",
    "char": "Monk",
    "amount": 2,
    "rank": "Steel",
@@ -2946,7 +2946,7 @@
   },
   {
    "id": 248,
-   "name": "Savage Maul/Leap Aside",
+   "name": "Morso Feroce / Balzo di Lato",
    "char": "Hachiko",
    "amount": 1,
    "rank": "Jade",
@@ -2972,7 +2972,7 @@
   },
   {
    "id": 324,
-   "name": "Scorpion Sting",
+   "name": "Puntura di Scorpione",
    "char": "Yojimbo",
    "amount": 2,
    "rank": "Steel",
@@ -2985,7 +2985,7 @@
   },
   {
    "id": 305,
-   "name": "Screaming Mind",
+   "name": "Mente Strepitante",
    "char": "Onna-Bugeisha",
    "amount": 3,
    "rank": "Wood",
@@ -2998,7 +2998,7 @@
   },
   {
    "id": 244,
-   "name": "Scything Cleave",
+   "name": "Fendente Falciante",
    "char": "Ashigaru",
    "amount": 3,
    "rank": "Wood",
@@ -3037,7 +3037,7 @@
   },
   {
    "id": 338,
-   "name": "Sea Legs",
+   "name": "Piedi da Marinaio",
    "char": "Wakou",
    "amount": 1,
    "rank": "Gold",
@@ -3066,7 +3066,7 @@
   },
   {
    "id": 325,
-   "name": "Senbon Throw",
+   "name": "Lancio di Senbon",
    "char": "Yojimbo",
    "amount": 2,
    "rank": "Steel",
@@ -3080,7 +3080,7 @@
   },
   {
    "id": 239,
-   "name": "Setting Sun",
+   "name": "Sole Calante",
    "char": "Ashigaru",
    "amount": 1,
    "rank": "Gold",
@@ -3093,7 +3093,7 @@
   },
   {
    "id": 229,
-   "name": "Sever Artery",
+   "name": "Arteria Recisa",
    "char": "Assassin",
    "amount": 3,
    "rank": "Wood",
@@ -3119,7 +3119,7 @@
   },
   {
    "id": 221,
-   "name": "Shadow Step",
+   "name": "Passo nell'Ombra",
    "char": "Assassin",
    "amount": 1,
    "rank": "Gold",
@@ -3132,7 +3132,7 @@
   },
   {
    "id": 220,
-   "name": "Shadow Sting",
+   "name": "Puntura d'Ombra",
    "char": "Assassin",
    "amount": 1,
    "rank": "Jade",
@@ -3175,7 +3175,7 @@
   },
   {
    "id": 169,
-   "name": "Shuriken Throw",
+   "name": "Lancio di Shuriken",
    "char": "Ninja",
    "amount": 1,
    "rank": "Gold",
@@ -3190,7 +3190,7 @@
   },
   {
    "id": 296,
-   "name": "Silent Embrace",
+   "name": "Abbraccio Silenzioso",
    "char": "Onna-Bugeisha",
    "amount": 1,
    "rank": "Jade",
@@ -3232,7 +3232,7 @@
   },
   {
    "id": 245,
-   "name": "Skewer",
+   "name": "Infilzata",
    "char": "Ashigaru",
    "amount": 3,
    "rank": "Wood",
@@ -3245,7 +3245,7 @@
   },
   {
    "id": 326,
-   "name": "Skull Cutter",
+   "name": "Craniotomia",
    "char": "Yojimbo",
    "amount": 2,
    "rank": "Steel",
@@ -3258,7 +3258,7 @@
   },
   {
    "id": 224,
-   "name": "Smoke Bomb",
+   "name": "Bomba Fumogena",
    "char": "Assassin",
    "amount": 2,
    "rank": "Steel",
@@ -3272,7 +3272,7 @@
   },
   {
    "id": 172,
-   "name": "Smoke Bomb",
+   "name": "Bomba Fumogena",
    "char": "Ninja",
    "amount": 2,
    "rank": "Steel",
@@ -3286,7 +3286,7 @@
   },
   {
    "id": 340,
-   "name": "Sobering Hulk",
+   "name": "Gigante Goffo",
    "char": "Wakou",
    "amount": 2,
    "rank": "Steel",
@@ -3299,7 +3299,7 @@
   },
   {
    "id": 222,
-   "name": "Spider's Kiss",
+   "name": "Bacio del Ragno",
    "char": "Assassin",
    "amount": 1,
    "rank": "Gold",
@@ -3338,7 +3338,7 @@
   },
   {
    "id": 269,
-   "name": "Stag Rush",
+   "name": "Carica del Cervo",
    "char": "Monk",
    "amount": 2,
    "rank": "Steel",
@@ -3351,7 +3351,7 @@
   },
   {
    "id": 341,
-   "name": "Staggering Blow",
+   "name": "Colpo Barcollante",
    "char": "Wakou",
    "amount": 2,
    "rank": "Steel",
@@ -3405,7 +3405,7 @@
   },
   {
    "id": 223,
-   "name": "Steel Rain",
+   "name": "Pioggia d'Acciaio",
    "char": "Assassin",
    "amount": 1,
    "rank": "Gold",
@@ -3431,7 +3431,7 @@
   },
   {
    "id": 151,
-   "name": "Storm Block",
+   "name": "Blocco della Tempesta",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -3444,7 +3444,7 @@
   },
   {
    "id": 318,
-   "name": "Stubborn Resolve",
+   "name": "Risolutezza Ostinata",
    "char": "Yojimbo",
    "amount": 1,
    "rank": "Jade",
@@ -3471,7 +3471,7 @@
   },
   {
    "id": 152,
-   "name": "Stunning Blow",
+   "name": "Colpo Stordente",
    "char": "Gen. Ability",
    "amount": 4,
    "rank": "Steel",
@@ -3485,7 +3485,7 @@
   },
   {
    "id": 306,
-   "name": "Surging River",
+   "name": "Fiume in Piena",
    "char": "Onna-Bugeisha",
    "amount": 3,
    "rank": "Wood",
@@ -3538,7 +3538,7 @@
   },
   {
    "id": 256,
-   "name": "Swipe/Prowl",
+   "name": "Strisciata / in Caccia",
    "char": "Hachiko",
    "amount": 3,
    "rank": "Wood",
@@ -3655,7 +3655,7 @@
   },
   {
    "id": 322,
-   "name": "The Job is Done",
+   "name": "Il Mio Lavoro Qui È Finito",
    "char": "Yojimbo",
    "amount": 1,
    "rank": "Gold",
@@ -3682,7 +3682,7 @@
   },
   {
    "id": 253,
-   "name": "Throat Tear/Cornered",
+   "name": "Morso alla Gola / all'Angolo",
    "char": "Hachiko",
    "amount": 2,
    "rank": "Steel",
@@ -3711,7 +3711,7 @@
   },
   {
    "id": 287,
-   "name": "Towering Strike",
+   "name": "Colpo Imponente",
    "char": "Sailor",
    "amount": 2,
    "rank": "Steel",
@@ -3750,7 +3750,7 @@
   },
   {
    "id": 261,
-   "name": "True Enlightenment",
+   "name": "Vera Illuminazione",
    "char": "Monk",
    "amount": 1,
    "rank": "Jade",
@@ -3803,7 +3803,7 @@
   },
   {
    "id": 225,
-   "name": "Twist the Knife",
+   "name": "Coltello nella Piaga",
    "char": "Assassin",
    "amount": 2,
    "rank": "Steel",
@@ -3831,7 +3831,7 @@
   },
   {
    "id": 226,
-   "name": "Umbra Vault",
+   "name": "Balzo nell'Ombra",
    "char": "Assassin",
    "amount": 2,
    "rank": "Steel",
@@ -3844,7 +3844,7 @@
   },
   {
    "id": 230,
-   "name": "Venomous Slice",
+   "name": "Taglio Velenoso",
    "char": "Assassin",
    "amount": 3,
    "rank": "Wood",
@@ -3871,7 +3871,7 @@
   },
   {
    "id": 227,
-   "name": "Viper Strike",
+   "name": "Colpo della Vipera",
    "char": "Assassin",
    "amount": 2,
    "rank": "Steel",
@@ -3900,7 +3900,7 @@
   },
   {
    "id": 333,
-   "name": "Wakou Core Card",
+   "name": "Carta Speciale Wakou",
    "char": "Wakou",
    "amount": 1,
    "rank": "-",
@@ -3913,7 +3913,7 @@
   },
   {
    "id": 342,
-   "name": "Walk it Off",
+   "name": "Far Due Passi",
    "char": "Wakou",
    "amount": 2,
    "rank": "Steel",
@@ -3926,7 +3926,7 @@
   },
   {
    "id": 345,
-   "name": "Wandering Star",
+   "name": "Stella Vagabonda",
    "char": "Wakou",
    "amount": 3,
    "rank": "Wood",
@@ -3992,7 +3992,7 @@
   },
   {
    "id": 173,
-   "name": "Whipping Flail",
+   "name": "Flagello Sferzante",
    "char": "Ninja",
    "amount": 2,
    "rank": "Steel",
@@ -4005,7 +4005,7 @@
   },
   {
    "id": 249,
-   "name": "Wild Bite/Lick Wounds",
+   "name": "Morso Selvaggio / Leccarsi le Ferite",
    "char": "Hachiko",
    "amount": 1,
    "rank": "Gold",
@@ -4070,7 +4070,7 @@
   },
   {
    "id": 176,
-   "name": "Withdraw",
+   "name": "Ritirata",
    "char": "Ninja",
    "amount": 3,
    "rank": "Wood",
@@ -4113,7 +4113,7 @@
   },
   {
    "id": 349,
-   "name": "Yasuke Core Card",
+   "name": "Carta Speciale Yasuke",
    "char": "Yasuke",
    "amount": 1,
    "rank": "-",
@@ -4126,7 +4126,7 @@
   },
   {
    "id": 316,
-   "name": "Yojimbo Core Card",
+   "name": "Carta Speciale Yojimbo",
    "char": "Yojimbo",
    "amount": 1,
    "rank": "-",
@@ -4152,7 +4152,7 @@
   },
   {
    "id": 262,
-   "name": "Zen Wave Slash",
+   "name": "Squarcio dell'Onda Zen",
    "char": "Monk",
    "amount": 1,
    "rank": "Jade",

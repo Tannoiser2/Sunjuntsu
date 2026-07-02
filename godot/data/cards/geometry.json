@@ -6735,5 +6735,133 @@
    ],
    "note": "Rinomanza stampata 62 (icona ventaglio). Ferite 5 / mano 5."
   }
- }
+ ,
+ "Assassin": {
+   "card_id": 214,
+   "name": "Morte dalle Ombre",
+   "wound_limit": 4,
+   "hand_limit": 6,
+   "weapons": [
+    "Kama",
+    "Sai",
+    "Tanto",
+    "Tonfa"
+   ],
+   "note": "Rinomanza stampata 92. Regola: Occultamento (può iniziare occultato o rivelato)."
+  },
+ "Ninja": {
+   "card_id": 159,
+   "name": "Fantasma nella Notte",
+   "wound_limit": 4,
+   "hand_limit": 6,
+   "weapons": [
+    "Kama",
+    "Kusarigama",
+    "Sai",
+    "Tanto",
+    "Tonfa"
+   ],
+   "note": "Rinomanza stampata 95. Regola: Occultamento (può iniziare occultato o rivelato)."
+  },
+ "Onna-Bugeisha": {
+   "card_id": 291,
+   "name": "Agile Guerriera Furente",
+   "wound_limit": 5,
+   "hand_limit": 5,
+   "weapons": [
+    "Bo",
+    "Kanabo",
+    "Naginata",
+    "Nodachi",
+    "Yari"
+   ],
+   "note": "Rinomanza stampata 50. Regola: Disperazione (carta doppia faccia, inizia con questo lato in alto)."
+  },
+ "Yojimbo": {
+   "card_id": 307,
+   "name": "Lealtà al Soldo",
+   "wound_limit": 5,
+   "hand_limit": 5,
+   "weapons": [
+    "Katana",
+    "Nagamaki",
+    "Shikomizue",
+    "Tanto",
+    "Wakizashi"
+   ],
+   "note": "Rinomanza stampata 39. Regola: Sicario a Contratto (carte 309-314, non modellate: obiettivi/contratti, non azioni Duel)."
+  },
+ "Ashigaru": {
+   "card_id": 231,
+   "name": "Leale fino alla Fine",
+   "wound_limit": 4,
+   "hand_limit": 5,
+   "weapons": [
+    "Bo",
+    "Kanabo",
+    "Naginata",
+    "Yari"
+   ],
+   "note": "Rinomanza stampata 14. Carta doppia faccia: se Hachikō viene sconfitto, si volta questa carta."
+  },
+ "Hachiko": {
+   "card_id": 246,
+   "name": "Leale fino alla Fine",
+   "wound_limit": 2,
+   "hand_limit": 2,
+   "weapons": [],
+   "note": "Rinomanza '=' (companion, non ha armi). Icona 'mano' sostituita da stelle (significato DA VERIFICARE, forse limite azioni). Retro di Ashigaru: se Ashigaru viene sconfitto, si volta questa carta. Le 9 carte azione sono doppia-faccia Attacco/Difesa con due iniziative distinte sulla stessa carta — schema geometry.json non ancora esteso per questo formato, vedi note per-carta."
+  },
+ "Monk": {
+   "card_id": 257,
+   "name": "Il Guerriero Spirituale",
+   "wound_limit": 5,
+   "hand_limit": 5,
+   "weapons": [
+    "Bo",
+    "Kanabo",
+    "Naginata",
+    "Yari"
+   ],
+   "note": "Rinomanza stampata 45. Regola: Illuminazione (Campana Bonsho, meccanica non modellata)."
+  },
+ "Sailor": {
+   "card_id": 273,
+   "name": "Avventuriero dall'Occidente",
+   "wound_limit": 5,
+   "hand_limit": 5,
+   "weapons": [
+    "Granchio",
+    "Pistola"
+   ],
+   "note": "Rinomanza stampata 06. Riceve le armi fisse Granchio+Pistola (non sceglie tra le armi standard). Regola: Kamae a Distanza."
+  },
+ "Wakou": {
+   "card_id": 330,
+   "name": "Grosso Pirata del Mare",
+   "wound_limit": 7,
+   "hand_limit": 4,
+   "weapons": [
+    "Bo",
+    "Kanabo",
+    "Naginata",
+    "Yari"
+   ],
+   "note": "Rinomanza stampata 08. Regola: Ubriaco (meccanica non modellata)."
+  },
+ "Yasuke": {
+   "card_id": 346,
+   "name": "Devota Guardia del Corpo",
+   "wound_limit": 5,
+   "hand_limit": 5,
+   "weapons": [
+    "Katana",
+    "Tachi",
+    "Tanto",
+    "Shikomizue",
+    "Wakizashi"
+   ],
+   "note": "Rinomanza stampata 78. Sceglie 2 armi tra le 5 elencate (non tutte e 4 come gli altri personaggi)."
+  }
+}
 }
