@@ -3,6 +3,46 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.77.0] — 2026-07-02
+### Fix perdita dati nell'editor geometria + audit meccaniche mancanti
+- **3 bug di perdita dati silenziosa in GeometryEditor.gd**, trovati da una
+  revisione mirata dopo la crescita dello schema in questa sessione:
+  - `split.defence`/`split.defences`/`split.counter` non venivano mai letti né
+    scritti: aprire e salvare le carte #354 (Anima Devota) o #360 (Difesa a
+    Due Lame) cancellava la difesa/contrattacco della seconda iniziativa.
+    Corretto riusando `_emit_part`/`_read_variants` (già corretti per il
+    livello principale) in modo simmetrico anche per lo split, invece di
+    ricopiare a mano solo `move`/`attack`/`effects`.
+  - Varianti `attacks[]` con lo stesso gate Kamae (incluso vuoto, cioè
+    opzioni libere non gated) venivano scartate tranne la prima: le carte
+    #164 (Colpo di Kusarigama) e #344 (Calcio del Mulo) perdevano una
+    variante d'attacco al primo salvataggio dall'editor.
+  - Rimosso codice morto (`_set_widget_type`/`_move_widget`, zero riferimenti
+    nel repo).
+  - Verificato con Godot 4.6 headless: suite di test esistente (`test_geometry_editor`,
+    `test_cardeditor_smoke`, `test_cardvalidator`, `test_allcards`, 281 carte)
+    tutta verde, più verifica mirata sulle 4 carte precedentemente affette.
+- **`GEOMETRY_SCHEMA.md` aggiornato**: documenta `split` (mai descritto),
+  i campi `kamae`/`focus_cost`/`dirs` sugli atomi di movimento, i valori
+  `neutral`/`any` per `to`, il pattern delle varianti `attacks[]` non gated,
+  e i limiti noti (meccaniche non ancora rappresentabili). Statistica di
+  copertura aggiornata da "140/303" a "281 carte, gioco base completo".
+- **Audit completo delle meccaniche non rappresentabili**: catalogate ~24
+  meccaniche ricorrenti trovate nelle note "DA VERIFICARE" di 156 carte,
+  raggruppate per impatto con proposte di estensione schema/motore (non
+  ancora implementate — richiede una decisione di scope, vedi discussione).
+  Due fix "gratis" identificati: `non_blockable` e `kamae_req` come array
+  (gate OR) sono già supportati dal motore ma non documentati né usati sui
+  dati (#35/#168/#334/#337 e #16/#45).
+- **`kamae_req` come Array: 3 punti del codice non lo gestivano** (assumevano
+  sempre una String), scoperti applicando il fix sopra alle carte #16/#45:
+  `CardValidator.gd` segnalava un falso errore "kamae_req non valido" (con
+  `str()` su un Array), `CardSimulator._run()` (anteprima "Simula" in
+  editor) non impostava la Kamae del combattente di prova, e
+  `test_allcards.gd` andava in crash a runtime (tipo `String` forzato su un
+  valore `Array`). Aggiunto `Kamae.gate_values(gate) -> Array` (normalizza
+  String/Array/assente a una lista di slug) e riusato nei tre punti.
+
 ## [0.76.0] — 2026-07-02
 ### Verifica adversariale dei 10 nuovi personaggi + fix ordine "spiega carta"
 - **Gioco base completato**: con Musashi e Kojiro esclusi dallo scope (nessuna

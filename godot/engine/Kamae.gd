@@ -38,6 +38,17 @@ static func gate_is_empty(gate) -> bool:
 	return str(gate) == ""
 
 
+## Normalizza un gate (String, Array o assente) a una lista di slug — vuota se
+## nessun vincolo. Evita di ripetere l'if String/Array in ogni chiamante.
+static func gate_values(gate) -> Array:
+	if gate == null:
+		return []
+	if gate is Array:
+		return (gate as Array).duplicate()
+	var s := str(gate)
+	return [s] if s != "" else []
+
+
 
 static func _adj(tree: Dictionary) -> Dictionary:
 	var a := {}

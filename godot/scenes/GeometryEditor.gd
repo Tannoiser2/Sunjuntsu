@@ -110,12 +110,18 @@ func _widgets_from(geom: Dictionary) -> Array:
 		if not (v["kamae"] in kamae_keys): kamae_keys.append(v["kamae"])
 	var pool := {"combat": [], "movement": [], "kamae": [], "effect": [], "counter": [], "note": []}
 	for k in kamae_keys:
-		var cw := {"type": "combat", "cond": k, "attack": {}, "defence": {}}
-		for v in atk_vars:
-			if v["kamae"] == k: cw["attack"] = v["cells"]; break
-		for v in dfn_vars:
-			if v["kamae"] == k: cw["defence"] = v["cells"]; break
-		pool["combat"].append(cw)
+		# Piu' varianti possono condividere lo stesso gate (anche vuoto, es. due
+		# opzioni "OPPURE" libere non gated): un widget "combat" per ciascuna, non
+		# solo la prima, altrimenti le varianti in eccesso sparirebbero
+		# silenziosamente dalla UI (e quindi al salvataggio successivo).
+		var atk_here := atk_vars.filter(func(v): return v["kamae"] == k)
+		var dfn_here := dfn_vars.filter(func(v): return v["kamae"] == k)
+		var pairs: int = maxi(maxi(atk_here.size(), dfn_here.size()), 1)
+		for i in pairs:
+			var cw := {"type": "combat", "cond": k, "attack": {}, "defence": {}}
+			if i < atk_here.size(): cw["attack"] = atk_here[i]["cells"]
+			if i < dfn_here.size(): cw["defence"] = dfn_here[i]["cells"]
+			pool["combat"].append(cw)
 	for opt in geom.get("move", {}).get("opts", []):
 		var atoms := []
 		for a in opt.get("atoms", []):
@@ -172,20 +178,37 @@ func _init_container(value: String, children: Array) -> Dictionary:
 	return {"type": "initiative", "cond": "", "value": value, "children": children}
 
 
-## Figli di una parte `split`: Movimento (obbligatorio) → Attacco → Effetti.
+## Figli di una parte `split`: Movimento → Combattimento (att./dif.) →
+## Contrattacco → Effetti. Simmetrico a `_widgets_from` per il livello
+## principale, cosi' `split.defence`/`split.counter` non spariscono al
+## primo giro editor -> salvataggio (bug osservato su carte reali, es.
+## Anima Devota #354 e Difesa a Due Lame #360).
 func _split_to_children(sp: Dictionary) -> Array:
 	var ch := []
+	var sp_kr = sp.get("kamae_req", "")
+	if not Kamae.gate_is_empty(sp_kr):
+		ch.append({"type": "kamae", "cond": "", "req": sp_kr})
 	for opt in sp.get("move", {}).get("opts", []):
 		var atoms := []
 		for a in opt.get("atoms", []):
 			atoms.append(_norm_atom(a))
 		ch.append({"type": "movement", "cond": "", "atoms": atoms})
-	if sp.has("attack") and sp["attack"] is Dictionary:
+	var atk_vars := _read_variants(sp, "attack", "attacks", "w")
+	var dfn_vars := _read_variants(sp, "defence", "defences", "v")
+	if not atk_vars.is_empty() or not dfn_vars.is_empty():
 		ch.append({"type": "combat", "cond": "",
-			"attack": _cells_from(sp["attack"], "w"), "defence": {}})
+			"attack": atk_vars[0]["cells"] if not atk_vars.is_empty() else {},
+			"defence": dfn_vars[0]["cells"] if not dfn_vars.is_empty() else {}})
+	var cvals := []
+	for x in sp.get("counter", []):
+		cvals.append(int(x))
+	if not cvals.is_empty():
+		ch.append({"type": "counter", "cond": "", "values": cvals})
 	for e in sp.get("effects", []):
 		if typeof(e) == TYPE_DICTIONARY:
 			ch.append(_effect_widget(e))
+	if str(sp.get("note", "")) != "":
+		ch.append({"type": "note", "cond": "", "text": str(sp["note"])})
 	return ch
 
 
@@ -217,16 +240,14 @@ func to_geometry() -> Dictionary:
 	_emit_part(g, part["main"])
 
 	if part["has_split"]:
-		var sg := {}
-		_emit_part(sg, part["split"])
-		# `split` capisce solo move/attack(singolo)/effects + initiative.
+		# `_emit_part` produce gia' tutti i campi (kamae_req/move/attack(s)/
+		# defence(s)/counter/effects/note) in modo simmetrico al livello
+		# principale: riusiamo lo stesso dizionario invece di ricopiare a mano
+		# solo move/attack/effects, altrimenti defence/counter/note della
+		# seconda iniziativa sparirebbero al salvataggio (bug osservato su
+		# carte reali, es. Anima Devota #354 e Difesa a Due Lame #360).
 		var sp := {}
-		if sg.has("move"): sp["move"] = sg["move"]
-		if sg.has("attack"):
-			sp["attack"] = sg["attack"]
-		elif sg.has("attacks") and not (sg["attacks"] as Array).is_empty():
-			sp["attack"] = {"cells": sg["attacks"][0]["cells"]}
-		if sg.has("effects"): sp["effects"] = sg["effects"]
+		_emit_part(sp, part["split"])
 		var iv: String = part["split_value"]
 		sp["initiative"] = int(iv) if iv.is_valid_int() else iv
 		g["split"] = sp
@@ -849,15 +870,6 @@ func _move_to_end(w: Dictionary, src: Array, dst: Array) -> void:
 
 func _title_of(w: Dictionary) -> String:
 	return str(WIDGET_TITLES.get(str(w.get("type", "")), "widget"))
-
-
-# Compatibilità test/headless: versioni a indice sul livello superiore.
-func _set_widget_type(idx: int, type: String) -> void:
-	_set_type_in(_widgets, idx, type)
-
-
-func _move_widget(idx: int, delta: int) -> void:
-	_move_in(_widgets, idx, delta)
 
 
 func _build_widget_body(w: Dictionary) -> Control:

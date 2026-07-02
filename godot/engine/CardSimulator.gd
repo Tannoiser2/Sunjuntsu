@@ -54,9 +54,10 @@ static func _run(character: String, geom: Dictionary, dummy: String) -> Dictiona
 	a.hand_limit = 5
 	a.focus = 5
 	a.stance = Domain.Stance.NEUTRAL
-	var req := str(geom.get("kamae_req", ""))
-	if Domain.STANCE_FROM_SLUG.has(req):
-		a.stance = Domain.STANCE_FROM_SLUG[req]
+	# kamae_req può essere stringa singola o Array in OR: basta soddisfarne una.
+	var req_list := Kamae.gate_values(geom.get("kamae_req", ""))
+	if not req_list.is_empty() and Domain.STANCE_FROM_SLUG.has(req_list[0]):
+		a.stance = Domain.STANCE_FROM_SLUG[req_list[0]]
 	a.planned = SIM_ID
 
 	var b := GameState.Fighter.new()

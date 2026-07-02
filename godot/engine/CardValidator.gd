@@ -77,9 +77,11 @@ static func validate(card: Dictionary, geom: Dictionary, image, ctx := {}) -> Ar
 	# geometria
 	if not geom.is_empty():
 		var gt := str(geom.get("type", ""))
-		var kr := str(geom.get("kamae_req", ""))
-		if kr != "" and not (kr in KAMAE):
-			out.append(_issue("error", "kamae_req", "kamae_req non valido: '%s'" % kr))
+		# kamae_req può essere una stringa singola o un Array in OR (Kamae.gate_values).
+		var kr_list := Kamae.gate_values(geom.get("kamae_req", ""))
+		for kr in kr_list:
+			if not (str(kr) in KAMAE):
+				out.append(_issue("error", "kamae_req", "kamae_req non valido: '%s'" % kr))
 		# Le verifiche "senza celle" valgono solo se la geometria è stata avviata
 		# (altrimenti è semplicemente "senza geometria", segnalato dall'indicatore ◇).
 		var has_atk := _has_combat_cells(geom, "attack", "attacks")
@@ -88,7 +90,7 @@ static func validate(card: Dictionary, geom: Dictionary, image, ctx := {}) -> Ar
 			or not (geom.get("move", {}).get("opts", []) as Array).is_empty() \
 			or not (geom.get("effects", []) as Array).is_empty() \
 			or not (geom.get("counter", []) as Array).is_empty() \
-			or str(geom.get("kamae_req", "")) != ""
+			or not kr_list.is_empty()
 		if has_content:
 			if gt == "attack" and not has_atk \
 					and not _has_combat_cells(geom.get("split", {}), "attack", "attacks"):
