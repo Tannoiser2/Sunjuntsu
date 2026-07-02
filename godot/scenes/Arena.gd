@@ -137,7 +137,7 @@ func _card_type_it(t: String) -> String:
 ## Carica nell'HUD la carta Kamae del combattente `i` e posiziona il segnalino.
 func _setup_kamae_for(i: int) -> void:
 	_kamae_shown = i
-	var tree := CardDB.kamae_tree_for(state.fighters[i].character.to_lower())
+	var tree := CardDB.kamae_tree_for(CardDB.deck_slug_for(state.fighters[i].character))
 	if tree.has("card"):
 		_hud.setup_kamae_tree(tree["card"], tree.get("nodes", {}))
 	_hud.set_kamae_marker(Domain.STANCE_SLUG[state.fighters[i].stance])
@@ -669,7 +669,7 @@ func _spawn_pawns() -> void:
 	state.fighters[1].facing = AI.facing_toward(state.fighters[1].cell, state.fighters[0].cell)
 	# Posizione Kamae iniziale dall'albero del personaggio.
 	for i in range(2):
-		var tree := CardDB.kamae_tree_for(state.fighters[i].character.to_lower())
+		var tree := CardDB.kamae_tree_for(CardDB.deck_slug_for(state.fighters[i].character))
 		var start_slug: String = tree.get("start", "neutral")
 		state.fighters[i].stance = Domain.STANCE_FROM_SLUG.get(start_slug, Domain.Stance.NEUTRAL)
 
@@ -836,7 +836,7 @@ func _refresh_kamae_chooser() -> void:
 	if gate != "" and gate != Domain.STANCE_SLUG[f.stance]:
 		_hud.hide_kamae()
 		return
-	var tree := CardDB.kamae_tree_for(f.character.to_lower())
+	var tree := CardDB.kamae_tree_for(CardDB.deck_slug_for(f.character))
 	var cur: String = Domain.STANCE_SLUG[f.stance]
 	var targets := Kamae.change_targets(tree, cur, int(params.get("n", 1)))
 	_hud.show_kamae(cur, targets)
@@ -967,7 +967,7 @@ func _on_kamae_chosen(slug: String) -> void:
 	var params := _change_kamae_params(g)
 	if params.is_empty():
 		return
-	var tree := CardDB.kamae_tree_for(f.character.to_lower())
+	var tree := CardDB.kamae_tree_for(CardDB.deck_slug_for(f.character))
 	var targets := Kamae.change_targets(tree, Domain.STANCE_SLUG[f.stance], int(params.get("n", 1)))
 	if not targets.has(slug):
 		return

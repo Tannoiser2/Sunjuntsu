@@ -3,6 +3,33 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.85.0] — 2026-07-03
+### Alberi Kamae: tutti i 13 personaggi, archi a senso unico, quinta Kamae "Distanza"
+- **Ri-verifica sugli scan di tutte le carte-albero**: le doppie frecce
+  stampate sono transizioni A SENSO UNICO — lo schema le ignorava (campo
+  nuovo `dir: true` sugli archi; `Kamae._adj` le rispetta). Trovati e
+  corretti nei 4 alberi base: **arco fantasma** determination—aggression
+  del Ronin (non esiste sulla carta), **archi mancanti**
+  balance—determination di Guerriero e Maestro, e le direzioni di
+  Guerriero (loto→Det, loto→Equil, Det→Neutrale), Ronin
+  (Neutrale→Aggressività), Allievo (Det→loto, Equil→Neutrale).
+- **Trascritti i 9 alberi mancanti** (Assassino, Ninja, Onna-Bugeisha,
+  Yojimbo, Ashigaru, Monaco, Navigatore, Wakou, Yasuke) dagli scan _02 —
+  prima questi personaggi non potevano cambiare Kamae (albero vuoto).
+  Hachikō, correttamente, non ha albero: usa flip_kamae (#247).
+- **Quinta Kamae "Distanza"** (§3.22, CHIUSA): il nodo onda blu
+  sull'albero del Navigatore. `Domain.Stance.DISTANCE` + slug/nomi,
+  ammessa nei gate; `kamae_req: "distance"` su #279/#280/#281.
+- **`Kamae.change_targets` riscritta**: espansione a livelli pulita
+  (via il segnaposto `_steps_to`=99), sensi unici rispettati, focus
+  massimo per destinazione corretto.
+- **Fix slug**: `kamae_tree_for(character.to_lower())` non trovava gli
+  alberi di Onna-Bugeisha (stesso bug dei mazzi in v0.84.0) — ora
+  `deck_slug_for` ovunque (Arena, Duel, MatchProtocol).
+- L'HUD mostra già lo scan dell'albero con i marcatori dai dati: la
+  Distanza appare da sola; selettore Kamae esteso alla quinta stance.
+- Test: 9 casi nuovi su direzioni/fantasma/focus/Distanza/roster.
+
 ## [0.84.0] — 2026-07-03
 ### Selezione dei combattenti con ritratti + ritratti nell'HUD
 - **13 ritratti ufficiali** (da Tabelle_Materiali/Senjutsu/Personaggi,

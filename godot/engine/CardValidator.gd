@@ -9,10 +9,10 @@
 class_name CardValidator
 extends RefCounted
 
-const KAMAE := ["aggression", "balance", "determination"]
+const KAMAE := ["aggression", "balance", "determination", "distance"]
 ## Stance bersaglio per gli effetti: include "neutral" (le stance reali sono 4,
 ## vedi Kamae.gd). `kamae_req` resta sulle 3 stance "attive" (non si richiede neutral).
-const STANCES := ["aggression", "balance", "determination", "neutral"]
+const STANCES := ["aggression", "balance", "determination", "neutral", "distance"]
 const RANKS := ["Wood", "Steel", "Gold", "Jade", "-"]
 
 ## Verbi `effects[].do` noti (GEOMETRY_SCHEMA.md §Effetti).

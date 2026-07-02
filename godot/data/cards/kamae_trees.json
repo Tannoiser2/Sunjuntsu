@@ -1,76 +1,736 @@
 {
-  "note": "Alberi Kamae trascritti (best-effort) dalle carte #052 Guerriero, #022 Ronin, #007 Maestro, #037 Allievo. Mapping icone->pose (verificato sul Guerriero): mon rosso=aggression, griglia gialla=determination, fiore verde=balance, torii=neutral, loto rosa=focus (ramo rosa = +1 focus, archi incidenti al focus). 'start' = posizione iniziale dell'anello. 'card' = immagine dell'albero; 'nodes' = posizione normalizzata (0-1) di ogni nodo. Posizioni nodi e archi DA VERIFICARE sul gioco fisico.",
-  "trees": {
-	"warrior": {
-	  "start": "neutral",
-	  "card": "warrior/warrior_36.webp",
-	  "nodes": {
-		"balance": [0.66, 0.20],
-		"determination": [0.27, 0.45],
-		"focus": [0.62, 0.46],
-		"neutral": [0.27, 0.73],
-		"aggression": [0.62, 0.73]
-	  },
-	  "edges": [
-		{"a": "balance", "b": "focus", "pink": true},
-		{"a": "focus", "b": "aggression", "pink": true},
-		{"a": "determination", "b": "focus", "pink": true},
-		{"a": "determination", "b": "neutral", "pink": false},
-		{"a": "neutral", "b": "aggression", "pink": false}
-	  ]
-	},
-	"ronin": {
-	  "start": "neutral",
-	  "card": "ronin/ronin_02.webp",
-	  "nodes": {
-		"focus": [0.22, 0.17],
-		"aggression": [0.22, 0.45],
-		"determination": [0.62, 0.48],
-		"neutral": [0.22, 0.76],
-		"balance": [0.62, 0.79]
-	  },
-	  "edges": [
-		{"a": "focus", "b": "aggression", "pink": true},
-		{"a": "neutral", "b": "aggression", "pink": false},
-		{"a": "neutral", "b": "balance", "pink": false},
-		{"a": "balance", "b": "determination", "pink": false},
-		{"a": "determination", "b": "aggression", "pink": false}
-	  ]
-	},
-	"master": {
-	  "start": "neutral",
-	  "card": "master/master_02.webp",
-	  "nodes": {
-		"aggression": [0.22, 0.18],
-		"determination": [0.68, 0.18],
-		"focus": [0.22, 0.47],
-		"neutral": [0.22, 0.78],
-		"balance": [0.68, 0.80]
-	  },
-	  "edges": [
-		{"a": "focus", "b": "aggression", "pink": true},
-		{"a": "focus", "b": "neutral", "pink": true},
-		{"a": "focus", "b": "determination", "pink": true},
-		{"a": "focus", "b": "balance", "pink": true}
-	  ]
-	},
-	"student": {
-	  "start": "neutral",
-	  "card": "student/student_20.webp",
-	  "nodes": {
-		"aggression": [0.62, 0.16],
-		"balance": [0.22, 0.42],
-		"focus": [0.62, 0.45],
-		"neutral": [0.22, 0.75],
-		"determination": [0.62, 0.78]
-	  },
-	  "edges": [
-		{"a": "aggression", "b": "focus", "pink": true},
-		{"a": "balance", "b": "focus", "pink": true},
-		{"a": "focus", "b": "determination", "pink": true},
-		{"a": "balance", "b": "neutral", "pink": false},
-		{"a": "neutral", "b": "determination", "pink": false}
-	  ]
-	}
+ "note": "Alberi Kamae trascritti dalle carte fisiche (una per personaggio, scan _02/_20/_36; Hachiko non ha albero: la sua carta Kamae #247 è a due facce, verbo flip_kamae). Mapping icone: mon rosso=aggression, griglia gialla=determination, fiore verde=balance, torii=neutral, loto rosa=focus (ramo rosa attraversato = +1 focus), onda blu=distance (quinta Kamae, solo Navigatore). Gli archi con doppie frecce sulla carta sono A SENSO UNICO: campo dir=true = percorribile solo da a verso b. Ri-verifica 2026-07-03 sugli scan: corretti il ramo fantasma determination-aggression del Ronin, i balance-determination mancanti di Guerriero/Maestro e le direzioni ovunque.",
+ "trees": {
+  "warrior": {
+   "start": "neutral",
+   "card": "warrior/warrior_36.webp",
+   "nodes": {
+    "balance": [
+     0.66,
+     0.2
+    ],
+    "determination": [
+     0.27,
+     0.45
+    ],
+    "focus": [
+     0.62,
+     0.46
+    ],
+    "neutral": [
+     0.27,
+     0.73
+    ],
+    "aggression": [
+     0.62,
+     0.73
+    ]
+   },
+   "edges": [
+    {
+     "a": "focus",
+     "b": "determination",
+     "pink": true,
+     "dir": true
+    },
+    {
+     "a": "focus",
+     "b": "balance",
+     "pink": true,
+     "dir": true
+    },
+    {
+     "a": "aggression",
+     "b": "focus",
+     "pink": true
+    },
+    {
+     "a": "determination",
+     "b": "neutral",
+     "pink": false,
+     "dir": true
+    },
+    {
+     "a": "neutral",
+     "b": "aggression",
+     "pink": false
+    },
+    {
+     "a": "balance",
+     "b": "determination",
+     "pink": false
+    }
+   ]
+  },
+  "ronin": {
+   "start": "neutral",
+   "card": "ronin/ronin_02.webp",
+   "nodes": {
+    "focus": [
+     0.22,
+     0.17
+    ],
+    "aggression": [
+     0.22,
+     0.45
+    ],
+    "determination": [
+     0.62,
+     0.48
+    ],
+    "neutral": [
+     0.22,
+     0.76
+    ],
+    "balance": [
+     0.62,
+     0.79
+    ]
+   },
+   "edges": [
+    {
+     "a": "focus",
+     "b": "aggression",
+     "pink": true
+    },
+    {
+     "a": "neutral",
+     "b": "aggression",
+     "pink": false,
+     "dir": true
+    },
+    {
+     "a": "neutral",
+     "b": "balance",
+     "pink": false
+    },
+    {
+     "a": "balance",
+     "b": "determination",
+     "pink": false
+    }
+   ]
+  },
+  "master": {
+   "start": "neutral",
+   "card": "master/master_02.webp",
+   "nodes": {
+    "aggression": [
+     0.22,
+     0.18
+    ],
+    "determination": [
+     0.68,
+     0.18
+    ],
+    "focus": [
+     0.22,
+     0.47
+    ],
+    "neutral": [
+     0.22,
+     0.78
+    ],
+    "balance": [
+     0.68,
+     0.8
+    ]
+   },
+   "edges": [
+    {
+     "a": "focus",
+     "b": "aggression",
+     "pink": true
+    },
+    {
+     "a": "focus",
+     "b": "neutral",
+     "pink": true
+    },
+    {
+     "a": "focus",
+     "b": "determination",
+     "pink": true
+    },
+    {
+     "a": "focus",
+     "b": "balance",
+     "pink": true
+    },
+    {
+     "a": "determination",
+     "b": "balance",
+     "pink": false
+    }
+   ]
+  },
+  "student": {
+   "start": "neutral",
+   "card": "student/student_20.webp",
+   "nodes": {
+    "aggression": [
+     0.62,
+     0.16
+    ],
+    "balance": [
+     0.22,
+     0.42
+    ],
+    "focus": [
+     0.62,
+     0.45
+    ],
+    "neutral": [
+     0.22,
+     0.75
+    ],
+    "determination": [
+     0.62,
+     0.78
+    ]
+   },
+   "edges": [
+    {
+     "a": "aggression",
+     "b": "focus",
+     "pink": true
+    },
+    {
+     "a": "balance",
+     "b": "focus",
+     "pink": true
+    },
+    {
+     "a": "determination",
+     "b": "focus",
+     "pink": true,
+     "dir": true
+    },
+    {
+     "a": "balance",
+     "b": "neutral",
+     "pink": false,
+     "dir": true
+    },
+    {
+     "a": "neutral",
+     "b": "determination",
+     "pink": false
+    }
+   ]
+  },
+  "assassin": {
+   "start": "neutral",
+   "card": "assassin/assassin_02.webp",
+   "nodes": {
+    "determination": [
+     0.24,
+     0.18
+    ],
+    "balance": [
+     0.24,
+     0.48
+    ],
+    "aggression": [
+     0.68,
+     0.48
+    ],
+    "neutral": [
+     0.24,
+     0.78
+    ],
+    "focus": [
+     0.68,
+     0.78
+    ]
+   },
+   "edges": [
+    {
+     "a": "determination",
+     "b": "balance",
+     "pink": false
+    },
+    {
+     "a": "determination",
+     "b": "aggression",
+     "pink": false,
+     "dir": true
+    },
+    {
+     "a": "balance",
+     "b": "aggression",
+     "pink": false
+    },
+    {
+     "a": "balance",
+     "b": "neutral",
+     "pink": false
+    },
+    {
+     "a": "neutral",
+     "b": "focus",
+     "pink": true
+    },
+    {
+     "a": "aggression",
+     "b": "focus",
+     "pink": true
+    }
+   ]
+  },
+  "ninja": {
+   "start": "neutral",
+   "card": "ninja/ninja_02.webp",
+   "nodes": {
+    "focus": [
+     0.68,
+     0.17
+    ],
+    "aggression": [
+     0.24,
+     0.47
+    ],
+    "balance": [
+     0.68,
+     0.47
+    ],
+    "neutral": [
+     0.24,
+     0.78
+    ],
+    "determination": [
+     0.68,
+     0.78
+    ]
+   },
+   "edges": [
+    {
+     "a": "focus",
+     "b": "balance",
+     "pink": true
+    },
+    {
+     "a": "aggression",
+     "b": "balance",
+     "pink": false
+    },
+    {
+     "a": "aggression",
+     "b": "neutral",
+     "pink": false,
+     "dir": true
+    },
+    {
+     "a": "neutral",
+     "b": "determination",
+     "pink": false
+    },
+    {
+     "a": "balance",
+     "b": "determination",
+     "pink": false
+    }
+   ]
+  },
+  "onna_bugeisha": {
+   "start": "neutral",
+   "card": "onna_bugeisha/onna_bugeisha_02.webp",
+   "nodes": {
+    "focus": [
+     0.24,
+     0.17
+    ],
+    "aggression": [
+     0.68,
+     0.17
+    ],
+    "determination": [
+     0.24,
+     0.48
+    ],
+    "balance": [
+     0.68,
+     0.48
+    ],
+    "neutral": [
+     0.24,
+     0.8
+    ]
+   },
+   "edges": [
+    {
+     "a": "focus",
+     "b": "aggression",
+     "pink": true,
+     "dir": true
+    },
+    {
+     "a": "determination",
+     "b": "focus",
+     "pink": true,
+     "dir": true
+    },
+    {
+     "a": "determination",
+     "b": "balance",
+     "pink": false
+    },
+    {
+     "a": "aggression",
+     "b": "balance",
+     "pink": false
+    },
+    {
+     "a": "neutral",
+     "b": "determination",
+     "pink": false
+    }
+   ]
+  },
+  "yojimbo": {
+   "start": "neutral",
+   "card": "yojimbo/yojimbo_02.webp",
+   "nodes": {
+    "balance": [
+     0.24,
+     0.17
+    ],
+    "aggression": [
+     0.24,
+     0.48
+    ],
+    "focus": [
+     0.68,
+     0.48
+    ],
+    "neutral": [
+     0.24,
+     0.79
+    ],
+    "determination": [
+     0.68,
+     0.79
+    ]
+   },
+   "edges": [
+    {
+     "a": "balance",
+     "b": "focus",
+     "pink": true,
+     "dir": true
+    },
+    {
+     "a": "balance",
+     "b": "aggression",
+     "pink": false
+    },
+    {
+     "a": "aggression",
+     "b": "focus",
+     "pink": true
+    },
+    {
+     "a": "aggression",
+     "b": "neutral",
+     "pink": false
+    },
+    {
+     "a": "focus",
+     "b": "determination",
+     "pink": true
+    },
+    {
+     "a": "neutral",
+     "b": "determination",
+     "pink": false
+    }
+   ]
+  },
+  "ashigaru": {
+   "start": "neutral",
+   "card": "ashigaru/ashigaru_02.webp",
+   "nodes": {
+    "focus": [
+     0.68,
+     0.16
+    ],
+    "determination": [
+     0.24,
+     0.47
+    ],
+    "aggression": [
+     0.68,
+     0.47
+    ],
+    "neutral": [
+     0.24,
+     0.78
+    ],
+    "balance": [
+     0.68,
+     0.78
+    ]
+   },
+   "edges": [
+    {
+     "a": "focus",
+     "b": "determination",
+     "pink": true,
+     "dir": true
+    },
+    {
+     "a": "aggression",
+     "b": "focus",
+     "pink": true,
+     "dir": true
+    },
+    {
+     "a": "determination",
+     "b": "aggression",
+     "pink": false
+    },
+    {
+     "a": "determination",
+     "b": "neutral",
+     "pink": false
+    },
+    {
+     "a": "aggression",
+     "b": "balance",
+     "pink": false
+    },
+    {
+     "a": "neutral",
+     "b": "balance",
+     "pink": false
+    }
+   ]
+  },
+  "monk": {
+   "start": "neutral",
+   "card": "monk/monk_02.webp",
+   "nodes": {
+    "balance": [
+     0.24,
+     0.17
+    ],
+    "aggression": [
+     0.68,
+     0.17
+    ],
+    "focus": [
+     0.24,
+     0.48
+    ],
+    "determination": [
+     0.68,
+     0.48
+    ],
+    "neutral": [
+     0.24,
+     0.79
+    ]
+   },
+   "edges": [
+    {
+     "a": "balance",
+     "b": "aggression",
+     "pink": false
+    },
+    {
+     "a": "balance",
+     "b": "focus",
+     "pink": true
+    },
+    {
+     "a": "aggression",
+     "b": "determination",
+     "pink": false
+    },
+    {
+     "a": "focus",
+     "b": "determination",
+     "pink": true
+    },
+    {
+     "a": "focus",
+     "b": "neutral",
+     "pink": true
+    }
+   ]
+  },
+  "sailor": {
+   "start": "neutral",
+   "card": "sailor/sailor_02.webp",
+   "nodes": {
+    "distance": [
+     0.24,
+     0.17
+    ],
+    "aggression": [
+     0.68,
+     0.17
+    ],
+    "focus": [
+     0.24,
+     0.48
+    ],
+    "balance": [
+     0.68,
+     0.48
+    ],
+    "neutral": [
+     0.24,
+     0.79
+    ],
+    "determination": [
+     0.68,
+     0.79
+    ]
+   },
+   "edges": [
+    {
+     "a": "distance",
+     "b": "aggression",
+     "pink": false
+    },
+    {
+     "a": "distance",
+     "b": "focus",
+     "pink": true
+    },
+    {
+     "a": "aggression",
+     "b": "balance",
+     "pink": false
+    },
+    {
+     "a": "focus",
+     "b": "balance",
+     "pink": true
+    },
+    {
+     "a": "focus",
+     "b": "neutral",
+     "pink": true
+    },
+    {
+     "a": "balance",
+     "b": "determination",
+     "pink": false
+    },
+    {
+     "a": "neutral",
+     "b": "determination",
+     "pink": false
+    }
+   ]
+  },
+  "wakou": {
+   "start": "neutral",
+   "card": "wakou/wakou_02.webp",
+   "nodes": {
+    "balance": [
+     0.68,
+     0.17
+    ],
+    "aggression": [
+     0.24,
+     0.47
+    ],
+    "focus": [
+     0.68,
+     0.47
+    ],
+    "neutral": [
+     0.24,
+     0.78
+    ],
+    "determination": [
+     0.68,
+     0.78
+    ]
+   },
+   "edges": [
+    {
+     "a": "balance",
+     "b": "focus",
+     "pink": true
+    },
+    {
+     "a": "aggression",
+     "b": "focus",
+     "pink": true
+    },
+    {
+     "a": "aggression",
+     "b": "neutral",
+     "pink": false
+    },
+    {
+     "a": "focus",
+     "b": "determination",
+     "pink": true
+    },
+    {
+     "a": "neutral",
+     "b": "determination",
+     "pink": false
+    }
+   ]
+  },
+  "yasuke": {
+   "start": "neutral",
+   "card": "yasuke/yasuke_02.webp",
+   "nodes": {
+    "focus": [
+     0.22,
+     0.17
+    ],
+    "aggression": [
+     0.68,
+     0.17
+    ],
+    "determination": [
+     0.22,
+     0.47
+    ],
+    "neutral": [
+     0.22,
+     0.78
+    ],
+    "balance": [
+     0.68,
+     0.78
+    ]
+   },
+   "edges": [
+    {
+     "a": "focus",
+     "b": "determination",
+     "pink": true
+    },
+    {
+     "a": "determination",
+     "b": "aggression",
+     "pink": false
+    },
+    {
+     "a": "determination",
+     "b": "neutral",
+     "pink": false
+    },
+    {
+     "a": "neutral",
+     "b": "balance",
+     "pink": false
+    },
+    {
+     "a": "aggression",
+     "b": "balance",
+     "pink": false
+    }
+   ]
   }
+ }
 }

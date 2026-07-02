@@ -461,5 +461,48 @@ func _ready() -> void:
 			ok = false
 			print("FAIL: nome IT mancante per %s" % ch)
 
+	# ── Alberi Kamae: archi orientati, focus dai rami rosa, quinta stance ────
+	# Guerriero: determination→neutral è a SENSO UNICO (frecce ↓ sulla carta):
+	# da neutral in 1 passo si raggiunge solo aggression.
+	var wt := CardDB.kamae_tree_for("warrior")
+	var t1w := Kamae.change_targets(wt, "neutral", 1)
+	_check(t1w.has("aggression") and not t1w.has("determination"),
+		"albero Guerriero: neutral n=1 → solo aggression (senso unico rispettato)")
+	# Il nuovo arco balance—determination (mancava): da balance in 1 passo.
+	var t1b := Kamae.change_targets(wt, "balance", 1)
+	_check(t1b.has("determination"), "albero Guerriero: balance—determination esiste")
+	# Ronin: il vecchio arco fantasma determination—aggression NON esiste più.
+	var rt := CardDB.kamae_tree_for("ronin")
+	var t1r := Kamae.change_targets(rt, "determination", 1)
+	_check(not t1r.has("aggression") and t1r.has("balance"),
+		"albero Ronin: rimosso l'arco fantasma determination—aggression")
+	# Ronin: aggression NON può tornare a neutral (freccia solo neutral→aggression).
+	var t1ra := Kamae.change_targets(rt, "aggression", 2)
+	_check(not t1ra.has("neutral"), "albero Ronin: neutral→aggression è a senso unico")
+	# Onna-Bugeisha: determination→loto→aggression = 2 passi con +1 focus.
+	var ot := CardDB.kamae_tree_for("onna_bugeisha")
+	var t2o := Kamae.change_targets(ot, "determination", 2)
+	_check(int(t2o.get("aggression", -1)) == 2,
+		"albero Onna: det→loto→aggression attraversa 2 rami rosa (+2 focus)")
+	# ...e il percorso inverso via loto è vietato (entrambe le frecce).
+	var t2i := Kamae.change_targets(ot, "aggression", 2)
+	_check(int(t2i.get("determination", -1)) == 0,
+		"albero Onna: aggression→balance→determination senza focus (loto a senso unico)")
+	# Navigatore: la quinta Kamae 'distance' è nell'albero e raggiungibile.
+	var st := CardDB.kamae_tree_for("sailor")
+	var t2s := Kamae.change_targets(st, "neutral", 2)
+	_check(int(t2s.get("distance", -1)) == 2,
+		"albero Navigatore: neutral→loto→distance = Kamae Distanza con +2 focus")
+	_check(Domain.STANCE_FROM_SLUG.get("distance", -1) == Domain.Stance.DISTANCE,
+		"Domain: quinta stance 'distance' registrata")
+	# Tutti i 13 alberi caricano e hanno il nodo di partenza.
+	var no_tree: Array = []
+	for ch in Domain.ROSTER:
+		if str(ch) == "Hachiko":
+			continue   # niente albero: carta Kamae a due facce (flip_kamae)
+		if CardDB.kamae_tree_for(CardDB.deck_slug_for(str(ch))).is_empty():
+			no_tree.append(ch)
+	_check(no_tree.is_empty(), "alberi Kamae presenti per tutto il roster (%s)" % str(no_tree))
+
 	print("RISULTATO: ", "PASS" if ok else "FAIL")
 	get_tree().quit(0 if ok else 1)

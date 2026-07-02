@@ -33,30 +33,34 @@ const RANK_COLORS := {
 # L'anello scorre sull'albero Kamae. Le 4 posizioni + ordine per spareggio
 # iniziativa (Aggressività, Equilibrio, Determinazione, Neutra).
 
-enum Stance { AGGRESSION, BALANCE, DETERMINATION, NEUTRAL }
+enum Stance { AGGRESSION, BALANCE, DETERMINATION, NEUTRAL, DISTANCE }
 
 const STANCE_NAMES := {
 	Stance.AGGRESSION: "Aggressività",
 	Stance.BALANCE: "Equilibrio",
 	Stance.DETERMINATION: "Determinazione",
 	Stance.NEUTRAL: "Neutra",
+	Stance.DISTANCE: "Distanza",   # quinta Kamae (onda blu), solo Navigatore
 }
 const STANCE_FROM_STRING := {
 	"aggression": Stance.AGGRESSION, "aggressivita": Stance.AGGRESSION,
 	"balance": Stance.BALANCE, "equilibrio": Stance.BALANCE,
 	"determination": Stance.DETERMINATION, "determinazione": Stance.DETERMINATION,
 	"neutral": Stance.NEUTRAL, "neutra": Stance.NEUTRAL,
+	"distance": Stance.DISTANCE, "distanza": Stance.DISTANCE,
 }
 ## Ordine di spareggio iniziativa a parità di velocità+tipo (dall'asterisco).
-const STANCE_TIE_ORDER := [Stance.AGGRESSION, Stance.BALANCE, Stance.DETERMINATION, Stance.NEUTRAL]
+const STANCE_TIE_ORDER := [Stance.AGGRESSION, Stance.BALANCE, Stance.DETERMINATION, Stance.NEUTRAL, Stance.DISTANCE]
 
 const STANCE_SLUG := {
 	Stance.AGGRESSION: "aggression", Stance.BALANCE: "balance",
 	Stance.DETERMINATION: "determination", Stance.NEUTRAL: "neutral",
+	Stance.DISTANCE: "distance",
 }
 const STANCE_FROM_SLUG := {
 	"aggression": Stance.AGGRESSION, "balance": Stance.BALANCE,
 	"determination": Stance.DETERMINATION, "neutral": Stance.NEUTRAL,
+	"distance": Stance.DISTANCE,
 }
 
 

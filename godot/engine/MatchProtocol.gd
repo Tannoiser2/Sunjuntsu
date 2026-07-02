@@ -237,7 +237,7 @@ func _kamae_ui() -> Dictionary:
 	if reach.is_empty() or _rseat == -1:
 		return {}
 	var f := state.fighters[_rseat]
-	var tree := CardDB.kamae_tree_for(f.character.to_lower())
+	var tree := CardDB.kamae_tree_for(CardDB.deck_slug_for(f.character))
 	if tree.is_empty():
 		return {}
 	return {
@@ -363,7 +363,7 @@ func _kamae_reachable() -> Dictionary:
 	var gate: String = params.get("gate", "")
 	if gate != "" and gate != Domain.STANCE_SLUG[f.stance]:
 		return {}
-	var tree := CardDB.kamae_tree_for(f.character.to_lower())
+	var tree := CardDB.kamae_tree_for(CardDB.deck_slug_for(f.character))
 	return Kamae.change_targets(tree, Domain.STANCE_SLUG[f.stance], int(params.get("n", 1)))
 
 
