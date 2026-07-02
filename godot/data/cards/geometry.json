@@ -12853,6 +12853,17 @@
    ],
    "note": "PUÒ ESSERE GIOCATO SOLO DOPO UNA REAZIONE RIUSCITA (condizione non modellata). Nessun diagramma. OTTIENI 1 focus; PESCA FINO A 1; l'avversario scarta 1 carta; l'avversario passa a Neutrale (bersaglio avversario, nessun verbo 'foe_switch_kamae', DA VERIFICARE); PASSA A UNA QUALSIASI KAMAE su te stesso. Verificata su yasuke_24.webp."
   }
+,
+ "215": {
+   "name": "ASSASSIN CORE DECK CARD",
+   "type": "core",
+   "note": "Divisore fisico del mazzo (organizza le carte nella scatola), non una carta azione: nessuna geometria di gioco. Nessuna immagine scansionata reperibile."
+  },
+ "234": {
+   "name": "ASHIGARU/HACHIKO CORE DECK",
+   "type": "core",
+   "note": "Divisore fisico del mazzo (organizza le carte nella scatola), non una carta azione: nessuna geometria di gioco. Nessuna immagine scansionata reperibile."
+  }
 },
  "characters": {
   "Warrior": {
