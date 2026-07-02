@@ -1300,6 +1300,18 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 				if to != -1:
 					f.stance = to
 					log.append("%s passa a Kamae %s" % [f.character, Domain.STANCE_NAMES[to]])
+			"flip_kamae":
+				# VOLTA LA CARTA KAMAE (Hachikō, §3.15): la sua carta Kamae ha
+				# due facce (scheda personaggio, kamae_flip: Determinazione e
+				# Aggressività dalla carta #247); il flip passa all'altra.
+				var faces: Array = CardDB.character_stats(f.character).get("kamae_flip", [])
+				if faces.size() == 2:
+					var cur := str(Domain.STANCE_SLUG[f.stance])
+					var flip_to: String = str(faces[1]) if cur == str(faces[0]) else str(faces[0])
+					var fto2: int = Domain.STANCE_FROM_SLUG.get(flip_to, -1)
+					if fto2 != -1:
+						f.stance = fto2
+						log.append("%s volta la carta Kamae → %s" % [f.character, Domain.STANCE_NAMES[fto2]])
 			"change_kamae":
 				# "Cambia Kamae fino a N": il giocatore sceglie nella scena (con focus
 				# dai rami rosa). L'IA traversa l'albero in automatico (ignora il focus).
@@ -1320,9 +1332,10 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 				else:
 					f.focus = maxi(0, f.focus - n_eff)
 			"foe_lose_focus":
-				if foe != null: foe.focus = maxi(0, foe.focus - n_eff)
+				if foe != null and not _immune(foe, "foe_lose_focus"):
+					foe.focus = maxi(0, foe.focus - n_eff)
 			"foe_discard":
-				if foe != null:
+				if foe != null and not _immune(foe, "foe_discard"):
 					for _d in range(maxi(1, n_eff)):
 						if foe.hand.is_empty():
 							break
@@ -1363,12 +1376,12 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 			"foe_reveal_hand":
 				# Effetto informativo (roadmap §3.5): la UI mostrerà la mano;
 				# qui si registra solo l'evento.
-				if foe != null:
+				if foe != null and not _immune(foe, "foe_reveal_hand"):
 					log.append("%s guarda la mano di %s (%d carte)" % [f.character, foe.character, foe.hand.size()])
 			"foe_switch_kamae":
 				# Forza la Kamae dell'AVVERSARIO (roadmap §3.7). "any" non ha una
 				# scelta sensata forzata: prudenzialmente porta a Neutrale.
-				if foe != null:
+				if foe != null and not _immune(foe, "foe_switch_kamae"):
 					var fslug := str(e.get("to", ""))
 					if fslug == "any":
 						fslug = "neutral"
@@ -1379,7 +1392,7 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 			"foe_change_kamae":
 				# Sposta l'avversario lungo il suo albero fino a n rami
 				# (approssimazione auto: stessa preferenza di change_kamae).
-				if foe != null:
+				if foe != null and not _immune(foe, "foe_change_kamae"):
 					var ftree := CardDB.kamae_tree_for(foe.character.to_lower())
 					var ftargets := Kamae.change_targets(ftree, Domain.STANCE_SLUG[foe.stance], n_eff)
 					for pref in ["neutral", "balance", "determination", "aggression"]:
@@ -1674,6 +1687,16 @@ func _opponent_index(i: int) -> int:
 		if j != i:
 			return j
 	return -1
+
+
+## Immunità di personaggio (scheda `immunities` in geometry.characters,
+## dalla carta-regola di Hachikō: non può essere obbligato a scartare
+## carte/focus, a cambiare Kamae, né a farsi guardare la mano): il verbo
+## foe_* indicato non ha effetto su questo bersaglio.
+func _immune(target: GameState.Fighter, verb: String) -> bool:
+	if target == null:
+		return false
+	return verb in (CardDB.character_stats(target.character).get("immunities", []) as Array)
 
 
 ## Anti-sconfitta (§3.26, #318 RISOLUTEZZA OSTINATA): se `i` sta per essere

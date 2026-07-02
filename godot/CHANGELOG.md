@@ -3,6 +3,50 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.84.0] — 2026-07-03
+### Selezione dei combattenti con ritratti + ritratti nell'HUD
+- **13 ritratti ufficiali** (da Tabelle_Materiali/Senjutsu/Personaggi,
+  rinominati dall'utente) processati in `assets/portraits/<slug>.webp`
+  (512px, alpha). Hachikō non ha ritratto nei materiali: la UI mostra
+  l'iniziale. Musashi/Kojiro esclusi (fuori scope permanente).
+- **Menu → selezione combattenti**: premendo Solo o 1v1 si apre la
+  griglia dei 14 personaggi (ritratto + nome italiano); si sceglie prima
+  il combattente del Giocatore 1 e poi quello del Giocatore 2/IA, con
+  "Indietro" per annullare. La scelta finisce in `Domain.selected_chars`;
+  vuota = coppia storica Warrior/Ronin (test e avvii diretti invariati).
+- **HUD**: ritratti dei contendenti agli angoli in alto (P1 a sinistra
+  bordo vermiglio, P2 a destra bordo blu, stessa convenzione del
+  controller telefono), tooltip col nome; testo della barra centrato.
+- **Slug unificati**: nuovo `CardDB.deck_slug_for` (Onna-Bugeisha →
+  onna_bugeisha, Hachiko → hachik) usato da Arena per mazzi/miniature —
+  prima i personaggi non-base avrebbero caricato un mazzo VUOTO
+  (to_lower non combaciava con lo slug del mazzo). `portrait_for` per i
+  ritratti. Pedine senza miniatura → placeholder già esistente.
+- **Controller telefono**: `portraitFile` esteso a tutto il roster
+  (prima solo Ronin/Guerriero); rimossi i vecchi png duplicati.
+- Rimosso il commento obsoleto "Jin Sakai da aggiungere" (fuori scope).
+
+## [0.83.0] — 2026-07-03
+### Regola Hachikō completa: flip_kamae e immunità (carte-regola #245/#233/#247)
+- **`flip_kamae`** (§3.15, "VOLTA LA CARTA KAMAE"): la carta Kamae di
+  Hachikō (#247) ha due facce — **Determinazione e Aggressività** (scan
+  forniti dall'utente) — e si cambia solo voltandola. Nuovo verbo che
+  alterna le due facce dichiarate sulla scheda personaggio
+  (`kamae_flip`); sostituisce l'approssimazione `switch_kamae to:any` su
+  #248/#252/#253 (faccia attacco e difesa). Chiude §3.15.
+- **Immunità di personaggio** (`immunities` sulla scheda): Hachikō non
+  può essere obbligato a scartare carte/focus, a cambiare Kamae, né a
+  farsi guardare la mano — i verbi foe_* indicati non hanno effetto su
+  di lui (generico: vale per qualsiasi personaggio futuro).
+- Registrate in nota le regole non ancora cablate (compagno a 2 pedine,
+  #233): mazzo esaurito → rimescola senza ferita; stordimenti mischiati
+  nel mazzo e messi in gioco alla pescata; sconfitta a 2 stordimenti in
+  gioco; risolve solo carte abilità; Kamae iniziale scelta dall'Ashigaru.
+- Nota su CardStore: il presunto bug dei diff-fantasma a tab NON è
+  riproducibile col codice attuale (save_geometry scrive già 1-spazio,
+  formato del repo) — probabile artefatto di una build vecchia; da
+  riverificare solo se ricompare.
+
 ## [0.82.0] — 2026-07-02
 ### Fase 4 (parte 2) — doppia faccia Hachikō, Disperazione derivata, anti-sconfitta, trappole, ricorsione
 - **Carte a doppia faccia** (§3.14, Hachikō): nuovo campo `face_defence`

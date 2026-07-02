@@ -154,7 +154,14 @@ function maybeFlashCharCard(me) {
 }
 
 // ── Ritratti dei contendenti (cerchi ai lati: io a sinistra, avversario a destra) ──
-function portraitFile(name) { return ({ Ronin: "ronin.png", Warrior: "guerriero.png" })[name] || ""; }
+function portraitFile(name) {
+  // Slug identico a CardDB.deck_slug_for; i ritratti sono assets/portraits/<slug>.webp.
+  const special = { "Onna-Bugeisha": "onna_bugeisha", "Hachiko": "hachik" };
+  const slug = special[name] || String(name || "").toLowerCase();
+  const known = ["warrior", "ronin", "master", "student", "assassin", "ninja",
+    "onna_bugeisha", "yojimbo", "ashigaru", "monk", "sailor", "wakou", "yasuke"];
+  return known.includes(slug) ? slug + ".webp" : "";
+}
 
 function updateFighters() {
   if (!board || !board.fighters) return;

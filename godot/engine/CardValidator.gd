@@ -19,7 +19,7 @@ const RANKS := ["Wood", "Steel", "Gold", "Jade", "-"]
 const EFFECT_VERBS := [
 	"bleed", "block_initiative", "cancel_abilities", "cancel_movement",
 	"change_ai_behaviour", "change_approach", "change_kamae", "discard_self",
-	"draw", "focus", "foe_change_kamae", "foe_discard", "foe_draw",
+	"draw", "flip_kamae", "focus", "foe_change_kamae", "foe_discard", "foe_draw",
 	"foe_lose_focus", "foe_reveal_hand", "foe_stun", "foe_switch_kamae",
 	"foe_mill", "heal", "hobble", "link_anchor", "mill", "place_traps",
 	"pull", "push", "reduce_damage",

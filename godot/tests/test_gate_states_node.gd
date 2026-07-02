@@ -419,5 +419,47 @@ func _ready() -> void:
 	d16._push(0, 1, 1, log16)   # spinge sul diversivo (k=4)
 	_check(v16.wounds.size() == 1 and s16.traps.is_empty(), "diversivo: nessun effetto, segnalino rimosso")
 
+	# ── Hachikō: flip_kamae (carta #247) e immunità (carta-regola) ──────────
+	var s17 := GameState.new()
+	var h17 := _mk("Hachiko"); var a17 := _mk("Assassino")
+	s17.fighters = [h17, a17]
+	var d17 := Duel.new(s17)
+	h17.stance = Domain.Stance.DETERMINATION
+	d17._apply_effects(0, 1, {"effects": [{"do": "flip_kamae"}]}, "always", [])
+	_check(h17.stance == Domain.Stance.AGGRESSION, "flip_kamae: Determinazione → Aggressività")
+	d17._apply_effects(0, 1, {"effects": [{"do": "flip_kamae"}]}, "always", [])
+	_check(h17.stance == Domain.Stance.DETERMINATION, "flip_kamae: torna a Determinazione")
+	h17.hand = [10, 11]; h17.focus = 2
+	d17._apply_effects(1, 0, {"effects": [
+		{"do": "foe_discard", "n": 1}, {"do": "foe_lose_focus", "n": 1},
+		{"do": "foe_switch_kamae", "to": "neutral"}]}, "always", [])
+	_check(h17.hand.size() == 2 and h17.focus == 2 and h17.stance == Domain.Stance.DETERMINATION,
+		"immunità Hachikō: scarto/focus/kamae forzati senza effetto")
+	var w17 := _mk("Warrior"); w17.hand = [10]
+	var s18 := GameState.new(); s18.fighters = [a17, w17]
+	var d18 := Duel.new(s18)
+	d18._apply_effects(0, 1, {"effects": [{"do": "foe_discard", "n": 1}]}, "always", [])
+	_check(w17.hand.is_empty(), "immunità: gli altri personaggi restano vulnerabili")
+
+	# ── Selezione combattenti: slug mazzi/ritratti e roster ─────────────────
+	_check(CardDB.deck_slug_for("Onna-Bugeisha") == "onna_bugeisha"
+		and CardDB.deck_slug_for("Hachiko") == "hachik"
+		and CardDB.deck_slug_for("Warrior") == "warrior", "deck_slug_for: eccezioni e default")
+	var missing_decks: Array = []
+	var missing_portraits: Array = []
+	for ch in Domain.ROSTER:
+		if CardDB.draw_pile_for(CardDB.deck_slug_for(str(ch))).is_empty():
+			missing_decks.append(ch)
+		if str(ch) != "Hachiko" and not FileAccess.file_exists(
+				"res://assets/portraits/%s.webp" % CardDB.deck_slug_for(str(ch))):
+			missing_portraits.append(ch)
+	_check(missing_decks.is_empty(), "roster: ogni personaggio ha un mazzo (%s)" % str(missing_decks))
+	_check(missing_portraits.is_empty(), "roster: ritratti presenti (Hachikō escluso) (%s)" % str(missing_portraits))
+	_check(CardDB.portrait_for("Hachiko") == null, "portrait_for: Hachikō senza ritratto → null (fallback iniziale)")
+	for ch in Domain.ROSTER:
+		if not Domain.CHAR_NAMES_IT.has(ch):
+			ok = false
+			print("FAIL: nome IT mancante per %s" % ch)
+
 	print("RISULTATO: ", "PASS" if ok else "FAIL")
 	get_tree().quit(0 if ok else 1)

@@ -131,11 +131,28 @@ static func initiative_options(raw: String) -> Array:
 # Il pool completo (24 tipi) è in data/cards/card_pool.json; questi sono i
 # guerrieri di partenza per cui abbiamo carte/miniature.
 
-const PLAYABLE := ["Warrior", "Ronin"]   ## "Jin Sakai" da aggiungere (carte JPG custom)
+const PLAYABLE := ["Warrior", "Ronin"]   ## default se il menu non ha scelto
+
+## Roster selezionabile dal menu (ordine di presentazione: base poi espansioni)
+## e nomi italiani per la UI. Le chiavi sono quelle di geometry.characters.
+const ROSTER := ["Warrior", "Ronin", "Master", "Student", "Assassin", "Ninja",
+	"Onna-Bugeisha", "Yojimbo", "Ashigaru", "Hachiko", "Monk", "Sailor",
+	"Wakou", "Yasuke"]
+const CHAR_NAMES_IT := {
+	"Warrior": "Guerriero", "Ronin": "Ronin", "Master": "Maestro",
+	"Student": "Allievo", "Assassin": "Assassino", "Ninja": "Ninja",
+	"Onna-Bugeisha": "Onna-Bugeisha", "Yojimbo": "Yojimbo",
+	"Ashigaru": "Ashigaru", "Hachiko": "Hachikō", "Monk": "Monaco",
+	"Sailor": "Navigatore", "Wakou": "Wakou", "Yasuke": "Yasuke",
+}
 
 ## Modalità scelta dal menu: "solo" (vs IA) o "versus" (1v1 locale hot-seat).
 ## L'Arena la legge all'avvio per configurare le pedine e il flusso del turno.
 var game_mode: String = "solo"
+
+## Combattenti scelti nel menu ([P1, P2], chiavi personaggio). Vuoto = default
+## PLAYABLE (retro-compatibile con test e avvii diretti dell'Arena).
+var selected_chars: Array = []
 
 ## URL del relay WebSocket per il tavolo online (companion). In LAN punta al PC che
 ## ospita il server (server/server.js). Default: localhost.

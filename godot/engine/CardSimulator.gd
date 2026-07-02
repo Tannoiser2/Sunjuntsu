@@ -121,6 +121,7 @@ const _VERB_IT := {
 	"foe_change_kamae": "sposti l'avversario lungo il suo albero Kamae",
 	"heal": "rimuovi ferite/stati", "mill": "scarti dalla cima del mazzo",
 	"place_traps": "piazzi segnalini trappola sulla griglia",
+	"flip_kamae": "volti la carta Kamae (due facce, Hachikō)",
 	"foe_mill": "l'avversario scarta dalla cima del mazzo",
 	"state_add": "aggiungi allo stato persistente",
 	"state_set": "imposti lo stato persistente", "state_clear": "azzeri lo stato persistente",
