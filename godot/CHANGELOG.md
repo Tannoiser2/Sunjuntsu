@@ -26,6 +26,11 @@ versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 - `state_clear` su "contratti" (#322) scarta anche le carte contratto
   completate dall'area. #316 alt b (rimettere in gioco un contratto
   scartato) resta in nota.
+- **UI cambio Kamae rifatta** (feedback dal tavolo): i nodi raggiungibili
+  si scelgono CLICCANDO direttamente sulla carta dell'albero — pulsanti
+  verdi sui nodi validi col focus guadagnato scritto dentro ("+N◈") e
+  tooltip; resta anche la striscia di pulsanti come alternativa. Banner
+  di fase spostato SOTTO la barra in alto (non ci finiva più sopra).
 - Con questo il **catalogo delle 28 meccaniche è coperto**: restano solo
   i 3 casi isolati §3.23/24/25 (carta-istantanea da pesca, muovi-verso,
   terzo pezzo) e le regole di regia (Bushido globali, mano rivelata di
