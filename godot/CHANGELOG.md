@@ -26,6 +26,13 @@ versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 - `state_clear` su "contratti" (#322) scarta anche le carte contratto
   completate dall'area. #316 alt b (rimettere in gioco un contratto
   scartato) resta in nota.
+- **Rotazione corretta** (feedback dal tavolo): un tocco di Q/E ora
+  ruota di UN lato nella direzione scelta fino al primo facing legale —
+  il vecchio ciclo sull'elenco ordinato dei facing faceva saltare la
+  pedina di più lati per volta (es. legali [3,5]: da 3 balzava a 5 anche
+  girando a sinistra). Il motore già generava tutti gli scatti intermedi
+  "fino a N". Frecce di rotazione in testo leggibile ("< Q" / "E >"):
+  i glifi ⟲/⟳ non esistono nel font e comparivano come rettangoli.
 - **UI cambio Kamae rifatta** (feedback dal tavolo): i nodi raggiungibili
   si scelgono CLICCANDO direttamente sulla carta dell'albero — pulsanti
   verdi sui nodi validi col focus guadagnato scritto dentro ("+N◈") e

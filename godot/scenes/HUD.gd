@@ -456,20 +456,22 @@ func _build_rotation_controls() -> void:
 	_rot_box = Control.new()
 	_rot_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_rot_box)
+	# Testo ASCII ("<Q" / "E>"): i glifi ⟲/⟳ non esistono nel font di
+	# progetto e comparivano come rettangoli incomprensibili.
 	var bl := Button.new()
-	bl.text = "⟲"
-	bl.custom_minimum_size = Vector2(50, 50)
-	bl.position = Vector2(-96, -25)
-	bl.tooltip_text = "Ruota a sinistra"
-	bl.add_theme_font_size_override("font_size", 24)
+	bl.text = "< Q"
+	bl.custom_minimum_size = Vector2(56, 50)
+	bl.position = Vector2(-102, -25)
+	bl.tooltip_text = "Ruota di un lato a sinistra (tasto Q)"
+	bl.add_theme_font_size_override("font_size", 20)
 	bl.pressed.connect(func(): rotate_requested.emit(-1))
 	_rot_box.add_child(bl)
 	var br := Button.new()
-	br.text = "⟳"
-	br.custom_minimum_size = Vector2(50, 50)
+	br.text = "E >"
+	br.custom_minimum_size = Vector2(56, 50)
 	br.position = Vector2(46, -25)
-	br.tooltip_text = "Ruota a destra"
-	br.add_theme_font_size_override("font_size", 24)
+	br.tooltip_text = "Ruota di un lato a destra (tasto E)"
+	br.add_theme_font_size_override("font_size", 20)
 	br.pressed.connect(func(): rotate_requested.emit(1))
 	_rot_box.add_child(br)
 	_rot_box.visible = false
