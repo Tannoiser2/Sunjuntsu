@@ -30,6 +30,17 @@ versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 - **`GEOMETRY_SCHEMA.md`**: documentati stati persistenti, gate unificato,
   `state_req` e i tre verbi nuovi. Nuovo report `docs/GATE_AUDIT.md` (censimento
   dei gate su tutte le 281 carte) e aggiornamento roadmap (decisioni §5 fissate).
+- **Pilota dati: Disperazione (Onna-Bugeisha)** — prime carte reali sul
+  sottosistema: #295/#296 giocabili solo in Disperazione (`state_req`),
+  #298 PESCA 5 (alternativa b), #299 PESCA 2 dello split, #305 terza riga
+  di movimento + PESCA 2, #306 STORDISCI+AZZOPPA on-hit gated
+  `state: "disperazione"`; #302 tridente dello split gated sull'atomo.
+  `Move.reachable_states/reachable_by_cell` ora filtrano gli atomi anche
+  per stato persistente (nuovo parametro, tutti i chiamanti aggiornati).
+  Restano in nota (fasi successive): counter gated di #299 (§3.10),
+  iniziativa alternativa e bonus-cella di #303 (§3.1), regole persistenti
+  di #295 (§3.2). Come si ENTRA in Disperazione è da definire con
+  l'utente (regola dell'espansione, non presente negli scan).
 - **Test**: nuova scena `tests/test_gate_states.tscn` (Gate, helper Fighter,
   verbi state_*, gate su effetti, state_req su playable, round-trip
   passthrough editor). ⚠️ Non ancora eseguita: il binario Godot 4.6 non è

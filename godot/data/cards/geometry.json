@@ -9356,7 +9356,8 @@
      "n": 3
     }
    ],
-   "note": "Meditazione, Aggiunta Istantanea. Icona fiamma rossa (Disperazione) non modellata come gate. RIMANE IN GIOCO; AUMENTA DI 3 IL LIMITE DI MANO; MANO RIVELATA; ordine di scelta invertito — regole persistenti non modellabili, DA VERIFICARE. Verificata su onna_bugeisha_04.webp."
+   "note": "Meditazione, Aggiunta Istantanea. Giocabile solo in Disperazione (banner fiamma, state_req). RIMANE IN GIOCO; AUMENTA DI 3 IL LIMITE DI MANO; MANO RIVELATA; ordine di scelta invertito — regole persistenti non ancora modellabili (roadmap §3.2/§3.17), DA VERIFICARE. Verificata su onna_bugeisha_04.webp.",
+   "state_req": "disperazione"
   },
  "296": {
    "name": "ABBRACCIO SILENZIOSO",
@@ -9392,7 +9393,8 @@
      }
     ]
    },
-   "note": "Icona fiamma (Disperazione) non modellata come kamae_req. Costo 3 focus. ↻3 (nessun passo). Fronte dist2 3 ferite; diagonale anello2 fronte-dx 2 ferite; fronte-dx dist2 1 ferita; anello1 tutto vuoto. Verificata su onna_bugeisha_05.webp."
+   "note": "Giocabile solo in Disperazione (icona fiamma, state_req). Costo 3 focus. ↻3 (nessun passo). Fronte dist2 3 ferite; diagonale anello2 fronte-dx 2 ferite; fronte-dx dist2 1 ferita; anello1 tutto vuoto. Verificata su onna_bugeisha_05.webp.",
+   "state_req": "disperazione"
   },
  "297": {
    "name": "MORSO DEL CIELO",
@@ -9504,13 +9506,14 @@
     {
      "do": "draw",
      "n": 5,
-     "alt": "b"
+     "alt": "b",
+     "state": "disperazione"
     },
     {
      "do": "reset_deck"
     }
    ],
-   "note": "Meditazione, Sostituzione Istantanea. Costo 1 focus. PESCA 3 (base) OPPURE (Disperazione, gate non modellato) PESCA 5. Poi RIMETTI ALTRETTANTE CARTE NEL MAZZO E MISCHIA (reso con reset_deck, DA VERIFICARE). Verificata su onna_bugeisha_07.webp."
+   "note": "Meditazione, Sostituzione Istantanea. Costo 1 focus. PESCA 3 (base) OPPURE PESCA 5 in Disperazione (gate state sull'alternativa b). Poi RIMETTI ALTRETTANTE CARTE NEL MAZZO E MISCHIA (reso con reset_deck, DA VERIFICARE). Verificata su onna_bugeisha_07.webp."
   },
  "299": {
    "name": "GUARDIA FURENTE",
@@ -9571,11 +9574,12 @@
     "effects": [
      {
       "do": "draw",
-      "n": 2
+      "n": 2,
+      "state": "disperazione"
      }
     ]
    },
-   "note": "Iniziativa card_pool 8-2 (non replicata). 3 scudi (fronte/fronte-dx/fronte-sx); celle retro-dx/retro-sx sono ancore senza effetto base, probabile bonus scudo solo in Disperazione (non modellato). Counter [7,6,5] preceduto da icona fiamma (Disperazione, gate non modellabile). Split [1]: passo indietro 1 OPPURE (Determinazione) tridente posteriore 1. PESCA 2 CARTE (Disperazione, senza gate esplicito nello schema). Verificata su onna_bugeisha_08.webp."
+   "note": "Iniziativa card_pool 8-2 (non replicata). 3 scudi (fronte/fronte-dx/fronte-sx); celle retro-dx/retro-sx sono ancore senza effetto base, probabile bonus scudo solo in Disperazione (non modellato). Counter [7,6,5] gated Disperazione (icona fiamma): il gate sul counter arriva in Fase 3 (roadmap §3.10), DA MODELLARE. Split [1]: passo indietro 1 OPPURE (Determinazione) tridente posteriore 1. PESCA 2 CARTE gated Disperazione (state). Verificata su onna_bugeisha_08.webp."
   },
  "300": {
    "name": "COLPO IN CADUTA",
@@ -9684,7 +9688,8 @@
           0,
           1,
           5
-         ]
+         ],
+         "state": "disperazione"
         },
         {
          "t": "rot",
@@ -9702,7 +9707,7 @@
      }
     ]
    },
-   "note": "DIFESA senza cella di blocco: schivata pura. Costo 1 focus. Base: ❄2 sempre + ⟳1 in Determinazione (bonus, non alternativa). Split [1]: tridente frontale 1 su banda con icona fiamma (Disperazione, gate non modellabile come kamae, DA VERIFICARE) + ⟳1 in Equilibrio. PASSA A Determinazione incondizionato. Verificata su onna_bugeisha_13.webp."
+   "note": "DIFESA senza cella di blocco: schivata pura. Costo 1 focus. Base: ❄2 sempre + ⟳1 in Determinazione (bonus, non alternativa). Split [1]: tridente frontale 1 gated Disperazione (state sull'atomo) + ⟳1 in Equilibrio. PASSA A Determinazione incondizionato. Verificata su onna_bugeisha_13.webp."
   },
  "303": {
    "name": "AFFONDO DI MONTAGNA",
@@ -9750,7 +9755,7 @@
      "to": "determination"
     }
    ],
-   "note": "Banda con riquadro [8] preceduta da icona fiamma = iniziativa alternativa 8 in Disperazione, non modellata. Movimento: passo indietro 1 + ⟳1 in Aggressività. Diagonale anello2 fronte-sx 1 ferita; fronte dist2 1 ferita; cella ancora estrema (diagonale fronte-sx dist2, w:0) con bonus a 2 ferite SOLO in Disperazione non modellato. PASSA A Determinazione incondizionato. Verificata su onna_bugeisha_15.webp."
+   "note": "Banda con riquadro [8] preceduta da icona fiamma = iniziativa alternativa 8 in Disperazione: campo alt_initiative in arrivo in Fase 3 (roadmap §3.1), DA MODELLARE. Movimento: passo indietro 1 + ⟳1 in Aggressività. Diagonale anello2 fronte-sx 1 ferita; fronte dist2 1 ferita; cella ancora estrema (diagonale fronte-sx dist2, w:0) con bonus a 2 ferite SOLO in Disperazione (gate di cella non ancora modellabile). PASSA A Determinazione incondizionato. Verificata su onna_bugeisha_15.webp."
   },
  "304": {
    "name": "COLPO ALLE CAVIGLIE",
@@ -9850,11 +9855,13 @@
        {
         "t": "step",
         "dir": -1,
-        "n": 1
+        "n": 1,
+        "state": "disperazione"
        },
        {
         "t": "rot",
-        "n": 1
+        "n": 1,
+        "state": "disperazione"
        }
       ]
      }
@@ -9863,7 +9870,8 @@
    "effects": [
     {
      "do": "draw",
-     "n": 2
+     "n": 2,
+     "state": "disperazione"
     },
     {
      "do": "change_kamae",
@@ -9871,7 +9879,7 @@
      "kamae": "determination"
     }
    ],
-   "note": "Tre righe identiche ❄1+↻1: prima senza gate, seconda gated Equilibrio, terza su banda con icona fiamma (Disperazione, non modellabile come kamae, DA VERIFICARE). Righe cumulative, non alternative. GUARDA LA MANO dell'avversario: nessun verbo disponibile, non modellato. PESCA 2 (Disperazione, senza gate esplicito). CAMBIA KAMAE FINO A 1 RAMO gated Determinazione. Verificata su onna_bugeisha_20.webp."
+   "note": "Tre righe cumulative ❄1+↻1: prima senza gate, seconda in Equilibrio, terza in Disperazione (state sugli atomi). GUARDA LA MANO dell'avversario: nessun verbo disponibile (roadmap §3.5), non modellato. PESCA 2 gated Disperazione (state). CAMBIA KAMAE FINO A 1 RAMO gated Determinazione. Verificata su onna_bugeisha_20.webp."
   },
  "306": {
    "name": "FIUME IN PIENA",
@@ -9911,12 +9919,14 @@
     {
      "do": "foe_stun",
      "n": 1,
-     "when": "on_hit"
+     "when": "on_hit",
+     "state": "disperazione"
     },
     {
      "do": "hobble",
      "n": 1,
-     "when": "on_hit"
+     "when": "on_hit",
+     "state": "disperazione"
     },
     {
      "do": "focus",
@@ -9925,7 +9935,7 @@
      "kamae": "balance"
     }
    ],
-   "note": "Movimento: sola ↻1. Fronte/fronte-dx/fronte-sx adiacenti (1 ferita ciascuna). SE RIUSCITO: Disperazione (non modellata) STORDISCI + AZZOPPA; Determinazione: passo indietro 1 senza icona elmo, probabile riposizionamento post-colpo non modellabile, non incluso; Equilibrio: OTTIENI 1 focus. Verificata su onna_bugeisha_23.webp."
+   "note": "Movimento: sola ↻1. Fronte/fronte-dx/fronte-sx adiacenti (1 ferita ciascuna). SE RIUSCITO: STORDISCI + AZZOPPA in Disperazione (gate state); Determinazione: passo indietro 1 senza icona elmo, probabile riposizionamento post-colpo non modellabile, non incluso; Equilibrio: OTTIENI 1 focus. Verificata su onna_bugeisha_23.webp."
   },
  "316": {
    "name": "CARTA SPECIALE YOJIMBO",

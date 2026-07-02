@@ -825,7 +825,7 @@ func attack_can_hit(i: int) -> bool:
 		return true
 	if not g.has("move"):
 		return false
-	var reach := Move.reachable_by_cell(f.cell, f.facing, g["move"], state.is_blocked, Domain.STANCE_SLUG[f.stance])
+	var reach := Move.reachable_by_cell(f.cell, f.facing, g["move"], state.is_blocked, Domain.STANCE_SLUG[f.stance], f.states)
 	for cell in reach.keys():
 		for fc in reach[cell]:
 			if attack_v2_cells(cell, fc, g, 1, f.stance).has(foe_cell):

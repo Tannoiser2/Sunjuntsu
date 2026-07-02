@@ -715,7 +715,7 @@ func _draw_overlays_for(card: Dictionary, move_used: bool) -> void:
 	if not move_used:
 		_move_states = {}
 		if g.has("move"):
-			_move_states = Move.reachable_by_cell(f.cell, f.facing, g["move"], state.is_blocked, Domain.STANCE_SLUG[f.stance])
+			_move_states = Move.reachable_by_cell(f.cell, f.facing, g["move"], state.is_blocked, Domain.STANCE_SLUG[f.stance], f.states)
 			for cell in _move_states.keys():
 				if cell != f.cell:
 					move_cells.append(cell)
