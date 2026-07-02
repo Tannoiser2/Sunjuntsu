@@ -3,6 +3,31 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.75.0] — 2026-07-02
+### 10 nuovi personaggi: geometria completata (fase 2, tutte le 137 carte)
+- Trascritte le ultime 45 carte rimaste in coda dalla 0.74.0: **Ninja** (14),
+  **Monaco** (13), **Yasuke** (14) e le prime 4 carte di **Wakou** (333-336,
+  sostituiscono i segnaposto temporanei).
+- Tutti e 10 i personaggi caricati in questa tornata (Assassino, Ninja,
+  Onna-Bugeisha, Yojimbo, Ashigaru, Hachikō, Monaco, Navigatore, Wakou,
+  Yasuke) hanno ora la geometria completa: **279 carte totali** in
+  geometry.json (era 140 prima di questa fase).
+- **Nuove meccaniche scoperte e documentate in nota** (non ancora
+  modellabili con lo schema attuale, coerentemente con l'approccio
+  "non inventare" delle fasi precedenti):
+  - **Stato "Ombra"** dell'Assassino e **stato speciale del Ninja mascherato**
+    ricorrono su più carte (probabile stessa meccanica "Occultamento" delle
+    due carte-personaggio) — nessuna quinta kamae nello schema.
+  - **Ciclo "Illuminata"** del Monaco: risorsa/costo non standard per
+    "cerca carta specifica", buff permanenti al limite ferite/mano/focus.
+  - **Attacchi "trappola"** del Ninja (166, 167, 169): bersaglio scelto per
+    confronto di iniziativa invece che per cella, con soglie a pagamento.
+  - Scaling di effetti "per casella mossa" (Yasuke 353, 355) non
+    rappresentabile come intero fisso.
+- Validazione automatica sull'intero file: zero verbi/kamae/direzioni fuori
+  vocabolario su tutte le 279 carte.
+- **Ancora bloccati**: Musashi e Kojiro (nessun PDF caricato).
+
 ## [0.74.0] — 2026-07-02
 ### 10 nuovi personaggi: anagrafica, immagini, geometria (fase 1)
 - **10 nuovi personaggi caricati**: Assassino, Ninja, Onna-Bugeisha, Yojimbo

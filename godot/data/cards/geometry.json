@@ -10456,27 +10456,185 @@
      "alt": "a"
     },
     {
+     "do": "search_draw",
+     "n": 1,
+     "alt": "b"
+    },
+    {
      "do": "change_kamae",
      "n": 1,
      "alt": "c"
     }
    ],
-   "note": "Struttura standard delle Carte Speciali (per analogia con id 53/23/236). Costo: SCARTA 1 CARTA. Movimento ❄1 ↻2 facoltativi. OPPURE: PESCA FINO A 2 / CAMBIA KAMAE FINO A 1 RAMO. DA VERIFICARE l'opzione centrale (b), non trascritta con dettaglio a causa di un problema tecnico nella sessione di trascrizione — richiede verifica su wakou_04.webp."
+   "note": "Struttura standard Carta Speciale. Costo: SCARTA 1 CARTA. Movimento ❄1 ⟳2 facoltativi. OPPURE: PESCA FINO A 2 / CERCA+PRENDI 1 (per analogia con Allievo id 38) / CAMBIA KAMAE FINO A 1 RAMO. Verificata su wakou_04.webp."
   },
  "334": {
    "name": "SCHIANTO DI BORDATA",
    "type": "attack",
-   "note": "DA VERIFICARE: card non trascritta in dettaglio a causa di un problema tecnico nella sessione di trascrizione — richiede verifica su wakou_05.webp (init 6)."
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "n": 2,
+        "dirs": [
+         1,
+         2
+        ],
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "attacks": [
+    {
+     "cells": [
+      {
+       "d": 0,
+       "k": 1,
+       "w": 0
+      },
+      {
+       "d": 5,
+       "k": 1,
+       "w": 0
+      }
+     ]
+    },
+    {
+     "kamae": "aggression",
+     "cells": [
+      {
+       "d": 0,
+       "k": 1,
+       "w": 1
+      },
+      {
+       "d": 5,
+       "k": 1,
+       "w": 1
+      }
+     ]
+    }
+   ],
+   "effects": [
+    {
+     "do": "foe_stun",
+     "n": 1,
+     "when": "on_hit"
+    },
+    {
+     "do": "push",
+     "n": 1,
+     "when": "on_hit",
+     "kamae": "balance"
+    }
+   ],
+   "note": "NON BLOCCABILE. Costo 2 focus. Icona fiamma non impostata come kamae_req (carta ha anche effetto gated Equilibrio, incompatibile con vincolo fisso, DA VERIFICARE). Movimento: scelta fronte-dx/retro-dx 2 passi + ⟳1, facoltativi, direzioni incerte DA VERIFICARE. 2 celle-àncora (fronte/fronte-sx): se colpite, STORDISCI. SE RIUSCITO: Aggressività converte le celle in 1 ferita; Equilibrio SPINGI 1. Verificata su wakou_05.webp."
   },
  "335": {
    "name": "TSUNAMI IN CADUTA",
    "type": "attack",
-   "note": "DA VERIFICARE: card non trascritta in dettaglio a causa di un problema tecnico nella sessione di trascrizione — richiede verifica su wakou_03.webp (init 8)."
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "n": 1,
+        "dirs": [
+         1,
+         3,
+         5
+        ]
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 2,
+      "w": 1
+     },
+     {
+      "q": 1,
+      "r": 1,
+      "w": 1
+     },
+     {
+      "q": 2,
+      "r": -1,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 2,
+      "w": 1
+     },
+     {
+      "d": 5,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "foe_discard",
+     "n": 2,
+     "when": "on_hit",
+     "kamae": "balance"
+    },
+    {
+     "do": "foe_lose_focus",
+     "n": 2,
+     "when": "on_hit",
+     "kamae": "determination"
+    }
+   ],
+   "note": "Costo 2 focus. Movimento a 3 punte (fronte-dx/fronte-sx/dorso) obbligatorio, combinazione non standard, DA VERIFICARE + ⟳1 facoltativo. Nido d'ape esteso (identico a id 55): fronte dist2, entrambe diagonali anello2, fronte-dx dist2, fronte-sx adiacente (1 ferita ciascuna). SE RIUSCITO: Equilibrio l'avversario scarta 2; Determinazione l'avversario perde 2 focus. Verificata su wakou_03.webp."
   },
  "336": {
    "name": "LANCIO DELLA BROCCA",
    "type": "attack",
-   "note": "DA VERIFICARE: card non trascritta in dettaglio a causa di un problema tecnico nella sessione di trascrizione — richiede verifica su wakou_06.webp (init 5)."
+   "effects": [
+    {
+     "do": "bleed",
+     "when": "on_hit"
+    },
+    {
+     "do": "hobble",
+     "n": 1,
+     "when": "on_hit"
+    },
+    {
+     "do": "foe_stun",
+     "n": 1,
+     "when": "on_hit",
+     "kamae": "aggression"
+    },
+    {
+     "do": "switch_kamae",
+     "to": "neutral",
+     "when": "on_hit"
+    }
+   ],
+   "note": "ATTACCO DISTANZA, Range2. Nessun movimento/nido d'ape: COLPISCI l'avversario con iniziativa inferiore (non rappresentabile con attack.cells, campo omesso, DA VERIFICARE). Se colpito: 1 ferita sanguinante + AZZOPPA. Aggressività: STORDISCI. Poi PASSA A Neutrale (incondizionato rispetto al kamae, DA VERIFICARE il timing). Costo 0 focus. Verificata su wakou_06.webp."
   },
  "337": {
    "name": "ARIETE BUKAN",
@@ -10812,6 +10970,1888 @@
     }
    ],
    "note": "DA VERIFICARE: icona di movimento con 3 punte (fronte-dx, fronte-sx, retro) non presente nella legenda standard, interpretata per analogia come passo 2 a scelta tra dir 1/5/3 + ⟳1. Banda viola: CERCA + PRENDI 1 carta Attacco CHE INFLIGGA STORDIMENTO — filtro sull'effetto della carta cercata non rappresentabile con search_draw, non modellato. Verificata su wakou_23.webp."
+  }
+,
+ "163": {
+   "name": "CARTA SPECIALE NINJA",
+   "type": "core",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": -1,
+        "n": 1
+       },
+       {
+        "t": "rot",
+        "n": 2
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "discard_self",
+     "n": 1
+    },
+    {
+     "do": "draw",
+     "n": 2,
+     "alt": "a"
+    },
+    {
+     "do": "search_draw",
+     "alt": "b"
+    },
+    {
+     "do": "change_kamae",
+     "n": 1,
+     "alt": "c"
+    }
+   ],
+   "note": "SCARTA 1 CARTA + passo libero 1 + rotazione 2 (obbligatori). OPPURE: PESCA FINO A 2 / CERCA + PRENDI 1 / CAMBIA KAMAE FINO A 1 RAMO. Verificata su ninja_03.webp."
+  },
+ "164": {
+   "name": "COLPO DI KUSARIGAMA",
+   "type": "attack",
+   "effects": [
+    {
+     "do": "discard_self",
+     "n": 1
+    }
+   ],
+   "attacks": [
+    {
+     "cells": [
+      {
+       "d": 0,
+       "k": 2,
+       "w": 1,
+       "focus_cost": 1
+      },
+      {
+       "q": 2,
+       "r": -1,
+       "w": 1,
+       "focus_cost": 1
+      }
+     ]
+    },
+    {
+     "cells": [
+      {
+       "d": 0,
+       "k": 1,
+       "w": 1
+      },
+      {
+       "d": 5,
+       "k": 1,
+       "w": 1
+      }
+     ]
+    }
+   ],
+   "split": {
+    "initiative": 3,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SCARTA 1 CARTA. Due varianti d'attacco OPPURE (una a pagamento su banda viola, costo non stampato, DA VERIFICARE): estesa colpisce d0k2+diagonale fronte-dx; gratuita colpisce d0k1+d5k1. Split [3]: ❄1. Verificata su ninja_05.webp."
+  },
+ "165": {
+   "name": "PASSO DELLA LUNA FANTASMA",
+   "type": "defence",
+   "defence": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 5,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 2,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 4,
+      "k": 1,
+      "v": 1
+     }
+    ]
+   },
+   "split": {
+    "initiative": 1,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 2
+        },
+        {
+         "t": "rot",
+         "n": 2
+        }
+       ]
+      },
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 3,
+         "focus_cost": 1
+        },
+        {
+         "t": "rot",
+         "n": 3,
+         "focus_cost": 1
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "5 scudi su ring1 (dorso vuoto). Split [1]: 'ENTRA IN [stato Ninja mascherato]' non modellabile (non è una kamae standard). Movimento: ❄2+⟳2 base, OPPURE (1 focus stimato) ❄3+⟳3. Verificata su ninja_04.webp."
+  },
+ "166": {
+   "name": "TRAPPOLA DEL TIRATORE LUNARE",
+   "type": "meditation",
+   "note": "Meccanica trappola non rappresentabile (nessun verbo per 'ferisci l'avversario se la sua iniziativa è inferiore a N'). Banda blu 'stato Ninja' in testa; banda viola [7] = soglia iniziativa &lt;7 (costo focus non stampato); COLPISCI l'avversario con iniziativa inferiore: 1 ferita; ulteriore banda viola trasforma la ferita in esecuzione pagando altro focus. DA VERIFICARE per intero. Verificata su ninja_31.webp."
+  },
+ "167": {
+   "name": "CERBOTTANA FUKIYA",
+   "type": "attack",
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 4,
+      "w": 0
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "foe_stun",
+     "when": "on_hit"
+    }
+   ],
+   "note": "ATTACCO DISTANZA, Range4. Nessun nido d'ape: COLPISCI l'avversario con iniziativa inferiore (cella d0k4 è placeholder, targeting non posizionale, DA VERIFICARE). Se innescato: STORDISCI. Banda viola successiva trasforma l'effetto in ESECUZIONE pagando focus, non modellato. Verificata su ninja_30.webp."
+  },
+ "168": {
+   "name": "SOFFIO DI METSUBUSHI",
+   "type": "attack",
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 0
+     },
+     {
+      "d": 0,
+      "k": 2,
+      "w": 0
+     },
+     {
+      "q": 1,
+      "r": 1,
+      "w": 0
+     },
+     {
+      "q": 2,
+      "r": -1,
+      "w": 0
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "cancel_movement",
+     "when": "on_hit"
+    },
+    {
+     "do": "hobble",
+     "n": 2,
+     "kamae": "balance",
+     "when": "on_hit"
+    },
+    {
+     "do": "hobble",
+     "n": 1,
+     "kamae": "aggression",
+     "when": "on_hit"
+    },
+    {
+     "do": "discard_self",
+     "n": 1,
+     "kamae": "aggression",
+     "when": "on_hit"
+    },
+    {
+     "do": "hobble",
+     "n": 1,
+     "kamae": "determination",
+     "when": "on_hit"
+    },
+    {
+     "do": "discard_self",
+     "n": 1,
+     "kamae": "determination",
+     "when": "on_hit"
+    }
+   ],
+   "note": "NON BLOCCABILE. 4 celle-àncora (w:0): d0k1,d0k2, diagonali fronte-sx/fronte-dx. '* CANCELLA IL MOVIMENTO ATTIVO' incondizionato. SE RIUSCITO per kamae: Equilibrio azzoppa x2; Aggressività azzoppa x1 + scarta 1 (tipo carta incerto); Determinazione azzoppa x1 + scarta 1 (tipo carta incerto). Verificata su ninja_29.webp."
+  },
+ "169": {
+   "name": "LANCIO DI SHURIKEN",
+   "type": "attack",
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 4,
+      "w": 1
+     }
+    ]
+   },
+   "note": "ATTACCO DISTANZA, Range4. Banda viola [6] = soglia iniziativa &lt;6 pagando focus (non stampato). COLPISCI l'avversario con iniziativa inferiore: 1 ferita se innescato. Nessuna cella/direzione reale, d0k4 è placeholder di gittata, targeting non posizionale, DA VERIFICARE. Verificata su ninja_28.webp."
+  },
+ "170": {
+   "name": "LANCIO DI PIEDI DI CORVO",
+   "type": "meditation",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 3,
+        "n": 1
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 0
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 0
+     },
+     {
+      "d": 5,
+      "k": 1,
+      "w": 0
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "link_anchor",
+     "alt": "a"
+    },
+    {
+     "do": "link_anchor",
+     "alt": "b"
+    }
+   ],
+   "note": "Passo indietro 1 obbligatorio. 3 celle vuote indicano solo dove piazzare trappole (nessuna ferita). OPPURE tra due effetti di piazzamento non modellabili coi verbi esistenti (approssimati con link_anchor, DA VERIFICARE): metti 1 Piede di Corvo, oppure metti 3 segnalini trappola a faccia in giù. Verificata su ninja_12.webp."
+  },
+ "171": {
+   "name": "CATENA E UNCINO",
+   "type": "defence",
+   "defence": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "v": 0
+     },
+     {
+      "d": 0,
+      "k": 2,
+      "v": 0
+     },
+     {
+      "q": 1,
+      "r": 1,
+      "v": 0
+     },
+     {
+      "d": 5,
+      "k": 1,
+      "v": 0
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "pull",
+     "n": 1
+    },
+    {
+     "do": "cancel_movement",
+     "when": "on_hit"
+    },
+    {
+     "do": "rotate_target",
+     "n": 2,
+     "kamae": "balance",
+     "when": "on_hit"
+    },
+    {
+     "do": "hobble",
+     "when": "on_hit"
+    }
+   ],
+   "note": "4 celle-àncora asimmetriche (solo lato sinistro/centrale). '* TIRA 1' collegato. SE RIUSCITO: CANCELLA MOVIMENTO ATTIVO incondizionato; Equilibrio RUOTA bersaglio 2; banda blu 'stato Ninja' AZZOPPA (gate non-kamae, DA VERIFICARE). Verificata su ninja_14.webp."
+  },
+ "172": {
+   "name": "BOMBA FUMOGENA",
+   "type": "defence",
+   "defence": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "v": 0
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "v": 0
+     },
+     {
+      "d": 5,
+      "k": 1,
+      "v": 0
+     },
+     {
+      "d": 2,
+      "k": 1,
+      "v": 0
+     },
+     {
+      "d": 4,
+      "k": 1,
+      "v": 0
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "push",
+     "n": 1
+    }
+   ],
+   "split": {
+    "initiative": 6,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": true
+        },
+        {
+         "t": "step",
+         "dir": 3,
+         "n": 1
+        }
+       ]
+      },
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "n": 1,
+         "dirs": [
+          0,
+          1,
+          3,
+          5
+         ],
+         "kamae": "determination"
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "5 celle-àncora attorno al personaggio (dorso vuoto). '* SPINGI 1' collegato. Split [6]: ⟳1 opzionale + passo indietro 1 obbligatorio, OPPURE (Determinazione) passo a scelta tra fronte/fronte-dx/fronte-sx/dorso, set esatto DA VERIFICARE. 'ENTRA IN [stato Ninja]' non modellato. Verificata su ninja_16.webp."
+  },
+ "173": {
+   "name": "FLAGELLO SFERZANTE",
+   "type": "attack",
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 2,
+      "w": 1
+     },
+     {
+      "q": 1,
+      "r": 1,
+      "w": 1
+     },
+     {
+      "q": 2,
+      "r": -1,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 2,
+      "w": 1
+     }
+    ]
+   },
+   "split": {
+    "initiative": 3,
+    "attack": {
+     "cells": [
+      {
+       "d": 5,
+       "k": 1,
+       "w": 1
+      },
+      {
+       "d": 4,
+       "k": 1,
+       "w": 1
+      },
+      {
+       "d": 2,
+       "k": 1,
+       "w": 1
+      },
+      {
+       "d": 3,
+       "k": 1,
+       "w": 1
+      },
+      {
+       "d": 3,
+       "k": 2,
+       "w": 1
+      },
+      {
+       "q": -2,
+       "r": 1,
+       "w": 1
+      },
+      {
+       "q": -1,
+       "r": -1,
+       "w": 1
+      }
+     ]
+    }
+   },
+   "note": "Doppio nido d'ape. Principale (iniziativa 6): fronte esteso, 1 ferita su d0k2, entrambe diagonali anello2 fronte, d1k2. Split [3]: colpisce dorso e fianchi posteriori (7 celle). Verificata su ninja_10.webp."
+  },
+ "174": {
+   "name": "OMBRA EVANESCENTE",
+   "type": "meditation",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "n": 2,
+        "dirs": [
+         0,
+         1,
+         5
+        ]
+       }
+      ]
+     },
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "n": 1,
+        "dirs": [
+         2,
+         4
+        ]
+       },
+       {
+        "t": "rot",
+        "n": 1
+       }
+      ]
+     }
+    ]
+   },
+   "note": "Aggiunta Istantanea, carta intera condizionata: ramo 1 GIOCA SE L'ATTACCO È RIUSCITO (tridente frontale 2) + 'ENTRA IN [stato Ninja]' non modellato; OPPURE ramo 2 GIOCA SE IL BLOCCO È RIUSCITO (bidente posteriore 1 + ⟳1) + stesso stato. Lo schema non condiziona le singole opzioni di movimento, DA VERIFICARE. Verificata su ninja_18.webp."
+  },
+ "175": {
+   "name": "SQUARCIO DI KAMA",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 2,
+        "kamae": "balance"
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 5,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "replace_wound_bleed",
+     "kamae": "aggression",
+     "when": "on_hit"
+    },
+    {
+     "do": "switch_kamae",
+     "to": "any",
+     "focus_cost": 1,
+     "when": "on_hit"
+    }
+   ],
+   "note": "Banda blu 'stato Ninja' con [7] in testa: probabile iniziativa alternativa legata allo stato speciale, non uno split classico (card_pool riporta solo iniziativa 5), non trascritta come split, DA VERIFICARE. ⟳2 gated Equilibrio. Fronte/fronte-sx 1 ferita ciascuna. SE RIUSCITO: Aggressività sostituisci ! con sanguinante; banda viola PASSA A UNA QUALSIASI KAMAE (1 focus stimato). Verificata su ninja_21.webp."
+  },
+ "176": {
+   "name": "RITIRATA",
+   "type": "defence",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "n": 2,
+        "dirs": [
+         1,
+         5,
+         3
+        ]
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": true,
+        "kamae": "balance"
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "draw",
+     "n": 1,
+     "kamae": "determination"
+    },
+    {
+     "do": "focus",
+     "n": 1
+    },
+    {
+     "do": "change_kamae",
+     "n": 1
+    }
+   ],
+   "note": "Movimento con 3 punte (fronte-dx/fronte-sx/dorso) 2, icona non standard, set esatto DA VERIFICARE. ⟳1 opzionale in Equilibrio. Determinazione: PESCA FINO A 1. Poi ungated: OTTIENI 1 focus; 'ENTRA IN [stato Ninja]' non modellato; CAMBIA KAMAE FINO A 1 RAMO. Nessuno scudo: difesa di riposizionamento puro. Verificata su ninja_06.webp."
+  },
+ "260": {
+   "name": "CARTA SPECIALE MONACO",
+   "type": "core",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": -1,
+        "n": 1
+       },
+       {
+        "t": "rot",
+        "n": 2
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "discard_self",
+     "n": 1
+    },
+    {
+     "do": "draw",
+     "n": 2,
+     "alt": "a"
+    },
+    {
+     "do": "discard_self",
+     "n": 2,
+     "alt": "b"
+    },
+    {
+     "do": "search_draw",
+     "alt": "b"
+    },
+    {
+     "do": "change_kamae",
+     "n": 1,
+     "alt": "c"
+    }
+   ],
+   "note": "SCARTA 1 CARTA + ❄1+⟳2 (obbligatori). OPPURE: PESCA FINO A 2 (a) / SCARTA 2 POI CERCA+PRENDI 1 (b) / CAMBIA KAMAE FINO A 1 RAMO (c). Verificata su monk_04.webp."
+  },
+ "261": {
+   "name": "VERA ILLUMINAZIONE",
+   "type": "meditation",
+   "effects": [
+    {
+     "do": "focus",
+     "n": 1
+    },
+    {
+     "do": "switch_kamae",
+     "to": "any"
+    },
+    {
+     "do": "discard_self",
+     "n": 1,
+     "alt": "a"
+    },
+    {
+     "do": "discard_self",
+     "n": 1,
+     "alt": "b"
+    },
+    {
+     "do": "replace_wound_bleed",
+     "n": 1
+    },
+    {
+     "do": "discard_self",
+     "n": 1
+    },
+    {
+     "do": "draw",
+     "n": 1
+    }
+   ],
+   "note": "REQUISITO: 3 carte illuminate in gioco (non modellabile). RIMANE IN GIOCO (non modellato). ALL'INIZIO DEL TURNO: OTTIENI 1 focus; PASSA A UNA QUALSIASI KAMAE; SCARTA 1 stordito O 1 azzoppato (rimozione stati propri, approssimata con discard_self, DA VERIFICARE); SOSTITUISCI 1 sanguinante con 1 ferita (direzione inversa, DA VERIFICARE); SCARTA 1 gettone non standard; PESCA FINO A 1. Verificata su monk_03.webp."
+  },
+ "262": {
+   "name": "SQUARCIO DELL'ONDA ZEN",
+   "type": "attack",
+   "kamae_req": "balance",
+   "split": {
+    "initiative": 8,
+    "attack": {
+     "cells": [
+      {
+       "d": 0,
+       "k": 2,
+       "w": "exec"
+      },
+      {
+       "q": 2,
+       "r": -1,
+       "w": "exec"
+      },
+      {
+       "q": 1,
+       "r": 1,
+       "w": "exec"
+      }
+     ]
+    }
+   },
+   "note": "Iniziativa principale 6 (card_pool). Focus 2. REQUISITO: 3 carte illuminate in gioco (non modellabile). Richiede Equilibrio. Banda viola [8]: unico diagramma della carta è sotto questa banda (trascritto come split, DA VERIFICARE se sia davvero seconda iniziativa). Nido d'ape a distanza 2: 3 celle con maschera oni invece del teschio pulito, trascritte come esecuzione, DA VERIFICARE il significato esclusivo del ciclo Illuminata. Verificata su monk_05.webp."
+  },
+ "263": {
+   "name": "CORPO ILLUMINATO",
+   "type": "meditation",
+   "effects": [
+    {
+     "do": "stun_self",
+     "when": "on_hit"
+    },
+    {
+     "do": "switch_kamae",
+     "to": "determination"
+    },
+    {
+     "do": "search_draw",
+     "opt": true
+    }
+   ],
+   "note": "Iniziativa '-'. Istantanea, condizionata (GIOCA SE L'ATTACCO DELL'AVVERSARIO È RIUSCITO, non modellabile come singolo effetto). SOSTITUISCI TUTTE LE ferite ricevute in questo turno con stordimento (approssimato con stun_self, DA VERIFICARE). PASSA A Determinazione. PUOI spendere una risorsa non standard per CERCARE+PRENDERE 1 (search_draw opzionale, meccanica ciclo Illuminata, DA VERIFICARE). RIMANE IN GIOCO, AUMENTA LIMITE FERITE +1 (non modellati). Verificata su monk_08.webp."
+  },
+ "264": {
+   "name": "MENTE ILLUMINATA",
+   "type": "meditation",
+   "effects": [
+    {
+     "do": "search_draw",
+     "opt": true
+    }
+   ],
+   "note": "Iniziativa '-'. NON PUÒ ESSERE GIOCATA COME CARTA ABILITÀ (non modellabile). SE SCARTATA da un effetto avversario, spendi 1 focus per riportarla in gioco (nessun verbo per 'ritorna dagli scarti', non modellato). QUANDO ENTRA IN GIOCO: PUOI spendere risorsa non standard per CERCARE+PRENDERE 1 (search_draw opzionale, ciclo Illuminata). RIMANE IN GIOCO, AUMENTA LIMITE MANO +1 (non modellati). Verificata su monk_07.webp."
+  },
+ "265": {
+   "name": "ANIMA ILLUMINATA",
+   "type": "meditation",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "n": 1,
+        "dirs": [
+         1,
+         5
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "search_draw",
+     "alt": "a"
+    },
+    {
+     "do": "search_draw",
+     "alt": "b"
+    },
+    {
+     "do": "switch_kamae",
+     "to": "balance"
+    },
+    {
+     "do": "search_draw",
+     "opt": true
+    }
+   ],
+   "note": "Passo diagonale frontale 1. CERCA+PRENDI 1 (a) OPPURE CERCA NEGLI SCARTI+PRENDI 1 (b). PASSA A Equilibrio. PUOI spendere risorsa non standard per CERCARE+PRENDERE 1 (ciclo Illuminata, ricorrente con 263/264). RIMANE IN GIOCO, AUMENTA LIMITE FOCUS +1 (non modellati). Verificata su monk_06.webp."
+  },
+ "266": {
+   "name": "CHIAREZZA DI INTENTI",
+   "type": "defence",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "n": 1,
+        "dirs": [
+         2,
+         4
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "defence": {
+    "cells": []
+   },
+   "effects": [
+    {
+     "do": "search_draw"
+    },
+    {
+     "do": "focus",
+     "n": 1,
+     "kamae": "determination"
+    },
+    {
+     "do": "draw",
+     "n": 1,
+     "kamae": "balance"
+    }
+   ],
+   "note": "Difesa pura per schivata (nessuno scudo). Bidente posteriore 1 (set esatto DA VERIFICARE, forse tridente). CERCA NEGLI SCARTI+PRENDI 1. Determinazione: OTTIENI 1 focus. Equilibrio: PESCA FINO A 1. Verificata su monk_09.webp."
+  },
+ "267": {
+   "name": "MENTE SERENA",
+   "type": "meditation",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "n": 2,
+        "dirs": [
+         0,
+         1,
+         5
+        ]
+       },
+       {
+        "t": "rot",
+        "n": 1
+       }
+      ]
+     },
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "n": 1,
+        "dirs": [
+         0,
+         1,
+         5
+        ],
+        "kamae": "balance"
+       },
+       {
+        "t": "rot",
+        "n": 2,
+        "kamae": "balance"
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "focus",
+     "n": 1
+    },
+    {
+     "do": "switch_kamae",
+     "to": "any"
+    }
+   ],
+   "note": "Tridente frontale 2+⟳1, OPPURE (Equilibrio) tridente frontale 1+⟳2. OTTIENI 1 focus. PASSA A UNA QUALSIASI KAMAE. Verificata su monk_11.webp."
+  },
+ "268": {
+   "name": "DISTRUZIONE SATORI",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1
+       },
+       {
+        "t": "rot",
+        "n": 1
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "q": 2,
+      "r": -1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "foe_discard",
+     "n": 1,
+     "when": "on_hit",
+     "kamae": "aggression"
+    }
+   ],
+   "note": "Passo avanti 1 POI ⟳1. Fronte-dx e diagonale fronte-dx (1 ferita ciascuna). SE RIUSCITO (Aggressività): l'avversario scarta 1 carta. Verificata su monk_13.webp."
+  },
+ "269": {
+   "name": "CARICA DEL CERVO",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 0,
+      "k": 2,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "push",
+     "n": 2,
+     "when": "on_hit"
+    }
+   ],
+   "note": "⟳1. Colonna frontale k1-k2 (1 ferita ciascuna). SE RIUSCITO: SPINGI 2; una seconda icona (passo avanti 2 del proprio combattente post-colpo) non ha verbo whitelist, non modellata, DA VERIFICARE. Verificata su monk_15.webp."
+  },
+ "270": {
+   "name": "CRESTA DELL'ONDA",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 3,
+        "n": 1
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 2,
+      "w": 1
+     },
+     {
+      "q": 1,
+      "r": 1,
+      "w": 1
+     }
+    ]
+   },
+   "split": {
+    "initiative": 5,
+    "attack": {
+     "cells": [
+      {
+       "d": 0,
+       "k": 2,
+       "w": 1
+      },
+      {
+       "q": 2,
+       "r": -1,
+       "w": 1
+      }
+     ]
+    },
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 1,
+         "opt": true,
+         "kamae": "aggression",
+         "focus_cost": 1
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "Iniziativa principale 7. Passo indietro 1. Fronte dist2 + diagonale fronte-sx (1 ferita ciascuna). Split [5]: colpisce invece diagonale fronte-dx; banda viola con solo icona loto (costo non stampato, assunto 1) sopra la banda Aggressività per un passo avanti opzionale nello split. Verificata su monk_17.webp."
+  },
+ "271": {
+   "name": "COLPO DEL PALMO",
+   "type": "attack",
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 0
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "link_anchor"
+    },
+    {
+     "do": "foe_stun",
+     "when": "on_hit"
+    },
+    {
+     "do": "hobble",
+     "when": "on_hit"
+    },
+    {
+     "do": "foe_lose_focus",
+     "n": 1,
+     "when": "on_hit"
+    },
+    {
+     "do": "push",
+     "n": 1,
+     "when": "on_hit",
+     "kamae": "balance"
+    },
+    {
+     "do": "change_kamae",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
+   "note": "Sostituzione Istantanea. Cella-àncora fronte (w:0): se colpita, STORDISCE E AZZOPPA l'avversario. SE RIUSCITO: l'avversario perde 1 focus; Equilibrio SPINGI 1; poi CAMBIA KAMAE FINO A 1 RAMO ungated. Verificata su monk_20.webp."
+  },
+ "272": {
+   "name": "BLOCCO RISOLUTO",
+   "type": "defence",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "kamae": "determination"
+       }
+      ]
+     }
+    ]
+   },
+   "defence": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "v": 1
+     }
+    ]
+   },
+   "split": {
+    "initiative": 3,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "n": 1,
+         "dirs": [
+          0,
+          1,
+          5
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    "effects": [
+     {
+      "do": "draw",
+      "n": 2,
+      "kamae": "balance"
+     },
+     {
+      "do": "change_kamae",
+      "n": 1
+     }
+    ]
+   },
+   "note": "Iniziativa 8-4 (card_pool). ⟳1 gated Determinazione. 3 scudi non numerati (fronte-sx/fronte/fronte-dx). Split [3]: tridente frontale 1; Equilibrio PESCA FINO A 2; CAMBIA KAMAE FINO A 1 RAMO ungated. Verificata su monk_23.webp."
+  },
+ "349": {
+   "name": "CARTA SPECIALE YASUKE",
+   "type": "core",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": -1,
+        "n": 1,
+        "opt": true
+       },
+       {
+        "t": "rot",
+        "n": 2,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "discard_self",
+     "n": 1
+    },
+    {
+     "do": "draw",
+     "n": 2,
+     "alt": "a"
+    },
+    {
+     "do": "focus",
+     "n": 1,
+     "alt": "b"
+    },
+    {
+     "do": "change_kamae",
+     "n": 1,
+     "alt": "c"
+    }
+   ],
+   "note": "Costo: SCARTA 1 CARTA. Movimento ❄1 ↻2 facoltativi. OPPURE: PESCA FINO A 2 / OTTIENI 1 focus / CAMBIA KAMAE FINO A 1 RAMO. Verificata su yasuke_04.webp."
+  },
+ "350": {
+   "name": "TAGLIO MANCINO",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "discard_self",
+     "n": 1
+    }
+   ],
+   "note": "Arma speciale Wakizashi. PUÒ ESSERE GIOCATA DOPO UNA REAZIONE RIUSCITA (timing non modellato). Costo: SCARTA 1 CARTA. ⟳1 facoltativo (loto decorativo, non un vero costo — focus:0 in card_pool). Fronte 1 ferita. Verificata su yasuke_05.webp."
+  },
+ "351": {
+   "name": "ONORE DEL LEONE",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1
+       }
+      ]
+     }
+    ]
+   },
+   "defence": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "v": 1
+     }
+    ]
+   },
+   "split": {
+    "initiative": 5,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "n": 1,
+         "dirs": [
+          0,
+          1,
+          5
+         ]
+        },
+        {
+         "t": "rot",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    },
+    "attack": {
+     "cells": [
+      {
+       "d": 5,
+       "k": 1,
+       "w": 1
+      },
+      {
+       "d": 0,
+       "k": 1,
+       "w": 1
+      },
+      {
+       "d": 1,
+       "k": 1,
+       "w": 1
+      }
+     ]
+    }
+   },
+   "note": "Iniziativa 9-6 per il blocco Difesa. ⟳1 + 3 scudi (fronte-sx/fronte/fronte-dx). Split [5] = blocco Attacco: tridente frontale + ⟳1, poi le stesse 3 celle come ferite. Icona kamae ibrida (gate + Determinazione) non rappresentabile con un solo kamae_req, DA VERIFICARE. Verificata su yasuke_03.webp."
+  },
+ "352": {
+   "name": "FURIA GIUSTA",
+   "type": "attack",
+   "kamae_req": "aggression",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "n": 1,
+        "dirs": [
+         1,
+         5
+        ]
+       },
+       {
+        "t": "rot",
+        "n": 1
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": "exec"
+     },
+     {
+      "d": 5,
+      "k": 1,
+      "w": 2
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 2
+     },
+     {
+      "q": 1,
+      "r": 1,
+      "w": 1
+     },
+     {
+      "q": 2,
+      "r": -1,
+      "w": 1
+     }
+    ]
+   },
+   "note": "Focus 3. Richiede Aggressività. Passo diagonale frontale + ⟳1. Fronte con maschera cornuta (esecuzione, come id 220); fronte-sx/fronte-dx 2 ferite; entrambe le diagonali anello2 1 ferita. Verificata su yasuke_06.webp."
+  },
+ "353": {
+   "name": "CARICA DEL BRANCO",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": true,
+        "focus_cost": 1
+       },
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 3
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 0
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "link_anchor"
+    },
+    {
+     "do": "foe_stun",
+     "when": "on_hit",
+     "kamae": "aggression"
+    },
+    {
+     "do": "switch_kamae",
+     "to": "aggression",
+     "when": "on_hit"
+    }
+   ],
+   "note": "Focus 1. ⟳1 (1 focus, opzionale) POI passo avanti 3. Cella-àncora fronte. SE RIUSCITO (Aggressività): STORDISCI, con quantità scalata dalle celle percorse (fino a 3, non rappresentabile come intero fisso, DA VERIFICARE); poi PASSA A Aggressività. Verificata su yasuke_07.webp."
+  },
+ "354": {
+   "name": "ANIMA DEVOTA",
+   "type": "defence",
+   "kamae_req": "determination",
+   "defence": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 5,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 4,
+      "k": 1,
+      "v": 1
+     }
+    ]
+   },
+   "counter": [
+    8,
+    7,
+    6
+   ],
+   "split": {
+    "initiative": 5,
+    "defence": {
+     "cells": [
+      {
+       "d": 0,
+       "k": 1,
+       "v": 1
+      },
+      {
+       "d": 5,
+       "k": 1,
+       "v": 1
+      },
+      {
+       "d": 1,
+       "k": 1,
+       "v": 1
+      },
+      {
+       "d": 4,
+       "k": 1,
+       "v": 1
+      }
+     ]
+    },
+    "counter": [
+     5,
+     4,
+     3
+    ]
+   },
+   "note": "Iniziativa 8-6 per il blocco principale, richiede Determinazione. 4 scudi (fronte, fronte-sx, fronte-dx, retro-sx). Contrattacco 8/7/6. Split [5-3]: stessa difesa, contrattacco 5/4/3. Verificata su yasuke_08.webp."
+  },
+ "355": {
+   "name": "SCHIANTO DELL'ELEFANTE",
+   "type": "meditation",
+   "effects": [
+    {
+     "do": "push",
+     "n": 1,
+     "alt": "a"
+    },
+    {
+     "do": "push",
+     "n": 1,
+     "alt": "b"
+    }
+   ],
+   "note": "Iniziativa =, Aggiunta Istantanea. Carta intera condizionata: OPPURE a) GIOCA SE L'ATTACCO È RIUSCITO → SPINGI 1 + 1 per cella mossa (scaling non rappresentabile, DA VERIFICARE); OPPURE b) GIOCA SE IL BLOCCO È RIUSCITO → SPINGI 1 fisso. Nessun diagramma proprio. Verificata su yasuke_09.webp."
+  },
+ "356": {
+   "name": "CHIUDERE LA DISTANZA",
+   "type": "meditation",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "n": 1,
+        "dirs": [
+         1,
+         5
+        ]
+       },
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1
+       },
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "search_draw",
+     "n": 1
+    },
+    {
+     "do": "change_kamae",
+     "n": 2
+    }
+   ],
+   "note": "Focus 0. Bidente frontale 1 + passo avanti 1 + passo avanti 1 ulteriore facoltativo. CERCA+PRENDI 1 (criterio esatto DA VERIFICARE). CAMBIA KAMAE FINO A 2 RAMI ungated. Verificata su yasuke_10.webp."
+  },
+ "357": {
+   "name": "COLPO DOPPIO",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "n": 1,
+        "dirs": [
+         0,
+         1,
+         5
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 0
+     },
+     {
+      "d": 5,
+      "k": 1,
+      "w": 0
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 2,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "link_anchor",
+     "kamae": "balance"
+    },
+    {
+     "do": "push",
+     "n": 1,
+     "when": "on_hit",
+     "kamae": "aggression"
+    }
+   ],
+   "note": "Tridente frontale 1. Celle-àncora fronte/fronte-sx; fronte-dx/retro-dx 1 ferita. Equilibrio: le celle-àncora infliggono 1 ferita. SE RIUSCITO (Aggressività): SPINGI 1. Verificata su yasuke_12.webp."
+  },
+ "358": {
+   "name": "ARTIGLI DELL'AQUILA",
+   "type": "attack",
+   "kamae_req": "aggression",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "n": 1,
+        "dirs": [
+         0,
+         1,
+         5
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "replace_wound_bleed",
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 5,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "rot",
+         "n": 1,
+         "kamae": "balance"
+        }
+       ]
+      }
+     ]
+    },
+    "attack": {
+     "cells": [
+      {
+       "d": 0,
+       "k": 1,
+       "w": 1
+      },
+      {
+       "d": 5,
+       "k": 1,
+       "w": 1
+      }
+     ]
+    },
+    "effects": [
+     {
+      "do": "hobble",
+      "when": "on_hit"
+     }
+    ]
+   },
+   "note": "Focus 0. Blocco principale (iniziativa 7, Aggressività): tridente frontale; fronte/fronte-dx 1 ferita; sostituisci ! con sanguinante. Split [5]: ⟳1 gated Equilibrio; fronte/fronte-sx 1 ferita; SE RIUSCITO: AZZOPPA. Verificata su yasuke_14.webp."
+  },
+ "359": {
+   "name": "ZANNE DEL LEONE",
+   "type": "attack",
+   "kamae_req": "determination",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1
+       },
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "foe_discard",
+     "n": 1,
+     "when": "on_hit",
+     "kamae": "aggression"
+    },
+    {
+     "do": "draw",
+     "n": 2,
+     "when": "on_hit",
+     "kamae": "balance"
+    }
+   ],
+   "note": "Sostituzione Istantanea. Richiede Determinazione: ⟳1 POI passo avanti 1. Fronte-sx/fronte-dx 1 ferita. SE RIUSCITO: Aggressività l'avversario scarta 1; Equilibrio PESCA FINO A 2. Verificata su yasuke_16.webp."
+  },
+ "360": {
+   "name": "DIFESA A DUE LAME",
+   "type": "defence",
+   "defence": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 5,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "v": 1
+     }
+    ]
+   },
+   "counter": [
+    7
+   ],
+   "split": {
+    "initiative": 5,
+    "defence": {
+     "cells": [
+      {
+       "d": 0,
+       "k": 1,
+       "v": 1
+      },
+      {
+       "d": 5,
+       "k": 1,
+       "v": 1
+      },
+      {
+       "d": 1,
+       "k": 1,
+       "v": 1
+      }
+     ]
+    },
+    "counter": [
+     5
+    ]
+   },
+   "note": "Iniziativa 8-7 per il blocco principale; split 5-4 per il secondo. 3 scudi identici (fronte-sx/fronte/fronte-dx) in entrambi i blocchi. Contrattacco gated Determinazione presente su una sola iniziativa per blocco (7 e 5), distribuzione esatta DA VERIFICARE. Verificata su yasuke_18.webp."
+  },
+ "361": {
+   "name": "MORSO DEL LEONE",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "n": 1,
+        "dirs": [
+         1,
+         5
+        ]
+       },
+       {
+        "t": "rot",
+        "n": 1
+       },
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "focus",
+     "n": 1,
+     "when": "on_hit",
+     "kamae": "determination"
+    }
+   ],
+   "note": "Passo diagonale frontale + ⟳1 + passo avanti 1 (tutti obbligatori). Fronte-sx/fronte-dx 1 ferita. SE RIUSCITO (Determinazione): OTTIENI 1 focus. Verificata su yasuke_21.webp."
+  },
+ "362": {
+   "name": "SBILANCIAMENTO",
+   "type": "attack",
+   "effects": [
+    {
+     "do": "focus",
+     "n": 1
+    },
+    {
+     "do": "draw",
+     "n": 1
+    },
+    {
+     "do": "foe_discard",
+     "n": 1
+    },
+    {
+     "do": "switch_kamae",
+     "to": "neutral"
+    },
+    {
+     "do": "switch_kamae",
+     "to": "any"
+    }
+   ],
+   "note": "PUÒ ESSERE GIOCATO SOLO DOPO UNA REAZIONE RIUSCITA (condizione non modellata). Nessun diagramma. OTTIENI 1 focus; PESCA FINO A 1; l'avversario scarta 1 carta; l'avversario passa a Neutrale (bersaglio avversario, nessun verbo 'foe_switch_kamae', DA VERIFICARE); PASSA A UNA QUALSIASI KAMAE su te stesso. Verificata su yasuke_24.webp."
   }
 },
  "characters": {
