@@ -3,6 +3,38 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.72.0] — 2026-07-01
+### Verifica visiva della geometria contro le carte reali (56 carte corrette)
+- **Verifica sistematica**: le 70 carte di geometry.json con immagine collegata
+  sono state confrontate una a una con le scansioni reali (WEBP estratte dai
+  PDF di Tabelle_Materiali); 56 presentavano differenze, tutte corrette.
+- **#23 CARTA SPECIALE RONIN**: SCARTA 1 CARTA (era stun_self) + tre
+  alternative corrette (pesca 2 / focus+passa a qualsiasi Kamae / cambia 1 ramo).
+- **#24 VORTICE CREMISI**: arco completo — tutte le 12 celle dell'anello 2 con
+  2 ferite (il formato {d,k} ne conservava solo 6).
+- **Errori ricorrenti corretti in blocco**:
+  - «PASSA A UNA QUALSIASI KAMAE» trascritto come `change_kamae` invece di
+    `switch_kamae to:any` (8 carte);
+  - barra gialla «4 quadretti» letta come costo focus invece che gate
+    Determinazione (#63, #98, #107, #126) e cerchio verde letto come
+    Determinazione invece di Equilibrio (#86, #98, #116…);
+  - frecce a più punte (arco frontale dirs 0,1,5 / posteriore 2,3,4 /
+    diagonali 1,5) trascritte come passo singolo (12+ carte);
+  - celle diagonali dell'anello 2 perse dal formato {d,k} → coordinate
+    assiali {q,r} (#55, #58, #60, #62, #71, #72);
+  - «elmo + ellisse di stelle» = STORDISCI uniformato (#125 era
+    swap_positions, #126 era rotate_target, #32 era foe_stun→hobble);
+  - seconde iniziative mancanti aggiunte come `split` (#39, #44, #48, #49,
+    #118, #123 — il [1] di Respinta era stato letto come counter);
+  - archi/scudi con celle mancanti o spostate (#10, #15, #16, #18, #19, #39,
+    #40, #44, #45, #46, #47, #55, #62, #119…), #19 ricostruita con 3 varianti
+    d'attacco gated per Kamae.
+- **Limiti documentati in nota** («DA VERIFICARE»): effetti sull'avversario
+  senza verbo nel vocabolario (pesca/prende carte/forza Kamae), gate doppi
+  Equilibrio/Determinazione su kamae_req, iniziative alternative per Kamae,
+  sottotipo DISTANZA. Le ~70 carte senza immagine collegata restano da
+  verificare (serve la mappatura id→immagine).
+
 ## [0.71.0] — 2026-07-01
 ### Turno di gioco più chiaro + editor ottimizzato + fix
 - **Banner di fase in partita**: banner in alto al centro che mostra sempre
