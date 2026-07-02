@@ -56,6 +56,14 @@ agganciata al **numero stampato sulla carta** (= Card ID).
       "alt": "a", "to": "aggression", "focus_cost": 1 }
   ],
 
+  "split": {                                   // seconda iniziativa (opz.) — stessi
+    "initiative": 5,                           // campi della carta principale (tranne
+    "move": { "opts": [ … ] },                 // name/type), per la "parte bassa" di
+    "attack": { "cells": [ … ] },               // una carta split. Vedi anche §Split.
+    "counter": [4],
+    "effects": [ … ]
+  },
+
   "note": "annotazioni / incertezze di trascrizione"
 }
 ```
@@ -69,13 +77,14 @@ agganciata al **numero stampato sulla carta** (= Card ID).
 | `kamae_req` | string (enum, opz.) | Kamae richiesto: `aggression` \| `balance` \| `determination`. |
 | `move` | object (opz.) | `{ "opts": [ Opzione, … ] }` — vedi **Movimento**. |
 | `attack` | object (opz.) | `{ "cells": [ Cella, … ] }` — celle offensive (variante unica). |
-| `attacks` | array[object] (opz.) | **Più varianti d'attacco**, ciascuna `{ "cells": […], "kamae": "<slug>"? }`. Il motore usa la variante il cui `kamae` combacia con la posa (stance) dell'attaccante; in mancanza, quella senza `kamae`. In alternativa a `attack`. |
+| `attacks` | array[object] (opz.) | **Più varianti d'attacco**, ciascuna `{ "cells": […], "kamae": "<slug>"? }`. Il motore usa la variante il cui `kamae` combacia con la posa (stance) dell'attaccante; in mancanza, quella senza `kamae`. In alternativa a `attack`. Se più varianti condividono lo stesso `kamae` (incluso nessuno, cioè libere/OPPURE non gated), sono opzioni scelte liberamente dal giocatore, non alternative gated — pattern raro (es. #164, #344), l'editor le mostra come widget "Combattimento" separati. |
 | `defence` | object (opz.) | `{ "cells": [ Cella, … ] }` — celle protette (variante unica). |
 | `defences` | array[object] (opz.) | Più varianti di difesa gated da `kamae`, come `attacks`. |
 | `counter` | array[int] (opz.) | Iniziative a cui scatta il contrattacco. |
 | `effects` | array[object] (opz.) | Effetti ordinati — vedi **Effetti**. |
 | `note` | string (opz.) | Note di trascrizione / incertezze (es. `"… DA VERIFICARE"`). |
 | `layout` | array[object] (opz.) | **Estetico, ignorato dal motore.** Albero dei widget dell'editor (nodi `{type, …, children[]}`, dalla v0.61): conserva annidamento (Iniziativa/OPPURE) e ordine come sulla carta fisica. In lettura resta supportata la forma storica `array[string]`. |
+| `split` | object (opz.) | **Seconda iniziativa.** Alcune carte agiscono due volte a iniziative diverse (riquadro `[N]` sulla carta fisica, "parte bassa"). `split` ha gli stessi campi della carta (tranne `name`/`type`): `initiative` (obbligatorio), più `kamae_req`/`move`/`attack(s)`/`defence(s)`/`counter`/`effects`/`note` opzionali. Risolto come una seconda azione indipendente alla propria iniziativa. |
 
 ### Movimento — `move.opts[].atoms[]`
 
@@ -84,10 +93,13 @@ una. Ogni opzione è una sequenza ordinata di **atomi**:
 
 | Campo atomo | Tipo | Significato |
 |-------------|------|-------------|
-| `t` | string | `step` (passo) \| `rot` (rotazione). |
+| `t` | string | `step` (passo) \| `rot` (rotazione) \| `anchor`. |
 | `dir` | int | Direzione del passo: `0`=fronte, senso **orario** 0–5; **`-1`=qualsiasi direzione** (❄ fiocco di neve sulla carta fisica). Solo per `step`. |
+| `dirs` | array[int] (opz.) | Alternativa a `dir`: più direzioni tra cui scegliere (es. bidente/tridente sulla carta fisica → `[0,1,5]`). |
 | `n` | int | Quantità (passi · scatti di rotazione). |
 | `opt` | bool | `true` = atomo **facoltativo** (bonus). |
+| `kamae` | string (opz.) | Gate kamae per l'atomo: l'opzione di movimento è disponibile solo in quella Kamae (barra colorata sulla carta fisica). Stessi valori di `kamae_req`. |
+| `focus_cost` | int (opz.) | Costo in focus per l'atomo (barra viola con loto sulla carta fisica). |
 
 > **❄ Fiocco di neve (`t: "step", dir: -1`).** Il simbolo ❄ nella barra
 > movimento di una carta significa **passo libero verso uno qualsiasi dei 6
@@ -124,9 +136,9 @@ contestuali:
 | `do` | string | Verbo dell'effetto (vocabolario sotto). |
 | `n` | int (opz.) | Quantità (passi di push, focus, carte, …). |
 | `when` | string (opz.) | Condizione: `on_hit` \| `always` (default contestuale). |
-| `kamae` | string (opz.) | Gate kamae per l'effetto: `aggression` \| `balance` \| `determination`. |
+| `kamae` | string (opz.) | Gate kamae per l'effetto: `aggression` \| `balance` \| `determination` (anche array, gate OR: `["balance","determination"]`). |
 | `alt` | string (opz.) | Etichetta di alternativa (effetti mutuamente esclusivi). |
-| `to` | string (opz.) | Kamae di destinazione (per cambi di kamae). |
+| `to` | string (opz.) | Kamae di destinazione (per cambi di kamae): `aggression` \| `balance` \| `determination` \| `neutral` (torii ⛩, quasi sempre come destinazione, mai come gate) \| `any` (PASSA A UNA QUALSIASI KAMAE). |
 | `focus_cost` | int (opz.) | Costo in focus dell'effetto (bonus opzionali). |
 
 **Verbi `do` presenti nei dati** (usare come autocomplete; estendibile):
@@ -142,10 +154,25 @@ rotate_target, search_draw, spend_focus, stun_self, swap_positions, switch_kamae
 
 ## Vocabolari controllati
 
-- `type`: `attack, defence, meditation, core` (anagrafica ammette anche `other`).
+- `type`: `attack, defence, meditation, core` (l'anagrafica in `card_pool.json` ammette
+  anche `other`, ma va sempre normalizzato a uno di questi 4 in `geometry.json`).
 - `atom.t`: `step, rot, anchor`.
 - `w` (ferite): intero `≥ 0`, oppure `"exec"`, `"bleed"`.
-- `kamae` / `kamae_req` / `to`: `aggression, balance, determination`.
+- `kamae` / `kamae_req`: `aggression, balance, determination` (anche array, gate OR).
+- `to` (destinazione di un cambio kamae): `aggression, balance, determination, neutral, any`.
+
+## Limiti noti (meccaniche non ancora rappresentabili)
+
+Alcune meccaniche specifiche di personaggio, scoperte trascrivendo le carte,
+non hanno ancora un campo/verbo dedicato: sono documentate carta per carta nel
+campo `note` invece di forzare un valore inventato. Tra le principali: iniziativa
+alternativa gated da Kamae/focus, effetti persistenti "rimane in gioco" con
+trigger a inizio turno, azioni informative sull'avversario ("guarda la mano"),
+carte a due facce con due movimenti sulla stessa entry (Hachikō), bersaglio
+scelto per confronto d'iniziativa invece che per cella, stati/risorse
+specifici di personaggio (Ombra, Disperazione, Contratti, Illuminata), una
+quinta Kamae "Distanza" (Navigatore) fuori da questo enum. Cercare `DA
+VERIFICARE` in `geometry.json` per l'elenco completo.
 
 ## Affidabilità
 
@@ -155,5 +182,7 @@ best-effort e annotati nelle `note` (cerca `DA VERIFICARE`). L'editor visuale
 sul nido d'ape è pensato proprio per correggerli: il campo `note` va sempre
 preservato.
 
-Allo stato attuale **140 carte su 303** hanno geometria trascritta; l'editor deve
-gestire bene il caso "geometria assente" (crearla da zero).
+Allo stato attuale **281 carte** hanno geometria trascritta — l'intero gioco
+base (Musashi/Kojiro esclusi: nessuna espansione disponibile) è coperto e
+verificato contro le scansioni reali. L'editor deve comunque gestire bene il
+caso "geometria assente" (crearla da zero) per eventuali carte future.

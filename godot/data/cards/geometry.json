@@ -2386,7 +2386,8 @@
      ]
     }
    ],
-   "note": "NON BLOCCABILE (non modellato). 'PASSA A Aggressività' stampato nel blocco SE RIUSCITO: when DA VERIFICARE. Verificata su ronin_11.webp."
+   "note": "NON BLOCCABILE (campo non_blockable:true). 'PASSA A Aggressività' stampato nel blocco SE RIUSCITO: when DA VERIFICARE. Verificata su ronin_11.webp.",
+   "non_blockable": true
   },
   "71": {
    "name": "SPAZZATA DI NAGINATA",
@@ -3526,7 +3527,11 @@
      "when": "on_hit"
     }
    ],
-   "note": "⟳3. Blocco su fronte-sx, fronte, fronte-dx. SE RIUSCITO: l'avversario perde 1 FOCUS e GUARDI LA SUA MANO (non modellato). Giocabile in Equilibrio O Determinazione (doppio kamae_req non modellabile). Verificata su master_09.webp."
+   "note": "⟳3. Blocco su fronte-sx, fronte, fronte-dx. SE RIUSCITO: l'avversario perde 1 FOCUS e GUARDI LA SUA MANO (non modellato). Giocabile in Equilibrio O Determinazione (kamae_req come array, gate OR). Verificata su master_09.webp.",
+   "kamae_req": [
+    "balance",
+    "determination"
+   ]
   },
   "17": {
    "name": "SAGGEZZA CORROTTA",
@@ -4056,7 +4061,11 @@
      "when": "on_hit"
     }
    ],
-   "note": "Preparata. Scudi su fronte, fronte-dx, retro-dx. SE RIUSCITO (tutti, nessun OPPURE): fai passare l'AVVERSARIO a una qualsiasi Kamae (verbo assente, non modellato); RUBI 1 focus (foe_lose_focus+focus); cambi Kamae fino a 1 ramo. Gate in alto Equilibrio/Determinazione (doppio kamae_req non modellabile). Verificata su student_10.webp."
+   "note": "Preparata. Scudi su fronte, fronte-dx, retro-dx. SE RIUSCITO (tutti, nessun OPPURE): fai passare l'AVVERSARIO a una qualsiasi Kamae (verbo assente, non modellato); RUBI 1 focus (foe_lose_focus+focus); cambi Kamae fino a 1 ramo. Gate in alto Equilibrio/Determinazione (kamae_req come array, gate OR). Verificata su student_10.webp.",
+   "kamae_req": [
+    "balance",
+    "determination"
+   ]
   },
   "46": {
    "name": "COLPO DELLA ROCCIA",
@@ -10543,7 +10552,8 @@
      "kamae": "balance"
     }
    ],
-   "note": "NON BLOCCABILE. Costo 2 focus. Icona fiamma non impostata come kamae_req (carta ha anche effetto gated Equilibrio, incompatibile con vincolo fisso, DA VERIFICARE). Movimento: scelta fronte-dx/retro-dx 2 passi + ⟳1, facoltativi, direzioni incerte DA VERIFICARE. 2 celle-àncora (fronte/fronte-sx): se colpite, STORDISCI. SE RIUSCITO: Aggressività converte le celle in 1 ferita; Equilibrio SPINGI 1. Verificata su wakou_05.webp. Sotto SPINGI compare una terza icona-freccia (1 passo, direzione incerta) non modellata, analoga a quella di ARIETE BUKAN (337), DA VERIFICARE."
+   "note": "NON BLOCCABILE (campo non_blockable:true). Costo 2 focus. Icona fiamma non impostata come kamae_req (carta ha anche effetto gated Equilibrio, incompatibile con vincolo fisso, DA VERIFICARE). Movimento: scelta fronte-dx/retro-dx 2 passi + ⟳1, facoltativi, direzioni incerte DA VERIFICARE. 2 celle-àncora (fronte/fronte-sx): se colpite, STORDISCI. SE RIUSCITO: Aggressività converte le celle in 1 ferita; Equilibrio SPINGI 1. Verificata su wakou_05.webp. Sotto SPINGI compare una terza icona-freccia (1 passo, direzione incerta) non modellata, analoga a quella di ARIETE BUKAN (337), DA VERIFICARE.",
+   "non_blockable": true
   },
  "335": {
    "name": "TSUNAMI IN CADUTA",
@@ -10682,7 +10692,8 @@
      "when": "on_hit"
     }
    ],
-   "note": "NON BLOCCABILE (non modellato). Sostituzione Istantanea. Cella fronte àncora (w:0) collegata a STORDISCI. Movimento: bidente avanti/avanti-sx 2, obbligatorio. SE RIUSCITO: SPINGI 1; una seconda icona '↑1' separata suggerisce un passo in avanti del proprio combattente dopo il colpo (tema 'ariete'), nessun verbo per 'muovi te stesso on_hit' in whitelist, non modellato, DA VERIFICARE. Verificata su wakou_07.webp."
+   "note": "NON BLOCCABILE (campo non_blockable:true). Sostituzione Istantanea. Cella fronte àncora (w:0) collegata a STORDISCI. Movimento: bidente avanti/avanti-sx 2, obbligatorio. SE RIUSCITO: SPINGI 1; una seconda icona '↑1' separata suggerisce un passo in avanti del proprio combattente dopo il colpo (tema 'ariete'), nessun verbo per 'muovi te stesso on_hit' in whitelist, non modellato, DA VERIFICARE. Verificata su wakou_07.webp.",
+   "non_blockable": true
   },
  "338": {
    "name": "PIEDI DA MARINAIO",
@@ -11236,7 +11247,8 @@
      "when": "on_hit"
     }
    ],
-   "note": "NON BLOCCABILE. 4 celle-àncora (w:0): d0k1,d0k2, diagonali fronte-sx/fronte-dx. '* CANCELLA IL MOVIMENTO ATTIVO' incondizionato. SE RIUSCITO per kamae: Equilibrio azzoppa x2; Aggressività azzoppa x1 + scarta 1 (tipo carta incerto); Determinazione azzoppa x1 + scarta 1 (tipo carta incerto). Verificata su ninja_29.webp."
+   "note": "NON BLOCCABILE (campo non_blockable:true). 4 celle-àncora (w:0): d0k1,d0k2, diagonali fronte-sx/fronte-dx. '* CANCELLA IL MOVIMENTO ATTIVO' incondizionato. SE RIUSCITO per kamae: Equilibrio azzoppa x2; Aggressività azzoppa x1 + scarta 1 (tipo carta incerto); Determinazione azzoppa x1 + scarta 1 (tipo carta incerto). Verificata su ninja_29.webp.",
+   "non_blockable": true
   },
  "169": {
    "name": "LANCIO DI SHURIKEN",

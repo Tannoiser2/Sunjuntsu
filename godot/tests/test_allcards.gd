@@ -26,10 +26,10 @@ func _ready() -> void:
 		b.draw_pile.assign([21, 22, 23, 24, 25])
 		s.fighters.append(a); s.fighters.append(b)
 		var duel := Duel.new(s)
-		# soddisfa eventuale kamae_req
-		var req: String = g.get("kamae_req", "")
-		if req != "":
-			a.stance = Domain.STANCE_FROM_SLUG[req]
+		# soddisfa eventuale kamae_req (String o Array in OR: basta una)
+		var req_list := Kamae.gate_values(g.get("kamae_req", ""))
+		if not req_list.is_empty():
+			a.stance = Domain.STANCE_FROM_SLUG[req_list[0]]
 		a.focus = 5
 		a.planned = cid
 		b.planned = -1
