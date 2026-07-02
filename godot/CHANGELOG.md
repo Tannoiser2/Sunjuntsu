@@ -3,6 +3,34 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.86.0] — 2026-07-03
+### Contratti dello Yojimbo (carta-regola "Sicario a Contratto" dal PDF) — catalogo meccaniche COMPLETO
+- **Sottosistema Contratti** (§3.11, ultima meccanica del catalogo): i 6
+  contratti sono dichiarati sulla scheda personaggio; in preparazione ne
+  entrano 5 a faccia in su (auto: i primi 5 — la scelta manuale arriverà
+  con la UI). `Duel._update_contracts` li completa a fine turno:
+  *Fagli Vedere* (attacco o blocco riuscito), *Primo Sangue* (prima
+  ferita della partita, attribuita a fine turno — ambigua se entrambi
+  feriscono nello stesso primo turno), *Reazione* (approssimato:
+  istantanea giocata in un turno con attacco/blocco riuscito, DA
+  VERIFICARE), *Furore* (2+ ferite inflitte nello stesso turno, DA
+  VERIFICARE), *Concentrazione* (4 turni con ≥1 focus speso — rotazioni
+  90°), *Gli Attrezzi del Mestiere* (primo inflitto di ciascun effetto
+  di stato, 4 tipi).
+- Al completamento: `states["contratti"]` +1 (in gioco — già letto da
+  `n_from_state` di #322 e ora da `state_req {contratti:1}` di #328) e
+  `states["contratti_totali"]` +1: **a 5 la partita è VINTA**
+  (`_check_winner`). Prima di pescare si può scartare un completato per
+  pescare 1 o +1 focus (`spend_completed_contract`, API per la scena —
+  l'auto non lo usa per non svuotare lo scaling di #321/#322).
+- `state_clear` su "contratti" (#322) scarta anche le carte contratto
+  completate dall'area. #316 alt b (rimettere in gioco un contratto
+  scartato) resta in nota.
+- Con questo il **catalogo delle 28 meccaniche è coperto**: restano solo
+  i 3 casi isolati §3.23/24/25 (carta-istantanea da pesca, muovi-verso,
+  terzo pezzo) e le regole di regia (Bushido globali, mano rivelata di
+  #295, compagno Hachikō) — più le UI (scelta faccia/contratti/focus).
+
 ## [0.85.0] — 2026-07-03
 ### Alberi Kamae: tutti i 13 personaggi, archi a senso unico, quinta Kamae "Distanza"
 - **Ri-verifica sugli scan di tutte le carte-albero**: le doppie frecce

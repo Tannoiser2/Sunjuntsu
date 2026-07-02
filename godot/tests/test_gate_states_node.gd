@@ -504,5 +504,60 @@ func _ready() -> void:
 			no_tree.append(ch)
 	_check(no_tree.is_empty(), "alberi Kamae presenti per tutto il roster (%s)" % str(no_tree))
 
+	# ═══ Contratti (Yojimbo, carta-regola "Sicario a Contratto") ═══════════
+	var s20 := GameState.new()
+	var yj := _mk("Yojimbo")
+	for _r in range(5):
+		yj.draw_pile += [317, 318, 319, 320, 321, 322]   # mazzo lungo: niente deck-out nei cleanup
+	var av := _mk("Warrior"); av.is_ai = true; av.draw_pile = [60, 61, 62, 63, 64]
+	s20.fighters = [yj, av]
+	var d20 := Duel.new(s20)
+	d20.start()
+	_check(yj.contracts.size() == 5, "contratti: 5 dei 6 in gioco alla preparazione")
+	_check(av.contracts.is_empty(), "contratti: l'avversario IA non li usa")
+
+	# fagli_vedere: attacco riuscito nel turno → completato
+	yj.contracts = [{"id": "fagli_vedere", "name": "Fagli Vedere",
+		"trigger": "attack_or_block_success", "progress": 0, "done": false, "seen": []}]
+	d20._attack_ok[0] = true
+	d20._cleanup([])
+	_check(bool(yj.contracts[0]["done"]), "contratto Fagli Vedere: completato con attacco riuscito")
+	_check(yj.state_get("contratti") == 1 and yj.state_get("contratti_totali") == 1,
+		"contratti: contatori in gioco e totale aggiornati")
+
+	# furore: 2+ ferite inflitte nello stesso turno
+	yj.contracts = [{"id": "furore", "name": "Furore",
+		"trigger": "wounds_dealt_2", "progress": 0, "done": false, "seen": []}]
+	av.wounds.append("wound"); av.wounds.append("wound")
+	d20._attack_ok.clear()
+	d20._cleanup([])
+	_check(bool(yj.contracts[0]["done"]), "contratto Furore: 2 ferite nello stesso turno")
+
+	# concentrazione: 4 turni con focus speso → diritta → completato
+	yj.contracts = [{"id": "concentrazione", "name": "Concentrazione",
+		"trigger": "focus_spent", "turns": 4, "progress": 0, "done": false, "seen": []}]
+	for _t in range(4):
+		d20._focus_spent[0] = 1
+		d20._cleanup([])
+	_check(bool(yj.contracts[0]["done"]), "contratto Concentrazione: completo dopo 4 rotazioni")
+
+	# spesa pre-pesca: scarta un completato → +1 focus e contatore giù
+	var in_play_before := yj.state_get("contratti")
+	yj.focus = 0
+	_check(d20.spend_completed_contract(0, "focus"), "spend_completed_contract: spesa riuscita")
+	_check(yj.focus == 1 and yj.state_get("contratti") == in_play_before - 1,
+		"spend_completed_contract: +1 focus e contatore in gioco decrementato")
+
+	# vittoria a 5 contratti completati
+	yj.state_set("contratti_totali", 5)
+	_check(d20._check_winner() == 0, "contratti: a 5 completati la partita è vinta")
+	yj.state_set("contratti_totali", 0)
+
+	# #328 SICARIO A PAGAMENTO: giocabile solo con un contratto completato in gioco
+	var yj2 := _mk("Yojimbo")
+	_check(not Duel.playable(yj2, 328), "#328: bloccata senza contratti completati")
+	yj2.state_set("contratti", 1)
+	_check(Duel.playable(yj2, 328), "#328: giocabile con un contratto completato in gioco")
+
 	print("RISULTATO: ", "PASS" if ok else "FAIL")
 	get_tree().quit(0 if ok else 1)

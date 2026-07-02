@@ -69,8 +69,11 @@ var _block_ok: Dictionary = {}        ## indice → il suo blocco è riuscito
 var _chosen: Dictionary = {}
 
 ## Fotografia di ferite/stati a inizio turno (indice → {wounds, stun,
-## hobbles, poison}) per le condizioni di uscita da Occultato.
+## hobbles, poison}) per le condizioni di uscita da Occultato e per i
+## trigger dei Contratti (Yojimbo).
 var _turn_baseline: Dictionary = {}
+## Focus spesi in questo turno (indice → n), per il contratto Concentrazione.
+var _focus_spent: Dictionary = {}
 ## Chi è ENTRATO in Occultato durante questo turno (non esce subito).
 var _stealth_entered: Dictionary = {}
 
@@ -144,6 +147,21 @@ func start() -> void:
 		while _hand_used(f) < f.hand_limit:
 			if f.draw_one() == -1:
 				break
+	# Contratti (Yojimbo, carta-regola "Sicario a Contratto"): 5 dei 6 a
+	# faccia in su nell'area di gioco. La scelta spetta al giocatore in
+	# preparazione — in auto si prendono i primi 5 della scheda (la UI di
+	# scelta arriverà con la scena). L'avversario solo (IA) non li usa.
+	for f in state.fighters:
+		if f.is_ai:
+			continue
+		var defs: Array = CardDB.character_stats(f.character).get("contracts", [])
+		f.contracts = []
+		for c in defs.slice(0, 5):
+			var entry: Dictionary = (c as Dictionary).duplicate(true)
+			entry["progress"] = 0
+			entry["done"] = false
+			entry["seen"] = []
+			f.contracts.append(entry)
 	_begin_turn()   # passo Draw del 1° turno
 	_set_phase(Domain.Phase.PLANNING)
 	_autoplan_ai()
@@ -311,6 +329,7 @@ func _pay_costs() -> void:
 	_attack_ok = {}
 	_block_ok = {}
 	_stealth_entered = {}
+	_focus_spent = {}
 	# Paga i costi di focus obbligatori; se non basta, la carta "svanisce".
 	for i in range(state.fighters.size()):
 		var f := state.fighters[i]
@@ -325,6 +344,7 @@ func _pay_costs() -> void:
 		if cost > 0:
 			if f.focus >= cost:
 				f.focus -= cost
+				_focus_spent[i] = int(_focus_spent.get(i, 0)) + cost
 			else:
 				_fizzled[i] = true
 				_res_log.append("%s: focus insufficiente per %s — la carta svanisce" % [
@@ -532,6 +552,9 @@ func _resolve_instant_card(i: int, id: int) -> void:
 	var c := CardDB.card(id)
 	var g := CardDB.geometry(id)
 	var name: String = c.get("name", "?")
+	var icost := mini(f.focus, _focus_cost_of(id))
+	if icost > 0:
+		_focus_spent[i] = int(_focus_spent.get(i, 0)) + icost
 	f.focus = maxi(0, f.focus - _focus_cost_of(id))
 	f.hand.erase(id)
 	_instant_used[i] = true
@@ -1470,6 +1493,10 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 				var sn := str(e.get("state", ""))
 				if sn != "" and f.state_get(sn) > 0:
 					f.state_set(sn, 0)
+					if sn == "contratti":
+						# "SCARTA TUTTI I CONTRATTI IN GIOCO" (#322): via
+						# anche le carte contratto completate dall'area.
+						f.contracts = f.contracts.filter(func(c): return not bool(c.get("done", false)))
 					log.append("%s: stato '%s' rimosso" % [f.character, sn])
 			"change_ai_behaviour":
 				# Carta solo: l'IA cambia atteggiamento (offensivo <-> difensivo).
@@ -1615,8 +1642,107 @@ func remove_from_play(i: int, cid: int) -> bool:
 	return true
 
 
+## Aggiorna i contratti di `i` a fine turno (carta-regola "Sicario a
+## Contratto" + le 6 carte contratto, trascritte dal PDF Yojimbo):
+##   fagli_vedere — attacco O blocco riuscito questo turno;
+##   reazione — hai giocato un'istantanea in un turno con attacco/blocco
+##     riuscito (approssimazione di "reazione attivata con successo");
+##   primo_sangue — la prima ferita della partita l'hai inflitta tu;
+##   furore — 2+ ferite inflitte nello stesso turno (DA VERIFICARE);
+##   concentrazione — turno in cui hai speso >=1 focus: ruota 90° (a 4 è
+##     diritta e si completa);
+##   attrezzi — la PRIMA volta che infliggi ciascun effetto di stato
+##     (stordito/azzoppato/sanguinante/veleno): ruota 90° (4 tipi = completo).
+## Al completamento: states["contratti"] +1 (in gioco, letto da
+## n_from_state/state_req) e states["contratti_totali"] +1 (a 5 = vittoria).
+func _update_contracts(i: int, log: Array) -> void:
+	var f := state.fighters[i]
+	if f.contracts.is_empty():
+		return
+	var foe := state.opponent_of(f)
+	var foe_idx := state.fighters.find(foe) if foe != null else -1
+	var base_foe: Dictionary = _turn_baseline.get(foe_idx, {})
+	var dealt := 0
+	var new_statuses: Array = []
+	if foe != null and not base_foe.is_empty():
+		dealt = foe.wounds.size() - int(base_foe.get("wounds", foe.wounds.size()))
+		if foe.stun > int(base_foe.get("stun", foe.stun)):
+			new_statuses.append("stun")
+		if foe.hobbles.size() > int(base_foe.get("hobbles", foe.hobbles.size())):
+			new_statuses.append("hobble")
+		if foe.poison > int(base_foe.get("poison", foe.poison)):
+			new_statuses.append("poison")
+		if foe.wounds.count("bleed") > 0 and dealt > 0 and foe.wounds.slice(int(base_foe.get("wounds", 0))).has("bleed"):
+			new_statuses.append("bleed")
+	for c in f.contracts:
+		if bool(c.get("done", false)):
+			continue
+		var completed := false
+		match str(c.get("trigger", "")):
+			"attack_or_block_success":
+				completed = bool(_attack_ok.get(i, false)) or bool(_block_ok.get(i, false))
+			"reaction_success":
+				completed = bool(_instant_used.get(i, false)) 						and (bool(_attack_ok.get(i, false)) or bool(_block_ok.get(i, false)))
+			"first_blood":
+				completed = state.first_blood_by == i
+			"wounds_dealt_2":
+				completed = dealt >= 2
+			"focus_spent":
+				if int(_focus_spent.get(i, 0)) >= 1:
+					c["progress"] = int(c.get("progress", 0)) + 1
+					completed = int(c["progress"]) >= int(c.get("turns", 4))
+			"status_inflicted":
+				var seen: Array = c.get("seen", [])
+				for st in new_statuses:
+					if not seen.has(st):
+						seen.append(st)
+						c["progress"] = int(c.get("progress", 0)) + 1
+				c["seen"] = seen
+				completed = int(c.get("progress", 0)) >= int(c.get("turns", 4))
+		if completed:
+			c["done"] = true
+			f.state_add("contratti", 1)
+			f.state_add("contratti_totali", 1)
+			log.append("%s completa il contratto %s (%d/5)" % [
+				f.character, str(c.get("name", c.get("id", "?"))), f.state_get("contratti_totali")])
+			fighter_updated.emit(i)
+
+
+## PRIMA DI PESCARE il proprietario può scartare un contratto completato per
+## pescare 1 carta o ottenere 1 focus (`gain` = "draw" | "focus"). La scelta
+## è del giocatore: qui l'API per la scena; l'auto-risoluzione NON la usa
+## (tenere i contratti in gioco alimenta n_from_state di #321/#322).
+func spend_completed_contract(i: int, gain: String) -> bool:
+	var f := state.fighters[i]
+	for k in range(f.contracts.size()):
+		if bool(f.contracts[k].get("done", false)):
+			f.contracts.remove_at(k)
+			f.state_add("contratti", -1)
+			if gain == "draw":
+				f.draw_one()
+			else:
+				f.gain_focus(1)
+			fighter_updated.emit(i)
+			return true
+	return false
+
+
 func _cleanup(log: Array) -> void:
 	_set_phase(Domain.Phase.CLEANUP)
+	# Primo Sangue: attribuisci la prima ferita della partita (a fine turno,
+	# confrontando con la fotografia di inizio turno; se entrambi feriscono
+	# nello stesso primo turno l'attribuzione è ambigua e nessuno la ottiene).
+	if state.first_blood_by == -1 and state.fighters.size() == 2:
+		var d0: int = state.fighters[0].wounds.size() - int(_turn_baseline.get(0, {}).get("wounds", state.fighters[0].wounds.size()))
+		var d1: int = state.fighters[1].wounds.size() - int(_turn_baseline.get(1, {}).get("wounds", state.fighters[1].wounds.size()))
+		if d0 > 0 and d1 > 0:
+			state.first_blood_by = -2
+		elif d0 > 0:
+			state.first_blood_by = 1   # il combattente 1 ha ferito lo 0
+		elif d1 > 0:
+			state.first_blood_by = 0
+	for i in range(state.fighters.size()):
+		_update_contracts(i, log)
 	# Uscita da Occultato (carta-regola #161): "volta questa carta dopo che
 	# hai effettuato un attacco riuscito O un blocco riuscito O hai subito
 	# una o più ferite O hai ottenuto un effetto di stato diverso da
@@ -1739,6 +1865,11 @@ func _try_defeat_save(i: int) -> void:
 func _check_winner() -> int:
 	for i in range(state.fighters.size()):
 		_try_defeat_save(i)
+	# Vittoria a contratti (Yojimbo): "se sono stati completati cinque
+	# contratti, hai vinto la partita".
+	for i in range(state.fighters.size()):
+		if state.fighters[i].state_get("contratti_totali") >= 5:
+			return i
 	var alive: Array = []
 	for i in range(state.fighters.size()):
 		if not state.fighters[i].is_defeated():

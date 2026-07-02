@@ -10329,7 +10329,7 @@
      "alt": "c"
     }
    ],
-   "note": "Costo: SCARTA 1 CARTA. Movimento ❄1 ↻2 facoltativi. OPPURE: PESCA FINO A 2 (a) / RIMETTI IN GIOCO UN CONTRATTO A FACCIA IN SU (meccanica Contratti, non modellata, alt b, DA VERIFICARE) / CAMBIA KAMAE FINO A 1 RAMO (c). Verificata su yojimbo_03.webp."
+   "note": "Costo: SCARTA 1 CARTA. Movimento ❄1 ↻2 facoltativi. OPPURE: PESCA FINO A 2 (a) / RIMETTI IN GIOCO UN CONTRATTO A FACCIA IN SU (alt b: riporta in gioco un contratto scartato, non ancora modellato — serve traccia dei contratti scartati, DA VERIFICARE) / CAMBIA KAMAE FINO A 1 RAMO (c). Verificata su yojimbo_03.webp."
   },
  "317": {
    "name": "AFFONDO DI NAGAMAKI",
@@ -10785,7 +10785,10 @@
      "alt": "c"
     }
    ],
-   "note": "Iniziativa '-'. GIOCA DOPO CHE HAI COMPLETATO UN CONTRATTO — condizione non modellabile, annotata. Tre OPPURE, tutte CERCA+PRENDI 1 carta arma filtrata per rango (0/1/2 focus). Corrispondenza colore-rango incerta, DA VERIFICARE. Verificata su yojimbo_07.webp."
+   "note": "Iniziativa '-'. GIOCA DOPO CHE HAI COMPLETATO UN CONTRATTO — approssimata con state_req {contratti:1} (almeno un contratto completato in gioco; la finestra temporale esatta 'subito dopo' non è modellata, DA VERIFICARE). Tre OPPURE, tutte CERCA+PRENDI 1 carta arma filtrata per rango (0/1/2 focus). Corrispondenza colore-rango incerta, DA VERIFICARE. Verificata su yojimbo_07.webp.",
+   "state_req": {
+    "contratti": 1
+   }
   },
  "329": {
    "name": "SPEZZARE LE GAMBE",
@@ -13496,7 +13499,41 @@
     "Tanto",
     "Wakizashi"
    ],
-   "note": "Rinomanza stampata 39. Regola: Sicario a Contratto (carte 309-314, non modellate: obiettivi/contratti, non azioni Duel)."
+   "note": "Carta-regola 'Sicario a Contratto' (PDF Yojimbo, 2026-07-03): 6 carte contratto, se ne scelgono 5 in preparazione a faccia in su (auto: le prime 5 della lista — la scelta manuale arriverà con la UI). Ogni contratto si volta quando la condizione è soddisfatta; prima di pescare si può scartare un completato per pescare 1 O ottenere 1 focus (Duel.spend_completed_contract, l'auto non lo usa); a 5 contratti completati VITTORIA. Trigger cablati in Duel._update_contracts; letture DA VERIFICARE: Furore (2+ ferite inflitte nello stesso turno) e Reazione (approssimata con istantanea giocata in un turno con attacco/blocco riuscito). states: 'contratti' = completati in gioco, 'contratti_totali' = partita.",
+   "contracts": [
+    {
+     "id": "fagli_vedere",
+     "name": "Fagli Vedere",
+     "trigger": "attack_or_block_success"
+    },
+    {
+     "id": "primo_sangue",
+     "name": "Primo Sangue",
+     "trigger": "first_blood"
+    },
+    {
+     "id": "reazione",
+     "name": "Reazione",
+     "trigger": "reaction_success"
+    },
+    {
+     "id": "furore",
+     "name": "Furore",
+     "trigger": "wounds_dealt_2"
+    },
+    {
+     "id": "concentrazione",
+     "name": "Concentrazione",
+     "trigger": "focus_spent",
+     "turns": 4
+    },
+    {
+     "id": "attrezzi",
+     "name": "Gli Attrezzi del Mestiere",
+     "trigger": "status_inflicted",
+     "turns": 4
+    }
+   ]
   },
  "Ashigaru": {
    "card_id": 231,
