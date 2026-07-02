@@ -76,10 +76,10 @@ meno che non richiesto esplicitamente.
 - **Test headless** (Godot 4.6): 27 scene in `godot/tests/*.tscn`.
   **4 test falliscono già in partenza, in modo pre-esistente e NON
   collegato a questo lavoro** — confermato più volte con `git stash` +
-  ri-esecuzione sul commit precedente: `test_kamae` (OR-gate sul campo
-  `kamae` di un *effetto*, non su `kamae_req` — nota: potrebbe essere
-  proprio uno dei buchi di questo catalogo, vedi §3.7), `test_blocks`,
-  `test_combat2`, `test_options`. Non provare a "sistemarli" a meno che il
+  ri-esecuzione sul commit precedente: `test_kamae` (RISOLTO 2026-07-02:
+  il test usava il verbo inesistente "gain_focus" al posto di "focus" —
+  bug del test, non del motore), `test_blocks`,
+  `test_combat2`, `test_options` (questi 3 restano, fuori scope). Non provare a "sistemarli" a meno che il
   task specifico li riguardi.
 - ⚠️ **Il binario Godot 4.6 headless linux NON è incluso nel repo.** La
   sessione precedente ne aveva scaricato una copia locale in
@@ -328,6 +328,12 @@ pena chiuderle insieme in una sessione di lavoro dedicata e corta.
 
 ## 5. Decisioni da prendere a inizio sessione (confermare con l'utente, non re-derivare da soli)
 
+> **Decise (sessione 2026-07-02):** §5.1 → **dizionario libero** di
+> flag/contatori per-fighter; §5.2 → **confermato**, `alt_initiative` campo
+> separato dallo split; §5.3 → **audit prima** (report in
+> `docs/GATE_AUDIT.md`), refactor in Fase 5; §5.4 → Kamae "Distanza"
+> **vincolata al solo Navigatore**.
+
 1. **Forma del sottosistema "stato persistente"** (§4): contatori/flag
    nominati per-fighter, dizionario libero vs enum fisso di nomi noti,
    dove vive nello schema (`geometry.json` per la definizione, `GameState`
@@ -356,51 +362,83 @@ pena chiuderle insieme in una sessione di lavoro dedicata e corta.
 ## 6. TODO a fasi
 
 ### Fase 0 — Setup
-- [ ] Leggere questo file + `GEOMETRY_SCHEMA.md` + `docs/CARD_EDITOR_ROADMAP.md`
+- [x] Leggere questo file + `GEOMETRY_SCHEMA.md` + `docs/CARD_EDITOR_ROADMAP.md`
       (per capire come è fatto l'editor esistente).
 - [ ] Procurarsi un binario Godot **4.6** headless linux x86_64, verificare
       che la suite di test giri e dia la stessa baseline di §2 (4 fail
-      pre-esistenti, tutto il resto verde).
-- [ ] Confermare le **Decisioni §5** con l'utente prima di scrivere codice.
+      pre-esistenti, tutto il resto verde). ⚠️ *Bloccato nelle sessioni
+      remote correnti: la policy di rete nega il download (github releases
+      e mirror) — vedi `GATE_AUDIT.md` §6. Da fare in locale o allargando
+      la policy dell'ambiente.*
+- [x] Confermare le **Decisioni §5** con l'utente prima di scrivere codice.
 
 ### Fase 1 — Audit di semplificazione (obiettivo B, se deciso in §5.3)
-- [ ] Scandire le 281 carte e mappare ogni pattern di condizione/gate
+- [x] Scandire le 281 carte e mappare ogni pattern di condizione/gate
       usato oggi per movimento, attacco/difesa, contrattacco, effetti.
-- [ ] Individuare quali sono davvero lo stesso concetto ripetuto vs quali
+- [x] Individuare quali sono davvero lo stesso concetto ripetuto vs quali
       sono genuinamente diversi.
-- [ ] Proporre (senza ancora implementare) un concetto di "gate" unificato
+- [x] Proporre (senza ancora implementare) un concetto di "gate" unificato
       — quali campi lo compongono (`kamae_req`? `focus_cost`? altro
       trovato durante l'audit?), dove si applica.
 - [ ] Presentare il report all'utente per approvazione prima di toccare
-      schema o editor.
+      schema o editor. → **report pronto: `docs/GATE_AUDIT.md`** (include
+      un bug reale trovato: `focus_cost` sugli atomi di movimento ignorato
+      da `Move.gd`, 31 atomi).
 
 ### Fase 2 — Sottosistema stato persistente (cuore dell'obiettivo A)
-- [ ] Disegnare schema + `Duel.gd`/`GameState.gd` per stato per-fighter
+- [x] Disegnare schema + `Duel.gd`/`GameState.gd` per stato per-fighter
       che persiste tra i turni (contatori/flag nominati, leggibili/
-      scrivibili da `effects[]`).
-- [ ] Widget editor per crearlo/leggerlo (`GeometryEditor.gd`).
-- [ ] Applicarlo a Disperazione (§3.6), Contratti (§3.11), stato Ombra
-      (§3.9), stato Ninja (§3.8), ciclo Illuminata (§3.12), carte "rimane
-      in gioco" (§3.2/§3.17) — ~40 carte totali.
-- [ ] Test headless dedicati + re-verifica delle carte toccate contro i
-      dati/scan reali (non solo "il JSON è valido").
+      scrivibili da `effects[]`). → `Fighter.states`, verbi `state_*`,
+      gate `state`/`state_req`, helper `engine/Gate.gd` (v0.78.0, PR #83).
+- [ ] Widget editor per crearlo/leggerlo (`GeometryEditor.gd`). → per ora
+      i campi nuovi SOPRAVVIVONO all'editor (passthrough dei campi non
+      modellati, v0.78.0) ma non hanno ancora UI dedicata.
+- [x] Applicarlo a Disperazione (§3.6), stato Ombra (§3.9), stato Ninja
+      (§3.8), ciclo Illuminata (§3.12) — 25 carte, verificate sugli scan.
+      **Contratti (§3.11) rinviati a Fase 3** (serve `n_source`, il
+      conteggio moltiplica effetti); "rimane in gioco" (§3.2/§3.17) resta
+      per la Fase 4 (trigger per-turno). **Risolto (carte-regola fisiche
+      #160/#161 fornite dall'utente, 2026-07-02): Ombra e Ninja sono lo
+      stesso stato ufficiale "Occultato"** — nomi unificati nei dati e
+      condizioni di uscita cablate in Duel._cleanup (attacco/blocco
+      riuscito, ferite o altro stato ricevuto, salvo re-ingresso nel
+      turno). Ancora aperto: attivazione Disperazione, completamento
+      Contratti (regole espansione).
+- [x] Test headless dedicati (`tests/test_gate_states.tscn`) + re-verifica
+      delle carte toccate contro gli scan reali. ⚠️ Suite NON eseguita:
+      binario Godot non disponibile nella sessione remota (vedi Fase 0).
 
 ### Fase 3 — Gruppo economico "schema+motore"
-- [ ] `alt_initiative` (§3.1, ~20 carte).
-- [ ] `foe_switch_kamae`/`foe_change_kamae` (§3.7), `foe_draw` (§3.18),
-      `foe_reveal_hand` (§3.5) — famiglia `foe_*`, insieme.
-- [ ] `counter` gated da Kamae (§3.10).
-- [ ] Effetti a entità variabile / `n_source` (§3.13).
-- [ ] Quinta Kamae "Distanza" (§3.22, dopo la decisione §5.4).
-- [ ] Guarigione/rimozione stato (§3.20), selezione casuale (§3.19).
+- [x] `alt_initiative` (§3.1) — 16 carte (v0.79.0); #146 ha un *range*
+      alternativo, non un valore: in nota. #166/#169/#279 erano soglie
+      trappola (§3.4), non alt initiative.
+- [x] `foe_switch_kamae`/`foe_change_kamae` (§3.7), `foe_draw` (§3.18),
+      `foe_reveal_hand` (§3.5) — fatti insieme; corretti 7 dati che
+      spostavano il GIOCATORE invece dell'avversario e 3 segnaposto errati.
+- [x] `counter` gated da Kamae/stato (§3.10) — 6 carte (#299 inclusa).
+- [x] Effetti a entità variabile: `n_from_state` (§3.13) — sblocca #322
+      (Contratti); #319/#321/#328 restano per fasi successive (bonus
+      iniziativa/raggio variabile, finestre di gioco).
+- [ ] Quinta Kamae "Distanza" (§3.22): **rinviata** — tocca gli enum di
+      stance ovunque; da fare quando la suite di test è eseguibile.
+- [x] Guarigione/rimozione stato `heal` (§3.20), selezione casuale
+      `random: true` (§3.19).
 
 ### Fase 4 — Gruppo strutturale rimanente
-- [ ] Doppia faccia Hachikō (§3.14) + "gira la carta" (§3.15).
-- [ ] Bersaglio per confronto iniziativa (§3.4).
-- [ ] Finestre di trigger/fase turno (§3.3, si appoggia sul lavoro di
-      Fase 2 per §3.2).
-- [ ] Manipolazione mazzo avanzata (§3.16).
-- [ ] Requisiti su conteggio carte in gioco (§3.21).
+- [ ] Doppia faccia Hachikō (§3.14) + "gira la carta" (§3.15) — richiede
+      scelta della faccia in pianificazione (UI/protocollo), prossimo giro.
+- [x] Bersaglio per confronto iniziativa (§3.4) — campo `targeting`
+      (v0.80.0): #167 #169 #279 #280 #281 #325 #336; #166 resta (trappola
+      §3.28).
+- [x] Finestre di trigger/fase turno (§3.3, parte "inizio turno"):
+      `stays_in_play` + `turn_start`/`limit_mod`/`in_play_state`/`expires`
+      (v0.80.0, 12 carte). Le restrizioni globali "FINCHÉ È ATTIVA" delle
+      virtù Bushido (#85/#91/#93/#95) e le finestre di gioco speciali
+      ("gioca dopo una Reazione", ecc.) restano da modellare.
+- [x] Manipolazione mazzo avanzata (§3.16, parte): verbi `mill`/`foe_mill`
+      (usati da #280). Reveal+filtra (#339) e mill variabile (#225) in nota.
+- [x] Requisiti su conteggio carte in gioco (§3.21): coperti da
+      `in_play_state` + `state_req` (ciclo Illuminata #261/#262 vivo).
 - [ ] Marcatori trappola su griglia (§3.28).
 - [ ] I casi isolati (1-2 carte ciascuno): giocare carta pescata come
       istantanea (§3.23), IA muovi-verso (§3.24), adiacenza a terzo pezzo

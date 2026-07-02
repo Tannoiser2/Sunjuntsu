@@ -3,6 +3,160 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.81.0] — 2026-07-02
+### Occultato: stato unico Assassino/Ninja con condizioni di uscita (da carte-regola fisiche)
+- L'utente ha fornito le foto delle carte-regola **#160 PIEDI DI CORVO** e
+  **#161 RIVELATO/OCCULTATO**: lo "stato Ombra" (Assassino) e lo "stato
+  Ninja" sono **lo stesso stato ufficiale, "Occultato"** (stessa carta a
+  doppia faccia, stessa icona incappucciata di "ENTRA IN").
+- **Nomi unificati nei dati**: `ombra`/`ninja` → `occultato` su 13 carte
+  (state/state_req/alt_initiative.state) + note aggiornate.
+- **Condizioni di USCITA cablate** in `Duel._cleanup` (dalla faccia
+  OCCULTATO di #161): si torna Rivelati dopo un attacco riuscito, un
+  blocco riuscito, ferite subite o un altro effetto di stato ricevuto
+  (stordito/azzoppato/veleno) — salvo esserci ENTRATI nello stesso turno
+  (le carte Assassino/Ninja tipicamente attaccano E entrano in Occultato:
+  l'ingresso a fine carta prevale). Fotografia di ferite/stati a inizio
+  turno (`_turn_baseline`) + tracking dell'ingresso (`_stealth_entered`).
+- **#170 LANCIO DI PIEDI DI CORVO**: nota aggiornata con la regola
+  confermata di #160 (miniatura visibile se lanciati da Rivelato,
+  segnalini '?' coperti con diversivi se da Occultato). I marcatori su
+  griglia restano da modellare (roadmap §3.28).
+- Test: 4 casi nuovi sulle condizioni di uscita. ⚠️ Suite ancora NON
+  eseguita in remoto; gdparse ok.
+
+## [0.80.0] — 2026-07-02
+### Fase 4 (parte 1) — zona "in gioco", trigger a inizio turno, bersaglio per confronto d'iniziativa, mill
+- **Zona "in gioco" per-fighter** (roadmap §3.2): `Fighter.in_play`; le carte
+  con `stays_in_play` a fine risoluzione restano sul tavolo invece di andare
+  negli scarti (anche le istantanee). Campi collegati:
+  - `in_play_state`: entrando la carta incrementa uno stato persistente,
+    uscendo lo decrementa — il contatore `illuminata` di #263/#264/#265 ora è
+    **vivo** (chiude il DA VERIFICARE sul decremento della 0.78.0);
+  - `limit_mod {hand/wound/focus}`: limiti modificati finché in gioco
+    (§3.17; nuovo `Fighter.focus_limit` al posto del MAX_FOCUS fisso);
+  - `turn_start`: effetti applicati a inizio turno PRIMA del passo Draw
+    (finestre di trigger, §3.3), con risoluzione dei gruppi OPPURE;
+  - `expires {turns:N}`: la carta scade da sola dopo N fine-turno (#106).
+  Nuove API `Duel._enter_play` / `Duel.remove_from_play` (rovescia
+  stato/limiti e scarta).
+- **Bersaglio per confronto d'iniziativa** (§3.4): campo `targeting
+  {mode:"initiative", threshold?, w?, w_from_gap?}` — l'attacco a distanza
+  senza diagramma colpisce se l'avversario è in gittata (keyword RangeN) e
+  la sua velocità scelta è inferiore (e sotto la soglia, se posta); ferite
+  fisse, bleed/exec, o pari al divario di velocità (#279).
+- **Verbi `mill`/`foe_mill`** (§3.16): scarto dalla cima del mazzo.
+- **Dati (18 carte)**: gruppo RIMANE IN GIOCO — #295 (mano +3), #261 (tutti
+  gli effetti spostati in `turn_start`), #263/#264/#265 (in_play_state
+  'illuminata' + limiti, rimosso lo state_add statico), #25, #106 (expires),
+  #85/#91/#93/#95 (Bushido: in gioco; le restrizioni globali "FINCHÉ È
+  ATTIVA" restano note), #280 (targeting + turn_start foe_mill). Targeting
+  iniziativa su #167/#169 (threshold 6)/#279 (w_from_gap)/#281/#325 (bleed)/
+  #336.
+- **Rinviati al prossimo giro**: doppia faccia Hachikō (§3.14/§3.15, tocca
+  pianificazione/UI/protocollo), marcatori trappola (§3.28), casi isolati
+  (§3.23–§3.27), restrizioni globali Bushido.
+- Validatore (campi in-gioco/targeting, verbi mill), simulatore, schema e
+  test aggiornati. ⚠️ Suite ancora NON eseguita (binario Godot non
+  disponibile in sessione remota); gdparse ok su tutti i file toccati.
+
+## [0.79.0] — 2026-07-02
+### Fase 3 — gruppo "schema+motore": alt_initiative, famiglia foe_*, counter gated, n_from_state, heal, scarto casuale
+- **`alt_initiative`** (roadmap §3.1): nuovo campo `{ value, kamae?/focus_cost?/state? }`
+  — iniziativa alternativa AL POSTO di quella stampata quando il gate è
+  soddisfatto (non è uno split). In auto-risoluzione si usa solo se gratis
+  e più veloce; le difese la includono tra le velocità che agganciano
+  l'attacco avversario. Applicata a **16 carte** (#44 #58 #60 #65 #77 #86
+  #100 #105 #109 #140 #143 #149 #175 #303 #324 #325); #146 ha un *range*
+  alternativo (8-3), non un valore: resta in nota.
+- **`counter` gated** (§3.10): le voci della lista possono essere oggetti
+  `{ on: [7,6], kamae/state/focus_cost }` valutati col gate del difensore.
+  Applicato a #111 #118 #120 #141 #151 e al counter in Disperazione di #299.
+  L'editor preserva le voci gated (passthrough nel widget counter).
+- **Famiglia `foe_*`** (§3.5/§3.7/§3.18): nuovi verbi `foe_switch_kamae`
+  (7 carte usavano `switch_kamae to:neutral` che spostava il GIOCATORE
+  invece dell'avversario — bug di dati corretto su #97 #145 #240 #301 #326
+  #336 #362), `foe_change_kamae` (#45 #66 #87), `foe_draw` (#12 #13 #17),
+  `foe_reveal_hand` (10 carte; su #117 e #122 sostituisce il segnaposto
+  errato `foe_discard`, su #153 il vecchio `draw` errato). #87 aveva anche
+  NON BLOCCABILE stampato ma non trascritto (`non_blockable` aggiunto).
+- **`n_from_state`** (§3.13): quantità a entità variabile — `n` effettivo =
+  n × valore di uno stato persistente. Sblocca i **Contratti** di #322
+  ("per ogni contratto completato" su focus/pesca/ricerca + `state_clear`
+  finale); #319/#321/#328 restano in nota (bonus iniziativa/raggio e
+  finestre di gioco, fasi successive).
+- **`heal`** (§3.20): rimozione ferite/stati propri (`what`: wound/bleed/
+  stun/hobble/poison, `all: true` per "tutti"). Applicato a #81 #124 #249
+  #261 (su #249 e #261 sostituisce le approssimazioni reduce_damage/
+  discard_self annotate come errate).
+- **Scarto casuale** (§3.19): flag `random: true` su `discard_self`/
+  `foe_discard`. Applicato a #242 e #327.
+- Quinta Kamae "Distanza" (§3.22) **rinviata**: tocca gli enum di stance in
+  tutto il progetto e senza suite eseguibile il rischio di regressione è
+  alto — da fare con Godot a disposizione.
+- Validatore e simulatore aggiornati ai campi/verbi nuovi; schema
+  documentato in GEOMETRY_SCHEMA.md; test estesi in test_gate_states.
+  ⚠️ Suite ancora NON eseguita (binario Godot non disponibile in sessione
+  remota); sintassi verificata con gdparse su tutti i file toccati.
+
+## [0.78.0] — 2026-07-02
+### Stati persistenti per-fighter + gate unificato (roadmap meccaniche, Fase 2)
+- **Nuovo sottosistema di stato persistente** (`Fighter.states`, dizionario
+  libero nome → int, decisione §5.1 della roadmap): copre come UN SOLO
+  meccanismo Disperazione (Onna-Bugeisha), Contratti (Yojimbo), stato Ombra
+  (Assassino), stato Ninja, ciclo Illuminata (Monaco) e le carte "RIMANE IN
+  GIOCO" (~40 carte del catalogo §3). Verbi effetto nuovi: `state_add`
+  (anche negativo, per spendere), `state_set`, `state_clear`; gate di
+  lettura: campo `state` sugli effetti e `state_req` sulla giocabilità
+  (stringa = flag ≥ 1, dizionario nome → minimo in AND).
+- **Nuovo `engine/Gate.gd`** (da `docs/GATE_AUDIT.md`): helper unico per il
+  gate ricorrente kamae + focus_cost + state. `Duel._apply_effects`,
+  `_resolve_option` e `playable()` ora passano da qui invece di ripetere il
+  controllo a mano; il resto dei siti duplicati migra in Fase 5.
+- **GeometryEditor: passthrough dei campi non modellati.** L'editor
+  ricostruiva la geometria da zero al salvataggio: i campi che la UI non
+  modella (`non_blockable`, `play_cost`, `wound_kind` dello split, `all`/
+  `all_but` di spend_focus, e i nuovi `state`/`state_req`) sparivano al primo
+  giro apri → salva (stessa classe di bug della 0.77.0). Ora le chiavi
+  sconosciute a livello carta/split/effetto/atomo sono preservate com'erano.
+- **CardValidator**: fix falso errore sul gate `kamae` in forma Array di un
+  effetto (probabile causa del fail pre-esistente di `test_kamae` — da
+  riverificare col binario); nuovi verbi `state_*` nel vocabolario e
+  validazione delle forme di `state`/`state_req`.
+- **`GEOMETRY_SCHEMA.md`**: documentati stati persistenti, gate unificato,
+  `state_req` e i tre verbi nuovi. Nuovo report `docs/GATE_AUDIT.md` (censimento
+  dei gate su tutte le 281 carte) e aggiornamento roadmap (decisioni §5 fissate).
+- **Pilota dati: Disperazione (Onna-Bugeisha)** — prime carte reali sul
+  sottosistema: #295/#296 giocabili solo in Disperazione (`state_req`),
+  #298 PESCA 5 (alternativa b), #299 PESCA 2 dello split, #305 terza riga
+  di movimento + PESCA 2, #306 STORDISCI+AZZOPPA on-hit gated
+  `state: "disperazione"`; #302 tridente dello split gated sull'atomo.
+  `Move.reachable_states/reachable_by_cell` ora filtrano gli atomi anche
+  per stato persistente (nuovo parametro, tutti i chiamanti aggiornati).
+  Restano in nota (fasi successive): counter gated di #299 (§3.10),
+  iniziativa alternativa e bonus-cella di #303 (§3.1), regole persistenti
+  di #295 (§3.2). Come si ENTRA in Disperazione è da definire con
+  l'utente (regola dell'espansione, non presente negli scan).
+- **Estensione agli altri gruppi di stato** (17 carte, verificate sugli
+  scan): **Ombra/Assassino** — #221/#224 (state_set nello split, posizione
+  confermata sugli scan), #225/#226/#228 (state_set nei effetti), #229
+  (movimento raddoppiato gated `state: "ombra"` sull'atomo);
+  **Ninja** — #165/#172 (state_set nello split), #174/#176 (state_set nei
+  effetti), #171 (AZZOPPA gated state), #166 (giocabile solo in stato
+  Ninja, `state_req`); **Illuminata/Monaco** — #263/#264/#265 incrementano
+  il contatore `illuminata` quando entrano in gioco, #261/#262 richiedono
+  `state_req {"illuminata": 3}` (l'uscita dal gioco non decrementa ancora
+  il contatore — legata a §3.2, in nota). **Contratti (Yojimbo)** resta in
+  nota: serve lo scaling a entità variabile (§3.13, Fase 3), non un flag.
+  L'icona "ENTRA IN [sagoma incappucciata]" è identica per Assassino e
+  Ninja: possibile stato unico "Occultamento" da confermare col
+  regolamento — per ora restano `ombra` e `ninja` come nel catalogo.
+- **Test**: nuova scena `tests/test_gate_states.tscn` (Gate, helper Fighter,
+  verbi state_*, gate su effetti, state_req su playable, round-trip
+  passthrough editor). ⚠️ Non ancora eseguita: il binario Godot 4.6 non è
+  scaricabile dalla sessione remota corrente (policy di rete) — da lanciare
+  alla prima occasione insieme alla baseline (4 fail pre-esistenti attesi).
+
 ## [0.77.0] — 2026-07-02
 ### Fix perdita dati nell'editor geometria + audit meccaniche mancanti
 - **3 bug di perdita dati silenziosa in GeometryEditor.gd**, trovati da una

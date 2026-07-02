@@ -21,9 +21,10 @@ extends RefCounted
 
 
 ## Stati raggiungibili come Array[Vector3i] (x=q, y=r, z=facing 0..5).
-## `stance_slug` filtra gli atomi gated dalla Kamae: un atomo con campo "kamae"
-## si applica solo se uguale alla stance corrente ("" = nessun filtro).
-static func reachable_states(cell: Vector2i, facing: int, spec, is_blocked: Callable, stance_slug: String = "") -> Array:
+## `stance_slug` e `fighter_states` filtrano gli atomi gated (Gate.gd): un atomo
+## con campo "kamae" e/o "state" si applica solo se la stance corrente e gli
+## stati persistenti del combattente li soddisfano ("" / {} = nessun filtro).
+static func reachable_states(cell: Vector2i, facing: int, spec, is_blocked: Callable, stance_slug: String = "", fighter_states: Dictionary = {}) -> Array:
 	var seen := {}
 	var start := Vector3i(cell.x, cell.y, facing)
 	if spec == null or typeof(spec) != TYPE_DICTIONARY or (spec.get("opts", []) as Array).is_empty():
@@ -32,8 +33,7 @@ static func reachable_states(cell: Vector2i, facing: int, spec, is_blocked: Call
 	for opt in spec.get("opts", []):
 		var atoms: Array = []
 		for a in opt.get("atoms", []):
-			var gate = a.get("kamae", "")
-			if Kamae.gate_allows(gate, stance_slug):
+			if Gate.allows(a, stance_slug, fighter_states):
 				atoms.append(a)
 		var ordered: bool = opt.get("ordered", false)
 		_enum(start, atoms, ordered, is_blocked, seen)
@@ -41,9 +41,9 @@ static func reachable_states(cell: Vector2i, facing: int, spec, is_blocked: Call
 
 
 ## Mappa cella → Array[int] dei facing legali ottenibili muovendoci.
-static func reachable_by_cell(cell: Vector2i, facing: int, spec, is_blocked: Callable, stance_slug: String = "") -> Dictionary:
+static func reachable_by_cell(cell: Vector2i, facing: int, spec, is_blocked: Callable, stance_slug: String = "", fighter_states: Dictionary = {}) -> Dictionary:
 	var out := {}
-	for s in reachable_states(cell, facing, spec, is_blocked, stance_slug):
+	for s in reachable_states(cell, facing, spec, is_blocked, stance_slug, fighter_states):
 		var c := Vector2i(s.x, s.y)
 		if not out.has(c):
 			out[c] = []

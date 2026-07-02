@@ -183,7 +183,7 @@ func _compute_reach() -> void:
 	var f := state.fighters[_rseat]
 	var g := _resolve_geom()
 	if g.has("move"):
-		_rreach = Move.reachable_by_cell(f.cell, f.facing, g["move"], state.is_blocked, Domain.STANCE_SLUG[f.stance])
+		_rreach = Move.reachable_by_cell(f.cell, f.facing, g["move"], state.is_blocked, Domain.STANCE_SLUG[f.stance], f.states)
 
 
 ## Geometria della carta in risoluzione (carta scelta o parte bassa dello split).

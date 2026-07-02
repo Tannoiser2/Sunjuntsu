@@ -86,7 +86,7 @@ static func plan_move(state: GameState, me: GameState.Fighter, geom: Dictionary)
 	if foe == null:
 		return {"cell": me.cell, "facing": me.facing}
 	var stance_slug: String = Domain.STANCE_SLUG[me.stance]
-	var states: Array = Move.reachable_states(me.cell, me.facing, geom.get("move", null), state.is_blocked, stance_slug)
+	var states: Array = Move.reachable_states(me.cell, me.facing, geom.get("move", null), state.is_blocked, stance_slug, me.states)
 	var start := Vector3i(me.cell.x, me.cell.y, me.facing)
 	if not states.has(start):
 		states.append(start)

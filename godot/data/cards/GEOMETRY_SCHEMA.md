@@ -75,13 +75,21 @@ agganciata al **numero stampato sulla carta** (= Card ID).
 | `name` | string | Nome stampato sulla carta (riferimento, ridondante con `card_pool`). |
 | `type` | string (enum) | `attack` \| `defence` \| `meditation` \| `core`. |
 | `kamae_req` | string (enum, opz.) | Kamae richiesto: `aggression` \| `balance` \| `determination`. |
+| `state_req` | string \| object (opz.) | Giocabilità gated dallo **stato persistente** (vedi §Stati persistenti): `"occultato"` (richiede ≥ 1) oppure `{ "contratti": 2 }` (nome → minimo, AND fra le chiavi). |
 | `move` | object (opz.) | `{ "opts": [ Opzione, … ] }` — vedi **Movimento**. |
 | `attack` | object (opz.) | `{ "cells": [ Cella, … ] }` — celle offensive (variante unica). |
 | `attacks` | array[object] (opz.) | **Più varianti d'attacco**, ciascuna `{ "cells": […], "kamae": "<slug>"? }`. Il motore usa la variante il cui `kamae` combacia con la posa (stance) dell'attaccante; in mancanza, quella senza `kamae`. In alternativa a `attack`. Se più varianti condividono lo stesso `kamae` (incluso nessuno, cioè libere/OPPURE non gated), sono opzioni scelte liberamente dal giocatore, non alternative gated — pattern raro (es. #164, #344), l'editor le mostra come widget "Combattimento" separati. |
 | `defence` | object (opz.) | `{ "cells": [ Cella, … ] }` — celle protette (variante unica). |
 | `defences` | array[object] (opz.) | Più varianti di difesa gated da `kamae`, come `attacks`. |
-| `counter` | array[int] (opz.) | Iniziative a cui scatta il contrattacco. |
+| `counter` | array (opz.) | Iniziative a cui scatta il contrattacco. Ogni voce è un **int** (sempre attiva) oppure un **oggetto gated** `{ "on": [7,6], "kamae"/"state"/"focus_cost" }` (attiva solo se il gate del difensore è soddisfatto — vedi §Gate unificato). |
+| `alt_initiative` | object (opz.) | **Iniziativa alternativa** (roadmap §3.1): riquadro `[N]` extra sulla carta, usabile AL POSTO di quella stampata se il gate è soddisfatto. `{ "value": 8, "kamae"?/"focus_cost"?/"state"? }`. Non è uno `split` (che è una *seconda azione*). In auto-risoluzione si usa solo se gratis e più veloce. |
 | `effects` | array[object] (opz.) | Effetti ordinati — vedi **Effetti**. |
+| `stays_in_play` | bool (opz.) | **RIMANE IN GIOCO** (roadmap §3.2): a fine risoluzione la carta va nell'area "in gioco" del combattente invece che negli scarti. |
+| `in_play_state` | string (opz.) | Con `stays_in_play`: entrando in gioco la carta incrementa questo stato persistente di 1, uscendo lo decrementa (es. contatore `illuminata` di #263/264/265, letto da `state_req` di #261/#262). |
+| `limit_mod` | object (opz.) | Con `stays_in_play`: modifica i limiti finché la carta è in gioco — `{ "hand": +3, "wound": +1, "focus": +1 }` (§3.17). |
+| `turn_start` | array[object] (opz.) | Con `stays_in_play`: effetti applicati **a inizio turno, prima del passo Draw**, finché la carta è in gioco (finestre di trigger, §3.3 — es. il mill forzato di #280). Stessa forma di `effects`. |
+| `expires` | object (opz.) | Con `stays_in_play`: `{ "turns": N }` — la carta si scarta da sola dopo N fine-turno (es. #106 che ruota di 90°). |
+| `targeting` | object (opz.) | **Bersaglio per confronto d'iniziativa** (§3.4), per armi a distanza senza diagramma: `{ "mode": "initiative", "threshold"?: N, "w"?: int\|"bleed"\|"exec", "w_from_gap"?: true }`. Colpisce se l'avversario è in gittata (keyword RangeN) e la sua velocità è inferiore alla propria (e sotto `threshold` se posto); `w_from_gap` = ferite pari al divario di velocità (#279). Le eventuali `cells` restano come placeholder di gittata per la UI. |
 | `note` | string (opz.) | Note di trascrizione / incertezze (es. `"… DA VERIFICARE"`). |
 | `layout` | array[object] (opz.) | **Estetico, ignorato dal motore.** Albero dei widget dell'editor (nodi `{type, …, children[]}`, dalla v0.61): conserva annidamento (Iniziativa/OPPURE) e ordine come sulla carta fisica. In lettura resta supportata la forma storica `array[string]`. |
 | `split` | object (opz.) | **Seconda iniziativa.** Alcune carte agiscono due volte a iniziative diverse (riquadro `[N]` sulla carta fisica, "parte bassa"). `split` ha gli stessi campi della carta (tranne `name`/`type`): `initiative` (obbligatorio), più `kamae_req`/`move`/`attack(s)`/`defence(s)`/`counter`/`effects`/`note` opzionali. Risolto come una seconda azione indipendente alla propria iniziativa. |
@@ -140,17 +148,53 @@ contestuali:
 | `alt` | string (opz.) | Etichetta di alternativa (effetti mutuamente esclusivi). |
 | `to` | string (opz.) | Kamae di destinazione (per cambi di kamae): `aggression` \| `balance` \| `determination` \| `neutral` (torii ⛩, quasi sempre come destinazione, mai come gate) \| `any` (PASSA A UNA QUALSIASI KAMAE). |
 | `focus_cost` | int (opz.) | Costo in focus dell'effetto (bonus opzionali). |
+| `state` | string \| object (opz.) | Gate di **stato persistente** per l'effetto (sui verbi non-`state_*`): stessa forma di `state_req`. Per i verbi `state_*` è invece il **nome** dello stato da modificare. |
+| `n_from_state` | string (opz.) | **Quantità a entità variabile** (roadmap §3.13): `n` effettivo = `n` (default 1) × valore dello stato indicato (es. "PER OGNI CONTRATTO COMPLETATO" → `"n_from_state": "contratti"`). A zero istanze l'effetto non scatta. |
+| `random` | bool (opz.) | Su `discard_self`/`foe_discard`: la carta da scartare è scelta **a caso** (roadmap §3.19) invece che dall'ultima. |
+| `what` | string (opz.) | Solo per `heal` (roadmap §3.20): cosa rimuovere — `wound` (default), `bleed`, `stun`, `hobble`, `poison`. |
 
 **Verbi `do` presenti nei dati** (usare come autocomplete; estendibile):
 `block_initiative, cancel_abilities, cancel_movement, change_ai_behaviour,
 change_kamae, discard_self, draw, focus, foe_discard, foe_lose_focus, foe_stun,
 hobble, link_anchor, push, reduce_damage, replace_wound_bleed, reset_deck,
-rotate_target, search_draw, spend_focus, stun_self, swap_positions, switch_kamae`.
+rotate_target, search_draw, spend_focus, state_add, state_clear, state_set,
+stun_self, swap_positions, switch_kamae`, più la famiglia sull'avversario
+`foe_change_kamae, foe_discard, foe_draw, foe_lose_focus, foe_reveal_hand,
+foe_stun, foe_switch_kamae` e `heal` (rimozione ferite/stati propri).
 
 > **`link_anchor`** (azione "SOSTITUISCI ! CON ❄", barra viola = focus): collega
 > il marcatore-àncora ❄ all'asterisco (`*`) sulla Griglia di Posizione; gli
 > effetti collegati si applicano al personaggio colpito. Di norma con
 > `focus_cost` (bonus a pagamento), quindi saltato nell'auto-risoluzione.
+
+## Stati persistenti (contatori/flag per-combattente)
+
+Sottosistema unico per le risorse/stati di personaggio che sopravvivono tra i
+turni (roadmap meccaniche §4): **Disperazione** (Onna-Bugeisha), **Contratti**
+(Yojimbo), **Occultato** (Assassino e Ninja), ciclo **Illuminata**
+(Monaco), carte "**RIMANE IN GIOCO**". Runtime: `Fighter.states`
+(dizionario libero nome → int, decisione §5.1); flag = assente/0 (off) o ≥ 1.
+
+> **`occultato`** è il nome ufficiale (carta-regola #161 RIVELATO/OCCULTATO,
+> unica per Assassino e Ninja — l'icona incappucciata di "ENTRA IN"). Le
+> condizioni di USCITA sono cablate in `Duel._cleanup`: si torna Rivelati
+> dopo un attacco riuscito, un blocco riuscito, ferite subite o un altro
+> effetto di stato ricevuto — salvo re-ingresso nello stesso turno. La
+> carta-regola #160 PIEDI DI CORVO (segnalini trappola, roadmap §3.28) non
+> è ancora modellata.
+
+- **Scrittura** (effetti): `{ "do": "state_add", "state": "contratti", "n": 1 }`
+  somma `n` (anche negativo, per spendere; a ≤ 0 lo stato si rimuove);
+  `state_set` imposta il valore assoluto; `state_clear` lo azzera.
+- **Lettura** (gate): campo `state` su un effetto/parte, o `state_req` a
+  livello carta — `"occultato"` (≥ 1) o `{ "contratti": 2 }` (nome → minimo, AND).
+
+### Gate unificato (`engine/Gate.gd` — vedi `docs/GATE_AUDIT.md`)
+
+Ovunque una sotto-parte sia condizionata, i campi sono sempre gli stessi, in
+**AND** fra loro: `kamae` (string o array = OR fra Kamae), `focus_cost` (int),
+`state` (come sopra). In auto-risoluzione le parti con `focus_cost > 0` si
+saltano (sono bonus facoltativi); in partita interattiva si offre il pagamento.
 
 ## Vocabolari controllati
 
