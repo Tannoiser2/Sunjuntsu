@@ -7392,9 +7392,16 @@
        ]
       }
      ]
-    }
+    },
+    "effects": [
+     {
+      "do": "state_set",
+      "state": "ombra",
+      "n": 1
+     }
+    ]
    },
-   "note": "DIFESA senza griglia di blocco stampata. Tutto il contenuto reale (❄ 1 POI ❄ 1, ↻1, 'ENTRA IN [stato Ombra]') è sotto la barra split [9]; l'iniziativa primaria 7 (da card_pool) risulta priva di contenuto proprio sulla carta fisica — DA VERIFICARE sul gioco fisico. 'ENTRA IN [sagoma Assassino]' = stato speciale 'Ombra', ricorrente su più carte Assassino, non modellato nello schema attuale. Verificata su assassin_06.webp."
+   "note": "DIFESA senza griglia di blocco stampata. Tutto il contenuto reale (❄ 1 POI ❄ 1, ↻1, ENTRA IN stato Ombra → state_set) è sotto la barra split [9]; l'iniziativa primaria 7 (da card_pool) risulta priva di contenuto proprio sulla carta fisica — DA VERIFICARE sul gioco fisico. Come si ESCE dallo stato Ombra (consumo/durata) è regola dell'espansione, non ancora cablata. Verificata su assassin_06.webp."
   },
  "222": {
    "name": "BACIO DEL RAGNO",
@@ -7577,9 +7584,16 @@
        ]
       }
      ]
-    }
+    },
+    "effects": [
+     {
+      "do": "state_set",
+      "state": "ombra",
+      "n": 1
+     }
+    ]
    },
-   "note": "keyword Prepared. Le 6 celle attorno al combattente sono marcate con asterisco (v:0, cella-ancora) collegate a '* SPINGI 1' — DA VERIFICARE se vadano trattate come blocco v:1 a 360 gradi. Split [6]: ↻1 poi passo indietro 1 in sequenza, OPPURE (Determinazione) tridente basso 1. 'ENTRA IN [stato Ombra]' finale non modellato. Verificata su assassin_09.webp."
+   "note": "keyword Prepared. Le 6 celle attorno al combattente sono marcate con asterisco (v:0, cella-ancora) collegate a '* SPINGI 1' — DA VERIFICARE se vadano trattate come blocco v:1 a 360 gradi. Split [6]: ↻1 poi passo indietro 1 in sequenza, OPPURE (Determinazione) tridente basso 1; in fondo ENTRA IN stato Ombra (state_set nello split). Verificata su assassin_09.webp."
   },
  "225": {
    "name": "COLTELLO NELLA PIAGA",
@@ -7607,9 +7621,14 @@
     {
      "do": "foe_discard",
      "when": "on_hit"
+    },
+    {
+     "do": "state_set",
+     "state": "ombra",
+     "n": 1
     }
    ],
-   "note": "Aggiunta Istantanea: GIOCA SE L'ATTACCO È RIUSCITO condiziona l'intera carta. L'avversario scarta dalla CIMA del mazzo (mill) un numero pari a ferite+sanguinanti attuali +1 — nessun verbo dedicato, approssimato con foe_discard senza 'n' fisso, DA VERIFICARE. 'ENTRA IN [stato Ombra]' non modellato. Verificata su assassin_11.webp."
+   "note": "Aggiunta Istantanea: GIOCA SE L'ATTACCO È RIUSCITO condiziona l'intera carta. L'avversario scarta dalla CIMA del mazzo (mill) un numero pari a ferite+sanguinanti attuali +1 — nessun verbo dedicato (roadmap §3.16), approssimato con foe_discard senza 'n' fisso, DA VERIFICARE. ENTRA IN stato Ombra → state_set. Verificata su assassin_11.webp."
   },
  "226": {
    "name": "BALZO NELL'OMBRA",
@@ -7672,9 +7691,14 @@
      "do": "push",
      "n": 1,
      "when": "on_hit"
+    },
+    {
+     "do": "state_set",
+     "state": "ombra",
+     "n": 1
     }
    ],
-   "note": "Tridente alto (fronte/fronte-dx/fronte-sx) 1 in testa. Cella fronte con asterisco (v:0) collegata a '* SCAMBIA POSIZIONE CON [avversario]'. SE RIUSCITO: SPINGI 1 e due bonus di movimento gated (Equilibrio ↻2, Determinazione tridente alto 1) trascritti come opts aggiuntive per assenza di campo dedicato, DA VERIFICARE. 'ENTRA IN [stato Ombra]' non modellato. Verificata su assassin_13.webp."
+   "note": "Tridente alto (fronte/fronte-dx/fronte-sx) 1 in testa. Cella fronte con asterisco (v:0) collegata a '* SCAMBIA POSIZIONE CON [avversario]'. SE RIUSCITO: SPINGI 1 e due bonus di movimento gated (Equilibrio ↻2, Determinazione tridente alto 1) trascritti come opts aggiuntive per assenza di campo dedicato, DA VERIFICARE. ENTRA IN stato Ombra → state_set. Verificata su assassin_13.webp."
   },
  "227": {
    "name": "COLPO DELLA VIPERA",
@@ -7741,9 +7765,14 @@
      "n": 1,
      "when": "on_hit",
      "kamae": "balance"
+    },
+    {
+     "do": "state_set",
+     "state": "ombra",
+     "n": 1
     }
    ],
-   "note": "Aggiunta Istantanea: GIOCA SE L'ATTACCO O IL BLOCCO È RIUSCITO condiziona l'intera carta. L'avversario scarta 1 carta (l'icona montagna dopo potrebbe filtrare il tipo, DA VERIFICARE). Equilibrio: OTTIENI 1 focus. 'ENTRA IN [stato Ombra]' non modellato. Verificata su assassin_17.webp."
+   "note": "Aggiunta Istantanea: GIOCA SE L'ATTACCO O IL BLOCCO È RIUSCITO condiziona l'intera carta. L'avversario scarta 1 carta (l'icona montagna dopo potrebbe filtrare il tipo, DA VERIFICARE). Equilibrio: OTTIENI 1 focus. ENTRA IN stato Ombra → state_set. Verificata su assassin_17.webp."
   },
  "229": {
    "name": "ARTERIA RECISA",
@@ -7771,7 +7800,8 @@
          1,
          5
         ],
-        "n": 2
+        "n": 2,
+        "state": "ombra"
        }
       ]
      }
@@ -7804,7 +7834,7 @@
      "kamae": "aggression"
     }
    ],
-   "note": "Movimento: bidente basso 1 OPPURE (banda con stato 'Ombra', gate non modellabile) lo stesso passo con n:2, DA VERIFICARE. Arco frontale completo a distanza 1 applica SANGUINANTE invece di ferite dirette. SE RIUSCITO (Aggressività): l'avversario scarta 1 carta. Verificata su assassin_20.webp."
+   "note": "Movimento: bidente basso 1 OPPURE lo stesso passo con n:2 in stato Ombra (gate state sull'atomo). Arco frontale completo a distanza 1 applica SANGUINANTE invece di ferite dirette. SE RIUSCITO (Aggressività): l'avversario scarta 1 carta. Verificata su assassin_20.webp."
   },
  "230": {
    "name": "TAGLIO VELENOSO",
@@ -11165,14 +11195,22 @@
        ]
       }
      ]
-    }
+    },
+    "effects": [
+     {
+      "do": "state_set",
+      "state": "ninja",
+      "n": 1
+     }
+    ]
    },
-   "note": "5 scudi su ring1 (dorso vuoto). Split [1]: 'ENTRA IN [stato Ninja mascherato]' non modellabile (non è una kamae standard). Movimento: ❄2+⟳2 base, OPPURE (1 focus stimato) ❄3+⟳3. Verificata su ninja_04.webp."
+   "note": "5 scudi su ring1 (dorso vuoto). Split [1]: ENTRA IN stato Ninja mascherato → state_set. Movimento: ❄2+⟳2 base, OPPURE (1 focus stimato) ❄3+⟳3. Come si ESCE dallo stato (consumo/durata) è regola dell'espansione, non ancora cablata. Verificata su ninja_04.webp."
   },
  "166": {
    "name": "TRAPPOLA DEL TIRATORE LUNARE",
    "type": "meditation",
-   "note": "Meccanica trappola non rappresentabile (nessun verbo per 'ferisci l'avversario se la sua iniziativa è inferiore a N'). Banda blu 'stato Ninja' in testa; banda viola [7] = soglia iniziativa &lt;7 (costo focus non stampato); COLPISCI l'avversario con iniziativa inferiore: 1 ferita; ulteriore banda viola trasforma la ferita in esecuzione pagando altro focus. DA VERIFICARE per intero. Verificata su ninja_31.webp."
+   "note": "Meccanica trappola non rappresentabile (roadmap §3.4/§3.28: nessun verbo per 'ferisci l'avversario se la sua iniziativa è inferiore a N'). Banda blu stato Ninja in testa → giocabile solo in stato Ninja (state_req). Banda viola [7] = soglia iniziativa <7 (costo focus non stampato); COLPISCI l'avversario con iniziativa inferiore: 1 ferita; ulteriore banda viola trasforma la ferita in esecuzione pagando altro focus. DA VERIFICARE per intero. Verificata su ninja_31.webp.",
+   "state_req": "ninja"
   },
  "167": {
    "name": "CERBOTTANA FUKIYA",
@@ -11365,10 +11403,11 @@
     },
     {
      "do": "hobble",
-     "when": "on_hit"
+     "when": "on_hit",
+     "state": "ninja"
     }
    ],
-   "note": "4 celle-àncora asimmetriche (solo lato sinistro/centrale). '* TIRA 1' collegato. SE RIUSCITO: CANCELLA MOVIMENTO ATTIVO incondizionato; Equilibrio RUOTA bersaglio 2; banda blu 'stato Ninja' AZZOPPA (gate non-kamae, DA VERIFICARE). Verificata su ninja_14.webp."
+   "note": "4 celle-àncora asimmetriche (solo lato sinistro/centrale). '* TIRA 1' collegato. SE RIUSCITO: CANCELLA MOVIMENTO ATTIVO incondizionato; Equilibrio RUOTA bersaglio 2; AZZOPPA in stato Ninja (gate state). Verificata su ninja_14.webp."
   },
  "172": {
    "name": "BOMBA FUMOGENA",
@@ -11447,9 +11486,16 @@
        ]
       }
      ]
-    }
+    },
+    "effects": [
+     {
+      "do": "state_set",
+      "state": "ninja",
+      "n": 1
+     }
+    ]
    },
-   "note": "6 celle-àncora asterisco, anello completo attorno al personaggio (incluso il dorso, verificato). '* SPINGI 1' collegato. Split [6]: rotazione 1 opzionale + passo indietro 1 obbligatorio, OPPURE (Determinazione) passo a scelta tra fronte/dorso-dx/dorso/dorso-sx (verificato su icona). 'ENTRA IN [stato Ninja]' non modellato. Verificata su ninja_16.webp."
+   "note": "6 celle-àncora asterisco, anello completo attorno al personaggio (incluso il dorso, verificato). '* SPINGI 1' collegato. Split [6]: rotazione 1 opzionale + passo indietro 1 obbligatorio, OPPURE (Determinazione) passo a scelta tra fronte/dorso-dx/dorso/dorso-sx (verificato su icona); in fondo ENTRA IN stato Ninja (state_set nello split). Verificata su ninja_16.webp."
   },
  "173": {
    "name": "FLAGELLO SFERZANTE",
@@ -11558,7 +11604,14 @@
      }
     ]
    },
-   "note": "Aggiunta Istantanea, carta intera condizionata: ramo 1 GIOCA SE L'ATTACCO È RIUSCITO (tridente frontale 2) + 'ENTRA IN [stato Ninja]' non modellato; OPPURE ramo 2 GIOCA SE IL BLOCCO È RIUSCITO (bidente posteriore 1 + ⟳1) + stesso stato. Lo schema non condiziona le singole opzioni di movimento, DA VERIFICARE. Verificata su ninja_18.webp."
+   "note": "Aggiunta Istantanea, carta intera condizionata: ramo 1 GIOCA SE L'ATTACCO È RIUSCITO (tridente frontale 2) OPPURE ramo 2 GIOCA SE IL BLOCCO È RIUSCITO (bidente posteriore 1 + ⟳1); entrambi i rami terminano con ENTRA IN stato Ninja (state_set, reso una sola volta). La condizione di gioco e il gate delle singole opzioni di movimento non sono modellabili (roadmap §3.3), DA VERIFICARE. Verificata su ninja_18.webp.",
+   "effects": [
+    {
+     "do": "state_set",
+     "state": "ninja",
+     "n": 1
+    }
+   ]
   },
  "175": {
    "name": "SQUARCIO DI KAMA",
@@ -11642,11 +11695,16 @@
      "n": 1
     },
     {
+     "do": "state_set",
+     "state": "ninja",
+     "n": 1
+    },
+    {
      "do": "change_kamae",
      "n": 1
     }
    ],
-   "note": "Movimento con 3 punte (fronte-dx/fronte-sx/dorso) 2, icona non standard, set esatto DA VERIFICARE. ⟳1 opzionale in Equilibrio. Determinazione: PESCA FINO A 1. Poi ungated: OTTIENI 1 focus; 'ENTRA IN [stato Ninja]' non modellato; CAMBIA KAMAE FINO A 1 RAMO. Nessuno scudo: difesa di riposizionamento puro. Verificata su ninja_06.webp."
+   "note": "Movimento con 3 punte (fronte-dx/fronte-sx/dorso) 2, icona non standard, set esatto DA VERIFICARE. ⟳1 opzionale in Equilibrio. Determinazione: PESCA FINO A 1. Poi ungated: OTTIENI 1 focus; ENTRA IN stato Ninja (state_set); CAMBIA KAMAE FINO A 1 RAMO. Nessuno scudo: difesa di riposizionamento puro. Verificata su ninja_06.webp."
   },
  "260": {
    "name": "CARTA SPECIALE MONACO",
@@ -11730,7 +11788,10 @@
      "n": 1
     }
    ],
-   "note": "REQUISITO: 3 carte illuminate in gioco (non modellabile). RIMANE IN GIOCO (non modellato). ALL'INIZIO DEL TURNO: OTTIENI 1 focus; PASSA A UNA QUALSIASI KAMAE; SCARTA 1 stordito O 1 azzoppato (rimozione stati propri, approssimata con discard_self, DA VERIFICARE); SOSTITUISCI 1 sanguinante con 1 ferita (direzione inversa, DA VERIFICARE); SCARTA 1 gettone non standard; PESCA FINO A 1. Verificata su monk_03.webp."
+   "note": "REQUISITO 3 carte Illuminata in gioco → state_req {illuminata:3} (contatore incrementato da #263/#264/#265 quando entrano in gioco; la RIMOZIONE dal gioco non è ancora tracciata, DA VERIFICARE). RIMANE IN GIOCO (roadmap §3.2, non modellato). ALL'INIZIO DEL TURNO: OTTIENI 1 focus; PASSA A UNA QUALSIASI KAMAE; SCARTA 1 stordito O 1 azzoppato (rimozione stati propri, approssimata con discard_self, DA VERIFICARE); SOSTITUISCI 1 sanguinante con 1 ferita (direzione inversa, DA VERIFICARE); SCARTA 1 gettone non standard; PESCA FINO A 1. Verificata su monk_03.webp.",
+   "state_req": {
+    "illuminata": 3
+   }
   },
  "262": {
    "name": "SQUARCIO DELL'ONDA ZEN",
@@ -11758,7 +11819,10 @@
      ]
     }
    },
-   "note": "Iniziativa principale 6 (card_pool). Focus 2. REQUISITO: 3 carte illuminate in gioco (non modellabile). Richiede Equilibrio. Banda viola [8]: unico diagramma della carta è sotto questa banda (trascritto come split, DA VERIFICARE se sia davvero seconda iniziativa). Nido d'ape a distanza 2: 3 celle con maschera oni invece del teschio pulito, trascritte come esecuzione, DA VERIFICARE il significato esclusivo del ciclo Illuminata. Verificata su monk_05.webp."
+   "note": "Iniziativa principale 6 (card_pool). Focus 2. REQUISITO 3 carte Illuminata in gioco → state_req {illuminata:3} (vedi #261). Richiede Equilibrio. Banda viola [8]: unico diagramma della carta è sotto questa banda (trascritto come split, DA VERIFICARE se sia davvero seconda iniziativa). Nido d'ape a distanza 2: 3 celle con maschera oni invece del teschio pulito, trascritte come esecuzione, DA VERIFICARE il significato esclusivo del ciclo Illuminata. Verificata su monk_05.webp.",
+   "state_req": {
+    "illuminata": 3
+   }
   },
  "263": {
    "name": "CORPO ILLUMINATO",
@@ -11775,9 +11839,14 @@
     {
      "do": "search_draw",
      "opt": true
+    },
+    {
+     "do": "state_add",
+     "state": "illuminata",
+     "n": 1
     }
    ],
-   "note": "Iniziativa '-'. Istantanea, condizionata (GIOCA SE L'ATTACCO DELL'AVVERSARIO È RIUSCITO, non modellabile come singolo effetto). SOSTITUISCI TUTTE LE ferite ricevute in questo turno con stordimento (approssimato con stun_self, DA VERIFICARE). PASSA A Determinazione. PUOI spendere una risorsa non standard per CERCARE+PRENDERE 1 (search_draw opzionale, meccanica ciclo Illuminata, DA VERIFICARE). RIMANE IN GIOCO, AUMENTA LIMITE FERITE +1 (non modellati). Verificata su monk_08.webp."
+   "note": "Iniziativa '-'. Istantanea, condizionata (GIOCA SE L'ATTACCO DELL'AVVERSARIO È RIUSCITO, non modellabile come singolo effetto). SOSTITUISCI TUTTE LE ferite ricevute in questo turno con stordimento (approssimato con stun_self, DA VERIFICARE). PASSA A Determinazione. PUOI spendere una risorsa non standard per CERCARE+PRENDERE 1 (search_draw opzionale, ciclo Illuminata, DA VERIFICARE). Quando entra in gioco conta come carta Illuminata (state_add illuminata, letto da #261/#262). RIMANE IN GIOCO, AUMENTA LIMITE FERITE +1 (roadmap §3.2/§3.17, non modellati; l'uscita dal gioco non decrementa il contatore, DA VERIFICARE). Verificata su monk_08.webp."
   },
  "264": {
    "name": "MENTE ILLUMINATA",
@@ -11786,9 +11855,14 @@
     {
      "do": "search_draw",
      "opt": true
+    },
+    {
+     "do": "state_add",
+     "state": "illuminata",
+     "n": 1
     }
    ],
-   "note": "Iniziativa '-'. NON PUÒ ESSERE GIOCATA COME CARTA ABILITÀ (non modellabile). SE SCARTATA da un effetto avversario, spendi 1 focus per riportarla in gioco (nessun verbo per 'ritorna dagli scarti', non modellato). QUANDO ENTRA IN GIOCO: PUOI spendere risorsa non standard per CERCARE+PRENDERE 1 (search_draw opzionale, ciclo Illuminata). RIMANE IN GIOCO, AUMENTA LIMITE MANO +1 (non modellati). Verificata su monk_07.webp."
+   "note": "Iniziativa '-'. NON PUÒ ESSERE GIOCATA COME CARTA ABILITÀ (non modellabile). SE SCARTATA da un effetto avversario, spendi 1 focus per riportarla in gioco (roadmap §3.27, non modellato). QUANDO ENTRA IN GIOCO: PUOI spendere risorsa non standard per CERCARE+PRENDERE 1 (search_draw opzionale, ciclo Illuminata). Conta come carta Illuminata in gioco (state_add illuminata, letto da #261/#262). RIMANE IN GIOCO, AUMENTA LIMITE MANO +1 (roadmap §3.2/§3.17, non modellati; l'uscita dal gioco non decrementa il contatore, DA VERIFICARE). Verificata su monk_07.webp."
   },
  "265": {
    "name": "ANIMA ILLUMINATA",
@@ -11825,9 +11899,14 @@
     {
      "do": "search_draw",
      "opt": true
+    },
+    {
+     "do": "state_add",
+     "state": "illuminata",
+     "n": 1
     }
    ],
-   "note": "Passo diagonale frontale 1. CERCA+PRENDI 1 (a) OPPURE CERCA NEGLI SCARTI+PRENDI 1 (b). PASSA A Equilibrio. PUOI spendere risorsa non standard per CERCARE+PRENDERE 1 (ciclo Illuminata, ricorrente con 263/264). RIMANE IN GIOCO, AUMENTA LIMITE FOCUS +1 (non modellati). Verificata su monk_06.webp."
+   "note": "Passo diagonale frontale 1. CERCA+PRENDI 1 (a) OPPURE CERCA NEGLI SCARTI+PRENDI 1 (b). PASSA A Equilibrio. PUOI spendere risorsa non standard per CERCARE+PRENDERE 1 (ciclo Illuminata, ricorrente con 263/264). Conta come carta Illuminata in gioco (state_add illuminata, letto da #261/#262). RIMANE IN GIOCO, AUMENTA LIMITE FOCUS +1 (roadmap §3.2/§3.17, non modellati; l'uscita dal gioco non decrementa il contatore, DA VERIFICARE). Verificata su monk_06.webp."
   },
  "266": {
    "name": "CHIAREZZA DI INTENTI",

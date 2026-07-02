@@ -41,6 +41,20 @@ versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
   iniziativa alternativa e bonus-cella di #303 (§3.1), regole persistenti
   di #295 (§3.2). Come si ENTRA in Disperazione è da definire con
   l'utente (regola dell'espansione, non presente negli scan).
+- **Estensione agli altri gruppi di stato** (17 carte, verificate sugli
+  scan): **Ombra/Assassino** — #221/#224 (state_set nello split, posizione
+  confermata sugli scan), #225/#226/#228 (state_set nei effetti), #229
+  (movimento raddoppiato gated `state: "ombra"` sull'atomo);
+  **Ninja** — #165/#172 (state_set nello split), #174/#176 (state_set nei
+  effetti), #171 (AZZOPPA gated state), #166 (giocabile solo in stato
+  Ninja, `state_req`); **Illuminata/Monaco** — #263/#264/#265 incrementano
+  il contatore `illuminata` quando entrano in gioco, #261/#262 richiedono
+  `state_req {"illuminata": 3}` (l'uscita dal gioco non decrementa ancora
+  il contatore — legata a §3.2, in nota). **Contratti (Yojimbo)** resta in
+  nota: serve lo scaling a entità variabile (§3.13, Fase 3), non un flag.
+  L'icona "ENTRA IN [sagoma incappucciata]" è identica per Assassino e
+  Ninja: possibile stato unico "Occultamento" da confermare col
+  regolamento — per ora restano `ombra` e `ninja` come nel catalogo.
 - **Test**: nuova scena `tests/test_gate_states.tscn` (Gate, helper Fighter,
   verbi state_*, gate su effetti, state_req su playable, round-trip
   passthrough editor). ⚠️ Non ancora eseguita: il binario Godot 4.6 non è
