@@ -1336,7 +1336,8 @@
      ]
     }
    ],
-   "note": "DIFESA. Aggiunta istantanea. RIMANE IN GIOCO: riduce 1 danno (fino a un minimo di 1) e focus/stordimento scattano OGNI VOLTA che il danno è ridotto (approssimato con on_hit, che vale una volta sola). Verificata su ronin_06.webp."
+   "note": "DIFESA. Aggiunta istantanea. RIMANE IN GIOCO (stays_in_play): riduce 1 danno (fino a un minimo di 1, damage_reduction persistente) e focus/stordimento scattano OGNI VOLTA che il danno è ridotto (approssimato con on_hit, che vale una volta sola — DA VERIFICARE). Verificata su ronin_06.webp.",
+   "stays_in_play": true
   },
   "26": {
    "name": "CARICA DEL TORO",
@@ -5622,12 +5623,13 @@
    "name": "ONESTA",
    "type": "meditation",
    "effects": [
-	{
-	 "do": "spend_focus",
-	 "n": 2
-	}
+    {
+     "do": "spend_focus",
+     "n": 2
+    }
    ],
-   "note": "Meditazione, Istantanea, Bushido. Init - focus 2. 'GIOCA ALL'INIZIO DEL TURNO ... RIMANE IN GIOCO / FINCHE E ATTIVA NESSUN GIOCATORE PUO GIOCARE CARTE [...] COME ISTANTANEE / ALLA FINE DEL TURNO QUALSIASI GIOCATORE PUO SPENDERE 2 [focus] PER SCARTARE QUESTA CARTA'. Effetto persistente Bushido; verbi segnaposto. DA VERIFICARE."
+   "note": "Meditazione, Istantanea, Bushido. Init - focus 2. 'GIOCA ALL'INIZIO DEL TURNO ... RIMANE IN GIOCO / FINCHE E ATTIVA NESSUN GIOCATORE PUO GIOCARE CARTE [...] COME ISTANTANEE / ALLA FINE DEL TURNO QUALSIASI GIOCATORE PUO SPENDERE 2 [focus] PER SCARTARE QUESTA CARTA'. RIMANE IN GIOCO reso con stays_in_play; la restrizione globale FINCHÉ È ATTIVA e lo scarto a pagamento a fine turno restano non modellabili (regole di regia). Verbi segnaposto. DA VERIFICARE.",
+   "stays_in_play": true
   },
   "92": {
    "name": "ONORE",
@@ -5643,12 +5645,13 @@
    "name": "RISPETTO",
    "type": "meditation",
    "effects": [
-	{
-	 "do": "spend_focus",
-	 "n": 2
-	}
+    {
+     "do": "spend_focus",
+     "n": 2
+    }
    ],
-   "note": "Meditazione, Istantanea, Bushido. Init - focus 2. 'GIOCA ALL'INIZIO DEL TURNO ... RIMANE IN GIOCO / FINCHE E ATTIVA NESSUN GIOCATORE PUO GIOCARE COPIE DI CARTE A FACCIA IN SU NELLA PROPRIA PILA DEGLI SCARTI / ALLA FINE DEL TURNO QUALSIASI GIOCATORE PUO SPENDERE 2 [focus] PER SCARTARE QUESTA CARTA'. Effetto persistente Bushido; verbi segnaposto. DA VERIFICARE."
+   "note": "Meditazione, Istantanea, Bushido. Init - focus 2. 'GIOCA ALL'INIZIO DEL TURNO ... RIMANE IN GIOCO / FINCHE E ATTIVA NESSUN GIOCATORE PUO GIOCARE COPIE DI CARTE A FACCIA IN SU NELLA PROPRIA PILA DEGLI SCARTI / ALLA FINE DEL TURNO QUALSIASI GIOCATORE PUO SPENDERE 2 [focus] PER SCARTARE QUESTA CARTA'. RIMANE IN GIOCO reso con stays_in_play; la restrizione globale FINCHÉ È ATTIVA e lo scarto a pagamento a fine turno restano non modellabili (regole di regia). Verbi segnaposto. DA VERIFICARE.",
+   "stays_in_play": true
   },
   "94": {
    "name": "RETTITUDINE",
@@ -5664,15 +5667,16 @@
    "name": "AUTOCONTROLLO",
    "type": "meditation",
    "effects": [
-	{
-	 "do": "foe_discard"
-	},
-	{
-	 "do": "spend_focus",
-	 "n": 2
-	}
+    {
+     "do": "foe_discard"
+    },
+    {
+     "do": "spend_focus",
+     "n": 2
+    }
    ],
-   "note": "Meditazione, Istantanea, Bushido. Init - focus 1. 'GIOCA ALL'INIZIO DEL TURNO ... RIMANE IN GIOCO / FINCHE E ATTIVA NESSUN GIOCATORE PUO GUARDARE LA MANO DI UN ALTRO O OBBLIGARE ALTRI GIOCATORI A SCARTARE CARTE / ALLA FINE DEL TURNO QUALSIASI GIOCATORE PUO SPENDERE 2 [focus] PER SCARTARE QUESTA CARTA'. Effetto persistente Bushido; verbi segnaposto. DA VERIFICARE."
+   "note": "Meditazione, Istantanea, Bushido. Init - focus 1. 'GIOCA ALL'INIZIO DEL TURNO ... RIMANE IN GIOCO / FINCHE E ATTIVA NESSUN GIOCATORE PUO GUARDARE LA MANO DI UN ALTRO O OBBLIGARE ALTRI GIOCATORI A SCARTARE CARTE / ALLA FINE DEL TURNO QUALSIASI GIOCATORE PUO SPENDERE 2 [focus] PER SCARTARE QUESTA CARTA'. RIMANE IN GIOCO reso con stays_in_play; la restrizione globale FINCHÉ È ATTIVA e lo scarto a pagamento a fine turno restano non modellabili (regole di regia). Verbi segnaposto. DA VERIFICARE.",
+   "stays_in_play": true
   },
   "90": {
    "name": "PASSO EVASIVO",
@@ -5749,12 +5753,13 @@
    "name": "CORAGGIO",
    "type": "meditation",
    "effects": [
-	{
-	 "do": "spend_focus",
-	 "n": 2
-	}
+    {
+     "do": "spend_focus",
+     "n": 2
+    }
    ],
-   "note": "Meditazione, Istantanea, Bushido. Init - focus 1 Gold. 'GIOCA ALL'INIZIO DEL TURNO ... RIMANE IN GIOCO / TUTTI I GIOCATORI VOLTANO A FACCIA IN SU LE PILE DEGLI SCARTI / FINCHE E ATTIVA TUTTE LE CARTE SONO SCARTATE A FACCIA IN SU / ALLA FINE DEL TURNO QUALSIASI GIOCATORE PUO SPENDERE 2 [focus] PER SCARTARE QUESTA CARTA'. ID 085. Effetto persistente Bushido; verbi segnaposto. DA VERIFICARE."
+   "note": "Meditazione, Istantanea, Bushido. Init - focus 1 Gold. 'GIOCA ALL'INIZIO DEL TURNO ... RIMANE IN GIOCO / TUTTI I GIOCATORI VOLTANO A FACCIA IN SU LE PILE DEGLI SCARTI / FINCHE E ATTIVA TUTTE LE CARTE SONO SCARTATE A FACCIA IN SU / ALLA FINE DEL TURNO QUALSIASI GIOCATORE PUO SPENDERE 2 [focus] PER SCARTARE QUESTA CARTA'. ID 085. RIMANE IN GIOCO reso con stays_in_play; la restrizione globale FINCHÉ È ATTIVA e lo scarto a pagamento a fine turno restano non modellabili (regole di regia). Verbi segnaposto. DA VERIFICARE.",
+   "stays_in_play": true
   },
   "155": {
    "name": "CONTRATTACCO",
@@ -5902,25 +5907,29 @@
    "name": "VOLONTA DI FERRO",
    "type": "meditation",
    "move": {
-	"opts": [
-	 {
-	  "atoms": [
-	   {
-		"t": "step",
-		"n": 1,
-		"opt": false,
-		"dir": -1
-	   }
-	  ]
-	 }
-	]
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "n": 1,
+        "opt": false,
+        "dir": -1
+       }
+      ]
+     }
+    ]
    },
    "effects": [
-	{
-	 "do": "reduce_damage"
-	}
+    {
+     "do": "reduce_damage"
+    }
    ],
-   "note": "Meditazione. Init 7 focus 2 Steel. ID 106. ❄1. 'RIMANE IN GIOCO / FINCHE E ATTIVA NON PRENDI FERITE SE NON PUOI PESCARE CARTE / ALLA FINE DEL TURNO RUOTA QUESTA CARTA DI 90 IN SENSO ORARIO POI, SE LA CARTA E DIRITTA, SCARTALA'. reduce_damage segnaposto. DA VERIFICARE."
+   "note": "Meditazione. Init 7 focus 2 Steel. ❄1. RIMANE IN GIOCO (stays_in_play): FINCHÉ È ATTIVA NON PRENDI FERITE SE NON PUOI PESCARE (regola sul decking-out, non modellabile — reduce_damage segnaposto, DA VERIFICARE). Ruota di 90° a fine turno e scade da diritta → expires {turns:3}. Verificata.",
+   "stays_in_play": true,
+   "expires": {
+    "turns": 3
+   }
   },
   "108": {
    "name": "DISTRAZIONE",
@@ -9019,7 +9028,11 @@
      }
     ]
    },
-   "note": "ATTACCO. DISTANZA. Range6. DA VERIFICARE: nessun diagramma nido d'ape stampato. COLPISCI l'avversario con iniziativa inferiore + infliggi ferite pari alla differenza d'iniziativa (numero variabile, non fisso). Cella placeholder sul raggio frontale a gittata massima, w:1 fittizio. Richiede la kamae speciale 'Distanza' del Navigatore (non enum standard, kamae_req non impostato). Bande viola [5]/[6] = iniziativa alternativa pagando 1/2 focus, non modellata. Verificata su sailor_07.webp."
+   "note": "ATTACCO. DISTANZA. Range6. DA VERIFICARE: nessun diagramma nido d'ape stampato. COLPISCI l'avversario con iniziativa inferiore + ferite pari alla differenza d'iniziativa (targeting initiative, w_from_gap). Cella placeholder sul raggio frontale a gittata massima, w:1 fittizio. Richiede la kamae speciale 'Distanza' del Navigatore (non enum standard, kamae_req non impostato). Bande viola [5]/[6] = iniziativa alternativa pagando 1/2 focus, non modellata. Verificata su sailor_07.webp.",
+   "targeting": {
+    "mode": "initiative",
+    "w_from_gap": true
+   }
   },
  "280": {
    "name": "TIRO PRECISO",
@@ -9033,7 +9046,18 @@
      }
     ]
    },
-   "note": "ATTACCO. DISTANZA. Range6. DA VERIFICARE: nessun diagramma. COLPISCI l'avversario con iniziativa inferiore, 1 ferita fissa se il confronto ha successo. Effetto persistente non rappresentabile: METTI QUESTA CARTA NELL'AREA AVVERSARIA (RIMANE IN GIOCO); PRIMA DI PESCARE l'avversario scarta a faccia in giù la prima carta del mazzo (mill forzato); RIDUCI DI 1 L'INIZIATIVA DI TUTTE LE CARTE ABILITÀ (minimo 1) — nessun verbo whitelist copre questa carta-trappola persistente. Kamae speciale 'Distanza' non impostata. Verificata su sailor_04.webp."
+   "note": "ATTACCO. DISTANZA. Range6. COLPISCI l'avversario con iniziativa inferiore, 1 ferita (targeting initiative). RIMANE IN GIOCO nell'area avversaria (stays_in_play — resa dal lato del proprietario) e PRIMA DI PESCARE l'avversario scarta la prima carta del mazzo (turn_start foe_mill). RIDUCI DI 1 L'INIZIATIVA DI TUTTE LE CARTE ABILITÀ (minimo 1) resta non modellabile (modificatore globale d'iniziativa, DA VERIFICARE). Kamae speciale 'Distanza' rinviata (§3.22). Verificata su sailor_05.webp.",
+   "targeting": {
+    "mode": "initiative",
+    "w": 1
+   },
+   "stays_in_play": true,
+   "turn_start": [
+    {
+     "do": "foe_mill",
+     "n": 1
+    }
+   ]
   },
  "281": {
    "name": "LANCIO DI PUGNALE",
@@ -9047,7 +9071,11 @@
      }
     ]
    },
-   "note": "ATTACCO. DISTANZA. Range3. DA VERIFICARE: nessun diagramma. COLPISCI l'avversario con iniziativa inferiore, 1 ferita fissa. Banda viola (1 focus) con esagono '5': probabile aumento della gittata da 3 a 5, non modellato. Kamae speciale 'Distanza' non impostata. Verificata su sailor_08.webp."
+   "note": "ATTACCO. DISTANZA. Range3. COLPISCI l'avversario con iniziativa inferiore, 1 ferita (targeting initiative; cella placeholder di gittata). Banda viola (1 focus) con esagono '5': probabile aumento della gittata da 3 a 5, non modellato. Kamae speciale 'Distanza' rinviata (§3.22). Verificata su sailor_08.webp.",
+   "targeting": {
+    "mode": "initiative",
+    "w": 1
+   }
   },
  "282": {
    "name": "SQUARCIO PROFONDO",
@@ -9543,8 +9571,12 @@
      "n": 3
     }
    ],
-   "note": "Meditazione, Aggiunta Istantanea. Giocabile solo in Disperazione (banner fiamma, state_req). RIMANE IN GIOCO; AUMENTA DI 3 IL LIMITE DI MANO; MANO RIVELATA; ordine di scelta invertito — regole persistenti non ancora modellabili (roadmap §3.2/§3.17), DA VERIFICARE. Verificata su onna_bugeisha_04.webp.",
-   "state_req": "disperazione"
+   "note": "Meditazione, Aggiunta Istantanea. Giocabile solo in Disperazione (banner fiamma, state_req). RIMANE IN GIOCO (stays_in_play) e AUMENTA DI 3 IL LIMITE DI MANO (limit_mod). MANO RIVELATA e ordine di scelta invertito restano regole non modellabili (modificatori di regia, DA VERIFICARE). Verificata su onna_bugeisha_04.webp.",
+   "state_req": "disperazione",
+   "stays_in_play": true,
+   "limit_mod": {
+    "hand": 3
+   }
   },
  "296": {
    "name": "ABBRACCIO SILENZIOSO",
@@ -10499,10 +10531,14 @@
      "kamae": "determination"
     }
    ],
-   "note": "ATTACCO. DISTANZA (Range2). COLPISCI l'avversario con iniziativa inferiore: bersaglio scelto per stato di gioco, non da una cella, DA VERIFICARE come modellare la selezione. Ferita di tipo sanguinante (icona goccia). Banda Aggressività [6] = iniziativa alternativa 6 (alt_initiative). SE RIUSCITO: OTTIENI 1 focus; Determinazione PESCA FINO A 2. Verificata su yojimbo_21.webp.",
+   "note": "ATTACCO. DISTANZA (Range2). COLPISCI l'avversario con iniziativa inferiore: 1 sanguinante (targeting initiative, w bleed). Banda Aggressività [6] = iniziativa alternativa 6 (alt_initiative). SE RIUSCITO: OTTIENI 1 focus; Determinazione PESCA FINO A 2. Verificata su yojimbo_21.webp.",
    "alt_initiative": {
     "value": 6,
     "kamae": "aggression"
+   },
+   "targeting": {
+    "mode": "initiative",
+    "w": "bleed"
    }
   },
  "326": {
@@ -10879,7 +10915,11 @@
      "when": "on_hit"
     }
    ],
-   "note": "ATTACCO DISTANZA, Range2. Nessun movimento/nido d'ape: COLPISCI l'avversario con iniziativa inferiore (non rappresentabile con attack.cells, campo omesso, DA VERIFICARE). Se colpito: 1 ferita sanguinante + AZZOPPA. Aggressività: STORDISCI. Poi l'avversario passa a Neutrale (foe_switch_kamae; DA VERIFICARE il timing e il bersaglio). Costo 0 focus. Verificata su wakou_06.webp."
+   "note": "ATTACCO DISTANZA, Range2. Nessun movimento/nido d'ape: COLPISCI l'avversario con iniziativa inferiore (targeting initiative; le ferite arrivano dagli effetti on_hit). Se colpito: 1 ferita sanguinante + AZZOPPA. Aggressività: STORDISCI. Poi l'avversario passa a Neutrale (foe_switch_kamae; DA VERIFICARE il timing e il bersaglio). Costo 0 focus. Verificata su wakou_06.webp.",
+   "targeting": {
+    "mode": "initiative",
+    "w": 0
+   }
   },
  "337": {
    "name": "ARIETE BUKAN",
@@ -11419,7 +11459,11 @@
      "when": "on_hit"
     }
    ],
-   "note": "ATTACCO DISTANZA, Range4. Nessun nido d'ape: COLPISCI l'avversario con iniziativa inferiore (cella d0k4 è placeholder, targeting non posizionale, DA VERIFICARE). Se innescato: STORDISCI. Banda viola successiva trasforma l'effetto in ESECUZIONE pagando focus, non modellato. Verificata su ninja_30.webp."
+   "note": "ATTACCO DISTANZA, Range4. COLPISCI l'avversario con iniziativa inferiore (targeting initiative; cella d0k4 resta come placeholder di gittata per la UI). Se innescato: STORDISCI (on_hit). Banda viola successiva trasforma l'effetto in ESECUZIONE pagando focus, non modellato. Verificata su ninja_30.webp.",
+   "targeting": {
+    "mode": "initiative",
+    "w": 0
+   }
   },
  "168": {
    "name": "SOFFIO DI METSUBUSHI",
@@ -11499,7 +11543,12 @@
      }
     ]
    },
-   "note": "ATTACCO DISTANZA, Range4. Banda viola [6] = soglia iniziativa &lt;6 pagando focus (non stampato). COLPISCI l'avversario con iniziativa inferiore: 1 ferita se innescato. Nessuna cella/direzione reale, d0k4 è placeholder di gittata, targeting non posizionale, DA VERIFICARE. Verificata su ninja_28.webp."
+   "note": "ATTACCO DISTANZA, Range4. COLPISCI l'avversario con iniziativa inferiore a 6 (targeting initiative, threshold 6): 1 ferita. La banda viola suggerisce un costo focus non stampato, DA VERIFICARE. Cella d0k4 placeholder di gittata. Verificata su ninja_28.webp.",
+   "targeting": {
+    "mode": "initiative",
+    "threshold": 6,
+    "w": 1
+   }
   },
  "170": {
    "name": "LANCIO DI PIEDI DI CORVO",
@@ -11949,7 +11998,12 @@
  "261": {
    "name": "VERA ILLUMINAZIONE",
    "type": "meditation",
-   "effects": [
+   "note": "REQUISITO 3 carte Illuminata in gioco → state_req {illuminata:3} (contatore mantenuto da in_play_state di #263/#264/#265). RIMANE IN GIOCO (stays_in_play); tutti gli effetti scattano ALL'INIZIO DEL TURNO (turn_start): OTTIENI 1 focus; PASSA A UNA QUALSIASI KAMAE; SCARTA 1 stordito O 1 azzoppato (heal in OPPURE); SOSTITUISCI 1 sanguinante con 1 ferita (direzione inversa, DA VERIFICARE); SCARTA 1 gettone non standard (discard_self approssimato); PESCA FINO A 1. Verificata su monk_03.webp.",
+   "state_req": {
+    "illuminata": 3
+   },
+   "stays_in_play": true,
+   "turn_start": [
     {
      "do": "focus",
      "n": 1
@@ -11982,11 +12036,7 @@
      "do": "draw",
      "n": 1
     }
-   ],
-   "note": "REQUISITO 3 carte Illuminata in gioco → state_req {illuminata:3} (contatore incrementato da #263/#264/#265 quando entrano in gioco; la RIMOZIONE dal gioco non è ancora tracciata, DA VERIFICARE). RIMANE IN GIOCO (roadmap §3.2, non modellato). ALL'INIZIO DEL TURNO: OTTIENI 1 focus; PASSA A UNA QUALSIASI KAMAE; SCARTA 1 stordito O 1 azzoppato (heal stun/hobble in OPPURE); SOSTITUISCI 1 sanguinante con 1 ferita (direzione inversa, DA VERIFICARE); SCARTA 1 gettone non standard; PESCA FINO A 1. Verificata su monk_03.webp.",
-   "state_req": {
-    "illuminata": 3
-   }
+   ]
   },
  "262": {
    "name": "SQUARCIO DELL'ONDA ZEN",
@@ -12034,14 +12084,14 @@
     {
      "do": "search_draw",
      "opt": true
-    },
-    {
-     "do": "state_add",
-     "state": "illuminata",
-     "n": 1
     }
    ],
-   "note": "Iniziativa '-'. Istantanea, condizionata (GIOCA SE L'ATTACCO DELL'AVVERSARIO È RIUSCITO, non modellabile come singolo effetto). SOSTITUISCI TUTTE LE ferite ricevute in questo turno con stordimento (approssimato con stun_self, DA VERIFICARE). PASSA A Determinazione. PUOI spendere una risorsa non standard per CERCARE+PRENDERE 1 (search_draw opzionale, ciclo Illuminata, DA VERIFICARE). Quando entra in gioco conta come carta Illuminata (state_add illuminata, letto da #261/#262). RIMANE IN GIOCO, AUMENTA LIMITE FERITE +1 (roadmap §3.2/§3.17, non modellati; l'uscita dal gioco non decrementa il contatore, DA VERIFICARE). Verificata su monk_08.webp."
+   "note": "Iniziativa '-'. Istantanea, condizionata (GIOCA SE L'ATTACCO DELL'AVVERSARIO È RIUSCITO, non modellabile come singolo effetto). SOSTITUISCI TUTTE LE ferite ricevute in questo turno con stordimento (approssimato con stun_self, DA VERIFICARE). PASSA A Determinazione. PUOI spendere una risorsa non standard per CERCARE+PRENDERE 1 (search_draw opzionale, ciclo Illuminata, DA VERIFICARE). RIMANE IN GIOCO (stays_in_play, in_play_state 'illuminata'), AUMENTA LIMITE FERITE +1 (limit_mod). Verificata su monk_08.webp.",
+   "stays_in_play": true,
+   "in_play_state": "illuminata",
+   "limit_mod": {
+    "wound": 1
+   }
   },
  "264": {
    "name": "MENTE ILLUMINATA",
@@ -12050,14 +12100,14 @@
     {
      "do": "search_draw",
      "opt": true
-    },
-    {
-     "do": "state_add",
-     "state": "illuminata",
-     "n": 1
     }
    ],
-   "note": "Iniziativa '-'. NON PUÒ ESSERE GIOCATA COME CARTA ABILITÀ (non modellabile). SE SCARTATA da un effetto avversario, spendi 1 focus per riportarla in gioco (roadmap §3.27, non modellato). QUANDO ENTRA IN GIOCO: PUOI spendere risorsa non standard per CERCARE+PRENDERE 1 (search_draw opzionale, ciclo Illuminata). Conta come carta Illuminata in gioco (state_add illuminata, letto da #261/#262). RIMANE IN GIOCO, AUMENTA LIMITE MANO +1 (roadmap §3.2/§3.17, non modellati; l'uscita dal gioco non decrementa il contatore, DA VERIFICARE). Verificata su monk_07.webp."
+   "note": "Iniziativa '-'. NON PUÒ ESSERE GIOCATA COME CARTA ABILITÀ (non modellabile). SE SCARTATA da un effetto avversario, spendi 1 focus per riportarla in gioco (roadmap §3.27, non modellato). QUANDO ENTRA IN GIOCO: PUOI spendere risorsa non standard per CERCARE+PRENDERE 1 (search_draw opzionale, ciclo Illuminata). RIMANE IN GIOCO (stays_in_play, in_play_state 'illuminata'), AUMENTA LIMITE MANO +1 (limit_mod). Verificata su monk_07.webp.",
+   "stays_in_play": true,
+   "in_play_state": "illuminata",
+   "limit_mod": {
+    "hand": 1
+   }
   },
  "265": {
    "name": "ANIMA ILLUMINATA",
@@ -12094,14 +12144,14 @@
     {
      "do": "search_draw",
      "opt": true
-    },
-    {
-     "do": "state_add",
-     "state": "illuminata",
-     "n": 1
     }
    ],
-   "note": "Passo diagonale frontale 1. CERCA+PRENDI 1 (a) OPPURE CERCA NEGLI SCARTI+PRENDI 1 (b). PASSA A Equilibrio. PUOI spendere risorsa non standard per CERCARE+PRENDERE 1 (ciclo Illuminata, ricorrente con 263/264). Conta come carta Illuminata in gioco (state_add illuminata, letto da #261/#262). RIMANE IN GIOCO, AUMENTA LIMITE FOCUS +1 (roadmap §3.2/§3.17, non modellati; l'uscita dal gioco non decrementa il contatore, DA VERIFICARE). Verificata su monk_06.webp."
+   "note": "Passo diagonale frontale 1. CERCA+PRENDI 1 (a) OPPURE CERCA NEGLI SCARTI+PRENDI 1 (b). PASSA A Equilibrio. PUOI spendere risorsa non standard per CERCARE+PRENDERE 1 (ciclo Illuminata, ricorrente con 263/264). RIMANE IN GIOCO (stays_in_play, in_play_state 'illuminata'), AUMENTA LIMITE FOCUS +1 (limit_mod). Verificata su monk_06.webp.",
+   "stays_in_play": true,
+   "in_play_state": "illuminata",
+   "limit_mod": {
+    "focus": 1
+   }
   },
  "266": {
    "name": "CHIAREZZA DI INTENTI",

@@ -3,6 +3,41 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.80.0] — 2026-07-02
+### Fase 4 (parte 1) — zona "in gioco", trigger a inizio turno, bersaglio per confronto d'iniziativa, mill
+- **Zona "in gioco" per-fighter** (roadmap §3.2): `Fighter.in_play`; le carte
+  con `stays_in_play` a fine risoluzione restano sul tavolo invece di andare
+  negli scarti (anche le istantanee). Campi collegati:
+  - `in_play_state`: entrando la carta incrementa uno stato persistente,
+    uscendo lo decrementa — il contatore `illuminata` di #263/#264/#265 ora è
+    **vivo** (chiude il DA VERIFICARE sul decremento della 0.78.0);
+  - `limit_mod {hand/wound/focus}`: limiti modificati finché in gioco
+    (§3.17; nuovo `Fighter.focus_limit` al posto del MAX_FOCUS fisso);
+  - `turn_start`: effetti applicati a inizio turno PRIMA del passo Draw
+    (finestre di trigger, §3.3), con risoluzione dei gruppi OPPURE;
+  - `expires {turns:N}`: la carta scade da sola dopo N fine-turno (#106).
+  Nuove API `Duel._enter_play` / `Duel.remove_from_play` (rovescia
+  stato/limiti e scarta).
+- **Bersaglio per confronto d'iniziativa** (§3.4): campo `targeting
+  {mode:"initiative", threshold?, w?, w_from_gap?}` — l'attacco a distanza
+  senza diagramma colpisce se l'avversario è in gittata (keyword RangeN) e
+  la sua velocità scelta è inferiore (e sotto la soglia, se posta); ferite
+  fisse, bleed/exec, o pari al divario di velocità (#279).
+- **Verbi `mill`/`foe_mill`** (§3.16): scarto dalla cima del mazzo.
+- **Dati (18 carte)**: gruppo RIMANE IN GIOCO — #295 (mano +3), #261 (tutti
+  gli effetti spostati in `turn_start`), #263/#264/#265 (in_play_state
+  'illuminata' + limiti, rimosso lo state_add statico), #25, #106 (expires),
+  #85/#91/#93/#95 (Bushido: in gioco; le restrizioni globali "FINCHÉ È
+  ATTIVA" restano note), #280 (targeting + turn_start foe_mill). Targeting
+  iniziativa su #167/#169 (threshold 6)/#279 (w_from_gap)/#281/#325 (bleed)/
+  #336.
+- **Rinviati al prossimo giro**: doppia faccia Hachikō (§3.14/§3.15, tocca
+  pianificazione/UI/protocollo), marcatori trappola (§3.28), casi isolati
+  (§3.23–§3.27), restrizioni globali Bushido.
+- Validatore (campi in-gioco/targeting, verbi mill), simulatore, schema e
+  test aggiornati. ⚠️ Suite ancora NON eseguita (binario Godot non
+  disponibile in sessione remota); gdparse ok su tutti i file toccati.
+
 ## [0.79.0] — 2026-07-02
 ### Fase 3 — gruppo "schema+motore": alt_initiative, famiglia foe_*, counter gated, n_from_state, heal, scarto casuale
 - **`alt_initiative`** (roadmap §3.1): nuovo campo `{ value, kamae?/focus_cost?/state? }`

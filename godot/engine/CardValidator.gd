@@ -21,7 +21,7 @@ const EFFECT_VERBS := [
 	"change_ai_behaviour", "change_approach", "change_kamae", "discard_self",
 	"draw", "focus", "foe_change_kamae", "foe_discard", "foe_draw",
 	"foe_lose_focus", "foe_reveal_hand", "foe_stun", "foe_switch_kamae",
-	"heal", "hobble", "link_anchor", "pull", "push", "reduce_damage",
+	"foe_mill", "heal", "hobble", "link_anchor", "mill", "pull", "push", "reduce_damage",
 	"replace_wound_bleed",
 	"reset_deck", "rotate_target", "search_draw", "spend_focus",
 	"state_add", "state_clear", "state_set", "stun_self",
@@ -123,6 +123,32 @@ static func validate(card: Dictionary, geom: Dictionary, image, ctx := {}) -> Ar
 							"alt_initiative: kamae non valido '%s'" % str(kv)))
 				if ai.has("state"):
 					out.append_array(_check_state_req(ai["state"], "alt_initiative.state"))
+		# Campi "RIMANE IN GIOCO" (§3.2): in_play_state stringa non vuota;
+		# limit_mod con sole chiavi hand/wound/focus; expires.turns >= 1;
+		# turn_start = lista effetti con verbi noti.
+		if geom.has("in_play_state") and str(geom["in_play_state"]) == "":
+			out.append(_issue("error", "in_play", "in_play_state vuoto"))
+		for lk in geom.get("limit_mod", {}):
+			if not (str(lk) in ["hand", "wound", "focus"]):
+				out.append(_issue("error", "in_play", "limit_mod: chiave sconosciuta '%s'" % str(lk)))
+		if geom.has("expires") and int(geom["expires"].get("turns", 0)) < 1:
+			out.append(_issue("error", "in_play", "expires.turns deve essere >= 1"))
+		for te in geom.get("turn_start", []):
+			var tv := str(te.get("do", ""))
+			if tv == "" or not (tv in EFFECT_VERBS):
+				out.append(_issue("warning", "in_play", "turn_start: effetto sconosciuto '%s'" % tv))
+		var has_in_play_fields: bool = geom.has("in_play_state") or geom.has("limit_mod") \
+				or geom.has("expires") or not (geom.get("turn_start", []) as Array).is_empty()
+		if has_in_play_fields and not bool(geom.get("stays_in_play", false)):
+			out.append(_issue("warning", "in_play",
+				"campi in-gioco presenti ma stays_in_play assente (non entreranno mai in gioco)"))
+		# `targeting` (§3.4): mode "initiative", threshold int >= 1 se presente.
+		if geom.has("targeting"):
+			var tg = geom["targeting"]
+			if not (tg is Dictionary) or str(tg.get("mode", "")) != "initiative":
+				out.append(_issue("error", "targeting", "targeting.mode deve essere 'initiative'"))
+			elif tg.has("threshold") and int(tg.get("threshold", 0)) < 1:
+				out.append(_issue("error", "targeting", "targeting.threshold deve essere >= 1"))
 		# `counter`: int (sempre attivo) o oggetto gated { on: [..], gate }.
 		for entry in geom.get("counter", []):
 			if entry is Dictionary:

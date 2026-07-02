@@ -212,5 +212,101 @@ func _ready() -> void:
 			has_int = true
 	_check(has_int and has_gated, "editor preserva le voci counter gated")
 
+	# ═══ Fase 4 ═══════════════════════════════════════════════════════════
+
+	# ── Zona "in gioco": enter/exit con in_play_state e limit_mod ────────────
+	const PID := 90004
+	CardDB.set_geometry(PID, {"name": "T-PLAY", "type": "meditation",
+		"stays_in_play": true, "in_play_state": "illuminata",
+		"limit_mod": {"hand": 1, "focus": 1}})
+	var s7 := GameState.new()
+	var m := _mk("Monaco"); var mf := _mk("Warrior")
+	s7.fighters = [m, mf]
+	var d7 := Duel.new(s7)
+	var base_hand := m.hand_limit
+	d7._enter_play(0, PID)
+	_check(m.in_play.has(PID), "enter_play: la carta è in gioco")
+	_check(m.state_get("illuminata") == 1, "enter_play: in_play_state incrementato")
+	_check(m.hand_limit == base_hand + 1 and m.focus_limit == 4, "enter_play: limit_mod applicato")
+	m.gain_focus(9)
+	_check(m.focus == 4, "gain_focus rispetta il focus_limit alzato")
+	_check(d7.remove_from_play(0, PID), "remove_from_play: rimozione riuscita")
+	_check(m.state_get("illuminata") == 0, "remove_from_play: in_play_state decrementato")
+	_check(m.hand_limit == base_hand and m.focus_limit == 3 and m.focus == 3,
+		"remove_from_play: limiti ripristinati e focus riallineato")
+	_check(m.discard.has(PID), "remove_from_play: la carta va negli scarti")
+
+	# ── turn_start: effetti a inizio turno (prima del Draw) ──────────────────
+	const TSID := 90005
+	CardDB.set_geometry(TSID, {"name": "T-TURNSTART", "type": "attack",
+		"stays_in_play": true, "turn_start": [{"do": "foe_mill", "n": 1}]})
+	d7._enter_play(0, TSID)
+	mf.draw_pile = [10, 11, 12]; mf.discard = []
+	m.draw_pile = [20, 21]; mf.is_ai = true   # l'IA salta il Draw: isola il mill
+	d7._begin_turn()
+	_check(mf.discard.size() == 1 and mf.draw_pile.size() == 2,
+		"turn_start: foe_mill scarta dalla cima del mazzo avversario a inizio turno")
+	d7.remove_from_play(0, TSID)
+	CardDB.set_geometry(TSID, {})
+
+	# ── expires: la carta scade dopo N fine-turno ────────────────────────────
+	const EID := 90006
+	CardDB.set_geometry(EID, {"name": "T-EXPIRES", "type": "meditation",
+		"stays_in_play": true, "expires": {"turns": 2}})
+	var s8 := GameState.new()
+	var e8 := _mk("Ronin"); var e8b := _mk("Warrior")
+	e8.draw_pile = [10, 11, 12, 13]; e8b.is_ai = true; e8b.draw_pile = [30, 31, 32]
+	s8.fighters = [e8, e8b]
+	var d8 := Duel.new(s8)
+	d8._enter_play(0, EID)
+	d8._cleanup([])
+	_check(e8.in_play.has(EID), "expires: ancora in gioco dopo 1 turno")
+	d8._cleanup([])
+	_check(not e8.in_play.has(EID) and e8.discard.has(EID), "expires: scaduta dopo 2 turni")
+	CardDB.set_geometry(EID, {})
+	CardDB.set_geometry(PID, {})
+
+	# ── targeting per confronto iniziativa (§3.4) ────────────────────────────
+	const RID := 90007
+	CardDB.set_geometry(RID, {"name": "T-RANGED", "type": "attack",
+		"targeting": {"mode": "initiative", "w": 1}})
+	var s9 := GameState.new()
+	var r9 := _mk("Navigatore"); r9.planned = RID
+	var t9 := _mk("Warrior"); t9.cell = HexGrid.DIRS[0]; t9.planned = 64   # adiacente: Range default 1
+	s9.fighters = [r9, t9]
+	var d9 := Duel.new(s9)
+	d9._chosen = {0: 7, 1: 4}
+	d9._resolve_attack_top(0, CardDB.geometry(RID), "T-RANGED", [], null)
+	_check(t9.wounds.size() == 1, "targeting initiative: colpisce con iniziativa superiore (7>4)")
+	d9._chosen = {0: 3, 1: 4}
+	d9._resolve_attack_top(0, CardDB.geometry(RID), "T-RANGED", [], null)
+	_check(t9.wounds.size() == 1, "targeting initiative: NON colpisce con iniziativa inferiore (3<4)")
+	CardDB.set_geometry(RID, {"name": "T-RANGED", "type": "attack",
+		"targeting": {"mode": "initiative", "threshold": 4, "w": 1}})
+	d9._chosen = {0: 7, 1: 4}
+	d9._resolve_attack_top(0, CardDB.geometry(RID), "T-RANGED", [], null)
+	_check(t9.wounds.size() == 1, "targeting threshold: 4 non è sotto la soglia 4")
+	d9._chosen = {0: 7, 1: 3}
+	d9._resolve_attack_top(0, CardDB.geometry(RID), "T-RANGED", [], null)
+	_check(t9.wounds.size() == 2, "targeting threshold: 3 sotto la soglia 4 colpisce")
+	CardDB.set_geometry(RID, {"name": "T-RANGED", "type": "attack",
+		"targeting": {"mode": "initiative", "w_from_gap": true}})
+	d9._chosen = {0: 7, 1: 4}
+	d9._resolve_attack_top(0, CardDB.geometry(RID), "T-RANGED", [], null)
+	_check(t9.wounds.size() == 5, "targeting w_from_gap: ferite pari al divario (7-4=3)")
+	CardDB.set_geometry(RID, {})
+
+	# ── mill / foe_mill ──────────────────────────────────────────────────────
+	var s10 := GameState.new()
+	var m10 := _mk("Yojimbo"); var m10b := _mk("Warrior")
+	s10.fighters = [m10, m10b]
+	var d10 := Duel.new(s10)
+	m10.draw_pile = [10, 11, 12]
+	d10._apply_effects(0, 1, {"effects": [{"do": "mill", "n": 2}]}, "always", [])
+	_check(m10.draw_pile.size() == 1 and m10.discard.size() == 2, "mill scarta dalla propria cima")
+	m10b.draw_pile = [20]
+	d10._apply_effects(0, 1, {"effects": [{"do": "foe_mill", "n": 3}]}, "always", [])
+	_check(m10b.draw_pile.is_empty() and m10b.discard.size() == 1, "foe_mill si ferma a mazzo vuoto")
+
 	print("RISULTATO: ", "PASS" if ok else "FAIL")
 	get_tree().quit(0 if ok else 1)

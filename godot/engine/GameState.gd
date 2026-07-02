@@ -33,6 +33,16 @@ class Fighter:
 	var advantage: bool = false                ## possiede il segnalino vantaggio
 	var planned: int = -1                      ## carta programmata (id int, -1 = nessuna)
 	var is_ai: bool = false
+	## Carte "RIMANE IN GIOCO" (roadmap §3.2): id delle carte a faccia in su
+	## davanti al combattente. Entrano da _cleanup/_resolve_instant_card
+	## (geometria con `stays_in_play`), escono via Duel.remove_from_play.
+	var in_play: Array = []
+	## Turni di permanenza per carta in gioco (cid → conteggio), per il campo
+	## `expires` (es. #106 che ruota di 90° a fine turno e scade da diritta).
+	var in_play_ticks: Dictionary = {}
+	## Limite focus corrente (di norma MAX_FOCUS; le carte in gioco possono
+	## alzarlo via `limit_mod`, es. Anima Illuminata #265).
+	var focus_limit: int = 3
 	## Stati/risorse persistenti per-fighter (decisione §5.1 roadmap meccaniche):
 	## dizionario libero nome → int, che sopravvive tra i turni finché una carta
 	## non lo modifica. Copre Disperazione, Contratti, stato Ombra/Ninja, ciclo
@@ -61,7 +71,7 @@ class Fighter:
 			states[state_name] = n
 
 	func gain_focus(n: int) -> void:
-		focus = clampi(focus + n, 0, MAX_FOCUS)
+		focus = clampi(focus + n, 0, focus_limit)
 
 	# ── Azzoppamenti (Hobble, regolamento 1.5 p.13) ──────────────────────────
 	## Ogni carta azzoppato è posata diritta (orientamento 0) nel turno in cui la

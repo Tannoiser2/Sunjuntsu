@@ -144,6 +144,20 @@ func _begin_turn() -> bool:
 	for f in state.fighters:
 		f.movement_cancelled = false
 		f.block_initiative_bonus = 0
+	# Finestre di trigger a inizio turno (§3.3): le carte in gioco con
+	# `turn_start` applicano i loro effetti PRIMA del passo Draw (es. #280
+	# "prima di pescare l'avversario scarta la prima carta del mazzo").
+	for i in range(state.fighters.size()):
+		var fp := state.fighters[i]
+		if fp.is_defeated():
+			continue
+		for cid in fp.in_play.duplicate():
+			var ts: Array = CardDB.geometry(cid).get("turn_start", [])
+			if not ts.is_empty():
+				var tgeom := {"effects": ts}
+				# I gruppi OPPURE dentro turn_start scelgono come in risoluzione
+				# (prima opzione applicabile), altrimenti verrebbero saltati.
+				_apply_effects(i, _opponent_index(i), tgeom, "always", [], _resolve_option(i, tgeom))
 	for f in state.fighters:
 		if f.is_defeated() or f.is_ai:
 			continue   # gli avversari solo saltano il passo Draw (e il sanguinamento conta come ferita)
@@ -377,7 +391,7 @@ func apply_instant_replace(i: int, new_id: int) -> void:
 	if new_id != -1 and instant_replacements_for(i).has(new_id):
 		var f := state.fighters[i]
 		var orig: int = f.planned
-		f.focus = mini(GameState.Fighter.MAX_FOCUS, f.focus + _focus_cost_of(orig))  # rimborso
+		f.focus = mini(f.focus_limit, f.focus + _focus_cost_of(orig))  # rimborso
 		f.focus = maxi(0, f.focus - _focus_cost_of(new_id))                            # nuovo costo
 		f.discard.append(orig)        # la carta originale viene scartata
 		f.hand.erase(new_id)
@@ -483,7 +497,10 @@ func _resolve_instant_card(i: int, id: int) -> void:
 	# Effetti "se a segno": valgono come reazione se il TUO attacco è andato a segno.
 	if bool(_attack_ok.get(i, false)):
 		_apply_effects(i, foe_idx, g, "on_hit", _res_log, alt)
-	f.discard.append(id)
+	if bool(g.get("stays_in_play", false)):
+		_enter_play(i, id)   # RIMANE IN GIOCO (§3.2)
+	else:
+		f.discard.append(id)
 	_res_log.append("%s gioca l'istantanea %s" % [f.character, name])
 
 
@@ -701,6 +718,13 @@ func _resolve_attack_top(i: int, g: Dictionary, name: String, log: Array, chosen
 	if foe_idx == -1:
 		return
 	var foe := state.fighters[foe_idx]
+	# Bersaglio per confronto d'iniziativa (§3.4): armi a distanza senza
+	# diagramma esagonale — colpiscono se l'avversario è in gittata e la sua
+	## velocità scelta è INFERIORE alla propria (e sotto `threshold`, se posto).
+	var tgt: Dictionary = g.get("targeting", {})
+	if str(tgt.get("mode", "")) == "initiative":
+		_resolve_initiative_attack(i, foe_idx, g, tgt, name, log, chosen_alt)
+		return
 	var cells := attack_v2_cells(f.cell, f.facing, g, _card_range(CardDB.card(f.planned)), f.stance)
 	if not cells.has(foe.cell):
 		log.append("%s usa %s ma il bersaglio è fuori arco/portata (dist %d)" % [
@@ -738,6 +762,51 @@ func _resolve_attack_top(i: int, g: Dictionary, name: String, log: Array, chosen
 	fighter_updated.emit(foe_idx)
 	log.append("%s colpisce %s con %s — %d ferita/e (%d/%d)" % [
 		f.character, foe.character, name, n, foe.wounds.size(), foe.wound_limit])
+
+
+## Attacco a confronto d'iniziativa (§3.4): niente celle — verifica gittata
+## (keyword RangeN) e velocità. Ferite: `w` del targeting (int | "bleed" |
+## "exec"), oppure il DIVARIO di velocità se `w_from_gap` è true (#279).
+func _resolve_initiative_attack(i: int, foe_idx: int, g: Dictionary, tgt: Dictionary, name: String, log: Array, chosen_alt) -> void:
+	var f := state.fighters[i]
+	var foe := state.fighters[foe_idx]
+	var rng := _card_range(CardDB.card(f.planned))
+	if HexGrid.distance(f.cell, foe.cell) > rng:
+		log.append("%s usa %s ma il bersaglio è fuori gittata (dist %d > %d)" % [
+			f.character, name, HexGrid.distance(f.cell, foe.cell), rng])
+		return
+	var my_speed := int(_chosen.get(i, _speed_of(i)))
+	var foe_speed := _speed_of(foe_idx) if foe.planned != -1 else -1
+	if foe_speed >= my_speed:
+		log.append("%s usa %s ma l'iniziativa avversaria non è inferiore (%d vs %d)" % [
+			f.character, name, foe_speed, my_speed])
+		return
+	if tgt.has("threshold") and foe_speed >= int(tgt.get("threshold", 0)):
+		log.append("%s usa %s ma l'iniziativa avversaria non è sotto la soglia %d" % [
+			f.character, name, int(tgt.get("threshold", 0))])
+		return
+	var raw = tgt.get("w", 0)
+	var n := 0
+	if bool(tgt.get("w_from_gap", false)):
+		n = maxi(0, my_speed - maxi(0, foe_speed))
+	elif str(raw) == "exec":
+		foe.wounds.append("exec"); foe.wounds.resize(foe.wound_limit)
+	elif str(raw) == "bleed":
+		foe.wounds.append("bleed")
+	else:
+		n = int(raw)
+	if n > 0:
+		if foe.damage_reduction > 0:
+			n = maxi(1, n - foe.damage_reduction)
+		for _w in range(n):
+			foe.wounds.append("wound")
+	_attack_ok[i] = true
+	combat_event.emit("hit", i, foe_idx, {"n": n})
+	_apply_if_success(i, foe_idx, g, log)
+	_apply_effects(i, foe_idx, g, "on_hit", log, chosen_alt)
+	fighter_updated.emit(foe_idx)
+	log.append("%s colpisce %s con %s (confronto iniziativa %d>%d) — %d ferita/e (%d/%d)" % [
+		f.character, foe.character, name, my_speed, foe_speed, n, foe.wounds.size(), foe.wound_limit])
 
 
 ## Risolve la parte SOTTO di una carta a iniziativa divisa (regolamento p.14).
@@ -1207,6 +1276,19 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 				if foe != null:
 					for _d in range(maxi(0, n_eff)):
 						foe.draw_one()
+			"mill":
+				# Scarta dalla CIMA del proprio mazzo (§3.16).
+				for _d in range(maxi(1, n_eff)):
+					if f.draw_pile.is_empty():
+						break
+					f.discard.append(f.draw_pile.pop_back())
+			"foe_mill":
+				# L'avversario scarta dalla cima del mazzo (mill forzato, §3.16).
+				if foe != null:
+					for _d in range(maxi(1, n_eff)):
+						if foe.draw_pile.is_empty():
+							break
+						foe.discard.append(foe.draw_pile.pop_back())
 			"foe_reveal_hand":
 				# Effetto informativo (roadmap §3.5): la UI mostrerà la mano;
 				# qui si registra solo l'evento.
@@ -1394,6 +1476,46 @@ func _resolve_collision(victim_idx: int, dest: Vector2i, log: Array) -> void:
 	fighter_updated.emit(victim_idx)
 
 
+## La carta `cid` entra nell'area "in gioco" di `i` (RIMANE IN GIOCO, §3.2):
+## applica `in_play_state` (+1 allo stato persistente, es. contatore Illuminata)
+## e `limit_mod` ({hand/wound/focus: ±N}) finché la carta resta in gioco.
+func _enter_play(i: int, cid: int) -> void:
+	var f := state.fighters[i]
+	f.in_play.append(cid)
+	f.in_play_ticks[cid] = 0
+	var g := CardDB.geometry(cid)
+	var st := str(g.get("in_play_state", ""))
+	if st != "":
+		f.state_add(st, 1)
+	var lm: Dictionary = g.get("limit_mod", {})
+	f.hand_limit += int(lm.get("hand", 0))
+	f.wound_limit += int(lm.get("wound", 0))
+	f.focus_limit += int(lm.get("focus", 0))
+	fighter_updated.emit(i)
+
+
+## La carta `cid` lascia il gioco (scartata/scaduta): rovescia `in_play_state`
+## e `limit_mod`, poi va negli scarti. True se la carta era davvero in gioco.
+func remove_from_play(i: int, cid: int) -> bool:
+	var f := state.fighters[i]
+	if not f.in_play.has(cid):
+		return false
+	f.in_play.erase(cid)
+	f.in_play_ticks.erase(cid)
+	var g := CardDB.geometry(cid)
+	var st := str(g.get("in_play_state", ""))
+	if st != "":
+		f.state_add(st, -1)
+	var lm: Dictionary = g.get("limit_mod", {})
+	f.hand_limit -= int(lm.get("hand", 0))
+	f.wound_limit -= int(lm.get("wound", 0))
+	f.focus_limit = maxi(1, f.focus_limit - int(lm.get("focus", 0)))
+	f.focus = mini(f.focus, f.focus_limit)
+	f.discard.append(cid)
+	fighter_updated.emit(i)
+	return true
+
+
 func _cleanup(log: Array) -> void:
 	_set_phase(Domain.Phase.CLEANUP)
 	# Passo "Discard": la carta giocata va negli scarti, MA le core tornano in mano
@@ -1403,6 +1525,8 @@ func _cleanup(log: Array) -> void:
 			if is_core(f.planned) and not f.is_ai:
 				if not f.hand.has(f.planned):
 					f.hand.append(f.planned)   # la core torna in mano
+			elif bool(CardDB.geometry(f.planned).get("stays_in_play", false)) and not f.is_ai:
+				_enter_play(state.fighters.find(f), f.planned)   # RIMANE IN GIOCO (§3.2)
 			else:
 				f.discard.append(f.planned)
 			f.planned = -1
@@ -1414,6 +1538,16 @@ func _cleanup(log: Array) -> void:
 			log.append("%s scarta in eccesso (limite mano %d)" % [f.character, f.hand_limit])
 		# Effetti di fine turno: gli azzoppamenti ruotano (e scadono).
 		f.tick_hobbles()
+		# Le carte in gioco con `expires` invecchiano e scadono (es. #106 che
+		# ruota di 90° a fine turno come gli azzoppamenti).
+		for cid in f.in_play.duplicate():
+			var exp: Dictionary = CardDB.geometry(cid).get("expires", {})
+			if exp.is_empty():
+				continue
+			f.in_play_ticks[cid] = int(f.in_play_ticks.get(cid, 0)) + 1
+			if f.in_play_ticks[cid] >= int(exp.get("turns", 1)):
+				remove_from_play(state.fighters.find(f), cid)
+				log.append("%s: %s scade e viene scartata" % [f.character, CardDB.card(cid).get("name", "?")])
 	state.round_num += 1
 	turn_resolved.emit(log)
 	# Passo "Draw" del turno successivo (sanguinamento + pesca 1).

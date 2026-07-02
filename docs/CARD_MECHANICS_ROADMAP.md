@@ -421,12 +421,20 @@ pena chiuderle insieme in una sessione di lavoro dedicata e corta.
       `random: true` (§3.19).
 
 ### Fase 4 — Gruppo strutturale rimanente
-- [ ] Doppia faccia Hachikō (§3.14) + "gira la carta" (§3.15).
-- [ ] Bersaglio per confronto iniziativa (§3.4).
-- [ ] Finestre di trigger/fase turno (§3.3, si appoggia sul lavoro di
-      Fase 2 per §3.2).
-- [ ] Manipolazione mazzo avanzata (§3.16).
-- [ ] Requisiti su conteggio carte in gioco (§3.21).
+- [ ] Doppia faccia Hachikō (§3.14) + "gira la carta" (§3.15) — richiede
+      scelta della faccia in pianificazione (UI/protocollo), prossimo giro.
+- [x] Bersaglio per confronto iniziativa (§3.4) — campo `targeting`
+      (v0.80.0): #167 #169 #279 #280 #281 #325 #336; #166 resta (trappola
+      §3.28).
+- [x] Finestre di trigger/fase turno (§3.3, parte "inizio turno"):
+      `stays_in_play` + `turn_start`/`limit_mod`/`in_play_state`/`expires`
+      (v0.80.0, 12 carte). Le restrizioni globali "FINCHÉ È ATTIVA" delle
+      virtù Bushido (#85/#91/#93/#95) e le finestre di gioco speciali
+      ("gioca dopo una Reazione", ecc.) restano da modellare.
+- [x] Manipolazione mazzo avanzata (§3.16, parte): verbi `mill`/`foe_mill`
+      (usati da #280). Reveal+filtra (#339) e mill variabile (#225) in nota.
+- [x] Requisiti su conteggio carte in gioco (§3.21): coperti da
+      `in_play_state` + `state_req` (ciclo Illuminata #261/#262 vivo).
 - [ ] Marcatori trappola su griglia (§3.28).
 - [ ] I casi isolati (1-2 carte ciascuno): giocare carta pescata come
       istantanea (§3.23), IA muovi-verso (§3.24), adiacenza a terzo pezzo
