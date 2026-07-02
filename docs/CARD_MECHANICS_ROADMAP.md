@@ -328,6 +328,12 @@ pena chiuderle insieme in una sessione di lavoro dedicata e corta.
 
 ## 5. Decisioni da prendere a inizio sessione (confermare con l'utente, non re-derivare da soli)
 
+> **Decise (sessione 2026-07-02):** §5.1 → **dizionario libero** di
+> flag/contatori per-fighter; §5.2 → **confermato**, `alt_initiative` campo
+> separato dallo split; §5.3 → **audit prima** (report in
+> `docs/GATE_AUDIT.md`), refactor in Fase 5; §5.4 → Kamae "Distanza"
+> **vincolata al solo Navigatore**.
+
 1. **Forma del sottosistema "stato persistente"** (§4): contatori/flag
    nominati per-fighter, dizionario libero vs enum fisso di nomi noti,
    dove vive nello schema (`geometry.json` per la definizione, `GameState`
@@ -356,23 +362,28 @@ pena chiuderle insieme in una sessione di lavoro dedicata e corta.
 ## 6. TODO a fasi
 
 ### Fase 0 — Setup
-- [ ] Leggere questo file + `GEOMETRY_SCHEMA.md` + `docs/CARD_EDITOR_ROADMAP.md`
+- [x] Leggere questo file + `GEOMETRY_SCHEMA.md` + `docs/CARD_EDITOR_ROADMAP.md`
       (per capire come è fatto l'editor esistente).
 - [ ] Procurarsi un binario Godot **4.6** headless linux x86_64, verificare
       che la suite di test giri e dia la stessa baseline di §2 (4 fail
-      pre-esistenti, tutto il resto verde).
-- [ ] Confermare le **Decisioni §5** con l'utente prima di scrivere codice.
+      pre-esistenti, tutto il resto verde). ⚠️ *Bloccato nelle sessioni
+      remote correnti: la policy di rete nega il download (github releases
+      e mirror) — vedi `GATE_AUDIT.md` §6. Da fare in locale o allargando
+      la policy dell'ambiente.*
+- [x] Confermare le **Decisioni §5** con l'utente prima di scrivere codice.
 
 ### Fase 1 — Audit di semplificazione (obiettivo B, se deciso in §5.3)
-- [ ] Scandire le 281 carte e mappare ogni pattern di condizione/gate
+- [x] Scandire le 281 carte e mappare ogni pattern di condizione/gate
       usato oggi per movimento, attacco/difesa, contrattacco, effetti.
-- [ ] Individuare quali sono davvero lo stesso concetto ripetuto vs quali
+- [x] Individuare quali sono davvero lo stesso concetto ripetuto vs quali
       sono genuinamente diversi.
-- [ ] Proporre (senza ancora implementare) un concetto di "gate" unificato
+- [x] Proporre (senza ancora implementare) un concetto di "gate" unificato
       — quali campi lo compongono (`kamae_req`? `focus_cost`? altro
       trovato durante l'audit?), dove si applica.
 - [ ] Presentare il report all'utente per approvazione prima di toccare
-      schema o editor.
+      schema o editor. → **report pronto: `docs/GATE_AUDIT.md`** (include
+      un bug reale trovato: `focus_cost` sugli atomi di movimento ignorato
+      da `Move.gd`, 31 atomi).
 
 ### Fase 2 — Sottosistema stato persistente (cuore dell'obiettivo A)
 - [ ] Disegnare schema + `Duel.gd`/`GameState.gd` per stato per-fighter
