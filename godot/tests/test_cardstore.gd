@@ -1,6 +1,8 @@
 ## Test headless di CardStore: scrittura atomica + .bak, ordinamento chiavi,
-## round-trip e logica overlay anagrafica. Non tocca i dati reali del repo
-## (usa file temporanei sotto user://).
+## round-trip e logica overlay anagrafica. La maggior parte usa file
+## temporanei sotto user://; _test_overlay_inmem() legge gli override reali
+## del progetto in sola lettura (load_overrides) ma opera in-memory sull'id
+## 143, quindi non scrive mai su res://data/cards/card_pool_overrides.json.
 extends Node
 
 var _failures: int = 0
@@ -82,8 +84,13 @@ func _test_sorted_keys() -> void:
 func _test_overlay_inmem() -> void:
 	print("[overlay_inmem]")
 	var store := CardStore.new()
-	store.load_overrides()   # file reale assente -> overrides vuoti
-	_check(store.overrides.is_empty(), "overrides vuoti senza file")
+	# Carica gli override REALI del progetto (POOL_OVERRIDES_PATH, non un file
+	# temporaneo): puo' non essere vuoto se il gioco base ha gia' override
+	# legittimi salvati dall'editor. Verifichiamo solo che il caricamento
+	# produca un Dictionary e che l'id 143 usato sotto parta pulito.
+	store.load_overrides()
+	_check(typeof(store.overrides) == TYPE_DICTIONARY, "load_overrides popola un Dictionary")
+	_check(not store.overrides.has(143), "carta 143 (usata sotto) senza override reali preesistenti")
 	store.set_override(143, {"focus": 2, "name": "Cross Kick (edit)"})
 	_check(store.get_override(143).get("focus", -1) == 2, "set_override registra i campi")
 	_check(store.get_override(999).is_empty(), "carta senza override -> dict vuoto")
