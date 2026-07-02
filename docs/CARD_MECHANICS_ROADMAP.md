@@ -386,15 +386,23 @@ pena chiuderle insieme in una sessione di lavoro dedicata e corta.
       da `Move.gd`, 31 atomi).
 
 ### Fase 2 — Sottosistema stato persistente (cuore dell'obiettivo A)
-- [ ] Disegnare schema + `Duel.gd`/`GameState.gd` per stato per-fighter
+- [x] Disegnare schema + `Duel.gd`/`GameState.gd` per stato per-fighter
       che persiste tra i turni (contatori/flag nominati, leggibili/
-      scrivibili da `effects[]`).
-- [ ] Widget editor per crearlo/leggerlo (`GeometryEditor.gd`).
-- [ ] Applicarlo a Disperazione (§3.6), Contratti (§3.11), stato Ombra
-      (§3.9), stato Ninja (§3.8), ciclo Illuminata (§3.12), carte "rimane
-      in gioco" (§3.2/§3.17) — ~40 carte totali.
-- [ ] Test headless dedicati + re-verifica delle carte toccate contro i
-      dati/scan reali (non solo "il JSON è valido").
+      scrivibili da `effects[]`). → `Fighter.states`, verbi `state_*`,
+      gate `state`/`state_req`, helper `engine/Gate.gd` (v0.78.0, PR #83).
+- [ ] Widget editor per crearlo/leggerlo (`GeometryEditor.gd`). → per ora
+      i campi nuovi SOPRAVVIVONO all'editor (passthrough dei campi non
+      modellati, v0.78.0) ma non hanno ancora UI dedicata.
+- [x] Applicarlo a Disperazione (§3.6), stato Ombra (§3.9), stato Ninja
+      (§3.8), ciclo Illuminata (§3.12) — 25 carte, verificate sugli scan.
+      **Contratti (§3.11) rinviati a Fase 3** (serve `n_source`, il
+      conteggio moltiplica effetti); "rimane in gioco" (§3.2/§3.17) resta
+      per la Fase 4 (trigger per-turno). Aperto: attivazione Disperazione
+      (regola espansione), possibile unificazione Ombra=Ninja
+      ("Occultamento"), uscita/durata degli stati.
+- [x] Test headless dedicati (`tests/test_gate_states.tscn`) + re-verifica
+      delle carte toccate contro gli scan reali. ⚠️ Suite NON eseguita:
+      binario Godot non disponibile nella sessione remota (vedi Fase 0).
 
 ### Fase 3 — Gruppo economico "schema+motore"
 - [ ] `alt_initiative` (§3.1, ~20 carte).
