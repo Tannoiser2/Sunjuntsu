@@ -419,8 +419,10 @@ pena chiuderle insieme in una sessione di lavoro dedicata e corta.
 - [x] Effetti a entità variabile: `n_from_state` (§3.13) — sblocca #322
       (Contratti); #319/#321/#328 restano per fasi successive (bonus
       iniziativa/raggio variabile, finestre di gioco).
-- [ ] Quinta Kamae "Distanza" (§3.22): **rinviata** — tocca gli enum di
-      stance ovunque; da fare quando la suite di test è eseguibile.
+- [x] Quinta Kamae "Distanza" (§3.22): CHIUSA in v0.85.0 insieme alla
+      trascrizione di TUTTI gli alberi Kamae (13 personaggi, archi a
+      senso unico col campo `dir`, arco fantasma del Ronin rimosso,
+      change_targets riscritta).
 - [x] Guarigione/rimozione stato `heal` (§3.20), selezione casuale
       `random: true` (§3.19).
 

@@ -1316,7 +1316,7 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 				# "Cambia Kamae fino a N": il giocatore sceglie nella scena (con focus
 				# dai rami rosa). L'IA traversa l'albero in automatico (ignora il focus).
 				if f.is_ai:
-					var tree := CardDB.kamae_tree_for(f.character.to_lower())
+					var tree := CardDB.kamae_tree_for(CardDB.deck_slug_for(f.character))
 					var targets := Kamae.change_targets(tree, Domain.STANCE_SLUG[f.stance], n_eff)
 					for pref in ["aggression", "determination", "balance"]:
 						if targets.has(pref):
@@ -1393,7 +1393,7 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 				# Sposta l'avversario lungo il suo albero fino a n rami
 				# (approssimazione auto: stessa preferenza di change_kamae).
 				if foe != null and not _immune(foe, "foe_change_kamae"):
-					var ftree := CardDB.kamae_tree_for(foe.character.to_lower())
+					var ftree := CardDB.kamae_tree_for(CardDB.deck_slug_for(foe.character))
 					var ftargets := Kamae.change_targets(ftree, Domain.STANCE_SLUG[foe.stance], n_eff)
 					for pref in ["neutral", "balance", "determination", "aggression"]:
 						if ftargets.has(pref):

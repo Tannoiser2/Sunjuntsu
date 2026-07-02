@@ -9148,11 +9148,12 @@
      }
     ]
    },
-   "note": "ATTACCO. DISTANZA. Range6. DA VERIFICARE: nessun diagramma nido d'ape stampato. COLPISCI l'avversario con iniziativa inferiore + ferite pari alla differenza d'iniziativa (targeting initiative, w_from_gap). Cella placeholder sul raggio frontale a gittata massima, w:1 fittizio. Richiede la kamae speciale 'Distanza' del Navigatore (non enum standard, kamae_req non impostato). Bande viola [5]/[6] = iniziativa alternativa pagando 1/2 focus, non modellata. Verificata su sailor_07.webp.",
+   "note": "ATTACCO. DISTANZA. Range6. DA VERIFICARE: nessun diagramma nido d'ape stampato. COLPISCI l'avversario con iniziativa inferiore + ferite pari alla differenza d'iniziativa (targeting initiative, w_from_gap). Cella placeholder sul raggio frontale a gittata massima, w:1 fittizio. Richiede la Kamae Distanza (kamae_req 'distance', quinta stance dall'albero #275). Bande viola [5]/[6] = iniziativa alternativa pagando 1/2 focus, non modellata. Verificata su sailor_07.webp.",
    "targeting": {
     "mode": "initiative",
     "w_from_gap": true
-   }
+   },
+   "kamae_req": "distance"
   },
  "280": {
    "name": "TIRO PRECISO",
@@ -9166,7 +9167,7 @@
      }
     ]
    },
-   "note": "ATTACCO. DISTANZA. Range6. COLPISCI l'avversario con iniziativa inferiore, 1 ferita (targeting initiative). RIMANE IN GIOCO nell'area avversaria (stays_in_play — resa dal lato del proprietario) e PRIMA DI PESCARE l'avversario scarta la prima carta del mazzo (turn_start foe_mill). RIDUCI DI 1 L'INIZIATIVA DI TUTTE LE CARTE ABILITÀ (minimo 1) resta non modellabile (modificatore globale d'iniziativa, DA VERIFICARE). Kamae speciale 'Distanza' rinviata (§3.22). Verificata su sailor_05.webp.",
+   "note": "ATTACCO. DISTANZA. Range6. COLPISCI l'avversario con iniziativa inferiore, 1 ferita (targeting initiative). RIMANE IN GIOCO nell'area avversaria (stays_in_play — resa dal lato del proprietario) e PRIMA DI PESCARE l'avversario scarta la prima carta del mazzo (turn_start foe_mill). RIDUCI DI 1 L'INIZIATIVA DI TUTTE LE CARTE ABILITÀ (minimo 1) resta non modellabile (modificatore globale d'iniziativa, DA VERIFICARE). Richiede la Kamae Distanza (kamae_req 'distance', quinta stance dall'albero #275). Verificata su sailor_05.webp.",
    "targeting": {
     "mode": "initiative",
     "w": 1
@@ -9177,7 +9178,8 @@
      "do": "foe_mill",
      "n": 1
     }
-   ]
+   ],
+   "kamae_req": "distance"
   },
  "281": {
    "name": "LANCIO DI PUGNALE",
@@ -9191,11 +9193,12 @@
      }
     ]
    },
-   "note": "ATTACCO. DISTANZA. Range3. COLPISCI l'avversario con iniziativa inferiore, 1 ferita (targeting initiative; cella placeholder di gittata). Banda viola (1 focus) con esagono '5': probabile aumento della gittata da 3 a 5, non modellato. Kamae speciale 'Distanza' rinviata (§3.22). Verificata su sailor_08.webp.",
+   "note": "ATTACCO. DISTANZA. Range3. COLPISCI l'avversario con iniziativa inferiore, 1 ferita (targeting initiative; cella placeholder di gittata). Banda viola (1 focus) con esagono '5': probabile aumento della gittata da 3 a 5, non modellato. Richiede la Kamae Distanza (kamae_req 'distance', quinta stance dall'albero #275). Verificata su sailor_08.webp.",
    "targeting": {
     "mode": "initiative",
     "w": 1
-   }
+   },
+   "kamae_req": "distance"
   },
  "282": {
    "name": "SQUARCIO PROFONDO",

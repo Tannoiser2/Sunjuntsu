@@ -20,6 +20,7 @@ signal instant_chosen(id: int)
 
 const _STANCE_LABEL := {
 	"aggression": "Aggr.", "balance": "Equil.", "determination": "Determ.", "neutral": "Neutra",
+	"distance": "Dist.",
 }
 var _kamae_box: HBoxContainer
 var _kamae_btns: Dictionary = {}
@@ -304,7 +305,7 @@ func _build_kamae_chooser() -> void:
 	_kamae_box = HBoxContainer.new()
 	_kamae_box.alignment = BoxContainer.ALIGNMENT_CENTER
 	wrap.add_child(_kamae_box)
-	for slug in ["aggression", "balance", "determination", "neutral"]:
+	for slug in ["aggression", "balance", "determination", "neutral", "distance"]:
 		var sl: String = slug   # cattura per-iterazione: senza, tutti i bottoni emetterebbero l'ultimo slug
 		var b := Button.new()
 		b.custom_minimum_size = Vector2(110, 40)
