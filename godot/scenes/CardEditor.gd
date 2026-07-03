@@ -272,10 +272,48 @@ func _populate_filters() -> void:
 		_rank_values.append(pair[0])
 
 
+## Personaggi non disponibili fisicamente all'utente: nascosti ovunque
+## nell'editor (dropdown E lista "Tutti i personaggi"), varianti Solo incluse.
+const _HIDDEN_CHARS := ["Musashi", "Kojiro"]
+
+## Il campo `char` grezzo del pool può essere un personaggio singolo ("Ronin",
+## "Ronin Solo") o un ibrido con l'arma ("Ninja/Weapon", "Ashigaru/Hachiko"):
+## lo scomponiamo nei personaggi reali a cui appartiene, ignorando il token
+## generico "Weapon" (le carte arma di un personaggio si vedono già sotto il
+## personaggio stesso — non serve più una categoria "Weapon" a parte).
+static func _char_components(raw: String) -> Array:
+	var out: Array = []
+	for part in raw.split("/"):
+		var p := part.strip_edges()
+		if p == "" or p == "Weapon":
+			continue
+		out.append(p)
+	return out
+
+
+static func _char_base(component: String) -> String:
+	return component.replace(" Solo", "").strip_edges()
+
+
+static func _char_is_hidden(raw: String) -> bool:
+	for c in _char_components(raw):
+		if _char_base(c) in _HIDDEN_CHARS:
+			return true
+	return false
+
+
 func _char_list() -> Array:
-	var a: Array = CardDB.by_char.keys()
-	a.sort()
-	return a
+	var seen := {}
+	var out: Array = []
+	for ch in CardDB.by_char.keys():
+		if _char_is_hidden(ch):
+			continue
+		for part in _char_components(ch):
+			if not seen.has(part):
+				seen[part] = true
+				out.append(part)
+	out.sort()
+	return out
 
 
 func _refresh_list() -> void:
@@ -291,7 +329,10 @@ func _refresh_list() -> void:
 	var shown := 0
 	for id in ids:
 		var c: Dictionary = CardDB.by_id[id]
-		if want_char != "" and str(c.get("char", "")) != want_char:
+		var raw_char := str(c.get("char", ""))
+		if _char_is_hidden(raw_char):
+			continue
+		if want_char != "" and want_char not in _char_components(raw_char):
 			continue
 		if want_type != "" and str(c.get("type", "")) != want_type:
 			continue

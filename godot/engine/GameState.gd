@@ -9,6 +9,12 @@ extends RefCounted
 ## Stato di un singolo combattente.
 class Fighter:
 	var character: String = "Warrior"          ## personaggio (chiave in CardDB)
+	## Squadra (0 = umano, 1 = IA alleate): sostituisce l'assunzione "sempre 2
+	## combattenti" di opponent_of/ally_of. Duelli 1v1 hanno sempre team 0/1
+	## sui due indici, quindi il comportamento non cambia; con 3+ combattenti
+	## (es. Ashigaru+Hachikō alleati, §3.24/§3.25) permette di distinguere
+	## nemici da alleati.
+	var team: int = 0
 	var cell: Vector2i = Vector2i.ZERO        ## posizione sulla mappa esagonale
 	var facing: int = 0                        ## direzione (0..5), indice in HexGrid.DIRS
 	var kamae: int = Domain.Rank.STEEL         ## ramo kamae (rank) — legacy
@@ -237,8 +243,46 @@ func spring_traps(f: Fighter) -> Array:
 	return ["%s calpesta i piedi di corvo: 1 ferita e AZZOPPATO" % f.character]
 
 
+## Nemico più vicino (team diverso da `f`). Con 2 combattenti (duello 1v1
+## normale) degenera esattamente al vecchio "l'altro pezzo"; con 3+ (es.
+## Ashigaru+Hachikō alleati) sceglie il più vicino per distanza esagonale —
+## per un alleato IA c'è comunque un solo umano quindi non è mai ambiguo; per
+## l'umano è una semplificazione (nessuna UI di scelta bersaglio per gli
+## effetti "foe_*" non basati su cella).
 func opponent_of(f: Fighter) -> Fighter:
+	# Retrocompatibilità: molti chiamanti (test, scene) creano i fighter senza
+	# impostare `team` (default 0 per tutti) — se nessuno ha un team diverso
+	# usa il vecchio comportamento "il primo diverso da me", invece di non
+	# trovare mai un nemico.
+	if not _has_other_team(f):
+		for other in fighters:
+			if other != f:
+				return other
+		return null
+	var best: Fighter = null
+	var best_d := 9999
 	for other in fighters:
-		if other != f:
+		if other == f or other.team == f.team:
+			continue
+		var d := HexGrid.distance(f.cell, other.cell)
+		if best == null or d < best_d:
+			best = other
+			best_d = d
+	return best
+
+
+func _has_other_team(f: Fighter) -> bool:
+	for other in fighters:
+		if other != f and other.team != f.team:
+			return true
+	return false
+
+
+## Alleato di `f` (stesso team, escluso se stesso), o null se assente
+## (duello 1v1 normale). Usato dalle carte "muovi verso l'alleato"/"se
+## adiacente all'alleato" (Ashigaru+Hachikō, §3.24/§3.25).
+func ally_of(f: Fighter) -> Fighter:
+	for other in fighters:
+		if other != f and other.team == f.team:
 			return other
 	return null

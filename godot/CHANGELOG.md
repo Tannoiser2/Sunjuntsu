@@ -3,6 +3,96 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.92.0] — 2026-07-03
+### Coppia alleata Ashigaru+Hachikō in Solitario (§3.24/§3.25): 1 umano vs 2 IA
+- **Nuova primitiva team/alleato**: `Fighter.team` (0 = umano, 1 = IA
+  alleate), `GameState.opponent_of()` ora restituisce il NEMICO più vicino
+  (invece del vecchio "il primo pezzo che non sono io") e la nuova
+  `GameState.ally_of()` restituisce l'alleato di squadra. Retrocompatibile:
+  se nessun combattente ha un team diverso (tutti i test/scene esistenti
+  che non impostano `team`), i due metodi ripiegano sul comportamento
+  storico — zero regressioni sul duello 1v1.
+- **Targeting per cella con più nemici** (`Duel._cell_target_index`): un
+  attacco colpisce chiunque dei nemici stia fisicamente nella cella
+  colpita, non più un "foe" fisso — così le due miniature alleate possono
+  essere bersagliate indipendentemente, come sul tavolo fisico.
+  `_resolve_chosen_speeds` prova ora ogni nemico rivelato (più vicino
+  prima) per far combaciare la velocità di difesa con l'attacco giusto.
+- **Nuovo atomo di movimento `"toward"`** (`Move.gd`): passo greedy verso
+  la cella di un bersaglio (`foe`/`ally`) passata in un nuovo parametro
+  `context` — stesso algoritmo già usato da `AI.move_target`, nessun vero
+  pathfinding. Risolve **#251 "Attacca/Al Piede"** (Hachikō): la faccia
+  attacco si muove verso l'avversario, la faccia difesa verso l'alleato
+  Ashigaru.
+- **Gate sintetico "adiacente_alleato"** (`Duel._apply_effects`): calcolato
+  fresco a ogni risoluzione da `ally_of` + distanza esagonale, riusa il
+  vocabolario `state`/`Gate.state_ok` esistente (zero campi nuovi in
+  `Gate.gd`). Risolve **#254 "Riporta la Preda/Bravo Cane"**: il focus
+  bonus della faccia difesa scatta solo se adiacente all'Ashigaru.
+- **Arena/HUD/Menu**: `_spawn_pawns` supporta 3 pedine (umano + coppia IA,
+  un 3° punto di partenza vicino al 1° avversario); ritratti HUD con una
+  3ª posizione impilata; il Menu aggiunge automaticamente il compagno
+  (`Domain.PAIRED_WITH`) quando si sceglie Ashigaru o Hachikō come
+  avversario in Solitario, finalizzando a 3 personaggi invece di 2.
+- Nuovo `tests/test_ally_pair.gd`: primitiva team/alleato, targeting per
+  cella, atomo "toward", gate di adiacenza, turno completo a 3 pedine,
+  selezione a coppia dal menu.
+- **Nota**: le carte Solitario di Ashigaru/Hachikō non hanno ancora
+  geometria trascritta (gap noto e già segnalato, indipendente da questa
+  feature) — l'impalcatura a 3 pedine funziona, ma le due IA non potranno
+  davvero attaccare finché quelle carte non saranno trascritte.
+
+## [0.91.1] — 2026-07-03
+### §3.23 risolto: "gioca la carta pescata come istantanea" (#42 Specchio d'Acqua)
+Non serviva un verbo dedicato: il sistema di Istantanea Aggiuntiva già
+esistente (`Duel._post_resolve` → `instant_plays_for`) offre automaticamente
+la scelta subito dopo la risoluzione della carta corrente, e la carta appena
+pescata da `search_draw` è già in mano a quel punto — se è di tipo
+additional/instant compare tra le opzioni. Nessuna modifica al motore,
+solo nota aggiornata.
+
+## [0.91.0] — 2026-07-03
+### Carte Solitario del Ninja + tabella ufficiale di composizione mazzo IA
+- Trascritte le 5 carte Abilità in Solitario del Ninja (#954 Bomba Fumogena,
+  #955 Squarcio di Kama, #956 Lancio di Shuriken, #957 Soffio di Metsubushi,
+  #990 Trappola del Tiratore Lunare/Incubo) dalle scansioni della carta
+  fisica — erano già estratte durante l'audit ma scartate perché non c'era
+  nulla in `geometry.json` con cui confrontarle.
+- Aggiunta `CardDB.AI_DECK_COMPOSITION`: la tabella ufficiale di composizione
+  del mazzo IA (regolamento solitario, verificata contro
+  `solo_AI_tables_v1.xlsx`) per tutti i personaggi — quante carte prendere
+  dai mazzi di selezione generici I-V oltre alle carte di Classe. **Non
+  ancora collegata** a `solo_deck_for()`: i mazzi generici I-VIII (~46 carte
+  condivise tra personaggi — "reach attacks", "melee attacks", "defence
+  cards", "nightmare mode" ecc.) non hanno ancora scansioni fisiche
+  disponibili nel repo materiali, servono pagine dedicate (sembra un
+  mazzetto a parte, non le pagine dei singoli personaggi).
+- **Stato reale delle carte Solitario per personaggio** (verificato pagina
+  per pagina nei PDF): Ronin e Guerriero già completi (fatti in una sessione
+  precedente); Ninja completato ora; i restanti 11 personaggi disponibili
+  (Yasuke, Wakou, Navigatore, Assassino, Hachikō, Maestro, Monaco,
+  Onna-Bugeisha, Yojimbo, Allievo, Ashigaru) hanno l'anagrafica di base ma
+  **non la geometria**: le loro pagine PDF non includono la carta
+  Solitario — serve scansionarla.
+
+## [0.90.0] — 2026-07-03
+### Fix crash "Sesto Senso" (#16) + pulizia editor carte
+- **Crash su carte con `kamae_req` ad array**: `#16 Sesto Senso` e `#45
+  Obbedienza` sono giocabili in due Kamae alternative (`kamae_req` è un Array
+  di slug, es. `["balance", "determination"]`). Due punti in `Arena.gd`
+  leggevano però il campo con `var req: String = ...` — appena la carta
+  veniva selezionata/passata col mouse mentre non giocabile (Kamae sbagliata),
+  Godot lanciava un errore di tipo a runtime e l'app si resettava. Aggiunto
+  `Domain.stance_req_label()` che formatta correttamente sia stringa singola
+  sia Array (join con "O"), usato in entrambi i punti.
+- **Editor carte**: rimossi Musashi e Kojiro (schede fisiche non disponibili)
+  da ovunque nell'editor — dropdown "personaggio" e vista "Tutti i
+  personaggi". Le carte ibride `Personaggio/Weapon` (es. `Ninja/Weapon`,
+  `Ashigaru/Hachiko`) non sono più una categoria a sé: confluiscono nel/nei
+  personaggio/i reale/i a cui appartengono, quindi il filtro ora elenca solo
+  "Personaggio" e "Personaggio Solo" per ciascuno dei 15 personaggi
+  disponibili (più i due bucket generici "Gen. Ability"/"Generic Solo").
+
 ## [0.89.0] — 2026-07-03
 ### UI: risolto sovrapposto testi di scelta + colonna log collassabile
 - **Kamae-chooser e option-chooser non si sovrappongono più**: prima avevano

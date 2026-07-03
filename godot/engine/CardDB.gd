@@ -178,6 +178,43 @@ func draw_pile_for(slug: String) -> Array:
 	return pile
 
 
+## Composizione UFFICIALE del mazzo IA (regolamento solitario, tabella verificata
+## contro solo_AI_tables_v1.xlsx dell'utente): per ogni personaggio, quante carte
+## prendere dai mazzi di selezione GENERICI I-V (condivisi tra personaggi, es.
+## "1x mazzo 1, 2x mazzo 4, 1x mazzo 5 +1 a scelta tra 2/4/5"), oltre alle 4-5
+## carte di Classe del personaggio (sempre incluse per intero) e alla sua carta
+## Incubo (tenuta da parte, aggiunta solo in Modalità Incubo).
+##
+## NON ANCORA USATA da `solo_deck_for()`: i mazzi generici I-VIII (~46 carte
+## condivise, es. "reach attacks"/"melee attacks"/"defence cards"/"nightmare
+## mode") non sono ancora trascritti in geometry.json — servono le scansioni
+## fisiche (sembrano un mazzetto a parte, non le pagine dei singoli personaggi).
+## Finché non esistono, `solo_deck_for()` usa solo le carte di Classe. Tenuta
+## qui come riferimento pronto per quando i dati arriveranno.
+const AI_DECK_COMPOSITION := {
+	# "boss/carte base": I×1, IV×2, V×1, +1 a scelta tra II/IV/V.
+	"master": {"I": 1, "IV": 2, "V": 1, "extra": ["II", "IV", "V"]},
+	"student": {"I": 1, "IV": 2, "V": 1, "extra": ["II", "IV", "V"]},
+	"assassin": {"I": 1, "IV": 2, "V": 1, "extra": ["II", "IV", "V"]},
+	"ninja": {"I": 1, "IV": 2, "V": 1, "extra": ["II", "IV", "V"]},
+	"sailor": {"I": 1, "IV": 2, "V": 1, "extra": ["II", "IV", "V"]},
+	"yasuke": {"I": 1, "IV": 2, "V": 1, "extra": ["II", "IV", "V"]},
+	"yojimbo": {"I": 1, "IV": 2, "V": 1, "extra": ["II", "IV", "V"]},
+	"musashi": {"I": 1, "IV": 2, "V": 1, "extra": ["II", "IV", "V"]},   # fuori scope (nessuna scheda fisica)
+	# "2 esagoni": I×1, III×1, IV×1, V×1, +1 a scelta tra II/IV/V.
+	"ronin": {"I": 1, "III": 1, "IV": 1, "V": 1, "extra": ["II", "IV", "V"]},
+	"warrior": {"I": 1, "III": 1, "IV": 1, "V": 1, "extra": ["II", "IV", "V"]},
+	"wakou": {"I": 1, "III": 1, "IV": 1, "V": 1, "extra": ["II", "IV", "V"]},
+	"kojiro": {"I": 1, "III": 1, "IV": 1, "V": 1, "extra": ["II", "IV", "V"]},   # fuori scope
+	# "coppia/difensivo": I×1, III×2, V×1, +1 a scelta tra II/IV/V.
+	"ashigaru": {"I": 1, "III": 2, "V": 1, "extra": ["II", "IV", "V"]},
+	"monk": {"I": 1, "III": 2, "V": 1, "extra": ["II", "IV", "V"]},
+	"onna_bugeisha": {"I": 1, "III": 2, "V": 1, "extra": ["II", "IV", "V"]},
+	# Hachikō: usa sempre e solo le sue 5 carte, mai modificate.
+	"hachiko": null,
+}
+
+
 ## Mazzo dell'AVVERSARIO solitario (sottoinsieme curato secondo solo_AI_tables_v1.xlsx),
 ## costruito riusando la geometria già trascritta del personaggio. L'IA rivela la cima
 ## ogni turno; niente focus/mano. The Terror (#28) cambia l'atteggiamento dell'IA.

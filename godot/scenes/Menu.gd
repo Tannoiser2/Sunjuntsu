@@ -174,6 +174,11 @@ func _update_select_title() -> void:
 
 func _on_char_picked(ch: String) -> void:
 	_picked.append(ch)
+	# Scelta dell'avversario in Solitario: Ashigaru e Hachikō combattono
+	# sempre in coppia (regolamento, §3.24/§3.25) — aggiungi automaticamente
+	# il partner e finalizza a 3 (umano + coppia alleata IA) invece che a 2.
+	if _pending_mode == "solo" and _picked.size() == 2 and Domain.PAIRED_WITH.has(ch):
+		_picked.append(Domain.PAIRED_WITH[ch])
 	if _picked.size() < 2:
 		_update_select_title()
 		return

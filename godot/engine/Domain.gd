@@ -64,6 +64,20 @@ const STANCE_FROM_SLUG := {
 }
 
 
+## Nome leggibile di un `kamae_req` per i messaggi di UI: il campo può essere
+## una stringa singola o un Array di slug in OR (es. #16 Sesto Senso,
+## #45 Obbedienza — "giocabile in Equilibrio O Determinazione"). Centralizzato
+## qui perché un `req` tipizzato come String in chiamante causava un crash a
+## runtime quando il campo era in realtà un Array.
+static func stance_req_label(req) -> String:
+	if req is Array:
+		var names: Array = []
+		for slug in req:
+			names.append(STANCE_NAMES.get(STANCE_FROM_SLUG.get(str(slug), -1), str(slug)))
+		return " O ".join(names)
+	return STANCE_NAMES.get(STANCE_FROM_SLUG.get(str(req), -1), str(req))
+
+
 # ─── Tipi di carta (dal campo Keywords) ──────────────────────────────────────
 
 enum CardType { ATTACK, DEFENCE, MEDITATION, CORE, OTHER }
@@ -150,12 +164,20 @@ const CHAR_NAMES_IT := {
 	"Sailor": "Navigatore", "Wakou": "Wakou", "Yasuke": "Yasuke",
 }
 
+## Personaggi che in Solitario combattono SEMPRE in coppia (regolamento):
+## scegliendone uno come avversario, il Menu aggiunge automaticamente anche
+## il partner (§3.24/§3.25 — Ashigaru+Hachikō alleati contro l'umano).
+const PAIRED_WITH := {
+	"Ashigaru": "Hachiko", "Hachiko": "Ashigaru",
+}
+
 ## Modalità scelta dal menu: "solo" (vs IA) o "versus" (1v1 locale hot-seat).
 ## L'Arena la legge all'avvio per configurare le pedine e il flusso del turno.
 var game_mode: String = "solo"
 
-## Combattenti scelti nel menu ([P1, P2], chiavi personaggio). Vuoto = default
-## PLAYABLE (retro-compatibile con test e avvii diretti dell'Arena).
+## Combattenti scelti nel menu ([P1, P2] normale, o [P1, IA1, IA2] per la
+## coppia alleata Ashigaru+Hachikō). Vuoto = default PLAYABLE
+## (retro-compatibile con test e avvii diretti dell'Arena).
 var selected_chars: Array = []
 
 ## URL del relay WebSocket per il tavolo online (companion). In LAN punta al PC che

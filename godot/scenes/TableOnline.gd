@@ -357,6 +357,7 @@ func _spawn_pawns() -> void:
 	var colors := [Color(0.85, 0.2, 0.2), Color(0.2, 0.4, 0.9)]
 	for i in range(2):
 		var f := state.add_fighter(chars[i], starts[i])
+		f.team = i   # squadre distinte: GameState.opponent_of/ally_of ora le richiedono
 		f.is_ai = false
 		f.draw_pile = CardDB.draw_pile_for(String(chars[i]).to_lower())
 		f.draw_pile.shuffle()
