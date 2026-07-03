@@ -8227,48 +8227,49 @@
    "note": "Movimento ❄1 facoltativo. Attacco fronte a distanza crescente: k1 1 ferita, k2 1 ferita, k3 2 ferite. SE RIUSCITO gated: Aggressività SPINGI 1; Equilibrio AZZOPPA. Verificata su ashigaru_05.webp."
   },
  "239": {
-   "name": "SOLE CALANTE",
-   "type": "meditation",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 3,
-        "n": 1
-       },
-       {
-        "t": "step",
-        "dirs": [
-         0,
-         3
-        ],
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
-   },
-   "effects": [
+  "name": "SOLE CALANTE",
+  "type": "meditation",
+  "move": {
+   "opts": [
     {
-     "do": "cancel_movement"
-    },
-    {
-     "do": "draw",
-     "n": 2,
-     "kamae": "balance",
-     "alt": "a"
-    },
-    {
-     "do": "change_kamae",
-     "n": 1,
-     "alt": "c"
+     "atoms": [
+      {
+       "t": "step",
+       "dir": 3,
+       "n": 1
+      },
+      {
+       "t": "step",
+       "dirs": [
+        2,
+        3,
+        4
+       ],
+       "n": 1,
+       "opt": true
+      }
+     ]
     }
-   ],
-   "note": "Movimento: passo indietro 1 obbligatorio POI glifo 4 punte 1 opzionale (convenzione dirs[0,3], DA UNIFORMARE nel progetto). CANCELLA IL MOVIMENTO ATTIVO dell'avversario (effetto principale). OPPURE Equilibrio: PESCA FINO A 2. OPPURE Determinazione: icona 'ventaglio/gunbai' non identificata, non trascritta. OPPURE: CAMBIA KAMAE FINO A 1 RAMO. Verificata su ashigaru_06.webp."
+   ]
   },
+  "effects": [
+   {
+    "do": "cancel_movement"
+   },
+   {
+    "do": "draw",
+    "n": 2,
+    "kamae": "balance",
+    "alt": "a"
+   },
+   {
+    "do": "change_kamae",
+    "n": 1,
+    "alt": "c"
+   }
+  ],
+  "note": "Movimento: passo indietro 1 obbligatorio POI glifo 4 punte 1 opzionale (convenzione dirs[0,3], DA UNIFORMARE nel progetto). CANCELLA IL MOVIMENTO ATTIVO dell'avversario (effetto principale). OPPURE Equilibrio: PESCA FINO A 2. OPPURE Determinazione: icona 'ventaglio/gunbai' non identificata, non trascritta. OPPURE: CAMBIA KAMAE FINO A 1 RAMO. Verificata su ashigaru_06.webp."
+ },
  "240": {
    "name": "INCIAMPO DEL CAVALLO",
    "type": "meditation",
@@ -8998,173 +8999,179 @@
   }
  },
  "276": {
-   "name": "CARTA SPECIALE NAVIGATORE",
-   "type": "core",
+  "name": "CARTA SPECIALE NAVIGATORE",
+  "type": "core",
+  "move": {
+   "opts": [
+    {
+     "atoms": [
+      {
+       "t": "step",
+       "dir": -1,
+       "n": 1,
+       "opt": true
+      },
+      {
+       "t": "rot",
+       "n": 2,
+       "opt": true
+      }
+     ]
+    }
+   ]
+  },
+  "effects": [
+   {
+    "do": "discard_self",
+    "n": 1
+   },
+   {
+    "do": "draw",
+    "n": 2,
+    "alt": "a"
+   },
+   {
+    "do": "discard_self",
+    "n": 2,
+    "alt": "b"
+   },
+   {
+    "do": "switch_kamae",
+    "alt": "b",
+    "to": "distance"
+   },
+   {
+    "do": "change_kamae",
+    "n": 1,
+    "alt": "c"
+   }
+  ],
+  "note": "Costo: SCARTA 1 CARTA. Movimento ❄1 ↻2 facoltativi. OPPURE a tre vie: PESCA FINO A 2 / SCARTA 2 + PASSA A Neutrale / CAMBIA KAMAE FINO A 1 RAMO. Verificata su sailor_03.webp."
+ },
+ "277": {
+  "name": "GRANCHIO",
+  "type": "attack",
+  "move": {
+   "opts": [
+    {
+     "atoms": [
+      {
+       "t": "step",
+       "dir": 0,
+       "n": 1,
+       "opt": true
+      }
+     ]
+    }
+   ]
+  },
+  "attack": {
+   "cells": [
+    {
+     "d": 0,
+     "k": 1,
+     "w": 1
+    },
+    {
+     "d": 1,
+     "k": 1,
+     "w": 1
+    }
+   ]
+  },
+  "effects": [
+   {
+    "do": "discard_self",
+    "n": 1
+   }
+  ],
+  "split": {
+   "initiative": 1,
    "move": {
     "opts": [
      {
       "atoms": [
        {
         "t": "step",
-        "dir": -1,
+        "dir": 3,
         "n": 1,
+        "focus_cost": 1,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "note": "Arma base Granchio. SCARTA 1 CARTA. Passo avanti 1. Ferite fronte/fronte-dx (fronte-sx vuota). Split [1] (1 focus): passo indietro 1. Verificata su sailor_05.webp."
+ },
+ "278": {
+  "name": "CALCIO DELLA PISTOLA",
+  "type": "attack",
+  "move": {
+   "opts": [
+    {
+     "atoms": [
+      {
+       "t": "step",
+       "dir": 0,
+       "n": 1,
+       "opt": true
+      }
+     ]
+    }
+   ]
+  },
+  "attack": {
+   "cells": [
+    {
+     "d": 0,
+     "k": 1,
+     "w": 0
+    },
+    {
+     "d": 5,
+     "k": 1,
+     "w": 0
+    }
+   ]
+  },
+  "effects": [
+   {
+    "do": "discard_self"
+   },
+   {
+    "do": "hobble",
+    "n": 1,
+    "when": "on_hit"
+   }
+  ],
+  "split": {
+   "initiative": 1,
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 3,
+        "n": 1,
+        "focus_cost": 1,
         "opt": true
        },
        {
         "t": "rot",
-        "n": 2,
+        "n": 1,
+        "focus_cost": 1,
         "opt": true
        }
       ]
      }
     ]
-   },
-   "effects": [
-    {
-     "do": "discard_self",
-     "n": 1
-    },
-    {
-     "do": "draw",
-     "n": 2,
-     "alt": "a"
-    },
-    {
-     "do": "discard_self",
-     "n": 2,
-     "alt": "b"
-    },
-    {
-     "do": "switch_kamae",
-     "alt": "b"
-    },
-    {
-     "do": "change_kamae",
-     "n": 1,
-     "alt": "c"
-    }
-   ],
-   "note": "Costo: SCARTA 1 CARTA. Movimento ❄1 ↻2 facoltativi. OPPURE a tre vie: PESCA FINO A 2 / SCARTA 2 + PASSA A Neutrale / CAMBIA KAMAE FINO A 1 RAMO. Verificata su sailor_03.webp."
+   }
   },
- "277": {
-   "name": "GRANCHIO",
-   "type": "attack",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1
-       }
-      ]
-     }
-    ]
-   },
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 1
-     }
-    ]
-   },
-   "effects": [
-    {
-     "do": "discard_self",
-     "n": 1
-    }
-   ],
-   "split": {
-    "initiative": 1,
-    "move": {
-     "opts": [
-      {
-       "atoms": [
-        {
-         "t": "step",
-         "dir": 3,
-         "n": 1,
-         "focus_cost": 1
-        }
-       ]
-      }
-     ]
-    }
-   },
-   "note": "Arma base Granchio. SCARTA 1 CARTA. Passo avanti 1. Ferite fronte/fronte-dx (fronte-sx vuota). Split [1] (1 focus): passo indietro 1. Verificata su sailor_05.webp."
-  },
- "278": {
-   "name": "CALCIO DELLA PISTOLA",
-   "type": "attack",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1
-       }
-      ]
-     }
-    ]
-   },
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 0
-     },
-     {
-      "d": 5,
-      "k": 1,
-      "w": 0
-     }
-    ]
-   },
-   "effects": [
-    {
-     "do": "discard_self"
-    },
-    {
-     "do": "hobble",
-     "n": 1,
-     "when": "on_hit"
-    }
-   ],
-   "split": {
-    "initiative": 1,
-    "move": {
-     "opts": [
-      {
-       "atoms": [
-        {
-         "t": "step",
-         "dir": 3,
-         "n": 1,
-         "focus_cost": 1
-        },
-        {
-         "t": "rot",
-         "n": 1,
-         "focus_cost": 1
-        }
-       ]
-      }
-     ]
-    }
-   },
-   "note": "Arma base Pistola. SCARTA 1 CARTA. Passo avanti 1. Celle fronte/fronte-sx sono ancore (w:0) collegate ad AZZOPPA (stesso pattern di id 67). Split [1] (1 focus totale): passo indietro 1 + ⟳1. Verificata su sailor_06.webp."
-  },
+  "note": "Arma base Pistola. SCARTA 1 CARTA. Passo avanti 1. Celle fronte/fronte-sx sono ancore (w:0) collegate ad AZZOPPA (stesso pattern di id 67). Split [1] (1 focus totale): passo indietro 1 + ⟳1. Verificata su sailor_06.webp."
+ },
  "279": {
    "name": "LA TEMUTA POLVERE NERA",
    "type": "attack",
@@ -9230,113 +9237,117 @@
    "kamae_req": "distance"
   },
  "282": {
-   "name": "SQUARCIO PROFONDO",
-   "type": "attack",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 1
-       }
-      ]
-     }
-    ]
-   },
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 2
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 2
-     }
-    ]
-   },
-   "effects": [
+  "name": "SQUARCIO PROFONDO",
+  "type": "attack",
+  "move": {
+   "opts": [
     {
-     "do": "draw",
-     "n": 2,
-     "when": "on_hit",
-     "kamae": "balance"
-    },
-    {
-     "do": "hobble",
-     "when": "on_hit",
-     "kamae": "aggression"
-    },
-    {
-     "do": "change_kamae",
-     "n": 1,
-     "when": "on_hit"
-    }
-   ],
-   "note": "Rotazione 1 obbligatoria. 2 ferite su fronte e fronte-dx. SE RIUSCITO: Equilibrio PESCA FINO A 2; Aggressività AZZOPPA; poi CAMBIA KAMAE FINO A 1 RAMO (ungated). Verificata su sailor_09.webp."
-  },
- "283": {
-   "name": "GUARDIA ALTA",
-   "type": "defence",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 1
-       }
-      ]
-     },
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 2,
-        "focus_cost": 1
-       }
-      ]
-     }
-    ]
-   },
-   "defence": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "v": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "v": 1
-     }
-    ]
-   },
-   "split": {
-    "initiative": 2,
-    "move": {
-     "opts": [
+     "atoms": [
       {
-       "atoms": [
-        {
-         "t": "step",
-         "dirs": [
-          0,
-          3
-         ],
-         "n": 1
-        }
-       ]
+       "t": "rot",
+       "n": 1,
+       "opt": true
       }
      ]
     }
-   },
-   "note": "Iniziativa 8-4 (già in card_pool). ⟳1 gratis OPPURE (1 focus) ⟳2. Scudi fronte/fronte-dx. Split [2] (libero): passo avanti O indietro 1. Verificata su sailor_11.webp."
+   ]
   },
+  "attack": {
+   "cells": [
+    {
+     "d": 0,
+     "k": 1,
+     "w": 2
+    },
+    {
+     "d": 1,
+     "k": 1,
+     "w": 2
+    }
+   ]
+  },
+  "effects": [
+   {
+    "do": "draw",
+    "n": 2,
+    "when": "on_hit",
+    "kamae": "balance"
+   },
+   {
+    "do": "hobble",
+    "when": "on_hit",
+    "kamae": "aggression"
+   },
+   {
+    "do": "change_kamae",
+    "n": 1,
+    "when": "on_hit"
+   }
+  ],
+  "note": "Rotazione 1 obbligatoria. 2 ferite su fronte e fronte-dx. SE RIUSCITO: Equilibrio PESCA FINO A 2; Aggressività AZZOPPA; poi CAMBIA KAMAE FINO A 1 RAMO (ungated). Verificata su sailor_09.webp."
+ },
+ "283": {
+  "name": "GUARDIA ALTA",
+  "type": "defence",
+  "move": {
+   "opts": [
+    {
+     "atoms": [
+      {
+       "t": "rot",
+       "n": 1,
+       "opt": true
+      }
+     ]
+    },
+    {
+     "atoms": [
+      {
+       "t": "rot",
+       "n": 2,
+       "focus_cost": 1,
+       "opt": true
+      }
+     ]
+    }
+   ]
+  },
+  "defence": {
+   "cells": [
+    {
+     "d": 0,
+     "k": 1,
+     "v": 1
+    },
+    {
+     "d": 1,
+     "k": 1,
+     "v": 1
+    }
+   ]
+  },
+  "split": {
+   "initiative": 2,
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dirs": [
+         0,
+         3
+        ],
+        "n": 1,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "note": "Iniziativa 8-4 (già in card_pool). ⟳1 gratis OPPURE (1 focus) ⟳2. Scudi fronte/fronte-dx. Split [2] (libero): passo avanti O indietro 1. Verificata su sailor_11.webp."
+ },
  "284": {
    "name": "REAZIONE DELLO SCIOCCO",
    "type": "meditation",
@@ -9349,17 +9360,53 @@
    "note": "Meditazione, Aggiunta Istantanea. GIOCA SE IL BLOCCO È RIUSCITO (condiziona l'intera carta). Contrattacco 8/7/6/5. Testo restante è flavor (haiku). Verificata su sailor_10.webp."
   },
  "285": {
-   "name": "AFFONDO DI PUNTA",
-   "type": "attack",
-   "kamae_req": "aggression",
+  "name": "AFFONDO DI PUNTA",
+  "type": "attack",
+  "kamae_req": "aggression",
+  "move": {
+   "opts": [
+    {
+     "atoms": [
+      {
+       "t": "step",
+       "dir": 0,
+       "n": 1
+      }
+     ]
+    }
+   ]
+  },
+  "attack": {
+   "cells": [
+    {
+     "d": 0,
+     "k": 1,
+     "w": 2
+    },
+    {
+     "d": 0,
+     "k": 2,
+     "w": 1
+    }
+   ]
+  },
+  "split": {
+   "initiative": 4,
    "move": {
     "opts": [
      {
       "atoms": [
        {
+        "t": "rot",
+        "n": 1,
+        "kamae": "determination",
+        "opt": true
+       },
+       {
         "t": "step",
-        "dir": 0,
-        "n": 1
+        "dir": 3,
+        "n": 1,
+        "kamae": "determination"
        }
       ]
      }
@@ -9378,292 +9425,266 @@
       "w": 1
      }
     ]
-   },
-   "split": {
-    "initiative": 4,
-    "move": {
-     "opts": [
+   }
+  },
+  "note": "L'intera carta è divisa in due sezioni gated per intero: base (Aggressività, iniziativa 5) passo avanti 1 + colonna ferite fronte k1(2)/k2(1); split [4] (Determinazione) ⟳1 poi passo indietro 1 (stessa colonna ferite) — trascritto con kamae sugli atomi di movimento dello split, poiché lo schema non ha kamae_req dedicato per split. Sequenza pre/post-attacco DA VERIFICARE. Verificata su sailor_12.webp. Ordine split: rot 1 PRIMA del diagramma d'attacco, passo indietro 1 DOPO (movimento post-attacco) — sequenza non modellata, DA VERIFICARE. [Audit scansioni 2026-07]"
+ },
+ "286": {
+  "name": "RECUPERO",
+  "type": "meditation",
+  "move": {
+   "opts": [
+    {
+     "atoms": [
       {
-       "atoms": [
-        {
-         "t": "rot",
-         "n": 1,
-         "kamae": "determination"
-        },
-        {
-         "t": "step",
-         "dir": 3,
-         "n": 1,
-         "kamae": "determination"
-        }
-       ]
+       "t": "step",
+       "dirs": [
+        0,
+        3
+       ],
+       "n": 1,
+       "opt": true
       }
      ]
-    },
-    "attack": {
-     "cells": [
+    }
+   ]
+  },
+  "effects": [
+   {
+    "do": "search_draw",
+    "n": 1
+   },
+   {
+    "do": "search_draw",
+    "n": 1,
+    "focus_cost": 1
+   },
+   {
+    "do": "switch_kamae",
+    "to": "any"
+   }
+  ],
+  "note": "Passo avanti O indietro 1, obbligatorio. CERCA NEGLI SCARTI + PRENDI 1 (gratis); stessa cosa pagando 1 focus (nessun OPPURE, come id 42); poi PASSA A UNA QUALSIASI KAMAE. Verificata su sailor_14.webp."
+ },
+ "287": {
+  "name": "COLPO IMPONENTE",
+  "type": "attack",
+  "move": {
+   "opts": [
+    {
+     "atoms": [
       {
-       "d": 0,
-       "k": 1,
-       "w": 2
+       "t": "step",
+       "dirs": [
+        1,
+        5
+       ],
+       "n": 1,
+       "opt": true
       },
       {
-       "d": 0,
-       "k": 2,
-       "w": 1
+       "t": "rot",
+       "n": 1,
+       "opt": true
       }
      ]
     }
-   },
-   "note": "L'intera carta è divisa in due sezioni gated per intero: base (Aggressività, iniziativa 5) passo avanti 1 + colonna ferite fronte k1(2)/k2(1); split [4] (Determinazione) ⟳1 poi passo indietro 1 (stessa colonna ferite) — trascritto con kamae sugli atomi di movimento dello split, poiché lo schema non ha kamae_req dedicato per split. Sequenza pre/post-attacco DA VERIFICARE. Verificata su sailor_12.webp."
+   ]
   },
- "286": {
-   "name": "RECUPERO",
-   "type": "meditation",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dirs": [
-         0,
-         3
-        ],
-        "n": 1
-       }
-      ]
-     }
-    ]
-   },
-   "effects": [
+  "attack": {
+   "cells": [
     {
-     "do": "search_draw",
-     "n": 1
-    },
-    {
-     "do": "search_draw",
-     "n": 1,
-     "focus_cost": 1
-    },
-    {
-     "do": "switch_kamae",
-     "to": "any"
+     "d": 0,
+     "k": 1,
+     "w": 1
     }
-   ],
-   "note": "Passo avanti O indietro 1, obbligatorio. CERCA NEGLI SCARTI + PRENDI 1 (gratis); stessa cosa pagando 1 focus (nessun OPPURE, come id 42); poi PASSA A UNA QUALSIASI KAMAE. Verificata su sailor_14.webp."
+   ]
   },
- "287": {
-   "name": "COLPO IMPONENTE",
-   "type": "attack",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dirs": [
-         1,
-         5
-        ],
-        "n": 1
-       },
-       {
-        "t": "rot",
-        "n": 1
-       }
-      ]
-     }
-    ]
+  "effects": [
+   {
+    "do": "replace_wound_bleed",
+    "focus_cost": 1,
+    "when": "on_hit"
    },
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
+   {
+    "do": "foe_discard",
+    "n": 1,
+    "when": "on_hit",
+    "kamae": "aggression"
    },
-   "effects": [
-    {
-     "do": "replace_wound_bleed",
-     "focus_cost": 1,
-     "when": "on_hit"
-    },
-    {
-     "do": "foe_discard",
-     "n": 1,
-     "when": "on_hit",
-     "kamae": "aggression"
-    },
-    {
-     "do": "foe_lose_focus",
-     "n": 1,
-     "when": "on_hit",
-     "kamae": "balance"
-    }
-   ],
-   "note": "Passo diagonale frontale a scelta + ⟳1. Fronte 1 ferita. Barra viola: SOSTITUISCI ! CON sanguinante. SE RIUSCITO gated: Aggressività l'avversario scarta 1 carta; Equilibrio l'avversario perde 1 focus. Verificata su sailor_13.webp."
-  },
+   {
+    "do": "foe_lose_focus",
+    "n": 1,
+    "when": "on_hit",
+    "kamae": "balance"
+   }
+  ],
+  "note": "Passo diagonale frontale a scelta + ⟳1. Fronte 1 ferita. Barra viola: SOSTITUISCI ! CON sanguinante. SE RIUSCITO gated: Aggressività l'avversario scarta 1 carta; Equilibrio l'avversario perde 1 focus. Verificata su sailor_13.webp."
+ },
  "288": {
-   "name": "SPAZZATA DI GRANCHIO",
-   "type": "attack",
+  "name": "SPAZZATA DI GRANCHIO",
+  "type": "attack",
+  "move": {
+   "opts": [
+    {
+     "atoms": [
+      {
+       "t": "step",
+       "dir": 0,
+       "n": 1
+      },
+      {
+       "t": "step",
+       "dir": 0,
+       "n": 1,
+       "kamae": "aggression",
+       "opt": true
+      }
+     ]
+    }
+   ]
+  },
+  "attack": {
+   "cells": [
+    {
+     "d": 0,
+     "k": 1,
+     "w": 1
+    },
+    {
+     "d": 5,
+     "k": 1,
+     "w": 1
+    },
+    {
+     "q": 1,
+     "r": 1,
+     "w": 1
+    }
+   ]
+  },
+  "split": {
+   "initiative": 5,
    "move": {
     "opts": [
      {
       "atoms": [
        {
         "t": "step",
-        "dir": 0,
-        "n": 1
-       },
-       {
-        "t": "step",
-        "dir": 0,
+        "dir": 3,
         "n": 1,
-        "kamae": "aggression"
+        "opt": true
        }
       ]
      }
     ]
-   },
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 5,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "q": 1,
-      "r": 1,
-      "w": 1
-     }
-    ]
-   },
-   "split": {
-    "initiative": 5,
-    "move": {
-     "opts": [
+   }
+  },
+  "note": "Passo avanti 1 obbligatorio; Aggressività aggiunge un secondo passo avanti (gated). Ferite: fronte, fronte-sx, diagonale anello2 fronte-sx. Split [5] (libero): passo indietro 1. Verificata su sailor_15.webp."
+ },
+ "289": {
+  "name": "AVANZATA IN DUELLO",
+  "type": "meditation",
+  "move": {
+   "opts": [
+    {
+     "atoms": [
       {
-       "atoms": [
-        {
-         "t": "step",
-         "dir": 3,
-         "n": 1
-        }
-       ]
+       "t": "rot",
+       "n": 1,
+       "opt": true
+      },
+      {
+       "t": "step",
+       "dirs": [
+        0,
+        3
+       ],
+       "n": 2,
+       "opt": true
       }
      ]
     }
-   },
-   "note": "Passo avanti 1 obbligatorio; Aggressività aggiunge un secondo passo avanti (gated). Ferite: fronte, fronte-sx, diagonale anello2 fronte-sx. Split [5] (libero): passo indietro 1. Verificata su sailor_15.webp."
+   ]
   },
- "289": {
-   "name": "AVANZATA IN DUELLO",
-   "type": "meditation",
+  "effects": [
+   {
+    "do": "draw",
+    "n": 2,
+    "kamae": "determination"
+   },
+   {
+    "do": "change_kamae",
+    "n": 1
+   }
+  ],
+  "note": "Rotazione 1 POI passo avanti O indietro 2, obbligatorio. Effetti gated (nessun OPPURE): Determinazione PESCA FINO A 2; Equilibrio CAMBIA KAMAE FINO A 1 RAMO. Verificata su sailor_16.webp. Icona ventaglio nero su banda verde Equilibrio: effetto gated non identificato (probabile ottieni/pesca), DA VERIFICARE. [Audit scansioni 2026-07]"
+ },
+ "290": {
+  "name": "GUARDIA DEL BUE",
+  "type": "defence",
+  "move": {
+   "opts": [
+    {
+     "atoms": [
+      {
+       "t": "rot",
+       "n": 1,
+       "kamae": "balance",
+       "opt": true
+      }
+     ]
+    },
+    {
+     "atoms": [
+      {
+       "t": "rot",
+       "n": 1,
+       "kamae": "determination",
+       "opt": true
+      }
+     ]
+    }
+   ]
+  },
+  "defence": {
+   "cells": [
+    {
+     "d": 0,
+     "k": 1,
+     "v": 1
+    }
+   ]
+  },
+  "effects": [
+   {
+    "do": "focus",
+    "n": 1,
+    "when": "on_hit"
+   }
+  ],
+  "split": {
+   "initiative": 4,
    "move": {
     "opts": [
      {
       "atoms": [
-       {
-        "t": "rot",
-        "n": 1
-       },
        {
         "t": "step",
         "dirs": [
          0,
          3
         ],
-        "n": 2
-       }
-      ]
-     }
-    ]
-   },
-   "effects": [
-    {
-     "do": "draw",
-     "n": 2,
-     "kamae": "determination"
-    },
-    {
-     "do": "change_kamae",
-     "n": 1,
-     "kamae": "balance"
-    }
-   ],
-   "note": "Rotazione 1 POI passo avanti O indietro 2, obbligatorio. Effetti gated (nessun OPPURE): Determinazione PESCA FINO A 2; Equilibrio CAMBIA KAMAE FINO A 1 RAMO. Verificata su sailor_16.webp."
-  },
- "290": {
-   "name": "GUARDIA DEL BUE",
-   "type": "defence",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "rot",
         "n": 1,
-        "kamae": "balance"
-       }
-      ]
-     },
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 1,
-        "kamae": "determination"
+        "opt": true
        }
       ]
      }
     ]
-   },
-   "defence": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "v": 1
-     }
-    ]
-   },
-   "effects": [
-    {
-     "do": "focus",
-     "n": 1,
-     "when": "on_hit"
-    }
-   ],
-   "split": {
-    "initiative": 4,
-    "move": {
-     "opts": [
-      {
-       "atoms": [
-        {
-         "t": "step",
-         "dirs": [
-          0,
-          3
-         ],
-         "n": 1
-        }
-       ]
-      }
-     ]
-    }
-   },
-   "note": "Iniziativa 7-5 (già in card_pool). Rotazione 1 gated Equilibrio O Determinazione (banda bicolore). Scudo singolo fronte. SE RIUSCITO: OTTIENI 1 focus. Split [4] (libero): passo avanti O indietro 1. Verificata su sailor_17.webp."
+   }
   },
+  "note": "Iniziativa 7-5 (già in card_pool). Rotazione 1 gated Equilibrio O Determinazione (banda bicolore). Scudo singolo fronte. SE RIUSCITO: OTTIENI 1 focus. Split [4] (libero): passo avanti O indietro 1. Verificata su sailor_17.webp."
+ },
  "294": {
    "name": "CARTA SPECIALE ONNA-BUGEISHA",
    "type": "core",
