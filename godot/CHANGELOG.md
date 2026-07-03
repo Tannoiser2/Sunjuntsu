@@ -3,6 +3,39 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.88.0] — 2026-07-03
+### Audit completo di tutte le 281 carte contro le scansioni originali
+Dopo i 4 fix di playtest (v0.87.0) è stato eseguito un riaudit sistematico di
+tutti i 18 mazzi (personaggi + carte comuni) confrontando ogni singola carta
+con la scansione ad alta risoluzione del fisico, con particolare attenzione ai
+movimenti (direzioni sbagliate, esagoni mancanti nei diagrammi, opzionalità
+non modellata). Punti principali:
+
+- **Grammatica dei glifi di movimento ricalibrata** sul regolamento ufficiale
+  (p.15 "Effetti di Movimento"): frecce NERE piene = movimento obbligatorio,
+  frecce BIANCHE a contorno = facoltativo. Questa distinzione non era mai
+  stata modellata: ~90 atomi di movimento su tutti i mazzi avevano `opt`
+  mancante o invertito rispetto al colore stampato sulla carta.
+- **Tridente "a manico"** (2 punte laterali + manico opposto senza punta) vs
+  **glifo misto** (2 punte diagonali + 1 punta centrale nella direzione
+  opposta, tutte e 3 valide): due glifi visivamente simili ma semanticamente
+  diversi, individuati e distinti su ~10 carte (#27, #32, #33, #67, #69, #72,
+  #75, #126, #219 e gemelle) dopo un primo errore di trascrizione corretto in
+  corsa.
+- **4 diagrammi d'attacco/difesa del Ninja** (#164, #168, #171, #173) erano
+  un anello troppo vicino al combattente rispetto allo stampato: corretti
+  sull'anello 2/3 giusto.
+- **9 `kamae_req` fantasma sull'Assassino** (#220–230): l'icona TIPO carta in
+  colonna sinistra (fiamma=attacco, montagne=difesa) era stata scambiata per
+  un requisito Kamae; rimossi tutti.
+- Altri fix puntuali: campo `counter` mancante su #17, `alt_initiative` al
+  posto di soglie iniziativa errate su #166/#169, gate di riga OR
+  Kamae/Kamae su #351/#358/#359 dello Yasuke, Kamae Distanza mancante su
+  #276 del Navigatore, dozzine di `focus_cost` mancanti sulle righe a banda
+  viola, e vari `foe_stun`/`hobble` scambiati.
+- Circa 15 note "DA VERIFICARE" restano aperte per glifi/icone non
+  identificati con certezza (documentate carta per carta nel campo `note`).
+
 ## [0.87.0] — 2026-07-03
 ### Fix dal playtest: movimenti carta errati e rotazione "fino a N" definitiva
 - **#138 Taglio di Tanto**: il passo era trascritto come diagonali FRONTALI
