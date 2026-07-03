@@ -619,11 +619,11 @@
         {
          "t": "step",
          "n": 1,
-         "opt": false,
+         "opt": true,
          "dirs": [
-          0,
-          1,
-          5
+          2,
+          3,
+          4
          ],
          "kamae": "determination"
         },
@@ -2466,43 +2466,43 @@
    "name": "BLOCCO D'EMERGENZA",
    "type": "defence",
    "move": {
-	"opts": [
-	 {
-	  "atoms": [
-	   {
-		"t": "rot",
-		"n": 1,
-		"opt": false,
-		"kamae": "balance"
-	   }
-	  ]
-	 },
-	 {
-	  "atoms": [
-	   {
-		"t": "rot",
-		"n": 2,
-		"opt": false,
-		"kamae": "determination"
-	   }
-	  ]
-	 }
-	]
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": true,
+        "kamae": "balance"
+       }
+      ]
+     },
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 2,
+        "opt": true,
+        "kamae": "determination"
+       }
+      ]
+     }
+    ]
    },
    "defence": {
-	"cells": [
-	 {
-	  "d": 0,
-	  "k": 1,
-	  "v": 1
-	 }
-	]
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "v": 1
+     }
+    ]
    },
    "effects": [
-	{
-	 "do": "switch_kamae",
-	 "to": "neutral"
-	}
+    {
+     "do": "switch_kamae",
+     "to": "neutral"
+    }
    ],
    "note": "Audit hi-res: ↻1 in Equilibrio (cerchio verde), ↻2 in Determinazione (4 quadretti) — non focus. PASSA A Neutrale (⛩)."
   },
@@ -2702,7 +2702,7 @@
          "t": "step",
          "dir": 0,
          "n": 1,
-         "opt": false
+         "opt": true
         }
        ]
       },
@@ -2711,7 +2711,7 @@
         {
          "t": "step",
          "n": 1,
-         "opt": false,
+         "opt": true,
          "kamae": "balance",
          "dir": -1
         }
@@ -2757,12 +2757,12 @@
          5
         ],
         "n": 1,
-        "opt": false
+        "opt": true
        },
        {
         "t": "rot",
         "n": 1,
-        "opt": false,
+        "opt": true,
         "kamae": "balance"
        }
       ]
@@ -2803,33 +2803,33 @@
    "name": "SPINTA INDIETRO",
    "type": "attack",
    "move": {
-	"opts": [
-	 {
-	  "atoms": [
-	   {
-		"t": "rot",
-		"n": 1,
-		"opt": false
-	   }
-	  ]
-	 }
-	]
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": true
+       }
+      ]
+     }
+    ]
    },
    "attack": {
-	"cells": [
-	 {
-	  "d": 0,
-	  "k": 1,
-	  "w": 0
-	 }
-	]
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 0
+     }
+    ]
    },
    "effects": [
-	{
-	 "do": "push",
-	 "n": 2,
-	 "when": "on_hit"
-	}
+    {
+     "do": "push",
+     "n": 2,
+     "when": "on_hit"
+    }
    ]
   },
   "901": {
