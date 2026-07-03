@@ -3,6 +3,27 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.87.0] — 2026-07-03
+### Fix dal playtest: movimenti carta errati e rotazione "fino a N" definitiva
+- **#138 Taglio di Tanto**: il passo era trascritto come diagonali FRONTALI
+  (dir 1/5); l'icona sulla carta è un bidente verso il BASSO → diagonali
+  POSTERIORI (dir 2/4).
+- **#117 Mente Addestrata**: stesso errore in entrambe le opzioni di
+  movimento (tridente frontale 0/1/5 → bidente basso 2/4, passo di 2).
+- **#226 Balzo nell'Ombra**: rimosso il `kamae_req: determination` fantasma —
+  sul corpo della carta non c'è nessuna banda Kamae (la banda gialla
+  Determinazione riguarda solo la riga di movimento bonus, già modellata
+  come gate sull'atomo). La carta è giocabile in qualsiasi Kamae.
+- **Rotazione, rifatta**: la finestra dei facing legali è ora ANCORATA al
+  facing che la pedina aveva all'inizio della risoluzione della carta
+  (`_move_origin_facing`): prima veniva ricalcolata dal facing corrente a
+  ogni pressione, così la finestra "scorreva" e la pedina poteva girare di
+  360°. Un tocco di Q/E = ESATTAMENTE un lato (niente scansione con wrap);
+  il tocco è permesso solo se il facing risultante è tra quelli concessi
+  dalla carta o è il ritorno al facing di partenza. Rot 1 = max 1 lato a
+  destra O sinistra, rot 2 = max 2, mai oltre. Stesso limite applicato al
+  percorso legacy `rotates`.
+
 ## [0.86.0] — 2026-07-03
 ### Contratti dello Yojimbo (carta-regola "Sicario a Contratto" dal PDF) — catalogo meccaniche COMPLETO
 - **Sottosistema Contratti** (§3.11, ultima meccanica del catalogo): i 6

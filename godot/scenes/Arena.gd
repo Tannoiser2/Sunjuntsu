@@ -37,6 +37,12 @@ var _attack_preview: Array[Vector2i] = []
 var _selected_card: Dictionary = {}
 var _move_used: bool = false       ## movimento della carta corrente già speso
 var _move_states: Dictionary = {}  ## cella -> Array[int] facing legali (dalla carta)
+## Àncora della rotazione "fino a N": facing che il combattente aveva ALL'INIZIO
+## della risoluzione della carta. I facing legali vanno calcolati da qui, non dal
+## facing corrente, altrimenti ogni pressione di Q/E fa scorrere la finestra e la
+## pedina può ruotare di 360°. -1 = nessuna àncora attiva.
+var _move_origin_facing: int = -1
+var _move_origin_key: String = ""  ## carta a cui è ancorata (id#nome)
 var _kamae_used: bool = false      ## cambio kamae della carta corrente già fatto
 var _ground: MeshInstance3D
 
@@ -294,6 +300,7 @@ func _drive_resolution(i: int) -> void:
 		_kamae_used = false
 		_selected_card = CardDB.card(state.fighters[i].planned).duplicate()
 		_selected_card["id"] = state.fighters[i].planned
+		_anchor_move_origin()
 		_setup_kamae_for(i)
 		_hud.hide_kamae()
 		_hud.hide_options()
@@ -408,6 +415,7 @@ func _enter_split_stage() -> void:
 	var sp_ini := _duel.pending_split_initiative()
 	var main_card_name: String = str(CardDB.card(state.fighters[_resolving_index].planned).get("name", "?"))
 	_selected_card = {"id": -1, "type": "attack", "name": "Parte bassa", "geom_override": g}
+	_anchor_move_origin()
 	_refresh_overlays()
 	_hud.show_confirm("Conferma parte bassa ▶")
 	_hud.show_phase("⚡ Iniziativa %d  ·  %s  ·  %s  (PARTE BASSA)" % [
@@ -720,7 +728,13 @@ func _draw_overlays_for(card: Dictionary, move_used: bool) -> void:
 	if not move_used:
 		_move_states = {}
 		if g.has("move"):
-			_move_states = Move.reachable_by_cell(f.cell, f.facing, g["move"], state.is_blocked, Domain.STANCE_SLUG[f.stance], f.gate_states())
+			# Parti dal facing ANCORATO all'inizio della risoluzione, non da
+			# quello corrente: dopo una rotazione Q/E il set legale non deve
+			# scorrere (rot N = fino a N lati dal facing di partenza).
+			var start_facing := f.facing
+			if _phase_mode == "resolving" and _move_origin_facing >= 0 and _move_origin_key == _origin_key_for(card):
+				start_facing = _move_origin_facing
+			_move_states = Move.reachable_by_cell(f.cell, start_facing, g["move"], state.is_blocked, Domain.STANCE_SLUG[f.stance], f.gate_states())
 			for cell in _move_states.keys():
 				if cell != f.cell:
 					move_cells.append(cell)
@@ -989,27 +1003,49 @@ func _rotate_player(delta: int) -> void:
 	var g: Dictionary = _selected_card.get("geom_override", CardDB.geometry(int(_selected_card.get("id", -1))))
 	var facings: Array = (_move_states.get(f.cell, []) as Array)
 	if facings.is_empty() or (facings.size() == 1 and facings.has(f.facing)):
-		# Rotazione libera legacy (carte senza spec move ma con 'rotates').
+		# Rotazione legacy (carte senza spec move ma con 'rotates'): anche qui
+		# vale "fino a N lati dal facing di partenza", misurato dall'àncora.
 		if not g.has("move") and int(g.get("rotates", 0)) > 0:
-			f.facing = (f.facing + delta + 6) % 6
+			var lim: int = int(g.get("rotates", 0))
+			var c := (f.facing + delta + 6) % 6
+			var org: int = _move_origin_facing if _move_origin_facing >= 0 else f.facing
+			var dist: int = mini((c - org + 6) % 6, (org - c + 6) % 6)
+			if dist > lim:
+				_hud.set_hint("Limite di rotazione raggiunto: questa carta permette al massimo %d lati" % lim)
+				return
+			f.facing = c
 			_apply_pawn_facing(idx_f)
 			_refresh_overlays()
 			return
 		# Nessuna rotazione disponibile: spiega perché.
 		_hud.set_hint("Rotazione non disponibile con questa carta" + _rotation_gate_hint(g))
 		return
-	# Un tocco = UN lato nella direzione scelta, fino al primo facing legale
-	# (il set legale arriva dal motore, che include già tutti gli scatti
-	# intermedi "fino a N": si salta un lato solo se la carta lo vieta).
-	# Il vecchio ciclo sull'elenco ORDINATO faceva saltare la pedina di più
-	# lati per volta (es. legali [3,5]: da 3 balzava a 5 anche verso sinistra).
-	for k in range(1, 7):
-		var cand := (f.facing + delta * k + 12) % 6
-		if facings.has(cand):
-			f.facing = cand
-			break
+	# Un tocco = ESATTAMENTE UN lato nella direzione scelta, mai di più.
+	# Il facing risultante deve essere tra quelli legali della carta (calcolati
+	# dal facing di PARTENZA dell'attivazione, vedi _move_origin_facing) oppure
+	# il ritorno al facing di partenza stesso. Niente scansione con wrap: se il
+	# lato successivo non è concesso, la pedina resta ferma (rot 1 = max 1 lato
+	# a destra O a sinistra, rot 2 = max 2 lati, ecc.).
+	var cand := (f.facing + delta + 6) % 6
+	if not (facings.has(cand) or cand == _move_origin_facing):
+		_hud.set_hint("Limite di rotazione raggiunto: questa carta non permette di girare oltre")
+		return
+	f.facing = cand
 	_apply_pawn_facing(idx_f)
 	_refresh_overlays()
+
+
+## Chiave identificativa della carta per l'àncora di rotazione.
+func _origin_key_for(card: Dictionary) -> String:
+	return "%d#%s" % [int(card.get("id", -1)), str(card.get("name", ""))]
+
+
+## Fissa l'àncora di rotazione: il facing attuale del combattente attivo diventa
+## il punto di partenza da cui la carta selezionata misura "ruota fino a N lati".
+## Da chiamare quando INIZIA la risoluzione di una carta (o della parte bassa).
+func _anchor_move_origin() -> void:
+	_move_origin_key = _origin_key_for(_selected_card)
+	_move_origin_facing = state.fighters[_active()].facing
 
 
 ## Quali Kamae sbloccherebbero la rotazione della carta selezionata (per il suggerimento).
