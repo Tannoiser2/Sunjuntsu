@@ -2555,50 +2555,50 @@
    "name": "MENTE RISOLUTA",
    "type": "meditation",
    "move": {
-	"opts": [
-	 {
-	  "atoms": [
-	   {
-		"t": "step",
-		"n": 2,
-		"opt": false,
-		"dir": -1
-	   },
-	   {
-		"t": "rot",
-		"n": 2,
-		"opt": false
-	   }
-	  ]
-	 },
-	 {
-	  "atoms": [
-	   {
-		"t": "rot",
-		"n": 1,
-		"opt": false,
-		"kamae": "determination"
-	   }
-	  ]
-	 }
-	]
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "n": 2,
+        "opt": true,
+        "dir": -1
+       },
+       {
+        "t": "rot",
+        "n": 2,
+        "opt": true
+       }
+      ]
+     },
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": true,
+        "kamae": "determination"
+       }
+      ]
+     }
+    ]
    },
    "effects": [
-	{
-	 "do": "change_kamae",
-	 "n": 1
-	},
-	{
-	 "do": "draw",
-	 "n": 2,
-	 "alt": "a"
-	},
-	{
-	 "do": "draw",
-	 "n": 3,
-	 "kamae": "balance",
-	 "alt": "b"
-	}
+    {
+     "do": "change_kamae",
+     "n": 1
+    },
+    {
+     "do": "draw",
+     "n": 2,
+     "alt": "a"
+    },
+    {
+     "do": "draw",
+     "n": 3,
+     "kamae": "balance",
+     "alt": "b"
+    }
    ],
    "note": "Audit hi-res: movimento ❄2 ↻2 (❄=àncora); barra arancio ↻1 in Determinazione. Pesca 3 carte = barra verde in Equilibrio (cerchio), non Determinazione."
   },
@@ -3268,7 +3268,8 @@
    "effects": [
     {
      "do": "switch_kamae",
-     "to": "any"
+     "to": "any",
+     "focus_cost": 1
     },
     {
      "do": "search_draw",
@@ -3287,7 +3288,7 @@
        {
         "t": "step",
         "n": 1,
-        "opt": true,
+        "opt": false,
         "dir": 1
        },
        {
@@ -3302,7 +3303,7 @@
        {
         "t": "step",
         "n": 1,
-        "opt": true,
+        "opt": false,
         "dir": 5
        },
        {
@@ -3330,7 +3331,7 @@
      "when": "on_hit"
     }
    ],
-   "note": "Passo diagonale frontale (dir 1 O 5) + ⟳1. Ferita fronte-dx (d1). SE RIUSCITO: passa a una qualsiasi Kamae (barra verde). Seconda barra viola SE RIUSCITO (loto+elmo+teschio) DA VERIFICARE (probabile ferita/effetto letale pagando 1 focus). Verificata su master_25.webp."
+   "note": "Passo diagonale frontale (dir 1 O 5) + ⟳1. Ferita fronte-dx (d1). SE RIUSCITO: passa a una qualsiasi Kamae (barra verde). Seconda barra viola SE RIUSCITO (loto+elmo+teschio) DA VERIFICARE (probabile ferita/effetto letale pagando 1 focus). Verificata su master_25.webp. SE RIUSCITO su banda viola (1 focus): icone elmo+TESCHIO, non modellato, DA VERIFICARE. [Audit scansioni 2026-07]"
   },
   "11": {
    "name": "ECO DELLA LAMA",
@@ -3479,10 +3480,11 @@
        {
         "t": "step",
         "n": 1,
-        "opt": false,
+        "opt": true,
         "dirs": [
-         0,
-         3
+         2,
+         3,
+         4
         ],
         "kamae": "aggression"
        },
@@ -3514,7 +3516,7 @@
      "to": "any"
     }
    ],
-   "note": "Sostituzione istantanea. Ferita ALLE SPALLE (d3 — coerente col nome). PASSA A UNA QUALSIASI KAMAE. Movimento gated: freccia 4 punte in Aggressività (direzioni esatte DA VERIFICARE), ⟳1 in Equilibrio/Determinazione. Barra viola SE RIUSCITO (loto+elmo+rotazione) DA VERIFICARE (probabile rotate_target con focus). Verificata su master_04.webp."
+   "note": "Sostituzione istantanea. Ferita ALLE SPALLE (d3 — coerente col nome). PASSA A UNA QUALSIASI KAMAE. Movimento gated: freccia 4 punte in Aggressività (direzioni esatte DA VERIFICARE), ⟳1 in Equilibrio/Determinazione. Barra viola SE RIUSCITO (loto+elmo+rotazione) DA VERIFICARE (probabile rotate_target con focus). Verificata su master_04.webp. SE RIUSCITO su banda viola (1 focus): icone elmo+rotazione+zigzag (probabile ruota e stordisci l'avversario), non modellato, DA VERIFICARE. [Audit scansioni 2026-07]"
   },
   "16": {
    "name": "SESTO SENSO",
@@ -3526,7 +3528,7 @@
        {
         "t": "rot",
         "n": 3,
-        "opt": true
+        "opt": false
        }
       ]
      }
@@ -3574,14 +3576,39 @@
    "effects": [
     {
      "do": "draw",
-     "n": 2
+     "n": 2,
+     "focus_cost": 1
     },
     {
      "do": "foe_draw",
-     "n": 2
+     "n": 2,
+     "focus_cost": 1
     }
    ],
-   "note": "Aggiunta istantanea. GIOCA SE IL BLOCCO È RIUSCITO. TUTTI i giocatori pescano 2 (draw + foe_draw; barra viola = probabile costo 1 focus, DA VERIFICARE). Bande kamae→iniziativa non modellate: GIALLA scudi 9/8, VERDE 7/6, ROSSA 5/4. Verificata su master_05.webp."
+   "note": "Aggiunta istantanea. GIOCA SE IL BLOCCO È RIUSCITO. TUTTI i giocatori pescano 2 (draw + foe_draw; barra viola = probabile costo 1 focus, DA VERIFICARE). Bande kamae→iniziativa non modellate: GIALLA scudi 9/8, VERDE 7/6, ROSSA 5/4. Verificata su master_05.webp.",
+   "counter": [
+    {
+     "on": [
+      9,
+      8
+     ],
+     "kamae": "determination"
+    },
+    {
+     "on": [
+      7,
+      6
+     ],
+     "kamae": "balance"
+    },
+    {
+     "on": [
+      5,
+      4
+     ],
+     "kamae": "aggression"
+    }
+   ]
   },
   "18": {
    "name": "COLPO INDOLENTE",
@@ -3593,12 +3620,13 @@
        {
         "t": "step",
         "n": 1,
-        "opt": true,
+        "opt": false,
         "dirs": [
          2,
          3,
          4
-        ]
+        ],
+        "focus_cost": 1
        }
       ]
      }
@@ -3654,20 +3682,20 @@
        {
         "t": "step",
         "n": 1,
-        "opt": true,
+        "opt": false,
         "dir": -1,
         "kamae": "balance"
        },
        {
         "t": "rot",
         "n": 1,
-        "opt": true,
+        "opt": false,
         "kamae": "determination"
        },
        {
         "t": "rot",
         "n": 1,
-        "opt": true,
+        "opt": false,
         "kamae": "aggression"
        }
       ]
@@ -3728,7 +3756,7 @@
        {
         "t": "step",
         "n": 1,
-        "opt": true,
+        "opt": false,
         "dirs": [
          1,
          5
@@ -4623,7 +4651,7 @@
        {
         "t": "step",
         "n": 1,
-        "opt": false,
+        "opt": true,
         "dirs": [
          0,
          1,
@@ -4637,7 +4665,7 @@
        {
         "t": "rot",
         "n": 2,
-        "opt": false,
+        "opt": true,
         "focus_cost": 1
        }
       ]
@@ -5326,7 +5354,7 @@
        {
         "t": "rot",
         "n": 1,
-        "opt": false,
+        "opt": true,
         "kamae": "balance"
        }
       ]
@@ -6087,7 +6115,7 @@
        {
         "t": "rot",
         "n": 1,
-        "opt": false,
+        "opt": true,
         "kamae": "balance"
        }
       ]
@@ -6344,7 +6372,7 @@
        {
         "t": "rot",
         "n": 1,
-        "opt": false
+        "opt": true
        }
       ]
      }
@@ -6667,7 +6695,7 @@
    },
    "effects": [
     {
-     "do": "foe_stun",
+     "do": "rotate_target",
      "n": 1,
      "when": "on_hit",
      "kamae": "aggression"
@@ -6706,7 +6734,8 @@
       "atoms": [
        {
         "t": "rot",
-        "n": 1
+        "n": 1,
+        "opt": true
        }
       ]
      }
@@ -6748,7 +6777,8 @@
         },
         {
          "t": "rot",
-         "n": 1
+         "n": 1,
+         "opt": true
         }
        ]
       }
