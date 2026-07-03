@@ -832,7 +832,7 @@
        {
         "t": "rot",
         "n": 1,
-        "opt": false
+        "opt": true
        },
        {
         "t": "step",
@@ -5492,7 +5492,7 @@
        {
         "t": "step",
         "n": 1,
-        "opt": false,
+        "opt": true,
         "dirs": [
          0,
          1,
@@ -5509,23 +5509,23 @@
    "name": "ISPIRAZIONE DIVINA",
    "type": "meditation",
    "move": {
-	"opts": [
-	 {
-	  "atoms": [
-	   {
-		"t": "step",
-		"n": 1,
-		"opt": false,
-		"dir": -1
-	   },
-	   {
-		"t": "rot",
-		"n": 1,
-		"opt": false
-	   }
-	  ]
-	 }
-	]
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "n": 1,
+        "opt": true,
+        "dir": -1
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": true
+       }
+      ]
+     }
+    ]
    },
    "note": "Meditazione, Aggiunta Istantanea. Init = , focus 3. 'GIOCA PRIMA DI RISOLVERE LA TUA CARTA ABILITA ATTIVA / RISOLVI PRIMA QUESTA CARTA'. Mostra ❄1 ↻1. Arco/atomi DA VERIFICARE."
   },
@@ -5539,7 +5539,7 @@
        {
         "t": "rot",
         "n": 1,
-        "opt": false
+        "opt": true
        }
       ]
      }
@@ -5598,13 +5598,13 @@
        {
         "t": "step",
         "n": 1,
-        "opt": false,
+        "opt": true,
         "dir": -1
        },
        {
         "t": "rot",
         "n": 1,
-        "opt": false
+        "opt": true
        }
       ]
      }
@@ -5799,7 +5799,7 @@
        {
         "t": "step",
         "n": 1,
-        "opt": false,
+        "opt": true,
         "dirs": [
          0,
          1,
@@ -5809,7 +5809,7 @@
        {
         "t": "rot",
         "n": 1,
-        "opt": false
+        "opt": true
        }
       ]
      }
@@ -5827,14 +5827,14 @@
        {
         "t": "step",
         "n": 2,
-        "opt": false,
+        "opt": true,
         "dir": -1,
         "focus_cost": 1
        },
        {
         "t": "rot",
         "n": 1,
-        "opt": false,
+        "opt": true,
         "focus_cost": 1
        }
       ]
@@ -5937,7 +5937,7 @@
        {
         "t": "step",
         "n": 1,
-        "opt": false,
+        "opt": true,
         "dir": -1
        }
       ]
@@ -6029,7 +6029,7 @@
        {
         "t": "step",
         "n": 2,
-        "opt": false,
+        "opt": true,
         "dir": 0,
         "kamae": "aggression"
        }
@@ -6040,7 +6040,7 @@
        {
         "t": "step",
         "n": 1,
-        "opt": false,
+        "opt": true,
         "dirs": [
          1,
          5
@@ -6054,7 +6054,7 @@
        {
         "t": "rot",
         "n": 2,
-        "opt": false,
+        "opt": true,
         "kamae": "balance"
        }
       ]
@@ -6201,7 +6201,7 @@
         {
          "t": "rot",
          "n": 1,
-         "opt": false
+         "opt": true
         }
        ]
       }
@@ -6404,7 +6404,7 @@
        {
         "t": "rot",
         "n": 1,
-        "opt": false,
+        "opt": true,
         "kamae": "balance"
        }
       ]
@@ -6471,7 +6471,7 @@
        {
         "t": "rot",
         "n": 1,
-        "opt": false,
+        "opt": true,
         "kamae": "aggression"
        }
       ]
@@ -6515,7 +6515,7 @@
        {
         "t": "step",
         "n": 1,
-        "opt": false,
+        "opt": true,
         "dir": -1
        }
       ]
@@ -6525,14 +6525,14 @@
        {
         "t": "step",
         "n": 1,
-        "opt": false,
+        "opt": true,
         "dir": -1,
         "kamae": "determination"
        },
        {
         "t": "rot",
         "n": 1,
-        "opt": false,
+        "opt": true,
         "kamae": "determination"
        }
       ]
@@ -6574,7 +6574,7 @@
        {
         "t": "step",
         "n": 1,
-        "opt": false,
+        "opt": true,
         "dir": -1,
         "kamae": "balance"
        }
