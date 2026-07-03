@@ -4380,8 +4380,8 @@
         "n": 1,
         "opt": false,
         "dirs": [
-         1,
-         5
+         2,
+         4
         ]
        },
        {
@@ -4408,7 +4408,7 @@
      "do": "discard_self"
     }
    ],
-   "note": "SCARTA 1 CARTA. Passo diagonale frontale a scelta (dir 1 O 5) + ⟳1 su barra viola (1 focus). 1 ferita sul fronte (laterali vuote). Verificata su altre_carte_01.webp."
+   "note": "SCARTA 1 CARTA. Bidente BASSO: passo diagonale POSTERIORE a scelta (dir 2 O 4) + ⟳1 su barra viola (1 focus). 1 ferita sul fronte (laterali vuote). Icona freccia verso il basso confermata dal playtest 2026-07. Verificata su altre_carte_01.webp."
   },
   "136": {
    "name": "SQUARCIO DI KATANA",
@@ -6254,9 +6254,8 @@
         "n": 2,
         "opt": false,
         "dirs": [
-         0,
-         1,
-         5
+         2,
+         4
         ]
        },
        {
@@ -6273,9 +6272,8 @@
         "n": 2,
         "opt": false,
         "dirs": [
-         0,
-         1,
-         5
+         2,
+         4
         ],
         "kamae": "balance"
        },
@@ -6305,7 +6303,7 @@
      "kamae": "determination"
     }
    ],
-   "note": "Movimento: passo frontale a 3 punte di 2 POI ⟳1; OPPURE (Equilibrio) lo stesso passo 2 POI ⟳3. CAMBIA KAMAE FINO A 2 RAMI OPPURE CERCA+PRENDI 1 (carta scura O chiara). GUARDA LA MANO dell'avversario in Determinazione (foe_reveal_hand). Verificata su altre_carte_2_29.webp."
+   "note": "Movimento: bidente BASSO (diagonali posteriori, dir 2 O 4) di 2 POI ⟳1; OPPURE (Equilibrio) lo stesso passo 2 POI ⟳3. CAMBIA KAMAE FINO A 2 RAMI OPPURE CERCA+PRENDI 1 (carta scura O chiara). GUARDA LA MANO dell'avversario in Determinazione (foe_reveal_hand). Icona freccia verso il basso confermata dal playtest 2026-07. Verificata su altre_carte_2_29.webp."
   },
   "120": {
    "name": "BLOCCO DI VENTO",
@@ -7795,75 +7793,74 @@
    "note": "Aggiunta Istantanea: GIOCA SE L'ATTACCO È RIUSCITO condiziona l'intera carta. L'avversario scarta dalla CIMA del mazzo (mill) un numero pari a ferite+sanguinanti attuali +1 — nessun verbo dedicato (roadmap §3.16), approssimato con foe_discard senza 'n' fisso, DA VERIFICARE. ENTRA IN stato Occultato → state_set. Verificata su assassin_11.webp."
   },
  "226": {
-   "name": "BALZO NELL'OMBRA",
-   "type": "defence",
-   "kamae_req": "determination",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dirs": [
-         0,
-         1,
-         5
-        ],
-        "n": 1
-       }
-      ]
-     },
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 2,
-        "kamae": "balance"
-       }
-      ]
-     },
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dirs": [
-         0,
-         1,
-         5
-        ],
-        "n": 1,
-        "kamae": "determination"
-       }
-      ]
-     }
-    ]
-   },
-   "defence": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "v": 0
-     }
-    ]
-   },
-   "effects": [
+  "name": "BALZO NELL'OMBRA",
+  "type": "defence",
+  "move": {
+   "opts": [
     {
-     "do": "swap_positions"
+     "atoms": [
+      {
+       "t": "step",
+       "dirs": [
+        0,
+        1,
+        5
+       ],
+       "n": 1
+      }
+     ]
     },
     {
-     "do": "push",
-     "n": 1,
-     "when": "on_hit"
+     "atoms": [
+      {
+       "t": "rot",
+       "n": 2,
+       "kamae": "balance"
+      }
+     ]
     },
     {
-     "do": "state_set",
-     "state": "occultato",
-     "n": 1
+     "atoms": [
+      {
+       "t": "step",
+       "dirs": [
+        0,
+        1,
+        5
+       ],
+       "n": 1,
+       "kamae": "determination"
+      }
+     ]
     }
-   ],
-   "note": "Tridente alto (fronte/fronte-dx/fronte-sx) 1 in testa. Cella fronte con asterisco (v:0) collegata a '* SCAMBIA POSIZIONE CON [avversario]'. SE RIUSCITO: SPINGI 1 e due bonus di movimento gated (Equilibrio ↻2, Determinazione tridente alto 1) trascritti come opts aggiuntive per assenza di campo dedicato, DA VERIFICARE. ENTRA IN stato Occultato → state_set. Verificata su assassin_13.webp."
+   ]
   },
+  "defence": {
+   "cells": [
+    {
+     "d": 0,
+     "k": 1,
+     "v": 0
+    }
+   ]
+  },
+  "effects": [
+   {
+    "do": "swap_positions"
+   },
+   {
+    "do": "push",
+    "n": 1,
+    "when": "on_hit"
+   },
+   {
+    "do": "state_set",
+    "state": "occultato",
+    "n": 1
+   }
+  ],
+  "note": "Tridente alto (fronte/fronte-dx/fronte-sx) 1 in testa. Cella fronte con asterisco (v:0) collegata a '* SCAMBIA POSIZIONE CON [avversario]'. SE RIUSCITO: SPINGI 1 e due bonus di movimento gated (Equilibrio ↻2, Determinazione tridente alto 1) trascritti come opts aggiuntive per assenza di campo dedicato, DA VERIFICARE. ENTRA IN stato Occultato → state_set. NESSUN requisito Kamae sul corpo carta (nessuna banda): kamae_req rimosso dopo playtest 2026-07. Verificata su assassin_13.webp."
+ },
  "227": {
    "name": "COLPO DELLA VIPERA",
    "type": "attack",
