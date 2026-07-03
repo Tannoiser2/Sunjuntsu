@@ -441,11 +441,13 @@ func _on_turn_resolved(log: Array) -> void:
 	_refresh_status()
 	if not log.is_empty():
 		_hud.set_hint(String("\n").join(log).left(420) + "\n— Programma la prossima carta —")
+		_hud.log_line("[Round %d] %s" % [state.round_num, String("\n").join(log)])
 
 
 func _on_duel_over(winner: int) -> void:
 	var who := "Pareggio" if winner < 0 else "%s vince!" % state.fighters[winner].character
 	_hud.set_info("⚔ Duello terminato — %s" % who)
+	_hud.log_line("⚔ DUELLO TERMINATO — %s" % who)
 	_hud.show_hand([])
 	_clear_overlays()
 	_hud.hide_kamae()
