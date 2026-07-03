@@ -241,11 +241,20 @@ func plan_card(fighter_index: int, card_id: int, face: String = "") -> bool:
 ## alla posizione attuale del combattente e l'eventuale requisito di stato
 ## persistente (`state_req`, stessa forma del campo `state` dei gate — vedi
 ## Gate.gd) è soddisfatto dai suoi Fighter.states.
-static func playable(f: GameState.Fighter, card_id: int) -> bool:
+## `state` (opzionale): serve solo per la guardia RISPETTO (#93, sotto) — i
+## chiamanti che non lo passano si comportano come prima (nessuna virtù
+## Bushido applicata, es. anteprime senza un GameState a portata di mano).
+static func playable(f: GameState.Fighter, card_id: int, state: GameState = null) -> bool:
 	var g := CardDB.geometry(card_id)
 	if not Kamae.gate_allows(g.get("kamae_req", ""), Domain.STANCE_SLUG[f.stance]):
 		return false
-	return Gate.state_req_ok(g.get("state_req", null), f.gate_states())
+	if not Gate.state_req_ok(g.get("state_req", null), f.gate_states()):
+		return false
+	# RISPETTO (#93): finché attiva, non si può giocare una carta identica a
+	# una già a faccia in su nella PROPRIA pila degli scarti.
+	if state != null and card_id != 93 and f.discard.has(card_id) and _has_active_bushido(state, 93):
+		return false
+	return true
 
 
 ## Tipo effettivo della carta programmata di `i`: "defence" se è stata
@@ -528,6 +537,8 @@ func _continue_after_resolver() -> void:
 func instant_plays_for(i: int) -> Array:
 	var f := state.fighters[i]
 	if f.is_ai or bool(_instant_used.get(i, false)) or f.planned == -1 or is_core(f.planned):
+		return []
+	if _has_active_bushido(state, 91):   # ONESTA: nessuno può giocare carte come istantanee
 		return []
 	var out: Array = []
 	for cid in f.hand:
@@ -1391,7 +1402,9 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 				if foe != null and not _immune(foe, "foe_lose_focus"):
 					foe.focus = maxi(0, foe.focus - n_eff)
 			"foe_discard":
-				if foe != null and not _immune(foe, "foe_discard"):
+				# AUTOCONTROLLO (#95): finché attiva, nessuno può obbligare un
+				# altro giocatore a scartare carte.
+				if foe != null and not _immune(foe, "foe_discard") and not _has_active_bushido(state, 95):
 					for _d in range(maxi(1, n_eff)):
 						if foe.hand.is_empty():
 							break
@@ -1424,15 +1437,17 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 					f.discard.append(f.draw_pile.pop_back())
 			"foe_mill":
 				# L'avversario scarta dalla cima del mazzo (mill forzato, §3.16).
-				if foe != null:
+				# AUTOCONTROLLO (#95): stesso "obbligare a scartare" del foe_discard.
+				if foe != null and not _has_active_bushido(state, 95):
 					for _d in range(maxi(1, n_eff)):
 						if foe.draw_pile.is_empty():
 							break
 						foe.discard.append(foe.draw_pile.pop_back())
 			"foe_reveal_hand":
 				# Effetto informativo (roadmap §3.5): la UI mostrerà la mano;
-				# qui si registra solo l'evento.
-				if foe != null and not _immune(foe, "foe_reveal_hand"):
+				# qui si registra solo l'evento. AUTOCONTROLLO (#95): finché attiva,
+				# nessuno può guardare la mano di un altro giocatore.
+				if foe != null and not _immune(foe, "foe_reveal_hand") and not _has_active_bushido(state, 95):
 					log.append("%s guarda la mano di %s (%d carte)" % [f.character, foe.character, foe.hand.size()])
 			"foe_switch_kamae":
 				# Forza la Kamae dell'AVVERSARIO (roadmap §3.7). "any" non ha una
@@ -1655,6 +1670,36 @@ func _enter_play(i: int, cid: int) -> void:
 
 ## La carta `cid` lascia il gioco (scartata/scaduta): rovescia `in_play_state`
 ## e `limit_mod`, poi va negli scarti. True se la carta era davvero in gioco.
+## Le carte "virtù Bushido" (#85/#91/#93/#95) restano in gioco e impongono
+## restrizioni GLOBALI finché attive (a entrambi i giocatori, non solo a chi
+## le ha giocate) — vedi guardie in instant_plays_for/_apply_effects/playable.
+## Statica (prende `state` esplicito) così anche `playable()` — statica,
+## usata prima che esista sempre un'istanza di Duel — può richiamarla.
+static func _has_active_bushido(state: GameState, cid: int) -> bool:
+	for f in state.fighters:
+		if f.in_play.has(cid):
+			return true
+	return false
+
+
+## "ALLA FINE DEL TURNO QUALSIASI GIOCATORE PUÒ SPENDERE 2 FOCUS PER SCARTARE
+## QUESTA CARTA" (le 4 virtù Bushido): API per la scena, sullo stesso modello
+## di spend_completed_contract — azione manuale del giocatore, non automatica.
+## `payer_i` paga i 2 focus; la carta può appartenere a QUALSIASI combattente
+## (la virtù è di tavolo, non del proprietario) e viene rimossa dal gioco di
+## chi la possiede.
+func discard_bushido_for_focus(payer_i: int, cid: int) -> bool:
+	var payer := state.fighters[payer_i]
+	if payer.focus < 2:
+		return false
+	for owner_i in range(state.fighters.size()):
+		if state.fighters[owner_i].in_play.has(cid):
+			payer.focus -= 2
+			fighter_updated.emit(payer_i)
+			return remove_from_play(owner_i, cid)
+	return false
+
+
 func remove_from_play(i: int, cid: int) -> bool:
 	var f := state.fighters[i]
 	if not f.in_play.has(cid):

@@ -3,6 +3,35 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.93.0] — 2026-07-03
+### Virtù Bushido (#85 Coraggio, #91 Onestà, #93 Rispetto, #95 Autocontrollo): restrizioni globali finché in gioco
+- Le 4 carte Bushido restano `stays_in_play` ma non avevano mai un effetto
+  osservabile: il placeholder `spend_focus` immediato è stato rimosso da
+  tutte e 4 (era un costo d'ingresso non previsto dal regolamento) e
+  sostituito con vere restrizioni GLOBALI, valide per qualunque
+  combattente al tavolo mentre la carta è in gioco — non solo per chi
+  l'ha giocata:
+  - **Onestà (#91)**: `Duel.instant_plays_for` non offre mai Istantanee
+    Aggiuntive/Sostitutive a nessuno mentre è in gioco.
+  - **Rispetto (#93)**: `Duel.playable()` (nuovo parametro opzionale
+    `state`) rifiuta una carta già presente nella propria pila degli
+    scarti — interpretazione ragionevole, DA VERIFICARE contro il
+    regolamento fisico.
+  - **Autocontrollo (#95)**: i verbi `foe_discard`/`foe_mill`/
+    `foe_reveal_hand` non hanno più alcun effetto (rimosso anche un
+    erroneo `foe_discard` immediato annidato nella carta stessa, mai
+    previsto dal testo reale).
+  - **Coraggio (#85)**: la regola "scarto a faccia in su" resta
+    intenzionalmente non modellata — puramente visiva, nessun effetto
+    osservabile in questa interfaccia.
+- **Nuovo `Duel.discard_bushido_for_focus(payer_i, cid)`**: QUALSIASI
+  giocatore può pagare 2 focus per far uscire dal gioco una virtù (anche
+  quella altrui), stesso pattern API "chiamata diretta, nessuna UI" già
+  usato da `spend_completed_contract` — nessuna scena la richiama ancora.
+- Nuovo `tests/test_bushido_virtues.gd`: copre tutti e 3 i guard globali
+  (Onestà/Rispetto/Autocontrollo) e lo scarto a pagamento, successo e
+  fallimento per focus insufficiente.
+
 ## [0.92.0] — 2026-07-03
 ### Coppia alleata Ashigaru+Hachikō in Solitario (§3.24/§3.25): 1 umano vs 2 IA
 - **Nuova primitiva team/alleato**: `Fighter.team` (0 = umano, 1 = IA
