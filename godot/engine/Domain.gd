@@ -164,12 +164,20 @@ const CHAR_NAMES_IT := {
 	"Sailor": "Navigatore", "Wakou": "Wakou", "Yasuke": "Yasuke",
 }
 
+## Personaggi che in Solitario combattono SEMPRE in coppia (regolamento):
+## scegliendone uno come avversario, il Menu aggiunge automaticamente anche
+## il partner (§3.24/§3.25 — Ashigaru+Hachikō alleati contro l'umano).
+const PAIRED_WITH := {
+	"Ashigaru": "Hachiko", "Hachiko": "Ashigaru",
+}
+
 ## Modalità scelta dal menu: "solo" (vs IA) o "versus" (1v1 locale hot-seat).
 ## L'Arena la legge all'avvio per configurare le pedine e il flusso del turno.
 var game_mode: String = "solo"
 
-## Combattenti scelti nel menu ([P1, P2], chiavi personaggio). Vuoto = default
-## PLAYABLE (retro-compatibile con test e avvii diretti dell'Arena).
+## Combattenti scelti nel menu ([P1, P2] normale, o [P1, IA1, IA2] per la
+## coppia alleata Ashigaru+Hachikō). Vuoto = default PLAYABLE
+## (retro-compatibile con test e avvii diretti dell'Arena).
 var selected_chars: Array = []
 
 ## URL del relay WebSocket per il tavolo online (companion). In LAN punta al PC che

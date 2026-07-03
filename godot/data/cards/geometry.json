@@ -8730,9 +8730,67 @@
      "do": "change_ai_behaviour"
     }
    ],
-   "note": "Doppia faccia (§3.14). Direttive IA per Hachikō, prive di geometria classica. ATTACCO [7] 'Attacca': DEVE MUOVERSI VERSO l'avversario 2 poi 1, poi ⟳1 (atomo 'muovi verso', roadmap §3.24, non modellato). DIFESA [5] 'Al Piede': DEVE MUOVERSI VERSO L'ASHIGARU 1+1+1, poi ⟳1 (idem, più terzo pezzo §3.25). La faccia DIFESA è in face_defence (iniziativa/movimento/effetti propri); scelta in pianificazione via plan_card(..., \"defence\"), UI non ancora presente. Verificata su hachiko_12.webp.",
+   "note": "Doppia faccia (§3.14). Direttive IA per Hachikō, prive di geometria classica. ATTACCO [7] 'Attacca': DEVE MUOVERSI VERSO l'avversario 2 poi 1, poi ⟳1 — RISOLTO (§3.24): atomo move 'toward' (Move._apply_toward, passo greedy verso context.foe_cell). DIFESA [5] 'Al Piede': DEVE MUOVERSI VERSO L'ASHIGARU 1+1+1, poi ⟳1 — RISOLTO (§3.25): stesso atomo con target 'ally' (richiede GameState.team/ally_of, coppia Ashigaru+Hachikō alleata). La faccia DIFESA è in face_defence (iniziativa/movimento/effetti propri); scelta in pianificazione via plan_card(..., \"defence\"), UI non ancora presente. Verificata su hachiko_12.webp.",
    "face_defence": {
-    "initiative": 5
+    "initiative": 5,
+    "move": {
+     "opts": [
+      {
+       "ordered": true,
+       "atoms": [
+        {
+         "t": "toward",
+         "target": "ally",
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "toward",
+         "target": "ally",
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "toward",
+         "target": "ally",
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "move": {
+    "opts": [
+     {
+      "ordered": true,
+      "atoms": [
+       {
+        "t": "toward",
+        "target": "foe",
+        "n": 2,
+        "opt": false
+       },
+       {
+        "t": "toward",
+        "target": "foe",
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
    }
   },
   "252": {
@@ -8884,13 +8942,14 @@
      "when": "on_hit"
     }
    ],
-   "note": "Doppia faccia (§3.14). ATTACCO [7] 'Riporta la Preda': cella-àncora fronte (w:0); 'SE RIUSCITO: * 1 POI TIRA 1' — sequenza incerta, modellata come singolo pull n:1 on_hit, DA VERIFICARE. DIFESA [9] 'Bravo Cane': OTTIENI 1 focus SE ADIACENTE ALL'ASHIGARU — la condizione di adiacenza al terzo pezzo (§3.25) non è modellata: l'effetto focus è nella faccia difesa senza gate, DA VERIFICARE. La faccia DIFESA è in face_defence (iniziativa/movimento/effetti propri); scelta in pianificazione via plan_card(..., \"defence\"), UI non ancora presente. Verificata su hachiko_07.webp. SE RIUSCITO in realtà è: passo NERO dir 3 n1 (obbligatorio) POI TIRA 1 — il passo pre-pull non è modellato, DA VERIFICARE. Faccia difesa: OTTIENI 1 focus solo SE ADIACENTE all'Ashigaru (condizione non modellata). [Audit scansioni 2026-07]",
+   "note": "Doppia faccia (§3.14). ATTACCO [7] 'Riporta la Preda': cella-àncora fronte (w:0); 'SE RIUSCITO: * 1 POI TIRA 1' — sequenza incerta, modellata come singolo pull n:1 on_hit, DA VERIFICARE (indipendente dalla coppia Ashigaru+Hachikō). DIFESA [9] 'Bravo Cane': OTTIENI 1 focus SE ADIACENTE ALL'ASHIGARU — RISOLTO (§3.25): gate \"state\": \"adiacente_alleato\", calcolato fresco da Duel._apply_effects via GameState.ally_of + HexGrid.distance == 1. La faccia DIFESA è in face_defence (iniziativa/movimento/effetti propri); scelta in pianificazione via plan_card(..., \"defence\"), UI non ancora presente. Verificata su hachiko_07.webp. SE RIUSCITO in realtà è: passo NERO dir 3 n1 (obbligatorio) POI TIRA 1 — il passo pre-pull non è modellato, DA VERIFICARE. [Audit scansioni 2026-07]",
    "face_defence": {
     "initiative": 9,
     "effects": [
      {
       "do": "focus",
-      "n": 1
+      "n": 1,
+      "state": "adiacente_alleato"
      }
     ]
    }

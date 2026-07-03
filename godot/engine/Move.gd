@@ -9,6 +9,9 @@
 ##   • Anchor (❄): marcatore-àncora sulla Griglia di Posizione — NON muove la
 ##     pedina. Una carta Abilità può collegarlo a un asterisco (*) applicando
 ##     quegli effetti al personaggio colpito.
+##   • Toward (§3.24, direttive IA di Hachikō "muoviti verso l'alleato/
+##     l'avversario"): passo greedy di 1 esagono per volta verso la posizione
+##     nel `context` passato a reachable_states/by_cell — vedi _apply_toward.
 ##   • Più atomi sulla stessa riga: ordine/combinazione liberi (a meno di "then"
 ##     → ordered=true). Più righe "OPPURE" → opzioni alternative.
 ##
@@ -24,7 +27,11 @@ extends RefCounted
 ## `stance_slug` e `fighter_states` filtrano gli atomi gated (Gate.gd): un atomo
 ## con campo "kamae" e/o "state" si applica solo se la stance corrente e gli
 ## stati persistenti del combattente li soddisfano ("" / {} = nessun filtro).
-static func reachable_states(cell: Vector2i, facing: int, spec, is_blocked: Callable, stance_slug: String = "", fighter_states: Dictionary = {}) -> Array:
+## `context` (opzionale): posizioni di riferimento per l'atomo "toward" (§3.24,
+## carte Hachikō "muoviti verso l'alleato/l'avversario") — chiavi "foe_cell"/
+## "ally_cell" (Vector2i). Assente/vuoto = comportamento invariato per tutte
+## le carte che non usano "toward" (la stragrande maggioranza).
+static func reachable_states(cell: Vector2i, facing: int, spec, is_blocked: Callable, stance_slug: String = "", fighter_states: Dictionary = {}, context: Dictionary = {}) -> Array:
 	var seen := {}
 	var start := Vector3i(cell.x, cell.y, facing)
 	if spec == null or typeof(spec) != TYPE_DICTIONARY or (spec.get("opts", []) as Array).is_empty():
@@ -36,14 +43,14 @@ static func reachable_states(cell: Vector2i, facing: int, spec, is_blocked: Call
 			if Gate.allows(a, stance_slug, fighter_states):
 				atoms.append(a)
 		var ordered: bool = opt.get("ordered", false)
-		_enum(start, atoms, ordered, is_blocked, seen)
+		_enum(start, atoms, ordered, is_blocked, seen, context)
 	return seen.values()
 
 
 ## Mappa cella → Array[int] dei facing legali ottenibili muovendoci.
-static func reachable_by_cell(cell: Vector2i, facing: int, spec, is_blocked: Callable, stance_slug: String = "", fighter_states: Dictionary = {}) -> Dictionary:
+static func reachable_by_cell(cell: Vector2i, facing: int, spec, is_blocked: Callable, stance_slug: String = "", fighter_states: Dictionary = {}, context: Dictionary = {}) -> Dictionary:
 	var out := {}
-	for s in reachable_states(cell, facing, spec, is_blocked, stance_slug, fighter_states):
+	for s in reachable_states(cell, facing, spec, is_blocked, stance_slug, fighter_states, context):
 		var c := Vector2i(s.x, s.y)
 		if not out.has(c):
 			out[c] = []
@@ -56,7 +63,7 @@ static func _k(s: Vector3i) -> String:
 	return "%d,%d,%d" % [s.x, s.y, s.z]
 
 
-static func _enum(state: Vector3i, remaining: Array, ordered: bool, is_blocked: Callable, seen: Dictionary) -> void:
+static func _enum(state: Vector3i, remaining: Array, ordered: bool, is_blocked: Callable, seen: Dictionary, context: Dictionary = {}) -> void:
 	# Stato terminale valido solo se tutti gli atomi rimasti sono opzionali.
 	var all_opt := true
 	for a in remaining:
@@ -72,13 +79,13 @@ static func _enum(state: Vector3i, remaining: Array, ordered: bool, is_blocked: 
 		var atom: Dictionary = remaining[i]
 		var rest: Array = remaining.duplicate()
 		rest.remove_at(i)
-		for ns in _apply(atom, state, is_blocked):
-			_enum(ns, rest, ordered, is_blocked, seen)
+		for ns in _apply(atom, state, is_blocked, context):
+			_enum(ns, rest, ordered, is_blocked, seen, context)
 		if atom.get("opt", false):
-			_enum(state, rest, ordered, is_blocked, seen)   # salta l'atomo opzionale
+			_enum(state, rest, ordered, is_blocked, seen, context)   # salta l'atomo opzionale
 
 
-static func _apply(atom: Dictionary, state: Vector3i, is_blocked: Callable) -> Array:
+static func _apply(atom: Dictionary, state: Vector3i, is_blocked: Callable, context: Dictionary = {}) -> Array:
 	var out: Array = []
 	if atom.get("t", "") == "rot":
 		var n: int = int(atom.get("n", 1))
@@ -87,6 +94,8 @@ static func _apply(atom: Dictionary, state: Vector3i, is_blocked: Callable) -> A
 				continue
 			out.append(Vector3i(state.x, state.y, (state.z + k + 6) % 6))
 		return out
+	if atom.get("t", "") == "toward":
+		return _apply_toward(atom, state, is_blocked, context)
 	# step
 	var nn: int = int(atom.get("n", 1))
 	# "dirs": elenco esplicito di direzioni relative (es. arco frontale [5,0,1]).
@@ -109,3 +118,34 @@ static func _apply(atom: Dictionary, state: Vector3i, is_blocked: Callable) -> A
 		if ok:
 			out.append(Vector3i(cur.x, cur.y, state.z))
 	return out
+
+
+## Atomo "toward" (§3.24, carte Hachikō "muoviti verso l'alleato/l'avversario"):
+## passo greedy di 1 esagono alla volta verso `context["<target>_cell"]`
+## ("foe"|"ally" secondo `atom.target`, default "foe"), ripetuto per `n`
+## passi. Nessun vero pathfinding: stesso algoritmo di AI.move_target (sceglie
+## il vicino libero che minimizza la distanza esagonale dal bersaglio) — si
+## ferma prima se nessun vicino migliora la distanza (movimento parziale, non
+## fallisce l'intero atomo). Se il bersaglio non è nel context (carta senza
+## nemico/alleato in gioco), l'atomo non produce stati, come un passo bloccato.
+static func _apply_toward(atom: Dictionary, state: Vector3i, is_blocked: Callable, context: Dictionary) -> Array:
+	var target_key := str(atom.get("target", "foe")) + "_cell"
+	if not context.has(target_key) or context[target_key] == null:
+		return []
+	var target: Vector2i = context[target_key]
+	var n: int = int(atom.get("n", 1))
+	var cur := Vector2i(state.x, state.y)
+	for _s in range(n):
+		var best := cur
+		var best_d := HexGrid.distance(cur, target)
+		for nb in HexGrid.neighbors(cur):
+			if is_blocked.call(nb):
+				continue
+			var d := HexGrid.distance(nb, target)
+			if d < best_d:
+				best_d = d
+				best = nb
+		if best == cur:
+			break   # nessun vicino migliora la distanza: fermati (movimento parziale)
+		cur = best
+	return [Vector3i(cur.x, cur.y, state.z)]

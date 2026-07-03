@@ -132,7 +132,10 @@ func _active() -> int:
 func _who(i: int) -> String:
 	if _versus:
 		return "Giocatore %d" % (i + 1)
-	return "TU" if i == 0 else "IA"
+	if i == 0:
+		return "TU"
+	# Con 2 alleati IA (Ashigaru+Hachikō, §3.24/§3.25) distingui i log per nome.
+	return "IA" if state.fighters.size() <= 2 else "IA %s" % state.fighters[i].character
 
 
 func _card_type_it(t: String) -> String:
@@ -489,12 +492,18 @@ func _ai_posture(f: GameState.Fighter) -> String:
 
 
 func _refresh_status() -> void:
-	var p := state.fighters[0]
-	var e := state.fighters[1]
-	_hud.set_info("Round %d  |  %s %s ❤%d/%d ◈%d [%s]%s mazzo%d scarti%d  —  %s %s ❤%d/%d ◈%d [%s]%s mazzo%d%s" % [
-		state.round_num,
-		_who(0), p.character, p.remaining_wounds(), p.wound_limit, p.focus, Domain.STANCE_NAMES[p.stance], _status_badges(p), p.draw_pile.size(), p.discard.size(),
-		_who(1), e.character, e.remaining_wounds(), e.wound_limit, e.focus, Domain.STANCE_NAMES[e.stance], _status_badges(e), e.draw_pile.size(), _ai_posture(e)])
+	# Un segmento per combattente: il giocatore (indice 0) mostra il conteggio
+	# scarti, ogni alleato IA (indici 1+, es. coppia Ashigaru+Hachikō) mostra
+	# invece l'atteggiamento IA — stesso formato di prima, generalizzato a N.
+	var segments: Array = []
+	for i in range(state.fighters.size()):
+		var fx := state.fighters[i]
+		var tail := "scarti%d" % fx.discard.size() if i == 0 else "mazzo%d%s" % [fx.draw_pile.size(), _ai_posture(fx)]
+		var head := "mazzo%d " % fx.draw_pile.size() if i == 0 else ""
+		segments.append("%s %s ❤%d/%d ◈%d [%s]%s %s%s" % [
+			_who(i), fx.character, fx.remaining_wounds(), fx.wound_limit, fx.focus,
+			Domain.STANCE_NAMES[fx.stance], _status_badges(fx), head, tail])
+	_hud.set_info("Round %d  |  %s" % [state.round_num, "  —  ".join(segments)])
 	_hud.set_kamae_marker(Domain.STANCE_SLUG[state.fighters[_kamae_shown].stance])
 	var af := _active()
 	_hud.set_focus(_who(af), state.fighters[af].focus, GameState.Fighter.MAX_FOCUS)
@@ -639,14 +648,20 @@ static func _load_texture(path: String) -> Texture2D:
 
 func _spawn_pawns() -> void:
 	var Pawn := preload("res://scenes/Pawn.gd")
-	var starts := [Vector2i(-3, 1), Vector2i(3, -1)]
-	# Combattenti scelti dal menu (fallback: coppia storica di default).
-	var chars: Array = Domain.selected_chars if Domain.selected_chars.size() == 2 else Domain.PLAYABLE
-	var colors := [Color(0.85, 0.2, 0.2), Color(0.2, 0.4, 0.9)]
-	for i in range(2):
+	# 3° punto (per la coppia alleata Ashigaru+Hachikō, §3.24/§3.25): vicino al
+	# 1° avversario (dist. 2), entro il raggio di default dell'arena. I primi
+	# due punti restano invariati per non alterare il duello 1v1 esistente.
+	var starts := [Vector2i(-3, 1), Vector2i(3, -1), Vector2i(2, -2)]
+	# Combattenti scelti dal menu: 2 = duello normale, 3 = umano + coppia IA
+	# alleata (Ashigaru+Hachikō). Fallback: coppia storica di default.
+	var chars: Array = Domain.selected_chars if Domain.selected_chars.size() in [2, 3] else Domain.PLAYABLE
+	var colors := [Color(0.85, 0.2, 0.2), Color(0.2, 0.4, 0.9), Color(0.3, 0.75, 0.35)]
+	for i in range(chars.size()):
 		var f := state.add_fighter(chars[i], starts[i])
-		# Solo: pedina 0 = giocatore, pedina 1 = IA. 1v1: entrambe umane.
-		f.is_ai = (i == 1) and not _versus
+		# Pedina 0 = giocatore (team 0); tutte le altre = IA alleate (team 1)
+		# in Solo, oppure umane (1v1 hot-seat, mai IA) in versus.
+		f.team = 0 if i == 0 else 1
+		f.is_ai = (i > 0) and not _versus
 		if f.is_ai:
 			# Mazzo SOLO dell'avversario (sottoinsieme curato) + parametri IA.
 			f.draw_pile = CardDB.solo_deck_for(CardDB.deck_slug_for(chars[i]))
@@ -674,11 +689,15 @@ func _spawn_pawns() -> void:
 		pawn.set_meta("fighter_index", i)
 		_pawns.append(pawn)
 	_chars = chars.duplicate()   # per i ritratti nell'HUD (costruito dopo)
-	# Orientamento iniziale: ciascuno verso l'avversario.
-	state.fighters[0].facing = AI.facing_toward(state.fighters[0].cell, state.fighters[1].cell)
-	state.fighters[1].facing = AI.facing_toward(state.fighters[1].cell, state.fighters[0].cell)
+	# Orientamento iniziale: ciascuno verso il proprio nemico più vicino
+	# (team diverso — con 3 pedine un alleato IA ha comunque un solo umano
+	# come nemico, mai ambiguo).
+	for i in range(state.fighters.size()):
+		var foe := state.opponent_of(state.fighters[i])
+		if foe != null:
+			state.fighters[i].facing = AI.facing_toward(state.fighters[i].cell, foe.cell)
 	# Posizione Kamae iniziale dall'albero del personaggio.
-	for i in range(2):
+	for i in range(state.fighters.size()):
 		var tree := CardDB.kamae_tree_for(CardDB.deck_slug_for(state.fighters[i].character))
 		var start_slug: String = tree.get("start", "neutral")
 		state.fighters[i].stance = Domain.STANCE_FROM_SLUG.get(start_slug, Domain.Stance.NEUTRAL)

@@ -647,13 +647,17 @@ func _resolve_chosen_speeds(fizzled: Dictionary) -> void:
 			# Iniziativa "=" (istantanea) o assente: blocco a velocità massima.
 			_chosen[i] = _hobbled(i, Domain.pick_initiative(_raw_ini(i), true))
 			continue
-		# Velocità dell'attacco avversario (se ne gioca uno).
-		var foe_idx := _opponent_index(i)
+		# Velocità dell'attacco avversario (se ne gioca uno): con più nemici
+		# (Ashigaru+Hachikō alleati) prova ciascuno in ordine di distanza
+		# crescente finché uno ha un attacco rivelato che combacia.
 		var target := -1
-		if foe_idx != -1 and _chosen.has(foe_idx):
+		for foe_idx in _opponent_indices_by_distance(i):
+			if not _chosen.has(foe_idx):
+				continue
 			var fc := CardDB.card(state.fighters[foe_idx].planned)
 			if fc.get("type", "") == "attack":
 				target = int(_chosen[foe_idx])
+				break
 		var pick := -999
 		if target != -1:
 			# Scegli, fra le opzioni azzoppate, quella che combacia col bersaglio.
@@ -792,22 +796,25 @@ func _resolve_card(i: int, block_ready: Dictionary, log: Array) -> void:
 ## Risolve la parte SOPRA di un attacco (eventuale parte SOTTO la gestisce lo split).
 func _resolve_attack_top(i: int, g: Dictionary, name: String, log: Array, chosen_alt) -> void:
 	var f := state.fighters[i]
-	var foe_idx := _opponent_index(i)
-	if foe_idx == -1:
-		return
-	var foe := state.fighters[foe_idx]
 	# Bersaglio per confronto d'iniziativa (§3.4): armi a distanza senza
 	# diagramma esagonale — colpiscono se l'avversario è in gittata e la sua
 	## velocità scelta è INFERIORE alla propria (e sotto `threshold`, se posto).
 	var tgt: Dictionary = g.get("targeting", {})
 	if str(tgt.get("mode", "")) == "initiative":
-		_resolve_initiative_attack(i, foe_idx, g, tgt, name, log, chosen_alt)
+		var init_foe_idx := _opponent_index(i)
+		if init_foe_idx == -1:
+			return
+		_resolve_initiative_attack(i, init_foe_idx, g, tgt, name, log, chosen_alt)
 		return
 	var cells := attack_v2_cells(f.cell, f.facing, g, _card_range(CardDB.card(f.planned)), f.stance)
-	if not cells.has(foe.cell):
-		log.append("%s usa %s ma il bersaglio è fuori arco/portata (dist %d)" % [
-			f.character, name, HexGrid.distance(f.cell, foe.cell)])
+	var foe_idx := _cell_target_index(i, cells)
+	if foe_idx == -1:
+		var nearest := state.opponent_of(f)
+		var dist_str := str(HexGrid.distance(f.cell, nearest.cell)) if nearest != null else "?"
+		log.append("%s usa %s ma il bersaglio è fuori arco/portata (dist %s)" % [
+			f.character, name, dist_str])
 		return
+	var foe := state.fighters[foe_idx]
 	var atk_speed := int(_chosen.get(i, _speed_of(i)))
 	if _attack_blocked(i, foe_idx, atk_speed, g):
 		_block_ok[foe_idx] = true   # il blocco del difensore è riuscito (reazioni "se blocco riuscito")
@@ -893,10 +900,9 @@ func _resolve_initiative_attack(i: int, foe_idx: int, g: Dictionary, tgt: Dictio
 ## della parte sotto (così il blocco si differenzia per velocità).
 func _resolve_split_bottom(i: int, split: Dictionary, name: String, log: Array, do_move: bool = true) -> void:
 	var f := state.fighters[i]
-	var foe_idx := _opponent_index(i)
+	var foe_idx := _opponent_index(i)   # bersaglio di default per gli effetti generici (non basati su cella)
 	if foe_idx == -1:
 		return
-	var foe := state.fighters[foe_idx]
 	if do_move and split.has("move"):
 		_auto_move_mandatory(i, split["move"])
 		fighter_updated.emit(i)
@@ -904,12 +910,14 @@ func _resolve_split_bottom(i: int, split: Dictionary, name: String, log: Array, 
 	if split.has("attack"):
 		var pg := {"attack": split["attack"]}
 		var cells := attack_v2_cells(f.cell, f.facing, pg, 1)
-		if cells.has(foe.cell):
-			if _attack_blocked(i, foe_idx, bspeed, pg):
-				combat_event.emit("blocked", i, foe_idx, {})
-				if int(_block_ready.get(foe_idx, -1)) == bspeed:
-					_block_ready[foe_idx] = -1
-					_try_counter(foe_idx, i, bspeed, log)
+		var atk_foe_idx := _cell_target_index(i, cells)
+		if atk_foe_idx != -1:
+			var foe := state.fighters[atk_foe_idx]
+			if _attack_blocked(i, atk_foe_idx, bspeed, pg):
+				combat_event.emit("blocked", i, atk_foe_idx, {})
+				if int(_block_ready.get(atk_foe_idx, -1)) == bspeed:
+					_block_ready[atk_foe_idx] = -1
+					_try_counter(atk_foe_idx, i, bspeed, log)
 				log.append("%s (parte bassa di %s, vel %d) — PARATO da %s" % [
 					f.character, name, bspeed, foe.character])
 			else:
@@ -924,8 +932,8 @@ func _resolve_split_bottom(i: int, split: Dictionary, name: String, log: Array, 
 					var tag := "bleed" if kind == "bleed" else "wound"
 					for _w in range(n):
 						foe.wounds.append(tag)
-				combat_event.emit("hit", i, foe_idx, {"n": n})
-				fighter_updated.emit(foe_idx)
+				combat_event.emit("hit", i, atk_foe_idx, {"n": n})
+				fighter_updated.emit(atk_foe_idx)
 				log.append("%s colpisce %s (parte bassa, vel %d) — %d ferita/e (%d/%d)" % [
 					f.character, foe.character, bspeed, n, foe.wounds.size(), foe.wound_limit])
 	if split.has("effects"):
@@ -979,6 +987,17 @@ func _apply_if_success(att_idx: int, foe_idx: int, g: Dictionary, log: Array) ->
 
 # ─── Commit To Hit (regolamento 1.5 p.10) ────────────────────────────────────
 
+## Celle occupate dai nemici (team diverso da `i`) — per i test booleani
+## "Commit to Hit", dove basta sapere SE una cella colpita è occupata da un
+## qualunque nemico, non da quale specifico (a differenza di
+## _cell_target_index, usato per la risoluzione vera e propria del danno).
+func _opponent_cells(i: int) -> Array:
+	var out: Array = []
+	for j in _opponent_indices_by_distance(i):
+		out.append(state.fighters[j].cell)
+	return out
+
+
 ## L'attacco programmato di `i` colpisce il bersaglio dalla posizione ATTUALE?
 func attack_hits_now(i: int) -> bool:
 	var f := state.fighters[i]
@@ -987,10 +1006,14 @@ func attack_hits_now(i: int) -> bool:
 	var c := CardDB.card(f.planned)
 	if c.get("type", "") != "attack":
 		return false
-	var fo := _opponent_index(i)
-	if fo == -1:
+	var opp_cells := _opponent_cells(i)
+	if opp_cells.is_empty():
 		return false
-	return attack_v2_cells(f.cell, f.facing, CardDB.geometry(f.planned), _card_range(c), f.stance).has(state.fighters[fo].cell)
+	var cells := attack_v2_cells(f.cell, f.facing, CardDB.geometry(f.planned), _card_range(c), f.stance)
+	for oc in opp_cells:
+		if cells.has(oc):
+			return true
+	return false
 
 
 ## Esiste una posizione raggiungibile con le mosse della carta da cui l'attacco
@@ -1002,20 +1025,23 @@ func attack_can_hit(i: int) -> bool:
 	var c := CardDB.card(f.planned)
 	if c.get("type", "") != "attack":
 		return false
-	var fo := _opponent_index(i)
-	if fo == -1:
+	var opp_cells := _opponent_cells(i)
+	if opp_cells.is_empty():
 		return false
-	var foe_cell: Vector2i = state.fighters[fo].cell
 	var g := CardDB.geometry(f.planned)
-	if attack_v2_cells(f.cell, f.facing, g, _card_range(c), f.stance).has(foe_cell):
-		return true
+	var cur_cells := attack_v2_cells(f.cell, f.facing, g, _card_range(c), f.stance)
+	for oc in opp_cells:
+		if cur_cells.has(oc):
+			return true
 	if not g.has("move"):
 		return false
 	var reach := Move.reachable_by_cell(f.cell, f.facing, g["move"], state.is_blocked, Domain.STANCE_SLUG[f.stance], f.gate_states())
 	for cell in reach.keys():
 		for fc in reach[cell]:
-			if attack_v2_cells(cell, fc, g, 1, f.stance).has(foe_cell):
-				return true
+			var moved_cells := attack_v2_cells(cell, fc, g, 1, f.stance)
+			for oc in opp_cells:
+				if moved_cells.has(oc):
+					return true
 	return false
 
 
@@ -1250,6 +1276,13 @@ func _apply_effects(i: int, foe_idx: int, geom: Dictionary, when: String, log: A
 		return
 	var f := state.fighters[i]
 	var foe: GameState.Fighter = state.fighters[foe_idx] if foe_idx != -1 else null
+	# Stato sintetico "adiacente all'alleato" (§3.25, carte Hachikō): calcolato
+	# fresco a ogni chiamata e riusa il vocabolario gate `state` esistente
+	# (Gate.state_ok) — zero campi nuovi in Gate.gd. Nessun effetto in gioco
+	# oggi referenzia questo nome tranne #254, quindi è innocuo per tutti gli
+	# altri personaggi/carte.
+	var ally := state.ally_of(f)
+	f.state_set("adiacente_alleato", 1 if (ally != null and HexGrid.distance(f.cell, ally.cell) == 1) else 0)
 	for e in effs:
 		if str(e.get("when", "always")) != when:
 			continue
@@ -1808,9 +1841,52 @@ func _finish(log: Array, winner: int) -> void:
 
 # ─── Utility ─────────────────────────────────────────────────────────────────
 
-func _opponent_index(i: int) -> int:
+## True se esiste almeno un altro combattente con team diverso da `i`.
+## Retrocompatibilità: molti test/scene creano i fighter senza impostare
+## `team` (default 0 per tutti) — in quel caso i metodi sotto ripiegano sul
+## vecchio comportamento "ogni altro pezzo è nemico", invece di non trovarne
+## mai nessuno.
+func _has_other_team(i: int) -> bool:
+	var f := state.fighters[i]
 	for j in range(state.fighters.size()):
-		if j != i:
+		if j != i and state.fighters[j].team != f.team:
+			return true
+	return false
+
+
+## Indice del nemico più vicino (team diverso da `i`) — vedi GameState.opponent_of
+## per la semantica (degenera a "l'altro pezzo" con 2 combattenti).
+func _opponent_index(i: int) -> int:
+	var idxs := _opponent_indices_by_distance(i)
+	return idxs[0] if not idxs.is_empty() else -1
+
+
+## Indici dei nemici (team diverso da `i`, o "ogni altro pezzo" in
+## retrocompatibilità — vedi _has_other_team), ordinati per distanza
+## crescente. Usato dove serve provare più bersagli in ordine di priorità
+## (es. quale attacco IA rivelato combacia con la difesa dell'umano, §3.24).
+func _opponent_indices_by_distance(i: int) -> Array:
+	var f := state.fighters[i]
+	var legacy := not _has_other_team(i)
+	var out: Array = []
+	for j in range(state.fighters.size()):
+		if j == i:
+			continue
+		if legacy or state.fighters[j].team != f.team:
+			out.append(j)
+	out.sort_custom(func(a, b):
+		return HexGrid.distance(f.cell, state.fighters[a].cell) < HexGrid.distance(f.cell, state.fighters[b].cell))
+	return out
+
+
+## Indice del nemico (team diverso da `i`) la cui cella è tra quelle colpite
+## da un attacco (più vicino se più di uno) — -1 se nessuno è nel raggio.
+## Sostituisce il vecchio controllo "cells.has(foe.cell)" con un unico foe
+## fisso: con 2+ nemici alleati (Ashigaru+Hachikō) chi dei due sta fisicamente
+## nella cella colpita subisce il danno, come con le miniature fisiche.
+func _cell_target_index(i: int, cells: Dictionary) -> int:
+	for j in _opponent_indices_by_distance(i):
+		if cells.has(state.fighters[j].cell):
 			return j
 	return -1
 

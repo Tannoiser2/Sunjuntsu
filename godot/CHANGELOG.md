@@ -3,6 +3,45 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.92.0] — 2026-07-03
+### Coppia alleata Ashigaru+Hachikō in Solitario (§3.24/§3.25): 1 umano vs 2 IA
+- **Nuova primitiva team/alleato**: `Fighter.team` (0 = umano, 1 = IA
+  alleate), `GameState.opponent_of()` ora restituisce il NEMICO più vicino
+  (invece del vecchio "il primo pezzo che non sono io") e la nuova
+  `GameState.ally_of()` restituisce l'alleato di squadra. Retrocompatibile:
+  se nessun combattente ha un team diverso (tutti i test/scene esistenti
+  che non impostano `team`), i due metodi ripiegano sul comportamento
+  storico — zero regressioni sul duello 1v1.
+- **Targeting per cella con più nemici** (`Duel._cell_target_index`): un
+  attacco colpisce chiunque dei nemici stia fisicamente nella cella
+  colpita, non più un "foe" fisso — così le due miniature alleate possono
+  essere bersagliate indipendentemente, come sul tavolo fisico.
+  `_resolve_chosen_speeds` prova ora ogni nemico rivelato (più vicino
+  prima) per far combaciare la velocità di difesa con l'attacco giusto.
+- **Nuovo atomo di movimento `"toward"`** (`Move.gd`): passo greedy verso
+  la cella di un bersaglio (`foe`/`ally`) passata in un nuovo parametro
+  `context` — stesso algoritmo già usato da `AI.move_target`, nessun vero
+  pathfinding. Risolve **#251 "Attacca/Al Piede"** (Hachikō): la faccia
+  attacco si muove verso l'avversario, la faccia difesa verso l'alleato
+  Ashigaru.
+- **Gate sintetico "adiacente_alleato"** (`Duel._apply_effects`): calcolato
+  fresco a ogni risoluzione da `ally_of` + distanza esagonale, riusa il
+  vocabolario `state`/`Gate.state_ok` esistente (zero campi nuovi in
+  `Gate.gd`). Risolve **#254 "Riporta la Preda/Bravo Cane"**: il focus
+  bonus della faccia difesa scatta solo se adiacente all'Ashigaru.
+- **Arena/HUD/Menu**: `_spawn_pawns` supporta 3 pedine (umano + coppia IA,
+  un 3° punto di partenza vicino al 1° avversario); ritratti HUD con una
+  3ª posizione impilata; il Menu aggiunge automaticamente il compagno
+  (`Domain.PAIRED_WITH`) quando si sceglie Ashigaru o Hachikō come
+  avversario in Solitario, finalizzando a 3 personaggi invece di 2.
+- Nuovo `tests/test_ally_pair.gd`: primitiva team/alleato, targeting per
+  cella, atomo "toward", gate di adiacenza, turno completo a 3 pedine,
+  selezione a coppia dal menu.
+- **Nota**: le carte Solitario di Ashigaru/Hachikō non hanno ancora
+  geometria trascritta (gap noto e già segnalato, indipendente da questa
+  feature) — l'impalcatura a 3 pedine funziona, ma le due IA non potranno
+  davvero attaccare finché quelle carte non saranno trascritte.
+
 ## [0.91.1] — 2026-07-03
 ### §3.23 risolto: "gioca la carta pescata come istantanea" (#42 Specchio d'Acqua)
 Non serviva un verbo dedicato: il sistema di Istantanea Aggiuntiva già

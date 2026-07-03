@@ -83,14 +83,17 @@ func _ready() -> void:
 ## controller telefono). Se il ritratto manca (es. Hachikō) mostra l'iniziale.
 func set_fighter_portraits(chars: Array) -> void:
 	const SIZE := 56.0
-	var colors := [Color(0.85, 0.2, 0.2), Color(0.2, 0.4, 0.9)]
-	for i in range(mini(2, chars.size())):
+	# 3° colore per la coppia alleata IA (Ashigaru+Hachikō, §3.24/§3.25) — i
+	# primi due restano quelli storici (vermiglio/blu) per non alterare il
+	# duello 1v1.
+	var colors := [Color(0.85, 0.2, 0.2), Color(0.2, 0.4, 0.9), Color(0.3, 0.75, 0.35)]
+	for i in range(chars.size()):
 		var holder := PanelContainer.new()
 		var sb := StyleBoxFlat.new()
 		sb.bg_color = Color(0.08, 0.08, 0.1, 0.85)
 		sb.set_corner_radius_all(int(SIZE / 2.0))
 		sb.set_border_width_all(3)
-		sb.border_color = colors[i]
+		sb.border_color = colors[i % colors.size()]
 		holder.add_theme_stylebox_override("panel", sb)
 		holder.custom_minimum_size = Vector2(SIZE, SIZE)
 		holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -98,13 +101,16 @@ func set_fighter_portraits(chars: Array) -> void:
 			holder.set_anchors_preset(Control.PRESET_TOP_LEFT)
 			holder.position = Vector2(8, 2)
 		else:
+			# 1° alleato IA in alto a destra (invariato); il 2° (i==2, es. il
+			# compagno di Ashigaru+Hachikō) impilato subito sotto.
 			holder.set_anchors_preset(Control.PRESET_TOP_RIGHT)
 			holder.anchor_left = 1.0
 			holder.anchor_right = 1.0
 			holder.offset_left = -SIZE - 8
 			holder.offset_right = -8
-			holder.offset_top = 2
-			holder.offset_bottom = 2 + SIZE
+			var top := 2.0 + (i - 1) * (SIZE + 6.0)
+			holder.offset_top = top
+			holder.offset_bottom = top + SIZE
 		holder.tooltip_text = str(Domain.CHAR_NAMES_IT.get(chars[i], chars[i]))
 		var tex := CardDB.portrait_for(str(chars[i]))
 		if tex != null:
