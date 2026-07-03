@@ -228,7 +228,7 @@
         "t": "step",
         "dir": 3,
         "n": 1,
-        "opt": false
+        "opt": true
        }
       ]
      },
@@ -237,7 +237,7 @@
        {
         "t": "step",
         "n": 1,
-        "opt": false,
+        "opt": true,
         "dirs": [
          0,
          1,
@@ -343,7 +343,7 @@
         "t": "step",
         "dir": 3,
         "n": 1,
-        "opt": false
+        "opt": true
        }
       ]
      },
@@ -352,7 +352,7 @@
        {
         "t": "step",
         "n": 1,
-        "opt": false,
+        "opt": true,
         "dirs": [
          0,
          1,
@@ -410,7 +410,7 @@
        {
         "t": "step",
         "n": 1,
-        "opt": false,
+        "opt": true,
         "dirs": [
          0,
          1,
@@ -550,7 +550,7 @@
        {
         "t": "step",
         "n": 1,
-        "opt": false,
+        "opt": true,
         "dirs": [
          0,
          1,
@@ -560,7 +560,7 @@
        {
         "t": "rot",
         "n": 1,
-        "opt": false,
+        "opt": true,
         "kamae": "aggression"
        }
       ]
@@ -602,14 +602,14 @@
         {
          "t": "step",
          "n": 1,
-         "opt": false,
+         "opt": true,
          "kamae": "balance",
          "dir": -1
         },
         {
          "t": "rot",
          "n": 1,
-         "opt": false,
+         "opt": true,
          "kamae": "balance"
         }
        ]
@@ -630,7 +630,7 @@
         {
          "t": "rot",
          "n": 1,
-         "opt": false,
+         "opt": true,
          "kamae": "determination"
         }
        ]
@@ -745,7 +745,7 @@
        {
         "t": "rot",
         "n": 1,
-        "opt": false,
+        "opt": true,
         "kamae": "balance"
        }
       ]
@@ -894,7 +894,7 @@
        {
         "t": "rot",
         "n": 1,
-        "opt": false,
+        "opt": true,
         "kamae": "balance"
        }
       ]
@@ -1026,7 +1026,7 @@
        {
         "t": "rot",
         "n": 1,
-        "opt": false
+        "opt": true
        }
       ]
      }
@@ -1067,7 +1067,7 @@
         {
          "t": "step",
          "n": 1,
-         "opt": false,
+         "opt": true,
          "dirs": [
           2,
           3,
