@@ -192,9 +192,9 @@ func _on_card_played(card_data: Dictionary) -> void:
 	var pi := _planning_player
 	var f := state.fighters[pi]
 	if not Duel.playable(f, id):
-		var req: String = CardDB.geometry(id).get("kamae_req", "")
+		var req = CardDB.geometry(id).get("kamae_req", "")
 		_hud.set_hint("⛔ Non giocabile: richiede Kamae %s (sei in %s)" % [
-			Domain.STANCE_NAMES.get(Domain.STANCE_FROM_SLUG.get(req, -1), req),
+			Domain.stance_req_label(req),
 			Domain.STANCE_NAMES[f.stance]])
 		return   # la carta resta in mano
 	var cost: int = int(CardDB.card(id).get("focus", 0))
@@ -719,10 +719,10 @@ func _draw_overlays_for(card: Dictionary, move_used: bool) -> void:
 	var g: Dictionary = card.get("geom_override", CardDB.geometry(id))
 	# Carta non giocabile nella Kamae attuale: nessun overlay.
 	if not Duel.playable(f, id):
-		var req: String = g.get("kamae_req", "")
+		var req = g.get("kamae_req", "")
 		_hud.set_hint("⛔ %s: giocabile solo in Kamae %s (sei in %s)" % [
 			card.get("name", "?"),
-			Domain.STANCE_NAMES.get(Domain.STANCE_FROM_SLUG.get(req, -1), req),
+			Domain.stance_req_label(req),
 			Domain.STANCE_NAMES[f.stance]])
 		return
 	# Celle di movimento (solo se non già mosso).

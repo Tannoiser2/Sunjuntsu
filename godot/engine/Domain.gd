@@ -64,6 +64,20 @@ const STANCE_FROM_SLUG := {
 }
 
 
+## Nome leggibile di un `kamae_req` per i messaggi di UI: il campo può essere
+## una stringa singola o un Array di slug in OR (es. #16 Sesto Senso,
+## #45 Obbedienza — "giocabile in Equilibrio O Determinazione"). Centralizzato
+## qui perché un `req` tipizzato come String in chiamante causava un crash a
+## runtime quando il campo era in realtà un Array.
+static func stance_req_label(req) -> String:
+	if req is Array:
+		var names: Array = []
+		for slug in req:
+			names.append(STANCE_NAMES.get(STANCE_FROM_SLUG.get(str(slug), -1), str(slug)))
+		return " O ".join(names)
+	return STANCE_NAMES.get(STANCE_FROM_SLUG.get(str(req), -1), str(req))
+
+
 # ─── Tipi di carta (dal campo Keywords) ──────────────────────────────────────
 
 enum CardType { ATTACK, DEFENCE, MEDITATION, CORE, OTHER }

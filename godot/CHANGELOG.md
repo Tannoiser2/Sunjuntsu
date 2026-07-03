@@ -3,6 +3,24 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.90.0] — 2026-07-03
+### Fix crash "Sesto Senso" (#16) + pulizia editor carte
+- **Crash su carte con `kamae_req` ad array**: `#16 Sesto Senso` e `#45
+  Obbedienza` sono giocabili in due Kamae alternative (`kamae_req` è un Array
+  di slug, es. `["balance", "determination"]`). Due punti in `Arena.gd`
+  leggevano però il campo con `var req: String = ...` — appena la carta
+  veniva selezionata/passata col mouse mentre non giocabile (Kamae sbagliata),
+  Godot lanciava un errore di tipo a runtime e l'app si resettava. Aggiunto
+  `Domain.stance_req_label()` che formatta correttamente sia stringa singola
+  sia Array (join con "O"), usato in entrambi i punti.
+- **Editor carte**: rimossi Musashi e Kojiro (schede fisiche non disponibili)
+  da ovunque nell'editor — dropdown "personaggio" e vista "Tutti i
+  personaggi". Le carte ibride `Personaggio/Weapon` (es. `Ninja/Weapon`,
+  `Ashigaru/Hachiko`) non sono più una categoria a sé: confluiscono nel/nei
+  personaggio/i reale/i a cui appartengono, quindi il filtro ora elenca solo
+  "Personaggio" e "Personaggio Solo" per ciascuno dei 15 personaggi
+  disponibili (più i due bucket generici "Gen. Ability"/"Generic Solo").
+
 ## [0.89.0] — 2026-07-03
 ### UI: risolto sovrapposto testi di scelta + colonna log collassabile
 - **Kamae-chooser e option-chooser non si sovrappongono più**: prima avevano
