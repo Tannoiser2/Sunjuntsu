@@ -8520,72 +8520,74 @@
    }
   },
  "249": {
-   "name": "MORSO SELVAGGIO / LECCARSI LE FERITE",
-   "type": "attack",
+  "name": "MORSO SELVAGGIO / LECCARSI LE FERITE",
+  "type": "attack",
+  "move": {
+   "opts": [
+    {
+     "atoms": [
+      {
+       "t": "step",
+       "dirs": [
+        1,
+        5
+       ],
+       "n": 1
+      },
+      {
+       "t": "rot",
+       "n": 1
+      }
+     ]
+    }
+   ]
+  },
+  "attack": {
+   "cells": [
+    {
+     "d": 0,
+     "k": 1,
+     "w": 2
+    }
+   ],
+   "focus_cost": 1
+  },
+  "note": "Doppia faccia (§3.14). ATTACCO [7] 'Morso Selvaggio': bidente frontale 1 POI ⟳1; 2 ferite sul fronte. DIFESA [1] 'Leccarsi le Ferite': bidente frontale 1; OPPURE (1 focus) rimuovi 1 ferita (heal) OPPURE (1 focus) sostituisci 1 sanguinante con ferita normale (direzione inversa di replace_wound_bleed, DA VERIFICARE). La faccia DIFESA è in face_defence (iniziativa/movimento/effetti propri); scelta in pianificazione via plan_card(..., \"defence\"), UI non ancora presente. Verificata su hachiko_09.webp.",
+  "face_defence": {
+   "initiative": 1,
    "move": {
     "opts": [
      {
       "atoms": [
        {
         "t": "step",
+        "n": 1,
         "dirs": [
-         1,
-         5
+         2,
+         4
         ],
-        "n": 1
-       },
-       {
-        "t": "rot",
-        "n": 1
+        "opt": true
        }
       ]
      }
     ]
    },
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 2
-     }
-    ]
-   },
-   "note": "Doppia faccia (§3.14). ATTACCO [7] 'Morso Selvaggio': bidente frontale 1 POI ⟳1; 2 ferite sul fronte. DIFESA [1] 'Leccarsi le Ferite': bidente frontale 1; OPPURE (1 focus) rimuovi 1 ferita (heal) OPPURE (1 focus) sostituisci 1 sanguinante con ferita normale (direzione inversa di replace_wound_bleed, DA VERIFICARE). La faccia DIFESA è in face_defence (iniziativa/movimento/effetti propri); scelta in pianificazione via plan_card(..., \"defence\"), UI non ancora presente. Verificata su hachiko_09.webp.",
-   "face_defence": {
-    "initiative": 1,
-    "move": {
-     "opts": [
-      {
-       "atoms": [
-        {
-         "t": "step",
-         "n": 1,
-         "dirs": [
-          1,
-          5
-         ]
-        }
-       ]
-      }
-     ]
+   "effects": [
+    {
+     "do": "heal",
+     "what": "wound",
+     "n": 1,
+     "alt": "a",
+     "focus_cost": 1
     },
-    "effects": [
-     {
-      "do": "heal",
-      "what": "wound",
-      "n": 1,
-      "alt": "a",
-      "focus_cost": 1
-     },
-     {
-      "do": "replace_wound_bleed",
-      "alt": "b",
-      "focus_cost": 1
-     }
-    ]
-   }
-  },
+    {
+     "do": "replace_wound_bleed",
+     "alt": "b",
+     "focus_cost": 1
+    }
+   ]
+  }
+ },
  "250": {
    "name": "MORSO ALLA CAVIGLIA / RINGHIO MINACCIOSO",
    "type": "attack",
@@ -8673,16 +8675,286 @@
    }
   },
  "252": {
-   "name": "MORSO RAPIDO / ULULATO FEROCE",
-   "type": "attack",
+  "name": "MORSO RAPIDO / ULULATO FEROCE",
+  "type": "attack",
+  "move": {
+   "opts": [
+    {
+     "atoms": [
+      {
+       "t": "step",
+       "n": 1,
+       "dirs": [
+        0,
+        1,
+        5
+       ]
+      },
+      {
+       "t": "rot",
+       "n": 1,
+       "opt": true
+      }
+     ]
+    }
+   ]
+  },
+  "attack": {
+   "cells": [
+    {
+     "d": 0,
+     "k": 1,
+     "w": 1
+    }
+   ]
+  },
+  "effects": [
+   {
+    "do": "flip_kamae"
+   }
+  ],
+  "note": "Doppia faccia (§3.14). ATTACCO [7] 'Morso Rapido': passo avanti 1 POI ⟳1 opz; 1 ferita sul fronte; poi VOLTA LA CARTA KAMAE (flip_kamae). DIFESA [6] 'Ululato Feroce' (Distanza, Range2): passo avanti 1 opz; OPPURE l'avversario scarta 1 carta OPPURE perde 1 focus. La faccia DIFESA è in face_defence (iniziativa/movimento/effetti propri); scelta in pianificazione via plan_card(..., \"defence\"), UI non ancora presente. Verificata su hachiko_16.webp.",
+  "face_defence": {
+   "initiative": 6,
    "move": {
     "opts": [
      {
       "atoms": [
        {
         "t": "step",
-        "dir": 0,
+        "n": 1,
+        "opt": true,
+        "dirs": [
+         0,
+         1,
+         5
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "foe_discard",
+     "n": 1,
+     "alt": "a"
+    },
+    {
+     "do": "foe_lose_focus",
+     "n": 1,
+     "alt": "b"
+    }
+   ]
+  }
+ },
+ "253": {
+  "name": "MORSO ALLA GOLA / ALL'ANGOLO",
+  "type": "attack",
+  "move": {
+   "opts": [
+    {
+     "atoms": [
+      {
+       "t": "rot",
+       "n": 1,
+       "opt": true
+      }
+     ]
+    }
+   ]
+  },
+  "attack": {
+   "cells": [
+    {
+     "d": 0,
+     "k": 1,
+     "w": "bleed"
+    }
+   ]
+  },
+  "note": "Doppia faccia (§3.14). ATTACCO [5] 'Morso alla Gola': solo ⟳1 opz; ferita sanguinante sul fronte. DIFESA [7] 'all'Angolo': movimento bidente[1,5] opz n2 (l'icona a 3 punte verso il basso potrebbe indicare passo verso il RETRO, INCERTO — DA VERIFICARE) poi VOLTA LA CARTA KAMAE (flip_kamae). La faccia DIFESA è in face_defence (iniziativa/movimento/effetti propri); scelta in pianificazione via plan_card(..., \"defence\"), UI non ancora presente. Verificata su hachiko_17.webp.",
+  "face_defence": {
+   "initiative": 7,
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "n": 2,
+        "dirs": [
+         2,
+         3,
+         4
+        ],
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "flip_kamae"
+    }
+   ]
+  }
+ },
+ "254": {
+  "name": "RIPORTA LA PREDA / BRAVO CANE",
+  "type": "attack",
+  "attack": {
+   "cells": [
+    {
+     "d": 0,
+     "k": 1,
+     "w": 0
+    }
+   ]
+  },
+  "effects": [
+   {
+    "do": "link_anchor"
+   },
+   {
+    "do": "pull",
+    "n": 1,
+    "when": "on_hit"
+   }
+  ],
+  "note": "Doppia faccia (§3.14). ATTACCO [7] 'Riporta la Preda': cella-àncora fronte (w:0); 'SE RIUSCITO: * 1 POI TIRA 1' — sequenza incerta, modellata come singolo pull n:1 on_hit, DA VERIFICARE. DIFESA [9] 'Bravo Cane': OTTIENI 1 focus SE ADIACENTE ALL'ASHIGARU — la condizione di adiacenza al terzo pezzo (§3.25) non è modellata: l'effetto focus è nella faccia difesa senza gate, DA VERIFICARE. La faccia DIFESA è in face_defence (iniziativa/movimento/effetti propri); scelta in pianificazione via plan_card(..., \"defence\"), UI non ancora presente. Verificata su hachiko_07.webp. SE RIUSCITO in realtà è: passo NERO dir 3 n1 (obbligatorio) POI TIRA 1 — il passo pre-pull non è modellato, DA VERIFICARE. Faccia difesa: OTTIENI 1 focus solo SE ADIACENTE all'Ashigaru (condizione non modellata). [Audit scansioni 2026-07]",
+  "face_defence": {
+   "initiative": 9,
+   "effects": [
+    {
+     "do": "focus",
+     "n": 1
+    }
+   ]
+  }
+ },
+ "255": {
+  "name": "SALTA / GIÙ",
+  "type": "attack",
+  "move": {
+   "opts": [
+    {
+     "atoms": [
+      {
+       "t": "step",
+       "n": 1,
+       "opt": true,
+       "dirs": [
+        0,
+        1,
+        5
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "attack": {
+   "cells": [
+    {
+     "d": 0,
+     "k": 1,
+     "w": 0
+    }
+   ]
+  },
+  "effects": [
+   {
+    "do": "link_anchor"
+   },
+   {
+    "do": "push",
+    "n": 1,
+    "when": "on_hit"
+   }
+  ],
+  "note": "Doppia faccia (§3.14). ATTACCO [7] 'Salta': passo avanti 1 opz; cella-àncora fronte (w:0) con '* SPINGI 1'. DIFESA [6] 'Giù': ❄1 opzionale, schivata pura. La faccia DIFESA è in face_defence (iniziativa/movimento/effetti propri); scelta in pianificazione via plan_card(..., \"defence\"), UI non ancora presente. Verificata su hachiko_05.webp.",
+  "face_defence": {
+   "initiative": 6,
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "n": 1,
+        "dir": -1,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   }
+  }
+ },
+ "256": {
+  "name": "STRISCIATA / IN CACCIA",
+  "type": "attack",
+  "move": {
+   "opts": [
+    {
+     "atoms": [
+      {
+       "t": "step",
+       "n": 1,
+       "opt": true,
+       "dirs": [
+        0,
+        1,
+        5
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "attack": {
+   "cells": [
+    {
+     "d": 0,
+     "k": 1,
+     "w": 1
+    },
+    {
+     "d": 1,
+     "k": 1,
+     "w": 1
+    }
+   ]
+  },
+  "note": "Doppia faccia (§3.14). ATTACCO [6] 'Strisciata': passo avanti 1 opz; fronte e fronte-dx (1 ferita ciascuna). DIFESA [3] 'in Caccia': bidente[2,4] + ⟳1 obbligatori POI la stessa sequenza facoltativa (l'icona è visivamente identica al bidente FRONTALE [1,5]: direzioni INCERTE, DA VERIFICARE). La faccia DIFESA è in face_defence (iniziativa/movimento/effetti propri); scelta in pianificazione via plan_card(..., \"defence\"), UI non ancora presente. Verificata su hachiko_06.webp.",
+  "face_defence": {
+   "initiative": 3,
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "n": 1,
+        "dirs": [
+         1,
+         5
+        ]
+       },
+       {
+        "t": "rot",
         "n": 1
+       },
+       {
+        "t": "step",
+        "n": 1,
+        "dirs": [
+         1,
+         5
+        ],
+        "opt": true
        },
        {
         "t": "rot",
@@ -8692,262 +8964,9 @@
       ]
      }
     ]
-   },
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
-   },
-   "effects": [
-    {
-     "do": "flip_kamae"
-    }
-   ],
-   "note": "Doppia faccia (§3.14). ATTACCO [7] 'Morso Rapido': passo avanti 1 POI ⟳1 opz; 1 ferita sul fronte; poi VOLTA LA CARTA KAMAE (flip_kamae). DIFESA [6] 'Ululato Feroce' (Distanza, Range2): passo avanti 1 opz; OPPURE l'avversario scarta 1 carta OPPURE perde 1 focus. La faccia DIFESA è in face_defence (iniziativa/movimento/effetti propri); scelta in pianificazione via plan_card(..., \"defence\"), UI non ancora presente. Verificata su hachiko_16.webp.",
-   "face_defence": {
-    "initiative": 6,
-    "move": {
-     "opts": [
-      {
-       "atoms": [
-        {
-         "t": "step",
-         "n": 1,
-         "dir": 0,
-         "opt": true
-        }
-       ]
-      }
-     ]
-    },
-    "effects": [
-     {
-      "do": "foe_discard",
-      "n": 1,
-      "alt": "a"
-     },
-     {
-      "do": "foe_lose_focus",
-      "n": 1,
-      "alt": "b"
-     }
-    ]
    }
-  },
- "253": {
-   "name": "MORSO ALLA GOLA / ALL'ANGOLO",
-   "type": "attack",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
-   },
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": "bleed"
-     }
-    ]
-   },
-   "note": "Doppia faccia (§3.14). ATTACCO [5] 'Morso alla Gola': solo ⟳1 opz; ferita sanguinante sul fronte. DIFESA [7] 'all'Angolo': movimento bidente[1,5] opz n2 (l'icona a 3 punte verso il basso potrebbe indicare passo verso il RETRO, INCERTO — DA VERIFICARE) poi VOLTA LA CARTA KAMAE (flip_kamae). La faccia DIFESA è in face_defence (iniziativa/movimento/effetti propri); scelta in pianificazione via plan_card(..., \"defence\"), UI non ancora presente. Verificata su hachiko_17.webp.",
-   "face_defence": {
-    "initiative": 7,
-    "move": {
-     "opts": [
-      {
-       "atoms": [
-        {
-         "t": "step",
-         "n": 2,
-         "dirs": [
-          1,
-          5
-         ],
-         "opt": true
-        }
-       ]
-      }
-     ]
-    },
-    "effects": [
-     {
-      "do": "flip_kamae"
-     }
-    ]
-   }
-  },
- "254": {
-   "name": "RIPORTA LA PREDA / BRAVO CANE",
-   "type": "attack",
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 0
-     }
-    ]
-   },
-   "effects": [
-    {
-     "do": "link_anchor"
-    },
-    {
-     "do": "pull",
-     "n": 1,
-     "when": "on_hit"
-    }
-   ],
-   "note": "Doppia faccia (§3.14). ATTACCO [7] 'Riporta la Preda': cella-àncora fronte (w:0); 'SE RIUSCITO: * 1 POI TIRA 1' — sequenza incerta, modellata come singolo pull n:1 on_hit, DA VERIFICARE. DIFESA [9] 'Bravo Cane': OTTIENI 1 focus SE ADIACENTE ALL'ASHIGARU — la condizione di adiacenza al terzo pezzo (§3.25) non è modellata: l'effetto focus è nella faccia difesa senza gate, DA VERIFICARE. La faccia DIFESA è in face_defence (iniziativa/movimento/effetti propri); scelta in pianificazione via plan_card(..., \"defence\"), UI non ancora presente. Verificata su hachiko_07.webp.",
-   "face_defence": {
-    "initiative": 9,
-    "effects": [
-     {
-      "do": "focus",
-      "n": 1
-     }
-    ]
-   }
-  },
- "255": {
-   "name": "SALTA / GIÙ",
-   "type": "attack",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
-   },
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 0
-     }
-    ]
-   },
-   "effects": [
-    {
-     "do": "link_anchor"
-    },
-    {
-     "do": "push",
-     "n": 1,
-     "when": "on_hit"
-    }
-   ],
-   "note": "Doppia faccia (§3.14). ATTACCO [7] 'Salta': passo avanti 1 opz; cella-àncora fronte (w:0) con '* SPINGI 1'. DIFESA [6] 'Giù': ❄1 opzionale, schivata pura. La faccia DIFESA è in face_defence (iniziativa/movimento/effetti propri); scelta in pianificazione via plan_card(..., \"defence\"), UI non ancora presente. Verificata su hachiko_05.webp.",
-   "face_defence": {
-    "initiative": 6,
-    "move": {
-     "opts": [
-      {
-       "atoms": [
-        {
-         "t": "step",
-         "n": 1,
-         "dir": -1,
-         "opt": true
-        }
-       ]
-      }
-     ]
-    }
-   }
-  },
- "256": {
-   "name": "STRISCIATA / IN CACCIA",
-   "type": "attack",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
-   },
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 1
-     }
-    ]
-   },
-   "note": "Doppia faccia (§3.14). ATTACCO [6] 'Strisciata': passo avanti 1 opz; fronte e fronte-dx (1 ferita ciascuna). DIFESA [3] 'in Caccia': bidente[2,4] + ⟳1 obbligatori POI la stessa sequenza facoltativa (l'icona è visivamente identica al bidente FRONTALE [1,5]: direzioni INCERTE, DA VERIFICARE). La faccia DIFESA è in face_defence (iniziativa/movimento/effetti propri); scelta in pianificazione via plan_card(..., \"defence\"), UI non ancora presente. Verificata su hachiko_06.webp.",
-   "face_defence": {
-    "initiative": 3,
-    "move": {
-     "opts": [
-      {
-       "atoms": [
-        {
-         "t": "step",
-         "n": 1,
-         "dirs": [
-          2,
-          4
-         ]
-        },
-        {
-         "t": "rot",
-         "n": 1
-        },
-        {
-         "t": "step",
-         "n": 1,
-         "dirs": [
-          2,
-          4
-         ],
-         "opt": true
-        },
-        {
-         "t": "rot",
-         "n": 1,
-         "opt": true
-        }
-       ]
-      }
-     ]
-    }
-   }
-  },
+  }
+ },
  "276": {
    "name": "CARTA SPECIALE NAVIGATORE",
    "type": "core",
@@ -9682,42 +9701,43 @@
    }
   },
  "296": {
-   "name": "ABBRACCIO SILENZIOSO",
-   "type": "attack",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 3
-       }
-      ]
-     }
-    ]
-   },
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 2,
-      "w": 3
-     },
-     {
-      "q": 2,
-      "r": -1,
-      "w": 2
-     },
-     {
-      "q": 2,
-      "r": -2,
-      "w": 1
-     }
-    ]
-   },
-   "note": "Giocabile solo in Disperazione (icona fiamma, state_req). Costo 3 focus. ↻3 (nessun passo). Fronte dist2 3 ferite; diagonale anello2 fronte-dx 2 ferite; fronte-dx dist2 1 ferita; anello1 tutto vuoto. Verificata su onna_bugeisha_05.webp.",
-   "state_req": "disperazione"
+  "name": "ABBRACCIO SILENZIOSO",
+  "type": "attack",
+  "move": {
+   "opts": [
+    {
+     "atoms": [
+      {
+       "t": "rot",
+       "n": 3,
+       "opt": true
+      }
+     ]
+    }
+   ]
   },
+  "attack": {
+   "cells": [
+    {
+     "d": 0,
+     "k": 2,
+     "w": 3
+    },
+    {
+     "q": 2,
+     "r": -1,
+     "w": 2
+    },
+    {
+     "q": 2,
+     "r": -2,
+     "w": 1
+    }
+   ]
+  },
+  "note": "Giocabile solo in Disperazione (icona fiamma, state_req). Costo 3 focus. ↻3 (nessun passo). Fronte dist2 3 ferite; diagonale anello2 fronte-dx 2 ferite; fronte-dx dist2 1 ferita; anello1 tutto vuoto. Verificata su onna_bugeisha_05.webp.",
+  "state_req": "disperazione"
+ },
  "297": {
    "name": "MORSO DEL CIELO",
    "type": "attack",
@@ -9838,128 +9858,131 @@
    "note": "Meditazione, Sostituzione Istantanea. Costo 1 focus. PESCA 3 (base) OPPURE PESCA 5 in Disperazione (gate state sull'alternativa b). Poi RIMETTI ALTRETTANTE CARTE NEL MAZZO E MISCHIA (reso con reset_deck, DA VERIFICARE). Verificata su onna_bugeisha_07.webp."
   },
  "299": {
-   "name": "GUARDIA FURENTE",
-   "type": "defence",
-   "defence": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "v": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "v": 1
-     },
-     {
-      "d": 5,
-      "k": 1,
-      "v": 1
-     }
-    ]
-   },
-   "counter": [
+  "name": "GUARDIA FURENTE",
+  "type": "defence",
+  "defence": {
+   "cells": [
     {
-     "on": [
-      7,
-      6,
-      5
-     ],
-     "state": "disperazione"
-    }
-   ],
-   "split": {
-    "initiative": 1,
-    "move": {
-     "opts": [
-      {
-       "atoms": [
-        {
-         "t": "step",
-         "dir": 3,
-         "n": 1
-        }
-       ]
-      },
-      {
-       "atoms": [
-        {
-         "t": "step",
-         "dirs": [
-          2,
-          3,
-          4
-         ],
-         "n": 1,
-         "kamae": "determination"
-        }
-       ]
-      }
-     ]
+     "d": 0,
+     "k": 1,
+     "v": 1
     },
-    "effects": [
-     {
-      "do": "draw",
-      "n": 2,
-      "state": "disperazione"
-     }
-    ]
-   },
-   "note": "Iniziativa card_pool 8-2 (non replicata). 3 scudi (fronte/fronte-dx/fronte-sx); celle retro-dx/retro-sx sono ancore senza effetto base, probabile bonus scudo solo in Disperazione (non modellato). Counter [7,6,5] in Disperazione (counter gated state). Split [1]: passo indietro 1 OPPURE (Determinazione) tridente posteriore 1. PESCA 2 CARTE gated Disperazione (state). Verificata su onna_bugeisha_08.webp."
+    {
+     "d": 1,
+     "k": 1,
+     "v": 1
+    },
+    {
+     "d": 5,
+     "k": 1,
+     "v": 1
+    }
+   ]
   },
- "300": {
-   "name": "COLPO IN CADUTA",
-   "type": "attack",
-   "attack": {
-    "cells": [
+  "counter": [
+   {
+    "on": [
+     7,
+     6,
+     5
+    ],
+    "state": "disperazione"
+   }
+  ],
+  "split": {
+   "initiative": 1,
+   "move": {
+    "opts": [
      {
-      "d": 0,
-      "k": 1,
-      "w": 1
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 3,
+        "n": 1,
+        "opt": true
+       }
+      ]
      },
      {
-      "d": 1,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "q": 1,
-      "r": 1,
-      "w": 1
+      "atoms": [
+       {
+        "t": "step",
+        "dirs": [
+         2,
+         3,
+         4
+        ],
+        "n": 1,
+        "kamae": "determination",
+        "opt": true
+       }
+      ]
      }
     ]
    },
    "effects": [
     {
-     "do": "push",
-     "n": 1,
-     "when": "on_hit",
-     "kamae": "aggression"
+     "do": "draw",
+     "n": 2,
+     "state": "disperazione"
     }
-   ],
-   "split": {
-    "initiative": 1,
-    "move": {
-     "opts": [
-      {
-       "atoms": [
-        {
-         "t": "step",
-         "n": 1,
-         "dirs": [
-          2,
-          3,
-          4
-         ]
-        }
-       ]
-      }
-     ]
-    }
-   },
-   "note": "Sostituzione istantanea. Nessun movimento base. Fronte/fronte-dx adiacenti + diagonale anello2 fronte-sx (1 ferita ciascuna). SE RIUSCITO (Aggressività): SPINGI 1. Split [1]: tridente posteriore 1, nessun gate. Verificata su onna_bugeisha_09.webp."
+   ]
   },
+  "note": "Iniziativa card_pool 8-2 (non replicata). 3 scudi (fronte/fronte-dx/fronte-sx); celle retro-dx/retro-sx sono ancore senza effetto base, probabile bonus scudo solo in Disperazione (non modellato). Counter [7,6,5] in Disperazione (counter gated state). Split [1]: passo indietro 1 OPPURE (Determinazione) tridente posteriore 1. PESCA 2 CARTE gated Disperazione (state). Verificata su onna_bugeisha_08.webp. Difesa: celle retro d2/d4 con '*' = scudo aggiuntivo in Disperazione (riga rossa), non modellabile per-cella, DA VERIFICARE. [Audit scansioni 2026-07]"
+ },
+ "300": {
+  "name": "COLPO IN CADUTA",
+  "type": "attack",
+  "attack": {
+   "cells": [
+    {
+     "d": 0,
+     "k": 1,
+     "w": 1
+    },
+    {
+     "d": 1,
+     "k": 1,
+     "w": 1
+    },
+    {
+     "q": 1,
+     "r": 1,
+     "w": 1
+    }
+   ]
+  },
+  "effects": [
+   {
+    "do": "push",
+    "n": 1,
+    "when": "on_hit",
+    "kamae": "aggression"
+   }
+  ],
+  "split": {
+   "initiative": 1,
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "n": 1,
+        "dirs": [
+         2,
+         3,
+         4
+        ],
+        "opt": true
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "note": "Sostituzione istantanea. Nessun movimento base. Fronte/fronte-dx adiacenti + diagonale anello2 fronte-sx (1 ferita ciascuna). SE RIUSCITO (Aggressività): SPINGI 1. Split [1]: tridente posteriore 1, nessun gate. Verificata su onna_bugeisha_09.webp."
+ },
  "301": {
    "name": "INCIAMPO DEL CAVALLO",
    "type": "meditation",
@@ -9982,115 +10005,30 @@
    "note": "Aggiunta Istantanea: GIOCA SE L'ATTACCO O IL BLOCCO È RIUSCITO condiziona l'intera carta (non un'altra carta). AZZOPPA senza costo; STORDISCI pagando 1 focus; l'avversario passa a Neutrale pagando 1 focus (foe_switch_kamae). Nessun OPPURE tra le due righe viola: indipendenti. Verificata su onna_bugeisha_11.webp."
   },
  "302": {
-   "name": "SCHIVATA DI URAGANO",
-   "type": "defence",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "n": 2,
-        "dir": -1
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "kamae": "determination"
-       }
-      ]
-     }
-    ]
-   },
-   "split": {
-    "initiative": 1,
-    "move": {
-     "opts": [
+  "name": "SCHIVATA DI URAGANO",
+  "type": "defence",
+  "move": {
+   "opts": [
+    {
+     "atoms": [
       {
-       "atoms": [
-        {
-         "t": "step",
-         "n": 1,
-         "dirs": [
-          0,
-          1,
-          5
-         ],
-         "state": "disperazione"
-        },
-        {
-         "t": "rot",
-         "n": 1,
-         "kamae": "balance"
-        }
-       ]
+       "t": "step",
+       "n": 2,
+       "dir": -1,
+       "opt": true
+      },
+      {
+       "t": "rot",
+       "n": 1,
+       "kamae": "determination",
+       "opt": true
       }
      ]
-    },
-    "effects": [
-     {
-      "do": "switch_kamae",
-      "to": "determination"
-     }
-    ]
-   },
-   "note": "DIFESA senza cella di blocco: schivata pura. Costo 1 focus. Base: ❄2 sempre + ⟳1 in Determinazione (bonus, non alternativa). Split [1]: tridente frontale 1 gated Disperazione (state sull'atomo) + ⟳1 in Equilibrio. PASSA A Determinazione incondizionato. Verificata su onna_bugeisha_13.webp."
-  },
- "303": {
-   "name": "AFFONDO DI MONTAGNA",
-   "type": "attack",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 3,
-        "n": 1
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "kamae": "aggression"
-       }
-      ]
-     }
-    ]
-   },
-   "attack": {
-    "cells": [
-     {
-      "q": 0,
-      "r": 2,
-      "w": 0
-     },
-     {
-      "q": 1,
-      "r": 1,
-      "w": 1
-     },
-     {
-      "d": 0,
-      "k": 2,
-      "w": 1
-     }
-    ]
-   },
-   "effects": [
-    {
-     "do": "switch_kamae",
-     "to": "determination"
     }
-   ],
-   "note": "Banda con riquadro [8] preceduta da icona fiamma = iniziativa alternativa 8 in Disperazione (alt_initiative gated state). Movimento: passo indietro 1 + ⟳1 in Aggressività. Diagonale anello2 fronte-sx 1 ferita; fronte dist2 1 ferita; cella ancora estrema (diagonale fronte-sx dist2, w:0) con bonus a 2 ferite SOLO in Disperazione (gate di cella non ancora modellabile). PASSA A Determinazione incondizionato. Verificata su onna_bugeisha_15.webp.",
-   "alt_initiative": {
-    "value": 8,
-    "state": "disperazione"
-   }
+   ]
   },
- "304": {
-   "name": "COLPO ALLE CAVIGLIE",
-   "type": "attack",
+  "split": {
+   "initiative": 1,
    "move": {
     "opts": [
      {
@@ -10102,97 +10040,15 @@
          2,
          3,
          4
-        ]
-       },
-       {
-        "t": "rot",
-        "n": 1
-       }
-      ]
-     }
-    ]
-   },
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 2,
-      "w": 1
-     },
-     {
-      "q": 2,
-      "r": -1,
-      "w": 1
-     }
-    ]
-   },
-   "split": {
-    "initiative": 2,
-    "move": {
-     "opts": [
-      {
-       "atoms": [
-        {
-         "t": "rot",
-         "n": 1
-        }
-       ]
-      }
-     ]
-    },
-    "effects": [
-     {
-      "do": "draw",
-      "n": 1,
-      "alt": "a"
-     },
-     {
-      "do": "draw",
-      "n": 2,
-      "kamae": "balance",
-      "alt": "b"
-     }
-    ]
-   },
-   "note": "Movimento: tridente posteriore 1 + ⟳1, nessun gate. Fronte/fronte-dx adiacenti (1 ferita ciascuna). Split [2]: ⟳1; PESCA FINO A 1 (base) OPPURE PESCA FINO A 2 in Equilibrio (upgrade, non costo). Verificata su onna_bugeisha_17.webp."
-  },
- "305": {
-   "name": "MENTE STREPITANTE",
-   "type": "meditation",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": -1,
-        "n": 1
-       },
-       {
-        "t": "rot",
-        "n": 1
-       },
-       {
-        "t": "step",
-        "dir": -1,
-        "n": 1,
-        "kamae": "balance"
+        ],
+        "state": "disperazione",
+        "opt": true
        },
        {
         "t": "rot",
         "n": 1,
-        "kamae": "balance"
-       },
-       {
-        "t": "step",
-        "dir": -1,
-        "n": 1,
-        "state": "disperazione"
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "state": "disperazione"
+        "kamae": "balance",
+        "opt": true
        }
       ]
      }
@@ -10200,77 +10056,257 @@
    },
    "effects": [
     {
-     "do": "foe_reveal_hand"
+     "do": "switch_kamae",
+     "to": "determination"
+    }
+   ]
+  },
+  "note": "DIFESA senza cella di blocco: schivata pura. Costo 1 focus. Base: ❄2 sempre + ⟳1 in Determinazione (bonus, non alternativa). Split [1]: tridente frontale 1 gated Disperazione (state sull'atomo) + ⟳1 in Equilibrio. PASSA A Determinazione incondizionato. Verificata su onna_bugeisha_13.webp."
+ },
+ "303": {
+  "name": "AFFONDO DI MONTAGNA",
+  "type": "attack",
+  "move": {
+   "opts": [
+    {
+     "atoms": [
+      {
+       "t": "step",
+       "dir": 3,
+       "n": 1,
+       "opt": true
+      },
+      {
+       "t": "rot",
+       "n": 1,
+       "kamae": "aggression"
+      }
+     ]
+    }
+   ]
+  },
+  "attack": {
+   "cells": [
+    {
+     "q": 0,
+     "r": 2,
+     "w": 0
+    },
+    {
+     "q": 1,
+     "r": 1,
+     "w": 1
+    },
+    {
+     "d": 0,
+     "k": 2,
+     "w": 1
+    }
+   ]
+  },
+  "effects": [
+   {
+    "do": "switch_kamae",
+    "to": "determination"
+   }
+  ],
+  "note": "Banda con riquadro [8] preceduta da icona fiamma = iniziativa alternativa 8 in Disperazione (alt_initiative gated state). Movimento: passo indietro 1 + ⟳1 in Aggressività. Diagonale anello2 fronte-sx 1 ferita; fronte dist2 1 ferita; cella ancora estrema (diagonale fronte-sx dist2, w:0) con bonus a 2 ferite SOLO in Disperazione (gate di cella non ancora modellabile). PASSA A Determinazione incondizionato. Verificata su onna_bugeisha_15.webp.",
+  "alt_initiative": {
+   "value": 8,
+   "state": "disperazione"
+  }
+ },
+ "304": {
+  "name": "COLPO ALLE CAVIGLIE",
+  "type": "attack",
+  "move": {
+   "opts": [
+    {
+     "atoms": [
+      {
+       "t": "step",
+       "n": 1,
+       "dirs": [
+        2,
+        3,
+        4
+       ]
+      },
+      {
+       "t": "rot",
+       "n": 1
+      }
+     ]
+    }
+   ]
+  },
+  "attack": {
+   "cells": [
+    {
+     "d": 0,
+     "k": 2,
+     "w": 1
+    },
+    {
+     "q": 2,
+     "r": -1,
+     "w": 1
+    }
+   ]
+  },
+  "split": {
+   "initiative": 2,
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": true
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "draw",
+     "n": 1,
+     "alt": "a"
     },
     {
      "do": "draw",
      "n": 2,
-     "state": "disperazione"
-    },
-    {
-     "do": "change_kamae",
-     "n": 1,
-     "kamae": "determination"
+     "kamae": "balance",
+     "alt": "b"
     }
-   ],
-   "note": "Tre righe cumulative ❄1+↻1: prima senza gate, seconda in Equilibrio, terza in Disperazione (state sugli atomi). GUARDA LA MANO dell'avversario (foe_reveal_hand). PESCA 2 gated Disperazione (state). CAMBIA KAMAE FINO A 1 RAMO gated Determinazione. Verificata su onna_bugeisha_20.webp."
+   ]
   },
+  "note": "Movimento: tridente posteriore 1 + ⟳1, nessun gate. Fronte/fronte-dx adiacenti (1 ferita ciascuna). Split [2]: ⟳1; PESCA FINO A 1 (base) OPPURE PESCA FINO A 2 in Equilibrio (upgrade, non costo). Verificata su onna_bugeisha_17.webp."
+ },
+ "305": {
+  "name": "MENTE STREPITANTE",
+  "type": "meditation",
+  "move": {
+   "opts": [
+    {
+     "atoms": [
+      {
+       "t": "step",
+       "dir": -1,
+       "n": 1,
+       "opt": true
+      },
+      {
+       "t": "rot",
+       "n": 1,
+       "opt": true
+      },
+      {
+       "t": "step",
+       "dir": -1,
+       "n": 1,
+       "kamae": "balance",
+       "opt": true
+      },
+      {
+       "t": "rot",
+       "n": 1,
+       "kamae": "balance",
+       "opt": true
+      },
+      {
+       "t": "step",
+       "dir": -1,
+       "n": 1,
+       "state": "disperazione",
+       "opt": true
+      },
+      {
+       "t": "rot",
+       "n": 1,
+       "state": "disperazione",
+       "opt": true
+      }
+     ]
+    }
+   ]
+  },
+  "effects": [
+   {
+    "do": "foe_reveal_hand"
+   },
+   {
+    "do": "draw",
+    "n": 2,
+    "state": "disperazione"
+   },
+   {
+    "do": "change_kamae",
+    "n": 1,
+    "kamae": "determination"
+   }
+  ],
+  "note": "Tre righe cumulative ❄1+↻1: prima senza gate, seconda in Equilibrio, terza in Disperazione (state sugli atomi). GUARDA LA MANO dell'avversario (foe_reveal_hand). PESCA 2 gated Disperazione (state). CAMBIA KAMAE FINO A 1 RAMO gated Determinazione. Verificata su onna_bugeisha_20.webp."
+ },
  "306": {
-   "name": "FIUME IN PIENA",
-   "type": "attack",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 1
-       }
-      ]
-     }
-    ]
-   },
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 2,
-      "w": 1
-     },
-     {
-      "q": 1,
-      "r": 1,
-      "w": 1
-     },
-     {
-      "q": 2,
-      "r": -1,
-      "w": 1
-     }
-    ]
-   },
-   "effects": [
+  "name": "FIUME IN PIENA",
+  "type": "attack",
+  "move": {
+   "opts": [
     {
-     "do": "foe_stun",
-     "n": 1,
-     "when": "on_hit",
-     "state": "disperazione"
-    },
-    {
-     "do": "hobble",
-     "n": 1,
-     "when": "on_hit",
-     "state": "disperazione"
-    },
-    {
-     "do": "focus",
-     "n": 1,
-     "when": "on_hit",
-     "kamae": "balance"
+     "atoms": [
+      {
+       "t": "rot",
+       "n": 1,
+       "opt": true
+      }
+     ]
     }
-   ],
-   "note": "Movimento: sola ↻1. Fronte/fronte-dx/fronte-sx adiacenti (1 ferita ciascuna). SE RIUSCITO: STORDISCI + AZZOPPA in Disperazione (gate state); Determinazione: passo indietro 1 senza icona elmo, probabile riposizionamento post-colpo non modellabile, non incluso; Equilibrio: OTTIENI 1 focus. Verificata su onna_bugeisha_23.webp."
+   ]
   },
+  "attack": {
+   "cells": [
+    {
+     "d": 0,
+     "k": 2,
+     "w": 1
+    },
+    {
+     "q": 1,
+     "r": 1,
+     "w": 1
+    },
+    {
+     "q": 2,
+     "r": -1,
+     "w": 1
+    }
+   ]
+  },
+  "effects": [
+   {
+    "do": "foe_stun",
+    "n": 1,
+    "when": "on_hit",
+    "state": "disperazione"
+   },
+   {
+    "do": "hobble",
+    "n": 1,
+    "when": "on_hit",
+    "state": "disperazione"
+   },
+   {
+    "do": "focus",
+    "n": 1,
+    "when": "on_hit",
+    "kamae": "balance"
+   }
+  ],
+  "note": "Movimento: sola ↻1. Fronte/fronte-dx/fronte-sx adiacenti (1 ferita ciascuna). SE RIUSCITO: STORDISCI + AZZOPPA in Disperazione (gate state); Determinazione: passo indietro 1 senza icona elmo, probabile riposizionamento post-colpo non modellabile, non incluso; Equilibrio: OTTIENI 1 focus. Verificata su onna_bugeisha_23.webp. SE RIUSCITO (banda Determinazione): passo BIANCO dir 3 n1 post-colpo, non modellato (movimento on_hit), DA VERIFICARE. [Audit scansioni 2026-07]"
+ },
  "316": {
    "name": "CARTA SPECIALE YOJIMBO",
    "type": "core",
