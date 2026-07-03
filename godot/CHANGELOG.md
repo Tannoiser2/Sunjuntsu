@@ -3,6 +3,30 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.91.0] — 2026-07-03
+### Carte Solitario del Ninja + tabella ufficiale di composizione mazzo IA
+- Trascritte le 5 carte Abilità in Solitario del Ninja (#954 Bomba Fumogena,
+  #955 Squarcio di Kama, #956 Lancio di Shuriken, #957 Soffio di Metsubushi,
+  #990 Trappola del Tiratore Lunare/Incubo) dalle scansioni della carta
+  fisica — erano già estratte durante l'audit ma scartate perché non c'era
+  nulla in `geometry.json` con cui confrontarle.
+- Aggiunta `CardDB.AI_DECK_COMPOSITION`: la tabella ufficiale di composizione
+  del mazzo IA (regolamento solitario, verificata contro
+  `solo_AI_tables_v1.xlsx`) per tutti i personaggi — quante carte prendere
+  dai mazzi di selezione generici I-V oltre alle carte di Classe. **Non
+  ancora collegata** a `solo_deck_for()`: i mazzi generici I-VIII (~46 carte
+  condivise tra personaggi — "reach attacks", "melee attacks", "defence
+  cards", "nightmare mode" ecc.) non hanno ancora scansioni fisiche
+  disponibili nel repo materiali, servono pagine dedicate (sembra un
+  mazzetto a parte, non le pagine dei singoli personaggi).
+- **Stato reale delle carte Solitario per personaggio** (verificato pagina
+  per pagina nei PDF): Ronin e Guerriero già completi (fatti in una sessione
+  precedente); Ninja completato ora; i restanti 11 personaggi disponibili
+  (Yasuke, Wakou, Navigatore, Assassino, Hachikō, Maestro, Monaco,
+  Onna-Bugeisha, Yojimbo, Allievo, Ashigaru) hanno l'anagrafica di base ma
+  **non la geometria**: le loro pagine PDF non includono la carta
+  Solitario — serve scansionarla.
+
 ## [0.90.0] — 2026-07-03
 ### Fix crash "Sesto Senso" (#16) + pulizia editor carte
 - **Crash su carte con `kamae_req` ad array**: `#16 Sesto Senso` e `#45
