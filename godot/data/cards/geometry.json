@@ -12828,12 +12828,90 @@
    "note": "Costo: SCARTA 1 CARTA. Movimento ❄1 ↻2 facoltativi. OPPURE: PESCA FINO A 2 / OTTIENI 1 focus / CAMBIA KAMAE FINO A 1 RAMO. Verificata su yasuke_04.webp."
   },
  "350": {
-   "name": "TAGLIO MANCINO",
-   "type": "attack",
+  "name": "TAGLIO MANCINO",
+  "type": "attack",
+  "move": {
+   "opts": [
+    {
+     "atoms": [
+      {
+       "t": "rot",
+       "n": 1,
+       "opt": true,
+       "focus_cost": 1
+      }
+     ]
+    }
+   ]
+  },
+  "attack": {
+   "cells": [
+    {
+     "d": 0,
+     "k": 1,
+     "w": 1
+    }
+   ]
+  },
+  "effects": [
+   {
+    "do": "discard_self",
+    "n": 1
+   }
+  ],
+  "note": "Arma speciale Wakizashi. PUÒ ESSERE GIOCATA DOPO UNA REAZIONE RIUSCITA (timing non modellato). Costo: SCARTA 1 CARTA. ⟳1 facoltativo (loto decorativo, non un vero costo — focus:0 in card_pool). Fronte 1 ferita. Verificata su yasuke_05.webp."
+ },
+ "351": {
+  "name": "ONORE DEL LEONE",
+  "type": "attack",
+  "move": {
+   "opts": [
+    {
+     "atoms": [
+      {
+       "t": "rot",
+       "n": 1,
+       "opt": true
+      }
+     ]
+    }
+   ]
+  },
+  "defence": {
+   "cells": [
+    {
+     "d": 5,
+     "k": 1,
+     "v": 1
+    },
+    {
+     "d": 0,
+     "k": 1,
+     "v": 1
+    },
+    {
+     "d": 1,
+     "k": 1,
+     "v": 1
+    }
+   ]
+  },
+  "split": {
+   "initiative": 5,
    "move": {
     "opts": [
      {
       "atoms": [
+       {
+        "t": "step",
+        "n": 1,
+        "dirs": [
+         2,
+         3,
+         4
+        ],
+        "opt": true
+       },
        {
         "t": "rot",
         "n": 1,
@@ -12846,99 +12924,25 @@
    "attack": {
     "cells": [
      {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
-   },
-   "effects": [
-    {
-     "do": "discard_self",
-     "n": 1
-    }
-   ],
-   "note": "Arma speciale Wakizashi. PUÒ ESSERE GIOCATA DOPO UNA REAZIONE RIUSCITA (timing non modellato). Costo: SCARTA 1 CARTA. ⟳1 facoltativo (loto decorativo, non un vero costo — focus:0 in card_pool). Fronte 1 ferita. Verificata su yasuke_05.webp."
-  },
- "351": {
-   "name": "ONORE DEL LEONE",
-   "type": "attack",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 1
-       }
-      ]
-     }
-    ]
-   },
-   "defence": {
-    "cells": [
-     {
       "d": 5,
       "k": 1,
-      "v": 1
+      "w": 1
      },
      {
       "d": 0,
       "k": 1,
-      "v": 1
+      "w": 1
      },
      {
       "d": 1,
       "k": 1,
-      "v": 1
+      "w": 1
      }
     ]
-   },
-   "split": {
-    "initiative": 5,
-    "move": {
-     "opts": [
-      {
-       "atoms": [
-        {
-         "t": "step",
-         "n": 1,
-         "dirs": [
-          0,
-          1,
-          5
-         ]
-        },
-        {
-         "t": "rot",
-         "n": 1
-        }
-       ]
-      }
-     ]
-    },
-    "attack": {
-     "cells": [
-      {
-       "d": 5,
-       "k": 1,
-       "w": 1
-      },
-      {
-       "d": 0,
-       "k": 1,
-       "w": 1
-      },
-      {
-       "d": 1,
-       "k": 1,
-       "w": 1
-      }
-     ]
-    }
-   },
-   "note": "Iniziativa 9-6 per il blocco Difesa. ⟳1 + 3 scudi (fronte-sx/fronte/fronte-dx). Split [5] = blocco Attacco: tridente frontale + ⟳1, poi le stesse 3 celle come ferite. Icona kamae ibrida (gate + Determinazione) non rappresentabile con un solo kamae_req, DA VERIFICARE. Verificata su yasuke_03.webp."
+   }
   },
+  "note": "Iniziativa 9-6 per il blocco Difesa. ⟳1 + 3 scudi (fronte-sx/fronte/fronte-dx). Split [5] = blocco Attacco: tridente frontale + ⟳1, poi le stesse 3 celle come ferite. Icona kamae ibrida (gate + Determinazione) non rappresentabile con un solo kamae_req, DA VERIFICARE. Verificata su yasuke_03.webp. Righe difesa gate 'balance OR determination', righe attacco/split gate 'aggression OR determination' (icona ibrida con '/'), non modellato per riga, DA VERIFICARE. [Audit scansioni 2026-07]"
+ },
  "352": {
    "name": "FURIA GIUSTA",
    "type": "attack",
@@ -12995,53 +12999,54 @@
    "note": "Focus 3. Richiede Aggressività. Passo diagonale frontale + ⟳1. Fronte con maschera cornuta (esecuzione, come id 220); fronte-sx/fronte-dx 2 ferite; entrambe le diagonali anello2 1 ferita. Verificata su yasuke_06.webp."
   },
  "353": {
-   "name": "CARICA DEL BRANCO",
-   "type": "attack",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": true,
-        "focus_cost": 1
-       },
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 3
-       }
-      ]
-     }
-    ]
-   },
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 0
-     }
-    ]
-   },
-   "effects": [
+  "name": "CARICA DEL BRANCO",
+  "type": "attack",
+  "move": {
+   "opts": [
     {
-     "do": "link_anchor"
-    },
-    {
-     "do": "foe_stun",
-     "when": "on_hit",
-     "kamae": "aggression"
-    },
-    {
-     "do": "switch_kamae",
-     "to": "aggression",
-     "when": "on_hit"
+     "atoms": [
+      {
+       "t": "rot",
+       "n": 1,
+       "opt": true,
+       "focus_cost": 1
+      },
+      {
+       "t": "step",
+       "dir": 0,
+       "n": 3,
+       "opt": true
+      }
+     ]
     }
-   ],
-   "note": "Focus 1. ⟳1 (1 focus, opzionale) POI passo avanti 3. Cella-àncora fronte. SE RIUSCITO (Aggressività): STORDISCI, con quantità scalata dalle celle percorse (fino a 3, non rappresentabile come intero fisso, DA VERIFICARE); poi PASSA A Aggressività. Verificata su yasuke_07.webp."
+   ]
   },
+  "attack": {
+   "cells": [
+    {
+     "d": 0,
+     "k": 1,
+     "w": 0
+    }
+   ]
+  },
+  "effects": [
+   {
+    "do": "link_anchor"
+   },
+   {
+    "do": "foe_stun",
+    "when": "on_hit",
+    "kamae": "aggression"
+   },
+   {
+    "do": "switch_kamae",
+    "to": "aggression",
+    "when": "on_hit"
+   }
+  ],
+  "note": "Focus 1. ⟳1 (1 focus, opzionale) POI passo avanti 3. Cella-àncora fronte. SE RIUSCITO (Aggressività): STORDISCI, con quantità scalata dalle celle percorse (fino a 3, non rappresentabile come intero fisso, DA VERIFICARE); poi PASSA A Aggressività. Verificata su yasuke_07.webp. SE RIUSCITO: dopo STORDISCI c'è un ⟳1 NERO (obbligatorio) prima di PASSA A Aggressione, non modellato, DA VERIFICARE. [Audit scansioni 2026-07]"
+ },
  "354": {
    "name": "ANIMA DEVOTA",
    "type": "defence",
@@ -13127,200 +13132,159 @@
    "note": "Iniziativa =, Aggiunta Istantanea. Carta intera condizionata: OPPURE a) GIOCA SE L'ATTACCO È RIUSCITO → SPINGI 1 + 1 per cella mossa (scaling non rappresentabile, DA VERIFICARE); OPPURE b) GIOCA SE IL BLOCCO È RIUSCITO → SPINGI 1 fisso. Nessun diagramma proprio. Verificata su yasuke_09.webp."
   },
  "356": {
-   "name": "CHIUDERE LA DISTANZA",
-   "type": "meditation",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "n": 1,
-        "dirs": [
-         1,
-         5
-        ]
-       },
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1
-       },
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "opt": true
-       }
-      ]
-     }
-    ]
-   },
-   "effects": [
+  "name": "CHIUDERE LA DISTANZA",
+  "type": "meditation",
+  "move": {
+   "opts": [
     {
-     "do": "search_draw",
-     "n": 1
-    },
-    {
-     "do": "change_kamae",
-     "n": 2
-    }
-   ],
-   "note": "Focus 0. Bidente frontale 1 + passo avanti 1 + passo avanti 1 ulteriore facoltativo. CERCA+PRENDI 1 (criterio esatto DA VERIFICARE). CAMBIA KAMAE FINO A 2 RAMI ungated. Verificata su yasuke_10.webp."
-  },
- "357": {
-   "name": "COLPO DOPPIO",
-   "type": "attack",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "n": 1,
-        "dirs": [
-         0,
-         1,
-         5
-        ]
-       }
-      ]
-     }
-    ]
-   },
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 0
-     },
-     {
-      "d": 5,
-      "k": 1,
-      "w": 0
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 2,
-      "k": 1,
-      "w": 1
-     }
-    ]
-   },
-   "effects": [
-    {
-     "do": "link_anchor",
-     "kamae": "balance"
-    },
-    {
-     "do": "push",
-     "n": 1,
-     "when": "on_hit",
-     "kamae": "aggression"
-    }
-   ],
-   "note": "Tridente frontale 1. Celle-àncora fronte/fronte-sx; fronte-dx/retro-dx 1 ferita. Equilibrio: le celle-àncora infliggono 1 ferita. SE RIUSCITO (Aggressività): SPINGI 1. Verificata su yasuke_12.webp."
-  },
- "358": {
-   "name": "ARTIGLI DELL'AQUILA",
-   "type": "attack",
-   "kamae_req": "aggression",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "n": 1,
-        "dirs": [
-         0,
-         1,
-         5
-        ]
-       }
-      ]
-     }
-    ]
-   },
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 1
-     }
-    ]
-   },
-   "effects": [
-    {
-     "do": "replace_wound_bleed",
-     "when": "on_hit"
-    }
-   ],
-   "split": {
-    "initiative": 5,
-    "move": {
-     "opts": [
+     "atoms": [
       {
-       "atoms": [
-        {
-         "t": "rot",
-         "n": 1,
-         "kamae": "balance"
-        }
+       "t": "step",
+       "n": 1,
+       "dirs": [
+        1,
+        5
        ]
-      }
-     ]
-    },
-    "attack": {
-     "cells": [
-      {
-       "d": 0,
-       "k": 1,
-       "w": 1
       },
       {
-       "d": 5,
-       "k": 1,
-       "w": 1
+       "t": "step",
+       "dir": 0,
+       "n": 1
+      },
+      {
+       "t": "step",
+       "dir": 0,
+       "n": 1,
+       "opt": true
       }
      ]
-    },
-    "effects": [
-     {
-      "do": "hobble",
-      "when": "on_hit"
-     }
-    ]
-   },
-   "note": "Focus 0. Blocco principale (iniziativa 7, Aggressività): tridente frontale; fronte/fronte-dx 1 ferita; sostituisci ! con sanguinante. Split [5]: ⟳1 gated Equilibrio; fronte/fronte-sx 1 ferita; SE RIUSCITO: AZZOPPA. Verificata su yasuke_14.webp."
+    }
+   ]
   },
- "359": {
-   "name": "ZANNE DEL LEONE",
-   "type": "attack",
-   "kamae_req": "determination",
+  "effects": [
+   {
+    "do": "search_draw",
+    "n": 1,
+    "focus_cost": 1
+   },
+   {
+    "do": "change_kamae",
+    "n": 2
+   }
+  ],
+  "note": "Focus 0. Bidente frontale 1 + passo avanti 1 + passo avanti 1 ulteriore facoltativo. CERCA+PRENDI 1 (criterio esatto DA VERIFICARE). CAMBIA KAMAE FINO A 2 RAMI ungated. Verificata su yasuke_10.webp."
+ },
+ "357": {
+  "name": "COLPO DOPPIO",
+  "type": "attack",
+  "move": {
+   "opts": [
+    {
+     "atoms": [
+      {
+       "t": "step",
+       "n": 1,
+       "dirs": [
+        0,
+        1,
+        5
+       ],
+       "opt": true
+      }
+     ]
+    }
+   ]
+  },
+  "attack": {
+   "cells": [
+    {
+     "d": 0,
+     "k": 1,
+     "w": 0
+    },
+    {
+     "d": 5,
+     "k": 1,
+     "w": 0
+    },
+    {
+     "d": 1,
+     "k": 1,
+     "w": 1
+    },
+    {
+     "d": 2,
+     "k": 1,
+     "w": 1
+    }
+   ]
+  },
+  "effects": [
+   {
+    "do": "link_anchor",
+    "kamae": "balance"
+   },
+   {
+    "do": "push",
+    "n": 1,
+    "when": "on_hit",
+    "kamae": "aggression"
+   }
+  ],
+  "note": "Tridente frontale 1. Celle-àncora fronte/fronte-sx; fronte-dx/retro-dx 1 ferita. Equilibrio: le celle-àncora infliggono 1 ferita. SE RIUSCITO (Aggressività): SPINGI 1. Verificata su yasuke_12.webp."
+ },
+ "358": {
+  "name": "ARTIGLI DELL'AQUILA",
+  "type": "attack",
+  "move": {
+   "opts": [
+    {
+     "atoms": [
+      {
+       "t": "step",
+       "n": 1,
+       "dirs": [
+        0,
+        1,
+        5
+       ],
+       "kamae": "aggression"
+      }
+     ]
+    }
+   ]
+  },
+  "attack": {
+   "cells": [
+    {
+     "d": 0,
+     "k": 1,
+     "w": 1
+    },
+    {
+     "d": 1,
+     "k": 1,
+     "w": 1
+    }
+   ]
+  },
+  "effects": [
+   {
+    "do": "replace_wound_bleed",
+    "when": "on_hit",
+    "focus_cost": 1
+   }
+  ],
+  "split": {
+   "initiative": 5,
    "move": {
     "opts": [
      {
       "atoms": [
        {
         "t": "rot",
-        "n": 1
-       },
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1
+        "n": 1,
+        "kamae": "balance"
        }
       ]
      }
@@ -13329,33 +13293,79 @@
    "attack": {
     "cells": [
      {
-      "d": 5,
+      "d": 0,
       "k": 1,
       "w": 1
      },
      {
-      "d": 1,
+      "d": 5,
       "k": 1,
       "w": 1
      }
-    ]
+    ],
+    "focus_cost": 1
    },
    "effects": [
     {
-     "do": "foe_discard",
-     "n": 1,
-     "when": "on_hit",
-     "kamae": "aggression"
+     "do": "hobble",
+     "when": "on_hit"
+    }
+   ]
+  },
+  "note": "Focus 0. Blocco principale (iniziativa 7, Aggressività): tridente frontale; fronte/fronte-dx 1 ferita; sostituisci ! con sanguinante. Split [5]: ⟳1 gated Equilibrio; fronte/fronte-sx 1 ferita; SE RIUSCITO: AZZOPPA. Verificata su yasuke_14.webp."
+ },
+ "359": {
+  "name": "ZANNE DEL LEONE",
+  "type": "attack",
+  "move": {
+   "opts": [
+    {
+     "atoms": [
+      {
+       "t": "rot",
+       "n": 1,
+       "opt": true,
+       "kamae": "determination"
+      },
+      {
+       "t": "step",
+       "dir": 0,
+       "n": 1
+      }
+     ]
+    }
+   ]
+  },
+  "attack": {
+   "cells": [
+    {
+     "d": 5,
+     "k": 1,
+     "w": 1
     },
     {
-     "do": "draw",
-     "n": 2,
-     "when": "on_hit",
-     "kamae": "balance"
+     "d": 1,
+     "k": 1,
+     "w": 1
     }
-   ],
-   "note": "Sostituzione Istantanea. Richiede Determinazione: ⟳1 POI passo avanti 1. Fronte-sx/fronte-dx 1 ferita. SE RIUSCITO: Aggressività l'avversario scarta 1; Equilibrio PESCA FINO A 2. Verificata su yasuke_16.webp."
+   ]
   },
+  "effects": [
+   {
+    "do": "foe_discard",
+    "n": 1,
+    "when": "on_hit",
+    "kamae": "aggression"
+   },
+   {
+    "do": "draw",
+    "n": 2,
+    "when": "on_hit",
+    "kamae": "balance"
+   }
+  ],
+  "note": "Sostituzione Istantanea. Richiede Determinazione: ⟳1 POI passo avanti 1. Fronte-sx/fronte-dx 1 ferita. SE RIUSCITO: Aggressività l'avversario scarta 1; Equilibrio PESCA FINO A 2. Verificata su yasuke_16.webp."
+ },
  "360": {
    "name": "DIFESA A DUE LAME",
    "type": "defence",
@@ -13409,57 +13419,60 @@
    "note": "Iniziativa 8-7 per il blocco principale; split 5-4 per il secondo. 3 scudi identici (fronte-sx/fronte/fronte-dx) in entrambi i blocchi. Contrattacco gated Determinazione presente su una sola iniziativa per blocco (7 e 5), distribuzione esatta DA VERIFICARE. Verificata su yasuke_18.webp."
   },
  "361": {
-   "name": "MORSO DEL LEONE",
-   "type": "attack",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "n": 1,
-        "dirs": [
-         1,
-         5
-        ]
-       },
-       {
-        "t": "rot",
-        "n": 1
-       },
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1
-       }
-      ]
-     }
-    ]
-   },
-   "attack": {
-    "cells": [
-     {
-      "d": 5,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 1
-     }
-    ]
-   },
-   "effects": [
+  "name": "MORSO DEL LEONE",
+  "type": "attack",
+  "move": {
+   "opts": [
     {
-     "do": "focus",
-     "n": 1,
-     "when": "on_hit",
-     "kamae": "determination"
+     "atoms": [
+      {
+       "t": "step",
+       "n": 1,
+       "dirs": [
+        1,
+        5
+       ],
+       "opt": true
+      },
+      {
+       "t": "rot",
+       "n": 1,
+       "opt": true
+      },
+      {
+       "t": "step",
+       "dir": 0,
+       "n": 1,
+       "opt": true
+      }
+     ]
     }
-   ],
-   "note": "Passo diagonale frontale + ⟳1 + passo avanti 1 (tutti obbligatori). Fronte-sx/fronte-dx 1 ferita. SE RIUSCITO (Determinazione): OTTIENI 1 focus. Verificata su yasuke_21.webp."
+   ]
   },
+  "attack": {
+   "cells": [
+    {
+     "d": 5,
+     "k": 1,
+     "w": 1
+    },
+    {
+     "d": 1,
+     "k": 1,
+     "w": 1
+    }
+   ]
+  },
+  "effects": [
+   {
+    "do": "focus",
+    "n": 1,
+    "when": "on_hit",
+    "kamae": "determination"
+   }
+  ],
+  "note": "Passo diagonale frontale + ⟳1 + passo avanti 1 (tutti obbligatori). Fronte-sx/fronte-dx 1 ferita. SE RIUSCITO (Determinazione): OTTIENI 1 focus. Verificata su yasuke_21.webp."
+ },
  "362": {
    "name": "SBILANCIAMENTO",
    "type": "attack",
