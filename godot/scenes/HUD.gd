@@ -38,6 +38,21 @@ var _played_label: Label
 var _phase_banner: PanelContainer
 var _phase_lbl: Label
 
+## Contenitore verticale che impila kamae-chooser e option-chooser uno sopra
+## l'altro (invece di due pannelli con offset fissi indipendenti, che potevano
+## sovrapporsi quando entrambi visibili contemporaneamente — vedi screenshot
+## utente). I Container ignorano i figli con visible=false nel layout, quindi
+## impilare qui basta a evitare qualunque sovrapposizione futura.
+var _choosers_stack: VBoxContainer
+
+var _log_wrap: PanelContainer
+var _log_rt: RichTextLabel
+var _log_toggle: Button
+var _log_collapsed: bool = false
+var _log_lines: Array[String] = []
+const _LOG_MAX_LINES := 400
+const _LOG_WIDTH := 320.0
+
 
 func _ready() -> void:
 	hand.card_played.connect(func(d):
@@ -45,9 +60,11 @@ func _ready() -> void:
 		if d.has("initiative"):
 			label += " (ini %s)" % str(d.get("initiative"))
 		info.text = "Carta giocata: %s" % label
+		log_line("▶ Carta giocata: %s" % label)
 		card_played.emit(d))
 	hand.card_selected.connect(func(d): card_selected.emit(d))
 	hand.card_hovered.connect(func(d, e): card_hovered.emit(d, e))
+	_build_choosers_stack()
 	_build_kamae_chooser()
 	_build_kamae_tree()
 	_build_played_slot()
@@ -58,6 +75,7 @@ func _ready() -> void:
 	_build_focus_widget()
 	_build_instant_chooser()
 	_build_phase_banner()
+	_build_log_panel()
 
 
 ## Ritratti dei contendenti agli angoli in alto (P1 a sinistra col bordo
@@ -153,14 +171,25 @@ var _opt_box: HBoxContainer
 var _opt_btns: Dictionary = {}
 
 
+## Contenitore che impila verticalmente kamae-chooser e option-chooser, senza
+## offset fissi indipendenti: i Container di Godot escludono dal layout i figli
+## con visible=false, quindi qui non c'è mai sovrapposizione anche quando
+## entrambi i pannelli sono costruiti (ognuno mostra/nasconde il proprio wrap).
+func _build_choosers_stack() -> void:
+	_choosers_stack = VBoxContainer.new()
+	_choosers_stack.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	_choosers_stack.anchor_left = 0.5; _choosers_stack.anchor_right = 0.5
+	_choosers_stack.offset_left = -320; _choosers_stack.offset_right = 320
+	_choosers_stack.offset_top = 92   # sotto la top bar E il banner di fase
+	_choosers_stack.add_theme_constant_override("separation", 6)
+	add_child(_choosers_stack)
+
+
 ## Selettore "OPPURE": una riga di pulsanti, uno per alternativa, mostrato durante
 ## la TUA risoluzione quando la carta ha opzioni mutuamente esclusive.
 func _build_option_chooser() -> void:
 	var wrap := VBoxContainer.new()
-	wrap.set_anchors_preset(Control.PRESET_CENTER_TOP)
-	wrap.anchor_left = 0.5; wrap.anchor_right = 0.5
-	wrap.offset_left = -320; wrap.offset_right = 320; wrap.offset_top = 120
-	add_child(wrap)
+	_choosers_stack.add_child(wrap)
 	var lbl := Label.new()
 	lbl.text = "Scegli un'opzione (OPPURE):"
 	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -291,13 +320,7 @@ static func _load_tex(path: String) -> Texture2D:
 
 func _build_kamae_chooser() -> void:
 	var wrap := VBoxContainer.new()
-	wrap.set_anchors_preset(Control.PRESET_CENTER_TOP)
-	wrap.anchor_left = 0.5
-	wrap.anchor_right = 0.5
-	wrap.offset_left = -240
-	wrap.offset_right = 240
-	wrap.offset_top = 92   # sotto la top bar E il banner di fase
-	add_child(wrap)
+	_choosers_stack.add_child(wrap)
 	var lbl := Label.new()
 	lbl.text = "Cambia Kamae — scegli sull'albero (o qui):"
 	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -607,3 +630,94 @@ func set_info(text: String) -> void:
 
 func set_hint(text: String) -> void:
 	hint.text = text
+
+
+## Colonna di log a destra, collassabile: raccoglie tutto ciò che succede in
+## partita (risoluzioni, effetti, vittoria) così l'utente può scorrerlo invece
+## di perderlo quando il testo transitorio in basso (Hint) viene sovrascritto.
+func _build_log_panel() -> void:
+	_log_wrap = PanelContainer.new()
+	_log_wrap.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	_log_wrap.anchor_left = 1.0; _log_wrap.anchor_right = 1.0
+	_log_wrap.anchor_top = 0.0; _log_wrap.anchor_bottom = 1.0
+	_log_wrap.offset_right = -8
+	_log_wrap.offset_left = -8 - _LOG_WIDTH
+	_log_wrap.offset_top = 44        # sotto la top bar
+	_log_wrap.offset_bottom = -44    # sopra la barra Hint
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.05, 0.06, 0.08, 0.85)
+	sb.set_corner_radius_all(8)
+	sb.set_border_width_all(1)
+	sb.border_color = Color(1, 1, 1, 0.12)
+	_log_wrap.add_theme_stylebox_override("panel", sb)
+	add_child(_log_wrap)
+
+	var col := VBoxContainer.new()
+	col.add_theme_constant_override("separation", 4)
+	_log_wrap.add_child(col)
+
+	var header := HBoxContainer.new()
+	col.add_child(header)
+	var title := Label.new()
+	title.text = "Log"
+	title.add_theme_font_size_override("font_size", 16)
+	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	header.add_child(title)
+	_log_toggle = Button.new()
+	_log_toggle.text = "▶"
+	_log_toggle.tooltip_text = "Comprimi/espandi il log"
+	_log_toggle.custom_minimum_size = Vector2(32, 32)
+	_log_toggle.pressed.connect(_toggle_log)
+	header.add_child(_log_toggle)
+
+	_log_rt = RichTextLabel.new()
+	_log_rt.bbcode_enabled = true
+	_log_rt.scroll_following = true
+	_log_rt.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_log_rt.add_theme_font_size_override("normal_font_size", 14)
+	col.add_child(_log_rt)
+
+	# Tab sempre cliccabile per riaprire quando il pannello è compresso, ancorata
+	# al bordo destro indipendentemente da _log_wrap (che a compresso trasla fuori
+	# schermo lasciando solo questa visibile).
+	var reopen := Button.new()
+	reopen.text = "◀ Log"
+	reopen.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	reopen.anchor_left = 1.0; reopen.anchor_right = 1.0
+	reopen.offset_right = -8; reopen.offset_left = -8 - 74
+	reopen.offset_top = 44; reopen.offset_bottom = 44 + 32
+	reopen.pressed.connect(_toggle_log)
+	reopen.visible = false
+	add_child(reopen)
+	_log_reopen_btn = reopen
+
+
+var _log_reopen_btn: Button
+
+
+func _toggle_log() -> void:
+	_log_collapsed = not _log_collapsed
+	if _log_collapsed:
+		_log_wrap.offset_left = 8 + _LOG_WIDTH   # trasla oltre il bordo destro (fuori vista)
+		_log_wrap.offset_right = 8 + _LOG_WIDTH + _LOG_WIDTH
+		_log_wrap.visible = false
+		_log_reopen_btn.visible = true
+	else:
+		_log_wrap.offset_left = -8 - _LOG_WIDTH
+		_log_wrap.offset_right = -8
+		_log_wrap.visible = true
+		_log_reopen_btn.visible = false
+
+
+## Aggiunge una o più righe al log persistente (a differenza di set_hint, che è
+## transitorio e viene sovrascritto). `lines` può contenere newline interni.
+func log_line(text: String) -> void:
+	if text.is_empty():
+		return
+	for line in text.split("\n"):
+		if line.strip_edges() == "":
+			continue
+		_log_lines.append(line)
+	while _log_lines.size() > _LOG_MAX_LINES:
+		_log_lines.pop_front()
+	_log_rt.text = "\n".join(_log_lines)

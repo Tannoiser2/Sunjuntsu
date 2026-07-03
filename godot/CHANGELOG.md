@@ -3,6 +3,22 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.89.0] — 2026-07-03
+### UI: risolto sovrapposto testi di scelta + colonna log collassabile
+- **Kamae-chooser e option-chooser non si sovrappongono più**: prima avevano
+  offset verticali fissi indipendenti (92px e 120px) che si accavallavano
+  quando entrambi i pannelli erano visibili nello stesso momento (es. cambio
+  Kamae + scelta OPPURE sulla stessa carta, come nello screenshot segnalato).
+  Ora condividono un unico `VBoxContainer` (`_choosers_stack`): i Container di
+  Godot escludono dal layout i figli nascosti, quindi si impilano da soli
+  senza mai accavallarsi, qualunque combinazione sia visibile.
+- **Nuova colonna di log a destra, collassabile** (`HUD._build_log_panel`):
+  raccoglie in un `RichTextLabel` scorrevole tutto ciò che succede in
+  partita (risoluzioni di turno riga per riga, carte giocate, fine duello) —
+  prima finiva solo nella barra "Hint" in basso, che veniva sovrascritta a
+  ogni azione e quindi perdeva la cronologia. Un pulsante "▶"/tab "◀ Log"
+  comprime/espande il pannello.
+
 ## [0.88.0] — 2026-07-03
 ### Audit completo di tutte le 281 carte contro le scansioni originali
 Dopo i 4 fix di playtest (v0.87.0) è stato eseguito un riaudit sistematico di
