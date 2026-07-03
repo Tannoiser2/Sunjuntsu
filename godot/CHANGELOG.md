@@ -3,6 +3,60 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.88.0] — 2026-07-03
+### Audit completo di tutte le 281 carte contro le scansioni originali
+Dopo i 4 fix di playtest (v0.87.0) è stato eseguito un riaudit sistematico di
+tutti i 18 mazzi (personaggi + carte comuni) confrontando ogni singola carta
+con la scansione ad alta risoluzione del fisico, con particolare attenzione ai
+movimenti (direzioni sbagliate, esagoni mancanti nei diagrammi, opzionalità
+non modellata). Punti principali:
+
+- **Grammatica dei glifi di movimento ricalibrata** sul regolamento ufficiale
+  (p.15 "Effetti di Movimento"): frecce NERE piene = movimento obbligatorio,
+  frecce BIANCHE a contorno = facoltativo. Questa distinzione non era mai
+  stata modellata: ~90 atomi di movimento su tutti i mazzi avevano `opt`
+  mancante o invertito rispetto al colore stampato sulla carta.
+- **Tridente "a manico"** (2 punte laterali + manico opposto senza punta) vs
+  **glifo misto** (2 punte diagonali + 1 punta centrale nella direzione
+  opposta, tutte e 3 valide): due glifi visivamente simili ma semanticamente
+  diversi, individuati e distinti su ~10 carte (#27, #32, #33, #67, #69, #72,
+  #75, #126, #219 e gemelle) dopo un primo errore di trascrizione corretto in
+  corsa.
+- **4 diagrammi d'attacco/difesa del Ninja** (#164, #168, #171, #173) erano
+  un anello troppo vicino al combattente rispetto allo stampato: corretti
+  sull'anello 2/3 giusto.
+- **9 `kamae_req` fantasma sull'Assassino** (#220–230): l'icona TIPO carta in
+  colonna sinistra (fiamma=attacco, montagne=difesa) era stata scambiata per
+  un requisito Kamae; rimossi tutti.
+- Altri fix puntuali: campo `counter` mancante su #17, `alt_initiative` al
+  posto di soglie iniziativa errate su #166/#169, gate di riga OR
+  Kamae/Kamae su #351/#358/#359 dello Yasuke, Kamae Distanza mancante su
+  #276 del Navigatore, dozzine di `focus_cost` mancanti sulle righe a banda
+  viola, e vari `foe_stun`/`hobble` scambiati.
+- Circa 15 note "DA VERIFICARE" restano aperte per glifi/icone non
+  identificati con certezza (documentate carta per carta nel campo `note`).
+
+## [0.87.0] — 2026-07-03
+### Fix dal playtest: movimenti carta errati e rotazione "fino a N" definitiva
+- **#138 Taglio di Tanto**: il passo era trascritto come diagonali FRONTALI
+  (dir 1/5); l'icona sulla carta è un bidente verso il BASSO → diagonali
+  POSTERIORI (dir 2/4).
+- **#117 Mente Addestrata**: stesso errore in entrambe le opzioni di
+  movimento (tridente frontale 0/1/5 → bidente basso 2/4, passo di 2).
+- **#226 Balzo nell'Ombra**: rimosso il `kamae_req: determination` fantasma —
+  sul corpo della carta non c'è nessuna banda Kamae (la banda gialla
+  Determinazione riguarda solo la riga di movimento bonus, già modellata
+  come gate sull'atomo). La carta è giocabile in qualsiasi Kamae.
+- **Rotazione, rifatta**: la finestra dei facing legali è ora ANCORATA al
+  facing che la pedina aveva all'inizio della risoluzione della carta
+  (`_move_origin_facing`): prima veniva ricalcolata dal facing corrente a
+  ogni pressione, così la finestra "scorreva" e la pedina poteva girare di
+  360°. Un tocco di Q/E = ESATTAMENTE un lato (niente scansione con wrap);
+  il tocco è permesso solo se il facing risultante è tra quelli concessi
+  dalla carta o è il ritorno al facing di partenza. Rot 1 = max 1 lato a
+  destra O sinistra, rot 2 = max 2, mai oltre. Stesso limite applicato al
+  percorso legacy `rotates`.
+
 ## [0.86.0] — 2026-07-03
 ### Contratti dello Yojimbo (carta-regola "Sicario a Contratto" dal PDF) — catalogo meccaniche COMPLETO
 - **Sottosistema Contratti** (§3.11, ultima meccanica del catalogo): i 6
