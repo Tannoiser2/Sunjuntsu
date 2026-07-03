@@ -285,50 +285,50 @@
    "name": "CONCENTRAZIONE RITROVATA",
    "type": "meditation",
    "move": {
-	"opts": [
-	 {
-	  "atoms": [
-	   {
-		"t": "step",
-		"n": 1,
-		"opt": false,
-		"dir": -1
-	   },
-	   {
-		"t": "rot",
-		"n": 1,
-		"opt": false
-	   }
-	  ]
-	 },
-	 {
-	  "atoms": [
-	   {
-		"t": "step",
-		"n": 2,
-		"opt": false,
-		"kamae": "balance",
-		"dir": -1
-	   },
-	   {
-		"t": "rot",
-		"n": 2,
-		"opt": false,
-		"kamae": "balance"
-	   }
-	  ]
-	 }
-	]
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "n": 1,
+        "opt": true,
+        "dir": -1
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": true
+       }
+      ]
+     },
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "n": 2,
+        "opt": true,
+        "kamae": "balance",
+        "dir": -1
+       },
+       {
+        "t": "rot",
+        "n": 2,
+        "opt": true,
+        "kamae": "balance"
+       }
+      ]
+     }
+    ]
    },
    "effects": [
-	{
-	 "do": "focus",
-	 "n": 1
-	},
-	{
-	 "do": "switch_kamae",
-	 "to": "aggression"
-	}
+    {
+     "do": "focus",
+     "n": 1
+    },
+    {
+     "do": "switch_kamae",
+     "to": "aggression"
+    }
    ],
    "note": "Movimento: ❄1 ↻1, OPPURE (verde = Equilibrio) ❄2 ↻2 — il ❄ è un marcatore-àncora, non un passo. \"OTTIENI 1 🪷\" = focus; \"PASSA A\" = switch_kamae aggression."
   },
