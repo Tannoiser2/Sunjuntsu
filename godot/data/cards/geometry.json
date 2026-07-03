@@ -10399,56 +10399,57 @@
    "note": "Costo: SCARTA 1 CARTA. Movimento ❄1 ↻2 facoltativi. OPPURE: PESCA FINO A 2 (a) / RIMETTI IN GIOCO UN CONTRATTO A FACCIA IN SU (alt b: riporta in gioco un contratto scartato, non ancora modellato — serve traccia dei contratti scartati, DA VERIFICARE) / CAMBIA KAMAE FINO A 1 RAMO (c). Verificata su yojimbo_03.webp."
   },
  "317": {
-   "name": "AFFONDO DI NAGAMAKI",
-   "type": "attack",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1
-       }
-      ]
-     }
-    ]
-   },
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 0,
-      "k": 2,
-      "w": 1
-     }
-    ]
-   },
-   "effects": [
+  "name": "AFFONDO DI NAGAMAKI",
+  "type": "attack",
+  "move": {
+   "opts": [
     {
-     "do": "discard_self",
-     "n": 1
-    },
-    {
-     "do": "hobble",
-     "when": "on_hit",
-     "focus_cost": 1,
-     "alt": "a"
-    },
-    {
-     "do": "foe_stun",
-     "n": 1,
-     "when": "on_hit",
-     "focus_cost": 1,
-     "alt": "b"
+     "atoms": [
+      {
+       "t": "step",
+       "dir": 0,
+       "n": 1,
+       "opt": true
+      }
+     ]
     }
-   ],
-   "note": "Arma Nagamaki, core. Costo SCARTA 1 CARTA. Passo avanti 1. Colonna frontale k1-k2 (1 ferita ciascuna). SE RIUSCITO: OPPURE AZZOPPA (1 focus) OPPURE STORDISCI (1 focus). Verificata su yojimbo_13.webp."
+   ]
   },
+  "attack": {
+   "cells": [
+    {
+     "d": 0,
+     "k": 1,
+     "w": 1
+    },
+    {
+     "d": 0,
+     "k": 2,
+     "w": 1
+    }
+   ]
+  },
+  "effects": [
+   {
+    "do": "discard_self",
+    "n": 1
+   },
+   {
+    "do": "hobble",
+    "when": "on_hit",
+    "focus_cost": 1,
+    "alt": "a"
+   },
+   {
+    "do": "foe_stun",
+    "n": 1,
+    "when": "on_hit",
+    "focus_cost": 1,
+    "alt": "b"
+   }
+  ],
+  "note": "Arma Nagamaki, core. Costo SCARTA 1 CARTA. Passo avanti 1. Colonna frontale k1-k2 (1 ferita ciascuna). SE RIUSCITO: OPPURE AZZOPPA (1 focus) OPPURE STORDISCI (1 focus). Verificata su yojimbo_13.webp."
+ },
  "318": {
    "name": "RISOLUTEZZA OSTINATA",
    "type": "meditation",
@@ -10460,126 +10461,130 @@
    }
   },
  "319": {
-   "name": "ZANMATO",
-   "type": "attack",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 5,
-        "n": 2
-       }
-      ]
-     }
-    ]
-   },
-   "attack": {
-    "cells": [
-     {
-      "d": 1,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 2,
-      "k": 1,
-      "w": 1
-     }
-    ]
-   },
-   "note": "QUANDO RIVELATA: SCARTA TUTTI I CONTRATTI IN GIOCO; per ogni contratto completato scartato, +1 iniziativa OPPURE +1 ferita — meccanica Contratti non modellata (nessun verbo per contare/bonus variabile), DA VERIFICARE. Movimento: passo fronte-sx x2, obbligatorio. Fronte-dx/retro-dx (1 ferita ciascuna); fronte/retro/fronte-sx/retro-sx vuoti. Verificata su yojimbo_14.webp."
-  },
- "320": {
-   "name": "COLPO BRUTALE",
-   "type": "attack",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1,
-        "kamae": "aggression"
-       }
-      ]
-     },
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dirs": [
-         0,
-         1,
-         5
-        ],
-        "n": 1
-       },
-       {
-        "t": "rot",
-        "n": 1
-       }
-      ]
-     }
-    ]
-   },
-   "attack": {
-    "cells": [
-     {
-      "d": 5,
-      "k": 1,
-      "w": 2
-     },
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
-   },
-   "effects": [
+  "name": "ZANMATO",
+  "type": "attack",
+  "move": {
+   "opts": [
     {
-     "do": "foe_reveal_hand",
-     "when": "on_hit"
+     "atoms": [
+      {
+       "t": "step",
+       "dir": 5,
+       "n": 2,
+       "opt": true
+      }
+     ]
+    }
+   ]
+  },
+  "attack": {
+   "cells": [
+    {
+     "d": 1,
+     "k": 1,
+     "w": 1
     },
     {
-     "do": "change_kamae",
-     "n": 1,
-     "when": "on_hit"
+     "d": 2,
+     "k": 1,
+     "w": 1
     }
-   ],
-   "note": "Movimento su due righe: banda Aggressività = passo avanti alternativo; riga sempre disponibile = tridente frontale + rotazione — trascritte come opzioni alternative, DA VERIFICARE se vadano composte in sequenza. Fronte-sx 2 ferite, fronte 1 ferita. SE RIUSCITO: GUARDA LA MANO dell'avversario (foe_reveal_hand), poi CAMBIA KAMAE FINO A 1 RAMO. Verificata su yojimbo_18.webp."
+   ]
   },
- "321": {
-   "name": "REPUTAZIONE SPAVENTOSA",
-   "type": "meditation",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": -1,
-        "n": 1
-       },
-       {
-        "t": "rot",
-        "n": 1
-       }
-      ]
-     }
-    ]
-   },
-   "effects": [
+  "note": "QUANDO RIVELATA: SCARTA TUTTI I CONTRATTI IN GIOCO; per ogni contratto completato scartato, +1 iniziativa OPPURE +1 ferita — meccanica Contratti non modellata (nessun verbo per contare/bonus variabile), DA VERIFICARE. Movimento: passo fronte-sx x2, obbligatorio. Fronte-dx/retro-dx (1 ferita ciascuna); fronte/retro/fronte-sx/retro-sx vuoti. Verificata su yojimbo_14.webp."
+ },
+ "320": {
+  "name": "COLPO BRUTALE",
+  "type": "attack",
+  "move": {
+   "opts": [
     {
-     "do": "hobble",
-     "n": 1
+     "atoms": [
+      {
+       "t": "step",
+       "dir": 0,
+       "n": 1,
+       "kamae": "aggression",
+       "opt": true
+      }
+     ]
+    },
+    {
+     "atoms": [
+      {
+       "t": "step",
+       "dirs": [
+        0,
+        1,
+        5
+       ],
+       "n": 1
+      },
+      {
+       "t": "rot",
+       "n": 1
+      }
+     ]
     }
-   ],
-   "note": "MEDITAZIONE. DISTANZA (Range1). DISTANZA +1 per contratto completato in gioco: meccanica non modellata (bonus raggio variabile). OGNI avversario in raggio viene AZZOPPATO (il campo 'n' non cattura il 'ogni', DA VERIFICARE). Movimento: ❄1 + ↻1, entrambi obbligatori. Verificata su yojimbo_17.webp."
+   ]
   },
+  "attack": {
+   "cells": [
+    {
+     "d": 5,
+     "k": 1,
+     "w": 2
+    },
+    {
+     "d": 0,
+     "k": 1,
+     "w": 1
+    }
+   ]
+  },
+  "effects": [
+   {
+    "do": "foe_reveal_hand",
+    "when": "on_hit"
+   },
+   {
+    "do": "change_kamae",
+    "n": 1,
+    "when": "on_hit"
+   }
+  ],
+  "note": "Movimento su due righe: banda Aggressività = passo avanti alternativo; riga sempre disponibile = tridente frontale + rotazione — trascritte come opzioni alternative, DA VERIFICARE se vadano composte in sequenza. Fronte-sx 2 ferite, fronte 1 ferita. SE RIUSCITO: GUARDA LA MANO dell'avversario (foe_reveal_hand), poi CAMBIA KAMAE FINO A 1 RAMO. Verificata su yojimbo_18.webp."
+ },
+ "321": {
+  "name": "REPUTAZIONE SPAVENTOSA",
+  "type": "meditation",
+  "move": {
+   "opts": [
+    {
+     "atoms": [
+      {
+       "t": "step",
+       "dir": -1,
+       "n": 1,
+       "opt": true
+      },
+      {
+       "t": "rot",
+       "n": 1,
+       "opt": true
+      }
+     ]
+    }
+   ]
+  },
+  "effects": [
+   {
+    "do": "hobble",
+    "n": 1
+   }
+  ],
+  "note": "MEDITAZIONE. DISTANZA (Range1). DISTANZA +1 per contratto completato in gioco: meccanica non modellata (bonus raggio variabile). OGNI avversario in raggio viene AZZOPPATO (il campo 'n' non cattura il 'ogni', DA VERIFICARE). Movimento: ❄1 + ↻1, entrambi obbligatori. Verificata su yojimbo_17.webp."
+ },
  "322": {
    "name": "IL MIO LAVORO QUI È FINITO",
    "type": "meditation",
@@ -10669,47 +10674,49 @@
    "note": "Iniziativa 7-5 (già in card_pool). 3 scudi non numerati (fronte/fronte-sx/fronte-dx). Contrattacco: scudo+6 = counter [6]. SE RIUSCITO: OTTIENI 1 focus; SPINGI 2 gated Equilibrio O Aggressività (banda unica, OR, trascritta come due effetti separati mutuamente esclusivi). Banda Determinazione con sola icona occhio senza testo, DA VERIFICARE. Split [4]: ❄1. Verificata su yojimbo_25.webp."
   },
  "324": {
-   "name": "PUNTURA DI SCORPIONE",
-   "type": "attack",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 1
-       },
-       {
-        "t": "rot",
-        "n": 1
-       }
-      ]
-     }
-    ]
-   },
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
-   },
-   "effects": [
+  "name": "PUNTURA DI SCORPIONE",
+  "type": "attack",
+  "move": {
+   "opts": [
     {
-     "do": "foe_discard",
-     "n": 1,
-     "when": "on_hit"
+     "atoms": [
+      {
+       "t": "step",
+       "dir": 0,
+       "n": 1,
+       "opt": true
+      },
+      {
+       "t": "rot",
+       "n": 1,
+       "opt": true
+      }
+     ]
     }
-   ],
-   "note": "Copia con testo stampato in inglese (Scorpion Sting/Attack/If successful/Discard 1 card), tradotto. Banda Aggressività con [8] = iniziativa alternativa 8 (alt_initiative). Movimento: passo avanti + rotazione. Fronte 1 ferita. Banda viola con icone elmo+teschio senza testo proprio sopra 'SCARTA 1 CARTA': probabile effetto letale aggiuntivo pagando 1 focus, non modellato, DA VERIFICARE (stesso pattern di id 10). Verificata su yojimbo_23.webp.",
-   "alt_initiative": {
-    "value": 8,
-    "kamae": "aggression"
-   }
+   ]
   },
+  "attack": {
+   "cells": [
+    {
+     "d": 0,
+     "k": 1,
+     "w": 1
+    }
+   ]
+  },
+  "effects": [
+   {
+    "do": "foe_discard",
+    "n": 1,
+    "when": "on_hit"
+   }
+  ],
+  "note": "Copia con testo stampato in inglese (Scorpion Sting/Attack/If successful/Discard 1 card), tradotto. Banda Aggressività con [8] = iniziativa alternativa 8 (alt_initiative). Movimento: passo avanti + rotazione. Fronte 1 ferita. Banda viola con icone elmo+teschio senza testo proprio sopra 'SCARTA 1 CARTA': probabile effetto letale aggiuntivo pagando 1 focus, non modellato, DA VERIFICARE (stesso pattern di id 10). Verificata su yojimbo_23.webp. IF SUCCESSFUL banda viola (1 focus): icone elmo+teschio, non modellato, DA VERIFICARE. [Audit scansioni 2026-07]",
+  "alt_initiative": {
+   "value": 8,
+   "kamae": "aggression"
+  }
+ },
  "325": {
    "name": "LANCIO DI SENBON",
    "type": "attack",
@@ -10737,99 +10744,102 @@
    }
   },
  "326": {
-   "name": "CRANIOTOMIA",
-   "type": "attack",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dirs": [
-         0,
-         1,
-         5
-        ],
-        "n": 1
-       },
-       {
-        "t": "rot",
-        "n": 1
-       }
-      ]
-     }
-    ]
-   },
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 1
-     }
-    ]
-   },
-   "effects": [
+  "name": "CRANIOTOMIA",
+  "type": "attack",
+  "move": {
+   "opts": [
     {
-     "do": "foe_stun",
-     "n": 1,
-     "when": "on_hit",
-     "kamae": "determination"
-    },
-    {
-     "do": "foe_switch_kamae",
-     "to": "neutral",
-     "when": "on_hit",
-     "kamae": "aggression"
-    },
-    {
-     "do": "change_kamae",
-     "n": 1,
-     "when": "on_hit"
+     "atoms": [
+      {
+       "t": "step",
+       "dirs": [
+        0,
+        1,
+        5
+       ],
+       "n": 1,
+       "opt": true
+      },
+      {
+       "t": "rot",
+       "n": 1,
+       "opt": true
+      }
+     ]
     }
-   ],
-   "note": "Movimento: tridente frontale + rotazione. Fronte/fronte-dx (1 ferita ciascuna). SE RIUSCITO: Determinazione STORDISCI; Aggressività l'AVVERSARIO passa a Neutrale (foe_switch_kamae); poi CAMBIA KAMAE FINO A 1 RAMO su se stessi. Verificata su yojimbo_19.webp."
+   ]
   },
+  "attack": {
+   "cells": [
+    {
+     "d": 0,
+     "k": 1,
+     "w": 1
+    },
+    {
+     "d": 1,
+     "k": 1,
+     "w": 1
+    }
+   ]
+  },
+  "effects": [
+   {
+    "do": "foe_stun",
+    "n": 1,
+    "when": "on_hit",
+    "kamae": "determination"
+   },
+   {
+    "do": "foe_switch_kamae",
+    "to": "neutral",
+    "when": "on_hit",
+    "kamae": "aggression"
+   },
+   {
+    "do": "change_kamae",
+    "n": 1,
+    "when": "on_hit"
+   }
+  ],
+  "note": "Movimento: tridente frontale + rotazione. Fronte/fronte-dx (1 ferita ciascuna). SE RIUSCITO: Determinazione STORDISCI; Aggressività l'AVVERSARIO passa a Neutrale (foe_switch_kamae); poi CAMBIA KAMAE FINO A 1 RAMO su se stessi. Verificata su yojimbo_19.webp."
+ },
  "327": {
-   "name": "AURA OSCURA",
-   "type": "meditation",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 0,
-        "n": 2
-       },
-       {
-        "t": "rot",
-        "n": 1
-       }
-      ]
-     }
-    ]
-   },
-   "effects": [
+  "name": "AURA OSCURA",
+  "type": "meditation",
+  "move": {
+   "opts": [
     {
-     "do": "foe_discard",
-     "n": 2,
-     "focus_cost": 1
-    },
-    {
-     "do": "foe_discard",
-     "n": 1,
-     "focus_cost": 2,
-     "random": true
+     "atoms": [
+      {
+       "t": "step",
+       "dir": 0,
+       "n": 2
+      },
+      {
+       "t": "rot",
+       "n": 1,
+       "opt": true
+      }
+     ]
     }
-   ],
-   "note": "MEDITAZIONE. DISTANZA (Range3). Nessun SE RIUSCITO. Banda viola 1 loto: l'avversario scarta 2; banda 2 loti: l'avversario scarta 1 A CASO (foe_discard random). Movimento: passo avanti x2 + rotazione, obbligatori. Verificata su yojimbo_10.webp."
+   ]
   },
+  "effects": [
+   {
+    "do": "foe_discard",
+    "n": 2,
+    "focus_cost": 1
+   },
+   {
+    "do": "foe_discard",
+    "n": 1,
+    "focus_cost": 2,
+    "random": true
+   }
+  ],
+  "note": "MEDITAZIONE. DISTANZA (Range3). Nessun SE RIUSCITO. Banda viola 1 loto: l'avversario scarta 2; banda 2 loti: l'avversario scarta 1 A CASO (foe_discard random). Movimento: passo avanti x2 + rotazione, obbligatori. Verificata su yojimbo_10.webp."
+ },
  "328": {
    "name": "SICARIO A PAGAMENTO",
    "type": "meditation",
@@ -10858,49 +10868,50 @@
    }
   },
  "329": {
-   "name": "SPEZZARE LE GAMBE",
-   "type": "attack",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": 3,
-        "n": 1
-       }
-      ]
-     }
-    ]
-   },
-   "attack": {
-    "cells": [
-     {
-      "d": 5,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 4,
-      "k": 1,
-      "w": 1
-     }
-    ]
-   },
-   "effects": [
+  "name": "SPEZZARE LE GAMBE",
+  "type": "attack",
+  "move": {
+   "opts": [
     {
-     "do": "hobble",
-     "when": "on_hit",
-     "kamae": "balance"
+     "atoms": [
+      {
+       "t": "step",
+       "dir": 3,
+       "n": 1,
+       "opt": true
+      }
+     ]
+    }
+   ]
+  },
+  "attack": {
+   "cells": [
+    {
+     "d": 5,
+     "k": 1,
+     "w": 1
     },
     {
-     "do": "change_kamae",
-     "n": 1,
-     "when": "on_hit"
+     "d": 4,
+     "k": 1,
+     "w": 1
     }
-   ],
-   "note": "Movimento: passo indietro 1. Fronte-sx/retro-sx (1 ferita ciascuna). SE RIUSCITO: Equilibrio AZZOPPA; poi CAMBIA KAMAE FINO A 1 RAMO su se stessi. Verificata su yojimbo_04.webp."
+   ]
   },
+  "effects": [
+   {
+    "do": "hobble",
+    "when": "on_hit",
+    "kamae": "balance"
+   },
+   {
+    "do": "change_kamae",
+    "n": 1,
+    "when": "on_hit"
+   }
+  ],
+  "note": "Movimento: passo indietro 1. Fronte-sx/retro-sx (1 ferita ciascuna). SE RIUSCITO: Equilibrio AZZOPPA; poi CAMBIA KAMAE FINO A 1 RAMO su se stessi. Verificata su yojimbo_04.webp."
+ },
  "333": {
    "name": "CARTA SPECIALE WAKOU",
    "type": "core",
