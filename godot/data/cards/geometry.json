@@ -675,7 +675,7 @@
        {
         "t": "step",
         "n": 1,
-        "opt": true,
+        "opt": false,
         "focus_cost": 1,
         "dir": -1
        }
@@ -686,7 +686,7 @@
        {
         "t": "rot",
         "n": 1,
-        "opt": false
+        "opt": true
        }
       ]
      }
