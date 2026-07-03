@@ -10913,122 +10913,121 @@
   "note": "Movimento: passo indietro 1. Fronte-sx/retro-sx (1 ferita ciascuna). SE RIUSCITO: Equilibrio AZZOPPA; poi CAMBIA KAMAE FINO A 1 RAMO su se stessi. Verificata su yojimbo_04.webp."
  },
  "333": {
-   "name": "CARTA SPECIALE WAKOU",
-   "type": "core",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": -1,
-        "n": 1,
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 2,
-        "opt": true
-       }
-      ]
-     }
-    ]
-   },
-   "effects": [
+  "name": "CARTA SPECIALE WAKOU",
+  "type": "core",
+  "move": {
+   "opts": [
     {
-     "do": "discard_self",
-     "n": 1
-    },
-    {
-     "do": "draw",
-     "n": 2,
-     "alt": "a"
-    },
-    {
-     "do": "search_draw",
-     "n": 1,
-     "alt": "b"
-    },
-    {
-     "do": "change_kamae",
-     "n": 1,
-     "alt": "c"
+     "atoms": [
+      {
+       "t": "step",
+       "dir": -1,
+       "n": 1,
+       "opt": true
+      },
+      {
+       "t": "rot",
+       "n": 2,
+       "opt": true
+      }
+     ]
     }
-   ],
-   "note": "Struttura standard Carta Speciale. Costo: SCARTA 1 CARTA. Movimento ❄1 ⟳2 facoltativi. OPPURE: PESCA FINO A 2 / CERCA+PRENDI 1 (per analogia con Allievo id 38) / CAMBIA KAMAE FINO A 1 RAMO. Verificata su wakou_04.webp."
+   ]
   },
+  "effects": [
+   {
+    "do": "discard_self",
+    "n": 1
+   },
+   {
+    "do": "draw",
+    "n": 2,
+    "alt": "a"
+   },
+   {
+    "do": "search_draw",
+    "n": 1,
+    "alt": "b"
+   },
+   {
+    "do": "change_kamae",
+    "n": 1,
+    "alt": "c"
+   }
+  ],
+  "note": "Struttura standard Carta Speciale. Costo: SCARTA 1 CARTA. Movimento ❄1 ⟳2 facoltativi. OPPURE: PESCA FINO A 2 / CERCA+PRENDI 1 (per analogia con Allievo id 38) / CAMBIA KAMAE FINO A 1 RAMO. Verificata su wakou_04.webp. Opzione b: sembra 'SCARTA 1 + PRENDI 1' (discard poi search_draw), oggi modellata solo come search_draw, DA VERIFICARE. [Audit scansioni 2026-07]"
+ },
  "334": {
-   "name": "SCHIANTO DI BORDATA",
-   "type": "attack",
-   "move": {
-    "opts": [
+  "name": "SCHIANTO DI BORDATA",
+  "type": "attack",
+  "move": {
+   "opts": [
+    {
+     "atoms": [
+      {
+       "t": "step",
+       "n": 2,
+       "dirs": [
+        1,
+        2
+       ],
+       "opt": true
+      },
+      {
+       "t": "rot",
+       "n": 1
+      }
+     ]
+    }
+   ]
+  },
+  "attacks": [
+   {
+    "cells": [
      {
-      "atoms": [
-       {
-        "t": "step",
-        "n": 2,
-        "dirs": [
-         1,
-         2
-        ],
-        "opt": true
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "opt": true
-       }
-      ]
+      "d": 0,
+      "k": 1,
+      "w": 0
+     },
+     {
+      "d": 5,
+      "k": 1,
+      "w": 0
      }
     ]
    },
-   "attacks": [
-    {
-     "cells": [
-      {
-       "d": 0,
-       "k": 1,
-       "w": 0
-      },
-      {
-       "d": 5,
-       "k": 1,
-       "w": 0
-      }
-     ]
-    },
-    {
-     "kamae": "aggression",
-     "cells": [
-      {
-       "d": 0,
-       "k": 1,
-       "w": 1
-      },
-      {
-       "d": 5,
-       "k": 1,
-       "w": 1
-      }
-     ]
-    }
-   ],
-   "effects": [
-    {
-     "do": "foe_stun",
-     "n": 1,
-     "when": "on_hit"
-    },
-    {
-     "do": "push",
-     "n": 1,
-     "when": "on_hit",
-     "kamae": "balance"
-    }
-   ],
-   "note": "NON BLOCCABILE (campo non_blockable:true). Costo 2 focus. Icona fiamma non impostata come kamae_req (carta ha anche effetto gated Equilibrio, incompatibile con vincolo fisso, DA VERIFICARE). Movimento: scelta fronte-dx/retro-dx 2 passi + ⟳1, facoltativi, direzioni incerte DA VERIFICARE. 2 celle-àncora (fronte/fronte-sx): se colpite, STORDISCI. SE RIUSCITO: Aggressività converte le celle in 1 ferita; Equilibrio SPINGI 1. Verificata su wakou_05.webp. Sotto SPINGI compare una terza icona-freccia (1 passo, direzione incerta) non modellata, analoga a quella di ARIETE BUKAN (337), DA VERIFICARE.",
-   "non_blockable": true
-  },
+   {
+    "kamae": "aggression",
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 5,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   }
+  ],
+  "effects": [
+   {
+    "do": "foe_stun",
+    "n": 1,
+    "when": "on_hit"
+   },
+   {
+    "do": "push",
+    "n": 1,
+    "when": "on_hit",
+    "kamae": "balance"
+   }
+  ],
+  "note": "NON BLOCCABILE (campo non_blockable:true). Costo 2 focus. Icona fiamma non impostata come kamae_req (carta ha anche effetto gated Equilibrio, incompatibile con vincolo fisso, DA VERIFICARE). Movimento: scelta fronte-dx/retro-dx 2 passi + ⟳1, facoltativi, direzioni incerte DA VERIFICARE. 2 celle-àncora (fronte/fronte-sx): se colpite, STORDISCI. SE RIUSCITO: Aggressività converte le celle in 1 ferita; Equilibrio SPINGI 1. Verificata su wakou_05.webp. Sotto SPINGI compare una terza icona-freccia (1 passo, direzione incerta) non modellata, analoga a quella di ARIETE BUKAN (337), DA VERIFICARE.",
+  "non_blockable": true
+ },
  "335": {
    "name": "TSUNAMI IN CADUTA",
    "type": "attack",
@@ -11100,79 +11099,80 @@
    "note": "Costo 2 focus. Movimento a 3 punte (fronte-dx/fronte-sx/dorso) obbligatorio, combinazione non standard, DA VERIFICARE + ⟳1 facoltativo. Nido d'ape esteso (identico a id 55): fronte dist2, entrambe diagonali anello2, fronte-dx dist2, fronte-sx adiacente (1 ferita ciascuna). SE RIUSCITO: Equilibrio l'avversario scarta 2; Determinazione l'avversario perde 2 focus. Verificata su wakou_03.webp."
   },
  "336": {
-   "name": "LANCIO DELLA BROCCA",
-   "type": "attack",
-   "effects": [
-    {
-     "do": "bleed",
-     "when": "on_hit"
-    },
-    {
-     "do": "hobble",
-     "n": 1,
-     "when": "on_hit"
-    },
-    {
-     "do": "foe_stun",
-     "n": 1,
-     "when": "on_hit",
-     "kamae": "aggression"
-    },
-    {
-     "do": "foe_switch_kamae",
-     "to": "neutral",
-     "when": "on_hit"
-    }
-   ],
-   "note": "ATTACCO DISTANZA, Range2. Nessun movimento/nido d'ape: COLPISCI l'avversario con iniziativa inferiore (targeting initiative; le ferite arrivano dagli effetti on_hit). Se colpito: 1 ferita sanguinante + AZZOPPA. Aggressività: STORDISCI. Poi l'avversario passa a Neutrale (foe_switch_kamae; DA VERIFICARE il timing e il bersaglio). Costo 0 focus. Verificata su wakou_06.webp.",
-   "targeting": {
-    "mode": "initiative",
-    "w": 0
+  "name": "LANCIO DELLA BROCCA",
+  "type": "attack",
+  "effects": [
+   {
+    "do": "bleed",
+    "when": "on_hit"
+   },
+   {
+    "do": "hobble",
+    "n": 1,
+    "when": "on_hit"
+   },
+   {
+    "do": "foe_stun",
+    "n": 1,
+    "when": "on_hit",
+    "kamae": "aggression"
+   },
+   {
+    "do": "switch_kamae",
+    "to": "neutral",
+    "when": "on_hit"
    }
-  },
+  ],
+  "note": "ATTACCO DISTANZA, Range2. Nessun movimento/nido d'ape: COLPISCI l'avversario con iniziativa inferiore (targeting initiative; le ferite arrivano dagli effetti on_hit). Se colpito: 1 ferita sanguinante + AZZOPPA. Aggressività: STORDISCI. Poi l'avversario passa a Neutrale (foe_switch_kamae; DA VERIFICARE il timing e il bersaglio). Costo 0 focus. Verificata su wakou_06.webp.",
+  "targeting": {
+   "mode": "initiative",
+   "w": 0
+  }
+ },
  "337": {
-   "name": "ARIETE BUKAN",
-   "type": "attack",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dirs": [
-         0,
-         5
-        ],
-        "n": 2
-       }
-      ]
-     }
-    ]
-   },
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 0
-     }
-    ]
-   },
-   "effects": [
+  "name": "ARIETE BUKAN",
+  "type": "attack",
+  "move": {
+   "opts": [
     {
-     "do": "foe_stun",
-     "n": 1,
-     "when": "on_hit"
-    },
-    {
-     "do": "push",
-     "n": 1,
-     "when": "on_hit"
+     "atoms": [
+      {
+       "t": "step",
+       "dirs": [
+        0,
+        5
+       ],
+       "n": 2,
+       "opt": true
+      }
+     ]
     }
-   ],
-   "note": "NON BLOCCABILE (campo non_blockable:true). Sostituzione Istantanea. Cella fronte àncora (w:0) collegata a STORDISCI. Movimento: bidente avanti/avanti-sx 2, obbligatorio. SE RIUSCITO: SPINGI 1; una seconda icona '↑1' separata suggerisce un passo in avanti del proprio combattente dopo il colpo (tema 'ariete'), nessun verbo per 'muovi te stesso on_hit' in whitelist, non modellato, DA VERIFICARE. Verificata su wakou_07.webp.",
-   "non_blockable": true
+   ]
   },
+  "attack": {
+   "cells": [
+    {
+     "d": 0,
+     "k": 1,
+     "w": 0
+    }
+   ]
+  },
+  "effects": [
+   {
+    "do": "foe_stun",
+    "n": 1,
+    "when": "on_hit"
+   },
+   {
+    "do": "push",
+    "n": 1,
+    "when": "on_hit"
+   }
+  ],
+  "note": "NON BLOCCABILE (campo non_blockable:true). Sostituzione Istantanea. Cella fronte àncora (w:0) collegata a STORDISCI. Movimento: bidente avanti/avanti-sx 2, obbligatorio. SE RIUSCITO: SPINGI 1; una seconda icona '↑1' separata suggerisce un passo in avanti del proprio combattente dopo il colpo (tema 'ariete'), nessun verbo per 'muovi te stesso on_hit' in whitelist, non modellato, DA VERIFICARE. Verificata su wakou_07.webp.",
+  "non_blockable": true
+ },
  "338": {
    "name": "PIEDI DA MARINAIO",
    "type": "meditation",
@@ -11211,75 +11211,78 @@
    "note": "Sostituzione Istantanea. Nessun effetto di combattimento: solo movimento. Due righe identiche (bidente posteriore + rotazione) stampate una sotto l'altra — interpretate come sequenza di 4 atomi anziché due opzioni alternative, DA VERIFICARE. Verificata su wakou_08.webp."
   },
  "339": {
-   "name": "GESTICOLARE DA UBRIACO",
-   "type": "meditation",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": -1,
-        "n": 1
-       }
-      ]
-     }
-    ]
-   },
-   "effects": [
+  "name": "GESTICOLARE DA UBRIACO",
+  "type": "meditation",
+  "move": {
+   "opts": [
     {
-     "do": "search_draw",
-     "n": 5
-    },
-    {
-     "do": "change_kamae",
-     "n": 2
+     "atoms": [
+      {
+       "t": "step",
+       "dir": -1,
+       "n": 1,
+       "opt": true
+      }
+     ]
     }
-   ],
-   "note": "❄1. RIVELA LE PRIME 5 CARTE DEL MAZZO, PRENDI TUTTE quelle di tipo Meditazione — nessun verbo whitelist per 'rivela N e prendi le corrispondenti', approssimato con search_draw n:5, DA VERIFICARE. CAMBIA KAMAE FINO A 2 RAMI. Verificata su wakou_09.webp."
+   ]
   },
+  "effects": [
+   {
+    "do": "search_draw",
+    "n": 5
+   },
+   {
+    "do": "change_kamae",
+    "n": 2
+   }
+  ],
+  "note": "❄1. RIVELA LE PRIME 5 CARTE DEL MAZZO, PRENDI TUTTE quelle di tipo Meditazione — nessun verbo whitelist per 'rivela N e prendi le corrispondenti', approssimato con search_draw n:5, DA VERIFICARE. CAMBIA KAMAE FINO A 2 RAMI. Verificata su wakou_09.webp."
+ },
  "340": {
-   "name": "GIGANTE GOFFO",
-   "type": "attack",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dirs": [
-         0,
-         1,
-         5
-        ],
-        "n": 2
-       },
-       {
-        "t": "rot",
-        "n": 1
-       }
-      ]
-     }
-    ]
-   },
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 0
-     }
-    ]
-   },
-   "effects": [
+  "name": "GIGANTE GOFFO",
+  "type": "attack",
+  "move": {
+   "opts": [
     {
-     "do": "foe_stun",
-     "n": 1,
-     "when": "on_hit"
+     "atoms": [
+      {
+       "t": "step",
+       "dirs": [
+        1,
+        3,
+        5
+       ],
+       "n": 2,
+       "opt": true
+      },
+      {
+       "t": "rot",
+       "n": 1,
+       "opt": true
+      }
+     ]
     }
-   ],
-   "note": "Movimento: tridente frontale 2 passi + rotazione 1, entrambi obbligatori. Cella fronte àncora (w:0, laterali vuote) collegata a STORDISCI. Nessuna cella con ferita numerica. Verificata su wakou_11.webp."
+   ]
   },
+  "attack": {
+   "cells": [
+    {
+     "d": 0,
+     "k": 1,
+     "w": 0
+    }
+   ]
+  },
+  "effects": [
+   {
+    "do": "foe_stun",
+    "n": 1,
+    "when": "on_hit"
+   }
+  ],
+  "note": "Movimento: tridente frontale 2 passi + rotazione 1, entrambi obbligatori. Cella fronte àncora (w:0, laterali vuote) collegata a STORDISCI. Nessuna cella con ferita numerica. Verificata su wakou_11.webp."
+ },
  "341": {
    "name": "COLPO BARCOLLANTE",
    "type": "meditation",
@@ -11300,172 +11303,180 @@
    "note": "Iniziativa pari all'avversario. Aggiunta Istantanea. GIOCA SE L'ATTACCO È RIUSCITO condiziona entrambe le righe. Aggressività: STORDISCI. Equilibrio: SPINGI 2. Righe gated, non alternative. Piccolo simbolo a losanga non identificato, decorativo, DA VERIFICARE. Verificata su wakou_13.webp."
   },
  "342": {
-   "name": "FAR DUE PASSI",
-   "type": "defence",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dir": -1,
-        "n": 2
-       }
-      ]
-     }
-    ]
-   },
-   "effects": [
+  "name": "FAR DUE PASSI",
+  "type": "defence",
+  "move": {
+   "opts": [
     {
-     "do": "draw",
-     "n": 2
-    },
-    {
-     "do": "change_kamae",
-     "n": 1
+     "atoms": [
+      {
+       "t": "step",
+       "dir": -1,
+       "n": 2,
+       "opt": true
+      }
+     ]
     }
-   ],
-   "note": "Difesa senza nido d'ape/scudi (pattern già visto in id 90). ❄2 obbligatorio. PESCA FINO A 2; CAMBIA KAMAE FINO A 1 RAMO. Nessuna banda kamae. Verificata su wakou_15.webp."
+   ]
   },
- "343": {
-   "name": "TESTATA",
-   "type": "attack",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "n": 1,
-        "dirs": [
-         0,
-         1,
-         5
-        ]
-       },
-       {
-        "t": "rot",
-        "n": 1,
-        "kamae": "aggression"
-       }
-      ]
-     }
-    ]
+  "effects": [
+   {
+    "do": "draw",
+    "n": 2
    },
-   "attack": {
+   {
+    "do": "change_kamae",
+    "n": 1
+   }
+  ],
+  "note": "Difesa senza nido d'ape/scudi (pattern già visto in id 90). ❄2 obbligatorio. PESCA FINO A 2; CAMBIA KAMAE FINO A 1 RAMO. Nessuna banda kamae. Verificata su wakou_15.webp."
+ },
+ "343": {
+  "name": "TESTATA",
+  "type": "attack",
+  "move": {
+   "opts": [
+    {
+     "atoms": [
+      {
+       "t": "step",
+       "n": 1,
+       "dirs": [
+        0,
+        1,
+        5
+       ],
+       "opt": true
+      },
+      {
+       "t": "rot",
+       "n": 1,
+       "kamae": "aggression",
+       "opt": true
+      }
+     ]
+    }
+   ]
+  },
+  "attack": {
+   "cells": [
+    {
+     "d": 0,
+     "k": 1,
+     "w": 1
+    }
+   ]
+  },
+  "effects": [
+   {
+    "do": "hobble",
+    "n": 1,
+    "when": "on_hit"
+   },
+   {
+    "do": "focus",
+    "n": 1,
+    "when": "on_hit"
+   }
+  ],
+  "note": "Identica alla carta TESTATA id 64 (stessa iconografia, verificata pixel-per-pixel): tridente frontale 1 + ⟳1 in Aggressività. Fronte 1 ferita. SE RIUSCITO: STORDISCI + OTTIENI 1 focus. Verificata su wakou_17.webp."
+ },
+ "344": {
+  "name": "CALCIO DEL MULO",
+  "type": "attack",
+  "move": {
+   "opts": [
+    {
+     "atoms": [
+      {
+       "t": "rot",
+       "n": 1,
+       "kamae": "balance",
+       "opt": true
+      },
+      {
+       "t": "step",
+       "n": 1,
+       "dirs": [
+        2,
+        3,
+        4
+       ],
+       "opt": true
+      }
+     ]
+    }
+   ]
+  },
+  "attacks": [
+   {
     "cells": [
      {
-      "d": 0,
+      "d": 4,
       "k": 1,
       "w": 1
      }
     ]
    },
-   "effects": [
-    {
-     "do": "foe_stun",
-     "n": 1,
-     "when": "on_hit"
-    },
-    {
-     "do": "focus",
-     "n": 1,
-     "when": "on_hit"
-    }
-   ],
-   "note": "Identica alla carta TESTATA id 64 (stessa iconografia, verificata pixel-per-pixel): tridente frontale 1 + ⟳1 in Aggressività. Fronte 1 ferita. SE RIUSCITO: STORDISCI + OTTIENI 1 focus. Verificata su wakou_17.webp."
-  },
- "344": {
-   "name": "CALCIO DEL MULO",
-   "type": "attack",
-   "move": {
-    "opts": [
+   {
+    "cells": [
      {
-      "atoms": [
-       {
-        "t": "rot",
-        "n": 1,
-        "kamae": "balance"
-       },
-       {
-        "t": "step",
-        "n": 1,
-        "dirs": [
-         2,
-         3,
-         4
-        ]
-       }
-      ]
+      "d": 2,
+      "k": 1,
+      "w": 1
      }
     ]
+   }
+  ],
+  "effects": [
+   {
+    "do": "hobble",
+    "n": 1,
+    "when": "on_hit"
    },
-   "attacks": [
-    {
-     "cells": [
-      {
-       "d": 4,
-       "k": 1,
-       "w": 1
-      }
-     ]
-    },
-    {
-     "cells": [
-      {
-       "d": 2,
-       "k": 1,
-       "w": 1
-      }
-     ]
-    }
-   ],
-   "effects": [
-    {
-     "do": "foe_stun",
-     "n": 1,
-     "when": "on_hit"
-    },
-    {
-     "do": "change_kamae",
-     "n": 1,
-     "when": "on_hit"
-    }
-   ],
-   "note": "⟳1 in Equilibrio + tridente posteriore 1 obbligatorio. Nido d'ape con OPPURE: ferita retro-sx OPPURE retro-dx (scelta libera, non gated da kamae — uso improprio del campo 'attacks', DA VERIFICARE). SE RIUSCITO: STORDISCI (stessa icona di TESTATA); CAMBIA KAMAE FINO A 1 RAMO. Verificata su wakou_20.webp."
-  },
+   {
+    "do": "change_kamae",
+    "n": 1,
+    "when": "on_hit"
+   }
+  ],
+  "note": "⟳1 in Equilibrio + tridente posteriore 1 obbligatorio. Nido d'ape con OPPURE: ferita retro-sx OPPURE retro-dx (scelta libera, non gated da kamae — uso improprio del campo 'attacks', DA VERIFICARE). SE RIUSCITO: STORDISCI (stessa icona di TESTATA); CAMBIA KAMAE FINO A 1 RAMO. Verificata su wakou_20.webp."
+ },
  "345": {
-   "name": "STELLA VAGABONDA",
-   "type": "meditation",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "n": 2,
-        "dirs": [
-         1,
-         5,
-         3
-        ]
-       },
-       {
-        "t": "rot",
-        "n": 1
-       }
-      ]
-     }
-    ]
-   },
-   "effects": [
+  "name": "STELLA VAGABONDA",
+  "type": "meditation",
+  "move": {
+   "opts": [
     {
-     "do": "search_draw",
-     "n": 1
+     "atoms": [
+      {
+       "t": "step",
+       "n": 2,
+       "dirs": [
+        1,
+        5,
+        3
+       ],
+       "opt": true
+      },
+      {
+       "t": "rot",
+       "n": 1,
+       "opt": true
+      }
+     ]
     }
-   ],
-   "note": "DA VERIFICARE: icona di movimento con 3 punte (fronte-dx, fronte-sx, retro) non presente nella legenda standard, interpretata per analogia come passo 2 a scelta tra dir 1/5/3 + ⟳1. Banda viola: CERCA + PRENDI 1 carta Attacco CHE INFLIGGA STORDIMENTO — filtro sull'effetto della carta cercata non rappresentabile con search_draw, non modellato. Verificata su wakou_23.webp."
-  }
+   ]
+  },
+  "effects": [
+   {
+    "do": "search_draw",
+    "n": 1,
+    "focus_cost": 1
+   }
+  ],
+  "note": "DA VERIFICARE: icona di movimento con 3 punte (fronte-dx, fronte-sx, retro) non presente nella legenda standard, interpretata per analogia come passo 2 a scelta tra dir 1/5/3 + ⟳1. Banda viola: CERCA + PRENDI 1 carta Attacco CHE INFLIGGA STORDIMENTO — filtro sull'effetto della carta cercata non rappresentabile con search_draw, non modellato. Verificata su wakou_23.webp."
+ }
 ,
  "163": {
   "name": "CARTA SPECIALE NINJA",
