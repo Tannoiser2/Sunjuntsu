@@ -5649,13 +5649,7 @@
   "91": {
    "name": "ONESTA",
    "type": "meditation",
-   "effects": [
-    {
-     "do": "spend_focus",
-     "n": 2
-    }
-   ],
-   "note": "Meditazione, Istantanea, Bushido. Init - focus 2. 'GIOCA ALL'INIZIO DEL TURNO ... RIMANE IN GIOCO / FINCHE E ATTIVA NESSUN GIOCATORE PUO GIOCARE CARTE [...] COME ISTANTANEE / ALLA FINE DEL TURNO QUALSIASI GIOCATORE PUO SPENDERE 2 [focus] PER SCARTARE QUESTA CARTA'. RIMANE IN GIOCO reso con stays_in_play; la restrizione globale FINCHÉ È ATTIVA e lo scarto a pagamento a fine turno restano non modellabili (regole di regia). Verbi segnaposto. DA VERIFICARE.",
+   "note": "Meditazione, Istantanea, Bushido. Init - focus 2. 'GIOCA ALL'INIZIO DEL TURNO ... RIMANE IN GIOCO / FINCHÉ È ATTIVA NESSUN GIOCATORE PUÒ GIOCARE CARTE [...] COME ISTANTANEE / ALLA FINE DEL TURNO QUALSIASI GIOCATORE PUÒ SPENDERE 2 FOCUS PER SCARTARE QUESTA CARTA' — RISOLTO: restrizione globale in Duel.instant_plays_for (blocca l'intero sistema di Istantanea Aggiuntiva finché #91 è in gioco per QUALSIASI combattente, non solo chi l'ha giocata). Scarto a pagamento: Duel.discard_bushido_for_focus(payer_i, 91) (API per la scena, UI non ancora presente). Rimosso l'effetto segnaposto spend_focus.",
    "stays_in_play": true
   },
   "92": {
@@ -5671,13 +5665,7 @@
   "93": {
    "name": "RISPETTO",
    "type": "meditation",
-   "effects": [
-    {
-     "do": "spend_focus",
-     "n": 2
-    }
-   ],
-   "note": "Meditazione, Istantanea, Bushido. Init - focus 2. 'GIOCA ALL'INIZIO DEL TURNO ... RIMANE IN GIOCO / FINCHE E ATTIVA NESSUN GIOCATORE PUO GIOCARE COPIE DI CARTE A FACCIA IN SU NELLA PROPRIA PILA DEGLI SCARTI / ALLA FINE DEL TURNO QUALSIASI GIOCATORE PUO SPENDERE 2 [focus] PER SCARTARE QUESTA CARTA'. RIMANE IN GIOCO reso con stays_in_play; la restrizione globale FINCHÉ È ATTIVA e lo scarto a pagamento a fine turno restano non modellabili (regole di regia). Verbi segnaposto. DA VERIFICARE.",
+   "note": "Meditazione, Istantanea, Bushido. Init - focus 2. 'GIOCA ALL'INIZIO DEL TURNO ... RIMANE IN GIOCO / FINCHÉ È ATTIVA NESSUN GIOCATORE PUÒ GIOCARE COPIE DI CARTE A FACCIA IN SU NELLA PROPRIA PILA DEGLI SCARTI / ALLA FINE DEL TURNO QUALSIASI GIOCATORE PUÒ SPENDERE 2 FOCUS PER SCARTARE QUESTA CARTA' — RISOLTO con un'interpretazione ragionevole (DA VERIFICARE contro il regolamento fisico): Duel.playable() blocca una carta se il suo id è già nella PROPRIA pila degli scarti mentre #93 è in gioco per QUALSIASI combattente (impedisce di rigiocare una copia identica già scartata a faccia in su). Scarto a pagamento: Duel.discard_bushido_for_focus(payer_i, 93). Rimosso l'effetto segnaposto spend_focus.",
    "stays_in_play": true
   },
   "94": {
@@ -5693,16 +5681,7 @@
   "95": {
    "name": "AUTOCONTROLLO",
    "type": "meditation",
-   "effects": [
-    {
-     "do": "foe_discard"
-    },
-    {
-     "do": "spend_focus",
-     "n": 2
-    }
-   ],
-   "note": "Meditazione, Istantanea, Bushido. Init - focus 1. 'GIOCA ALL'INIZIO DEL TURNO ... RIMANE IN GIOCO / FINCHE E ATTIVA NESSUN GIOCATORE PUO GUARDARE LA MANO DI UN ALTRO O OBBLIGARE ALTRI GIOCATORI A SCARTARE CARTE / ALLA FINE DEL TURNO QUALSIASI GIOCATORE PUO SPENDERE 2 [focus] PER SCARTARE QUESTA CARTA'. RIMANE IN GIOCO reso con stays_in_play; la restrizione globale FINCHÉ È ATTIVA e lo scarto a pagamento a fine turno restano non modellabili (regole di regia). Verbi segnaposto. DA VERIFICARE.",
+   "note": "Meditazione, Istantanea, Bushido. Init - focus 1. 'GIOCA ALL'INIZIO DEL TURNO ... RIMANE IN GIOCO / FINCHÉ È ATTIVA NESSUN GIOCATORE PUÒ GUARDARE LA MANO DI UN ALTRO O OBBLIGARE ALTRI GIOCATORI A SCARTARE CARTE / ALLA FINE DEL TURNO QUALSIASI GIOCATORE PUÒ SPENDERE 2 FOCUS PER SCARTARE QUESTA CARTA' — RISOLTO: restrizione globale sui verbi foe_discard/foe_mill/foe_reveal_hand in Duel._apply_effects, finché #95 è in gioco per QUALSIASI combattente. Scarto a pagamento: Duel.discard_bushido_for_focus(payer_i, 95). Rimossi gli effetti segnaposto spend_focus E un foe_discard estraneo (miscodificato: costringeva l'avversario a scartare 1 carta alla sola giocata di #95, comportamento MAI presente nel testo reale della carta).",
    "stays_in_play": true
   },
   "90": {
@@ -5779,13 +5758,7 @@
   "85": {
    "name": "CORAGGIO",
    "type": "meditation",
-   "effects": [
-    {
-     "do": "spend_focus",
-     "n": 2
-    }
-   ],
-   "note": "Meditazione, Istantanea, Bushido. Init - focus 1 Gold. 'GIOCA ALL'INIZIO DEL TURNO ... RIMANE IN GIOCO / TUTTI I GIOCATORI VOLTANO A FACCIA IN SU LE PILE DEGLI SCARTI / FINCHE E ATTIVA TUTTE LE CARTE SONO SCARTATE A FACCIA IN SU / ALLA FINE DEL TURNO QUALSIASI GIOCATORE PUO SPENDERE 2 [focus] PER SCARTARE QUESTA CARTA'. ID 085. RIMANE IN GIOCO reso con stays_in_play; la restrizione globale FINCHÉ È ATTIVA e lo scarto a pagamento a fine turno restano non modellabili (regole di regia). Verbi segnaposto. DA VERIFICARE.",
+   "note": "Meditazione, Istantanea, Bushido. Init - focus 1 Gold. 'GIOCA ALL'INIZIO DEL TURNO ... RIMANE IN GIOCO / TUTTI I GIOCATORI VOLTANO A FACCIA IN SU LE PILE DEGLI SCARTI / FINCHÉ È ATTIVA TUTTE LE CARTE SONO SCARTATE A FACCIA IN SU / ALLA FINE DEL TURNO QUALSIASI GIOCATORE PUÒ SPENDERE 2 FOCUS PER SCARTARE QUESTA CARTA'. RIMANE IN GIOCO reso con stays_in_play; lo scarto a pagamento è Duel.discard_bushido_for_focus(payer_i, 85) (API per la scena, come spend_completed_contract, UI non ancora presente). La regola 'scarti a faccia in su' è puramente visiva e non ha alcun effetto osservabile in questa implementazione (le pile di scarto non vengono mai renderizzate carta-per-carta all'avversario): intenzionalmente non modellata, nessun gap reale. Rimosso l'effetto segnaposto spend_focus (costava erroneamente focus a chi gioca la carta: non è nel regolamento). ID 085.",
    "stays_in_play": true
   },
   "155": {

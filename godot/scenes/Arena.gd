@@ -194,7 +194,7 @@ func _on_card_played(card_data: Dictionary) -> void:
 		return
 	var pi := _planning_player
 	var f := state.fighters[pi]
-	if not Duel.playable(f, id):
+	if not Duel.playable(f, id, state):
 		var req = CardDB.geometry(id).get("kamae_req", "")
 		_hud.set_hint("⛔ Non giocabile: richiede Kamae %s (sei in %s)" % [
 			Domain.stance_req_label(req),
@@ -737,7 +737,7 @@ func _draw_overlays_for(card: Dictionary, move_used: bool) -> void:
 	# La parte bassa (iniziativa divisa) porta la sua geometria esplicita.
 	var g: Dictionary = card.get("geom_override", CardDB.geometry(id))
 	# Carta non giocabile nella Kamae attuale: nessun overlay.
-	if not Duel.playable(f, id):
+	if not Duel.playable(f, id, state):
 		var req = g.get("kamae_req", "")
 		_hud.set_hint("⛔ %s: giocabile solo in Kamae %s (sei in %s)" % [
 			card.get("name", "?"),
@@ -822,7 +822,7 @@ func _on_card_selected(card_data: Dictionary) -> void:
 	_hud.hide_kamae()
 	# Flusso A: scegli la carta, poi CONFERMA per bloccarla (coperta). Il movimento
 	# e l'attacco avverranno DOPO, in risoluzione, secondo l'ordine d'iniziativa.
-	if Duel.playable(state.fighters[_planning_player], int(card_data.get("id", -1))):
+	if Duel.playable(state.fighters[_planning_player], int(card_data.get("id", -1)), state):
 		_hud.show_confirm("✓ Conferma carta")
 	else:
 		_hud.hide_confirm()

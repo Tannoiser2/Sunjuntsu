@@ -125,7 +125,7 @@ func _plan_data(i: int) -> Dictionary:
 		cards.append({
 			"id": cid, "name": c.get("name", "?"), "type": c.get("type", ""),
 			"focus": cost, "file": CardDB.image_for(cid),
-			"playable": Duel.playable(f, cid) and f.focus >= cost,
+			"playable": Duel.playable(f, cid, state) and f.focus >= cost,
 		})
 	return {"hand": cards, "focus": f.focus, "kamae": Domain.STANCE_SLUG[f.stance]}
 
