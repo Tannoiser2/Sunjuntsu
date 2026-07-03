@@ -7486,51 +7486,53 @@
    "note": "Costo in testa: SCARTA 1 CARTA. Movimento ❄ 1 (passo libero facoltativo) + ↻2 (rotazione facoltativa). OPPURE: (a) PESCA FINO A 2 CARTE; (b) SCARTA 1 CARTA + OTTIENI 1 loto; (c) CAMBIA KAMAE FINO A 1 RAMO. Verificata su assassin_03.webp."
   },
  "219": {
-   "name": "LAME AVVELENATE",
-   "type": "meditation",
-   "move": {
-    "opts": [
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dirs": [
-         1,
-         5
-        ],
-        "n": 1,
-        "kamae": "aggression"
-       }
-      ]
-     },
-     {
-      "atoms": [
-       {
-        "t": "step",
-        "dirs": [
-         2,
-         3,
-         4
-        ],
-        "n": 1,
-        "kamae": "determination"
-       }
-      ]
-     }
-    ]
-   },
-   "effects": [
+  "name": "LAME AVVELENATE",
+  "type": "meditation",
+  "move": {
+   "opts": [
     {
-     "do": "reset_deck"
+     "atoms": [
+      {
+       "t": "step",
+       "dirs": [
+        1,
+        5
+       ],
+       "n": 1,
+       "kamae": "aggression",
+       "opt": true
+      }
+     ]
     },
     {
-     "do": "draw",
-     "n": 2,
-     "kamae": "balance"
+     "atoms": [
+      {
+       "t": "step",
+       "dirs": [
+        2,
+        3,
+        4
+       ],
+       "n": 1,
+       "kamae": "determination",
+       "opt": true
+      }
+     ]
     }
-   ],
-   "note": "RIMETTI NEL MAZZO un numero di carte scartate marcate da teschio (mill/veleno, approssimato con reset_deck, DA VERIFICARE). Gated per Kamae attuale (non OPPURE): Aggressività bidente alto (dir1,5) 1; Determinazione tridente basso (2,3,4) 1; Equilibrio PESCA FINO A 2 CARTE. Verificata su assassin_04.webp."
+   ]
   },
+  "effects": [
+   {
+    "do": "reset_deck"
+   },
+   {
+    "do": "draw",
+    "n": 2,
+    "kamae": "balance"
+   }
+  ],
+  "note": "RIMETTI NEL MAZZO un numero di carte scartate marcate da teschio (mill/veleno, approssimato con reset_deck, DA VERIFICARE). Gated per Kamae attuale (non OPPURE): Aggressività bidente alto (dir1,5) 1; Determinazione tridente basso (2,3,4) 1; Equilibrio PESCA FINO A 2 CARTE. Verificata su assassin_04.webp."
+ },
  "220": {
   "name": "PUNTURA D'OMBRA",
   "type": "attack",
@@ -7560,16 +7562,19 @@
        {
         "t": "step",
         "dir": -1,
-        "n": 1
+        "n": 1,
+        "opt": true
        },
        {
         "t": "step",
         "dir": -1,
-        "n": 1
+        "n": 1,
+        "opt": true
        },
        {
         "t": "rot",
-        "n": 1
+        "n": 1,
+        "opt": true
        }
       ]
      }
@@ -7594,7 +7599,8 @@
      "atoms": [
       {
        "t": "rot",
-       "n": 1
+       "n": 1,
+       "opt": true
       }
      ]
     }
@@ -7739,7 +7745,8 @@
       "atoms": [
        {
         "t": "rot",
-        "n": 1
+        "n": 1,
+        "opt": true
        },
        {
         "t": "step",
@@ -7789,7 +7796,8 @@
         4
        ],
        "n": 1,
-       "focus_cost": 1
+       "focus_cost": 1,
+       "opt": true
       }
      ]
     }
@@ -7831,7 +7839,8 @@
       {
        "t": "rot",
        "n": 2,
-       "kamae": "balance"
+       "kamae": "balance",
+       "opt": true
       }
      ]
     },
