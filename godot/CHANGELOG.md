@@ -3,6 +3,15 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.91.1] — 2026-07-03
+### §3.23 risolto: "gioca la carta pescata come istantanea" (#42 Specchio d'Acqua)
+Non serviva un verbo dedicato: il sistema di Istantanea Aggiuntiva già
+esistente (`Duel._post_resolve` → `instant_plays_for`) offre automaticamente
+la scelta subito dopo la risoluzione della carta corrente, e la carta appena
+pescata da `search_draw` è già in mano a quel punto — se è di tipo
+additional/instant compare tra le opzioni. Nessuna modifica al motore,
+solo nota aggiornata.
+
 ## [0.91.0] — 2026-07-03
 ### Carte Solitario del Ninja + tabella ufficiale di composizione mazzo IA
 - Trascritte le 5 carte Abilità in Solitario del Ninja (#954 Bomba Fumogena,

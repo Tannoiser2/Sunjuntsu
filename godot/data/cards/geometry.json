@@ -4015,7 +4015,7 @@
      "focus_cost": 1
     }
    ],
-   "note": "CERCA NEGLI SCARTI + PRENDI 1; seconda riga su barra viola = stessa cosa pagando 1 focus (NESSUN 'OPPURE'). Terza riga (2 loti): GIOCA LA CARTA PESCATA COME SOSTITUZIONE ISTANTANEA — verbo assente, non modellato. Tipi carta delle miniature DA VERIFICARE. Verificata su student_23.webp. Terza riga (2 loti, banda viola): GIOCA LA CARTA PESCATA COME ISTANTANEA per 2 focus — non modellata (roadmap 3.23), DA VERIFICARE. [Audit scansioni 2026-07]"
+   "note": "CERCA NEGLI SCARTI + PRENDI 1; seconda riga su barra viola = stessa cosa pagando 1 focus (NESSUN 'OPPURE'). Terza riga (2 loti): GIOCA LA CARTA PESCATA COME ISTANTANEA — RISOLTO (§3.23): non serve un verbo dedicato, è già coperto dal sistema esistente di Istantanea Aggiuntiva (Duel._post_resolve/instant_plays_for): la carta pescata da search_draw finisce in mano PRIMA che _post_resolve offra la scelta, quindi se è di tipo additional/instant compare già tra le opzioni giocabili subito dopo Specchio d'Acqua (Meditazione, non core → non blocca l'offerta). Tipi carta delle miniature DA VERIFICARE. Verificata su student_23.webp."
   },
   "43": {
    "name": "TIGRE APPOSTATA",
