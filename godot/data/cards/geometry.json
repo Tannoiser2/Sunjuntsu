@@ -1092,12 +1092,12 @@
         "t": "step",
         "dir": -1,
         "n": 1,
-        "opt": true
+        "opt": false
        },
        {
         "t": "rot",
         "n": 2,
-        "opt": true
+        "opt": false
        }
       ]
      }
@@ -2528,7 +2528,7 @@
        {
         "t": "rot",
         "n": 1,
-        "opt": false,
+        "opt": true,
         "kamae": "balance"
        }
       ]
@@ -2646,12 +2646,12 @@
         "t": "step",
         "dir": 0,
         "n": 1,
-        "opt": false
+        "opt": true
        },
        {
         "t": "rot",
         "n": 1,
-        "opt": false,
+        "opt": true,
         "kamae": "determination"
        }
       ]
