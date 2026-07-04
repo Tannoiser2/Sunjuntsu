@@ -14348,6 +14348,628 @@
     ]
    },
    "note": "SOLITARIO. Hachiko 002 (coppia alleata). Balza avanti 1, morso al fronte marcato '*' (1 cella): SE RIUSCITO SPINGI l'avversario 1. OPPURE (iniziativa 6): concentra 1. Il '*' indica la spinta (nessun conteggio ferite extra). [Trascritta da scansione Carte Solo personaggi, 2026-07]"
+  },
+  "916": {
+   "name": "DOUBLE STRIKE (Solo)",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 2,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "push",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 1,
+    "effects": [
+     {
+      "do": "change_ai_behaviour"
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. Yasuke 001 'COLPO DOPPIO' (il pool lo chiama 'Ankle Strike': discrepanza di nome fra edizione EN e scansione IT, mappato per numero di carta). Avanza 1, poi colpo ad ampio arco (celle fronte + obliqui + fianco destro), 1 ferita ciascuna. SE RIUSCITO: SPINGI 1. OPPURE (iniziativa 1): CAMBIA COMPORTAMENTO IA + avanza 1 + ruota 1. Anello esatto delle celle DA VERIFICARE. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "917": {
+   "name": "LION'S BITE (Solo)",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "foe_lose_focus",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 2,
+    "effects": [
+     {
+      "do": "change_ai_behaviour"
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. Yasuke 002 'MORSO DEL LEONE'. Avanza 1 + ruota 1 + avanza 1, poi morso ai due obliqui frontali (fronte-sx d5, fronte-dx d1), 1 ferita ciascuno. SE RIUSCITO: l'avversario scarta 1 focus (loto). OPPURE (iniziativa 2): CAMBIA COMPORTAMENTO IA + avanza 1 + ruota 1. Celle esatte DA VERIFICARE. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "918": {
+   "name": "DUAL BLADE DEFENCE (Solo)",
+   "type": "defence",
+   "defence": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "v": 1
+     }
+    ]
+   },
+   "effects": [],
+   "split": {
+    "initiative": 4,
+    "defence": {
+     "cells": [
+      {
+       "d": 5,
+       "k": 1,
+       "v": 1
+      },
+      {
+       "d": 0,
+       "k": 1,
+       "v": 1
+      },
+      {
+       "d": 1,
+       "k": 1,
+       "v": 1
+      }
+     ]
+    },
+    "effects": [
+     {
+      "do": "reset_deck"
+     }
+    ]
+   },
+   "note": "SOLITARIO. Yasuke 003 'DIFESA A DUE LAME'. Difesa a due livelli: iniziativa 8-7 con blocco frontale (arco d5/d0/d1) valore stampato 7; iniziativa 5-4 stesso arco, valore 5, + RICOMPONI IL MAZZO. I valori 7/5 sono resi come blocco 1 per cella (schema v); soglie esatte DA VERIFICARE. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "919": {
+   "name": "CHARGING PRIDE (Solo)",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 3,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "change_ai_behaviour"
+    },
+    {
+     "do": "swap_positions",
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 3,
+    "effects": [
+     {
+      "do": "change_ai_behaviour"
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 2,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. Yasuke 004 'CARICA DEL BRANCO'. CAMBIA COMPORTAMENTO IA + ruota 1 POI avanza 3, colpo al fronte marcato '*' (1 cella): il '*' = SCAMBIA POSIZIONE con l'avversario (swap). OPPURE (iniziativa 3): CAMBIA COMPORTAMENTO IA + avanza 1 + avanza 2. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "920": {
+   "name": "RIGHTEOUS FURY (Solo)",
+   "type": "attack",
+   "nightmare": true,
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 2
+     },
+     {
+      "d": 5,
+      "k": 1,
+      "w": 2
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 2
+     },
+     {
+      "d": 4,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 2,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "reset_deck",
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 4,
+    "effects": [
+     {
+      "do": "change_ai_behaviour"
+     },
+     {
+      "do": "reset_deck"
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. INCUBO. Yasuke (Modalità Incubo) 'FURIA GIUSTA'. Ampio colpo: fronte e obliqui 2 ferite (esagono con volto-demone incubo al centro-fronte), fianchi 1 ferita. SE RIUSCITO: RICOMPONI IL MAZZO. OPPURE (iniziativa 4): CAMBIA COMPORTAMENTO IA + avanza 1 + ruota 1 + RICOMPONI IL MAZZO. Distribuzione ferite/anello DA VERIFICARE. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "921": {
+   "name": "STAGGERING HULK (Solo)",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": -1,
+        "n": 2,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "swap_positions",
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 1,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 2,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    },
+    "effects": []
+   },
+   "note": "SOLITARIO. Wakou 001 'GIGANTE GOFFO' (pool 'Staggering Hulk'). Icona 'Y' resa come passo libero 2 (direzione esatta DA VERIFICARE) + ruota 1, colpo al fronte marcato '*' (1 cella): il '*' = SCAMBIA POSIZIONE con l'avversario. OPPURE (iniziativa 1): stesso movimento (Y2 + ruota 1). [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "922": {
+   "name": "FASTER LEGS (Solo)",
+   "type": "meditation",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [],
+   "note": "SOLITARIO. MEDITAZIONE. Wakou 002 'PIEDI DA MARINAIO' (pool 'Faster Legs'). Carta di solo movimento: avanza 1 POI ruota 1, ripetuto due volte. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "923": {
+   "name": "HEADBUTT (Solo)",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "swap_positions",
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 2,
+    "effects": [
+     {
+      "do": "focus",
+      "n": 1
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. Wakou 003 'TESTATA' (pool 'Headbutt'). Avanza 1 + ruota 1, colpo al fronte marcato '*' (1 cella): il '*' = SCAMBIA POSIZIONE. OPPURE (iniziativa 2): concentra 1 + ruota 1. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "924": {
+   "name": "STAGGERING BLOW (Solo)",
+   "type": "attack",
+   "attack": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "swap_positions",
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 5,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    },
+    "effects": []
+   },
+   "note": "SOLITARIO. Wakou 004 'COLPO BARCOLLANTE' (pool 'Staggering Blow'). Colpo ad arco frontale (3 celle d5/d0/d1) tutte marcate '*' = SCAMBIA POSIZIONE se colpisce. OPPURE (iniziativa 5): passo libero 1 (icona '+', direzione DA VERIFICARE) + ruota 1. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "981": {
+   "name": "BROADSIDE SLAM (Solo)",
+   "type": "attack",
+   "nightmare": true,
+   "non_blockable": true,
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": -1,
+        "n": 2,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "swap_positions",
+     "when": "on_hit"
+    },
+    {
+     "do": "reset_deck",
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 1,
+    "effects": [
+     {
+      "do": "focus",
+      "n": 1
+     },
+     {
+      "do": "reset_deck"
+     }
+    ]
+   },
+   "note": "SOLITARIO. INCUBO. Wakou (Modalità Incubo) 'SCHIANTO DI BORDATA' (pool 'Broadside Slam'). NON BLOCCABILE. Icona '◄' resa come passo libero 2 (direzione DA VERIFICARE) + ruota 1, colpo (2 celle fronte-sx/fronte marcate '*') = SCAMBIA POSIZIONE. SE RIUSCITO: RICOMPONI IL MAZZO. OPPURE (iniziativa 1): concentra 1 + RICOMPONI IL MAZZO. [Scansione Carte Solo personaggi, 2026-07]"
   }
  },
  "characters": {
