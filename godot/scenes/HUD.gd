@@ -51,7 +51,7 @@ var _log_toggle: Button
 var _log_collapsed: bool = false
 var _log_lines: Array[String] = []
 const _LOG_MAX_LINES := 400
-const _LOG_WIDTH := 320.0
+const _LOG_WIDTH := 360.0
 
 
 func _ready() -> void:
@@ -680,7 +680,9 @@ func _build_log_panel() -> void:
 	_log_rt.bbcode_enabled = true
 	_log_rt.scroll_following = true
 	_log_rt.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_log_rt.add_theme_font_size_override("normal_font_size", 14)
+	_log_rt.add_theme_font_size_override("normal_font_size", 15)
+	_log_rt.add_theme_font_size_override("bold_font_size", 15)
+	_log_rt.add_theme_constant_override("line_separation", 3)
 	col.add_child(_log_rt)
 
 	# Tab sempre cliccabile per riaprire quando il pannello è compresso, ancorata
@@ -717,13 +719,69 @@ func _toggle_log() -> void:
 
 ## Aggiunge una o più righe al log persistente (a differenza di set_hint, che è
 ## transitorio e viene sovrascritto). `lines` può contenere newline interni.
+## Ogni riga viene arricchita con BBCode (ferite in rosso, azioni in neretto,
+## intestazioni di round e vittoria evidenziate) per renderla più leggibile.
 func log_line(text: String) -> void:
 	if text.is_empty():
 		return
 	for line in text.split("\n"):
 		if line.strip_edges() == "":
 			continue
-		_log_lines.append(line)
+		_log_lines.append(_colorize_log(line))
 	while _log_lines.size() > _LOG_MAX_LINES:
 		_log_lines.pop_front()
 	_log_rt.text = "\n".join(_log_lines)
+
+
+## Colori del log (coerenti col resto della UI).
+const _LOG_C_ROUND := "#6fd3ff"     # intestazione round: ciano
+const _LOG_C_WOUND := "#ff5b5b"     # ferite: rosso
+const _LOG_C_BLEED := "#c0392b"     # sanguinante: rosso scuro
+const _LOG_C_STUN := "#f4a742"      # stordimento: arancio
+const _LOG_C_WIN := "#ffcf5a"       # vittoria: oro
+
+
+## Applica BBCode a una singola riga di log già formata dal motore.
+func _colorize_log(line: String) -> String:
+	# Riga di fine duello: tutta oro e in neretto.
+	if line.begins_with("⚔"):
+		return "[b][color=%s]%s[/color][/b]" % [_LOG_C_WIN, line]
+	var out := line
+	var prefix := ""
+	# Intestazione "[Round N] ...": estrai e stilizza il prefisso.
+	var rr := RegEx.new()
+	rr.compile("^\\[Round (\\d+)\\]\\s*")
+	var m := rr.search(out)
+	if m:
+		prefix = "[b][color=%s]Round %s[/color][/b]  " % [_LOG_C_ROUND, m.get_string(1)]
+		out = out.substr(m.get_end())
+	# Neutralizza eventuali parentesi quadre residue (verrebbero lette come tag).
+	out = out.replace("[", "(").replace("]", ")")
+	# Ferite in rosso e in neretto (es. "3 ferita/e").
+	out = _wrap_matches(out, "\\d+\\s*ferit[a-z/]*",
+		"[b][color=%s]" % _LOG_C_WOUND, "[/color][/b]")
+	# Effetti di stato.
+	out = _wrap_matches(out, "sanguinante", "[color=%s]" % _LOG_C_BLEED, "[/color]")
+	out = _wrap_matches(out, "stordiment[oi]|stordit[oa]",
+		"[color=%s]" % _LOG_C_STUN, "[/color]")
+	# Verbi d'azione in neretto.
+	out = _wrap_matches(out,
+		"attacca|colpisce|CONTRATTACCA|PARATO|blocca|spinge|spinto|urta|collide|rimescola|scarta|azzoppa|subisce",
+		"[b]", "[/b]")
+	return prefix + out
+
+
+## Avvolge tutte le occorrenze di `pattern` in `text` fra `open_t` e `close_t`.
+## Processa i match da destra a sinistra per non invalidare gli indici, e non
+## usa backreference (evita ambiguità di sintassi fra le versioni di Godot).
+func _wrap_matches(text: String, pattern: String, open_t: String, close_t: String) -> String:
+	var re := RegEx.new()
+	if re.compile(pattern) != OK:
+		return text
+	var matches := re.search_all(text)
+	for i in range(matches.size() - 1, -1, -1):
+		var mm: RegExMatch = matches[i]
+		var s := mm.get_start()
+		var e := mm.get_end()
+		text = text.substr(0, s) + open_t + text.substr(s, e - s) + close_t + text.substr(e)
+	return text
