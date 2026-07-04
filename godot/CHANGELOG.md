@@ -3,6 +3,29 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.97.0] — 2026-07-04
+### Carte Solo trascritte: Maestro + Monaco (lotto 4/12)
+- **Maestro** (`943` Dark Insight, `944` Reposition, `945` Masterful Cut,
+  `946` Idle Strike, `947` Hidden Victory — Incubo) e **Monaco** (`948` Satori
+  Smite, `950` Palm Strike, `951` Resolute Block, `952` Zen Wave Slash — Incubo,
+  `953` Enlightened Path — persistente).
+- Chiarite due corrispondenze numero-fisico↔ID-pool: la carta Incubo del
+  Maestro (fisica **#992** "ZANNA CELATA DELLA VIPERA") è il pool `947`
+  "Hidden Victory"; quella del Monaco (fisica **#985** "SQUARCIO DELL'ONDA
+  ZEN") è il pool `952` "Zen Wave Slash".
+- **`953` SENTIERO ILLUMINATO** è una carta *persistente* (RIMANE IN GIOCO):
+  accumula loti sui successi dell'IA Monaco e sblocca soglie (3+ = +1 limite
+  ferite, 5+ = immune agli stati, 7+ = attacchi +1). La meccanica di accumulo
+  loti + soglie **non è ancora nel motore** (marcata `stays_in_play` come
+  segnaposto, `DA IMPLEMENTARE`); l'Incubo `952` richiede `953` in gioco
+  (gate su carta-in-gioco anch'esso non modellato).
+- **Nota**: il pool elenca `949` "Enlighten" per il Monaco (6ª carta), ma
+  **non è presente tra le pagine scansionate** (le carte fisiche del Monaco
+  sono 5). Lasciata senza geometria in attesa di scansione/chiarimento.
+- Solo geometria; sole aggiunte in `geometry.json`.
+- **Restano** 5 personaggi (Yojimbo, Allievo, Onna-Bugeisha + Incubo,
+  Ronin/Guerriero già presenti in forma parziale) e il mazzo GENERICO.
+
 ## [0.96.0] — 2026-07-04
 ### Carte Solo trascritte: Navigatore + Assassino (lotto 3/12)
 - **Navigatore** (`925` Carrack Plow, `926` Roof Guard, `927` Towering
