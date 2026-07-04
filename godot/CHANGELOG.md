@@ -3,6 +3,24 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.98.0] — 2026-07-04
+### Carte Solo trascritte: Yojimbo + Onna-Bugeisha (lotto 5/12)
+- **Yojimbo** (`963` Leg Breaker — azzoppa, `964` Scorpion Sting, `965` Row —
+  a distanza) e **Onna-Bugeisha** (`958` Surging River, `959` Falling Arc,
+  `960` Rage Guard — difesa 7-3, `961` Screaming Mind — meditazione, `962`
+  Silent End — Incubo).
+- Il mazzo Solitario di Yojimbo usa solo 3 carte (963-965), tutte attacchi;
+  `965` "Row" ha un nome EN che non combacia con la scansione (LANCIO DI
+  SENBON), mappato per esclusione come terzo attacco.
+- L'Incubo di Onna (fisica **#983** "ABBRACCIO SILENZIOSO") è il pool `962`
+  "Silent End". Le carte Onna hanno una **banda rossa** = bonus quando in
+  Kamae Fuoco (iniziativa/blocchi potenziati, scambio+spinta): questi bonus
+  condizionati alla Kamae **non sono ancora modellati** (`DA VERIFICARE`).
+- `963` usa il verbo `hobble` (azzoppamento) già nel motore.
+- Solo geometria; sole aggiunte in `geometry.json`.
+- **Restano**: il completamento di Allievo (966-970) e le rifiniture di
+  Ronin/Guerriero (parziali), poi il mazzo GENERICO Solitario.
+
 ## [0.97.0] — 2026-07-04
 ### Carte Solo trascritte: Maestro + Monaco (lotto 4/12)
 - **Maestro** (`943` Dark Insight, `944` Reposition, `945` Masterful Cut,
