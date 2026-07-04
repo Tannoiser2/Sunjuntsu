@@ -5379,6 +5379,78 @@
     "Nightmare"
    ],
    "type": "meditation"
-  }
+  },
+ {
+  "id": 1001,
+  "name": "Mente Aggressiva (solo)",
+  "char": "Generic Solo",
+  "amount": 2,
+  "rank": "-",
+  "initiative": "2",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Meditation"
+  ],
+  "type": "meditation"
+ },
+ {
+  "id": 1002,
+  "name": "Mente Risoluta (solo)",
+  "char": "Generic Solo",
+  "amount": 3,
+  "rank": "-",
+  "initiative": "3",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Meditation"
+  ],
+  "type": "meditation"
+ },
+ {
+  "id": 1003,
+  "name": "Mente Rapida (solo)",
+  "char": "Generic Solo",
+  "amount": 2,
+  "rank": "-",
+  "initiative": "6",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Meditation"
+  ],
+  "type": "meditation"
+ },
+ {
+  "id": 1004,
+  "name": "Provocazione (solo)",
+  "char": "Generic Solo",
+  "amount": 1,
+  "rank": "-",
+  "initiative": "7",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Meditation",
+   "Range"
+  ],
+  "type": "meditation"
+ },
+ {
+  "id": 1005,
+  "name": "Grido di Guerra (solo)",
+  "char": "Generic Solo",
+  "amount": 1,
+  "rank": "-",
+  "initiative": "7",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Meditation",
+   "Range"
+  ],
+  "type": "meditation"
+ }
  ]
 }
