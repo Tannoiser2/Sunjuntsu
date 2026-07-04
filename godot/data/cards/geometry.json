@@ -16048,6 +16048,435 @@
    "stays_in_play": true,
    "effects": [],
    "note": "SOLITARIO. MEDITAZIONE. Monaco 001 'SENTIERO ILLUMINATO' (pool 'Enlightened Path'). RIMANE IN GIOCO: ogni volta che l'IA Monaco mette a segno un attacco o un blocco riuscito, accumula 1 loto sulla carta. Soglie: 3+ loti = +1 limite ferite; 5+ = immune a tutti gli effetti di stato; 7+ = tutti gli attacchi +1 ferita. Meccanica di accumulo loti + soglie NON ancora modellata nel motore (DA IMPLEMENTARE); qui la carta e' marcata stays_in_play come segnaposto. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "963": {
+   "name": "LEG BREAKER (Solo)",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 3,
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 4,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "hobble",
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 2,
+    "effects": [
+     {
+      "do": "change_ai_behaviour"
+     },
+     {
+      "do": "focus",
+      "n": 1
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. Yojimbo 002 'SPEZZARE LE GAMBE' (pool 'Leg Breaker'). Arretra 1, colpo sul lato sinistro (2 celle). SE RIUSCITO: AZZOPPA l'avversario (hobble). OPPURE (iniziativa 2): CAMBIA COMPORTAMENTO IA + concentra 1 + ruota 1. Celle DA VERIFICARE. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "964": {
+   "name": "SCORPION STING (Solo)",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "foe_discard",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 2,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    },
+    "effects": []
+   },
+   "note": "SOLITARIO. Yojimbo 001 'PUNTURA DELLO SCORPIONE' (pool 'Scorpion Sting'). Avanza 1 + ruota 1, puntura al fronte (1 cella). SE RIUSCITO: teschio (possibile effetto letale/veleno, non modellato) + SCARTA 1 CARTA. OPPURE (iniziativa 2): avanza 1 + ruota 1. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "965": {
+   "name": "ROW (Solo)",
+   "type": "attack",
+   "targeting": {
+    "mode": "initiative",
+    "w": 1
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 2,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [],
+   "split": {
+    "initiative": 2,
+    "effects": [
+     {
+      "do": "focus",
+      "n": 1
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. DISTANZA. Yojimbo 004 'LANCIO DI SENBON' (pool 'Row' — nome EN non combaciante, mappato per esclusione come terzo attacco del deck). COLPISCI l'avversario con iniziativa INFERIORE, 1 ferita (goccia; targeting initiative, cella placeholder a gittata 2). OPPURE (iniziativa 2): concentra 1 + ruota 1. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "958": {
+   "name": "SURGING RIVER (Solo)",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 0,
+      "k": 2,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "swap_positions",
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 2,
+    "effects": [
+     {
+      "do": "focus",
+      "n": 1
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "rot",
+         "n": 2,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. Onna-Bugeisha 001 'FIUME IN PIENA' (pool 'Surging River'). Ruota 1, colpo ampio ad arco frontale (fronte 2 di profondita' + obliqui). SE RIUSCITO (banda rossa = bonus in Kamae Fuoco, non modellato): scambio posizione + spinta, poi arretra 1. OPPURE (iniziativa 2): concentra 1 + ruota 2. Celle DA VERIFICARE. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "959": {
+   "name": "FALLING ARC (Solo)",
+   "type": "attack",
+   "attack": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 0,
+      "k": 2,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "push",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 4,
+    "effects": [
+     {
+      "do": "change_ai_behaviour"
+     },
+     {
+      "do": "focus",
+      "n": 1
+     }
+    ]
+   },
+   "note": "SOLITARIO. Onna-Bugeisha 003 'COLPO IN CADUTA' (pool 'Falling Arc'). Colpo ampio ad arco frontale. SE RIUSCITO: SPINGI 1 + avanza 1. OPPURE (iniziativa 4): CAMBIA COMPORTAMENTO IA + concentra 1. Celle DA VERIFICARE. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "960": {
+   "name": "RAGE GUARD (Solo)",
+   "type": "defence",
+   "defence": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "v": 1
+     }
+    ]
+   },
+   "effects": [],
+   "split": {
+    "initiative": 1,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    },
+    "effects": [
+     {
+      "do": "reset_deck"
+     }
+    ]
+   },
+   "note": "SOLITARIO. Onna-Bugeisha 004 'GUARDIA FURENTE' (pool 'Rage Guard', difesa 7-3). Blocco ad arco frontale (d5/d0/d1). Banda rossa: in Kamae Fuoco l'iniziativa sale a 8-2 e i blocchi diventano 7/6/5 (bonus non modellato). Iniziativa 1: avanza 1 + RICOMPONI IL MAZZO. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "961": {
+   "name": "SCREAMING MIND (Solo)",
+   "type": "meditation",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 2,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "change_ai_behaviour"
+    },
+    {
+     "do": "focus",
+     "n": 2
+    }
+   ],
+   "note": "SOLITARIO. MEDITAZIONE. Onna-Bugeisha 002 'MENTE STREPITANTE' (pool 'Screaming Mind'). CAMBIA COMPORTAMENTO IA + concentra 2 + ruota 2. Banda rossa: in Kamae Fuoco concentra 1 + ruota 1 extra (bonus non modellato). [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "962": {
+   "name": "SILENT END (Solo)",
+   "type": "attack",
+   "nightmare": true,
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 3,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 3
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "w": 2
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "reset_deck",
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 4,
+    "effects": [
+     {
+      "do": "focus",
+      "n": 1
+     },
+     {
+      "do": "reset_deck"
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. INCUBO. Onna-Bugeisha = pool 'Silent End' 962, carta fisica n.983 'ABBRACCIO SILENZIOSO'. Ruota 3, colpo ad arco frontale a ferite decrescenti (3/2/1). Banda rossa: bonus in Kamae Fuoco. SE RIUSCITO: RICOMPONI IL MAZZO. OPPURE (iniziativa 4): concentra 1 + ruota 1 + RICOMPONI IL MAZZO. Distribuzione ferite DA VERIFICARE. [Scansione Carte Solo personaggi, 2026-07]"
   }
  },
  "characters": {
