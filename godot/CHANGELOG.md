@@ -3,6 +3,24 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.99.0] — 2026-07-04
+### Carte Solo trascritte: Allievo + Guerriero Incubo — mazzi-personaggio COMPLETI (lotto 6/6)
+- **Allievo** (`966` Obedience — difesa 7-3, `967` Rock Strike, `968` Mountain
+  Swap — difesa, `969` Insightful, `970` Lightning Tail — Incubo) e la carta
+  Incubo mancante del **Guerriero** (`993` Rising Phoenix Arc, fisica "COLPO
+  DELLA FENICE FIAMMANTE").
+- **Con questo tutti i 13 personaggi disponibili hanno la geometria Solo
+  completa.** Restano fuori solo: `949` "Enlighten" del Monaco (non presente
+  nelle scansioni fisiche), e i mazzi di **Kojiro** (938-942) e **Musashi**
+  (971-975), che l'utente non possiede fisicamente (fuori scope).
+- Le geometrie parziali/approssimate di Ronin (901-905) e Guerriero (911-915),
+  trascritte nelle prime versioni, restano valide e potranno essere rifinite
+  in seguito con le scansioni ora disponibili.
+- Solo geometria; sole aggiunte in `geometry.json`.
+- **Prossimo grande blocco**: il mazzo GENERICO Solitario (001-041 + Incubo
+  995-999, ~46 carte condivise da tutti i mazzi IA) — mini-progetto a sé che
+  richiede ID nuovi nel pool + wiring in `solo_deck_for`/`AI_DECK_COMPOSITION`.
+
 ## [0.98.0] — 2026-07-04
 ### Carte Solo trascritte: Yojimbo + Onna-Bugeisha (lotto 5/12)
 - **Yojimbo** (`963` Leg Breaker — azzoppa, `964` Scorpion Sting, `965` Row —

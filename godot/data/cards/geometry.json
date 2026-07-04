@@ -16477,6 +16477,379 @@
     }
    },
    "note": "SOLITARIO. INCUBO. Onna-Bugeisha = pool 'Silent End' 962, carta fisica n.983 'ABBRACCIO SILENZIOSO'. Ruota 3, colpo ad arco frontale a ferite decrescenti (3/2/1). Banda rossa: bonus in Kamae Fuoco. SE RIUSCITO: RICOMPONI IL MAZZO. OPPURE (iniziativa 4): concentra 1 + ruota 1 + RICOMPONI IL MAZZO. Distribuzione ferite DA VERIFICARE. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "966": {
+   "name": "OBEDIENCE (Solo)",
+   "type": "defence",
+   "defence": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "v": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "foe_switch_kamae",
+     "when": "on_hit"
+    },
+    {
+     "do": "foe_lose_focus",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 2,
+    "effects": [
+     {
+      "do": "change_ai_behaviour"
+     },
+     {
+      "do": "focus",
+      "n": 1
+     },
+     {
+      "do": "reset_deck"
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. Allievo 001 'OBBEDIENZA' (pool 'Obedience', difesa 7-3). Blocco ad arco frontale (d5/d0/d1). SE RIUSCITO: l'avversario PASSA alla Kamae Tempio (foe_switch_kamae) + scarta 1 focus (loto). OPPURE (iniziativa 2): CAMBIA COMPORTAMENTO IA + concentra 1 + ruota 1 + RICOMPONI IL MAZZO. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "967": {
+   "name": "ROCK STRIKE (Solo)",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "change_ai_behaviour"
+    }
+   ],
+   "split": {
+    "initiative": 3,
+    "effects": [
+     {
+      "do": "focus",
+      "n": 2
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. Allievo 002 'COLPO DELLA ROCCIA' (pool 'Rock Strike'). CAMBIA COMPORTAMENTO IA + avanza 1 + ruota 1, colpo al fronte (celle DA VERIFICARE). OPPURE (iniziativa 3): concentra 2 + ruota 1. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "968": {
+   "name": "MOUNTAIN SWAP (Solo)",
+   "type": "defence",
+   "defence": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "v": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "swap_positions"
+    }
+   ],
+   "split": {
+    "initiative": 5,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    },
+    "effects": []
+   },
+   "note": "SOLITARIO. Allievo 003 'SCAMBIO DELLA MONTAGNA' (pool 'Mountain Swap', difesa). Cella fronte marcata '*' = SCAMBIA POSIZIONE con l'avversario. SE RIUSCITO: ruota 3 (movimento post-scambio non modellato come atomo). OPPURE (iniziativa 5): avanza 1 + ruota 1. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "969": {
+   "name": "INSIGHTFUL (Solo)",
+   "type": "attack",
+   "attack": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "w": 2
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "foe_discard",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 4,
+    "effects": [
+     {
+      "do": "focus",
+      "n": 1
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. Allievo 004 'COLPO ASTUTO' (pool 'Insightful'). Colpo ad arco frontale (fronte 2 ferite, obliqui 1). SE RIUSCITO: SCARTA 1 CARTA. OPPURE (iniziativa 4): concentra 1 + ruota 1. Celle DA VERIFICARE. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "970": {
+   "name": "LIGHTNING TAIL (Solo)",
+   "type": "attack",
+   "nightmare": true,
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 2,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "reset_deck",
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 5,
+    "effects": [
+     {
+      "do": "change_ai_behaviour"
+     },
+     {
+      "do": "focus",
+      "n": 2
+     },
+     {
+      "do": "reset_deck"
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "rot",
+         "n": 2,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. INCUBO. Allievo (Modalita' Incubo) = pool 'Lightning Tail' 970, carta fisica n.994 'CODA FULMINEA'. Avanza 2 + ruota 1, colpo ad arco frontale (3 celle). SE RIUSCITO: RICOMPONI IL MAZZO. OPPURE (iniziativa 5): CAMBIA COMPORTAMENTO IA + concentra 2 + ruota 2 + RICOMPONI IL MAZZO. Celle DA VERIFICARE. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "993": {
+   "name": "RISING PHOENIX ARC (Solo)",
+   "type": "attack",
+   "nightmare": true,
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 2
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "w": 2
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "reset_deck",
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 2,
+    "effects": [
+     {
+      "do": "reset_deck"
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. INCUBO. Guerriero (Modalita' Incubo) 'COLPO DELLA FENICE FIAMMANTE' (pool 'Rising Phoenix Arc' 993). Avanza 1, colpo ad arco frontale (volto-demone incubo al centro, ferite ~2/2/1). SE RIUSCITO: RICOMPONI IL MAZZO. OPPURE (iniziativa 2): avanza 1 + ruota 1 + RICOMPONI IL MAZZO. Distribuzione ferite/celle DA VERIFICARE. [Scansione Carte Solo personaggi, 2026-07]"
   }
  },
  "characters": {
