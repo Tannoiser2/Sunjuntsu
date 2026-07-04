@@ -3,6 +3,21 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.99.1] — 2026-07-04
+### Log più leggibile: colonna destra più larga + testo colorato
+- La colonna di log a destra (già collassabile) ora usa BBCode per evidenziare
+  ciò che conta a colpo d'occhio:
+  - **Ferite** in rosso e neretto (es. "2 ferita/e").
+  - **Azioni** in neretto (attacca, colpisce, PARATO, blocca, spinge, urta,
+    collide, rimescola, scarta, azzoppa, subisce…).
+  - Intestazioni **Round N** in ciano/neretto; riga di **vittoria** in oro.
+  - Stati: *sanguinante* in rosso scuro, *stordimento* in arancio.
+- Colonna allargata (320→360 px), font 14→15 e interlinea maggiorata per una
+  lettura più comoda. Nessun cambiamento al contenuto registrato: solo resa.
+- La colorazione è applicata in `HUD.log_line` tramite un helper robusto
+  (`_wrap_matches`) che avvolge le occorrenze da destra a sinistra e neutralizza
+  le parentesi quadre residue (che il BBCode interpreterebbe come tag).
+
 ## [0.99.0] — 2026-07-04
 ### Carte Solo trascritte: Allievo + Guerriero Incubo — mazzi-personaggio COMPLETI (lotto 6/6)
 - **Allievo** (`966` Obedience — difesa 7-3, `967` Rock Strike, `968` Mountain
