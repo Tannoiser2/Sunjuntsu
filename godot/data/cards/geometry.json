@@ -16047,7 +16047,7 @@
    "type": "meditation",
    "stays_in_play": true,
    "effects": [],
-   "note": "SOLITARIO. MEDITAZIONE. Monaco 001 'SENTIERO ILLUMINATO' (pool 'Enlightened Path'). RIMANE IN GIOCO: ogni volta che l'IA Monaco mette a segno un attacco o un blocco riuscito, accumula 1 loto sulla carta. Soglie: 3+ loti = +1 limite ferite; 5+ = immune a tutti gli effetti di stato; 7+ = tutti gli attacchi +1 ferita. Meccanica di accumulo loti + soglie NON ancora modellata nel motore (DA IMPLEMENTARE); qui la carta e' marcata stays_in_play come segnaposto. [Scansione Carte Solo personaggi, 2026-07]"
+   "note": "SOLITARIO. MEDITAZIONE. Monaco 001 'SENTIERO ILLUMINATO' (pool 'Enlightened Path'). RIMANE IN GIOCO: ogni attacco o blocco riuscito dell'IA che ha questa carta in gioco accumula 1 loto (Fighter.enlightened_lotus). Soglie IMPLEMENTATE (Duel/GameState): 3+ loti = +1 al limite ferite (effective_wound_limit), 5+ = immune a tutti gli effetti di stato (_immune/enlightened_immune), 7+ = tutti gli attacchi infliggono +1 ferita (enlightened_attack_bonus). I loti si azzerano quando la carta esce dal gioco. [Scansione Carte Solo personaggi, 2026-07; meccanica implementata v0.99.3]"
   },
   "963": {
    "name": "LEG BREAKER (Solo)",

@@ -3,6 +3,25 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.99.3] — 2026-07-04
+### Sentiero Illuminato (#953, IA Monaco): meccanica dei loti implementata
+- La carta persistente del Monaco ora **funziona davvero** (prima era solo un
+  segnaposto `stays_in_play`). Nuovo campo `Fighter.enlightened_lotus`:
+  - Ogni **attacco o blocco riuscito** dell'IA che ha #953 in gioco accumula
+    1 loto (agganciato in tutti i punti di risoluzione: attacco melee, attacco
+    a confronto d'iniziativa, parte bassa delle carte a iniziativa divisa, e i
+    rispettivi blocchi).
+  - **Soglie**: 3+ loti ⇒ +1 al limite ferite (`effective_wound_limit`);
+    5+ ⇒ immune a tutti gli effetti di stato (`_immune`); 7+ ⇒ tutti gli
+    attacchi infliggono +1 ferita (`enlightened_attack_bonus`).
+  - I loti si **azzerano** quando la carta esce dal gioco (`remove_from_play`).
+- **Fix collegato**: le carte `stays_in_play` **dell'IA** ora entrano davvero
+  in gioco (prima la guardia `and not f.is_ai` le scartava soltanto). Sicuro:
+  nei mazzi Solo dell'IA l'unica carta persistente è #953; le altre 13
+  `stays_in_play` sono carte del giocatore.
+- Nuovo `tests/test_enlightened_path.gd`: accumulo condizionato alla presenza
+  in gioco, le tre soglie, l'aggancio di `_immune`, e l'azzeramento all'uscita.
+
 ## [0.99.2] — 2026-07-04
 ### Mazzo GENERICO Solitario — batch 1/N: carte comportamento/meditazione
 - Prime 5 carte generiche distinte del mazzo IA condiviso, con **nuovi ID
