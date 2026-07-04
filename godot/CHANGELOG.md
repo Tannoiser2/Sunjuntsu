@@ -3,6 +3,24 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.96.0] — 2026-07-04
+### Carte Solo trascritte: Navigatore + Assassino (lotto 3/12)
+- **Navigatore** (`925` Carrack Plow, `926` Roof Guard, `927` Towering
+  Strike, `928` Dreadnaught — resa come meditazione, `984` Barbed Black Shot
+  — Incubo, a distanza) e **Assassino** (`929` Shadow Strike, `930` Venomous
+  Slice, `931` Penumbra Vault, `932` Sever Artery, `987` Spider's Kiss — Incubo).
+- Novità di modellazione: le carte dell'Assassino usano lo stato **Occultato**
+  (già nel motore, condiviso col Ninja) — `state_set occultato` all'"ENTRA IN"
+  stealth, con i bonus della banda viola (iniziativa a 9, avanzamenti extra)
+  annotati come `DA VERIFICARE`; celle teschio (veleno) e goccia (sanguinante)
+  rese come 1 ferita; `984` riusa il pattern targeting-iniziativa + `discard_self`
+  (rimuovi dal gioco dopo l'uso) dell'omonima carta base #279.
+- Una discrepanza EN↔IT segnalata: pool `928` "Dreadnaught" marcata *attack*
+  ma la scansione è chiaramente una **meditazione** (mappata per esclusione).
+- Solo geometria; sole aggiunte in `geometry.json`.
+- **Restano** 7 personaggi (Maestro, Monaco, Yojimbo, Allievo, Onna-Bugeisha
+  + Incubo) e il mazzo GENERICO Solitario.
+
 ## [0.95.0] — 2026-07-04
 ### Carte Solo trascritte: Yasuke + Wakou (lotto 2/12 dei mazzi-personaggio)
 - Trascritte le 10 geometrie mancanti di **Yasuke** (`916` Double Strike,

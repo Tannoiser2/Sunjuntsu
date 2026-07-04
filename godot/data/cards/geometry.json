@@ -14970,6 +14970,568 @@
     ]
    },
    "note": "SOLITARIO. INCUBO. Wakou (Modalità Incubo) 'SCHIANTO DI BORDATA' (pool 'Broadside Slam'). NON BLOCCABILE. Icona '◄' resa come passo libero 2 (direzione DA VERIFICARE) + ruota 1, colpo (2 celle fronte-sx/fronte marcate '*') = SCAMBIA POSIZIONE. SE RIUSCITO: RICOMPONI IL MAZZO. OPPURE (iniziativa 1): concentra 1 + RICOMPONI IL MAZZO. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "925": {
+   "name": "CARRACK PLOW (Solo)",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 2,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 4,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [],
+   "split": {
+    "initiative": 3,
+    "effects": [
+     {
+      "do": "focus",
+      "n": 2
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. Navigatore 002 'SPAZZATA DI GRANCHIO' (pool 'Carrack Plow'; mappato per tipo+iniziativa). Avanza 2, spazzata sul lato sinistro (celle fronte + obliqui sinistri), 1 ferita ciascuna, poi arretra 1 (arretramento post-colpo non modellato). OPPURE (iniziativa 3): concentra 2 + ruota 1. Celle DA VERIFICARE. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "926": {
+   "name": "ROOF GUARD (Solo)",
+   "type": "defence",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 2,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "defence": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "v": 1
+     }
+    ]
+   },
+   "effects": [],
+   "split": {
+    "initiative": 2,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    },
+    "effects": [
+     {
+      "do": "reset_deck"
+     }
+    ]
+   },
+   "note": "SOLITARIO. Navigatore 003 'GUARDIA ALTA' (pool 'Roof Guard', difesa 8-4). Ruota 2, blocco fronte + fronte-destro (d0/d1). Iniziativa 2: passo libero 1 (icona doppia freccia su/giù) + RICOMPONI IL MAZZO. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "927": {
+   "name": "TOWERING STRIKE (Solo)",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "foe_discard",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 2,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    },
+    "effects": []
+   },
+   "note": "SOLITARIO. Navigatore 001 'COLPO IMPONENTE' (pool 'Towering Strike'). Avanza 1 POI ruota 1, colpo al fronte (1 cella, con goccia = probabile ferita sanguinante, resa come 1 ferita). SE RIUSCITO: SCARTA 1 CARTA. OPPURE (iniziativa 2): passo libero 1. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "928": {
+   "name": "DREADNAUGHT (Solo)",
+   "type": "meditation",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 2,
+        "opt": false
+       },
+       {
+        "t": "step",
+        "dir": -1,
+        "n": 2,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "change_ai_behaviour"
+    },
+    {
+     "do": "reset_deck"
+    }
+   ],
+   "note": "SOLITARIO. MEDITAZIONE. Navigatore 004 'AVANZATA IN DUELLO' (pool 'Dreadnaught', mappato per esclusione: il pool la marca 'attack' ma la scansione e' chiaramente MEDITAZIONE — discrepanza EN↔IT, DA VERIFICARE). CAMBIA COMPORTAMENTO IA + ruota 2 + passo libero 2 + RICOMPONI IL MAZZO. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "984": {
+   "name": "BARBED BLACK SHOT (Solo)",
+   "type": "attack",
+   "nightmare": true,
+   "targeting": {
+    "mode": "initiative",
+    "w": 1
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 6,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "discard_self"
+    }
+   ],
+   "split": {
+    "initiative": 2,
+    "effects": [
+     {
+      "do": "change_ai_behaviour"
+     },
+     {
+      "do": "focus",
+      "n": 1
+     },
+     {
+      "do": "reset_deck"
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. INCUBO. DISTANZA. Navigatore (Modalita' Incubo) 'LA TEMUTA POLVERE NERA' (pool 'Barbed Black Shot', range 6). COLPISCI l'avversario con iniziativa INFERIORE, ferite PARI ALLA DIFFERENZA (targeting initiative; cella placeholder a gittata 6, w:1 fittizio). RIMUOVI DAL GIOCO DOPO L'USO (discard_self). OPPURE (iniziativa 2): CAMBIA COMPORTAMENTO IA + concentra 1 + ruota 1 + RICOMPONI IL MAZZO. Omonima della carta base #279. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "929": {
+   "name": "SHADOW STRIKE (Solo)",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "focus",
+     "n": 1
+    }
+   ],
+   "split": {
+    "initiative": 3,
+    "effects": [
+     {
+      "do": "focus",
+      "n": 1
+     },
+     {
+      "do": "state_set",
+      "state": "occultato",
+      "n": 1
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. Assassino 001 'COLPO DELLA VIPERA' (pool 'Shadow Strike'). Concentra 1 + ruota 1, colpo al fronte marcato teschio (veleno/letale, reso come 1 ferita). Banda viola: se OCCULTATO, bonus goccia + avanza 1 (non pienamente modellato). OPPURE (iniziativa 3): concentra 1 + ruota 1 + ENTRA IN Occultato (state_set). [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "930": {
+   "name": "VENOMOUS SLICE (Solo)",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [],
+   "split": {
+    "initiative": 5,
+    "effects": [
+     {
+      "do": "change_ai_behaviour"
+     },
+     {
+      "do": "state_set",
+      "state": "occultato",
+      "n": 1
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. Assassino 002 'TAGLIO VELENOSO' (pool 'Venomous Slice'). Avanza 1, colpo al fronte marcato teschio (veleno, 1 ferita). Banda viola: se OCCULTATO, l'iniziativa sale a 9 (bonus non modellato). OPPURE (iniziativa 5): CAMBIA COMPORTAMENTO IA + avanza 1 + ruota 1 + ENTRA IN Occultato. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "931": {
+   "name": "PENUMBRA VAULT (Solo)",
+   "type": "defence",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "defence": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "v": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "swap_positions"
+    },
+    {
+     "do": "push",
+     "n": 1,
+     "when": "on_hit"
+    },
+    {
+     "do": "state_set",
+     "state": "occultato",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
+   "note": "SOLITARIO. Assassino 003 'BALZO NELL'OMBRA' (pool 'Penumbra Vault'). Avanza 1, cella fronte marcata '*' = SCAMBIA POSIZIONE con l'avversario. SE RIUSCITO: SPINGI 1 + ruota 2 + avanza 1 + ENTRA IN Occultato (la parte di movimento post-scambio, ruota 2/avanza 1, non e' modellata come atomo). [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "932": {
+   "name": "SEVER ARTERY (Solo)",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "foe_discard",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 1,
+    "effects": [
+     {
+      "do": "change_ai_behaviour"
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 2,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. Assassino 004 'ARTERIA RECISA' (pool 'Sever Artery'). Avanza 1 (banda viola: se OCCULTATO avanza 2), colpo ad arco frontale a 3 celle con gocce = ferite sanguinanti (rese come 1 ferita ciascuna). SE RIUSCITO: SCARTA 1 CARTA. OPPURE (iniziativa 1): CAMBIA COMPORTAMENTO IA + avanza 2. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "987": {
+   "name": "SPIDER'S KISS (Solo)",
+   "type": "attack",
+   "nightmare": true,
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 2
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "w": 2
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 2
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "reset_deck",
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 1,
+    "effects": [
+     {
+      "do": "change_ai_behaviour"
+     },
+     {
+      "do": "focus",
+      "n": 1
+     },
+     {
+      "do": "reset_deck"
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "rot",
+         "n": 2,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. INCUBO. Assassino (Modalita' Incubo) 'BACIO DEL RAGNO' (pool \"Spider's Kiss\"). Ruota 1, colpo ad arco frontale a 3 celle da 2 ferite ciascuna. SE RIUSCITO: RICOMPONI IL MAZZO. OPPURE (iniziativa 1): CAMBIA COMPORTAMENTO IA + concentra 1 + ruota 2 + RICOMPONI IL MAZZO. [Scansione Carte Solo personaggi, 2026-07]"
   }
  },
  "characters": {
