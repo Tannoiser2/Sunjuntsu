@@ -13843,6 +13843,511 @@
     }
    ],
    "note": "SOLITARIO. INCUBO. Gated stato Occultato (banda blu, solo icona). COLPISCI il samurai con iniziativa INFERIORE: 1 ferita + teschio (probabile effetto letale aggiuntivo, non modellato, DA VERIFICARE). OPPURE: CAMBIA COMPORTAMENTO IA + passo libero 1 + ENTRA IN Occultato + RICOMPONI IL MAZZO. [Trascritta da scansione carta Solitario Ninja, 2026-07]"
+  },
+  "976": {
+   "name": "SCYTHING CLEAVE (Solo)",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [],
+   "split": {
+    "initiative": 2,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 2,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    },
+    "effects": []
+   },
+   "note": "SOLITARIO. Ashigaru 001 (coppia alleata). Avanza 1 verso l'avversario, poi fendente ad arco frontale (3 celle: fronte + i due esagoni obliqui davanti), 1 ferita ciascuna. OPPURE (iniziativa 2): avanza 1 + ruota 2. Direzioni celle DA VERIFICARE sul gioco fisico. [Trascritta da scansione Carte Solo personaggi, 2026-07]"
+  },
+  "977": {
+   "name": "SKEWER (Solo)",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 0,
+      "k": 2,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [],
+   "split": {
+    "initiative": 1,
+    "effects": [
+     {
+      "do": "change_ai_behaviour"
+     },
+     {
+      "do": "focus",
+      "n": 2
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. Ashigaru 002 (coppia alleata). Ruota 1, poi infilzata dritta di 2 esagoni (fronte anello 1 e 2), 1 ferita ciascuno. OPPURE (iniziativa 1): CAMBIA COMPORTAMENTO IA + concentra 2 (fiocco) + ruota 1. Il 'fiocco' (focus) su una carta IA è reso come effetto focus, effetto pratico marginale. [Trascritta da scansione Carte Solo personaggi, 2026-07]"
+  },
+  "978": {
+   "name": "LUNGING PIERCE (Solo)",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 0,
+      "k": 2,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "foe_lose_focus",
+     "n": 1,
+     "when": "on_hit"
+    },
+    {
+     "do": "push",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 2,
+    "effects": [
+     {
+      "do": "focus",
+      "n": 1
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "rot",
+         "n": 2,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. Ashigaru 004 (coppia alleata). Avanza 1, poi stoccata dritta di 2 esagoni, 1 ferita ciascuno. SE RIUSCITO: l'avversario scarta 1 focus (loto) + freccia in giù 1 (resa come spinta 1, DA VERIFICARE se invece è un avanzamento del pezzo). OPPURE (iniziativa 2): concentra 1 + ruota 2. [Trascritta da scansione Carte Solo personaggi, 2026-07]"
+  },
+  "979": {
+   "name": "HEAVEN'S DESCENT (Solo)",
+   "type": "defence",
+   "defence": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 2,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 4,
+      "k": 1,
+      "v": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "rotate_target",
+     "n": 2,
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 1,
+    "effects": [
+     {
+      "do": "focus",
+      "n": 1
+     },
+     {
+      "do": "reset_deck"
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "nightmare": true,
+   "note": "SOLITARIO. INCUBO. Ashigaru (carta Modalità Incubo, iniziativa 9-2 = ampio ventaglio). Blocco quasi a 360° (5 celle attorno al pezzo, esclusa la retro d3), valore 1 ciascuna. SE RIUSCITO (blocco): ruota il bersaglio di 2. Riquadro [1]: concentra 1 + ruota 1 + bonus 'zampa'+concentra 1 (sinergia con Hachikō in gioco, reso come focus, DA VERIFICARE) + RICOMPONI IL MAZZO. Cella vuota (retro) e sinergia Hachikō DA VERIFICARE. [Trascritta da scansione Carte Solo personaggi, 2026-07]"
+  },
+  "933": {
+   "name": "SWIPE (Solo)",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [],
+   "split": {
+    "initiative": 3,
+    "effects": [
+     {
+      "do": "change_ai_behaviour"
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 2,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. Hachiko 001 (coppia alleata). Avanza 1, poi zampata su fronte e obliquo-destro (2 celle), 1 ferita ciascuna. OPPURE (iniziativa 3): CAMBIA COMPORTAMENTO IA + avanza 2 + ruota 2. Direzioni celle DA VERIFICARE. [Trascritta da scansione Carte Solo personaggi, 2026-07]"
+  },
+  "934": {
+   "name": "FERAL HOWL (Solo)",
+   "type": "defence",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "change_ai_behaviour"
+    },
+    {
+     "do": "foe_lose_focus",
+     "n": 1
+    }
+   ],
+   "split": {
+    "initiative": 3,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    },
+    "effects": []
+   },
+   "range": 2,
+   "note": "SOLITARIO. DISTANZA. Hachiko 003 (coppia alleata). Carta comportamentale a gittata 2 (nessun diagramma di blocco): CAMBIA COMPORTAMENTO IA + avanza 1 + l'avversario scarta 1 focus (loto). OPPURE (iniziativa 3): avanza 1 + ruota 1. La gittata influenza solo la scelta IA (già gestita da ai_preferred_range). [Trascritta da scansione Carte Solo personaggi, 2026-07]"
+  },
+  "935": {
+   "name": "MENACING GROWL (Solo)",
+   "type": "defence",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 2,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "change_ai_behaviour"
+    },
+    {
+     "do": "cancel_movement"
+    }
+   ],
+   "range": 2,
+   "note": "SOLITARIO. DISTANZA. Hachiko 004 (coppia alleata). Gittata 2, nessun diagramma di blocco: CAMBIA COMPORTAMENTO IA + avanza 2 + CANCELLA IL MOVIMENTO ATTIVO dell'avversario. Nessuna alternativa OPPURE. [Trascritta da scansione Carte Solo personaggi, 2026-07]"
+  },
+  "936": {
+   "name": "QUICK BITE (Solo)",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "change_ai_behaviour"
+    }
+   ],
+   "split": {
+    "initiative": 5,
+    "effects": [
+     {
+      "do": "focus",
+      "n": 2
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. Hachiko 005 (coppia alleata). CAMBIA COMPORTAMENTO IA + avanza 1 POI ruota 1, morso al fronte (1 cella, 1 ferita). OPPURE (iniziativa 5): concentra 2 + ruota 1. [Trascritta da scansione Carte Solo personaggi, 2026-07]"
+  },
+  "937": {
+   "name": "JUMP (Solo)",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "push",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 6,
+    "effects": [
+     {
+      "do": "focus",
+      "n": 1
+     }
+    ]
+   },
+   "note": "SOLITARIO. Hachiko 002 (coppia alleata). Balza avanti 1, morso al fronte marcato '*' (1 cella): SE RIUSCITO SPINGI l'avversario 1. OPPURE (iniziativa 6): concentra 1. Il '*' indica la spinta (nessun conteggio ferite extra). [Trascritta da scansione Carte Solo personaggi, 2026-07]"
   }
  },
  "characters": {

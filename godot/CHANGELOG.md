@@ -3,6 +3,30 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.94.0] — 2026-07-04
+### Carte Solo della coppia Ashigaru + Hachikō trascritte: le due IA alleate ora combattono davvero
+- Trascritte da scansione (`Tabelle_Materiali/Senjutsu/CARTE/Carte Solo
+  personaggi.pdf`) le 9 geometrie mancanti della coppia alleata, sbloccando
+  la feature rilasciata in v0.92.0 (la cui nota avvertiva che "le due IA non
+  potranno davvero attaccare finché quelle carte non saranno trascritte"):
+  - **Ashigaru** (`976` Scything Cleave, `977` Skewer, `978` Lunging Pierce,
+    `979` Heaven's Descent — carta Modalità Incubo, blocco quasi a 360°).
+  - **Hachikō** (`933` Swipe, `934` Feral Howl, `935` Menacing Growl,
+    `936` Quick Bite, `937` Jump).
+- Ogni carta modella fedelmente (alla granularità del motore: `step`/`rot`
+  + celle `attack`/`defence` + effetti) le due metà OPPURE, gli attacchi ad
+  arco/infilzata, le carte a distanza comportamentali (Ululato/Ringhio) e le
+  sinergie di coppia. I dettagli incerti (direzioni celle esatte, semantica
+  di alcune frecce, sinergia Hachikō sulla carta Incubo di Ashigaru) sono
+  marcati `DA VERIFICARE` nelle note, come da convenzione del repo.
+- Nessun ID nuovo: i nomi/metadati erano già in `card_pool.json`; qui si
+  aggiunge solo la geometria in `geometry.json` (505 righe, sole aggiunte).
+- **Restano da trascrivere** gli altri 11 personaggi (Yasuke, Wakou,
+  Navigatore, Assassino, Maestro, Monaco, Yojimbo, Allievo, Onna-Bugeisha,
+  più le carte Incubo) e il mazzo GENERICO Solitario (001-041 + Incubo
+  995-999): le scansioni sono ora tutte disponibili, la trascrizione
+  proseguirà a lotti.
+
 ## [0.93.0] — 2026-07-03
 ### Virtù Bushido (#85 Coraggio, #91 Onestà, #93 Rispetto, #95 Autocontrollo): restrizioni globali finché in gioco
 - Le 4 carte Bushido restano `stays_in_play` ma non avevano mai un effetto
