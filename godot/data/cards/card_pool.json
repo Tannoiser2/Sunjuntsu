@@ -4169,7 +4169,7 @@
    "char": "Ronin Solo",
    "amount": 1,
    "rank": "-",
-   "initiative": "1",
+   "initiative": "6",
    "focus": 0,
    "keywords": [
 	"Solo",
@@ -4183,7 +4183,7 @@
    "char": "Ronin Solo",
    "amount": 1,
    "rank": "-",
-   "initiative": "6,5,4",
+   "initiative": "8,7,6,5,4,3",
    "focus": 0,
    "keywords": [
 	"Solo",
@@ -4197,7 +4197,7 @@
    "char": "Ronin Solo",
    "amount": 1,
    "rank": "-",
-   "initiative": "1",
+   "initiative": "8",
    "focus": 0,
    "keywords": [
 	"Solo",
@@ -4211,7 +4211,7 @@
    "char": "Ronin Solo",
    "amount": 1,
    "rank": "-",
-   "initiative": "3",
+   "initiative": "6",
    "focus": 0,
    "keywords": [
 	"Solo",
@@ -4240,7 +4240,7 @@
    "char": "Warrior Solo",
    "amount": 1,
    "rank": "-",
-   "initiative": "9,8,7,6,5",
+   "initiative": "8,7,6,5",
    "focus": 0,
    "keywords": [
 	"Solo",

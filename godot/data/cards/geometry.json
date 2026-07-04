@@ -2840,19 +2840,16 @@
    "name": "CHARGE (Solo)",
    "type": "attack",
    "non_blockable": true,
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
-   },
    "move": {
     "opts": [
      {
       "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       },
        {
         "t": "rot",
         "n": 1,
@@ -2862,8 +2859,29 @@
      }
     ]
    },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 0
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "rotate_target",
+     "when": "on_hit",
+     "n": 1
+    },
+    {
+     "do": "push",
+     "when": "on_hit",
+     "n": 1
+    }
+   ],
    "split": {
-    "initiative": 2,
+    "initiative": 4,
     "move": {
      "opts": [
       {
@@ -2871,30 +2889,20 @@
         {
          "t": "step",
          "dir": 0,
+         "n": 2,
+         "opt": false
+        },
+        {
+         "t": "rot",
          "n": 1,
          "opt": false
         }
        ]
       }
      ]
-    },
-    "attack": {
-     "cells": [
-      {
-       "d": 0,
-       "k": 1,
-       "w": 1
-      }
-     ]
-    },
-    "effects": [
-     {
-      "do": "push",
-      "n": 1
-     }
-    ]
+    }
    },
-   "note": "Solo Ronin 001 (trascrizione parziale)."
+   "note": "SOLITARIO. ATTACCO. Ronin 001 'CHIATTA DI BUOI'. Iniziativa 6. NON BLOCCABILE. Avanza 1 POI ruota 1; cella frontale marcata '*' (nessuna ferita automatica): ruota il bersaglio. SE RIUSCITO: SPINGI 1. OPPURE (init 4): avanza 2 POI ruota 1. [Ri-verifica scansione Carte Solo personaggi, 2026-07]"
   },
   "902": {
    "name": "STEEL BLOCK (Solo)",
@@ -2904,93 +2912,49 @@
      {
       "d": 5,
       "k": 1,
-      "v": 1
+      "v": 6
      },
      {
       "d": 0,
       "k": 1,
-      "v": 1
+      "v": 5
      },
      {
       "d": 1,
       "k": 1,
-      "v": 1
+      "v": 4
      }
     ]
    },
    "effects": [
     {
      "do": "rotate_target",
+     "when": "on_hit",
      "n": 1
-    },
-    {
-     "do": "change_ai_behaviour"
-    },
-    {
-     "do": "reset_deck"
     }
    ],
-   "note": "Solo Ronin 002. Griglia difesa approssimata."
-  },
-  "903": {
-   "name": "REVERSE CARVED FANG (Solo)",
-   "type": "attack",
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 2
-     }
-    ]
-   },
-   "effects": [
-    {
-     "do": "push",
-     "n": 1,
-     "when": "on_hit",
-     "alt": "a"
-    },
-    {
-     "do": "rotate_target",
-     "n": 1,
-     "when": "on_hit",
-     "alt": "b"
-    }
-   ],
-   "note": "Solo Ronin 003."
-  },
-  "904": {
-   "name": "FERAL SWEEP (Solo)",
-   "type": "attack",
-   "attack": {
-    "cells": [
-     {
-      "d": 5,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "w": 1
-     }
-    ]
-   },
    "split": {
     "initiative": 2,
+    "effects": [
+     {
+      "do": "change_ai_behaviour"
+     },
+     {
+      "do": "reset_deck"
+     }
+    ],
     "move": {
      "opts": [
       {
        "atoms": [
         {
          "t": "step",
-         "dir": 0,
+         "dir": -1,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
          "n": 1,
          "opt": false
         }
@@ -2999,89 +2963,10 @@
      ]
     }
    },
-   "effects": [
-    {
-     "do": "change_ai_behaviour"
-    }
-   ],
-   "note": "Solo Ronin 004."
+   "note": "SOLITARIO. DIFESA. Ronin 002 'DIFESA D'ACCIAIO'. Difende alle iniziative 8-3. Blocco su arco frontale di 3 celle con valori 6/5/4 (sx/fronte/dx). SE RIUSCITO: ruota il bersaglio. OPPURE (init 2): CAMBIA COMPORTAMENTO IA + passo libero 1 + ruota 1 + RICOMPONI IL MAZZO. Offset celle DA VERIFICARE. [Ri-verifica scansione Carte Solo personaggi, 2026-07]"
   },
-  "905": {
-   "name": "THE TERROR (Solo)",
-   "type": "meditation",
-   "effects": [
-    {
-     "do": "change_ai_behaviour"
-    },
-    {
-     "do": "cancel_abilities"
-    }
-   ],
-   "split": {
-    "initiative": 3,
-    "move": {
-     "opts": [
-      {
-       "atoms": [
-        {
-         "t": "rot",
-         "n": 2,
-         "opt": false
-        }
-       ]
-      }
-     ]
-    },
-    "effects": [
-     {
-      "do": "rotate_target",
-      "n": 1
-     },
-     {
-      "do": "reset_deck"
-     }
-    ]
-   },
-   "note": "Solo Ronin Nightmare. RANGE/ALL approssimato."
-  },
-  "911": {
-   "name": "EMBER BLOCK (Solo)",
-   "type": "defence",
-   "defence": {
-    "cells": [
-     {
-      "d": 5,
-      "k": 1,
-      "v": 1
-     },
-     {
-      "d": 0,
-      "k": 1,
-      "v": 1
-     },
-     {
-      "d": 1,
-      "k": 1,
-      "v": 1
-     }
-    ]
-   },
-   "effects": [
-    {
-     "do": "push",
-     "n": 1
-    },
-    {
-     "do": "change_ai_behaviour"
-    },
-    {
-     "do": "reset_deck"
-    }
-   ],
-   "note": "Solo Warrior 001. Difesa 8 approssimata."
-  },
-  "912": {
-   "name": "SCYTHING UPPERCUT (Solo)",
+  "903": {
+   "name": "REVERSE CARVED FANG (Solo)",
    "type": "attack",
    "move": {
     "opts": [
@@ -3100,10 +2985,48 @@
    "attack": {
     "cells": [
      {
-      "d": 5,
-      "k": 1,
-      "w": 1
-     },
+      "d": 0,
+      "k": 2,
+      "w": 2
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "push",
+     "when": "on_hit",
+     "n": 1
+    }
+   ],
+   "split": {
+    "initiative": 5,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. ATTACCO. Ronin 003 'AFFONDO INVERTITO DI ZANNA'. Iniziativa 8. Avanza 1; affondo lungo su cella frontale corona 2 (2 ferite). SE RIUSCITO: SPINGI 1. OPPURE (init 5): passo libero 1 + ruota 1. Offset cella DA VERIFICARE. [Ri-verifica scansione Carte Solo personaggi, 2026-07]"
+  },
+  "904": {
+   "name": "FERAL SWEEP (Solo)",
+   "type": "attack",
+   "attack": {
+    "cells": [
      {
       "d": 0,
       "k": 1,
@@ -3115,18 +3038,212 @@
       "w": 1
      },
      {
-      "d": 0,
+      "d": 1,
       "k": 2,
       "w": 1
+     },
+     {
+      "d": 2,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "split": {
+    "initiative": 6,
+    "effects": [
+     {
+      "do": "change_ai_behaviour"
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. ATTACCO. Ronin 004 'SPAZZATA FEROCE'. Iniziativa 6. Spazzata ampia asimmetrica verso destra (~4-5 celle, 1 ferita ciascuna); forma esatta DA VERIFICARE. OPPURE (init 6): CAMBIA COMPORTAMENTO IA + avanza 1 + ruota 1. [Ri-verifica scansione Carte Solo personaggi, 2026-07]"
+  },
+  "905": {
+   "name": "THE TERROR (Solo)",
+   "type": "meditation",
+   "nightmare": true,
+   "range": 3,
+   "effects": [
+    {
+     "do": "change_ai_behaviour"
+    },
+    {
+     "do": "cancel_abilities"
+    },
+    {
+     "do": "rotate_target",
+     "n": 1
+    },
+    {
+     "do": "reset_deck"
+    }
+   ],
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": -1,
+        "n": 2,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 2,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "note": "SOLITARIO. INCUBO. MEDITAZIONE. DISTANZA (gittata 3). Ronin 005 (Incubo) 'IL TERRORE' (n. fisico 991). Iniziativa 7. Blocco unico (nessun OPPURE): CAMBIA COMPORTAMENTO IA + CANCELLA TUTTE LE CARTE ABILITA' ATTIVE dell'avversario (cancel_abilities) + ruota il bersaglio + passo libero 2 + ruota 2 + RICOMPONI IL MAZZO. [Ri-verifica scansione Carte Solo personaggi, 2026-07]"
+  },
+  "911": {
+   "name": "EMBER BLOCK (Solo)",
+   "type": "defence",
+   "defence": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "v": 8
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "v": 8
+     },
+     {
+      "d": 4,
+      "k": 1,
+      "v": 8
      }
     ]
    },
    "effects": [
     {
-     "do": "change_ai_behaviour"
+     "do": "push",
+     "when": "on_hit",
+     "n": 1
     }
    ],
-   "note": "Solo Warrior."
+   "split": {
+    "initiative": 4,
+    "effects": [
+     {
+      "do": "change_ai_behaviour"
+     },
+     {
+      "do": "reset_deck"
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. DIFESA. Guerriero 001 'BLOCCO CINEREO'. Difende alle iniziative 8-5. Blocco a sinistra (fronte + fronte-sx + dietro-sx), valore 8 (mostrato una volta sotto il diagramma; applicato alle 3 celle, DA VERIFICARE se e' solo frontale). SE RIUSCITO: SPINGI 1. OPPURE (init 4): CAMBIA COMPORTAMENTO IA + passo libero 1 + ruota 1 + RICOMPONI IL MAZZO. [Ri-verifica scansione Carte Solo personaggi, 2026-07]"
+  },
+  "912": {
+   "name": "SCYTHING UPPERCUT (Solo)",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 3,
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 2,
+      "w": 1
+     }
+    ]
+   },
+   "split": {
+    "initiative": 5,
+    "effects": [
+     {
+      "do": "change_ai_behaviour"
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. ATTACCO. Guerriero 002 'FALCIATA MONTANTE'. Iniziativa 8. Indietreggia 1 (freccia giu'); taglio obliquo montante su 3 celle (fronte-sx anello 1, fronte anello 1, fronte-dx anello 2), 1 ferita ciascuna. OPPURE (init 5): CAMBIA COMPORTAMENTO IA + passo libero 1 + ruota 1. Offset/direzione-movimento DA VERIFICARE. [Ri-verifica scansione Carte Solo personaggi, 2026-07]"
   },
   "913": {
    "name": "WARDING ARC (Solo)",
@@ -3147,31 +3264,43 @@
       "d": 1,
       "k": 1,
       "w": 1
+     },
+     {
+      "d": 5,
+      "k": 2,
+      "w": 1
+     },
+     {
+      "d": 0,
+      "k": 2,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 2,
+      "w": 1
      }
     ]
    },
    "effects": [
     {
      "do": "foe_discard",
-     "n": 1,
-     "when": "on_hit"
+     "when": "on_hit",
+     "n": 1
     },
     {
-     "do": "change_ai_behaviour"
-    }
-   ],
-   "note": "Solo Warrior 002."
-  },
-  "914": {
-   "name": "REFOCUSED MIND (Solo)",
-   "type": "meditation",
-   "effects": [
-    {
-     "do": "change_ai_behaviour"
+     "do": "push",
+     "when": "on_hit",
+     "n": 1
     }
    ],
    "split": {
-    "initiative": 3,
+    "initiative": 5,
+    "effects": [
+     {
+      "do": "change_ai_behaviour"
+     }
+    ],
     "move": {
      "opts": [
       {
@@ -3179,20 +3308,52 @@
         {
          "t": "step",
          "dir": -1,
-         "n": 2,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
          "opt": false
         }
        ]
       }
      ]
+    }
+   },
+   "note": "SOLITARIO. ATTACCO. Guerriero 003 'ARCO RESPINGENTE'. Iniziativa 7. Ventaglio frontale ampio: 6 celle (arco 1 + arco 2), 1 ferita ciascuna. SE RIUSCITO: l'avversario scarta 1 carta + SPINGI 1. OPPURE (init 5): CAMBIA COMPORTAMENTO IA + passo libero 1 + ruota 1. Offset arco DA VERIFICARE. [Ri-verifica scansione Carte Solo personaggi, 2026-07]"
+  },
+  "914": {
+   "name": "REFOCUSED MIND (Solo)",
+   "type": "meditation",
+   "effects": [
+    {
+     "do": "change_ai_behaviour"
     },
-    "effects": [
+    {
+     "do": "reset_deck"
+    }
+   ],
+   "move": {
+    "opts": [
      {
-      "do": "reset_deck"
+      "atoms": [
+       {
+        "t": "step",
+        "dir": -1,
+        "n": 2,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 2,
+        "opt": false
+       }
+      ]
      }
     ]
    },
-   "note": "Solo Warrior 003."
+   "note": "SOLITARIO. MEDITAZIONE. Guerriero 004 'CONCENTRAZIONE RITROVATA'. Iniziativa 5. Blocco unico (nessun OPPURE): CAMBIA COMPORTAMENTO IA + passo libero 2 + ruota 2 + RICOMPONI IL MAZZO. [Ri-verifica scansione Carte Solo personaggi, 2026-07]"
   },
   "8": {
    "name": "CARTA SPECIALE MAESTRO",
