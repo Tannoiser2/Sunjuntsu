@@ -15532,6 +15532,522 @@
     }
    },
    "note": "SOLITARIO. INCUBO. Assassino (Modalita' Incubo) 'BACIO DEL RAGNO' (pool \"Spider's Kiss\"). Ruota 1, colpo ad arco frontale a 3 celle da 2 ferite ciascuna. SE RIUSCITO: RICOMPONI IL MAZZO. OPPURE (iniziativa 1): CAMBIA COMPORTAMENTO IA + concentra 1 + ruota 2 + RICOMPONI IL MAZZO. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "943": {
+   "name": "DARK INSIGHT (Solo)",
+   "type": "meditation",
+   "effects": [
+    {
+     "do": "reset_deck"
+    },
+    {
+     "do": "draw",
+     "n": 3
+    }
+   ],
+   "note": "SOLITARIO. MEDITAZIONE. Maestro 001 'INTUIZIONE OSCURA' (pool 'Dark Insight'). Rimescola nel mazzo 1 carta di ciascun elemento (fuoco/terra/…) e PESCA 3 CARTE: reso come RICOMPONI IL MAZZO + pesca 3. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "944": {
+   "name": "REPOSITION (Solo)",
+   "type": "meditation",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "change_ai_behaviour"
+    },
+    {
+     "do": "foe_discard",
+     "n": 1
+    }
+   ],
+   "note": "SOLITARIO. MEDITAZIONE. Maestro 002 'RIPOSIZIONAMENTO' (pool 'Reposition'). CAMBIA COMPORTAMENTO IA + avanza 1 + avanza 1 + ruota 1 + l'avversario SCARTA 1 CARTA. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "945": {
+   "name": "MASTERFUL CUT (Solo)",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "w": 2
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "focus",
+     "n": 1
+    }
+   ],
+   "split": {
+    "initiative": 3,
+    "effects": [
+     {
+      "do": "focus",
+      "n": 2
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. Maestro 003 'TAGLIO MAGISTRALE' (pool 'Masterful Cut'). Concentra 1 + ruota 1, colpo ad arco frontale: fronte 2 ferite, obliqui 1 ferita. OPPURE (iniziativa 3): concentra 2 + ruota 1. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "946": {
+   "name": "IDLE STRIKE (Solo)",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "foe_discard",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 3,
+    "effects": [
+     {
+      "do": "focus",
+      "n": 1
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. Maestro 004 'COLPO INDOLENTE' (pool 'Idle Strike'). Avanza 1, colpo ad arco frontale (3 celle). SE RIUSCITO: SCARTA 1 CARTA. OPPURE (iniziativa 3): concentra 1 + ruota 1. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "947": {
+   "name": "HIDDEN VICTORY (Solo)",
+   "type": "attack",
+   "nightmare": true,
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "change_ai_behaviour"
+    },
+    {
+     "do": "reset_deck",
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 6,
+    "effects": [
+     {
+      "do": "focus",
+      "n": 1
+     },
+     {
+      "do": "reset_deck"
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. INCUBO. Maestro (Modalita' Incubo) = pool 'Hidden Victory' 947, carta fisica n.992 'ZANNA CELATA DELLA VIPERA'. CAMBIA COMPORTAMENTO IA + avanza 1 + ruota 1, colpo ad arco frontale (3 celle). SE RIUSCITO: teschio sul samurai (possibile effetto letale extra, non modellato) + RICOMPONI IL MAZZO. OPPURE (iniziativa 6): concentra 1 + ruota 1 + RICOMPONI IL MAZZO. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "948": {
+   "name": "SATORI SMITE (Solo)",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 2,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "foe_discard",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 2,
+    "effects": [
+     {
+      "do": "focus",
+      "n": 1
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. Monaco 002 'DISTRUZIONE SATORI' (pool 'Satori Smite'). Avanza 1 POI ruota 1, colpo sul lato destro (fronte-destro + fianco-destro). SE RIUSCITO: SCARTA 1 CARTA. OPPURE (iniziativa 2): concentra 1 + ruota 1. Celle DA VERIFICARE. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "950": {
+   "name": "PALM STRIKE (Solo)",
+   "type": "attack",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "swap_positions",
+     "when": "on_hit"
+    },
+    {
+     "do": "foe_lose_focus",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 3,
+    "effects": [
+     {
+      "do": "change_ai_behaviour"
+     },
+     {
+      "do": "focus",
+      "n": 2
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. Monaco 003 'COLPO DEL PALMO' (pool 'Palm Strike'). Ruota 1, colpo al fronte marcato '*' = SCAMBIA POSIZIONE + spinta. SE RIUSCITO: l'avversario scarta 1 focus (loto). OPPURE (iniziativa 3): CAMBIA COMPORTAMENTO IA + concentra 2 + ruota 1. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "951": {
+   "name": "RESOLUTE BLOCK (Solo)",
+   "type": "defence",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "defence": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "v": 1
+     }
+    ]
+   },
+   "effects": [],
+   "split": {
+    "initiative": 3,
+    "effects": [
+     {
+      "do": "change_ai_behaviour"
+     },
+     {
+      "do": "reset_deck"
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. Monaco 004 'BLOCCO RISOLUTO' (pool 'Resolute Block', difesa 8-4). Ruota 1, blocco ad arco frontale (d5/d0/d1). Iniziativa 3: CAMBIA COMPORTAMENTO IA + avanza 1 + RICOMPONI IL MAZZO. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "952": {
+   "name": "ZEN WAVE SLASH (Solo)",
+   "type": "attack",
+   "nightmare": true,
+   "attack": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 2
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "w": 2
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 2
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "reset_deck",
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 1,
+    "effects": [
+     {
+      "do": "reset_deck"
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "note": "SOLITARIO. INCUBO. Monaco = pool 'Zen Wave Slash' 952, carta fisica n.985 'SQUARCIO DELL'ONDA ZEN'. REQUISITO: 'Sentiero Illuminato' (953) deve essere in gioco — gate su carta-in-gioco non modellato (DA IMPLEMENTARE). Colpo ad arco frontale (3 celle, volti-demone = 2 ferite ciascuna). OPPURE (iniziativa 1): avanza 1 + RICOMPONI IL MAZZO. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "953": {
+   "name": "ENLIGHTENED PATH (Solo)",
+   "type": "meditation",
+   "stays_in_play": true,
+   "effects": [],
+   "note": "SOLITARIO. MEDITAZIONE. Monaco 001 'SENTIERO ILLUMINATO' (pool 'Enlightened Path'). RIMANE IN GIOCO: ogni volta che l'IA Monaco mette a segno un attacco o un blocco riuscito, accumula 1 loto sulla carta. Soglie: 3+ loti = +1 limite ferite; 5+ = immune a tutti gli effetti di stato; 7+ = tutti gli attacchi +1 ferita. Meccanica di accumulo loti + soglie NON ancora modellata nel motore (DA IMPLEMENTARE); qui la carta e' marcata stays_in_play come segnaposto. [Scansione Carte Solo personaggi, 2026-07]"
   }
  },
  "characters": {
