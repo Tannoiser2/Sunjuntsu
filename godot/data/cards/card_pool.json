@@ -6,7 +6,7 @@
   "Gold",
   "Jade"
  ],
- "count": 388,
+ "count": 422,
  "characters": [
   "Ashigaru",
   "Ashigaru/Hachiko",
@@ -5436,6 +5436,430 @@
    "Range"
   ],
   "type": "meditation"
+ },
+ {
+  "id": 1006,
+  "name": "Colpo alle Caviglie (solo)",
+  "char": "Generic Solo",
+  "amount": 1,
+  "rank": "-",
+  "initiative": "7",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Attack"
+  ],
+  "type": "attack"
+ },
+ {
+  "id": 1007,
+  "name": "Affondo Lungo (solo)",
+  "char": "Generic Solo",
+  "amount": 1,
+  "rank": "-",
+  "initiative": "4",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Attack"
+  ],
+  "type": "attack"
+ },
+ {
+  "id": 1008,
+  "name": "Affondo in Spinta (solo)",
+  "char": "Generic Solo",
+  "amount": 1,
+  "rank": "-",
+  "initiative": "3",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Attack"
+  ],
+  "type": "attack"
+ },
+ {
+  "id": 1009,
+  "name": "Affondo in Spinta (solo)",
+  "char": "Generic Solo",
+  "amount": 1,
+  "rank": "-",
+  "initiative": "6",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Attack"
+  ],
+  "type": "attack"
+ },
+ {
+  "id": 1010,
+  "name": "Squarcio di Rovescio (solo)",
+  "char": "Generic Solo",
+  "amount": 1,
+  "rank": "-",
+  "initiative": "2",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Attack"
+  ],
+  "type": "attack"
+ },
+ {
+  "id": 1011,
+  "name": "Squarcio di Rovescio (solo)",
+  "char": "Generic Solo",
+  "amount": 1,
+  "rank": "-",
+  "initiative": "6",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Attack"
+  ],
+  "type": "attack"
+ },
+ {
+  "id": 1012,
+  "name": "Taglio Sanguinante (solo)",
+  "char": "Generic Solo",
+  "amount": 1,
+  "rank": "-",
+  "initiative": "7",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Attack"
+  ],
+  "type": "attack"
+ },
+ {
+  "id": 1013,
+  "name": "Taglio Orizzontale (solo)",
+  "char": "Generic Solo",
+  "amount": 1,
+  "rank": "-",
+  "initiative": "8",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Attack"
+  ],
+  "type": "attack"
+ },
+ {
+  "id": 1014,
+  "name": "Calcio del Cavallo (solo)",
+  "char": "Generic Solo",
+  "amount": 1,
+  "rank": "-",
+  "initiative": "6",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Attack"
+  ],
+  "type": "attack"
+ },
+ {
+  "id": 1015,
+  "name": "Colpo d'Elsa (solo)",
+  "char": "Generic Solo",
+  "amount": 1,
+  "rank": "-",
+  "initiative": "5",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Attack"
+  ],
+  "type": "attack"
+ },
+ {
+  "id": 1016,
+  "name": "Spinta Indietro (solo)",
+  "char": "Generic Solo",
+  "amount": 1,
+  "rank": "-",
+  "initiative": "5",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Attack"
+  ],
+  "type": "attack"
+ },
+ {
+  "id": 1017,
+  "name": "Squarcio Rotante (solo)",
+  "char": "Generic Solo",
+  "amount": 1,
+  "rank": "-",
+  "initiative": "6",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Attack"
+  ],
+  "type": "attack"
+ },
+ {
+  "id": 1018,
+  "name": "Taglio Troncante (solo)",
+  "char": "Generic Solo",
+  "amount": 1,
+  "rank": "-",
+  "initiative": "4",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Attack"
+  ],
+  "type": "attack"
+ },
+ {
+  "id": 1019,
+  "name": "Stoccata (solo)",
+  "char": "Generic Solo",
+  "amount": 1,
+  "rank": "-",
+  "initiative": "3",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Attack"
+  ],
+  "type": "attack"
+ },
+ {
+  "id": 1020,
+  "name": "Stoccata (solo)",
+  "char": "Generic Solo",
+  "amount": 1,
+  "rank": "-",
+  "initiative": "5",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Attack"
+  ],
+  "type": "attack"
+ },
+ {
+  "id": 1021,
+  "name": "Stoccata (solo)",
+  "char": "Generic Solo",
+  "amount": 1,
+  "rank": "-",
+  "initiative": "7",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Attack"
+  ],
+  "type": "attack"
+ },
+ {
+  "id": 1022,
+  "name": "Difesa Tranquilla (solo)",
+  "char": "Generic Solo",
+  "amount": 1,
+  "rank": "-",
+  "initiative": "6,5,4,3,2",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Defence"
+  ],
+  "type": "defence"
+ },
+ {
+  "id": 1023,
+  "name": "Difesa Accerchiante (solo)",
+  "char": "Generic Solo",
+  "amount": 1,
+  "rank": "-",
+  "initiative": "7,6,5,4,3",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Defence"
+  ],
+  "type": "defence"
+ },
+ {
+  "id": 1024,
+  "name": "Schivata (solo)",
+  "char": "Generic Solo",
+  "amount": 1,
+  "rank": "-",
+  "initiative": "8",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Defence"
+  ],
+  "type": "defence"
+ },
+ {
+  "id": 1025,
+  "name": "Respinta (solo)",
+  "char": "Generic Solo",
+  "amount": 1,
+  "rank": "-",
+  "initiative": "5,4,3,2",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Defence"
+  ],
+  "type": "defence"
+ },
+ {
+  "id": 1026,
+  "name": "Passo di Foresta (solo)",
+  "char": "Generic Solo",
+  "amount": 1,
+  "rank": "-",
+  "initiative": "7",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Defence"
+  ],
+  "type": "defence"
+ },
+ {
+  "id": 1027,
+  "name": "Blocco di Fiume (solo)",
+  "char": "Generic Solo",
+  "amount": 2,
+  "rank": "-",
+  "initiative": "7,6,5,4",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Defence"
+  ],
+  "type": "defence"
+ },
+ {
+  "id": 1028,
+  "name": "Difesa di Roccia (solo)",
+  "char": "Generic Solo",
+  "amount": 1,
+  "rank": "-",
+  "initiative": "6,5,4,3,2",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Defence"
+  ],
+  "type": "defence"
+ },
+ {
+  "id": 1029,
+  "name": "Blocco di Vento (solo)",
+  "char": "Generic Solo",
+  "amount": 2,
+  "rank": "-",
+  "initiative": "8,7,6,5",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Defence"
+  ],
+  "type": "defence"
+ },
+ {
+  "id": 1030,
+  "name": "Tiro di Yumi (solo)",
+  "char": "Generic Solo",
+  "amount": 1,
+  "rank": "-",
+  "initiative": "5",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Attack",
+   "Range"
+  ],
+  "type": "attack"
+ },
+ {
+  "id": 1031,
+  "name": "Tiro di Yumi (solo)",
+  "char": "Generic Solo",
+  "amount": 1,
+  "rank": "-",
+  "initiative": "6",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Attack",
+   "Range"
+  ],
+  "type": "attack"
+ },
+ {
+  "id": 1032,
+  "name": "Tiro di Yumi (solo)",
+  "char": "Generic Solo",
+  "amount": 1,
+  "rank": "-",
+  "initiative": "7",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Attack",
+   "Range"
+  ],
+  "type": "attack"
+ },
+ {
+  "id": 1033,
+  "name": "Randellata (solo)",
+  "char": "Generic Solo",
+  "amount": 1,
+  "rank": "-",
+  "initiative": "5",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Attack"
+  ],
+  "type": "attack"
+ },
+ {
+  "id": 1034,
+  "name": "Randellata (solo)",
+  "char": "Generic Solo",
+  "amount": 1,
+  "rank": "-",
+  "initiative": "7",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Attack"
+  ],
+  "type": "attack"
+ },
+ {
+  "id": 1035,
+  "name": "Fuoco (solo)",
+  "char": "Generic Solo",
+  "amount": 1,
+  "rank": "-",
+  "initiative": "6",
+  "focus": 0,
+  "keywords": [
+   "Solo",
+   "Attack",
+   "Range"
+  ],
+  "type": "attack"
  }
  ]
 }

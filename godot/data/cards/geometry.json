@@ -16972,6 +16972,1681 @@
     }
    ],
    "note": "SOLITARIO. MEDITAZIONE. DISTANZA (gittata 5). Generica 009 'GRIDO DI GUERRA'. CAMBIA COMPORTAMENTO IA + avanza 2 + ruota 1 + CANCELLA IL MOVIMENTO ATTIVO dell'avversario. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1006": {
+   "kamae_req": "aggression",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 2,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 2,
+      "w": 1
+     }
+    ]
+   },
+   "split": {
+    "initiative": 2,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "name": "Colpo alle Caviglie (solo)",
+   "type": "attack",
+   "note": "SOLITARIO. ATTACCO. Generica 010 'COLPO ALLE CAVIGLIE'. Kamae Fuoco. Avanza 1 + ruota 1, poi due celle colpite (1 ferita ciascuna, corona 2 frontale). OPPURE (init 2): passo libero 1 + ruota 1. Offset arco DA VERIFICARE. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1007": {
+   "kamae_req": "aggression",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 2,
+      "w": 1
+     }
+    ]
+   },
+   "split": {
+    "initiative": 4,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "name": "Affondo Lungo (solo)",
+   "type": "attack",
+   "note": "SOLITARIO. ATTACCO. Generica 011 'AFFONDO LUNGO'. Kamae Fuoco. Avanza 1 + ruota 1; colpo su cella frontale + cella corona 2 (1 ferita ciascuna). OPPURE (init 4): passo libero 1 + ruota 1. Offset arco DA VERIFICARE. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1008": {
+   "kamae_req": "aggression",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 2,
+      "w": 2
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "rotate_target",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 3,
+    "effects": [
+     {
+      "do": "change_ai_behaviour"
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "name": "Affondo in Spinta (solo)",
+   "type": "attack",
+   "note": "SOLITARIO. ATTACCO. Generica 012 'AFFONDO IN SPINTA'. Kamae Fuoco. Avanza 1; stoccata rettilinea (cella frontale 1 ferita + cella corona 2 frontale 2 ferite). SE RIUSCITO: ruota il bersaglio. OPPURE (init 3): CAMBIA COMPORTAMENTO IA + passo libero 1 + ruota 1. Offset arco DA VERIFICARE. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1009": {
+   "kamae_req": "aggression",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 2,
+      "w": 2
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "rotate_target",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 3,
+    "effects": [
+     {
+      "do": "change_ai_behaviour"
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "name": "Affondo in Spinta (solo)",
+   "type": "attack",
+   "note": "SOLITARIO. ATTACCO. Generica 013 'AFFONDO IN SPINTA' (iniziativa 6; contenuto uguale alla 012). Kamae Fuoco. Avanza 1; stoccata rettilinea (frontale 1 + corona 2 frontale 2). SE RIUSCITO: ruota il bersaglio. OPPURE (init 3): CAMBIA COMPORTAMENTO IA + passo libero 1 + ruota 1. Offset arco DA VERIFICARE. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1010": {
+   "kamae_req": "aggression",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": -1,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "foe_discard",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 2,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "name": "Squarcio di Rovescio (solo)",
+   "type": "attack",
+   "note": "SOLITARIO. ATTACCO. Generica 014 'SQUARCIO DI ROVESCIO'. Kamae Fuoco. Passo libero 1 + ruota 1; colpo frontale 1 ferita. SE RIUSCITO: l'avversario scarta 1 carta. OPPURE (init 2): passo libero 1 + ruota 1. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1011": {
+   "kamae_req": "aggression",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": -1,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "foe_discard",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 2,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "name": "Squarcio di Rovescio (solo)",
+   "type": "attack",
+   "note": "SOLITARIO. ATTACCO. Generica 015 'SQUARCIO DI ROVESCIO' (iniziativa 6; contenuto uguale alla 014). Kamae Fuoco. Passo libero 1 + ruota 1; colpo frontale 1 ferita. SE RIUSCITO: l'avversario scarta 1 carta. OPPURE (init 2): passo libero 1 + ruota 1. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1012": {
+   "kamae_req": "aggression",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": "bleed"
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": "bleed"
+     }
+    ]
+   },
+   "split": {
+    "initiative": 1,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "name": "Taglio Sanguinante (solo)",
+   "type": "attack",
+   "note": "SOLITARIO. ATTACCO. Generica 016 'TAGLIO SANGUINANTE'. Kamae Fuoco. Avanza 1; due celle frontali che infliggono SANGUINANTE. OPPURE (init 1): passo libero 1 + ruota 1. Offset arco DA VERIFICARE. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1013": {
+   "kamae_req": "aggression",
+   "effects": [
+    {
+     "do": "change_ai_behaviour"
+    }
+   ],
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": -1,
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "split": {
+    "initiative": 4,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "name": "Taglio Orizzontale (solo)",
+   "type": "attack",
+   "note": "SOLITARIO. ATTACCO. Generica 017 'TAGLIO ORIZZONTALE'. Kamae Fuoco. CAMBIA COMPORTAMENTO IA + passo libero 1 (glifo a quattro frecce, interpretato come passo libero); arco orizzontale frontale di 3 celle (1 ferita ciascuna). OPPURE (init 4): passo libero 1. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1014": {
+   "kamae_req": "aggression",
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 0
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "push",
+     "n": 1,
+     "when": "on_hit"
+    },
+    {
+     "do": "rotate_target",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 5,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "name": "Calcio del Cavallo (solo)",
+   "type": "attack",
+   "note": "SOLITARIO. ATTACCO. Generica 018 'CALCIO DEL CAVALLO'. Kamae Fuoco. Cella frontale marcata '*' (griglia di posizione, nessuna ferita automatica): SPINGI 1 + ruota il bersaglio. OPPURE (init 5): passo libero 1. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1015": {
+   "kamae_req": "aggression",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "foe_lose_focus",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 5,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "name": "Colpo d'Elsa (solo)",
+   "type": "attack",
+   "note": "SOLITARIO. ATTACCO. Generica 019 \"COLPO D'ELSA\". Kamae Fuoco. Avanza 1 + ruota 1; colpo frontale 1 ferita. SE RIUSCITO: l'avversario perde 1 focus (loto). OPPURE (init 5): avanza 1 + ruota 1. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1016": {
+   "kamae_req": "aggression",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 0
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "push",
+     "n": 2,
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 2,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "name": "Spinta Indietro (solo)",
+   "type": "attack",
+   "note": "SOLITARIO. ATTACCO. Generica 020 'SPINTA INDIETRO'. Kamae Fuoco. Ruota 1; cella frontale marcata '*' (nessuna ferita automatica): SPINGI l'avversario di 2. OPPURE (init 2): passo libero 1. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1017": {
+   "kamae_req": "aggression",
+   "effects": [
+    {
+     "do": "change_ai_behaviour"
+    }
+   ],
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 2,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "w": 2
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "split": {
+    "initiative": 6,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 2,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "name": "Squarcio Rotante (solo)",
+   "type": "attack",
+   "note": "SOLITARIO. ATTACCO. Generica 021 'SQUARCIO ROTANTE'. Kamae Fuoco. CAMBIA COMPORTAMENTO IA + avanza 2 + ruota 1; colpo su cella frontale-sinistra (2 ferite) e cella frontale (1 ferita). OPPURE (init 6): passo libero 2. Offset arco DA VERIFICARE. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1018": {
+   "kamae_req": "aggression",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": "bleed"
+     }
+    ]
+   },
+   "split": {
+    "initiative": 1,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "name": "Taglio Troncante (solo)",
+   "type": "attack",
+   "note": "SOLITARIO. ATTACCO. Generica 022 'TAGLIO TRONCANTE'. Kamae Fuoco. Avanza 1 + ruota 1; colpo frontale SANGUINANTE. OPPURE (init 1): passo libero 1 + ruota 1. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1019": {
+   "kamae_req": "aggression",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "split": {
+    "initiative": 3,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "name": "Stoccata (solo)",
+   "type": "attack",
+   "note": "SOLITARIO. ATTACCO. Generica 023 'STOCCATA' (iniziativa 3). Kamae Fuoco. Avanza 1 + ruota 1; colpo frontale 1 ferita. OPPURE (init 3): avanza 1 + ruota 1. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1020": {
+   "kamae_req": "aggression",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "split": {
+    "initiative": 2,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "name": "Stoccata (solo)",
+   "type": "attack",
+   "note": "SOLITARIO. ATTACCO. Generica 024 'STOCCATA' (iniziativa 5). Kamae Fuoco. Avanza 1 + ruota 1; colpo frontale 1 ferita. OPPURE (init 2): avanza 1 + ruota 1. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1021": {
+   "kamae_req": "aggression",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 1
+     }
+    ]
+   },
+   "split": {
+    "initiative": 1,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "name": "Stoccata (solo)",
+   "type": "attack",
+   "note": "SOLITARIO. ATTACCO. Generica 025 'STOCCATA' (iniziativa 7). Kamae Fuoco. Avanza 1 + ruota 1; colpo frontale 1 ferita. OPPURE (init 1): avanza 1 + ruota 1. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1022": {
+   "kamae_req": "determination",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "defence": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "v": 1
+     }
+    ]
+   },
+   "split": {
+    "initiative": 1,
+    "effects": [
+     {
+      "do": "change_ai_behaviour"
+     },
+     {
+      "do": "reset_deck"
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "name": "Difesa Tranquilla (solo)",
+   "type": "defence",
+   "note": "SOLITARIO. DIFESA. Generica 026 'DIFESA TRANQUILLA'. Kamae Roccia. Difende alle iniziative 6-2. Ruota 1; blocco su arco frontale di 3 celle (valore 1 ciascuna). OPPURE (init 1): CAMBIA COMPORTAMENTO IA + avanza 1 + ruota 1 + RICOMPONI IL MAZZO. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1023": {
+   "kamae_req": "determination",
+   "defence": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 2,
+      "k": 1,
+      "v": 1
+     }
+    ]
+   },
+   "split": {
+    "initiative": 2,
+    "effects": [
+     {
+      "do": "reset_deck"
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 2,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 2,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "name": "Difesa Accerchiante (solo)",
+   "type": "defence",
+   "note": "SOLITARIO. DIFESA. Generica 027 'DIFESA ACCERCHIANTE'. Kamae Roccia. Difende alle iniziative 7-3. Blocco avvolgente su fronte + lato destro (celle d0/d1/d2 anello 1, valore 1). OPPURE (init 2): avanza 2 + ruota 2 + RICOMPONI IL MAZZO. Offset celle DA VERIFICARE. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1024": {
+   "kamae_req": "determination",
+   "effects": [
+    {
+     "do": "change_ai_behaviour"
+    },
+    {
+     "do": "reset_deck"
+    }
+   ],
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": -1,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "step",
+        "dir": -1,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "name": "Schivata (solo)",
+   "type": "defence",
+   "note": "SOLITARIO. DIFESA. Generica 028 'SCHIVATA'. Kamae Roccia. Difende all'iniziativa 8. Nessuna cella di blocco: schiva con CAMBIA COMPORTAMENTO IA + due passi liberi + ruota 1 + RICOMPONI IL MAZZO. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1025": {
+   "kamae_req": "determination",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "defence": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "v": 1
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "v": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "push",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 1,
+    "effects": [
+     {
+      "do": "reset_deck"
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "name": "Respinta (solo)",
+   "type": "defence",
+   "note": "SOLITARIO. DIFESA. Generica 029 'RESPINTA'. Kamae Roccia. Difende alle iniziative 5-2. Ruota 1; blocco su arco frontale di 3 celle (valore 1). SE RIUSCITO: SPINGI 1. OPPURE (init 1): avanza 1 + RICOMPONI IL MAZZO. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1026": {
+   "kamae_req": "determination",
+   "defence": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "v": 0
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "rotate_target",
+     "n": 2,
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 2,
+    "effects": [
+     {
+      "do": "change_ai_behaviour"
+     },
+     {
+      "do": "reset_deck"
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "name": "Passo di Foresta (solo)",
+   "type": "defence",
+   "note": "SOLITARIO. DIFESA. Generica 030 'PASSO DI FORESTA'. Kamae Roccia. Difende all'iniziativa 7. Cella frontale marcata '*' (griglia di posizione): ruota il bersaglio di 2. OPPURE (init 2): CAMBIA COMPORTAMENTO IA + passo libero 1 + ruota 1 + RICOMPONI IL MAZZO. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1027": {
+   "kamae_req": "determination",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "defence": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "v": 6
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "v": 5
+     }
+    ]
+   },
+   "split": {
+    "initiative": 3,
+    "effects": [
+     {
+      "do": "change_ai_behaviour"
+     },
+     {
+      "do": "reset_deck"
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "name": "Blocco di Fiume (solo)",
+   "type": "defence",
+   "note": "SOLITARIO. DIFESA. Generica 031-032 (2 copie) 'BLOCCO DI FIUME'. Kamae Roccia. Difende alle iniziative 7-4. Ruota 1; blocco su cella frontale (valore 6) e frontale-destra (valore 5). OPPURE (init 3): CAMBIA COMPORTAMENTO IA + passo libero 1 + ruota 1 + RICOMPONI IL MAZZO. Offset celle DA VERIFICARE. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1028": {
+   "kamae_req": "determination",
+   "defence": {
+    "cells": [
+     {
+      "d": 5,
+      "k": 1,
+      "v": 5
+     },
+     {
+      "d": 0,
+      "k": 1,
+      "v": 4
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "v": 3
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "rotate_target",
+     "n": 1,
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 1,
+    "effects": [
+     {
+      "do": "change_ai_behaviour"
+     },
+     {
+      "do": "reset_deck"
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 3,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "name": "Difesa di Roccia (solo)",
+   "type": "defence",
+   "note": "SOLITARIO. DIFESA. Generica 033 'DIFESA DI ROCCIA'. Kamae Roccia. Difende alle iniziative 6-2. Blocco avvolgente su arco frontale (valori 5/4/3). SE RIUSCITO: ruota il bersaglio. OPPURE (init 1): CAMBIA COMPORTAMENTO IA + indietreggia 1 + ruota 1 + RICOMPONI IL MAZZO. Offset/valori-per-cella DA VERIFICARE. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1029": {
+   "kamae_req": "determination",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "defence": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "v": 8
+     },
+     {
+      "d": 1,
+      "k": 1,
+      "v": 7
+     }
+    ]
+   },
+   "split": {
+    "initiative": 4,
+    "effects": [
+     {
+      "do": "reset_deck"
+     }
+    ],
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": 0,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "name": "Blocco di Vento (solo)",
+   "type": "defence",
+   "note": "SOLITARIO. DIFESA. Generica 034-035 (2 copie) 'BLOCCO DI VENTO'. Kamae Roccia. Difende alle iniziative 8-5. Ruota 1; blocco su cella frontale (valore 8) e frontale-destra (valore 7). OPPURE (init 4): avanza 1 + ruota 1 + RICOMPONI IL MAZZO. Offset celle DA VERIFICARE. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1030": {
+   "kamae_req": "aggression",
+   "range": 5,
+   "targeting": {
+    "mode": "initiative",
+    "w": 1
+   },
+   "split": {
+    "initiative": 5,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "name": "Tiro di Yumi (solo)",
+   "type": "attack",
+   "note": "SOLITARIO. ATTACCO. DISTANZA (gittata 5). Generica 036 'TIRO DI YUMI' (iniziativa 5). Kamae Fuoco. Colpisci l'avversario in gittata con iniziativa inferiore: 1 ferita. OPPURE (init 5): passo libero 1 + ruota 1. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1031": {
+   "kamae_req": "aggression",
+   "range": 5,
+   "targeting": {
+    "mode": "initiative",
+    "w": 1
+   },
+   "split": {
+    "initiative": 6,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "name": "Tiro di Yumi (solo)",
+   "type": "attack",
+   "note": "SOLITARIO. ATTACCO. DISTANZA (gittata 5). Generica 037 'TIRO DI YUMI' (iniziativa 6). Kamae Fuoco. Colpisci l'avversario in gittata con iniziativa inferiore: 1 ferita. OPPURE (init 6): passo libero 1 + ruota 1. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1032": {
+   "kamae_req": "aggression",
+   "range": 5,
+   "targeting": {
+    "mode": "initiative",
+    "w": 1
+   },
+   "split": {
+    "initiative": 7,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "name": "Tiro di Yumi (solo)",
+   "type": "attack",
+   "note": "SOLITARIO. ATTACCO. DISTANZA (gittata 5). Generica 038 'TIRO DI YUMI' (iniziativa 7). Kamae Fuoco. Colpisci l'avversario in gittata con iniziativa inferiore: 1 ferita. OPPURE (init 7): passo libero 1 + ruota 1. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1033": {
+   "kamae_req": "aggression",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 0
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "rotate_target",
+     "n": 1,
+     "when": "on_hit"
+    },
+    {
+     "do": "foe_stun",
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 2,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "name": "Randellata (solo)",
+   "type": "attack",
+   "note": "SOLITARIO. ATTACCO. Generica 039 'RANDELLATA' (iniziativa 5). Kamae Fuoco. Avanza 1 + ruota 1; cella frontale marcata '*' (nessuna ferita automatica): ruota il bersaglio + STORDISCI. OPPURE (init 2): passo libero 1 + ruota 1. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1034": {
+   "kamae_req": "aggression",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "attack": {
+    "cells": [
+     {
+      "d": 0,
+      "k": 1,
+      "w": 0
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "rotate_target",
+     "n": 1,
+     "when": "on_hit"
+    },
+    {
+     "do": "foe_stun",
+     "when": "on_hit"
+    }
+   ],
+   "split": {
+    "initiative": 2,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "name": "Randellata (solo)",
+   "type": "attack",
+   "note": "SOLITARIO. ATTACCO. Generica 040 'RANDELLATA' (iniziativa 7; contenuto uguale alla 039). Kamae Fuoco. Avanza 1 + ruota 1; cella frontale '*': ruota il bersaglio + STORDISCI. OPPURE (init 2): passo libero 1 + ruota 1. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1035": {
+   "kamae_req": "aggression",
+   "range": 6,
+   "targeting": {
+    "mode": "initiative",
+    "w": 2
+   },
+   "remove_after_use": true,
+   "split": {
+    "initiative": 6,
+    "move": {
+     "opts": [
+      {
+       "atoms": [
+        {
+         "t": "step",
+         "dir": -1,
+         "n": 1,
+         "opt": false
+        },
+        {
+         "t": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "name": "Fuoco (solo)",
+   "type": "attack",
+   "note": "SOLITARIO. ATTACCO. DISTANZA (gittata 6). Generica 041 'FUOCO' (arma da fuoco). Kamae Fuoco. Colpisci l'avversario in gittata con iniziativa inferiore: 2 ferite; poi 'CAMBIA LA DISTANZA PREFERITA DELL'IA A 1' e 'RIMUOVI DAL GIOCO DOPO L'USO' (remove_after_use). Le due regole IA/rimozione non hanno ancora un verbo dedicato: annotate qui. OPPURE (init 6): passo libero 1 + ruota 1. [Scansione Carte Solo generiche, 2026-07]"
   }
  },
  "characters": {
