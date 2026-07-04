@@ -3,6 +3,24 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.99.5] — 2026-07-04
+### Mazzo generico Solo batch 2 (attacchi/difese/distanza) + Incubo + rifiniture
+- **Carte generiche 010-041** trascritte dalle scansioni `Carte Solo generiche.pdf`:
+  30 entry distinte (`card_pool.json` `1006-1035`) + geometrie. 22 attacchi e 8
+  difese; duplicati fusi con `amount` (BLOCCO DI FIUME ×2, BLOCCO DI VENTO ×2).
+  Carte a distanza (TIRO DI YUMI ×3, FUOCO) con `targeting` per confronto
+  d'iniziativa + `range`; seconda azione «OPPURE» come `split`.
+- **Incubo generiche 994-998** (Wild Swing, Powerful Strike, Dirt Throw, Blood
+  Fury Cut, Dashdown Strike): aggiunta la geometria mancante (erano solo nel pool).
+- **Rifinitura carte-personaggio** Ronin `901-905` e Guerriero `911-914` dalle
+  scansioni: iniziative pool corrette, valori di blocco reali (Steel Block 6/5/4,
+  Ember Block 8), strutture `split`/«OPPURE» e pattern d'attacco allineati.
+- Coerenza: rimosso `kamae_req` dalle generiche (nessuna delle carte Solo lo usa;
+  l'IA non è gated da Kamae).
+- Offset arco/celle restano best-effort, annotati `DA VERIFICARE`. Il **cablaggio**
+  del mazzo generico in `solo_deck_for()` resta da fare: serve la tabella di
+  raggruppamento mazzi I-VIII (dato non presente in repo).
+
 ## [0.99.4] — 2026-07-04
 ### Fix dati: rimosso il doppione Incubo del Guerriero (915)
 - Il mazzo Solo del Guerriero elencava 6 carte (911-915 + 993) ma il Guerriero

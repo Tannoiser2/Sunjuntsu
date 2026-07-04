@@ -185,12 +185,14 @@ func draw_pile_for(slug: String) -> Array:
 ## carte di Classe del personaggio (sempre incluse per intero) e alla sua carta
 ## Incubo (tenuta da parte, aggiunta solo in Modalità Incubo).
 ##
-## NON ANCORA USATA da `solo_deck_for()`: i mazzi generici I-VIII (~46 carte
-## condivise, es. "reach attacks"/"melee attacks"/"defence cards"/"nightmare
-## mode") non sono ancora trascritti in geometry.json — servono le scansioni
-## fisiche (sembrano un mazzetto a parte, non le pagine dei singoli personaggi).
-## Finché non esistono, `solo_deck_for()` usa solo le carte di Classe. Tenuta
-## qui come riferimento pronto per quando i dati arriveranno.
+## NON ANCORA USATA da `solo_deck_for()`. Le carte generiche ORA sono trascritte
+## (pool 1001-1005 = generiche 001-009 comportamento/meditazione; pool 1006-1035
+## = generiche 010-041 attacchi/difese/distanza; entrambe con geometria). Quel
+## che ancora manca è la **tabella di raggruppamento** che assegna ciascuna carta
+## 001-041 a uno dei mazzi di selezione I-VIII citati qui sotto: non è nel
+## materiale in repo e va chiesta all'utente (foto del regolamento solitario).
+## Finché non c'è, `solo_deck_for()` usa solo le carte di Classe. Tenuta qui come
+## riferimento pronto per quando la mappa carta→mazzo arriverà.
 const AI_DECK_COMPOSITION := {
 	# "boss/carte base": I×1, IV×2, V×1, +1 a scelta tra II/IV/V.
 	"master": {"I": 1, "IV": 2, "V": 1, "extra": ["II", "IV", "V"]},
