@@ -50,6 +50,11 @@ class Fighter:
 	## Turni di permanenza per carta in gioco (cid → conteggio), per il campo
 	## `expires` (es. #106 che ruota di 90° a fine turno e scade da diritta).
 	var in_play_ticks: Dictionary = {}
+	## Loti accumulati su "Sentiero Illuminato" (#953, IA Monaco): ogni attacco o
+	## blocco riuscito ne aggiunge 1 finché quella carta resta in gioco. Soglie:
+	## 3+ ⇒ +1 al limite ferite, 5+ ⇒ immune a tutti gli effetti di stato,
+	## 7+ ⇒ tutti gli attacchi infliggono +1 ferita. Azzerato quando la carta esce.
+	var enlightened_lotus: int = 0
 	## Limite focus corrente (di norma MAX_FOCUS; le carte in gioco possono
 	## alzarlo via `limit_mod`, es. Anima Illuminata #265).
 	var focus_limit: int = 3
@@ -147,9 +152,19 @@ class Fighter:
 			out.append(Status.POISON_VIRULENT)
 		return out
 
-	## Limite ferite effettivo (ridotto dai veleni virulenti, minimo 1).
+	## Limite ferite effettivo (ridotto dai veleni virulenti, minimo 1; +1 con
+	## 3+ loti di Sentiero Illuminato).
 	func effective_wound_limit() -> int:
-		return maxi(1, wound_limit - poison)
+		var lotus_bonus := 1 if enlightened_lotus >= 3 else 0
+		return maxi(1, wound_limit + lotus_bonus - poison)
+
+	## Immune a tutti gli effetti di stato con 5+ loti di Sentiero Illuminato.
+	func enlightened_immune() -> bool:
+		return enlightened_lotus >= 5
+
+	## Ferita bonus per attacco con 7+ loti di Sentiero Illuminato.
+	func enlightened_attack_bonus() -> int:
+		return 1 if enlightened_lotus >= 7 else 0
 
 	func remaining_wounds() -> int:
 		return effective_wound_limit() - wounds.size()

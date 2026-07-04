@@ -42,6 +42,9 @@ var state: GameState
 ## subite o un altro effetto di stato ricevuto — salvo re-ingresso nello
 ## stesso turno. Vedi _cleanup.
 const STEALTH_STATE := "occultato"
+## "Sentiero Illuminato" (#953, IA Monaco): carta persistente che accumula loti
+## sui successi e sblocca soglie di potenziamento (vedi Fighter.enlightened_*).
+const CARD_SENTIERO_ILLUMINATO := 953
 
 ## Modalità interattiva: la risoluzione avviene a passi guidati dalla scena
 ## (programma → rivela → risolvi in ordine d'iniziativa). Se false, la
@@ -835,11 +838,14 @@ func _resolve_attack_top(i: int, g: Dictionary, name: String, log: Array, chosen
 			_try_counter(foe_idx, i, atk_speed, log)
 		log.append("%s attacca con %s a velocità %d — PARATO da %s" % [
 			f.character, name, atk_speed, foe.character])
+		_award_enlightened(foe_idx, log)   # blocco riuscito → loto al difensore
 		return
 	var raw = cells.get(foe.cell, g.get("wounds", 1))
 	var act := _active_variant(g, "attack", "attacks", f.stance)
 	var kind: String = "exec" if str(raw) == "exec" else str(act.get("wound_kind", g.get("wound_kind", "normal")))
 	var n: int = 0 if str(raw) == "exec" else int(raw)
+	if n > 0:
+		n += f.enlightened_attack_bonus()   # +1 ferita con 7+ loti Illuminati
 	if kind == "exec":
 		foe.wounds.append("exec"); foe.wounds.resize(foe.wound_limit)
 	elif n > 0:
@@ -852,6 +858,7 @@ func _resolve_attack_top(i: int, g: Dictionary, name: String, log: Array, chosen
 	# Saltate in auto-risoluzione come i bonus-effetti a pagamento (riga ~1056).
 	# TODO: quando la UI espone la scelta focus, chiamare qui _apply_focus_wound().
 	_attack_ok[i] = true   # attacco a segno (reazioni "se attacco riuscito")
+	_award_enlightened(i, log)   # attacco riuscito → loto
 	combat_event.emit("hit", i, foe_idx, {"n": n})
 	_apply_if_success(i, foe_idx, g, log)
 	_apply_effects(i, foe_idx, g, "on_hit", log, chosen_alt)
@@ -891,12 +898,15 @@ func _resolve_initiative_attack(i: int, foe_idx: int, g: Dictionary, tgt: Dictio
 		foe.wounds.append("bleed")
 	else:
 		n = int(raw)
+		if n > 0:
+			n += f.enlightened_attack_bonus()   # +1 ferita con 7+ loti Illuminati (attacco a distanza)
 	if n > 0:
 		if foe.damage_reduction > 0:
 			n = maxi(1, n - foe.damage_reduction)
 		for _w in range(n):
 			foe.wounds.append("wound")
 	_attack_ok[i] = true
+	_award_enlightened(i, log)   # attacco a distanza riuscito → loto
 	combat_event.emit("hit", i, foe_idx, {"n": n})
 	_apply_if_success(i, foe_idx, g, log)
 	_apply_effects(i, foe_idx, g, "on_hit", log, chosen_alt)
@@ -931,10 +941,13 @@ func _resolve_split_bottom(i: int, split: Dictionary, name: String, log: Array, 
 					_try_counter(atk_foe_idx, i, bspeed, log)
 				log.append("%s (parte bassa di %s, vel %d) — PARATO da %s" % [
 					f.character, name, bspeed, foe.character])
+				_award_enlightened(atk_foe_idx, log)   # blocco parte bassa → loto al difensore
 			else:
 				var raw = cells.get(foe.cell, 1)
 				var kind: String = "exec" if str(raw) == "exec" else split.get("wound_kind", "normal")
 				var n: int = 0 if str(raw) == "exec" else int(raw)
+				if n > 0:
+					n += f.enlightened_attack_bonus()   # +1 ferita con 7+ loti (parte bassa)
 				if kind == "exec":
 					foe.wounds.append("exec"); foe.wounds.resize(foe.wound_limit)
 				else:
@@ -947,6 +960,7 @@ func _resolve_split_bottom(i: int, split: Dictionary, name: String, log: Array, 
 				fighter_updated.emit(atk_foe_idx)
 				log.append("%s colpisce %s (parte bassa, vel %d) — %d ferita/e (%d/%d)" % [
 					f.character, foe.character, bspeed, n, foe.wounds.size(), foe.wound_limit])
+				_award_enlightened(i, log)   # parte bassa a segno → loto
 	if split.has("effects"):
 		_apply_effects(i, foe_idx, {"effects": split["effects"]}, "always", log, null)
 
@@ -1682,6 +1696,23 @@ static func _has_active_bushido(state: GameState, cid: int) -> bool:
 	return false
 
 
+## Assegna 1 loto a "Sentiero Illuminato" se il combattente `i` ce l'ha in gioco
+## (attacco o blocco riuscito). Registra a log i superamenti di soglia (3/5/7).
+func _award_enlightened(i: int, log: Array) -> void:
+	var f := state.fighters[i]
+	if not f.in_play.has(CARD_SENTIERO_ILLUMINATO):
+		return
+	f.enlightened_lotus += 1
+	fighter_updated.emit(i)
+	var n := f.enlightened_lotus
+	if n == 3:
+		log.append("%s — Sentiero Illuminato: 3 loti, +1 al limite ferite" % f.character)
+	elif n == 5:
+		log.append("%s — Sentiero Illuminato: 5 loti, immune agli effetti di stato" % f.character)
+	elif n == 7:
+		log.append("%s — Sentiero Illuminato: 7 loti, tutti gli attacchi +1 ferita" % f.character)
+
+
 ## "ALLA FINE DEL TURNO QUALSIASI GIOCATORE PUÒ SPENDERE 2 FOCUS PER SCARTARE
 ## QUESTA CARTA" (le 4 virtù Bushido): API per la scena, sullo stesso modello
 ## di spend_completed_contract — azione manuale del giocatore, non automatica.
@@ -1705,6 +1736,8 @@ func remove_from_play(i: int, cid: int) -> bool:
 	if not f.in_play.has(cid):
 		return false
 	f.in_play.erase(cid)
+	if cid == CARD_SENTIERO_ILLUMINATO:
+		f.enlightened_lotus = 0
 	f.in_play_ticks.erase(cid)
 	var g := CardDB.geometry(cid)
 	var st := str(g.get("in_play_state", ""))
@@ -1845,8 +1878,8 @@ func _cleanup(log: Array) -> void:
 			if is_core(f.planned) and not f.is_ai:
 				if not f.hand.has(f.planned):
 					f.hand.append(f.planned)   # la core torna in mano
-			elif bool(CardDB.geometry(f.planned).get("stays_in_play", false)) and not f.is_ai:
-				_enter_play(state.fighters.find(f), f.planned)   # RIMANE IN GIOCO (§3.2)
+			elif bool(CardDB.geometry(f.planned).get("stays_in_play", false)):
+				_enter_play(state.fighters.find(f), f.planned)   # RIMANE IN GIOCO (§3.2, anche IA: Sentiero Illuminato)
 			else:
 				f.discard.append(f.planned)
 			f.planned = -1
@@ -1943,6 +1976,8 @@ func _cell_target_index(i: int, cells: Dictionary) -> int:
 func _immune(target: GameState.Fighter, verb: String) -> bool:
 	if target == null:
 		return false
+	if target.enlightened_immune():   # 5+ loti Illuminati: immune a tutto
+		return true
 	return verb in (CardDB.character_stats(target.character).get("immunities", []) as Array)
 
 
