@@ -3,6 +3,20 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.99.2] — 2026-07-04
+### Mazzo GENERICO Solitario — batch 1/N: carte comportamento/meditazione
+- Prime 5 carte generiche distinte del mazzo IA condiviso, con **nuovi ID
+  1001-1005** in `card_pool.json` (+ geometria): `1001` Mente Aggressiva (×2),
+  `1002` Mente Risoluta (×3), `1003` Mente Rapida (×2), `1004` Provocazione
+  (distanza), `1005` Grido di Guerra (distanza). `amount` = numero di copie
+  fisiche (carte 001-009 della scansione).
+- Sono le carte "CAMBIA COMPORTAMENTO IA" centrali per l'IA solitaria
+  (`change_ai_behaviour`, `foe_switch_kamae`, `cancel_movement`).
+- **Nota**: le carte generiche NON sono ancora collegate a `solo_deck_for`
+  (serve la tabella di raggruppamento nei mazzi I-VIII, non ancora
+  disponibile) — restano dati pronti all'uso. Le restanti generiche
+  (attacchi/difese/distanza, 010-041) seguiranno nei prossimi batch.
+
 ## [0.99.1] — 2026-07-04
 ### Log più leggibile: colonna destra più larga + testo colorato
 - La colonna di log a destra (già collassabile) ora usa BBCode per evidenziare

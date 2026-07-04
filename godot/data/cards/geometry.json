@@ -16850,6 +16850,150 @@
     }
    },
    "note": "SOLITARIO. INCUBO. Guerriero (Modalita' Incubo) 'COLPO DELLA FENICE FIAMMANTE' (pool 'Rising Phoenix Arc' 993). Avanza 1, colpo ad arco frontale (volto-demone incubo al centro, ferite ~2/2/1). SE RIUSCITO: RICOMPONI IL MAZZO. OPPURE (iniziativa 2): avanza 1 + ruota 1 + RICOMPONI IL MAZZO. Distribuzione ferite/celle DA VERIFICARE. [Scansione Carte Solo personaggi, 2026-07]"
+  },
+  "1001": {
+   "name": "Mente Aggressiva (solo)",
+   "type": "meditation",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 2,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 3,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "change_ai_behaviour"
+    }
+   ],
+   "note": "SOLITARIO. MEDITAZIONE. Generica 001-002 (2 copie) 'MENTE AGGRESSIVA'. CAMBIA COMPORTAMENTO IA + avanza 2 + ruota 3. Testo: 'MISCHIA NEL MAZZO LA PRIMA carta FUOCO degli scarti' (recupero mirato di una carta dallo scarto, non modellato come verbo dedicato). [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1002": {
+   "name": "Mente Risoluta (solo)",
+   "type": "meditation",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 2,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "focus",
+     "n": 2
+    }
+   ],
+   "note": "SOLITARIO. MEDITAZIONE. Generica 003-005 (3 copie) 'MENTE RISOLUTA'. Concentra 2 (fiocco) + ruota 2. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1003": {
+   "name": "Mente Rapida (solo)",
+   "type": "meditation",
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 1,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "focus",
+     "n": 2
+    }
+   ],
+   "note": "SOLITARIO. MEDITAZIONE. Generica 006-007 (2 copie) 'MENTE RAPIDA'. Concentra 2 + avanza 1 + ruota 1. [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1004": {
+   "name": "Provocazione (solo)",
+   "type": "meditation",
+   "range": 5,
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "focus",
+     "n": 2
+    },
+    {
+     "do": "foe_switch_kamae"
+    }
+   ],
+   "note": "SOLITARIO. MEDITAZIONE. DISTANZA (gittata 5). Generica 008 'PROVOCAZIONE'. Concentra 2 + ruota 1 + l'avversario PASSA alla Kamae Tempio (foe_switch_kamae). [Scansione Carte Solo generiche, 2026-07]"
+  },
+  "1005": {
+   "name": "Grido di Guerra (solo)",
+   "type": "meditation",
+   "range": 5,
+   "move": {
+    "opts": [
+     {
+      "atoms": [
+       {
+        "t": "step",
+        "dir": 0,
+        "n": 2,
+        "opt": false
+       },
+       {
+        "t": "rot",
+        "n": 1,
+        "opt": false
+       }
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "do": "change_ai_behaviour"
+    },
+    {
+     "do": "cancel_movement"
+    }
+   ],
+   "note": "SOLITARIO. MEDITAZIONE. DISTANZA (gittata 5). Generica 009 'GRIDO DI GUERRA'. CAMBIA COMPORTAMENTO IA + avanza 2 + ruota 1 + CANCELLA IL MOVIMENTO ATTIVO dell'avversario. [Scansione Carte Solo generiche, 2026-07]"
   }
  },
  "characters": {
