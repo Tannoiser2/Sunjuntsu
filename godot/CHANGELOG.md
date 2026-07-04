@@ -3,6 +3,25 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.95.0] — 2026-07-04
+### Carte Solo trascritte: Yasuke + Wakou (lotto 2/12 dei mazzi-personaggio)
+- Trascritte le 10 geometrie mancanti di **Yasuke** (`916` Double Strike,
+  `917` Lion's Bite, `918` Dual Blade Defence, `919` Charging Pride, `920`
+  Righteous Fury — Incubo) e **Wakou** (`921` Staggering Hulk, `922` Faster
+  Legs, `923` Headbutt, `924` Staggering Blow, `981` Broadside Slam — Incubo).
+- Novità di modellazione rispetto alla coppia alleata: celle marcate `*` che
+  attivano **scambio di posizione** (`swap_positions` on-hit, carate "carica"
+  di Yasuke/Wakou), difesa a due livelli (`918`), carta di sola meditazione-
+  movimento (`922`), e la Incubo `981` NON BLOCCABILE.
+- Come per il lotto precedente: solo geometria (nomi già in `card_pool.json`),
+  sole aggiunte in `geometry.json`. Discrepanze di nome EN↔IT (es. Yasuke 001
+  "Ankle Strike" nel pool ↔ "COLPO DOPPIO" sulla scansione) risolte mappando
+  per numero di carta e usando il contenuto della scansione; dettagli incerti
+  (icone di movimento 'Y'/'◄'/'+', anelli esatti delle celle, soglie di blocco
+  7/5) marcati `DA VERIFICARE`.
+- **Restano** 9 personaggi (Navigatore, Assassino, Maestro, Monaco, Yojimbo,
+  Allievo, Onna-Bugeisha + Incubo vari) e il mazzo GENERICO Solitario.
+
 ## [0.94.0] — 2026-07-04
 ### Carte Solo della coppia Ashigaru + Hachikō trascritte: le due IA alleate ora combattono davvero
 - Trascritte da scansione (`Tabelle_Materiali/Senjutsu/CARTE/Carte Solo
