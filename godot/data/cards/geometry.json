@@ -3194,28 +3194,6 @@
    },
    "note": "Solo Warrior 003."
   },
-  "915": {
-   "name": "FLAMING PHOENIX ARC (Solo)",
-   "type": "attack",
-   "attack": {
-    "cells": [
-     {
-      "d": 0,
-      "k": 1,
-      "w": 1
-     }
-    ]
-   },
-   "effects": [
-    {
-     "do": "change_ai_behaviour"
-    },
-    {
-     "do": "reset_deck"
-    }
-   ],
-   "note": "Solo Warrior Nightmare."
-  },
   "8": {
    "name": "CARTA SPECIALE MAESTRO",
    "type": "core",

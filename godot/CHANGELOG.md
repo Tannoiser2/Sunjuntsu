@@ -3,6 +3,14 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.99.4] — 2026-07-04
+### Fix dati: rimosso il doppione Incubo del Guerriero (915)
+- Il mazzo Solo del Guerriero elencava 6 carte (911-915 + 993) ma il Guerriero
+  fisico ha **5 carte** (una sola Incubo). `915` "Flaming Phoenix Arc" e `993`
+  "Rising Phoenix Arc" erano la stessa carta (COLPO DELLA FENICE FIAMMANTE,
+  iniziativa 6). Rimossa `915` da `solo_deck_for("warrior")`, da `geometry.json`
+  e da `card_pool.json`; corretta l'iniziativa di `993` da "-" a "6".
+
 ## [0.99.3] — 2026-07-04
 ### Sentiero Illuminato (#953, IA Monaco): meccanica dei loti implementata
 - La carta persistente del Monaco ora **funziona davvero** (prima era solo un

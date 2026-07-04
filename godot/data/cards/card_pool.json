@@ -4291,21 +4291,6 @@
    "type": "meditation"
   },
   {
-   "id": 915,
-   "name": "Flaming Phoenix Arc (solo)",
-   "char": "Warrior Solo",
-   "amount": 1,
-   "rank": "-",
-   "initiative": "6",
-   "focus": 0,
-   "keywords": [
-	"Solo",
-	"Attack",
-    "Nightmare"
-   ],
-   "type": "attack"
-  },
-  {
    "id": 916,
    "name": "Ankle Strike (solo)",
    "char": "Yasuke Solo",
@@ -5281,7 +5266,7 @@
    "char": "Warrior Solo",
    "amount": 1,
    "rank": "-",
-   "initiative": "-",
+   "initiative": "6",
    "focus": 0,
    "keywords": [
 	"Solo",

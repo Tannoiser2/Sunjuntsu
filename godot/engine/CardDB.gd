@@ -223,7 +223,7 @@ func solo_deck_for(slug: String) -> Array:
 		"ronin":
 			return [901, 902, 903, 904, 905]
 		"warrior":
-			return [911, 912, 913, 914, 915, 993]
+			return [911, 912, 913, 914, 993]   # 915 rimossa: doppione dell'Incubo 993 (Guerriero ha 1 sola carta Incubo)
 		"yasuke":
 			return [916, 917, 918, 919, 920]
 		"wakou":
