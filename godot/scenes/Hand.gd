@@ -32,10 +32,15 @@ func set_hand(entries: Array) -> void:
 
 
 func _layout() -> void:
+	if _cards.is_empty():
+		return
+	await get_tree().process_frame
+	# Rileggi la dimensione DOPO l'await: durante il frame di attesa la mano può
+	# essere stata ricostruita (set_hand → _cards.clear()), quindi un indice/conteggio
+	# catturato prima non è più valido. Evita "Out of bounds get index" su _cards[i].
 	var n := _cards.size()
 	if n == 0:
 		return
-	await get_tree().process_frame
 	var center_x: float = size.x * 0.5
 	var base_y: float = size.y - 226.0    ## carte più in alto (più leggibili)
 	for i in range(n):
