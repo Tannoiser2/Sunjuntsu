@@ -4,7 +4,7 @@ Documento di ripartenza per **una sessione nuova** (il lavoro rimasto richiede
 di *leggere* le scansioni delle carte, cosa che va fatta con budget-immagini
 fresco — vedi §5).
 
-Ultimo aggiornamento: 2026-07-04, alla versione **0.99.4**.
+Ultimo aggiornamento: 2026-07-05, alla versione **0.99.6**.
 
 ---
 
@@ -41,40 +41,73 @@ Geometria completa in `data/cards/geometry.json`; i nomi/metadati erano già in
 Nuovi ID **1001-1005** in pool + geometria (PR #99): Mente Aggressiva (×2),
 Mente Risoluta (×3), Mente Rapida (×2), Provocazione, Grido di Guerra.
 
+### Mazzo GENERICO — batch 2 (attacchi/difese/distanza) — v0.99.5
+Carte **010-041** trascritte da `Carte Solo generiche.pdf` come **30 entry
+distinte**, pool **1006-1035** + geometria (append testuale al pool, load/dump
+per la geometria). 22 attacchi + 8 difese; duplicati fusi con `amount` (BLOCCO
+DI FIUME ×2 = 1027, BLOCCO DI VENTO ×2 = 1029). Carte a distanza (TIRO DI YUMI
+×3 = 1030-1032, FUOCO = 1035) con `targeting` (confronto d'iniziativa) + `range`.
+Seconda azione «OPPURE» modellata come `split`. `kamae_req` NON impostato (come
+tutte le altre Solo). Offset arco/celle best-effort → note `DA VERIFICARE`.
+
+### Incubo generiche 994-998 — v0.99.5
+Aggiunta la **geometria mancante** alle 5 carte Incubo d'attacco (erano solo nel
+pool): 994 Wild Swing (FENDENTE SELVAGGIO), 995 Powerful Strike (COLPO POTENTE),
+996 Dirt Throw (SABBIA NEGLI OCCHI), 997 Blood Fury Cut (FURIA SANGUINOSA),
+998 Dashdown Strike (COLPO IN AFFONDO). Mappate per nome+iniziativa (il numero
+FISICO stampato ≠ id pool, annotato nelle note). **999 "Ancient Terror"**
+(meditazione Incubo) resta SENZA geometria: non era tra le pagine scansionate —
+da verificare con l'utente se esiste la carta fisica.
+
+### Cablaggio mazzo generico nell'IA — v0.99.6
+`solo_deck_for()` ora aggiunge le carte generiche (mazzi I-VII) alle carte di
+Classe secondo `AI_DECK_COMPOSITION`. La mappa carta→mazzo (`CardDB.GENERIC_DECKS`)
+viene dal foglio "groups based on cards" di `solo_AI_tables_v1.xlsx` — che ERA
+già nei materiali (`Senjutsu/Tabelle/`), contrariamente a quanto ipotizzato prima.
+
+### Rifinitura carte-personaggio 901-905 / 911-914 — v0.99.5
+Ri-verificate dalle scansioni `Carte Solo personaggi.pdf` (Ronin pag.1,
+Guerriero pag.2): iniziative pool corrette (Charge 1→6, Steel Block 6,5,4→8-3,
+Reverse Carved Fang 1→8, Feral Sweep 3→6, Ember Block 9-5→8-5), valori di blocco
+reali (Steel 6/5/4, Ember 8), strutture `split`/«OPPURE» e pattern d'attacco
+allineati (Warding Arc = ventaglio 6 celle, ecc.). Offset residui `DA VERIFICARE`.
+
 ---
 
-## 2. Stato: DA FARE ⏳ (richiede lettura scansioni → sessione nuova)
+## 2. Stato: DA FARE ⏳
 
-### A. Mazzo GENERICO, carte 010-041 (attacchi/difese/distanza)
-- Fonte: `Tabelle_Materiali/Senjutsu/CARTE/Carte Solo generiche.pdf`
-  (6 pagine, 9 carte/pagina). Batch 1 (001-009) già fatto.
-- **Schema ID**: continuare da **1006** in su, un'entry per carta DISTINTA
-  (stesso nome+iniziativa+contenuto ⇒ una entry con `amount` = n. copie;
-  iniziative diverse ⇒ entry separate). Le 6 Incubo generiche (COLPO POTENTE,
-  FENDENTE SELVAGGIO, SABBIA NEGLI OCCHI, FURIA SANGUINOSA, COLPO IN AFFONDO,
-  ecc.) esistono già come 994-999 nel pool.
-- Aggiungere in `card_pool.json` (append testuale, NON `json.dump` che
-  riformatta tutto — vedi §4) + geometria in `geometry.json` (round-trip
-  `json.dump(indent=1)` è stabile per geometry.json).
+### A. ~~Mazzo GENERICO, carte 010-041~~ ✅ FATTO (v0.99.5, vedi §1)
+Le 010-041 sono in pool `1006-1035` + geometria. Le Incubo generiche d'attacco
+994-998 hanno ora la geometria. Resta la 999 "Ancient Terror" (vedi D-bis).
 
-### B. Rifinitura Ronin (901-905) e Guerriero (911-914) parziali
-Geometrie "approssimate" trascritte in una sessione vecchia; note dicono
-"trascrizione parziale/approssimata". Riverificare celle/effetti dalle
-scansioni `Carte Solo personaggi.pdf` (pagina 1 Ronin, pagina 2 Guerriero).
-Mappa: 901=CHIATTA DI BUOI, 902=DIFESA D'ACCIAIO, 903=AFFONDO INVERTITO DI
-ZANNA, 904=SPAZZATA FEROCE, 905=IL TERRORE(incubo); 911=BLOCCO CINEREO,
-912=FALCIATA MONTANTE, 913=ARCO RESPINGENTE, 914=CONCENTRAZIONE RITROVATA.
+### B. ~~Rifinitura Ronin 901-905 / Guerriero 911-914~~ ✅ FATTO (v0.99.5, vedi §1)
+Restano solo gli offset arco/celle marcati `DA VERIFICARE` (best-effort): da
+confermare sul gioco fisico o con l'editor visuale sul nido d'ape. Punti più
+incerti: SPAZZATA FEROCE (904, forma della spazzata), BLOCCO CINEREO (911, se il
+valore 8 è solo frontale), direzione del passo di FALCIATA MONTANTE (912).
 
-### C. Wiring del mazzo generico (serve dato mancante)
-`solo_deck_for()` NON collega ancora le carte generiche. Per farlo serve la
-**tabella di raggruppamento mazzi I-VIII** (quali carte 001-041 stanno in
-ciascun mazzo di selezione). Non è nella repo materiali. `CardDB.AI_DECK_COMPOSITION`
-ha già i rapporti per personaggio ma non la mappa carta→mazzo. Chiedere
-all'utente la tabella (o una foto del regolamento), poi wire + test.
+### C. ~~Wiring del mazzo generico~~ ✅ FATTO (v0.99.6)
+La tabella di raggruppamento era in `Senjutsu/Tabelle/solo_AI_tables_v1.xlsx`
+(foglio "groups based on cards"). Trascritta in `CardDB.GENERIC_DECKS` e
+`solo_deck_for()` ora aggiunge le generiche alle carte di Classe secondo
+`AI_DECK_COMPOSITION`. **Resta da PROVARE in Godot** (test non eseguibili in
+remoto): aprire `tests/test_solo_decks.tscn` (verifica composizione mazzi per
+ogni personaggio) e `tests/test_allcards.tscn` (risolve ogni carta con
+geometria, incluse le nuove); poi lanciare una partita Solo e controllare che
+l'IA risolva le carte generiche senza errori.
+Il mazzo generico Incubo (VIII = 994-998) è definito in `GENERIC_DECKS` ma NON
+è ancora pescato da `solo_deck_for()`: va agganciato quando esisterà una
+Modalità Incubo esplicita.
 
 ### D. Carta mancante Monaco 949 "Enlighten"
 Il pool elenca 949 ma non è tra le pagine scansionate (il Monaco fisico ha 5
 carte). Verificare con l'utente se esiste una 6ª carta fisica da scansionare.
+
+### D-bis. Carta Incubo generica 999 "Ancient Terror"
+Il pool elenca 999 (meditazione, Incubo) ma la carta NON era tra le pagine
+scansionate di `Carte Solo generiche.pdf` (che contiene solo 5 Incubo d'attacco,
+ora trascritte come 994-998). Verificare con l'utente se esiste la 6ª carta
+Incubo generica fisica da scansionare.
 
 ### E. Fuori scope (l'utente non possiede le carte)
 Kojiro (938-942) e Musashi (971-975).
@@ -104,8 +137,11 @@ Kojiro (938-942) e Musashi (971-975).
 - Validare sempre: `python3 -c "import json; json.load(open(...))"`.
 - Sintassi GDScript: `gdparse <file>.gd` (niente Godot in remoto).
 - Ogni PR funzionale: bump `config/version` in `project.godot` + voce in
-  `CHANGELOG.md`. Workflow: branch `claude/card-mechanics-roadmap-s7mnr0`,
-  draft PR, merge squash, reset da `origin/main`.
+  `CHANGELOG.md`. Workflow: branch dedicato, draft PR, merge squash, reset da
+  `origin/main` (batch 2 fatto su `claude/solo-mode-completion-v39yb2`, PR #101).
+- **Non eseguibile in remoto**: `test_allcards.gd`/`test_cardvalidator.gd`
+  richiedono Godot. Verificare i dati con `python3 -c "import json; json.load(...)"`
+  e, quando possibile, aprire il progetto in locale per lanciare i test headless.
 
 ## 5. Il muro delle immagini (perché serve una sessione nuova)
 Il limite è ~**32 MB di immagini TOTALI accumulate nella conversazione**, non

@@ -3,6 +3,39 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.99.6] — 2026-07-05
+### Cablaggio del mazzo generico nell'IA solitaria (`solo_deck_for`)
+- L'IA ora **pesca davvero** le carte generiche. Aggiunta la costante
+  `CardDB.GENERIC_DECKS` (mappa mazzo I-VIII → carte, da `solo_AI_tables_v1.xlsx`
+  foglio "groups based on cards"): I=1001,1002,1004,1005; II=1001,1002²,1003²;
+  III=1006-1009; IV=1010-1021; V=1022-1029 (con 1027/1029 doppie); VI=1030-1032;
+  VII=1033-1035; VIII(Incubo)=994-998.
+- `solo_deck_for()` ora ritorna **carte di Classe + generiche** pescate secondo
+  `AI_DECK_COMPOSITION` (es. Ronin/Guerriero: I×1, III×1, IV×1, V×1, +1 tra
+  II/IV/V; boss: I×1, IV×2, V×1, +1). Estrazione casuale senza rimpiazzo entro
+  ogni mazzo; il chiamante rimescola. Il mazzo generico Incubo (VIII) resta a
+  parte (solo Modalità Incubo); Hachikō invariato (solo 5 carte).
+- Logica validata via simulazione; sintassi GDScript verificata con `gdparse`.
+  **Da provare in Godot** (non eseguibile in remoto).
+
+## [0.99.5] — 2026-07-04
+### Mazzo generico Solo batch 2 (attacchi/difese/distanza) + Incubo + rifiniture
+- **Carte generiche 010-041** trascritte dalle scansioni `Carte Solo generiche.pdf`:
+  30 entry distinte (`card_pool.json` `1006-1035`) + geometrie. 22 attacchi e 8
+  difese; duplicati fusi con `amount` (BLOCCO DI FIUME ×2, BLOCCO DI VENTO ×2).
+  Carte a distanza (TIRO DI YUMI ×3, FUOCO) con `targeting` per confronto
+  d'iniziativa + `range`; seconda azione «OPPURE» come `split`.
+- **Incubo generiche 994-998** (Wild Swing, Powerful Strike, Dirt Throw, Blood
+  Fury Cut, Dashdown Strike): aggiunta la geometria mancante (erano solo nel pool).
+- **Rifinitura carte-personaggio** Ronin `901-905` e Guerriero `911-914` dalle
+  scansioni: iniziative pool corrette, valori di blocco reali (Steel Block 6/5/4,
+  Ember Block 8), strutture `split`/«OPPURE» e pattern d'attacco allineati.
+- Coerenza: rimosso `kamae_req` dalle generiche (nessuna delle carte Solo lo usa;
+  l'IA non è gated da Kamae).
+- Offset arco/celle restano best-effort, annotati `DA VERIFICARE`. Il **cablaggio**
+  del mazzo generico in `solo_deck_for()` resta da fare: serve la tabella di
+  raggruppamento mazzi I-VIII (dato non presente in repo).
+
 ## [0.99.4] — 2026-07-04
 ### Fix dati: rimosso il doppione Incubo del Guerriero (915)
 - Il mazzo Solo del Guerriero elencava 6 carte (911-915 + 993) ma il Guerriero
