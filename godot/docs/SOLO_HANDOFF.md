@@ -91,8 +91,10 @@ La tabella di raggruppamento era in `Senjutsu/Tabelle/solo_AI_tables_v1.xlsx`
 (foglio "groups based on cards"). Trascritta in `CardDB.GENERIC_DECKS` e
 `solo_deck_for()` ora aggiunge le generiche alle carte di Classe secondo
 `AI_DECK_COMPOSITION`. **Resta da PROVARE in Godot** (test non eseguibili in
-remoto): lanciare una partita Solo per ogni personaggio e verificare che il
-mazzo IA contenga classe + generiche e che l'IA le risolva senza errori.
+remoto): aprire `tests/test_solo_decks.tscn` (verifica composizione mazzi per
+ogni personaggio) e `tests/test_allcards.tscn` (risolve ogni carta con
+geometria, incluse le nuove); poi lanciare una partita Solo e controllare che
+l'IA risolva le carte generiche senza errori.
 Il mazzo generico Incubo (VIII = 994-998) è definito in `GENERIC_DECKS` ma NON
 è ancora pescato da `solo_deck_for()`: va agganciato quando esisterà una
 Modalità Incubo esplicita.
