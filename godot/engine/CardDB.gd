@@ -185,14 +185,10 @@ func draw_pile_for(slug: String) -> Array:
 ## carte di Classe del personaggio (sempre incluse per intero) e alla sua carta
 ## Incubo (tenuta da parte, aggiunta solo in Modalità Incubo).
 ##
-## NON ANCORA USATA da `solo_deck_for()`. Le carte generiche ORA sono trascritte
-## (pool 1001-1005 = generiche 001-009 comportamento/meditazione; pool 1006-1035
-## = generiche 010-041 attacchi/difese/distanza; entrambe con geometria). Quel
-## che ancora manca è la **tabella di raggruppamento** che assegna ciascuna carta
-## 001-041 a uno dei mazzi di selezione I-VIII citati qui sotto: non è nel
-## materiale in repo e va chiesta all'utente (foto del regolamento solitario).
-## Finché non c'è, `solo_deck_for()` usa solo le carte di Classe. Tenuta qui come
-## riferimento pronto per quando la mappa carta→mazzo arriverà.
+## USATA da `solo_deck_for()`: alle carte di Classe si aggiungono le carte pescate
+## dai mazzi di selezione GENERICI secondo questa composizione. La mappa
+## carta→mazzo è in `GENERIC_DECKS` (fonte: solo_AI_tables_v1.xlsx foglio
+## "groups based on cards", regolamento solitario V1.0 erratato).
 const AI_DECK_COMPOSITION := {
 	# "boss/carte base": I×1, IV×2, V×1, +1 a scelta tra II/IV/V.
 	"master": {"I": 1, "IV": 2, "V": 1, "extra": ["II", "IV", "V"]},
@@ -217,10 +213,28 @@ const AI_DECK_COMPOSITION := {
 }
 
 
-## Mazzo dell'AVVERSARIO solitario (sottoinsieme curato secondo solo_AI_tables_v1.xlsx),
-## costruito riusando la geometria già trascritta del personaggio. L'IA rivela la cima
-## ogni turno; niente focus/mano. The Terror (#28) cambia l'atteggiamento dell'IA.
-func solo_deck_for(slug: String) -> Array:
+## Mazzi di selezione GENERICI condivisi (regolamento solitario, tabella
+## solo_AI_tables_v1.xlsx foglio "groups based on cards"). Chiave = mazzo I-VIII,
+## valore = ID pool delle carte, con le copie multiple ESPANSE (così pescare
+## senza rimpiazzo rispetta le quantità fisiche). Mappa numero fisico → id pool:
+## generiche 001-009 = 1001-1005 (comportamento/meditazione, con `amount`),
+## 010-041 = 1006-1035 (attacchi/difese/distanza), Incubo 995-999 = pool 994-998.
+const GENERIC_DECKS := {
+	"I": [1001, 1002, 1004, 1005],                                                  # boss/character meditations (fisiche 1,3,8,9)
+	"II": [1001, 1002, 1002, 1003, 1003],                                           # ashigaru meditations (2,4,5,6,7)
+	"III": [1006, 1007, 1008, 1009],                                                # reach attacks (10-13)
+	"IV": [1010, 1011, 1012, 1013, 1014, 1015, 1016, 1017, 1018, 1019, 1020, 1021], # melee attacks (14-25)
+	"V": [1022, 1023, 1024, 1025, 1026, 1027, 1027, 1028, 1029, 1029],              # defence cards (26-35)
+	"VI": [1030, 1031, 1032],                                                       # yumi (36-38)
+	"VII": [1033, 1034, 1035],                                                       # arquebusier (39-41)
+	"VIII": [994, 995, 996, 997, 998],                                              # nightmare mode (fisiche 995-999)
+}
+
+
+## Carte di CLASSE (specifiche del personaggio), sempre incluse per intero nel
+## mazzo dell'IA. La carta Incubo del personaggio è inclusa qui (in questa build
+## il mazzo generico Incubo VIII resta a parte).
+func _solo_class_cards(slug: String) -> Array:
 	match slug:
 		"ronin":
 			return [901, 902, 903, 904, 905]
@@ -255,6 +269,43 @@ func solo_deck_for(slug: String) -> Array:
 		"ashigaru":
 			return [976, 977, 978, 979]
 	return draw_pile_for(slug)
+
+
+## Mazzo dell'AVVERSARIO solitario: carte di Classe + carte generiche pescate dai
+## mazzi di selezione secondo `AI_DECK_COMPOSITION` (regolamento solitario). Le
+## generiche sono estratte A CASO a ogni costruzione (come mescolare i mazzetti
+## fisici e pescarne N), senza rimpiazzo entro lo stesso mazzo; il chiamante
+## rimescola comunque il risultato. L'IA rivela la cima ogni turno; niente
+## focus/mano. Il mazzo generico Incubo (VIII) NON è incluso qui: va aggiunto
+## solo in Modalità Incubo. `hachiko` (composizione null) usa solo le sue 5 carte.
+func solo_deck_for(slug: String) -> Array:
+	var deck: Array = _solo_class_cards(slug)
+	var comp = AI_DECK_COMPOSITION.get(slug, null)
+	if comp == null:
+		return deck
+	# Copie di lavoro mescolate dei mazzi generici (pesca senza rimpiazzo).
+	var pools: Dictionary = {}
+	for key in GENERIC_DECKS.keys():
+		var p: Array = GENERIC_DECKS[key].duplicate()
+		p.shuffle()
+		pools[key] = p
+	# Pescate fisse: N carte da ciascun mazzo indicato dalla composizione.
+	for key in ["I", "II", "III", "IV", "V", "VI", "VII"]:
+		var n: int = int(comp.get(key, 0))
+		for _i in range(n):
+			var pk: Array = pools[key]
+			if not pk.is_empty():
+				deck.append(pk.pop_back())
+	# Pescata "additional": 1 carta dall'unione dei mazzi in "extra" (residui).
+	var extra: Array = comp.get("extra", [])
+	if not extra.is_empty():
+		var union: Array = []
+		for key in extra:
+			union.append_array(pools.get(key, []))
+		union.shuffle()
+		if not union.is_empty():
+			deck.append(union.pop_back())
+	return deck
 
 
 func _load_pool() -> void:

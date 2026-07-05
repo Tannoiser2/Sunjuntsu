@@ -3,6 +3,21 @@
 Tutte le modifiche rilevanti del progetto. Formato ispirato a *Keep a Changelog*;
 versioni in [SemVer](https://semver.org/lang/it/) (pre-1.0: in sviluppo).
 
+## [0.99.6] — 2026-07-05
+### Cablaggio del mazzo generico nell'IA solitaria (`solo_deck_for`)
+- L'IA ora **pesca davvero** le carte generiche. Aggiunta la costante
+  `CardDB.GENERIC_DECKS` (mappa mazzo I-VIII → carte, da `solo_AI_tables_v1.xlsx`
+  foglio "groups based on cards"): I=1001,1002,1004,1005; II=1001,1002²,1003²;
+  III=1006-1009; IV=1010-1021; V=1022-1029 (con 1027/1029 doppie); VI=1030-1032;
+  VII=1033-1035; VIII(Incubo)=994-998.
+- `solo_deck_for()` ora ritorna **carte di Classe + generiche** pescate secondo
+  `AI_DECK_COMPOSITION` (es. Ronin/Guerriero: I×1, III×1, IV×1, V×1, +1 tra
+  II/IV/V; boss: I×1, IV×2, V×1, +1). Estrazione casuale senza rimpiazzo entro
+  ogni mazzo; il chiamante rimescola. Il mazzo generico Incubo (VIII) resta a
+  parte (solo Modalità Incubo); Hachikō invariato (solo 5 carte).
+- Logica validata via simulazione; sintassi GDScript verificata con `gdparse`.
+  **Da provare in Godot** (non eseguibile in remoto).
+
 ## [0.99.5] — 2026-07-04
 ### Mazzo generico Solo batch 2 (attacchi/difese/distanza) + Incubo + rifiniture
 - **Carte generiche 010-041** trascritte dalle scansioni `Carte Solo generiche.pdf`:

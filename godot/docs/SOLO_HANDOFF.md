@@ -4,7 +4,7 @@ Documento di ripartenza per **una sessione nuova** (il lavoro rimasto richiede
 di *leggere* le scansioni delle carte, cosa che va fatta con budget-immagini
 fresco — vedi §5).
 
-Ultimo aggiornamento: 2026-07-04, alla versione **0.99.5**.
+Ultimo aggiornamento: 2026-07-05, alla versione **0.99.6**.
 
 ---
 
@@ -59,6 +59,12 @@ FISICO stampato ≠ id pool, annotato nelle note). **999 "Ancient Terror"**
 (meditazione Incubo) resta SENZA geometria: non era tra le pagine scansionate —
 da verificare con l'utente se esiste la carta fisica.
 
+### Cablaggio mazzo generico nell'IA — v0.99.6
+`solo_deck_for()` ora aggiunge le carte generiche (mazzi I-VII) alle carte di
+Classe secondo `AI_DECK_COMPOSITION`. La mappa carta→mazzo (`CardDB.GENERIC_DECKS`)
+viene dal foglio "groups based on cards" di `solo_AI_tables_v1.xlsx` — che ERA
+già nei materiali (`Senjutsu/Tabelle/`), contrariamente a quanto ipotizzato prima.
+
 ### Rifinitura carte-personaggio 901-905 / 911-914 — v0.99.5
 Ri-verificate dalle scansioni `Carte Solo personaggi.pdf` (Ronin pag.1,
 Guerriero pag.2): iniziative pool corrette (Charge 1→6, Steel Block 6,5,4→8-3,
@@ -80,15 +86,16 @@ confermare sul gioco fisico o con l'editor visuale sul nido d'ape. Punti più
 incerti: SPAZZATA FEROCE (904, forma della spazzata), BLOCCO CINEREO (911, se il
 valore 8 è solo frontale), direzione del passo di FALCIATA MONTANTE (912).
 
-### C. Wiring del mazzo generico (serve dato mancante) — **PROSSIMO PASSO**
-`solo_deck_for()` NON collega ancora le carte generiche (usa solo le carte di
-Classe). Per farlo serve la **tabella di raggruppamento mazzi I-VIII** (quali
-carte 001-041 stanno in ciascun mazzo di selezione). Non è nella repo materiali.
-`CardDB.AI_DECK_COMPOSITION` ha già i rapporti per personaggio (I×1, IV×2, …) ma
-non la mappa carta→mazzo. **Chiedere all'utente la tabella** (o una foto del
-regolamento solitario), poi: (1) aggiungere una costante `GENERIC_DECKS` id→mazzo,
-(2) far pescare a `solo_deck_for()` le carte generiche secondo la composizione,
-(3) test.
+### C. ~~Wiring del mazzo generico~~ ✅ FATTO (v0.99.6)
+La tabella di raggruppamento era in `Senjutsu/Tabelle/solo_AI_tables_v1.xlsx`
+(foglio "groups based on cards"). Trascritta in `CardDB.GENERIC_DECKS` e
+`solo_deck_for()` ora aggiunge le generiche alle carte di Classe secondo
+`AI_DECK_COMPOSITION`. **Resta da PROVARE in Godot** (test non eseguibili in
+remoto): lanciare una partita Solo per ogni personaggio e verificare che il
+mazzo IA contenga classe + generiche e che l'IA le risolva senza errori.
+Il mazzo generico Incubo (VIII = 994-998) è definito in `GENERIC_DECKS` ma NON
+è ancora pescato da `solo_deck_for()`: va agganciato quando esisterà una
+Modalità Incubo esplicita.
 
 ### D. Carta mancante Monaco 949 "Enlighten"
 Il pool elenca 949 ma non è tra le pagine scansionate (il Monaco fisico ha 5
