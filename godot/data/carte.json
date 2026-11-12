@@ -11027,6 +11027,1003 @@
    "pers": "Gen. Ability",
    "img": "altre_carte_3/altre_carte_3_04.webp"
   },
+  "294": {
+   "id": 294,
+   "name": "Carta Speciale Onna-Bugeisha",
+   "type": "core",
+   "init": 0,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "discard",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "draw",
+            "n": 2
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "self_wound",
+            "n": 1
+           },
+           {
+            "v": "switch",
+            "to": "any"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "change",
+            "n": 1
+           }
+          ]
+         }
+        ]
+       ]
+      }
+     ]
+    }
+   ],
+   "core": true,
+   "en": "Carta Speciale Onna-Bugeisha",
+   "rank": "-",
+   "pers": "Onna-Bugeisha",
+   "img": "onna_bugeisha/onna_bugeisha_03.webp"
+  },
+  "137": {
+   "id": 137,
+   "name": "Affondo di Naginata",
+   "type": "attack",
+   "init": 4,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "discard",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "00": "w1",
+        "01": "w1",
+        "1": "w1"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "f": 1
+      }
+     ],
+     "init": 1
+    }
+   ],
+   "weapon": "Naginata",
+   "core": true,
+   "en": "Affondo di Naginata",
+   "rank": "-",
+   "pers": "Weapon",
+   "img": "altre_carte/altre_carte_05.webp"
+  },
+  "296": {
+   "id": 296,
+   "name": "Abbraccio Silenzioso",
+   "type": "attack",
+   "init": 7,
+   "focus": 2,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 3,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "00": "w3",
+        "01": "w2",
+        "11": "w1"
+       }
+      }
+     ]
+    }
+   ],
+   "req_d": true,
+   "en": "Abbraccio Silenzioso",
+   "rank": "Jade",
+   "pers": "Onna-Bugeisha",
+   "img": "onna_bugeisha/onna_bugeisha_05.webp"
+  },
+  "297": {
+   "id": 297,
+   "name": "Morso del Cielo",
+   "type": "attack",
+   "init": 8,
+   "focus": 2,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "00": "w1",
+        "01": "w1",
+        "11": "w1",
+        "12": "w1",
+        "22": "w1",
+        "23": "w1",
+        "33": "w1",
+        "34": "w1",
+        "44": "w1",
+        "45": "w1",
+        "55": "w1",
+        "50": "w1"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "w1",
+        "0": "w1",
+        "1": "w1"
+       },
+       "d": true
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "draw_exact",
+         "n": 2
+        }
+       ],
+       "d": true
+      }
+     ],
+     "init": 7
+    }
+   ],
+   "req": "aggression",
+   "en": "Morso del Cielo",
+   "rank": "Gold",
+   "pers": "Onna-Bugeisha",
+   "img": "onna_bugeisha/onna_bugeisha_06.webp"
+  },
+  "298": {
+   "id": 298,
+   "name": "Istinto Furioso",
+   "type": "meditation",
+   "init": 4,
+   "focus": 1,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "draw_return",
+            "n": 3
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "draw_return",
+            "n": 5
+           }
+          ],
+          "d": true
+         }
+        ]
+       ]
+      }
+     ]
+    }
+   ],
+   "instant": "rep",
+   "en": "Istinto Furioso",
+   "rank": "Gold",
+   "pers": "Onna-Bugeisha",
+   "img": "onna_bugeisha/onna_bugeisha_07.webp"
+  },
+  "299": {
+   "id": 299,
+   "name": "Guardia Furente",
+   "type": "defence",
+   "init": [
+    8,
+    2
+   ],
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "5": "s",
+        "0": "s",
+        "1": "s",
+        "4": "sa",
+        "2": "sa"
+       },
+       "ad": true
+      },
+      {
+       "t": "counter",
+       "v": [
+        7,
+        6,
+        5
+       ],
+       "d": true
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "move",
+          "parts": [
+           {
+            "m": "step",
+            "dirs": [
+             3
+            ],
+            "n": 1,
+            "opt": true
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "move",
+          "parts": [
+           {
+            "m": "step",
+            "dirs": [
+             4,
+             3,
+             2
+            ],
+            "n": 1,
+            "opt": true
+           }
+          ],
+          "k": "determination"
+         }
+        ]
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "draw_exact",
+         "n": 2
+        }
+       ],
+       "d": true
+      }
+     ],
+     "init": 1
+    }
+   ],
+   "en": "Guardia Furente",
+   "rank": "Gold",
+   "pers": "Onna-Bugeisha",
+   "img": "onna_bugeisha/onna_bugeisha_08.webp"
+  },
+  "300": {
+   "id": 300,
+   "name": "Colpo in Caduta",
+   "type": "attack",
+   "init": 4,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "05": "w1",
+        "0": "w1",
+        "1": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "push",
+         "n": 1
+        }
+       ],
+       "k": "aggression"
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 1
+    }
+   ],
+   "instant": "rep",
+   "en": "Colpo in Caduta",
+   "rank": "Steel",
+   "pers": "Onna-Bugeisha",
+   "img": "onna_bugeisha/onna_bugeisha_09.webp"
+  },
+  "301": {
+   "id": 301,
+   "name": "Inciampo del Cavallo",
+   "type": "meditation",
+   "init": "=",
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_hobble"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_stun"
+        }
+       ],
+       "f": 1
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_switch",
+         "to": "neutral"
+        }
+       ],
+       "f": 1
+      }
+     ]
+    }
+   ],
+   "instant": "add",
+   "when": "atk_ok|block_ok",
+   "en": "Inciampo del Cavallo",
+   "rank": "Steel",
+   "pers": "Onna-Bugeisha",
+   "img": "onna_bugeisha/onna_bugeisha_11.webp"
+  },
+  "302": {
+   "id": 302,
+   "name": "Schivata di Uragano",
+   "type": "defence",
+   "init": 8,
+   "focus": 1,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "k": "determination"
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "d": true
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "k": "balance"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "switch",
+         "to": "determination"
+        }
+       ]
+      }
+     ],
+     "init": 1
+    }
+   ],
+   "en": "Schivata di Uragano",
+   "rank": "Steel",
+   "pers": "Onna-Bugeisha",
+   "img": "onna_bugeisha/onna_bugeisha_13.webp"
+  },
+  "303": {
+   "id": 303,
+   "name": "Affondo di Montagna",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "alt",
+       "v": 8,
+       "d": true
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          3
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ],
+       "k": "aggression"
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "00": "w1",
+        "0": "w1",
+        "55": "a"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "add_wound",
+         "n": 2
+        }
+       ],
+       "d": true
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "switch",
+         "to": "determination"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "en": "Affondo di Montagna",
+   "rank": "Steel",
+   "pers": "Onna-Bugeisha",
+   "img": "onna_bugeisha/onna_bugeisha_15.webp"
+  },
+  "304": {
+   "id": 304,
+   "name": "Colpo alle Caviglie (Onna)",
+   "type": "attack",
+   "init": 3,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": false
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "00": "w1",
+        "01": "w1"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "draw",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "draw",
+         "n": 2
+        }
+       ],
+       "k": "balance"
+      }
+     ],
+     "init": 2
+    }
+   ],
+   "en": "Colpo alle Caviglie",
+   "rank": "Wood",
+   "pers": "Onna-Bugeisha",
+   "img": "onna_bugeisha/onna_bugeisha_17.webp"
+  },
+  "305": {
+   "id": 305,
+   "name": "Mente Strepitante",
+   "type": "meditation",
+   "init": 4,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "k": "balance"
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "d": true
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "view_hand"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "draw_exact",
+         "n": 2
+        }
+       ],
+       "d": true
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "change",
+         "n": 1
+        }
+       ],
+       "k": "determination"
+      }
+     ]
+    }
+   ],
+   "en": "Mente Strepitante",
+   "rank": "Wood",
+   "pers": "Onna-Bugeisha",
+   "img": "onna_bugeisha/onna_bugeisha_20.webp"
+  },
+  "306": {
+   "id": 306,
+   "name": "Fiume in Piena",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "w1",
+        "0": "w1",
+        "1": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_stun"
+        },
+        {
+         "v": "t_hobble"
+        }
+       ],
+       "d": true
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          3
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "k": "determination"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "focus",
+         "n": 1
+        }
+       ],
+       "k": "balance"
+      }
+     ]
+    }
+   ],
+   "en": "Fiume in Piena",
+   "rank": "Wood",
+   "pers": "Onna-Bugeisha",
+   "img": "onna_bugeisha/onna_bugeisha_23.webp"
+  },
+  "143": {
+   "id": 143,
+   "name": "Calcio Incrociato",
+   "type": "attack",
+   "init": 7,
+   "focus": 1,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "alt",
+       "v": 4,
+       "k": "determination"
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "k": "aggression"
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_hobble"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "en": "Calcio Incrociato",
+   "rank": "Steel",
+   "pers": "Gen. Ability",
+   "img": "altre_carte_2/altre_carte_2_34.webp"
+  },
   "1001": {
    "id": 1001,
    "name": "Chiatta di Buoi (Solo)",
@@ -15096,6 +16093,91 @@
      [
       "focus",
       "determination",
+      2
+     ]
+    ]
+   }
+  },
+  "onna": {
+   "name": "Onna-Bugeisha",
+   "title": "Agile guerriera furente",
+   "advantage": 50,
+   "disperazione": true,
+   "hand": 5,
+   "wounds": 5,
+   "char_img": "onna_bugeisha/onna_bugeisha_01.webp",
+   "kamae_img": "onna_bugeisha/onna_bugeisha_02.webp",
+   "portrait": "onna_bugeisha.webp",
+   "model": "",
+   "deck": {
+    "296": 1,
+    "297": 1,
+    "298": 1,
+    "299": 1,
+    "300": 2,
+    "301": 2,
+    "302": 2,
+    "303": 2,
+    "304": 3,
+    "305": 3,
+    "306": 3,
+    "118": 1,
+    "143": 2,
+    "145": 2,
+    "151": 2,
+    "152": 2
+   },
+   "core": [
+    294,
+    137
+   ],
+   "kamae": {
+    "nodes": {
+     "focus": [
+      0.27,
+      0.2
+     ],
+     "aggression": [
+      0.73,
+      0.2
+     ],
+     "determination": [
+      0.27,
+      0.5
+     ],
+     "balance": [
+      0.73,
+      0.5
+     ],
+     "neutral": [
+      0.27,
+      0.8
+     ]
+    },
+    "edges": [
+     [
+      "focus",
+      "aggression",
+      1
+     ],
+     [
+      "determination",
+      "focus",
+      1
+     ],
+     [
+      "aggression",
+      "balance",
+      2
+     ],
+     [
+      "determination",
+      "balance",
+      2
+     ],
+     [
+      "determination",
+      "neutral",
       2
      ]
     ]

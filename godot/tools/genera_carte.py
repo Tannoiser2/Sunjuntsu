@@ -532,6 +532,49 @@ card(344, "Calcio del Mulo", "attack", 5, seg(
 card(345, "Stella Vagabonda", "meditation", 3, seg(move(step(YY, 2), rot(1)), fx(e("search_stun"), f=1)))
 card(152, "Colpo Stordente", "meditation", "=", seg(fx(e("t_stun"))), focus=2, instant="add", when="atk_ok|block_ok")
 
+# ───────────── ONNA-BUGEISHA ─────────────
+def dsp(line): line["d"] = True; return line
+card(294, "Carta Speciale Onna-Bugeisha", "core", 0, seg(
+    fx(e("discard", n=1)), move(step(ANY, 1), rot(2)),
+    OR(fx(e("draw", n=2)), fx(e("self_wound", n=1), e("switch", to="any")), fx(e("change", n=1)))), core=True)
+card(137, "Affondo di Naginata", "attack", 4,
+    seg(fx(e("discard", n=1)), atk({"00": "w1", "01": "w1", "1": "w1"})),
+    seg(move(step(ANY, 1), rot(1), f=1), init=1), core=True, weapon="Naginata")
+card(296, "Abbraccio Silenzioso", "attack", 7, seg(move(rot(3)), atk({"00": "w3", "01": "w2", "11": "w1"})), focus=2)
+C["296"]["req_d"] = True
+card(297, "Morso del Cielo", "attack", 8,
+    seg(atk({c: "w1" for c in RING2})),
+    seg(dsp(atk({"5": "w1", "0": "w1", "1": "w1"})), dsp(fx(e("draw_exact", n=2))), init=7), focus=2, req=AG)
+card(298, "Istinto Furioso", "meditation", 4, seg(
+    OR(fx(e("draw_return", n=3)), dsp(fx(e("draw_return", n=5))))), focus=1, instant="rep")
+gr299 = blk("5", "0", "1"); gr299["cells"]["4"] = "sa"; gr299["cells"]["2"] = "sa"; gr299["ad"] = True
+card(299, "Guardia Furente", "defence", [8, 2],
+    seg(gr299, dsp(counter(7, 6, 5))),
+    seg(OR(move(step(B, 1)), move(step(FANDN, 1), k=DE)), dsp(fx(e("draw_exact", n=2))), init=1))
+card(300, "Colpo in Caduta", "attack", 4,
+    seg(atk({"05": "w1", "0": "w1", "1": "w1"}), IFS, fx(e("push", n=1), k=AG)),
+    seg(move(step(FANDN, 1)), init=1), instant="rep")
+card(301, "Inciampo del Cavallo", "meditation", "=", seg(
+    fx(e("t_hobble")), fx(e("t_stun"), f=1), fx(e("t_switch", to="neutral"), f=1)),
+    instant="add", when="atk_ok|block_ok")
+card(302, "Schivata di Uragano", "defence", 8,
+    seg(move(step(ANY, 2)), move(rot(1), k=DE)),
+    seg(dsp(move(step(FANDN, 1))), move(rot(1), k=BA), fx(e("switch", to=DE)), init=1), focus=1)
+card(303, "Affondo di Montagna", "attack", 6, seg(
+    dsp(alt(8)), move(step(B, 1)), move(rot(1, False), k=AG),
+    atk({"00": "w1", "0": "w1", "55": "a"}), dsp(ast(e("add_wound", n=2))), fx(e("switch", to=DE))))
+card(304, "Colpo alle Caviglie (Onna)", "attack", 3,
+    seg(move(step(FANDN, 1, False), rot(1, False)), atk({"00": "w1", "01": "w1"})),
+    seg(move(rot(1)), fx(e("draw", n=1)), fx(e("draw", n=2), k=BA), init=2))
+card(305, "Mente Strepitante", "meditation", 4, seg(
+    move(step(ANY, 1), rot(1)), move(step(ANY, 1), rot(1), k=BA), dsp(move(step(ANY, 1), rot(1))),
+    fx(e("view_hand")), dsp(fx(e("draw_exact", n=2))), fx(e("change", n=1), k=DE)))
+card(306, "Fiume in Piena", "attack", 6, seg(
+    move(rot(1)), atk({"5": "w1", "0": "w1", "1": "w1"}),
+    IFS, dsp(fx(e("t_stun"), e("t_hobble"))), move(step(B, 1), k=DE), fx(e("focus", n=1), k=BA)))
+card(143, "Calcio Incrociato", "attack", 7, seg(
+    alt(4, k=DE), move(step(F, 1)), move(rot(1), k=AG), atk({"0": "w1"}), IFS, fx(e("t_hobble"))), focus=1)
+
 # ───────────── CARTE SOLO (Solitario) ─────────────
 # Id: 1000+ Ronin, 2000+ Guerriero, 3000+ generiche (numero stampato + base).
 V = [5, 1]; A = [4, 2]; X = [1, 2, 4, 5]
@@ -732,7 +775,17 @@ out = {
      "kamae": {"nodes": {"balance":[0.73,0.2],"aggression":[0.27,0.5],"focus":[0.73,0.5],
                          "neutral":[0.27,0.8],"determination":[0.73,0.8]},
         "edges": [["balance","focus",2],["aggression","focus",2],["aggression","neutral",2],
-                  ["focus","determination",2]]}}},
+                  ["focus","determination",2]]}},
+  "onna": {"name": "Onna-Bugeisha", "title": "Agile guerriera furente", "advantage": 50, "disperazione": True,
+     "hand": 5, "wounds": 5, "char_img": imgs["2291"], "kamae_img": imgs["2293"],
+     "portrait": "onna_bugeisha.webp", "model": "",
+     "deck": {"296":1,"297":1,"298":1,"299":1,"300":2,"301":2,"302":2,"303":2,"304":3,"305":3,"306":3,
+              "118":1,"143":2,"145":2,"151":2,"152":2},
+     "core": [294, 137],
+     "kamae": {"nodes": {"focus":[0.27,0.2],"aggression":[0.73,0.2],"determination":[0.27,0.5],
+                         "balance":[0.73,0.5],"neutral":[0.27,0.8]},
+        "edges": [["focus","aggression",1],["determination","focus",1],["aggression","balance",2],
+                  ["determination","balance",2],["determination","neutral",2]]}}},
  "solo": SOLO,
  # mappa "villaggio in fiamme": celle giocabili (colonna,riga) lette dal contorno arancione
  "maps": {"villaggio": {"img": "arena.webp", "img_size": 1594,

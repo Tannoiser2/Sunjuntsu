@@ -978,6 +978,8 @@ func _aggiorna() -> void:
 			st.append("Armatura Pesante")
 		if f.get("occ", false):
 			st.append("Occultato")
+		if g.disperata(f):
+			st.append("Disperazione")
 		if not f.get("contr", {}).is_empty():
 			var fatti := 0
 			for kc in f.contr:

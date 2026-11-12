@@ -6,7 +6,7 @@ const KAMAE := {"aggression": "Aggressione", "balance": "Equilibrio",
 	"determination": "Determinazione", "neutral": "Neutrale", "focus": "Punto Focus"}
 const COMPORTAMENTI := ["Sinistra", "Centro", "Destra"]
 const TIPI := {"attack": "Attacco", "defence": "Difesa", "meditation": "Meditazione", "core": "Speciale"}
-const EFFETTI_CELLA := {"w1": "1 ferita", "w2": "2 ferite", "b": "ferita sanguinante",
+const EFFETTI_CELLA := {"w1": "1 ferita", "w2": "2 ferite", "w3": "3 ferite", "b": "ferita sanguinante",
 	"x": "ESECUZIONE", "a": "asterisco", "w1a": "1 ferita + asterisco",
 	"ba": "sanguinante + asterisco", "s": "blocco", "sa": "blocco con asterisco",
 	"p": "veleno", "pa": "veleno + asterisco"}
@@ -93,6 +93,8 @@ static func _porta(ln: Dictionary) -> String:
 	var s := ""
 	if ln.get("o", false):
 		s += "[Occultato] "
+	if ln.get("d", false):
+		s += "[Disperazione] "
 	if ln.has("k"):
 		var ks: Array = ln.k if ln.k is Array else [ln.k]
 		var nn: Array = []
@@ -153,6 +155,8 @@ static func effetto(e: Dictionary) -> String:
 			var bn := {"wounds": "limite di ferite", "hand": "limite di mano", "focus": "limite di focus"}
 			return "rimane in gioco: +1 al tuo %s" % bn.get(e.get("bonus", ""), "")
 		"wounds_to_stun": return "sostituisci tutte le ferite ricevute in questo turno con stordimenti"
+		"self_wound": return "prendi %d ferita" % n
+		"draw_return": return "pesca %d carte, poi rimettine altrettante nel mazzo e mischia" % n
 		"reveal_take": return "rivela le prime %d carte del tuo mazzo e prendi tutte quelle del tuo personaggio" % n
 		"search_stun": return "cerca nel mazzo e prendi 1 Attacco che infligge stordimento"
 		"contract_back": return "rimetti nella tua area di gioco un contratto scartato, a faccia in su"
@@ -216,6 +220,8 @@ static func riga(ln: Dictionary) -> String:
 			var coda := ""
 			if ln.has("ak"):
 				coda = " (asterisco = blocco solo in %s)" % KAMAE[ln.ak]
+			if ln.get("ad", false):
+				coda = " (asterisco = blocco solo in Disperazione)"
 			if ln.get("retro", false):
 				coda += " (requisito: devi essere alle spalle del bersaglio)"
 			return g + ("Attacco — " if ln.mode == "atk" else "Blocco — ") + "; ".join(a2) + coda
@@ -264,6 +270,8 @@ static func testo(c: Dictionary) -> String:
 		testa += ", " + ("Sostituzione istantanea" if c.instant == "rep" else "Aggiunta istantanea")
 	if c.has("range"):
 		testa += ", Distanza %d" % int(c.range)
+	if c.get("req_d", false):
+		testa += ", richiede Disperazione"
 	if c.has("req_illum"):
 		testa += ", requisito: %d carte Illuminate in gioco" % int(c.req_illum)
 	if c.get("zanmato", false):

@@ -366,6 +366,8 @@ func giocabile(f: Dictionary, id: int) -> bool:
 		return false
 	if c.has("req_illum") and f.illum.size() < int(c.req_illum):
 		return false
+	if c.get("req_d", false) and not disperata(f):
+		return false
 	if int(c.focus) > f.focus:
 		return false
 	if not _req_ok(f, c):
@@ -478,6 +480,9 @@ func _iniziativa(f: Dictionary) -> void:
 			continue
 		if ln.get("o", false):
 			if f.occ:
+				base = int(ln.v)
+		elif ln.get("d", false):
+			if disperata(f):
 				base = int(ln.v)
 		elif ln.has("k"):
 			if f.kamae == ln.k:
@@ -711,7 +716,14 @@ func _svela(o: Dictionary) -> void:
 		_ev({"t": "state"})
 
 
+## Disperazione (Onna-Bugeisha): attiva quando mancano 2 ferite o meno alla sconfitta.
+func disperata(f: Dictionary) -> bool:
+	return f.cd.get("disperazione", false) and int(f.lim) - (f.wounds + f.bleeds) <= 2
+
+
 func _kamae_ok(f: Dictionary, ln: Dictionary) -> bool:
+	if ln.get("d", false) and not disperata(f):
+		return false
 	if ln.get("o", false) and not f.get("occ", false):
 		return false
 	if not ln.has("k"):
@@ -759,7 +771,7 @@ func _opzioni_or(f: Dictionary, ln: Dictionary, focus: int) -> Array:
 			continue
 		if g.has("f") and focus < int(g.f):
 			continue
-		if g.has("k") or g.get("o", false):
+		if g.has("k") or g.get("o", false) or g.get("d", false):
 			kam.append(o)
 		else:
 			altre.append(o)
@@ -1073,10 +1085,8 @@ func _colpisci(f: Dictionary, b: Dictionary, ast: Array, sangue: bool, ctx: Dict
 		return
 	var w := 0
 	var bl := 0
-	if base == "w1":
-		w = 1
-	elif base == "w2":
-		w = 2
+	if base.begins_with("w"):
+		w = int(base.substr(1))
 	elif base == "b":
 		bl = 1
 	elif base == "p":
@@ -1318,7 +1328,7 @@ func _seg_attacca(en: Dictionary) -> bool:
 func _blocco(f: Dictionary, ln: Dictionary, lines: Array, i: int, ctx: Dictionary) -> bool:
 	var cs: Array = []
 	for c in ln.cells:
-		if ln.cells[c] == "sa" and ln.get("ak", "") != f.kamae:
+		if ln.cells[c] == "sa" and ln.get("ak", "") != f.kamae and not (ln.get("ad", false) and disperata(f)):
 			continue
 		cs.append(Hex.walk(f.pos, f.face, c))
 	var b := {"p": f.i, "init": cur_init, "cells": cs, "ok": false, "done": false,
@@ -1627,6 +1637,21 @@ func _fx(f: Dictionary, e: Dictionary, ctx: Dictionary) -> void:
 			_log("%s trasforma %d ferite di questo turno in stordimenti." % [f.name, q3])
 			for _k in q3:
 				_stordisci(f)
+		"self_wound":
+			autore = -1
+			_danno(f, n, 0)
+		"draw_return":
+			var prima: int = f.hand.size()
+			_pesca(f, n)
+			for _k in f.hand.size() - prima:
+				var ro := _scartabili(f)
+				if ro.is_empty():
+					break
+				var ir := await _ask(f.i, "card", "%s: scegli una carta da rimettere nel mazzo" % f.name, ro, {"mostra": true, "scarto": true})
+				f.hand.erase(ro[ir].card)
+				f.deck.append(ro[ir].card)
+			_mischia(f.deck)
+			_log("%s pesca %d carte e ne rimette altrettante nel mazzo." % [f.name, n])
 		"reveal_take":
 			var presi := 0
 			var resto: Array = []
