@@ -1,157 +1,51 @@
-# Senjutsu — Fedeltà al regolamento (obiettivo 1:1)
+# Senjutsu — fedeltà al regolamento
 
-Fonte autorevole: **Senjutsu 1.5 Edition Rulebook (gennaio 2026)** + Reference Sheet +
-Path of the Ronin (regole solo), presenti in `Tabelle_Materiali/Senjutsu/`.
-Il regolamento italiano (`Senjutsu-Rule-Book-V1-ITA-web.pdf`) è la **prima edizione**
-ed è un PDF solo-immagini: utile per la terminologia, ma la 1.5 EN è più recente e
-completa, quindi è la base di riferimento.
+Fonte: **Rulebook 1a edizione con errata** (`Senjutsu Rule Book_Errata_v1_MAIN_compressed.pdf`)
+più le **carte italiane scansionate** (cartella `CARTE`). Le carte italiane sono della 1a
+edizione: per questo NON si usa il regolamento 1.5, che cambia alberi Kamae, contrattacchi e
+testo di varie carte.
 
-Questo file traccia, regola per regola, cosa è già implementato (✅), cosa è parziale
-(⚠️) e cosa manca (❌), con la roadmap.
+## Implementato
 
----
+- **Turno**: sanguinamento (scarto della cima del mazzo prima della pesca), pesca (mazzo vuoto =
+  ferita), scelta coperta, rivelazione, costi focus, Sostituzioni istantanee (con rimborso),
+  iniziative alternative (banda Kamae = obbligatoria), iniziative variabili, risoluzione in ordine
+  d'iniziativa, spareggi per tipo (difesa, attacco, meditazione, speciale; le armi dopo le carte
+  normali) e poi scelta di chi ha il Vantaggio, scarto, limite di mano.
+- **Carte riga per riga**: bande Kamae, costi focus facoltativi, OPPURE (l'opzione della tua Kamae
+  è obbligatoria), «SE RIUSCITO» (vale fino alla fine del segmento), divisori con seconda iniziativa.
+- **Movimento**: passi e rotazioni facoltativi/obbligatori, stessa direzione per le mosse multiple,
+  qualsiasi ordine sulla stessa riga, «poi» in sequenza; collisioni (fuori campo, altro personaggio)
+  con interruzione della carta.
+- **Commit To Hit**: se muovendoti (anche pagando un focus) puoi colpire, devi farlo.
+- **Attacchi**: griglie a 2 anelli con celle esatte, ferite, sanguinanti, esecuzione, asterischi,
+  non bloccabile.
+- **Blocchi**: valgono solo all'iniziativa scelta; fermano l'attacco se coprono la cella
+  dell'attaccante o ogni percorso più breve. **Contrattacco** (1a ed.): si gioca subito una carta
+  Attacco non speciale di iniziativa uguale o inferiore.
+- **Kamae**: alberi di Guerriero e Ronin con rami a senso unico e **Punto Focus**; «Passa a».
+- **Stati**: stordimenti in mano (giocabili al posto di una carta, sconfitta al limite di mano),
+  azzoppamento (−1 iniziativa per 3 turni, non nel turno in cui lo subisci), Armatura Pesante.
+- **Istantanee**: Aggiunte «se l'attacco è riuscito» e «dopo aver risolto la carta», Blocco Ampio,
+  una sola istantanea per turno, mai sulle carte speciali o dello stesso tipo.
+- **Vantaggio**, spinte (con scelta in caso di parità e collisioni), rotazione del bersaglio,
+  cancellazione di carte/movimento attivi, ricerca nel mazzo.
+- **Campo**: il «villaggio in fiamme» con le sue 19 caselle vere (non un disco esagonale).
 
-## 1. Struttura del turno (rulebook p.6–7, Reference Sheet)
+## Scelte d'interpretazione da confermare
 
-Ordine ufficiale di ogni turno:
+- **Blocco Ampio (083)**: l'intervallo d'iniziativa si allarga di 1 a entrambi gli estremi.
+- **Istinto Bruciante (057)**: rimescola nel mazzo mano e scarti (non le speciali).
+- **«Pesca fino a N»**: scegli quante carte pescare, da 0 a N.
+- **Spinta «direttamente via»**: la casella più lontana in linea d'aria; se due sono pari sceglie
+  chi spinge.
 
-1. **Start of turn** — risolvi effetti "At Start of Turn".
-2. **Pre-draw** — effetti prima della pesca.
-3. **Draw** — pesca **1** carta. Se hai ≥1 ferita sanguinante, prima scarti 1 carta
-   dal mazzo. **Mazzo vuoto ⇒ subisci una ferita** (niente rimescolo, edizione 1.5).
-4. **After-draw / before-choose** — effetti dopo la pesca.
-5. **Choose** — gioca 1 carta coperta (devi poter pagare il focus; devi essere nella
-   Kamae richiesta).
-6. **Reveal** — scoprite simultaneamente. Paga focus obbligatori, poi opzionali;
-   gioca eventuali Instant Replacement; scegli le iniziative variabili; confronta.
-7. **Resolve** — risolvi in ordine d'iniziativa (alto→basso). Pareggi: per **tipo**
-   (difesa → attacco → meditazione → core); ulteriore pareggio: chi è più in alto
-   sulla **traccia vantaggio** sceglie l'ordine.
-8. **Discard** — scarta la carta giocata, riporta i core in mano, rientra nel limite
-   di mano (scarta in eccesso). Poi effetti "end of turn" (es. Hobble).
+## Non ancora fatto
 
-Stato:
-- ✅ Sequenza programma→rivela→risolvi per iniziativa (interattiva).
-- ✅ Pesca 1 a inizio turno; sanguinamento al draw; mazzo vuoto ⇒ ferita; limite mano a fine turno.
-- ✅ Pareggio iniziativa per tipo (difesa→attacco→meditazione→core).
-- ⚠️ Iniziative **variabili** (difese): scelta velocità semplificata; manca la scelta
-   guidata in ordine di traccia vantaggio e l'iniziativa **alternativa** (box) con/senza Kamae/focus.
-- ❌ Traccia **vantaggio** (ordine giocatori, tie-break, effetto "Advantage").
-- ❌ Instant cards (Additional / Replacement / Instant) e relativi tempi.
-- ❌ Core cards che tornano in mano (non modellati a parte).
-
-## 2. Movimento (rulebook p.8–9)
-
-- ✅ Step (frecce dritte) e Rotate (frecce curve), multi-direzione, relativi al facing.
-- ✅ **Obbligatorio (icona piena) vs opzionale (icona vuota)** — riallineato carta per
-   carta con audit sulle scansioni. `!` nei dati = obbligatorio.
-- ✅ Righe gate-ate da Kamae (la mossa è disponibile solo in quella posizione).
-- ✅ "then" = sequenza ordinata; stessa riga = ordine/combinazione libera.
-- ✅ **Collisioni** (p.9) per push/pull: fuori campo (+1 stun), contro personaggio
-   (scarta 1 dalla mano, entrambi +1 stun), contro terreno (effetto del terreno). Il
-   bersaglio resta nella cella originale. Push/pull possono colpire i pericoli di proposito.
-- ⚠️ Collisione da **mossa propria obbligatoria** senza alternativa: non ancora gestita
-   (il movimento interattivo offre solo celle valide). Mosse obbligatorie non ancora
-   **forzate** nella UI.
-- ✅ **Commit To Hit** (p.10): se l'attacco può colpire muovendoti, la conferma è
-   bloccata finché non ti posizioni (helper `attack_can_hit`/`attack_hits_now`).
-   ⚠️ Manca la parte "pagare focus opzionale obbligatorio se abilita il colpo".
-- ❌ Casi struttura carta da rivedere a mano: **#26** (2° passo avanti), **#27**
-   (un solo passo bidirezionale obbligatorio), **#33** (passo+rot obbligatori + 2ª rot
-   opzionale), **#23** (probabile assenza di movimento).
-
-## 3. Attacchi (rulebook p.10)
-
-- ✅ Bersaglio per griglia esagonale relativa a posizione/facing (schema v2).
-- ✅ Effetti: ferita, 2 ferite, sanguinante, esecuzione, effetto asterisco.
-- ⚠️ "If Successful" e effetti asterisco: parziali.
-- ✅ **Commit To Hit** (regola d'oro): vedi §2.
-- ❌ Attacchi a distanza (Range) + Linea di Vista (LoS dai 2 angoli frontali).
-
-## 4. Difese / Blocchi / Contrattacchi (rulebook p.11)
-
-- ✅ Regola ufficiale del blocco (1.5): l'attacco alla **stessa** iniziativa è fermato
-   se (1) c'è un blocco nella cella dell'attaccante, **oppure** (2) **ogni percorso più
-   breve** attaccante→difensore passa per una cella con blocco. Il **terreno** aggiunge
-   un blocco a tutte le iniziative. Rispetta `non_blockable`. Un solo attacco per difesa.
-- ⚠️ **Counter**: meccanica implementata (`_try_counter`: il giocatore scarta un attacco
-   non-core, l'IA infligge la ferita senza scartare) ma **inerte** finché non trascrivo
-   il dato `counter` (velocità) sulle carte difesa.
-
-## 5. Kamae (rulebook p.12)
-
-- ✅ 4 posizioni: Aggressione, Equilibrio, Determinazione, Neutrale.
-- ✅ Requisito Kamae per giocare una carta (controllato al Choose).
-- ✅ **Albero Kamae** (grafo nodi/archi in `kamae_trees.json`): "Cambia Kamae fino a N"
-   scorre lungo i rami (`Kamae.change_targets`); i rami **rosa** danno +1 focus; il
-   giocatore sceglie la destinazione nella scena, l'IA traversa in automatico (ignora il
-   focus). "Passa a Y" (switch) va diretto senza focus; `to:"any"` → posizione ≠ neutral.
-- ⚠️ Alberi Kamae trascritti **best-effort** solo per Guerriero/Ronin (DA VERIFICARE
-   sulle scansioni `Senjutsu_Kamae_Cards_1.5_Edition.pdf`); altri personaggi mancano.
-- ✅ Effetti Kamae gated: le righe `kamae` si applicano solo nella posizione giusta.
-
-## 6. Focus (rulebook p.12–13)
-
-- ✅ Costo focus obbligatorio per giocare; carta "svanisce" se non puoi pagare.
-- ✅ Massimo **3** focus (`gain_focus` cappa a 3).
-- ✅ Focus dai rami rosa dell'albero Kamae.
-- ⚠️ Focus **opzionali** su effetti (paghi per attivare la riga): in auto-risoluzione
-   vengono saltati; manca la scelta interattiva di pagarli.
-
-## 7. Status: Ferite, Sanguinamento, Stun, Hobble, Poison (rulebook p.10,13)
-
-- ✅ Ferite / sanguinanti (contano come ferite); sconfitta a ferite ≥ limite.
-- ✅ Sconfitta per stun in mano ≥ dimensione mano.
-- ✅ **Hobble** (p.13): −1 iniziativa per ogni azzoppamento attivo (min 1); NON vale nel
-   turno in cui lo subisci; ruota 90° a ogni fine turno e si scarta quando torna diritto
-   (~3 turni attivi). Modellato per carta (`hobbles`/`add_hobble`/`tick_hobbles`).
-- ⚠️ Stun: contatore; sconfitta se stun ≥ limite mano. Manca "occupa la mano, non
-   scartabile, giocabile al posto di una carta a iniziativa 0" e (solo) rimescolato nel mazzo.
-- ⚠️ **Poison**: modellato come riduzione del limite ferite (approssimazione); manca il
-   testo reale della carta 002 Crippling Poison.
-
-## 8. Altri keyword (rulebook p.14–15)
-
-- ❌ Push / Pull (con collisioni), Swap Positions, Rotate (sul bersaglio), Discard X,
-   Search, Advantage, Split Initiative, Targeted Character, Ranged Effects.
-
-## 9. Terreno (rulebook p.16)
-
-- ⚠️ Le celle ostacolo bloccano il movimento e contano per il percorso del blocco.
-- ✅ Effetti collisione per tipo implementati (`_resolve_collision`): ostacolo → ferita;
-   bambù → ferita + stordimento (+rimosso); carri in fiamme → ferita + sanguinante;
-   torii → ferita. ⚠️ La **mappa non assegna ancora i tipi** di terreno (tutto "obstacle")
-   né le regole speciali (Torii attraversabile, bambù rimosso se colpito da attacco).
-
-## 10. Solo (rulebook p.20–23 + Path of the Ronin)
-
-- ✅ Gli avversari **non pescano e non scelgono**: rivelano la **cima del mazzo**
-   (rimescolano gli scarti se vuoto). **Niente mano, niente focus** (costi focus/scarto
-   ignorati). Saltano il passo Draw. La carta rivelata va negli scarti a fine turno.
-- ⚠️ **Movimento IA**: durante la risoluzione l'IA si muove con un'euristica
-   (`AI.move_target` + orientamento), **non** ancora con le tabelle di priorità ufficiali.
-- ❌ **Mazzo solo dedicato**: l'IA usa per ora il mazzo normale del personaggio, non le
-   77 carte "solo" + nightmare con struttura "attacco OR movimento" (non trascritte).
-- ❌ **Priorità di movimento** (tabelle p.23) per stance offensiva/difensiva, range
-   preferito, approccio, facing. Tabelle in `Tabelle/solo_AI_tables_v1.xlsx`.
-- ❌ **Stun solo**: rimescolato nel mazzo; carta stun rivelata = salta il turno;
-   sconfitta se stun ≥ ferite rimaste (modello diverso dall'attuale contatore).
-
----
-
-## Roadmap (ordine proposto)
-
-1. **Turno & iniziativa fedeli** — ✅ fatto (pesca/scarto/limite mano, pareggi per tipo).
-   Resta: traccia vantaggio + iniziative variabili/alternative complete.
-2. **Movimento & collisioni 1:1** — collisioni regolamentari, mosse obbligatorie
-   forzate, Commit To Hit, fix struttura #26/#27/#33/#23.
-3. **Blocchi, percorso più breve, counter** — il cuore del combattimento difensivo.
-4. **Albero Kamae & focus** (rami, rosa→focus, switch, cap 3) — da scansioni Kamae.
-5. **Status completi** — hobble, stun-in-mano, poison, asterischi.
-6. **Keyword** — push/pull/swap/rotate-bersaglio/range/LoS/search/discard.
-7. **Terreno** — effetti collisione per tipo + regole speciali.
-8. **IA solo fedele** — top-of-deck, priorità di movimento, stance/approccio/range.
-
-Note di onestà: i punti ⚠️/❌ sono semplificazioni note del prototipo. Le icone delle
-carte (movimento/gate) sono state riallineate via audit ma alcune restano "DA
-VERIFICARE" sul gioco fisico.
+- Gli altri personaggi (i loro dati sono ancora nel vecchio formato in `godot/data/cards/`).
+- **Solo ufficiale**: carte Solo, Comportamenti e Atteggiamenti dell'IA. Ora l'avversario è un'IA
+  di base che gioca il mazzo normale.
+- **Online** (tavolo + telefoni, Firebase): da adattare al nuovo motore.
+- Terreno (rocce, bambù, carri, torii) e linea di vista; altre mappe; scelta dell'arma
+  (ora Nodachi per il Guerriero e Naginata per il Ronin, come nei mazzi Signature).
+- Veleni, Occultamento, partite a 3+ giocatori.

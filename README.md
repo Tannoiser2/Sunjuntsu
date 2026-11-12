@@ -1,29 +1,40 @@
-# Senjutsu — versione digitale 3D
+# Senjutsu — versione digitale
 
-Reimplementazione digitale di *Senjutsu: Battle for Japan*: duello tra guerrieri
-su mappa esagonale con **pedine 3D**, modalità **solo** e **1 vs 1**.
-Motore: **Godot 4.6**. Uso personale.
+Duello tattico fra samurai su mappa esagonale (*Senjutsu: Battle for Japan*), in Godot 4.7.
+Uso personale.
 
-> **Primo passaggio**: questo repo contiene lo *scaffold* giocabile (mappa
-> esagonale 3D, camera, pedine, movimento) e il documento di design. Il gioco
-> completo è in costruzione.
+## Stato (versione 1.0.0)
 
-## Avvio rapido
-1. Installa [Godot 4.6](https://godotengine.org/).
-2. Apri `godot/project.godot`.
-3. Premi **Play**. Nel menu scegli una modalità.
+- **Regole**: regolamento della **1a edizione + errata** (quello a cui appartengono le carte
+  italiane scansionate), con le carte risolte **riga per riga come sono stampate**.
+- **Personaggi giocabili**: Guerriero e Ronin con i mazzi «Signature» ufficiali da 30 carte.
+- **Modalità**: partita contro un'IA di base (gioca il mazzo come un giocatore).
+- **Editor carte**: scansione accanto alle righe della carta e al testo di come il gioco la applica.
 
-Controlli nell'arena: **tasto destro** = ruota camera · **rotella** = zoom ·
-**click sinistro** su esagono evidenziato = muovi pedina.
+Cosa manca è elencato in `REGOLAMENTO_FEDELTA.md`.
 
 ## Struttura
-- `godot/engine/` — logica di gioco pura (testabile, riusabile solo/multiplayer)
-- `godot/scenes/` — presentazione 3D (menu, arena, pedine)
-- `godot/data/cards/` — cataloghi carte (JSON) + schema
-- `godot/assets/` — integrazione miniature/mappe (vedi `assets/README.md`)
-- `godot/DESIGN.md` — design, architettura e roadmap
 
-## Materiali
-Carte, mappe e miniature di partenza sono nel repo `Tabelle_Materiali` sotto
-`Senjutsu/`. Vedi `godot/DESIGN.md` per stato e cosa manca (regolamento,
-tabelle/Excel dati carte, mazzo Jin Sakai).
+- `godot/engine/` — logica pura: `Game.gd` (regole), `Carte.gd` (dati e testi), `Hex.gd`, `Bot.gd`.
+- `godot/scenes/` — `Menu`, `Partita` (tabellone 3D + interfaccia), `Editor`, `Tema`.
+- `godot/data/carte.json` — carte, personaggi, alberi Kamae e mappa; si rigenera con
+  `python3 godot/tools/genera_carte.py` (trascrizione commentata, carta per carta).
+- `godot/tests/` — `regole.gd` (scenari di regole), `partite.gd` (partite automatiche),
+  `Schermate.tscn` (schermate dell'interfaccia), `EditorProva.tscn`.
+- `godot/tools/controlla_glifi.py` — verifica che ogni carattere dei testi esista nei font.
+- `server/`, `phone/` — vecchio online «tavolo + telefoni»: **non ancora adattato** al nuovo motore.
+
+## Verifiche
+
+```
+cd godot
+godot --headless --path . --import
+godot --headless --path . -s tests/regole.gd
+godot --headless --path . -s tests/partite.gd -- 300
+python3 tools/controlla_glifi.py
+```
+
+## Pubblicazione
+
+Solo su richiesta: «Run workflow» a mano su GitHub Actions, oppure un commit su `main` con
+`[pubblica]` nel messaggio.

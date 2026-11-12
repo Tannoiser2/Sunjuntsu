@@ -1,6 +1,8 @@
 name: Deploy Godot Web to Pages
 
 on:
+  # Pubblicazione solo su richiesta: "Run workflow" a mano, oppure un commit su main
+  # il cui messaggio contiene [pubblica].
   push:
     branches: [main]
   workflow_dispatch:
@@ -16,10 +18,11 @@ concurrency:
 
 env:
   # Bumpa qui se cambia la versione di Godot del progetto.
-  GODOT_VERSION: 4.6-stable
+  GODOT_VERSION: 4.7-stable
 
 jobs:
   build:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[pubblica]')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
