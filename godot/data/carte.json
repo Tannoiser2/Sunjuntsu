@@ -13117,6 +13117,1410 @@
    "pers": "Gen. Ability",
    "img": "altre_carte_3/altre_carte_3_01.webp"
   },
+  "236": {
+   "id": 236,
+   "name": "Carta Speciale Ashigaru",
+   "type": "core",
+   "init": 0,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "discard",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "draw",
+            "n": 2
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "flip_dog"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "change",
+            "n": 1
+           }
+          ]
+         }
+        ]
+       ]
+      }
+     ]
+    }
+   ],
+   "core": true,
+   "en": "Carta Speciale Ashigaru",
+   "rank": "-",
+   "pers": "Ashigaru",
+   "img": "ashigaru/ashigaru_03.webp"
+  },
+  "139": {
+   "id": 139,
+   "name": "Impalamento di Yari",
+   "type": "attack",
+   "init": 1,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "discard",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "000": "w1",
+        "0000": "w1"
+       }
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "f": 1
+      }
+     ]
+    }
+   ],
+   "weapon": "Yari",
+   "note": "Griglia letta come distanza 3 e 4 in linea retta: lettura da confermare.",
+   "core": true,
+   "en": "Impalamento di Yari",
+   "rank": "-",
+   "pers": "Weapon",
+   "img": "altre_carte/altre_carte_08.webp"
+  },
+  "237": {
+   "id": 237,
+   "name": "Castello del Cielo",
+   "type": "defence",
+   "init": [
+    9,
+    2
+   ],
+   "focus": 1,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "5": "s",
+        "0": "s",
+        "1": "s",
+        "4": "s",
+        "2": "s"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_rot",
+         "n": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "dog_move"
+        }
+       ]
+      }
+     ],
+     "init": 1
+    }
+   ],
+   "en": "Castello del Cielo",
+   "rank": "Jade",
+   "pers": "Ashigaru",
+   "img": "ashigaru/ashigaru_04.webp"
+  },
+  "238": {
+   "id": 238,
+   "name": "Per il Daimyo",
+   "type": "attack",
+   "init": 7,
+   "focus": 1,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "000": "w2",
+        "00": "w1",
+        "0": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "push",
+         "n": 1
+        }
+       ],
+       "k": "aggression"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_hobble"
+        }
+       ],
+       "k": "balance"
+      }
+     ]
+    }
+   ],
+   "en": "Per il Daimyo",
+   "rank": "Gold",
+   "pers": "Ashigaru",
+   "img": "ashigaru/ashigaru_05.webp"
+  },
+  "239": {
+   "id": 239,
+   "name": "Sole Calante",
+   "type": "meditation",
+   "init": 7,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          3
+         ],
+         "n": 1,
+         "opt": false
+        },
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "seq": true
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "cancel_move"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "draw",
+         "n": 2
+        }
+       ],
+       "k": "balance"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "advantage"
+        }
+       ],
+       "k": "determination"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "change",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "en": "Sole Calante",
+   "rank": "Gold",
+   "pers": "Ashigaru",
+   "img": "ashigaru/ashigaru_06.webp"
+  },
+  "240": {
+   "id": 240,
+   "name": "Inciampo del Cavallo (Ashigaru)",
+   "type": "meditation",
+   "init": "=",
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_hobble"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_stun"
+        }
+       ],
+       "f": 1
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_switch",
+         "to": "neutral"
+        }
+       ],
+       "f": 1
+      }
+     ]
+    }
+   ],
+   "instant": "add",
+   "when": "atk_ok|block_ok",
+   "en": "Inciampo del Cavallo",
+   "rank": "Steel",
+   "pers": "Ashigaru",
+   "img": "ashigaru/ashigaru_07.webp"
+  },
+  "241": {
+   "id": 241,
+   "name": "Stoccata in Affondo",
+   "type": "attack",
+   "init": 5,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": false
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "00": "w1",
+        "0": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_lose_focus",
+         "n": 1
+        }
+       ],
+       "k": "determination"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_stun"
+        }
+       ],
+       "k": "aggression"
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          3
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "f": 1
+      }
+     ]
+    }
+   ],
+   "en": "Stoccata in Affondo",
+   "rank": "Steel",
+   "pers": "Ashigaru",
+   "img": "ashigaru/ashigaru_08.webp"
+  },
+  "243": {
+   "id": 243,
+   "name": "Accerchiamento",
+   "type": "meditation",
+   "init": 3,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": false
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "en": "Accerchiamento",
+   "rank": "Wood",
+   "pers": "Ashigaru",
+   "img": "ashigaru/ashigaru_11.webp"
+  },
+  "244": {
+   "id": 244,
+   "name": "Fendente Falciante",
+   "type": "attack",
+   "init": 4,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "05": "w1",
+        "01": "w1",
+        "0": "w1"
+       }
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "draw",
+         "n": 2
+        }
+       ],
+       "k": "balance"
+      }
+     ]
+    }
+   ],
+   "en": "Fendente Falciante",
+   "rank": "Wood",
+   "pers": "Ashigaru",
+   "img": "ashigaru/ashigaru_12.webp"
+  },
+  "245": {
+   "id": 245,
+   "name": "Infilzata",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "00": "w1",
+        "0": "w1"
+       }
+      }
+     ]
+    }
+   ],
+   "en": "Infilzata",
+   "rank": "Wood",
+   "pers": "Ashigaru",
+   "img": "ashigaru/ashigaru_13.webp"
+  },
+  "101": {
+   "id": 101,
+   "name": "Taglio di Finta",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "k": "balance"
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_stun"
+        }
+       ],
+       "k": "aggression"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "advantage"
+        }
+       ],
+       "k": "determination"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "switch",
+         "to": "determination"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "instant": "rep",
+   "en": "Taglio di Finta",
+   "rank": "Steel",
+   "pers": "Gen. Ability",
+   "img": "altre_carte/altre_carte_26.webp"
+  },
+  "106": {
+   "id": 106,
+   "name": "Volontà di Ferro",
+   "type": "meditation",
+   "init": 7,
+   "focus": 2,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ferro"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "en": "Volonta di Ferro",
+   "rank": "Steel",
+   "pers": "Gen. Ability",
+   "img": "altre_carte_2/altre_carte_2_21.webp"
+  },
+  "249": {
+   "id": 249,
+   "name": "Morso Selvaggio",
+   "type": "attack",
+   "init": 7,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": false
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ],
+       "seq": true
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w2"
+       },
+       "f": 1
+      }
+     ]
+    }
+   ],
+   "fisica": 249,
+   "en": "Morso Selvaggio / Leccarsi le Ferite",
+   "rank": "Gold",
+   "pers": "Hachiko",
+   "img": "hachiko/hachiko_09.webp"
+  },
+  "4249": {
+   "id": 4249,
+   "name": "Leccarsi le Ferite",
+   "type": "defence",
+   "init": 1,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "heal"
+           }
+          ],
+          "f": 1
+         }
+        ],
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "bleed1_to_wound"
+           }
+          ],
+          "f": 1
+         }
+        ]
+       ]
+      }
+     ]
+    }
+   ],
+   "fisica": 249,
+   "en": "",
+   "rank": "-",
+   "pers": "",
+   "img": "hachiko/hachiko_09.webp"
+  },
+  "250": {
+   "id": 250,
+   "name": "Morso alla Caviglia",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "seq": true
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "a"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "t_hobble"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "fisica": 250,
+   "en": "Morso alla Caviglia / Ringhio Minaccioso",
+   "rank": "Steel",
+   "pers": "Hachiko",
+   "img": "hachiko/hachiko_14.webp"
+  },
+  "4250": {
+   "id": 4250,
+   "name": "Ringhio Minaccioso",
+   "type": "defence",
+   "init": 7,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "cancel_move"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "range": 2,
+   "fisica": 250,
+   "en": "",
+   "rank": "-",
+   "pers": "",
+   "img": "hachiko/hachiko_14.webp"
+  },
+  "251": {
+   "id": 251,
+   "name": "Attacca",
+   "type": "attack",
+   "init": 7,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 2,
+         "opt": true
+        },
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "seq": true
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "fisica": 251,
+   "en": "Attacca / Al Piede",
+   "rank": "Steel",
+   "pers": "Hachiko",
+   "img": "hachiko/hachiko_15.webp"
+  },
+  "4251": {
+   "id": 4251,
+   "name": "Al Piede",
+   "type": "defence",
+   "init": 5,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "seq": true
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "fisica": 251,
+   "en": "",
+   "rank": "-",
+   "pers": "",
+   "img": "hachiko/hachiko_15.webp"
+  },
+  "252": {
+   "id": 252,
+   "name": "Morso Rapido",
+   "type": "attack",
+   "init": 7,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": false
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "seq": true
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1"
+       }
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "flip_dog"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "fisica": 252,
+   "en": "Morso Rapido / Ululato Feroce",
+   "rank": "Steel",
+   "pers": "Hachiko",
+   "img": "hachiko/hachiko_16.webp"
+  },
+  "4252": {
+   "id": 4252,
+   "name": "Ululato Feroce",
+   "type": "defence",
+   "init": 6,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "t_discard",
+            "n": 1
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "t_lose_focus",
+            "n": 1
+           }
+          ]
+         }
+        ]
+       ]
+      }
+     ]
+    }
+   ],
+   "range": 2,
+   "fisica": 252,
+   "en": "",
+   "rank": "-",
+   "pers": "",
+   "img": "hachiko/hachiko_16.webp"
+  },
+  "253": {
+   "id": 253,
+   "name": "Morso alla Gola",
+   "type": "attack",
+   "init": 5,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "b"
+       }
+      }
+     ]
+    }
+   ],
+   "fisica": 253,
+   "en": "Morso alla Gola / all'Angolo",
+   "rank": "Steel",
+   "pers": "Hachiko",
+   "img": "hachiko/hachiko_17.webp"
+  },
+  "4253": {
+   "id": 4253,
+   "name": "All'Angolo",
+   "type": "defence",
+   "init": 7,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "flip_dog"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "fisica": 253,
+   "en": "",
+   "rank": "-",
+   "pers": "",
+   "img": "hachiko/hachiko_17.webp"
+  },
+  "254": {
+   "id": 254,
+   "name": "Riporta la Preda",
+   "type": "attack",
+   "init": 7,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "a"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "drag"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "fisica": 254,
+   "en": "Riporta la Preda / Bravo Cane",
+   "rank": "Wood",
+   "pers": "Hachiko",
+   "img": "hachiko/hachiko_07.webp"
+  },
+  "4254": {
+   "id": 4254,
+   "name": "Bravo Cane",
+   "type": "defence",
+   "init": 9,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "dog_adjacent_focus"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "fisica": 254,
+   "en": "",
+   "rank": "-",
+   "pers": "",
+   "img": "hachiko/hachiko_07.webp"
+  },
+  "256": {
+   "id": 256,
+   "name": "Strisciata",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1",
+        "1": "w1"
+       }
+      }
+     ]
+    }
+   ],
+   "fisica": 256,
+   "en": "Strisciata / in Caccia",
+   "rank": "Wood",
+   "pers": "Hachiko",
+   "img": "hachiko/hachiko_06.webp"
+  },
+  "4256": {
+   "id": 4256,
+   "name": "In Caccia",
+   "type": "defence",
+   "init": 3,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": false
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "fisica": 256,
+   "en": "",
+   "rank": "-",
+   "pers": "",
+   "img": "hachiko/hachiko_06.webp"
+  },
   "1001": {
    "id": 1001,
    "name": "Chiatta di Buoi (Solo)",
@@ -17360,6 +18764,110 @@
      [
       "neutral",
       "determination",
+      2
+     ]
+    ]
+   }
+  },
+  "ashigaru": {
+   "name": "Ashigaru",
+   "title": "Leale fino alla fine",
+   "advantage": 14,
+   "hand": 5,
+   "wounds": 4,
+   "char_img": "ashigaru/ashigaru_01.webp",
+   "kamae_img": "ashigaru/ashigaru_02.webp",
+   "portrait": "ashigaru.webp",
+   "model": "",
+   "compagno": {
+    "name": "Hachiko",
+    "wounds": 2,
+    "sprite": "res://assets/cards/hachiko/hachiko_01.webp",
+    "deck": {
+     "249": 1,
+     "250": 1,
+     "251": 1,
+     "252": 1,
+     "253": 1,
+     "254": 3,
+     "256": 2
+    }
+   },
+   "deck": {
+    "237": 1,
+    "238": 1,
+    "239": 1,
+    "240": 2,
+    "241": 2,
+    "243": 3,
+    "244": 3,
+    "245": 3,
+    "101": 1,
+    "102": 1,
+    "106": 1,
+    "107": 2,
+    "118": 2,
+    "121": 2,
+    "123": 2,
+    "124": 1,
+    "125": 2
+   },
+   "core": [
+    236,
+    139
+   ],
+   "kamae": {
+    "nodes": {
+     "focus": [
+      0.73,
+      0.2
+     ],
+     "determination": [
+      0.27,
+      0.5
+     ],
+     "aggression": [
+      0.73,
+      0.5
+     ],
+     "neutral": [
+      0.27,
+      0.8
+     ],
+     "balance": [
+      0.73,
+      0.8
+     ]
+    },
+    "edges": [
+     [
+      "aggression",
+      "focus",
+      1
+     ],
+     [
+      "focus",
+      "determination",
+      1
+     ],
+     [
+      "determination",
+      "aggression",
+      2
+     ],
+     [
+      "neutral",
+      "determination",
+      2
+     ],
+     [
+      "neutral",
+      "balance",
+      2
+     ],
+     [
+      "aggression",
+      "balance",
       2
      ]
     ]

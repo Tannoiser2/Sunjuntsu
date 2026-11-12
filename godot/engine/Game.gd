@@ -75,7 +75,7 @@ func prepara(setup: Dictionary) -> void:
 			"pos": Vector2i(99, 99), "face": 0, "kamae": "neutral", "focus": 0,
 			"wounds": 0, "bleeds": 0, "hand": hand, "deck": deck, "discard": [],
 			"hobbles": [], "armour": false, "dead": false, "play": {},
-			"instant_used": false, "no_move": false, "no_rot": false, "occ": false, "illum": [], "passi": 0, "contr": {}, "contr_nuovo": false, "reaz": false, "turn_tot": 0, "maxfocus": MAX_FOCUS, "turn_w": 0,
+			"instant_used": false, "no_move": false, "no_rot": false, "owner": i, "cane": false, "ferro": 0, "occ": false, "illum": [], "passi": 0, "contr": {}, "contr_nuovo": false, "reaz": false, "turn_tot": 0, "maxfocus": MAX_FOCUS, "turn_w": 0,
 			"ai": ia, "lim": int(pl.get("ferite", db.solo.ferite)) if ia else int(cd.wounds),
 			"mano": 99 if ia else int(cd.hand),
 			"comp": rng.randi_range(0, 2), "post": "off" if rng.randi_range(0, 1) == 0 else "def",
@@ -84,6 +84,30 @@ func prepara(setup: Dictionary) -> void:
 	adv = [0, 1]
 	if int(F[1].cd.advantage) > int(F[0].cd.advantage) and not F[1].ai:
 		adv = [1, 0]
+	# Compagni (Hachiko): una seconda pedina dello stesso giocatore, con il suo mazzo.
+	for pi in 2:
+		if F[pi].ai or not F[pi].cd.has("compagno"):
+			continue
+		var cc: Dictionary = F[pi].cd.compagno
+		var h: Dictionary = F[pi].duplicate(true)
+		var dk: Array = []
+		for k in cc.deck:
+			for _n in int(cc.deck[k]):
+				dk.append(int(k))
+		_mischia(dk)
+		h.i = F.size()
+		h.owner = pi
+		h.cane = true
+		h.name = cc.name
+		h.cd = {"name": cc.name, "model": "", "portrait": "", "sprite": cc.sprite, "kamae": {"nodes": {}, "edges": []}}
+		h.hand = []
+		h.deck = dk
+		h.discard = []
+		h.lim = int(cc.wounds)
+		h.mano = 99
+		h.kamae = "aggression"
+		h.stun_lato = 0
+		F.append(h)
 
 
 ## Mazzo Solo di un personaggio: carte firma + una carta da ciascun mazzo di selezione
@@ -128,7 +152,9 @@ func _ask(p: int, kind: String, text: String, opts: Array, extra: Dictionary = {
 		return -1
 	if opts.size() == 1 and not extra.get("mostra", false):
 		return 0
-	var req := {"p": p, "kind": kind, "text": text, "opts": opts}
+	var comb := p
+	p = int(F[p].owner) if p < F.size() else p
+	var req := {"p": p, "f": comb, "kind": kind, "text": text, "opts": opts}
 	req.merge(extra)
 	var idx := 0
 	if deciders[p].is_valid():
@@ -167,9 +193,66 @@ func _mischia(a: Array) -> void:
 func _avversari(f: Dictionary) -> Array:
 	var out: Array = []
 	for o in F:
-		if o.i != f.i and not o.dead:
+		if o.owner != f.owner and not o.dead:
 			out.append(o)
 	return out
+
+
+## Combattenti con una carta in gioco, in ordine di Vantaggio crescente.
+func _attivi() -> Array:
+	var out: Array = []
+	for p in _ordine_asc():
+		for f in F:
+			if f.owner == p and not f.dead and f.play.has("id"):
+				out.append(f.i)
+	return out
+
+
+func _cane_di(f: Dictionary):
+	for o in F:
+		if o.cane and o.owner == f.owner and not o.dead:
+			return o
+	return null
+
+
+func _variante(f: Dictionary, id: int) -> int:
+	return id if f.kamae == "aggression" else id + 4000
+
+
+## Hachiko: prima della pesca si guardano le prime 2 carte del suo mazzo e se ne sceglie una.
+func _scegli_cane(f: Dictionary) -> void:
+	var quante: int = 1 if F[f.owner].dead else 2
+	var prese: Array = []
+	while prese.size() < quante:
+		if f.deck.is_empty():
+			if f.discard.is_empty():
+				break
+			f.deck = f.discard
+			f.discard = []
+			_mischia(f.deck)
+		var c: int = f.deck.pop_back()
+		if c < 0:
+			f.stun_lato += 1
+			_log("%s pesca uno stordimento (%d/2)." % [f.name, f.stun_lato])
+			if f.stun_lato >= 2:
+				f.dead = true
+				_log("[b]%s è sconfitto[/b]: troppi stordimenti." % f.name)
+				_fine()
+				return
+			continue
+		prese.append(c)
+	if prese.is_empty():
+		return
+	var sc: int = prese[0]
+	if prese.size() == 2:
+		var opts: Array = []
+		for c in prese:
+			opts.append({"card": _variante(f, c), "label": Carte.nome(_variante(f, c))})
+		var idx := await _ask(f.i, "card", "%s: scegli la carta di questo turno (l'altra è scartata)" % f.name, opts, {"mostra": true, "dal_mazzo": true})
+		sc = prese[idx]
+		f.discard.append(prese[1 - idx])
+	f.play = {"id": _variante(f, sc)}
+	_ev({"t": "chosen", "p": f.i})
 
 
 func _in_cella(c: Vector2i):
@@ -216,10 +299,15 @@ func hobble_attivi(f: Dictionary) -> int:
 
 func _piazzamento() -> void:
 	fase = "piazzamento"
-	for p in _ordine_asc():
+	var lista: Array = []
+	for pp in _ordine_asc():
+		for x in F:
+			if x.owner == pp:
+				lista.append(x.i)
+	for p in lista:
 		var f: Dictionary = F[p]
 		var opts: Array = []
-		for c in mappa.start[p]:
+		for c in mappa.start[int(f.owner)]:
 			var cell := Hex.da_offset(int(c[0]), int(c[1]))
 			if _in_cella(cell) != null:
 				continue
@@ -235,6 +323,10 @@ func _preparazione() -> void:
 	fase = "preparazione"
 	for f in F:
 		if f.ai:
+			continue
+		if f.cane:
+			var ik := await _ask(f.i, "choice", "%s: con quale Kamae comincia?" % f.name, [{"label": "Aggressione"}, {"label": "Determinazione"}])
+			f.kamae = "aggression" if ik == 0 else "determination"
 			continue
 		var visti := {}
 		for id in f.deck.duplicate():
@@ -284,12 +376,17 @@ func _turno() -> void:
 	_ev({"t": "turn"})
 	# Ferite sanguinanti: prima della pesca si scarta la cima del mazzo (una sola volta).
 	for f in F:
-		if f.bleeds > 0 and not f.deck.is_empty():
+		if f.bleeds > 0 and not f.deck.is_empty() and not f.dead:
 			f.discard.append(f.deck.pop_back())
 			_log("%s sanguina: scarta la prima carta del mazzo." % f.name)
 	fase = "pesca"
 	for f in F:
-		if contratti_fatti(f) > 0:
+		if f.cane and not f.dead:
+			await _scegli_cane(f)
+	if _fine():
+		return
+	for f in F:
+		if contratti_fatti(f) > 0 and not f.cane:
 			var oc: Array = [{"label": "Tieni i contratti"}]
 			for k in f.contr:
 				if f.contr[k].done and not f.contr[k].via:
@@ -304,17 +401,20 @@ func _turno() -> void:
 					_focus(f, 1)
 				_log("%s scarta il contratto «%s»." % [f.name, CONTRATTI[oc[jc].k]])
 	for f in F:
-		if not f.ai:
+		if not f.ai and not f.cane and not f.dead:
 			_pesca(f, 1)
 	if _fine():
 		return
 	fase = "scelta"
 	for p in _ordine_asc():
-		await _scegli(F[p])
+		if not F[p].dead:
+			await _scegli(F[p])
 	if _fine():
 		return
 	fase = "rivela"
 	for f in F:
+		if f.dead or not f.play.has("id"):
+			continue
 		var id: int = f.play.id
 		if id >= 0:
 			_spendi(f, int(Carte.carta(id).focus))
@@ -332,9 +432,9 @@ func _turno() -> void:
 		return
 	_ev({"t": "reveal"})
 	await _pausa("reveal")
-	for p in _ordine_asc():
+	for p in _attivi():
 		await _sostituzione(F[p])
-	var ordine := _ordine_asc()
+	var ordine := _attivi()
 	ordine.sort_custom(func(a, b): return (not F[a].ai) and F[b].ai)
 	for p in ordine:
 		await _iniziativa(F[p])
@@ -546,6 +646,8 @@ func _con_hobble(f: Dictionary, v: int) -> int:
 func _costruisci_coda() -> void:
 	queue.clear()
 	for f in F:
+		if f.dead or not f.play.has("id"):
+			continue
 		var id: int = f.play.id
 		if id < 0:
 			continue
@@ -572,13 +674,15 @@ func _ordina_coda() -> void:
 			return a.init > b.init
 		if a.rank != b.rank:
 			return a.rank < b.rank
+		if F[a.p].owner != F[b.p].owner:
+			return adv.find(int(F[a.p].owner)) < adv.find(int(F[b.p].owner))
 		if a.p != b.p:
-			return adv.find(a.p) < adv.find(b.p)
+			return a.p < b.p
 		return a.s < b.s)
 
 
 func _pari(a: Dictionary, b: Dictionary) -> bool:
-	return a.p != b.p and a.init == b.init and a.rank == b.rank
+	return F[a.p].owner != F[b.p].owner and a.init == b.init and a.rank == b.rank
 
 
 func _risolvi_coda() -> void:
@@ -588,7 +692,7 @@ func _risolvi_coda() -> void:
 			var idx := await _ask(alto, "choice", "%s ha il Vantaggio: stessa iniziativa e stesso tipo. Risolvi…" % F[alto].name,
 				[{"label": "Per primo"}, {"label": "Per secondo"}])
 			var primo: int = alto if idx == 0 else 1 - alto
-			if queue[0].p != primo:
+			if int(F[queue[0].p].owner) != primo:
 				var t = queue[0]
 				queue[0] = queue[1]
 				queue[1] = t
@@ -596,7 +700,12 @@ func _risolvi_coda() -> void:
 			queue[1].deciso = true
 		var en: Dictionary = queue.pop_front()
 		cur_init = en.init
+		var chi: Dictionary = F[en.p]
+		if chi.cane:
+			chi.focus = F[chi.owner].focus
 		await _esegui_segmento(en)
+		if chi.cane:
+			F[chi.owner].focus = chi.focus
 		await _chiudi_blocchi()
 		_fine()
 
@@ -940,7 +1049,7 @@ func _puo_colpire(f: Dictionary, pos: Vector2i, face: int, lines: Array, i: int,
 					continue
 				for c in ln.cells:
 					var o = _in_cella(Hex.walk(pos, face, c))
-					if o != null and o.i != f.i and (not ln.get("retro", false) or Hex.walk(o.pos, o.face, "3") == pos):
+					if o != null and o.owner != f.owner and (not ln.get("retro", false) or Hex.walk(o.pos, o.face, "3") == pos):
 						return true
 				return false
 			"ifs":
@@ -1643,6 +1752,37 @@ func _fx(f: Dictionary, e: Dictionary, ctx: Dictionary) -> void:
 			_log("%s trasforma %d ferite di questo turno in stordimenti." % [f.name, q3])
 			for _k in q3:
 				_stordisci(f)
+		"flip_dog":
+			var cn = _cane_di(f)
+			if cn != null:
+				cn.kamae = "determination" if cn.kamae == "aggression" else "aggression"
+				_log("%s volta la carta Kamae: %s." % [cn.name, Carte.KAMAE[cn.kamae]])
+		"heal":
+			if f.wounds > 0:
+				f.wounds -= 1
+				_log("%s si lecca le ferite: 1 ferita in meno." % f.name)
+		"bleed1_to_wound":
+			if f.bleeds > 0:
+				f.bleeds -= 1
+				f.wounds += 1
+				_log("Una ferita sanguinante di %s diventa ferita." % f.name)
+		"dog_adjacent_focus":
+			if not F[f.owner].dead and Hex.dist(f.pos, F[f.owner].pos) == 1:
+				_focus(f, 1)
+		"dog_move":
+			var dm = _cane_di(f)
+			if dm != null:
+				var sm: Array = _stati(dm.pos, dm.face, [{"m": "step", "dirs": [0, 1, 2, 3, 4, 5], "n": 1, "opt": true}], dm.i).ok
+				var om: Array = []
+				for x in sm:
+					om.append({"pos": x[0], "face": x[1]})
+				var im := await _ask(dm.i, "move", "%s: passo facoltativo di 1" % dm.name, om)
+				dm.pos = om[im].pos
+				_ev({"t": "move", "p": dm.i})
+				await _pausa("move")
+		"ferro":
+			f.ferro = 4
+			_log("Volontà di Ferro: %s non subisce ferite se non può pescare (4 turni)." % f.name)
 		"self_wound":
 			autore = -1
 			_danno(f, n, 0)
@@ -1778,7 +1918,9 @@ func _fx(f: Dictionary, e: Dictionary, ctx: Dictionary) -> void:
 
 
 func _fx_bersaglio(f: Dictionary, o: Dictionary, e: Dictionary, n: int) -> void:
-	if o.ai and ["t_lose_focus", "t_switch", "t_discard_type", "t_discard", "t_discard_rand", "t_shuffle_type", "t_draw", "t_give_top"].has(e.v):
+	if o.cane and ["view_hand", "steal_focus", "t_poison"].has(e.v):
+		return
+	if (o.ai or o.cane) and ["t_lose_focus", "t_switch", "t_discard_type", "t_discard", "t_discard_rand", "t_shuffle_type", "t_draw", "t_give_top"].has(e.v):
 		return
 	match e.v:
 		"t_discard":
@@ -1828,6 +1970,15 @@ func _fx_bersaglio(f: Dictionary, o: Dictionary, e: Dictionary, n: int) -> void:
 			for _k in q2:
 				o.discard.append(o.deck.pop_back())
 			_log("%s scarta %d carte dalla cima del mazzo." % [o.name, q2])
+		"pull":
+			await _spingi(f, o, n, true)
+		"drag":
+			var dietro: Vector2i = Hex.walk(f.pos, f.face, "3")
+			if _libera(dietro, f.i):
+				f.pos = dietro
+				_ev({"t": "move", "p": f.i})
+				await _pausa("move")
+				await _spingi(f, o, 1, true)
 		"t_discard_rand":
 			var pr: Array = []
 			for h in o.hand:
@@ -2006,7 +2157,7 @@ func _stordisci(o: Dictionary) -> void:
 		return
 	_svela(o)
 	_attrezzo(o, "stordimento")
-	if o.ai:
+	if o.ai or o.cane:
 		o.deck.insert(rng.randi_range(0, o.deck.size()), -1)
 		_log("Uno [b]stordimento[/b] viene mischiato nel mazzo di %s." % o.name)
 		_ev({"t": "damage", "p": o.i})
@@ -2024,7 +2175,9 @@ func _pesca(f: Dictionary, n: int) -> void:
 	for _k in n:
 		if f.dead:
 			return
-		if f.deck.is_empty():
+		if f.deck.is_empty() and int(f.ferro) > 0:
+			_log("%s non può pescare, ma la Volontà di Ferro lo protegge." % f.name)
+		elif f.deck.is_empty():
 			_log("%s non ha più carte da pescare." % f.name)
 			_danno(f, 1, 0)
 		else:
@@ -2085,6 +2238,8 @@ func _mente_illuminata(f: Dictionary, id: int) -> void:
 
 
 func _passa_a(f: Dictionary, to: String) -> void:
+	if f.cane:
+		return
 	var dest := to
 	if to == "any":
 		var opts: Array = []
@@ -2130,6 +2285,8 @@ func _esiti_kamae(f: Dictionary, start: String, cur: String, rimasti: int, foc: 
 
 
 func _cambia_kamae(f: Dictionary, n: int) -> void:
+	if f.cane:
+		return
 	var res := {}
 	_esiti_kamae(f, f.kamae, f.kamae, n, 0, res)
 	var opts: Array = []
@@ -2241,8 +2398,9 @@ func _fine_turno() -> void:
 			if Carte.carta(id).get("core", false):
 				f.hand.append(id)
 			elif not f.illum.has(id):
-				f.discard.append(id)
+				f.discard.append(int(Carte.carta(id).get("fisica", id)))
 		f.play = {}
+		f.ferro = maxi(0, int(f.ferro) - 1)
 		var nuovi: Array = []
 		for h in f.hobbles:
 			if h + 1 < 4:
@@ -2268,12 +2426,28 @@ func _fine_turno() -> void:
 func _fine() -> bool:
 	if over:
 		return true
-	var vivi: Array = []
+	for f in F:
+		if f.dead and not f.get("sepolto", false):
+			f["sepolto"] = true
+			for o in F:
+				if o.i == f.i or o.owner != f.owner or o.dead:
+					continue
+				# la carta personaggio del compagno si volta
+				adv.erase(int(o.owner))
+				adv.push_front(int(o.owner))
+				if o.cane:
+					o.kamae = "aggression"
+					_log("%s resta solo: passa ad Aggressione e prende il Vantaggio." % o.name)
+				else:
+					o.mano = int(o.mano) + 1
+					_pesca(o, 1)
+					_log("%s resta solo: limite di mano %d, pesca 1 carta e prende il Vantaggio." % [o.name, o.mano])
+	var vivi := {}
 	for f in F:
 		if not f.dead:
-			vivi.append(f.i)
+			vivi[int(f.owner)] = true
 	if vivi.size() <= 1:
 		over = true
-		winner = vivi[0] if vivi.size() == 1 else -1
+		winner = vivi.keys()[0] if vivi.size() == 1 else -1
 		queue.clear()
 	return over

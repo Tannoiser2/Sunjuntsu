@@ -412,6 +412,23 @@ func _initialize() -> void:
 	await turno(279, 53)   # Polvere Nera a iniziativa 4 contro iniziativa 0
 	ok(g.F[1].wounds == 4, "La Temuta Polvere Nera: ferite pari alla differenza di iniziativa (4)")
 
+	print("Ashigaru e Hachiko")
+	nuovo("ashigaru", "warrior")
+	ok(g.F.size() == 3 and g.F[2].cane and g.F[2].owner == 0 and g.F[2].lim == 2, "Hachiko è una seconda pedina dell'Ashigaru, con 2 ferite")
+	metti(2, Vector2i(4, -3), 3)   # Hachiko a nord del Guerriero, rivolto verso di lui
+	g.F[2].kamae = "aggression"
+	g.F[2].deck = [256, 253]
+	g.F[0].focus = 2
+	await turno(236, 53)
+	ok(g.F[1].wounds + g.F[1].bleeds == 1, "la carta di Hachiko si risolve e colpisce")
+	ok(g.F[2].discard.size() == 2 and not g.F[2].discard.has(4253), "delle due carte guardate una è giocata e una scartata")
+	g._stordisci(g.F[2])
+	ok(g.F[2].deck.has(-1), "lo stordimento di Hachiko va nel suo mazzo")
+	g._danno(g.F[2], 2, 0)
+	ok(g.F[2].dead and not g.over and g.F[0].mano == 6, "Hachiko sconfitto: la partita continua, l'Ashigaru ha mano 6")
+	g._danno(g.F[0], 4, 0)
+	ok(g.over and g.winner == 1, "sconfitti entrambi: vince l'avversario")
+
 	print("Tutte le carte hanno un testo")
 	for c in Carte.db().cards.values():
 		if Carte.testo(c).contains("?"):

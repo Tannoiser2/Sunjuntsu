@@ -1,5 +1,8 @@
 # Novità
 
+## 1.10.0 — Ashigaru e Hachiko
+- Dodicesimo combattente: l'Ashigaru con il cane Hachiko, seconda pedina con il suo mazzo.
+
 ## 1.9.0 — Wakou, Onna-Bugeisha, Navigatore
 - Tre personaggi nuovi: Wakou (Ubriaco), Onna-Bugeisha (Disperazione), Navigatore (Kamae a Distanza).
 

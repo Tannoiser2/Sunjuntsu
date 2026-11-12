@@ -3,7 +3,7 @@ extends Control
 
 var scelte: Dictionary = {}
 var scelta_avv: OptionButton
-const ORDINE := ["warrior", "ronin", "student", "master", "assassin", "monk", "yasuke", "yojimbo", "wakou", "onna", "sailor"]
+const ORDINE := ["warrior", "ronin", "student", "master", "assassin", "monk", "yasuke", "yojimbo", "wakou", "onna", "sailor", "ashigaru"]
 
 
 func _ready() -> void:

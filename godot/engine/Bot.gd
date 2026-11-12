@@ -13,11 +13,11 @@ func _init(indice: int, seme: int = 7) -> void:
 
 
 func decidi(g: Game, req: Dictionary) -> int:
-	var f: Dictionary = g.F[io]
+	var f: Dictionary = g.F[int(req.get("f", io))]
 	var opts: Array = req.opts
 	var nem = null
 	for o in g.F:
-		if o.i != io and not o.dead:
+		if o.owner != io and not o.dead and (nem == null or Hex.dist(f.pos, o.pos) < Hex.dist(f.pos, nem.pos)):
 			nem = o
 	match req.kind:
 		"place", "move":

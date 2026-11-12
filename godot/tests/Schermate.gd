@@ -11,6 +11,8 @@ func _ready() -> void:
 	for a in OS.get_cmdline_user_args():
 		if a.begins_with("out="):
 			cart = a.substr(4)
+		if a.begins_with("io="):
+			Sessione.setup = {"io": a.substr(3), "avv": "warrior", "modo": "duello"}
 	DirAccess.make_dir_recursive_absolute(cart)
 	p = load("res://scenes/Partita.tscn").instantiate()
 	add_child(p)

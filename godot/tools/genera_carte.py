@@ -619,6 +619,57 @@ card(146, "Guardia Concentrata", "defence", [7, 4],
 card(157, "Colpo Esperto", "attack", 6, seg(
     OR(move(step([5, 1], 1, False), rot(1, False)), move(step([5, 1], 1), rot(1), f=1)), atk({"0": "w1"})))
 
+# ───────────── ASHIGARU E HACHIKO ─────────────
+card(236, "Carta Speciale Ashigaru", "core", 0, seg(
+    fx(e("discard", n=1)), move(step(ANY, 1), rot(2)),
+    OR(fx(e("draw", n=2)), fx(e("flip_dog")), fx(e("change", n=1)))), core=True)
+card(139, "Impalamento di Yari", "attack", 1, seg(
+    fx(e("discard", n=1)), atk({"000": "w1", "0000": "w1"}), move(step(ANY, 1), rot(1), f=1)),
+    core=True, weapon="Yari", note="Griglia letta come distanza 3 e 4 in linea retta: lettura da confermare.")
+card(237, "Castello del Cielo", "defence", [9, 2],
+    seg(blk("5", "0", "1", "4", "2"), IFS, fx(e("t_rot", n=2))),
+    seg(move(step(ANY, 1), rot(1)), fx(e("dog_move")), init=1), focus=1)
+card(238, "Per il Daimyo", "attack", 7, seg(
+    move(step(ANY, 1)), atk({"000": "w2", "00": "w1", "0": "w1"}), IFS, fx(e("push", n=1), k=AG), fx(e("t_hobble"), k=BA)), focus=1)
+card(239, "Sole Calante", "meditation", 7, seg(
+    move(step(B, 1, False), step(FANDN, 1), seq=True), fx(e("cancel_move")),
+    fx(e("draw", n=2), k=BA), fx(e("advantage"), k=DE), fx(e("change", n=1))))
+card(240, "Inciampo del Cavallo (Ashigaru)", "meditation", "=", seg(
+    fx(e("t_hobble")), fx(e("t_stun"), f=1), fx(e("t_switch", to="neutral"), f=1)),
+    instant="add", when="atk_ok|block_ok")
+card(241, "Stoccata in Affondo", "attack", 5, seg(
+    move(step([5, 1], 1, False)), atk({"00": "w1", "0": "w1"}),
+    IFS, fx(e("t_lose_focus", n=1), k=DE), fx(e("t_stun"), k=AG), move(step(B, 1), f=1)))
+card(243, "Accerchiamento", "meditation", 3, seg(
+    move(step([5, 1], 1, False), rot(1, False)), move(step([5, 1], 1), rot(1))))
+card(244, "Fendente Falciante", "attack", 4, seg(
+    move(step([5, 1], 1)), atk({"05": "w1", "01": "w1", "0": "w1"}), fx(e("draw", n=2), k=BA)))
+card(245, "Infilzata", "attack", 6, seg(move(rot(1)), atk({"00": "w1", "0": "w1"})))
+card(101, "Taglio di Finta", "attack", 6, seg(
+    move(step([5, 1], 1), k=BA), atk({"0": "w1"}), IFS, fx(e("t_stun"), k=AG), fx(e("advantage"), k=DE), fx(e("switch", to=DE))),
+    instant="rep")
+card(106, "Volontà di Ferro", "meditation", 7, seg(move(step(ANY, 1)), fx(e("ferro"))), focus=2)
+
+def cane(id, nomeA, initA, righeA, nomeD, initD, righeD, range=None):
+    card(id, nomeA, "attack", initA, seg(*righeA))
+    card(id + 4000, nomeD, "defence", initD, seg(*righeD), range=range)
+    C[str(id)]["fisica"] = id; C[str(id + 4000)]["fisica"] = id
+    C[str(id + 4000)]["img_da"] = str(id)
+cane(249, "Morso Selvaggio", 7, [move(step([5, 1], 1, False), rot(1, False), seq=True), g(atk({"0": "w2"}), f=1)],
+     "Leccarsi le Ferite", 1, [move(step(FANDN, 1)), OR(fx(e("heal"), f=1), fx(e("bleed1_to_wound"), f=1))])
+cane(250, "Morso alla Caviglia", 6, [move(step([5, 1], 1), rot(1), seq=True), atk({"0": "a"}), ast(e("t_hobble"))],
+     "Ringhio Minaccioso", 7, [move(step([5, 1], 2)), fx(e("cancel_move"))], range=2)
+cane(251, "Attacca", 7, [move(step(FANUP, 2), step(FANUP, 1), seq=True), move(rot(1))],
+     "Al Piede", 5, [move(step(FANDN, 1), step(FANDN, 1), seq=True), move(step(FANDN, 1))])
+cane(252, "Morso Rapido", 7, [move(step(FANDN, 1, False), rot(1), seq=True), atk({"0": "w1"}), fx(e("flip_dog"))],
+     "Ululato Feroce", 6, [move(step(FANUP, 1)), OR(fx(e("t_discard", n=1)), fx(e("t_lose_focus", n=1)))], range=2)
+cane(253, "Morso alla Gola", 5, [move(rot(1)), atk({"0": "b"})],
+     "All'Angolo", 7, [move(step(FANDN, 2)), fx(e("flip_dog"))])
+cane(254, "Riporta la Preda", 7, [atk({"0": "a"}), ast(e("drag"))],
+     "Bravo Cane", 9, [fx(e("dog_adjacent_focus"))])
+cane(256, "Strisciata", 6, [move(step(FANUP, 1)), atk({"0": "w1", "1": "w1"})],
+     "In Caccia", 3, [move(step([5, 1], 1, False), rot(1, False)), move(step([5, 1], 1), rot(1))])
+
 # ───────────── CARTE SOLO (Solitario) ─────────────
 # Id: 1000+ Ronin, 2000+ Guerriero, 3000+ generiche (numero stampato + base).
 V = [5, 1]; A = [4, 2]; X = [1, 2, 4, 5]
@@ -723,7 +774,7 @@ for k, c in C.items():
     if c.get("solo"): continue
     p = pool.get(int(k), {})
     c["en"] = p.get("name", ""); c["rank"] = p.get("rank", "-"); c["pers"] = p.get("char", "")
-    c["img"] = imgs.get(k, "")
+    c["img"] = imgs.get(c.pop("img_da", k), "")
     assert c["img"], k
 
 out = {
@@ -839,7 +890,19 @@ out = {
      "kamae": {"nodes": {"ranged":[0.27,0.2],"aggression":[0.73,0.2],"focus":[0.27,0.5],
                          "balance":[0.73,0.5],"neutral":[0.27,0.8],"determination":[0.73,0.8]},
         "edges": [["ranged","aggression",2],["aggression","balance",2],["focus","balance",2],
-                  ["balance","determination",2],["neutral","determination",2]]}}},
+                  ["balance","determination",2],["neutral","determination",2]]}},
+  "ashigaru": {"name": "Ashigaru", "title": "Leale fino alla fine", "advantage": 14,
+     "hand": 5, "wounds": 4, "char_img": imgs["2231"], "kamae_img": imgs["2235"],
+     "portrait": "ashigaru.webp", "model": "",
+     "compagno": {"name": "Hachiko", "wounds": 2, "sprite": "res://assets/cards/hachiko/hachiko_01.webp",
+                  "deck": {"249":1,"250":1,"251":1,"252":1,"253":1,"254":3,"256":2}},
+     "deck": {"237":1,"238":1,"239":1,"240":2,"241":2,"243":3,"244":3,"245":3,"101":1,"102":1,"106":1,
+              "107":2,"118":2,"121":2,"123":2,"124":1,"125":2},
+     "core": [236, 139],
+     "kamae": {"nodes": {"focus":[0.73,0.2],"determination":[0.27,0.5],"aggression":[0.73,0.5],
+                         "neutral":[0.27,0.8],"balance":[0.73,0.8]},
+        "edges": [["aggression","focus",1],["focus","determination",1],["determination","aggression",2],
+                  ["neutral","determination",2],["neutral","balance",2],["aggression","balance",2]]}}},
  "solo": SOLO,
  # mappa "villaggio in fiamme": celle giocabili (colonna,riga) lette dal contorno arancione
  "maps": {"villaggio": {"img": "arena.webp", "img_size": 1594,

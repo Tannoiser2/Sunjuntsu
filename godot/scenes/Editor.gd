@@ -18,7 +18,7 @@ const EFF := ["discard", "draw", "draw_exact", "focus", "lose_focus_all", "lose_
 	"each_stun", "cancel_move", "advantage", "add_wound", "armour", "broad_block",
 	"ai_change", "ai_reset", "ai_recycle", "t_discard", "search_discard", "search_top", "discard_stun",
 	"bleed_to_wound", "view_hand", "steal_focus", "swap", "t_step", "nota", "all_draw", "t_poison",
-	"t_draw", "pull_or_push", "conceal", "t_mill_wounds", "cancel_rot", "add_bleed", "illum_search", "search_illum", "wounds_to_stun", "discard_hobble", "t_stun_per_step", "push_steps", "contract_back", "lavoro_finito", "t_discard_rand", "self_wound", "draw_return", "search_stun"]
+	"t_draw", "pull_or_push", "conceal", "t_mill_wounds", "cancel_rot", "add_bleed", "illum_search", "search_illum", "wounds_to_stun", "discard_hobble", "t_stun_per_step", "push_steps", "contract_back", "lavoro_finito", "t_discard_rand", "self_wound", "draw_return", "search_stun", "flip_dog", "heal", "bleed1_to_wound", "dog_adjacent_focus", "dog_move", "ferro", "pull"]
 const CICLO_ATK := ["", "w1", "w2", "w3", "b", "x", "a", "w1a", "ba", "p", "pa"]
 const SIGLE := {"w1": "1", "w2": "2", "b": "S", "x": "X", "a": "*", "w1a": "1*", "ba": "S*", "s": "B", "p": "V", "pa": "V*", "sa": "B*", "w3": "3"}
 const CELLE := ["0", "1", "2", "3", "4", "5", "00", "01", "11", "12", "22", "23", "33", "34", "44", "45", "55", "50"]

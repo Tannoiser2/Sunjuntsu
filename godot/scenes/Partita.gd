@@ -103,7 +103,7 @@ func _nuova() -> void:
 	else:
 		g.prepara({"seed": randi(), "players": [{"char": mio},
 			{"char": suo, "solo": solo, "incubo": Sessione.setup.get("incubo", false)}]})
-	for i in 2:
+	for i in g.F.size():
 		pedine.append(_crea_pedina(i))
 	_aggiorna()
 	_partita()
@@ -196,8 +196,8 @@ func _mostra_richiesta() -> void:
 			for c in opz_celle:
 				evid[c] = Color(0.95, 0.75, 0.1, 0.5)
 			lbl_richiesta.text += "\nTocca una casella evidenziata."
-			if req.kind == "move" and opz_celle.has(g.F[io].pos):
-				_seleziona_cella(g.F[io].pos)
+			if req.kind == "move" and opz_celle.has(g.F[int(req.get("f", io))].pos):
+				_seleziona_cella(g.F[int(req.get("f", io))].pos)
 			_ridisegna_celle()
 		"card":
 			var in_mano := true
@@ -239,7 +239,7 @@ func _seleziona_cella(c: Vector2i) -> void:
 	lista.sort_custom(func(a, b): return a[0] < b[0])
 	sel_cella = c
 	sel_k = 0
-	var voglio: int = g.F[io].face
+	var voglio: int = g.F[int(req.get("f", io))].face
 	if req.kind == "place":
 		voglio = Hex.verso(c, Hex.da_offset(3, 0))
 	var meglio := 99
@@ -254,7 +254,7 @@ func _seleziona_cella(c: Vector2i) -> void:
 
 func _anteprima_mossa() -> void:
 	var lista: Array = opz_celle[sel_cella]
-	_posa_pedina(io, sel_cella, int(lista[sel_k][0]), true)
+	_posa_pedina(int(req.get("f", io)), sel_cella, int(lista[sel_k][0]), true)
 	_svuota(box_bottoni)
 	if lista.size() > 1:
 		var bs := Tema.bottone("Ruota a sinistra", 170)
@@ -394,7 +394,7 @@ func _crea_pedina(i: int) -> Node3D:
 	cil.height = 0.1
 	base.mesh = cil
 	var bm := StandardMaterial3D.new()
-	bm.albedo_color = Tema.GIOCATORI[i]
+	bm.albedo_color = Tema.GIOCATORI[int(f.owner)]
 	base.material_override = bm
 	base.position.y = 0.05
 	n.add_child(base)
@@ -419,7 +419,7 @@ func _crea_pedina(i: int) -> Node3D:
 	else:
 		# nessuna miniatura 3D: sagoma in piedi con il ritratto
 		var sag := Sprite3D.new()
-		sag.texture = _tex("res://assets/portraits/" + f.cd.portrait)
+		sag.texture = _tex(f.cd.get("sprite", "res://assets/portraits/" + f.cd.portrait))
 		sag.pixel_size = 1.5 / float(sag.texture.get_height())
 		sag.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
 		sag.shaded = false
@@ -980,6 +980,14 @@ func _aggiorna() -> void:
 			st.append("Occultato")
 		if g.disperata(f):
 			st.append("Disperazione")
+		for x in g.F:
+			if x.cane and x.owner == i:
+				if x.dead:
+					st.append("%s sconfitto" % x.name)
+				else:
+					st.append("%s: ferite %d/%d, stordimenti %d/2, %s" % [x.name, x.wounds + x.bleeds, int(x.lim), int(x.stun_lato), Carte.KAMAE[x.kamae]])
+					if x.play.has("id") and (i == io or g.fase != "scelta"):
+						st.append("gioca «%s»" % Carte.nome(int(x.play.id)))
 		if not f.get("contr", {}).is_empty():
 			var fatti := 0
 			for kc in f.contr:
@@ -1001,6 +1009,9 @@ func _aggiorna() -> void:
 			s.giocata.tooltip_text = "Iniziativa %d" % int(f.play.init)
 		if not pedine.is_empty() and pedine[i].visible == false and f.pos.x < 50:
 			_muovi_pedina(i, false)
+	for j in range(2, g.F.size()):
+		if j < pedine.size() and pedine[j].visible == false and g.F[j].pos.x < 50:
+			_muovi_pedina(j, false)
 	_aggiorna_mano()
 	pan_richiesta.visible = lbl_richiesta.text != "" or box_bottoni.get_child_count() > 0
 

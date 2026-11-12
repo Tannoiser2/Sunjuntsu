@@ -155,6 +155,14 @@ static func effetto(e: Dictionary) -> String:
 			var bn := {"wounds": "limite di ferite", "hand": "limite di mano", "focus": "limite di focus"}
 			return "rimane in gioco: +1 al tuo %s" % bn.get(e.get("bonus", ""), "")
 		"wounds_to_stun": return "sostituisci tutte le ferite ricevute in questo turno con stordimenti"
+		"flip_dog": return "volta la carta Kamae di Hachiko"
+		"heal": return "scarta 1 ferita"
+		"bleed1_to_wound": return "sostituisci 1 ferita sanguinante con 1 ferita"
+		"dog_adjacent_focus": return "se adiacente all'Ashigaru, ottieni 1 focus"
+		"dog_move": return "Hachiko: passo 1 (qualsiasi direzione) facoltativo"
+		"ferro": return "rimane in gioco per 4 turni: non prendi ferite se non puoi pescare carte"
+		"drag": return "fai 1 passo indietro, poi tira il bersaglio di 1"
+		"pull": return "tira il bersaglio di %d" % n
 		"self_wound": return "prendi %d ferita" % n
 		"draw_return": return "pesca %d carte, poi rimettine altrettante nel mazzo e mischia" % n
 		"reveal_take": return "rivela le prime %d carte del tuo mazzo e prendi tutte quelle del tuo personaggio" % n
@@ -275,6 +283,8 @@ static func testo(c: Dictionary) -> String:
 		testa += ", richiede Disperazione"
 	if c.has("req_illum"):
 		testa += ", requisito: %d carte Illuminate in gioco" % int(c.req_illum)
+	if c.has("fisica"):
+		testa += "; carta di Hachiko, metà usata in " + ("Aggressione" if int(c.id) < 4000 else "Determinazione")
 	if c.get("zanmato", false):
 		testa += "; quando rivelata scarta tutti i contratti: per ogni contratto completato +1 iniziativa oppure +1 ferita"
 	if c.get("range_contr", false):
