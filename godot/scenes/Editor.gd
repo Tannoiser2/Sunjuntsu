@@ -18,7 +18,7 @@ const EFF := ["discard", "draw", "draw_exact", "focus", "lose_focus_all", "lose_
 	"each_stun", "cancel_move", "advantage", "add_wound", "armour", "broad_block",
 	"ai_change", "ai_reset", "ai_recycle", "t_discard", "search_discard", "search_top", "discard_stun",
 	"bleed_to_wound", "view_hand", "steal_focus", "swap", "t_step", "nota", "all_draw", "t_poison",
-	"t_draw", "pull_or_push", "conceal", "t_mill_wounds", "cancel_rot", "add_bleed", "illum_search", "search_illum", "wounds_to_stun"]
+	"t_draw", "pull_or_push", "conceal", "t_mill_wounds", "cancel_rot", "add_bleed", "illum_search", "search_illum", "wounds_to_stun", "discard_hobble", "t_stun_per_step", "push_steps"]
 const CICLO_ATK := ["", "w1", "w2", "b", "x", "a", "w1a", "ba", "p", "pa"]
 const SIGLE := {"w1": "1", "w2": "2", "b": "S", "x": "X", "a": "*", "w1a": "1*", "ba": "S*", "s": "B", "p": "V", "pa": "V*", "sa": "B*"}
 const CELLE := ["0", "1", "2", "3", "4", "5", "00", "01", "11", "12", "22", "23", "33", "34", "44", "45", "55", "50"]
@@ -157,7 +157,7 @@ func _apri(id: int) -> void:
 	for si in cur.segs.size():
 		var s: Dictionary = cur.segs[si]
 		if s.has("init"):
-			righe.append({"tipo": "div", "v": int(s.init), "cond": ""})
+			righe.append({"tipo": "div", "v": s.init, "cond": ""})
 		var pend: Dictionary = {}
 		for l in s.lines:
 			if l.t == "or":
@@ -217,7 +217,7 @@ func _componi() -> void:
 	for r in righe:
 		var linee: Array = segs[-1].lines
 		if r.tipo == "div":
-			segs.append({"lines": [], "init": int(r.get("v", 1))})
+			segs.append({"lines": [], "init": r.get("v", 1)})
 			aggancia = false
 		elif r.tipo == "or":
 			if not linee.is_empty():
@@ -392,7 +392,10 @@ func _widget_riga(i: int) -> Control:
 			piu.pressed.connect(func(): r.fx.append({"v": "focus", "n": 1}); _disegna())
 			f.add_child(piu)
 		"alt", "div":
-			f.add_child(_campo("Iniziativa", _numero(int(r.get("v", 1)), 0, 9, func(v): r.v = v; _componi())))
+			if r.get("v", 1) is Array:
+				f.add_child(Tema.etichetta("Iniziativa %d-%d" % [int(r.v[0]), int(r.v[1])], 18))
+			else:
+				f.add_child(_campo("Iniziativa", _numero(int(r.get("v", 1)), 0, 9, func(v): r.v = v; _componi())))
 		"counter":
 			var le := LineEdit.new()
 			var a2: Array = []

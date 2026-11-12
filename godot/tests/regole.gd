@@ -356,6 +356,21 @@ func _initialize() -> void:
 	g.F[0].illum = [263, 264, 265]
 	ok(g.giocabile(g.F[0], 262), "con 3 Illuminate in gioco si può giocare")
 
+	print("Yasuke")
+	nuovo("yasuke", "warrior")
+	ok(g.F[0].hand.has(350) and g.F[0].hand.has(136), "Yasuke: due armi in mano")
+	ok(not g.giocabile(g.F[0], 362), "Sbilanciamento non si sceglie come carta del turno")
+	g.F[0].kamae = "determination"
+	piano[0]["vel"] = 8
+	piano[0]["speed"] = [0, 1]    # parte 1 a 8, parte 2 a 4
+	piano[0]["counter"] = 1
+	g.F[0].hand = [349, 350, 136, 362]
+	g.F[1].kamae = "determination"   # Falciata Montante a iniziativa 8
+	await turno(354, 60)
+	ok(g.F[0].wounds == 0, "Anima Devota blocca a 8")
+	ok(registro.any(func(t): return t.contains("contrattacca")), "Anima Devota: contrattacco a 8")
+	ok(g.F[0].hand.has(350) or g.F[0].discard.has(362), "la carta del contrattacco: l'arma torna in mano, Sbilanciamento va negli scarti")
+
 	print("Tutte le carte hanno un testo")
 	for c in Carte.db().cards.values():
 		if Carte.testo(c).contains("?"):

@@ -8080,6 +8080,1212 @@
    "pers": "Gen. Ability",
    "img": "altre_carte_3/altre_carte_3_03.webp"
   },
+  "349": {
+   "id": 349,
+   "name": "Carta Speciale Yasuke",
+   "type": "core",
+   "init": 0,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "discard",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "draw",
+            "n": 2
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "move",
+          "parts": [
+           {
+            "m": "step",
+            "dirs": [
+             0
+            ],
+            "n": 1,
+            "opt": true
+           }
+          ],
+          "f": 1
+         }
+        ],
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "change",
+            "n": 1
+           }
+          ]
+         }
+        ]
+       ]
+      }
+     ]
+    }
+   ],
+   "core": true,
+   "en": "Carta Speciale Yasuke",
+   "rank": "-",
+   "pers": "Yasuke",
+   "img": "yasuke/yasuke_04.webp"
+  },
+  "350": {
+   "id": 350,
+   "name": "Taglio Mancino",
+   "type": "attack",
+   "init": 1,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "discard",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "f": 1
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1"
+       }
+      }
+     ]
+    }
+   ],
+   "weapon": "Wakizashi",
+   "core": true,
+   "counter_ok": true,
+   "en": "Taglio Mancino",
+   "rank": "-",
+   "pers": "Yasuke/Weapon",
+   "img": "yasuke/yasuke_05.webp"
+  },
+  "136": {
+   "id": 136,
+   "name": "Squarcio di Katana",
+   "type": "attack",
+   "init": 4,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "discard",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "f": 1
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1"
+       }
+      }
+     ]
+    }
+   ],
+   "weapon": "Katana",
+   "core": true,
+   "en": "Squarcio di Katana",
+   "rank": "-",
+   "pers": "Weapon",
+   "img": "weapon/weapon_01.webp"
+  },
+  "352": {
+   "id": 352,
+   "name": "Furia Giusta",
+   "type": "attack",
+   "init": 6,
+   "focus": 3,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "x",
+        "5": "w2",
+        "1": "w2",
+        "45": "w1",
+        "12": "w1"
+       }
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": false
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ],
+       "seq": true
+      }
+     ]
+    }
+   ],
+   "req": "aggression",
+   "en": "Furia Giusta",
+   "rank": "Jade",
+   "pers": "Yasuke",
+   "img": "yasuke/yasuke_06.webp"
+  },
+  "353": {
+   "id": 353,
+   "name": "Carica del Branco",
+   "type": "attack",
+   "init": 3,
+   "focus": 1,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "f": 1
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 3,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "a"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "t_stun"
+        }
+       ]
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_stun_per_step"
+        }
+       ],
+       "k": "aggression"
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "switch",
+         "to": "aggression"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "en": "Carica del Branco",
+   "rank": "Gold",
+   "pers": "Yasuke",
+   "img": "yasuke/yasuke_07.webp"
+  },
+  "354": {
+   "id": 354,
+   "name": "Anima Devota",
+   "type": "defence",
+   "init": [
+    8,
+    6
+   ],
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "0": "s",
+        "5": "s",
+        "1": "s",
+        "4": "s"
+       }
+      },
+      {
+       "t": "counter",
+       "v": [
+        8,
+        7,
+        6
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "0": "s",
+        "5": "s",
+        "1": "s",
+        "4": "s"
+       }
+      },
+      {
+       "t": "counter",
+       "v": [
+        5,
+        4,
+        3
+       ]
+      }
+     ],
+     "init": [
+      5,
+      3
+     ]
+    }
+   ],
+   "req": "determination",
+   "en": "Anima Devota",
+   "rank": "Gold",
+   "pers": "Yasuke",
+   "img": "yasuke/yasuke_08.webp"
+  },
+  "355": {
+   "id": 355,
+   "name": "Schianto dell'Elefante",
+   "type": "meditation",
+   "init": "=",
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "push_steps"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "instant": "add",
+   "when": "atk_ok|block_ok",
+   "en": "Schianto dell'Elefante",
+   "rank": "Gold",
+   "pers": "Yasuke",
+   "img": "yasuke/yasuke_09.webp"
+  },
+  "356": {
+   "id": 356,
+   "name": "Chiudere la Distanza",
+   "type": "meditation",
+   "init": 3,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": false
+        },
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 1,
+         "opt": false
+        }
+       ],
+       "seq": true
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "search",
+         "rank": "Steel",
+         "type": "defence"
+        }
+       ],
+       "f": 1
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "change",
+         "n": 2
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "en": "Chiudere la Distanza",
+   "rank": "Steel",
+   "pers": "Yasuke",
+   "img": "yasuke/yasuke_10.webp"
+  },
+  "357": {
+   "id": 357,
+   "name": "Colpo Doppio",
+   "type": "attack",
+   "init": 4,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "a",
+        "5": "a",
+        "1": "w1",
+        "2": "w1"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "add_wound",
+         "n": 1
+        }
+       ],
+       "k": "balance"
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "push",
+         "n": 1
+        }
+       ],
+       "k": "aggression"
+      }
+     ]
+    }
+   ],
+   "en": "Colpo Doppio",
+   "rank": "Steel",
+   "pers": "Yasuke",
+   "img": "yasuke/yasuke_12.webp"
+  },
+  "358": {
+   "id": 358,
+   "name": "Artigli dell'Aquila",
+   "type": "attack",
+   "init": 7,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": false
+        }
+       ],
+       "k": "aggression"
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1",
+        "1": "w1"
+       }
+      },
+      {
+       "t": "mod",
+       "fx": "bleed",
+       "f": 1
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ],
+       "k": "balance"
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "w1",
+        "0": "w1"
+       },
+       "f": 1
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_hobble"
+        }
+       ]
+      }
+     ],
+     "init": 5
+    }
+   ],
+   "en": "Artigli dell'Aquila",
+   "rank": "Steel",
+   "pers": "Yasuke",
+   "img": "yasuke/yasuke_14.webp"
+  },
+  "359": {
+   "id": 359,
+   "name": "Zanne del Leone",
+   "type": "attack",
+   "init": 5,
+   "focus": 1,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "k": "determination"
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 1,
+         "opt": false
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "w1",
+        "1": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_discard_type",
+         "type": "meditation",
+         "n": 1
+        }
+       ],
+       "k": "aggression"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "draw",
+         "n": 2
+        }
+       ],
+       "k": "balance"
+      }
+     ]
+    }
+   ],
+   "instant": "rep",
+   "en": "Zanne del Leone",
+   "rank": "Steel",
+   "pers": "Yasuke",
+   "img": "yasuke/yasuke_16.webp"
+  },
+  "360": {
+   "id": 360,
+   "name": "Difesa a Due Lame",
+   "type": "defence",
+   "init": [
+    8,
+    7
+   ],
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "5": "s",
+        "0": "s",
+        "1": "s"
+       }
+      },
+      {
+       "t": "counter",
+       "v": [
+        7
+       ],
+       "k": "determination"
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "5": "s",
+        "0": "s",
+        "1": "s"
+       }
+      },
+      {
+       "t": "counter",
+       "v": [
+        5
+       ],
+       "k": "determination"
+      }
+     ],
+     "init": [
+      5,
+      4
+     ]
+    }
+   ],
+   "en": "Difesa a Due Lame",
+   "rank": "Wood",
+   "pers": "Yasuke",
+   "img": "yasuke/yasuke_18.webp"
+  },
+  "361": {
+   "id": 361,
+   "name": "Morso del Leone",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 1,
+         "opt": false
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "w1",
+        "1": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "focus",
+         "n": 1
+        }
+       ],
+       "k": "determination"
+      }
+     ]
+    }
+   ],
+   "en": "Morso del Leone",
+   "rank": "Wood",
+   "pers": "Yasuke",
+   "img": "yasuke/yasuke_21.webp"
+  },
+  "362": {
+   "id": 362,
+   "name": "Sbilanciamento",
+   "type": "attack",
+   "init": 1,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "focus",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "draw",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_discard",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_switch",
+         "to": "neutral"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "advantage"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "switch",
+         "to": "any"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "counter_only": true,
+   "en": "Sbilanciamento",
+   "rank": "Wood",
+   "pers": "Yasuke",
+   "img": "yasuke/yasuke_24.webp"
+  },
+  "114": {
+   "id": 114,
+   "name": "Difesa di Roccia",
+   "type": "defence",
+   "init": [
+    6,
+    2
+   ],
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "0": "s",
+        "5": "s",
+        "1": "s",
+        "4": "s"
+       }
+      },
+      {
+       "t": "counter",
+       "v": [
+        5,
+        4,
+        3
+       ]
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_stun"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "focus",
+         "n": 1
+        }
+       ],
+       "k": "determination"
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "switch",
+         "to": "determination"
+        }
+       ]
+      }
+     ],
+     "init": 1
+    }
+   ],
+   "en": "Difesa di Roccia",
+   "rank": "Steel",
+   "pers": "Gen. Ability",
+   "img": "altre_carte_2/altre_carte_2_26.webp"
+  },
+  "144": {
+   "id": 144,
+   "name": "Determinazione",
+   "type": "meditation",
+   "init": "=",
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "discard_hobble"
+        }
+       ],
+       "k": "determination"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "switch",
+         "to": "determination"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "instant": "add",
+   "when": "after_card",
+   "note": "Sulla carta il «Passa a Determinazione» avviene a iniziativa 0: qui è immediato.",
+   "prepared": true,
+   "en": "Determinazione",
+   "rank": "Steel",
+   "pers": "Gen. Ability",
+   "img": "altre_carte_3/altre_carte_3_08.webp"
+  },
+  "145": {
+   "id": 145,
+   "name": "Colpo Disorientante",
+   "type": "attack",
+   "init": 3,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "k": "determination"
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "k": "balance"
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1",
+        "1": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_switch",
+         "to": "neutral"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "en": "Colpo Disorientante",
+   "rank": "Steel",
+   "pers": "Gen. Ability",
+   "img": "altre_carte_3/altre_carte_3_07.webp"
+  },
+  "147": {
+   "id": 147,
+   "name": "Passo di Foresta",
+   "type": "defence",
+   "init": 7,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "a"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "t_rot",
+         "n": 2
+        }
+       ]
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "focus",
+         "n": 1
+        }
+       ],
+       "k": "determination"
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "k": "balance"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "switch",
+         "to": "balance"
+        }
+       ]
+      }
+     ],
+     "init": 2
+    }
+   ],
+   "en": "Passo di Foresta",
+   "rank": "Steel",
+   "pers": "Gen. Ability",
+   "img": "altre_carte_3/altre_carte_3_06.webp"
+  },
   "1001": {
    "id": 1001,
    "name": "Chiatta di Buoi (Solo)",
@@ -11892,6 +13098,91 @@
      [
       "focus",
       "neutral",
+      2
+     ]
+    ]
+   }
+  },
+  "yasuke": {
+   "name": "Yasuke",
+   "title": "Devota guardia del corpo",
+   "advantage": 78,
+   "hand": 5,
+   "wounds": 5,
+   "char_img": "yasuke/yasuke_01.webp",
+   "kamae_img": "yasuke/yasuke_02.webp",
+   "portrait": "yasuke.webp",
+   "model": "",
+   "deck": {
+    "352": 1,
+    "353": 1,
+    "354": 1,
+    "355": 1,
+    "356": 2,
+    "357": 2,
+    "358": 2,
+    "359": 2,
+    "360": 3,
+    "361": 3,
+    "362": 3,
+    "114": 1,
+    "144": 2,
+    "145": 2,
+    "147": 2,
+    "121": 2
+   },
+   "core": [
+    349,
+    350,
+    136
+   ],
+   "kamae": {
+    "nodes": {
+     "focus": [
+      0.27,
+      0.2
+     ],
+     "aggression": [
+      0.73,
+      0.2
+     ],
+     "determination": [
+      0.27,
+      0.5
+     ],
+     "neutral": [
+      0.27,
+      0.8
+     ],
+     "balance": [
+      0.73,
+      0.8
+     ]
+    },
+    "edges": [
+     [
+      "focus",
+      "determination",
+      2
+     ],
+     [
+      "aggression",
+      "determination",
+      2
+     ],
+     [
+      "determination",
+      "neutral",
+      2
+     ],
+     [
+      "determination",
+      "balance",
+      2
+     ],
+     [
+      "neutral",
+      "balance",
       2
      ]
     ]

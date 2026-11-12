@@ -153,6 +153,9 @@ static func effetto(e: Dictionary) -> String:
 			var bn := {"wounds": "limite di ferite", "hand": "limite di mano", "focus": "limite di focus"}
 			return "rimane in gioco: +1 al tuo %s" % bn.get(e.get("bonus", ""), "")
 		"wounds_to_stun": return "sostituisci tutte le ferite ricevute in questo turno con stordimenti"
+		"discard_hobble": return "scarta 1 azzoppamento"
+		"t_stun_per_step": return "il bersaglio prende 1 stordimento per ogni casella in cui ti sei mosso"
+		"push_steps": return "spingi il bersaglio di 1, +1 per ogni casella in cui ti sei mosso (solo dopo un attacco)"
 		"conceal": return "entra in Occultamento"
 		"t_mill_wounds": return "il bersaglio scarta dalla cima del mazzo tante carte quante sono le sue ferite, +1"
 		"cancel_rot": return "cancella la rotazione attiva del bersaglio"
@@ -257,6 +260,10 @@ static func testo(c: Dictionary) -> String:
 		testa += ", Distanza %d" % int(c.range)
 	if c.has("req_illum"):
 		testa += ", requisito: %d carte Illuminate in gioco" % int(c.req_illum)
+	if c.get("counter_only", false):
+		testa += ", si gioca solo come contrattacco"
+	elif c.get("counter_ok", false):
+		testa += ", giocabile anche come contrattacco"
 	if c.get("no_play", false):
 		testa += ", non si può giocare come carta abilità"
 	out.append(testa)
@@ -265,6 +272,8 @@ static func testo(c: Dictionary) -> String:
 		if s.has("init"):
 			if c.get("or", false):
 				out.append("— OPPURE, se non può attaccare, a iniziativa %d —" % int(s.init))
+			elif s.init is Array:
+				out.append("— a iniziativa %d-%d —" % [int(s.init[0]), int(s.init[1])])
 			else:
 				out.append("— a iniziativa %d —" % int(s.init))
 		for ln in s.lines:

@@ -407,6 +407,60 @@ C["262"]["req_illum"] = 3
 C["264"]["no_play"] = True
 for _i in (263, 264, 265): C[str(_i)]["stays"] = True
 
+# ───────────── YASUKE ─────────────
+card(349, "Carta Speciale Yasuke", "core", 0, seg(
+    fx(e("discard", n=1)), move(step(ANY, 1), rot(2)),
+    OR(fx(e("draw", n=2)), move(step(F, 1), f=1), fx(e("change", n=1)))), core=True)
+card(350, "Taglio Mancino", "attack", 1, seg(
+    fx(e("discard", n=1)), move(rot(1), f=1), atk({"0": "w1"})), core=True, weapon="Wakizashi")
+C["350"]["counter_ok"] = True
+card(136, "Squarcio di Katana", "attack", 4, seg(
+    fx(e("discard", n=1)), move(step([5, 1], 1), f=1), move(rot(1)), atk({"0": "w1"})), core=True, weapon="Katana")
+card(352, "Furia Giusta", "attack", 6, seg(
+    atk({"0": "x", "5": "w2", "1": "w2", "45": "w1", "12": "w1"}),
+    move(step([5, 1], 1, False), rot(1, False), seq=True)), focus=3, req=AG)
+card(353, "Carica del Branco", "attack", 3, seg(
+    move(rot(1), f=1), move(step(F, 3)), atk({"0": "a"}), ast(e("t_stun")),
+    IFS, fx(e("t_stun_per_step"), k=AG), move(rot(1, False)), fx(e("switch", to=AG))), focus=1)
+card(354, "Anima Devota", "defence", [8, 6],
+    seg(blk("0", "5", "1", "4"), counter(8, 7, 6)),
+    seg(blk("0", "5", "1", "4"), counter(5, 4, 3), init=[5, 3]), req=DE)
+card(355, "Schianto dell'Elefante", "meditation", "=", seg(fx(e("push_steps"))),
+    instant="add", when="atk_ok|block_ok")
+card(356, "Chiudere la Distanza", "meditation", 3, seg(
+    move(step([5, 1], 1, False), step(F, 1, False), seq=True), move(step(F, 1)),
+    fx(e("search", rank="Steel", type="defence"), f=1), fx(e("change", n=2))))
+card(357, "Colpo Doppio", "attack", 4, seg(
+    move(step(FANUP, 1)), atk({"0": "a", "5": "a", "1": "w1", "2": "w1"}), ast(e("add_wound", n=1), k=BA),
+    IFS, fx(e("push", n=1), k=AG)))
+card(358, "Artigli dell'Aquila", "attack", 7,
+    seg(move(step(FANDN, 1, False), k=AG), atk({"0": "w1", "1": "w1"}), g({"t": "mod", "fx": "bleed"}, f=1)),
+    seg(move(rot(1, False), k=BA), g(atk({"5": "w1", "0": "w1"}), f=1), IFS, fx(e("t_hobble")), init=5))
+card(359, "Zanne del Leone", "attack", 5, seg(
+    move(rot(1), k=DE), move(step(F, 1, False)), atk({"5": "w1", "1": "w1"}),
+    IFS, fx(e("t_discard_type", type="meditation", n=1), k=AG), fx(e("draw", n=2), k=BA)), focus=1, instant="rep")
+card(360, "Difesa a Due Lame", "defence", [8, 7],
+    seg(blk("5", "0", "1"), counter(7, k=DE)),
+    seg(blk("5", "0", "1"), counter(5, k=DE), init=[5, 4]))
+card(361, "Morso del Leone", "attack", 6, seg(
+    move(step([5, 1], 1), rot(1)), move(step(F, 1, False)), atk({"5": "w1", "1": "w1"}),
+    IFS, fx(e("focus", n=1), k=DE)))
+card(362, "Sbilanciamento", "attack", 1, seg(
+    fx(e("focus", n=1)), fx(e("draw", n=1)), fx(e("t_discard", n=1)), fx(e("t_switch", to="neutral")),
+    fx(e("advantage")), fx(e("switch", to="any"))))
+C["362"]["counter_only"] = True
+card(114, "Difesa di Roccia", "defence", [6, 2],
+    seg(blk("0", "5", "1", "4"), counter(5, 4, 3), IFS, fx(e("t_stun"))),
+    seg(fx(e("focus", n=1), k=DE), move(rot(1)), fx(e("switch", to=DE)), init=1))
+card(144, "Determinazione", "meditation", "=", seg(fx(e("discard_hobble"), k=DE), fx(e("switch", to=DE))),
+    instant="add", when="after_card", prepared=True,
+    note="Sulla carta il «Passa a Determinazione» avviene a iniziativa 0: qui è immediato.")
+card(145, "Colpo Disorientante", "attack", 3, seg(
+    move(step(F, 1), k=DE), move(rot(1), k=BA), atk({"0": "w1", "1": "w1"}), IFS, fx(e("t_switch", to="neutral"))))
+card(147, "Passo di Foresta", "defence", 7,
+    seg(atk({"0": "a"}), ast(e("t_rot", n=2)), IFS, fx(e("focus", n=1), k=DE)),
+    seg(move(step(ANY, 1)), move(step(FANDN, 1), rot(1), k=BA), fx(e("switch", to=BA)), init=2))
+
 # ───────────── CARTE SOLO (Solitario) ─────────────
 # Id: 1000+ Ronin, 2000+ Guerriero, 3000+ generiche (numero stampato + base).
 V = [5, 1]; A = [4, 2]; X = [1, 2, 4, 5]
@@ -577,7 +631,17 @@ out = {
      "kamae": {"nodes": {"balance":[0.27,0.2],"aggression":[0.73,0.2],"focus":[0.27,0.5],
                          "determination":[0.73,0.5],"neutral":[0.27,0.8]},
         "edges": [["balance","aggression",2],["balance","focus",2],["aggression","determination",2],
-                  ["focus","determination",2],["focus","neutral",2]]}}},
+                  ["focus","determination",2],["focus","neutral",2]]}},
+  "yasuke": {"name": "Yasuke", "title": "Devota guardia del corpo", "advantage": 78,
+     "hand": 5, "wounds": 5, "char_img": imgs["346"], "kamae_img": imgs["348"],
+     "portrait": "yasuke.webp", "model": "",
+     "deck": {"352":1,"353":1,"354":1,"355":1,"356":2,"357":2,"358":2,"359":2,"360":3,"361":3,"362":3,
+              "114":1,"144":2,"145":2,"147":2,"121":2},
+     "core": [349, 350, 136],
+     "kamae": {"nodes": {"focus":[0.27,0.2],"aggression":[0.73,0.2],"determination":[0.27,0.5],
+                         "neutral":[0.27,0.8],"balance":[0.73,0.8]},
+        "edges": [["focus","determination",2],["aggression","determination",2],["determination","neutral",2],
+                  ["determination","balance",2],["neutral","balance",2]]}}},
  "solo": SOLO,
  # mappa "villaggio in fiamme": celle giocabili (colonna,riga) lette dal contorno arancione
  "maps": {"villaggio": {"img": "arena.webp", "img_size": 1594,

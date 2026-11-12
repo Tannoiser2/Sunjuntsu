@@ -71,7 +71,7 @@ func prepara(setup: Dictionary) -> void:
 			"pos": Vector2i(99, 99), "face": 0, "kamae": "neutral", "focus": 0,
 			"wounds": 0, "bleeds": 0, "hand": hand, "deck": deck, "discard": [],
 			"hobbles": [], "armour": false, "dead": false, "play": {},
-			"instant_used": false, "no_move": false, "no_rot": false, "occ": false, "illum": [], "maxfocus": MAX_FOCUS, "turn_w": 0,
+			"instant_used": false, "no_move": false, "no_rot": false, "occ": false, "illum": [], "passi": 0, "maxfocus": MAX_FOCUS, "turn_w": 0,
 			"ai": ia, "lim": int(pl.get("ferite", db.solo.ferite)) if ia else int(cd.wounds),
 			"mano": 99 if ia else int(cd.hand),
 			"comp": rng.randi_range(0, 2), "post": "off" if rng.randi_range(0, 1) == 0 else "def",
@@ -309,6 +309,8 @@ func _turno() -> void:
 	ordine.sort_custom(func(a, b): return (not F[a].ai) and F[b].ai)
 	for p in ordine:
 		await _iniziativa(F[p])
+	for p in ordine:
+		await _iniz_segmenti(F[p])
 	_ev({"t": "reveal"})
 	await _pausa("init")
 	fase = "risolvi"
@@ -331,7 +333,7 @@ func giocabile(f: Dictionary, id: int) -> bool:
 	if id < 0:
 		return true
 	var c := Carte.carta(id)
-	if c.init is String or c.get("no_play", false):
+	if c.init is String or c.get("no_play", false) or c.get("counter_only", false):
 		return false
 	if c.has("req_illum") and f.illum.size() < int(c.req_illum):
 		return false
@@ -472,6 +474,24 @@ func _iniziativa(f: Dictionary) -> void:
 	_log("%s: iniziativa [b]%d[/b]." % [f.name, f.play.init])
 
 
+## Parti successive con iniziativa variabile (es. «5-3»): si sceglie alla rivelazione.
+func _iniz_segmenti(f: Dictionary) -> void:
+	var id: int = f.play.get("id", -1)
+	if id < 0:
+		return
+	var c := Carte.carta(id)
+	for si in c.segs.size():
+		if c.segs[si].get("init") is Array:
+			var r: Array = c.segs[si].init
+			var opts: Array = []
+			for x in range(int(r[0]), int(r[1]) - 1, -1):
+				opts.append({"label": str(x), "v": x})
+			var ix := await _ask(f.i, "speed", "%s: scegli l'iniziativa della parte %d di «%s»" % [f.name, si + 1, c.name], opts)
+			if not f.play.has("seg"):
+				f.play["seg"] = {}
+			f.play.seg[si] = int(opts[ix].v)
+
+
 func _con_hobble(f: Dictionary, v: int) -> int:
 	if v <= 0:
 		return v
@@ -493,7 +513,10 @@ func _costruisci_coda() -> void:
 				continue
 			var ini: int = f.play.init
 			if c.segs[s].has("init"):
-				ini = _con_hobble(f, int(c.segs[s].init))
+				var grezza = c.segs[s].init
+				if grezza is Array:
+					grezza = f.play.get("seg", {}).get(s, grezza[0])
+				ini = _con_hobble(f, int(grezza))
 			queue.append({"p": f.i, "s": s, "init": ini, "rank": rango})
 	_ordina_coda()
 
@@ -538,6 +561,8 @@ func _esegui_segmento(en: Dictionary) -> void:
 	if f.dead:
 		return
 	var c := Carte.carta(f.play.id)
+	if en.s == 0:
+		f.passi = 0
 	var ctx := {"card": c, "success": null, "hit": [], "abort": false, "main": true, "en": en}
 	_log("[color=#7a1f1f]Iniziativa %d[/color] — %s risolve [b]%s[/b]%s." % [en.init, f.name, c.name,
 		"" if c.segs.size() == 1 else " (parte %d)" % (en.s + 1)])
@@ -786,6 +811,7 @@ func _muovi(f: Dictionary, ln: Dictionary, ctx: Dictionary, lines: Array, i: int
 	for s in stati:
 		opts.append({"pos": s[0], "face": s[1]})
 	var idx := await _ask(f.i, "move", "%s: %s" % [f.name, Carte.riga(ln)], opts, {"line": ln})
+	f.passi += Hex.dist(f.pos, opts[idx].pos)
 	f.pos = opts[idx].pos
 	f.face = opts[idx].face
 	_ev({"t": "move", "p": f.i})
@@ -1261,7 +1287,9 @@ func _contrattacco(d: Dictionary, vel: int) -> void:
 		if h < 0 or visti.has(h):
 			continue
 		var c := Carte.carta(h)
-		if c.type != "attack" or c.get("core", false) or c.init is Array or c.init is String:
+		if c.type != "attack" or c.init is Array or c.init is String:
+			continue
+		if c.get("core", false) and not c.get("counter_ok", false):
 			continue
 		if int(c.init) > vel or int(c.focus) > d.focus:
 			continue
@@ -1285,7 +1313,10 @@ func _contrattacco(d: Dictionary, vel: int) -> void:
 	for s in c2.segs:
 		await _righe(d, s.lines, 0, ctx)
 		ctx.success = null
-	d.discard.append(id)
+	if c2.get("core", false):
+		d.hand.append(id)
+	else:
+		d.discard.append(id)
 
 
 ## Chiude i blocchi rimasti in attesa quando non ci sono più attacchi a quella iniziativa.
@@ -1483,6 +1514,10 @@ func _fx(f: Dictionary, e: Dictionary, ctx: Dictionary) -> void:
 			_log("%s trasforma %d ferite di questo turno in stordimenti." % [f.name, q3])
 			for _k in q3:
 				_stordisci(f)
+		"discard_hobble":
+			if not f.hobbles.is_empty():
+				f.hobbles.pop_back()
+				_log("%s scarta 1 azzoppamento." % f.name)
 		"conceal":
 			if not f.occ:
 				f.occ = true
@@ -1589,6 +1624,11 @@ func _fx_bersaglio(f: Dictionary, o: Dictionary, e: Dictionary, n: int) -> void:
 			for _k in q2:
 				o.discard.append(o.deck.pop_back())
 			_log("%s scarta %d carte dalla cima del mazzo." % [o.name, q2])
+		"t_stun_per_step":
+			for _k in int(f.passi):
+				_stordisci(o)
+		"push_steps":
+			await _spingi(f, o, 1 + (int(f.passi) if Carte.carta(f.play.id).type == "attack" else 0))
 		"cancel_rot":
 			o.no_rot = true
 			_log("La rotazione attiva di %s è cancellata." % o.name)

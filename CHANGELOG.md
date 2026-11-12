@@ -1,5 +1,8 @@
 # Novità
 
+## 1.7.0 — Yasuke
+- Settimo personaggio: Yasuke, con due armi e le carte da contrattacco.
+
 ## 1.6.0 — Monaco
 - Sesto personaggio: il Monaco, con le carte Illuminate che restano in gioco.
 

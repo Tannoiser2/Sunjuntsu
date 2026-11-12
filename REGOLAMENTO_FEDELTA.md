@@ -60,7 +60,7 @@ libero passo per passo; «verrebbe colpito» considera il tuo attacco dalla tua 
 
 ## Non ancora fatto
 
-- Gli altri personaggi dopo Allievo, Maestro, Assassino e Monaco ( Ashigaru e Hachiko, Monaco, Navigatore,
+- Gli altri personaggi dopo Allievo, Maestro, Assassino, Monaco e Yasuke ( Ashigaru e Hachiko, Monaco, Navigatore,
   Ninja, Onna-Bugeisha, Wakou, Yasuke, Yojimbo): i loro dati sono ancora nel vecchio formato.
 - Allievo: «Specchio d'Acqua», riga da 2 focus (giocare la carta presa come Sostituzione istantanea)
   non è automatizzata.
