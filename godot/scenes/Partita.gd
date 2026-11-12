@@ -636,6 +636,8 @@ func _tex(percorso: String) -> Texture2D:
 
 
 func _tex_carta(id: int) -> Texture2D:
+	if id == -2:
+		return _tex("res://assets/cards/status/veleno_debilitante.webp")
 	if id < 0:
 		return _tex("res://assets/cards/status/stordimento.webp")
 	return _tex("res://assets/cards/" + Carte.carta(id).img)
@@ -917,7 +919,9 @@ func _disegna_anello(c: Control, i: int) -> void:
 
 func _apri_anteprima(id: int, idx: int) -> void:
 	ant_img.texture = _tex_carta(id)
-	if id < 0:
+	if id == -2:
+		ant_txt.text = "Veleno Debilitante\n\nSe ce l'hai in mano quando scegli la carta, devi giocare questo: iniziativa 0, nessun effetto, poi torna nella riserva."
+	elif id < 0:
 		ant_txt.text = "Stordimento\n\nNon si può scartare e conta nel limite di mano. Puoi giocarlo al posto di una carta: iniziativa 0, nessun effetto, poi torna nella riserva.\nSe gli stordimenti in mano raggiungono il limite di mano sei sconfitto."
 	else:
 		ant_txt.text = Carte.testo(Carte.carta(id))

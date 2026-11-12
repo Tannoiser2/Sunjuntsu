@@ -55,6 +55,8 @@ static func carta(id: int) -> Dictionary:
 
 
 static func nome(id: int) -> String:
+	if id == -2:
+		return "Veleno Debilitante"
 	if id < 0:
 		return "Stordimento"
 	return carta(id).name
@@ -128,6 +130,18 @@ static func effetto(e: Dictionary) -> String:
 		"steal_focus": return "ruba %d focus al bersaglio" % n
 		"swap": return "scambia posizione con il bersaglio"
 		"t_step": return "sposta il bersaglio di %d nella sua direzione %s" % [n, Hex.NOMI_DIR[int(e.get("dir", 0))]]
+		"trade": return "scarta 1 carta di rango %s, poi cerca negli scarti e prendi 1 carta di rango %s" % [_rango({"rank": e.drop}), _rango(e)]
+		"all_draw": return "tutti i giocatori pescano %d carte" % n
+		"counter_now":
+			var cv: Array = []
+			for v in e.v2:
+				cv.append(str(int(v)))
+			return "contrattacco a iniziativa " + ", ".join(cv)
+		"t_poison": return "il bersaglio è avvelenato (Veleno Debilitante)"
+		"t_shuffle_type": return "il bersaglio rimescola nel mazzo 1 carta %s dalla mano" % TIPI[e.type]
+		"t_draw": return "il bersaglio pesca %d carte" % n
+		"t_give_top": return "guarda le prime %d carte del mazzo del bersaglio: ne scegli 1, che lui prende in mano" % n
+		"pull_or_push": return "tira o spingi il bersaglio di %d" % n
 		"nota": return str(e.get("txt", "")) + " (non automatizzato)"
 		"reshuffle": return "mischia nel mazzo tutte le tue carte abilità non speciali"
 		"cancel_cards": return "ogni bersaglio a distanza cancella le sue carte abilità attive"

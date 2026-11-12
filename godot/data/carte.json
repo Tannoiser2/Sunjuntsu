@@ -4711,6 +4711,1308 @@
    "rank": "Wood",
    "img": "altre_carte/altre_carte_31.webp"
   },
+  "8": {
+   "id": 8,
+   "name": "Carta Speciale Maestro",
+   "type": "core",
+   "init": 0,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "discard",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "draw",
+            "n": 2
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "trade",
+            "drop": "Steel",
+            "rank": "Wood"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "change",
+            "n": 1
+           }
+          ]
+         }
+        ]
+       ]
+      }
+     ]
+    }
+   ],
+   "core": true,
+   "en": "Carta Speciale Maestro",
+   "rank": "-",
+   "img": "master/master_03.webp"
+  },
+  "75": {
+   "id": 75,
+   "name": "Taglio di Tachi",
+   "type": "attack",
+   "init": 5,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "discard",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "move",
+          "parts": [
+           {
+            "m": "step",
+            "dirs": [
+             5,
+             0,
+             1
+            ],
+            "n": 1,
+            "opt": true
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "move",
+          "parts": [
+           {
+            "m": "rot",
+            "n": 2,
+            "opt": true
+           }
+          ],
+          "f": 1
+         }
+        ]
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "1": "w1"
+       }
+      }
+     ]
+    }
+   ],
+   "weapon": "Tachi",
+   "core": true,
+   "en": "Taglio di Tachi",
+   "rank": "-",
+   "img": "altre_carte/altre_carte_06.webp"
+  },
+  "10": {
+   "id": 10,
+   "name": "Zanna Celata della Vipera",
+   "type": "attack",
+   "init": 8,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": false
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "1": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_poison"
+        }
+       ],
+       "f": 1
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "switch",
+         "to": "any"
+        }
+       ],
+       "k": "balance"
+      }
+     ]
+    }
+   ],
+   "en": "Zanna Celata della Vipera",
+   "rank": "Jade",
+   "img": "master/master_25.webp"
+  },
+  "12": {
+   "id": 12,
+   "name": "Intuizione Oscura",
+   "type": "meditation",
+   "init": 7,
+   "focus": 1,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "view_hand"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_shuffle_type",
+         "type": "attack"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_shuffle_type",
+         "type": "defence"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_shuffle_type",
+         "type": "meditation"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_draw",
+         "n": 3
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "switch",
+         "to": "any"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "en": "Intuizione Oscura",
+   "rank": "Gold",
+   "img": "master/master_21.webp"
+  },
+  "13": {
+   "id": 13,
+   "name": "Occhio del Dragone",
+   "type": "meditation",
+   "init": "=",
+   "focus": 1,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_lose_focus",
+         "n": 2
+        }
+       ],
+       "f": 1
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_draw",
+         "n": 2
+        }
+       ],
+       "f": 1
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "k": "aggression"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "draw",
+         "n": 2
+        }
+       ],
+       "k": "determination"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "pull_or_push",
+         "n": 1
+        }
+       ],
+       "k": "balance"
+      }
+     ]
+    }
+   ],
+   "instant": "add",
+   "when": "after_card",
+   "en": "Occhio del Dragone",
+   "rank": "Gold",
+   "img": "master/master_23.webp"
+  },
+  "14": {
+   "id": 14,
+   "name": "Patto Oscuro",
+   "type": "meditation",
+   "init": 1,
+   "focus": 1,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "search_top",
+         "n": 3
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_give_top",
+         "n": 3
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "range": 3,
+   "en": "Patto Oscuro",
+   "rank": "Steel",
+   "img": "master/master_07.webp"
+  },
+  "15": {
+   "id": 15,
+   "name": "Coda del Dragone",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "switch",
+         "to": "any"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "k": "aggression"
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ],
+       "k": [
+        "balance",
+        "determination"
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "3": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_stun"
+        },
+        {
+         "v": "t_hobble"
+        }
+       ],
+       "f": 1
+      }
+     ]
+    }
+   ],
+   "instant": "rep",
+   "en": "Coda del Dragone",
+   "rank": "Steel",
+   "img": "master/master_04.webp"
+  },
+  "16": {
+   "id": 16,
+   "name": "Sesto Senso",
+   "type": "defence",
+   "init": [
+    9,
+    4
+   ],
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 3,
+         "opt": false
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "5": "s",
+        "0": "s",
+        "1": "s"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_lose_focus",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "view_hand"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "req": [
+    "balance",
+    "determination"
+   ],
+   "en": "Sesto Senso",
+   "rank": "Steel",
+   "img": "master/master_09.webp"
+  },
+  "17": {
+   "id": 17,
+   "name": "Saggezza Corrotta",
+   "type": "meditation",
+   "init": "=",
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "counter_now",
+         "v2": [
+          9,
+          8
+         ]
+        }
+       ],
+       "k": "determination"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "counter_now",
+         "v2": [
+          7,
+          6
+         ]
+        }
+       ],
+       "k": "balance"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "counter_now",
+         "v2": [
+          5,
+          4
+         ]
+        }
+       ],
+       "k": "aggression"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "all_draw",
+         "n": 2
+        }
+       ],
+       "f": 1
+      }
+     ]
+    }
+   ],
+   "instant": "add",
+   "when": "block_ok",
+   "en": "Saggezza Corrotta",
+   "rank": "Steel",
+   "img": "master/master_05.webp"
+  },
+  "18": {
+   "id": 18,
+   "name": "Colpo Indolente",
+   "type": "attack",
+   "init": 3,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "w1",
+        "0": "w1",
+        "1": "w1"
+       }
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": false
+        }
+       ],
+       "f": 1
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_wound_to_bleed"
+        }
+       ],
+       "k": "aggression"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_discard",
+         "n": 1
+        }
+       ],
+       "k": "determination"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_hobble"
+        }
+       ],
+       "k": "balance"
+      }
+     ]
+    }
+   ],
+   "en": "Colpo Indolente",
+   "rank": "Wood",
+   "img": "master/master_15.webp"
+  },
+  "19": {
+   "id": 19,
+   "name": "Taglio Magistrale",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": false
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ],
+       "k": [
+        "balance",
+        "determination"
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ],
+       "k": "aggression"
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "b"
+       },
+       "k": "determination"
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "w1",
+        "0": "w1",
+        "1": "w1"
+       },
+       "k": "balance"
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w2"
+       },
+       "k": "aggression"
+      }
+     ]
+    }
+   ],
+   "en": "Taglio Magistrale",
+   "rank": "Wood",
+   "img": "master/master_13.webp"
+  },
+  "20": {
+   "id": 20,
+   "name": "Riposizionamento",
+   "type": "meditation",
+   "init": 7,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": false
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "k": "aggression"
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "draw",
+         "n": 2
+        }
+       ],
+       "k": "balance"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "search",
+         "rank": "Wood"
+        }
+       ],
+       "k": "determination"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "change",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "en": "Riposizionamento",
+   "rank": "Wood",
+   "img": "master/master_12.webp"
+  },
+  "96": {
+   "id": 96,
+   "name": "Colpo Squarciante",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "k": "balance"
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 2,
+         "opt": false
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "f": 1
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w2"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_stun"
+        }
+       ],
+       "k": "aggression"
+      }
+     ]
+    }
+   ],
+   "en": "Colpo Squarciante",
+   "rank": "Gold",
+   "img": "altre_carte_3/altre_carte_3_10.webp"
+  },
+  "97": {
+   "id": 97,
+   "name": "Provocazione",
+   "type": "meditation",
+   "init": "=",
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_switch",
+         "to": "neutral"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "advantage"
+        }
+       ],
+       "k": "determination"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_discard",
+         "n": 1
+        }
+       ],
+       "f": 1
+      }
+     ]
+    }
+   ],
+   "instant": "add",
+   "when": "atk_ok|block_ok",
+   "range": 5,
+   "en": "Provocazione",
+   "rank": "Gold",
+   "img": "altre_carte_3/altre_carte_3_11.webp"
+  },
+  "111": {
+   "id": 111,
+   "name": "Blocco di Fiume",
+   "type": "defence",
+   "init": [
+    7,
+    4
+   ],
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "0": "s",
+        "1": "s"
+       }
+      },
+      {
+       "t": "counter",
+       "v": [
+        6,
+        5
+       ],
+       "k": "determination"
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "seq": true
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "focus",
+         "n": 1
+        }
+       ],
+       "k": "balance"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "switch",
+         "to": "balance"
+        }
+       ]
+      }
+     ],
+     "init": 3
+    }
+   ],
+   "en": "Blocco di Fiume",
+   "rank": "Steel",
+   "img": "altre_carte_3/altre_carte_3_16.webp"
+  },
+  "112": {
+   "id": 112,
+   "name": "Squarcio Rotante (Maestro)",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "move",
+          "parts": [
+           {
+            "m": "step",
+            "dirs": [
+             5
+            ],
+            "n": 1,
+            "opt": false
+           },
+           {
+            "m": "step",
+            "dirs": [
+             5
+            ],
+            "n": 1,
+            "opt": true
+           }
+          ],
+          "seq": true
+         }
+        ],
+        [
+         {
+          "t": "move",
+          "parts": [
+           {
+            "m": "step",
+            "dirs": [
+             1
+            ],
+            "n": 1,
+            "opt": false
+           },
+           {
+            "m": "step",
+            "dirs": [
+             1
+            ],
+            "n": 1,
+            "opt": true
+           }
+          ],
+          "seq": true
+         }
+        ]
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "k": "balance"
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1",
+        "5": "w2"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "focus",
+         "n": 1
+        }
+       ],
+       "k": "aggression"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "change",
+         "n": 1
+        }
+       ],
+       "k": "determination"
+      }
+     ]
+    }
+   ],
+   "en": "Squarcio Rotante",
+   "rank": "Steel",
+   "img": "altre_carte_2/altre_carte_2_24.webp"
+  },
+  "120": {
+   "id": 120,
+   "name": "Blocco di Vento",
+   "type": "defence",
+   "init": [
+    8,
+    5
+   ],
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "0": "s",
+        "1": "s"
+       }
+      },
+      {
+       "t": "counter",
+       "v": [
+        8,
+        7
+       ],
+       "k": "balance"
+      },
+      {
+       "t": "counter",
+       "v": [
+        6,
+        5
+       ],
+       "k": "determination"
+      }
+     ]
+    }
+   ],
+   "en": "Blocco di Vento",
+   "rank": "Steel",
+   "img": "altre_carte_2/altre_carte_2_31.webp"
+  },
+  "128": {
+   "id": 128,
+   "name": "Stoccata Rapida",
+   "type": "attack",
+   "init": 8,
+   "focus": 1,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 1,
+         "opt": false
+        }
+       ],
+       "k": "aggression"
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "k": "balance"
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "focus",
+         "n": 1
+        }
+       ],
+       "k": "determination"
+      }
+     ]
+    }
+   ],
+   "en": "Stoccata Rapida",
+   "rank": "Wood",
+   "img": "altre_carte/altre_carte_32.webp"
+  },
   "1001": {
    "id": 1001,
    "name": "Chiatta di Buoi (Solo)",
@@ -8267,6 +9569,87 @@
       "determination",
       "focus",
       1
+     ]
+    ]
+   }
+  },
+  "master": {
+   "name": "Maestro",
+   "title": "Il vecchio dragone",
+   "advantage": 74,
+   "hand": 5,
+   "wounds": 5,
+   "char_img": "master/master_01.webp",
+   "kamae_img": "master/master_02.webp",
+   "portrait": "master.webp",
+   "model": "",
+   "deck": {
+    "10": 1,
+    "12": 1,
+    "13": 1,
+    "14": 2,
+    "15": 2,
+    "16": 1,
+    "17": 1,
+    "18": 3,
+    "19": 3,
+    "20": 3,
+    "96": 1,
+    "97": 1,
+    "102": 1,
+    "111": 2,
+    "112": 2,
+    "117": 1,
+    "120": 2,
+    "128": 2
+   },
+   "core": [
+    8,
+    75
+   ],
+   "kamae": {
+    "nodes": {
+     "aggression": [
+      0.27,
+      0.2
+     ],
+     "determination": [
+      0.73,
+      0.2
+     ],
+     "focus": [
+      0.27,
+      0.5
+     ],
+     "neutral": [
+      0.27,
+      0.8
+     ],
+     "balance": [
+      0.73,
+      0.8
+     ]
+    },
+    "edges": [
+     [
+      "aggression",
+      "focus",
+      2
+     ],
+     [
+      "determination",
+      "focus",
+      2
+     ],
+     [
+      "neutral",
+      "focus",
+      2
+     ],
+     [
+      "balance",
+      "focus",
+      2
      ]
     ]
    }

@@ -284,7 +284,9 @@ func _turno() -> void:
 		if id >= 0:
 			f.focus -= int(Carte.carta(id).focus)
 		_log("%s rivela [b]%s[/b]." % [f.name, Carte.nome(id)])
-		if f.ai and id < 0:
+		if f.ai and id == -2:
+			_log("%s è avvelenato: salta il turno." % f.name)
+		elif f.ai and id < 0:
 			f.stun_lato += 1
 			_log("%s è stordito: salta il turno (%d/%d stordimenti)." % [f.name, f.stun_lato, f.lim])
 			if f.stun_lato >= int(f.lim):
@@ -349,6 +351,13 @@ func _scegli(f: Dictionary) -> void:
 		return
 	var opts: Array = []
 	var visti := {}
+	if f.hand.has(-2):
+		# Veleno Debilitante: se è in mano va scelto per forza.
+		_log("%s deve giocare il Veleno Debilitante." % f.name)
+		f.hand.erase(-2)
+		f.play = {"id": -2}
+		_ev({"t": "chosen", "p": f.i})
+		return
 	for id in f.hand:
 		if visti.has(id) or not giocabile(f, id):
 			continue
@@ -1146,6 +1155,15 @@ func _blocco_riuscito(b: Dictionary, att: Dictionary) -> void:
 	b.done = true
 	var d: Dictionary = F[b.p]
 	var ctx: Dictionary = b.ctx
+	var cl: int = b.next
+	while not d.ai and cl < b.lines.size() and b.lines[cl].t == "counter":
+		var vl: Array = []
+		for v in b.lines[cl].v:
+			vl.append(int(v))
+		if _kamae_ok(d, b.lines[cl]) and vl.has(cur_init) and not d.dead and not att.dead:
+			await _contrattacco(d, cur_init)
+			break
+		cl += 1
 	if d.ai and b.next < b.lines.size() and b.lines[b.next].t == "counter":
 		# Contrattacco Solo: si scarta la prima carta del mazzo; se ha un attacco, 1 ferita.
 		var vv: Array = []
@@ -1165,7 +1183,7 @@ func _blocco_riuscito(b: Dictionary, att: Dictionary) -> void:
 				_danno(att, 1, 0)
 	# Contrattacco: se l'iniziativa dell'attacco parato coincide, si può giocare subito
 	# una carta Attacco non speciale di iniziativa uguale o inferiore.
-	if not d.ai and b.next < b.lines.size() and b.lines[b.next].t == "counter" and _kamae_ok(d, b.lines[b.next]):
+	if false:
 		var vel: Array = []
 		for v in b.lines[b.next].v:
 			vel.append(int(v))
@@ -1248,7 +1266,7 @@ func _istantanea(f: Dictionary, quando: String, ctx: Dictionary) -> void:
 		if h < 0 or visti.has(h):
 			continue
 		var c := Carte.carta(h)
-		if c.get("instant", "") != "add" or c.get("when", "") != quando or c.type == princ.type:
+		if c.get("instant", "") != "add" or not c.get("when", "").split("|").has(quando) or c.type == princ.type:
 			continue
 		if int(c.focus) > f.focus or (not _req_ok(f, c)):
 			continue
@@ -1351,6 +1369,31 @@ func _fx(f: Dictionary, e: Dictionary, ctx: Dictionary) -> void:
 				f.wounds += f.bleeds
 				f.bleeds = 0
 				_log("%s fascia le ferite: non sanguina più." % f.name)
+		"trade":
+			var giu: Array = []
+			var vv := {}
+			for h in f.hand:
+				if h >= 0 and not vv.has(h) and Carte.carta(h).rank == e.drop and not Carte.carta(h).get("core", false):
+					vv[h] = true
+					giu.append({"card": h, "label": Carte.nome(h)})
+			if giu.is_empty():
+				_log("%s non ha carte del rango richiesto da scartare." % f.name)
+			else:
+				var ig := await _ask(f.i, "card", "%s: scegli la carta da scartare" % f.name, giu, {"mostra": true, "scarto": true})
+				f.hand.erase(giu[ig].card)
+				await _cerca(f, e.rank, "", f.discard, false)
+				f.discard.append(giu[ig].card)
+		"all_draw":
+			for x in F:
+				if not x.ai and not x.dead:
+					_pesca(x, n)
+			_log("Tutti i giocatori pescano %d carte." % n)
+		"counter_now":
+			var cv: Array = []
+			for v in e.v2:
+				cv.append(int(v))
+			if cv.has(cur_init):
+				await _contrattacco(f, cur_init)
 		"nota":
 			_log("(%s: «%s» va applicato a mano.)" % [f.name, e.get("txt", "")])
 		"reshuffle":
@@ -1393,11 +1436,52 @@ func _fx(f: Dictionary, e: Dictionary, ctx: Dictionary) -> void:
 
 
 func _fx_bersaglio(f: Dictionary, o: Dictionary, e: Dictionary, n: int) -> void:
-	if o.ai and ["t_lose_focus", "t_switch", "t_discard_type", "t_discard"].has(e.v):
+	if o.ai and ["t_lose_focus", "t_switch", "t_discard_type", "t_discard", "t_shuffle_type", "t_draw", "t_give_top"].has(e.v):
 		return
 	match e.v:
 		"t_discard":
 			await _scarta(o, n)
+		"t_poison":
+			var pp: int = maxi(0, o.deck.size() - rng.randi_range(0, mini(4, o.deck.size())))
+			o.deck.insert(pp, -2)
+			_log("%s è [b]avvelenato[/b]: il Veleno Debilitante finisce fra le prime 5 carte del suo mazzo." % o.name)
+		"t_shuffle_type":
+			var so: Array = []
+			var sv := {}
+			for h in o.hand:
+				if h >= 0 and not sv.has(h) and Carte.carta(h).type == e.type and not Carte.carta(h).get("core", false):
+					sv[h] = true
+					so.append({"card": h, "label": Carte.nome(h)})
+			if not so.is_empty():
+				var si := await _ask(o.i, "card", "%s: scegli una carta %s da rimescolare nel mazzo" % [o.name, Carte.TIPI[e.type]], so, {"mostra": true, "scarto": true})
+				o.hand.erase(so[si].card)
+				o.deck.append(so[si].card)
+				_mischia(o.deck)
+				_log("%s rimescola una carta nel mazzo." % o.name)
+		"t_draw":
+			_pesca(o, n)
+			_log("%s pesca %d carte." % [o.name, n])
+		"t_give_top":
+			var tc: Array = []
+			for _k in mini(n, o.deck.size()):
+				var x: int = o.deck.pop_back()
+				if x >= 0:
+					tc.append(x)
+				else:
+					o.deck.push_front(x)
+			if not tc.is_empty():
+				var to: Array = []
+				for cid in tc:
+					to.append({"card": cid, "label": Carte.nome(cid)})
+				var ti := await _ask(f.i, "card", "%s: scegli la carta che %s deve prendere in mano" % [f.name, o.name], to, {"mostra": true, "dal_mazzo": true})
+				o.hand.append(to[ti].card)
+				tc.erase(to[ti].card)
+				o.deck.append_array(tc)
+				_mischia(o.deck)
+				_log("%s sceglie una carta dal mazzo di %s, che la prende in mano." % [f.name, o.name])
+		"pull_or_push":
+			var pi := await _ask(f.i, "choice", "%s: tiri o spingi %s?" % [f.name, o.name], [{"label": "Spingi"}, {"label": "Tira"}])
+			await _spingi(f, o, n, pi == 1)
 		"view_hand":
 			var viste: Array = o.hand.duplicate()
 			if o.ai:
@@ -1649,7 +1733,7 @@ func _cerca(f: Dictionary, rango, tipo: String, pila: Array, mischia: bool) -> v
 		_mischia(pila)
 
 
-func _spingi(f: Dictionary, o: Dictionary, n: int) -> void:
+func _spingi(f: Dictionary, o: Dictionary, n: int, tira: bool = false) -> void:
 	for _k in n:
 		if o.dead or over:
 			return
@@ -1657,8 +1741,11 @@ func _spingi(f: Dictionary, o: Dictionary, n: int) -> void:
 		var bd := -1.0
 		for d in 6:
 			var c: Vector2i = o.pos + Hex.DIRS[d]
-			var dd := Hex.euclid(f.pos, c)
-			if dd > bd + 0.01:
+			var dd := Hex.euclid(f.pos, c) * (-1.0 if tira else 1.0)
+			if bd == -1.0 and best.is_empty():
+				best = [c]
+				bd = dd
+			elif dd > bd + 0.01:
 				best = [c]
 				bd = dd
 			elif absf(dd - bd) <= 0.01:
@@ -1671,7 +1758,7 @@ func _spingi(f: Dictionary, o: Dictionary, n: int) -> void:
 			dest = opts[await _ask(f.i, "hex", "%s: dove spingi %s?" % [f.name, o.name], opts)].pos
 		if _libera(dest, o.i):
 			o.pos = dest
-			_log("%s viene spinto." % o.name)
+			_log("%s viene %s." % [o.name, "tirato" if tira else "spinto"])
 			_ev({"t": "move", "p": o.i})
 			await _pausa("move")
 		else:

@@ -18,8 +18,8 @@ func _initialize() -> void:
 			func(gg, r): kinds[r.kind] = kinds.get(r.kind, 0) + 1; return b1.decidi(gg, r)]
 		var stato := {"fine": false}
 		g.finished.connect(func(_w): stato.fine = true)
-		var tutti := ["warrior", "ronin", "student"]
-		var chars := [tutti[s % 3], tutti[(s + 1 + (s / 3) % 2) % 3]]
+		var tutti := ["warrior", "ronin", "student", "master"]
+		var chars := [tutti[s % 4], tutti[(s + 1 + (s / 4) % 3) % 4]]
 		if OS.get_cmdline_user_args().has("solo"):
 			chars[1] = "ronin" if chars[0] != "ronin" and s % 2 == 0 else ("warrior" if chars[0] != "warrior" else "ronin")
 		var solo := OS.get_cmdline_user_args().has("solo")

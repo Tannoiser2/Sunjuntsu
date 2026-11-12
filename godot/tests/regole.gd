@@ -287,6 +287,30 @@ func _initialize() -> void:
 	await turno(48, 53)    # Cascata Fendente: seconda griglia a iniziativa 4 pagando 1 focus
 	ok(g.F[1].wounds == 2 and g.F[0].focus == 0, "Cascata Fendente: secondo colpo a iniziativa 4 con 1 focus")
 
+	print("Maestro")
+	nuovo("master", "warrior")
+	g.F[0].kamae = "aggression"
+	g.F[0].face = 1        # la rotazione obbligatoria lo porta a guardare l'avversario
+	await turno(19, 53)    # Taglio Magistrale in Aggressione: 2 ferite sul fronte
+	ok(g.F[1].wounds == 2, "Taglio Magistrale in Aggressione: 2 ferite")
+	nuovo("master", "warrior")
+	metti(1, Vector2i(4, -2), 2)
+	metti(0, Vector2i(3, -2), 2)
+	g.F[0].focus = 1
+	piano[0]["yesno"] = 0
+	piano[0]["mossa"] = [[Vector2i(4, -3), 2]]   # passo in diagonale: il bersaglio resta a Fronte-Dx
+	await turno(10, 116)   # Zanna Celata della Vipera (8)
+	ok(g.F[1].wounds == 1 and (g.F[1].deck.has(-2) or g.F[1].hand.has(-2)), "Zanna Celata: 1 ferita e veleno nel mazzo del bersaglio")
+	g.F[1].deck.erase(-2)
+	g.F[1].hand.erase(-2)
+	g.F[1].hand.append(-2)
+	registro.clear()
+	await turno(8, 53)
+	ok(registro.any(func(t): return t.contains("Veleno Debilitante")) and not g.F[1].hand.has(-2), "Veleno in mano: va giocato per forza e poi sparisce")
+	res = {}
+	g._esiti_kamae(g.F[0], "neutral", "neutral", 1, 0, res)
+	ok(res.get("aggression", -1) == 1 and res.get("balance", -1) == 1 and res.get("determination", -1) == 1, "Maestro da Neutrale: Punto Focus e poi una qualsiasi delle tre Kamae")
+
 	print("Tutte le carte hanno un testo")
 	for c in Carte.db().cards.values():
 		if Carte.testo(c).contains("?"):

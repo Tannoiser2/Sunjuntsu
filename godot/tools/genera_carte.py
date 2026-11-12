@@ -269,6 +269,57 @@ card(124, "Fasciature da Campo", "defence", 1, seg(
     move(step(ANY, 1), rot(1)), OR(fx(e("discard_stun", n=2)), fx(e("bleed_to_wound"))),
     fx(e("draw", n=1), k=BA), fx(e("draw", n=2), k=DE)), prepared=True)
 
+# ───────────── MAESTRO ─────────────
+card(8, "Carta Speciale Maestro", "core", 0, seg(
+    fx(e("discard", n=1)), move(step(ANY, 1), rot(2)),
+    OR(fx(e("draw", n=2)), fx(e("trade", drop="Steel", rank="Wood")), fx(e("change", n=1)))), core=True)
+card(75, "Taglio di Tachi", "attack", 5, seg(
+    fx(e("discard", n=1)), OR(move(step(FANUP, 1)), move(rot(2), f=1)), atk({"1": "w1"})),
+    core=True, weapon="Tachi")
+card(10, "Zanna Celata della Vipera", "attack", 8, seg(
+    move(step([5, 1], 1, False), rot(1)), atk({"1": "w1"}),
+    IFS, fx(e("t_poison"), f=1), fx(e("switch", to="any"), k=BA)))
+card(12, "Intuizione Oscura", "meditation", 7, seg(
+    fx(e("view_hand")), fx(e("t_shuffle_type", type="attack")), fx(e("t_shuffle_type", type="defence")),
+    fx(e("t_shuffle_type", type="meditation")), fx(e("t_draw", n=3)), fx(e("switch", to="any"))), focus=1)
+card(13, "Occhio del Dragone", "meditation", "=", seg(
+    fx(e("t_lose_focus", n=2), f=1), fx(e("t_draw", n=2), f=1), move(step(ANY, 1), k=AG),
+    fx(e("draw", n=2), k=DE), fx(e("pull_or_push", n=1), k=BA)), focus=1, instant="add", when="after_card")
+card(14, "Patto Oscuro", "meditation", 1, seg(
+    move(step(ANY, 1), rot(1)), fx(e("search_top", n=3)), fx(e("t_give_top", n=3))), focus=1, range=3)
+card(15, "Coda del Dragone", "attack", 6, seg(
+    fx(e("switch", to="any")), move(step(FANDN, 1), k=AG), move(rot(1, False), k=[BA, DE]),
+    atk({"3": "w1"}), IFS, fx(e("t_stun"), e("t_hobble"), f=1)), instant="rep")
+card(16, "Sesto Senso", "defence", [9, 4], seg(
+    move(rot(3, False)), blk("5", "0", "1"), IFS, fx(e("t_lose_focus", n=1)), fx(e("view_hand"))), req=[BA, DE])
+card(17, "Saggezza Corrotta", "meditation", "=", seg(
+    fx(e("counter_now", v2=[9, 8]), k=DE), fx(e("counter_now", v2=[7, 6]), k=BA),
+    fx(e("counter_now", v2=[5, 4]), k=AG), fx(e("all_draw", n=2), f=1)), instant="add", when="block_ok")
+card(18, "Colpo Indolente", "attack", 3, seg(
+    atk({"5": "w1", "0": "w1", "1": "w1"}), move(step(FANDN, 1, False), f=1),
+    IFS, fx(e("t_wound_to_bleed"), k=AG), fx(e("t_discard", n=1), k=DE), fx(e("t_hobble"), k=BA)))
+card(19, "Taglio Magistrale", "attack", 6, seg(
+    move(step(ANY, 1, False), rot(1, False), k=[BA, DE]), move(rot(1, False), k=AG),
+    g(atk({"5": "b"}), k=DE), g(atk({"5": "w1", "0": "w1", "1": "w1"}), k=BA), g(atk({"0": "w2"}), k=AG)))
+card(20, "Riposizionamento", "meditation", 7, seg(
+    move(step([5, 1], 1, False)), move(step(F, 1), k=AG), move(rot(2)),
+    fx(e("draw", n=2), k=BA), fx(e("search", rank="Wood"), k=DE), fx(e("change", n=1))))
+card(96, "Colpo Squarciante", "attack", 6, seg(
+    move(rot(1), k=BA), move(step(F, 2, False)), move(rot(1), f=1), atk({"0": "w2"}), IFS, fx(e("t_stun"), k=AG)))
+card(97, "Provocazione", "meditation", "=", seg(
+    fx(e("t_switch", to="neutral")), fx(e("advantage"), k=DE), fx(e("t_discard", n=1), f=1)),
+    instant="add", when="atk_ok|block_ok", range=5)
+card(111, "Blocco di Fiume", "defence", [7, 4],
+    seg(move(rot(1)), blk("0", "1"), counter(6, 5, k=DE)),
+    seg(move(step(ANY, 1), rot(1), seq=True), fx(e("focus", n=1), k=BA), fx(e("switch", to=BA)), init=3))
+card(112, "Squarcio Rotante (Maestro)", "attack", 6, seg(
+    OR(move(step([5], 1, False), step([5], 1), seq=True), move(step([1], 1, False), step([1], 1), seq=True)),
+    move(rot(1), k=BA), atk({"0": "w1", "5": "w2"}), IFS, fx(e("focus", n=1), k=AG), fx(e("change", n=1), k=DE)))
+card(120, "Blocco di Vento", "defence", [8, 5], seg(
+    move(rot(1)), blk("0", "1"), counter(8, 7, k=BA), counter(6, 5, k=DE)))
+card(128, "Stoccata Rapida", "attack", 8, seg(
+    move(step(F, 1, False), k=AG), move(rot(1), k=BA), atk({"0": "w1"}), IFS, fx(e("focus", n=1), k=DE)), focus=1)
+
 # ───────────── CARTE SOLO (Solitario) ─────────────
 # Id: 1000+ Ronin, 2000+ Guerriero, 3000+ generiche (numero stampato + base).
 V = [5, 1]; A = [4, 2]; X = [1, 2, 4, 5]
@@ -409,7 +460,17 @@ out = {
      "kamae": {"nodes": {"aggression":[0.66,0.2],"balance":[0.27,0.47],"focus":[0.66,0.47],
                          "neutral":[0.27,0.78],"determination":[0.66,0.78]},
         "edges": [["aggression","focus",2],["balance","focus",2],["balance","neutral",1],
-                  ["neutral","determination",2],["determination","focus",1]]}}},
+                  ["neutral","determination",2],["determination","focus",1]]}},
+  "master": {"name": "Maestro", "title": "Il vecchio dragone", "advantage": 74,
+     "hand": 5, "wounds": 5, "char_img": imgs["6"], "kamae_img": imgs["7"],
+     "portrait": "master.webp", "model": "",
+     "deck": {"10":1,"12":1,"13":1,"14":2,"15":2,"16":1,"17":1,"18":3,"19":3,"20":3,"96":1,"97":1,
+              "102":1,"111":2,"112":2,"117":1,"120":2,"128":2},
+     "core": [8, 75],
+     "kamae": {"nodes": {"aggression":[0.27,0.2],"determination":[0.73,0.2],"focus":[0.27,0.5],
+                         "neutral":[0.27,0.8],"balance":[0.73,0.8]},
+        "edges": [["aggression","focus",2],["determination","focus",2],["neutral","focus",2],
+                  ["balance","focus",2]]}}},
  "solo": SOLO,
  # mappa "villaggio in fiamme": celle giocabili (colonna,riga) lette dal contorno arancione
  "maps": {"villaggio": {"img": "arena.webp", "img_size": 1594,

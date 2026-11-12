@@ -3,7 +3,7 @@ extends Control
 
 var scelte: Dictionary = {}
 var avversari: Dictionary = {}
-const ORDINE := ["warrior", "ronin", "student"]
+const ORDINE := ["warrior", "ronin", "student", "master"]
 
 
 func _ready() -> void:
@@ -44,7 +44,7 @@ func _ready() -> void:
 		var b := TextureButton.new()
 		b.ignore_texture_size = true
 		b.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-		b.custom_minimum_size = Vector2(172, 240)
+		b.custom_minimum_size = Vector2(158, 220)
 		b.texture_normal = load("res://assets/cards/" + cd.char_img)
 		b.pressed.connect(_scegli.bind(k))
 		var bordo := Panel.new()
@@ -61,7 +61,7 @@ func _ready() -> void:
 	la.custom_minimum_size = Vector2(100, 0)
 	ha.add_child(la)
 	for k in ORDINE:
-		var ba := Tema.bottone(db.characters[k].name, 130)
+		var ba := Tema.bottone(db.characters[k].name, 120)
 		ba.toggle_mode = true
 		ba.pressed.connect(_scegli_avv.bind(k))
 		avversari[k] = ba

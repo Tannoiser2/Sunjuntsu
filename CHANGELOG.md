@@ -1,5 +1,8 @@
 # Novità
 
+## 1.4.0 — Maestro
+- Quarto personaggio: il Maestro (20 carte trascritte), con il Veleno Debilitante.
+
 ## 1.3.0 — Allievo
 - Terzo personaggio: l'Allievo (24 carte trascritte), scelta dell'avversario nel menu.
 
