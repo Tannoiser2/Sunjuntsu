@@ -63,7 +63,7 @@ libero passo per passo; «verrebbe colpito» considera il tuo attacco dalla tua 
 - Gli altri personaggi (i loro dati sono ancora nel vecchio formato in `godot/data/cards/`).
 - Solo: avversari su pedina (Ashigaru, Boss), più avversari insieme, carte a distanza (Yumi,
   archibugio), campagna «Path of the Ronin».
-- **Online** (tavolo + telefoni, Firebase): da adattare al nuovo motore.
+- Online «tavolo + telefoni» (il duello online a due su Firebase c'è).
 - Terreno (rocce, bambù, carri, torii) e linea di vista; altre mappe; scelta dell'arma
   (ora Nodachi per il Guerriero e Naginata per il Ronin, come nei mazzi Signature).
 - Veleni, Occultamento, partite a 3+ giocatori.

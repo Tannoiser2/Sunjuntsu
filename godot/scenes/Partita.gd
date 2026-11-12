@@ -7,6 +7,7 @@ const CARTA_TAV := Vector2(128, 178)
 
 var g: Game
 var bot: Bot
+var sincro: Sincro = null
 var io := 0
 var req: Dictionary = {}
 
@@ -41,6 +42,7 @@ var ant_txt: RichTextLabel
 var ant_azione: Button
 var ant_idx := -1
 var fine_pan: PanelContainer
+var b_rivincita: Button
 var tex_cache: Dictionary = {}
 
 # input
@@ -67,7 +69,9 @@ func _nuova() -> void:
 	var suo: String = "ronin" if mio == "warrior" else "warrior"
 	io = 0
 	bot = Bot.new(1, randi())
-	g.ask.connect(_su_richiesta)
+	var online: bool = Sessione.setup.get("modo", "solo") == "online"
+	if not online:
+		g.ask.connect(_su_richiesta)
 	g.logged.connect(_su_log)
 	g.event.connect(_su_evento)
 	g.ritmo = _ritmo
@@ -77,8 +81,26 @@ func _nuova() -> void:
 		p.queue_free()
 	pedine = []
 	var solo: bool = Sessione.setup.get("modo", "solo") == "solo"
-	g.prepara({"seed": randi(), "players": [{"char": mio},
-		{"char": suo, "solo": solo, "incubo": Sessione.setup.get("incubo", false)}]})
+	if online:
+		var pt: Dictionary = Sessione.setup.partita
+		io = int(Sessione.setup.posto)
+		g.prepara({"seed": int(pt.seed), "players": [{"char": pt.pers[0]}, {"char": pt.pers[1]}]})
+		sincro = Sincro.new()
+		sincro.rete = Sessione.rete
+		sincro.codice = Sessione.setup.codice
+		sincro.posto = io
+		add_child(sincro)
+		lbl_richiesta.text = "Collegamento alla stanza %s…" % sincro.codice
+		await sincro.avvia(g)
+		sincro.tocca_a_me.connect(func(r):
+			req = r
+			_mostra_richiesta())
+		sincro.attesa.connect(func(t):
+			lbl_richiesta.text = t
+			_aggiorna())
+	else:
+		g.prepara({"seed": randi(), "players": [{"char": mio},
+			{"char": suo, "solo": solo, "incubo": Sessione.setup.get("incubo", false)}]})
 	for i in 2:
 		pedine.append(_crea_pedina(i))
 	_aggiorna()
@@ -96,6 +118,8 @@ func _partita() -> void:
 
 
 func _ritmo(tipo: String) -> void:
+	if sincro != null and sincro.recupero:
+		return
 	var t: float = {"reveal": 1.4, "init": 1.0, "resolve": 1.2, "move": 0.6, "attack": 0.9, "hit": 0.7, "end": 0.6}.get(tipo, 0.4)
 	await get_tree().create_timer(t).timeout
 
@@ -142,7 +166,11 @@ func _rispondi(idx: int) -> void:
 	_svuota(box_bottoni)
 	lbl_richiesta.text = ""
 	_ridisegna_celle()
-	g.answer(idx)
+	if sincro != null:
+		lbl_richiesta.text = "Invio…"
+		sincro.rispondi(idx)
+	else:
+		g.answer(idx)
 	_aggiorna()
 
 
@@ -248,6 +276,9 @@ func _mostra_fine() -> void:
 	if g.winner >= 0:
 		t = "Hai vinto!" if g.winner == io else "%s ti ha sconfitto" % g.F[g.winner].name
 	fine_pan.get_node("V/Titolo").text = t
+	if sincro != null:
+		b_rivincita.visible = false
+		Sessione.rete.remember_room("")
 	fine_pan.visible = true
 	lbl_richiesta.text = "Partita conclusa."
 
@@ -719,6 +750,7 @@ func _hud() -> void:
 	fh.add_theme_constant_override("separation", 12)
 	fv.add_child(fh)
 	var b1 := Tema.bottone("Rivincita", 170)
+	b_rivincita = b1
 	b1.pressed.connect(_nuova)
 	fh.add_child(b1)
 	var b2 := Tema.bottone("Menu", 130)

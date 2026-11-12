@@ -1,5 +1,8 @@
 # Novità
 
+## 1.2.0 — Duello online
+- Duello a due su Firebase: stanza con codice, mani nascoste, rientro in partita.
+
 ## 1.1.0 — Solitario
 - Modalità Solitario con le 45 carte Solo trascritte dalle scansioni (firma di Ronin e Guerriero,
   generiche 001-035, Incubo), Comportamenti e Atteggiamenti dell'avversario.
