@@ -187,6 +187,8 @@ static func effetto(e: Dictionary) -> String:
 		"advantage": return "ottieni il Vantaggio"
 		"add_wound": return "+%d ferita" % n
 		"armour": return "rimane in gioco: riduci di 1 le ferite di ogni attacco subito (minimo 1); a ogni riduzione [Determinazione] ottieni 1 focus, poi prendi 1 azzoppamento"
+		"sentiero": return "rimane in gioco: 1 segnalino a ogni attacco o blocco riuscito; con 3 +1 al limite di ferite, con 5 immune agli effetti di stato, con 7 tutti gli attacchi +1 ferita"
+		"ai_remove": return "rimuovi questa carta dal gioco dopo l'uso"
 		"ai_change": return "cambia Comportamento IA"
 		"ai_reset": return "ricomponi il mazzo (a fine turno)"
 		"ai_recycle": return "mischia nel mazzo la prima carta Attacco degli scarti"
@@ -281,6 +283,8 @@ static func testo(c: Dictionary) -> String:
 		testa += ", " + ("Sostituzione istantanea" if c.instant == "rep" else "Aggiunta istantanea")
 	if c.has("range"):
 		testa += ", Distanza %d" % int(c.range)
+	if c.get("req_sent", false):
+		testa += ", requisito: Sentiero Illuminato in gioco"
 	if c.get("req_o", false):
 		testa += ", richiede Occultamento"
 	if c.get("req_d", false):

@@ -972,6 +972,8 @@ func _aggiorna() -> void:
 			st.append("Vantaggio")
 		if g.conta_stun(f) > 0:
 			st.append("Stordimenti %d" % g.conta_stun(f))
+		if f.ai and int(f.sent) >= 0:
+			st.append("Sentiero %d" % int(f.sent))
 		if f.ai and f.stun_lato > 0:
 			st.append("Stordimenti %d/%d" % [f.stun_lato, f.lim])
 		if f.hobbles.size() > 0:

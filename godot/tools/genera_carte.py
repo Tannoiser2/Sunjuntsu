@@ -805,6 +805,87 @@ SOLO = {"selezione": {"1": [3001, 3003, 3008, 3009], "2": [3002, 3004, 3005, 300
         "ronin": {"firma": [1001, 1002, 1003, 1004], "incubo": 1991, "raggio": 2, "mazzi": ["1", "3", "4", "5"], "extra": ["2", "4", "5"]},
         "ferite": 7}
 
+# ───────────── CARTE SOLO DEGLI ALTRI PERSONAGGI (5000+) ─────────────
+solo(5001, "Obbedienza (Solo)", "defence", [7, 3], seg(blk("0", "1", "2"), IFS, fx(e("t_switch", to="neutral")), fx(e("t_lose_focus", n=1))),
+    seg(CHG, move(step(ANY, 1), rot(1)), RST, init=2))
+oppure(5002, "Colpo della Roccia (Solo)", 3, [CHG, move(step([5, 1], 1), rot(1)), atk({"0": "w1", "1": "w1"})], 3, [move(step(ANY, 2), rot(1))])
+oppure(5003, "Scambio della Montagna (Solo)", 7, [atk({"0": "a"}), ast(e("swap")), IFS, move(rot(3))], 5, [move(step(FANUP, 1), rot(1))])
+oppure(5004, "Colpo Astuto (Solo)", 7, [atk({"5": "w1", "0": "w1", "1": "w1"}), IFS, fx(e("t_discard", n=1))], 4, [move(step(ANY, 1), rot(1))])
+
+solo(5101, "Intuizione Oscura (Solo)", "meditation", 7, seg(fx(e("t_shuffle_type", type="attack")),
+    fx(e("t_shuffle_type", type="defence")), fx(e("t_shuffle_type", type="meditation")), fx(e("t_draw", n=3))))
+solo(5102, "Riposizionamento (Solo)", "meditation", 7, seg(CHG, move(step([5, 1], 1)), move(step(F, 1)), move(rot(1)), fx(e("t_discard", n=1))))
+oppure(5103, "Taglio Magistrale (Solo)", 6, [move(step(ANY, 1), rot(1)), atk({"5": "w1", "0": "w2", "1": "w1"})], 3, [move(step(ANY, 2), rot(1))])
+oppure(5104, "Colpo Indolente (Solo)", 3, [atk({"5": "w1", "0": "w1", "1": "w1"}), move(step(FANDN, 1)), IFS, fx(e("t_discard", n=1))], 3, [move(step(ANY, 1), rot(1))])
+oppure(5190, "Zanna Celata della Vipera (Solo, Incubo)", 7, [CHG, move(step([5, 1], 1), rot(1)), atk({"0": "w1", "1": "w1"}), IFS, fx(e("t_poison")), RST],
+    6, [move(step(ANY, 1), rot(1)), RST], nightmare=True)
+
+oppure(5201, "Colpo Doppio (Solo)", 4, [move(step(FANUP, 1)), atk({"5": "w1", "0": "w1", "1": "w1", "2": "w1"}), IFS, fx(e("push", n=1))], 1, [CHG, move(step(FANUP, 1), rot(1))])
+oppure(5202, "Morso del Leone (Solo)", 6, [move(step([5, 1], 1), rot(1)), move(step(F, 1)), atk({"5": "w1", "1": "w1"}), IFS, fx(e("t_lose_focus", n=1))], 2, [CHG, move(step(FANUP, 1), rot(1))])
+solo(5203, "Difesa a Due Lame (Solo)", "defence", [8, 7], seg(blk("5", "0", "1"), counter(7)), seg(blk("5", "0", "1"), counter(5), RST, init=[5, 4]))
+oppure(5204, "Carica del Branco (Solo)", 5, [CHG, move(rot(1)), move(step(F, 3)), atk({"0": "a"}), ast(e("t_stun"), e("t_stun"))], 3, [CHG, move(step([5, 1], 1)), move(step(F, 2))])
+oppure(5290, "Furia Giusta (Solo, Incubo)", 6, [atk({"0": "x", "5": "w2", "1": "w2", "45": "w1", "12": "w1"}), IFS, RST], 4, [CHG, move(step([5, 1], 1), rot(1)), RST], nightmare=True)
+
+oppure(5301, "Gigante Goffo (Solo)", 5, [move(step(YY, 2), rot(1)), atk({"0": "a"}), ast(e("t_stun"))], 1, [move(step(YY, 2), rot(1))])
+solo(5302, "Piedi da Marinaio (Solo)", "meditation", 9, seg(move(step([5, 1], 1), rot(1)), move(step([5, 1], 1), rot(1))))
+oppure(5303, "Testata (Solo)", 4, [move(step(FANDN, 1), rot(1)), atk({"0": "a"}), ast(e("t_stun"))], 2, [move(step(ANY, 1), rot(1))])
+oppure(5304, "Colpo Barcollante (Solo)", 7, [atk({"5": "a", "0": "a", "1": "a"}), ast(e("t_stun"))], 5, [move(step(ANY, 1), rot(1))])
+oppure(5390, "Schianto di Bordata (Solo, Incubo)", 6, [UNB, move(step([5, 4], 2), rot(1)), atk({"0": "a", "5": "a"}), ast(e("t_stun"), e("t_stun")), IFS, RST],
+    1, [move(step(ANY, 1)), RST], nightmare=True)
+
+oppure(5401, "Colpo della Vipera (Solo)", 5, [move(step(ANY, 1), rot(1)), atk({"0": "pa"}), occ(ast(e("add_bleed", n=1))), move(step(FANUP, 1))],
+    3, [move(step(ANY, 1), rot(1)), fx(e("conceal"))])
+oppure(5402, "Taglio Velenoso (Solo)", 6, [occ(alt(9)), atk({"0": "p"}), move(step(FANDN, 1))], 5, [CHG, move(step(FANDN, 1), rot(1)), fx(e("conceal"))])
+solo(5403, "Balzo nell'Ombra (Solo)", "defence", 8, seg(move(step(FANUP, 1)), atk({"0": "a"}), ast(e("swap")), IFS, fx(e("push", n=1)),
+    move(rot(2)), move(step(FANUP, 1)), fx(e("conceal"))))
+oppure(5404, "Arteria Recisa (Solo)", 5, [move(step([5, 1], 1)), occ(move(step([5, 1], 1))), atk({"5": "b", "0": "b", "1": "b"}), IFS, fx(e("t_discard", n=1))],
+    1, [CHG, move(step([5, 1], 2))])
+oppure(5490, "Bacio del Ragno (Solo, Incubo)", 1, [move(rot(1)), atk({"5": "w2", "0": "w2", "1": "w2"}), RST], 1, [CHG, move(step(ANY, 1), rot(2)), RST], nightmare=True)
+
+oppure(5501, "Fendente Falciante (Solo)", 4, [move(step([5, 1], 1)), atk({"05": "w1", "01": "w1", "0": "w1"})], 2, [move(step([5, 1], 1), rot(2))])
+oppure(5502, "Infilzata (Solo)", 6, [move(rot(1)), atk({"00": "w1", "0": "w1"})], 1, [CHG, move(step(ANY, 2), rot(1))])
+solo(5503, "Sole Calante (Solo)", "meditation", 5, seg(CHG, move(step(B, 1)), move(step(FANDN, 1)), fx(e("cancel_move"))))
+oppure(5504, "Stoccata in Affondo (Solo)", 5, [move(step([5, 1], 1)), atk({"00": "w1", "0": "w1"}), IFS, fx(e("t_lose_focus", n=1)), move(step(B, 1))], 2, [move(step(ANY, 1), rot(2))])
+solo(5590, "Castello del Cielo (Solo, Incubo)", "defence", [9, 2], seg(blk("5", "0", "1", "4", "2"), IFS, fx(e("t_rot", n=2))),
+    seg(move(step(ANY, 1), rot(1)), RST, init=1), nightmare=True)
+
+oppure(5601, "Colpo Imponente (Solo)", 7, [move(step([5, 1], 1)), move(rot(1)), atk({"0": "b"}), IFS, fx(e("t_discard", n=1))], 2, [move(step(FB, 1))])
+oppure(5602, "Spazzata di Granchio (Solo)", 5, [move(step(F, 2)), atk({"05": "w1", "5": "w1", "0": "w1"}), move(step(B, 1))], 3, [move(step(ANY, 2), rot(1))])
+solo(5603, "Guardia Alta (Solo)", "defence", [8, 4], seg(move(rot(2)), blk("0", "1")), seg(move(step(FB, 1)), RST, init=2))
+solo(5604, "Avanzata in Duello (Solo)", "meditation", 5, seg(CHG, move(rot(2)), move(step(FB, 2)), RST))
+oppure(5690, "La Temuta Polvere Nera (Solo, Incubo)", 7, [ranged("diff", 6), fx(e("ai_remove"))], 2, [CHG, move(step(ANY, 1), rot(1)), RST], nightmare=True, range=6)
+
+solo(5701, "Sentiero Illuminato", "meditation", 1, seg(fx(e("sentiero"))))
+oppure(5702, "Distruzione Satori (Solo)", 4, [move(step(F, 1)), move(rot(1)), atk({"1": "w1", "2": "w1"}), IFS, fx(e("t_discard", n=1))], 2, [move(step(ANY, 1), rot(1))])
+oppure(5703, "Colpo del Palmo (Solo)", 5, [move(rot(1)), atk({"0": "a"}), ast(e("t_stun"), e("t_hobble")), IFS, fx(e("t_lose_focus", n=1))], 3, [CHG, move(step(ANY, 2), rot(1))])
+solo(5704, "Blocco Risoluto (Solo)", "defence", [8, 4], seg(move(rot(1)), blk("5", "0", "1")), seg(CHG, move(step(FANDN, 1)), RST, init=3))
+oppure(5790, "Squarcio dell'Onda Zen (Solo, Incubo)", 8, [atk({"5": "x", "1": "x", "0": "w2"})], 8, [move(step(FANDN, 1)), RST], nightmare=True)
+C["5790"]["req_sent"] = True
+
+oppure(5801, "Puntura dello Scorpione (Solo)", 8, [move(step(F, 1), rot(1)), atk({"0": "w1"}), IFS, fx(e("t_poison")), fx(e("t_discard", n=1))], 2, [move(step(FANUP, 1), rot(1))])
+oppure(5802, "Spezzare le Gambe (Solo)", 7, [move(step(B, 1)), atk({"5": "w1", "4": "w1"}), IFS, fx(e("t_hobble"))], 2, [CHG, move(step(ANY, 1), rot(1))])
+solo(5803, "Guardia di Ferro (Solo)", "defence", [7, 5], seg(blk("5", "0", "1"), counter(6), IFS, fx(e("push", n=2)), fx(e("t_stun"))),
+    seg(move(step(ANY, 1)), RST, init=4))
+oppure(5804, "Lancio di Senbon (Solo)", 4, [ranged("b", 2)], 2, [move(step(ANY, 1), rot(1))], range=2)
+oppure(5890, "Zanmato (Solo, Incubo)", 6, [move(step([5], 2)), atk({"1": "w2", "2": "w2"}), IFS, RST], 1, [move(step(ANY, 2)), RST], nightmare=True)
+C["5890"]["zanmato"] = True
+
+oppure(5901, "Fiume in Piena (Solo)", 6, [move(rot(1)), atk({"5": "w1", "0": "w1", "1": "w1"}), IFS, dsp(fx(e("t_stun"), e("t_hobble"))), move(step(B, 1))], 2, [move(step(ANY, 1), rot(2))])
+solo(5902, "Mente Strepitante (Solo)", "meditation", 4, seg(CHG, move(step(ANY, 2), rot(2)), dsp(move(step(ANY, 1), rot(1)))))
+oppure(5903, "Colpo in Caduta (Solo)", 4, [atk({"05": "w1", "0": "w1", "1": "w1"}), IFS, fx(e("push", n=1)), move(step(FANDN, 1))], 4, [CHG, move(step(ANY, 1))])
+solo(5904, "Guardia Furente (Solo)", "defence", [7, 3], seg(blk("5", "0", "1"), dsp(counter(7, 6, 5))), seg(move(step(FANDN, 1)), RST, init=1))
+oppure(5990, "Abbraccio Silenzioso (Solo, Incubo)", 7, [move(rot(3)), atk({"00": "w3", "01": "w2", "11": "w1"}), IFS, RST], 4, [move(step(ANY, 1), rot(1)), RST], nightmare=True)
+C["5990"]["req_d"] = True
+
+def _s(base, incubo, raggio, mazzi):
+    return {"firma": [base + 1, base + 2, base + 3, base + 4], "incubo": incubo, "raggio": raggio, "mazzi": mazzi, "extra": ["2", "4", "5"]}
+SOLO.update({
+    "student": _s(5000, None, 1, ["1", "4", "4", "5"]), "master": _s(5100, 5190, 1, ["1", "4", "4", "5"]),
+    "yasuke": _s(5200, 5290, 1, ["1", "4", "4", "5"]), "wakou": _s(5300, 5390, 1, ["1", "3", "4", "5"]),
+    "assassin": _s(5400, 5490, 1, ["1", "4", "4", "5"]), "ashigaru": _s(5500, 5590, 2, ["1", "3", "3", "5"]),
+    "sailor": _s(5600, 5690, 1, ["1", "4", "4", "5"]), "monk": _s(5700, 5790, 2, ["1", "3", "3", "5"]),
+    "yojimbo": _s(5800, 5890, 1, ["1", "4", "4", "5"]), "onna": _s(5900, 5990, 2, ["1", "3", "3", "5"])})
+
 here = os.path.dirname(os.path.abspath(__file__))
 pool = {c["id"]: c for c in json.load(open(os.path.join(here, "../data/cards/card_pool.json")))["cards"]}
 imgs = json.load(open(os.path.join(here, "../data/cards/card_images.json")))["by_id"]

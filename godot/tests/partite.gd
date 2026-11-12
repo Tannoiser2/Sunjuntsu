@@ -22,7 +22,10 @@ func _initialize() -> void:
 		var nt: int = tutti.size()
 		var chars := [tutti[s % nt], tutti[(s + 1 + (s / nt) % (nt - 1)) % nt]]
 		if OS.get_cmdline_user_args().has("solo"):
-			chars[1] = "ronin" if chars[0] != "ronin" and s % 2 == 0 else ("warrior" if chars[0] != "warrior" else "ronin")
+			var avv: Array = Carte.db().solo.keys().filter(func(k): return Carte.db().characters.has(k))
+			chars[1] = avv[(s / 2) % avv.size()]
+			if chars[1] == chars[0]:
+				chars[1] = "ronin" if chars[0] != "ronin" else "warrior"
 		var solo := OS.get_cmdline_user_args().has("solo")
 		g.start({"seed": s + 1, "players": [{"char": chars[0]}, {"char": chars[1], "solo": solo, "incubo": solo and s % 5 == 0}]})
 		if not stato.fine:

@@ -68,9 +68,9 @@ func _ready() -> void:
 		scelta_avv.add_item(db.characters[k].name)
 	scelta_avv.item_selected.connect(func(i): _scegli_avv(ORDINE[i]))
 	ha.add_child(scelta_avv)
-	var nota := Tema.etichetta("In Solitario l'avversario può essere Guerriero o Ronin.", 16)
+	var nota := Tema.etichetta("In Solitario non sono disponibili come avversari Ninja e Hachiko (l'Ashigaru combatte da solo).", 16)
 	nota.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	nota.custom_minimum_size = Vector2(420, 0)
+	nota.custom_minimum_size = Vector2(620, 0)
 	v.add_child(nota)
 	var hb := HBoxContainer.new()
 	hb.alignment = BoxContainer.ALIGNMENT_CENTER

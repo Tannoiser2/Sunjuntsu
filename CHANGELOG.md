@@ -1,5 +1,10 @@
 # Novità
 
+## 1.12.0 — Solitario contro tutti
+- Carte Solo di Allievo, Maestro, Yasuke, Wakou, Assassino, Ashigaru, Navigatore, Monaco, Yojimbo e
+  Onna-Bugeisha: ora si possono affrontare in Solitario (anche Incubo, tranne l'Allievo).
+- Corretto: nella versione web mancavano le immagini delle carte dei personaggi aggiunti dalla 1.3.
+
 ## 1.11.0 — Ninja
 - Tredicesimo combattente: il Ninja, con Occultamento, attacchi a distanza, Piedi di Corvo e Trappole.
 

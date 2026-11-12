@@ -80,7 +80,13 @@ func prepara(setup: Dictionary) -> void:
 			"ai": ia, "lim": int(pl.get("ferite", db.solo.ferite)) if ia else int(cd.wounds),
 			"mano": 99 if ia else int(cd.hand),
 			"comp": rng.randi_range(0, 2), "post": "off" if rng.randi_range(0, 1) == 0 else "def",
-			"raggio": int(db.solo[pl.char].raggio) if ia else 1, "stun_lato": 0, "reset": false})
+			"raggio": int(db.solo[pl.char].raggio) if ia else 1, "stun_lato": 0, "reset": false, "sent": -1, "goal": 5})
+		if ia and cd.get("occulta", false):
+			F[-1].occ = true
+		if ia and cd.get("contratti", false):
+			F[-1].goal = 3
+			for kc in ["sangue", "reazione", "attrezzi"]:
+				F[-1].contr[kc] = {"done": false, "rot": 0, "mai": false, "visti": [], "via": false}
 		i += 1
 	adv = [0, 1]
 	if int(F[1].cd.advantage) > int(F[0].cd.advantage) and not F[1].ai:
@@ -126,9 +132,12 @@ func _mazzo_solo(pers: String, incubo: bool) -> Array:
 	for x in d.firma:
 		out.append(int(x))
 	var mazzi: Array = d.mazzi.duplicate()
-	if incubo:
+	if incubo and d.get("incubo") != null:
 		out.append(int(d.incubo))
-		mazzi.erase("3")
+		if mazzi.has("3"):
+			mazzi.erase("3")
+		else:
+			mazzi.erase("4")
 	for k in mazzi:
 		out.append(sel[k].pop_back())
 	var extra: Array = d.extra.duplicate()
@@ -578,6 +587,12 @@ func _iniziativa(f: Dictionary) -> void:
 				vv = clampi(int(pl.play.init) + hobble_attivi(f), int(c.init[1]), int(c.init[0]))
 		else:
 			vv = int(c.init)
+		for ln in c.segs[0].lines:
+			if ln.t == "alt" and ln.get("o", false) and f.occ:
+				vv = int(ln.v)
+		if c.get("zanmato", false):
+			vv += contratti_fatti(f)
+			f.play["bonus_w"] = contratti_fatti(f)
 		f.play.init = _con_hobble(f, vv)
 		_log("%s: iniziativa [b]%d[/b]." % [f.name, f.play.init])
 		return
@@ -742,6 +757,8 @@ func _esegui_segmento(en: Dictionary) -> void:
 	await _pausa("resolve")
 	if f.ai and c.get("or", false) and en.s == 0:
 		var dec := _decidi_or(f, c.segs[0].lines)
+		if (c.get("req_sent", false) and int(f.sent) < 0) or (c.get("req_d", false) and not disperata(f)):
+			dec = {"attacca": false, "piano": []}
 		if not dec.attacca:
 			_log("%s non può attaccare: userà la seconda parte della carta." % f.name)
 			queue.append({"p": f.i, "s": 1, "init": _con_hobble(f, int(c.segs[1].init)), "rank": en.rank})
@@ -1195,6 +1212,8 @@ func _attacco(f: Dictionary, ln: Dictionary, lines: Array, i: int, ctx: Dictiona
 	for b in colpiti:
 		await _reazione_colpito(b.o)
 		_verifica_morte(b.o)
+	if ctx.success and f.ai and int(f.sent) >= 0:
+		_sentiero(f)
 	if ctx.success:
 		_svela(f)
 		if ctx.card.rank == "Gold" and ctx.card.type == "attack":
@@ -1234,6 +1253,8 @@ func _colpisci(f: Dictionary, b: Dictionary, ast: Array, sangue: bool, ctx: Dict
 				bl += int(e.get("n", 1))
 	if w > 0 and ctx.main:
 		w += int(f.play.get("bonus_w", 0))
+	if w > 0 and f.ai and int(f.sent) >= 7:
+		w += 1
 	if sangue:
 		bl += w
 		w = 0
@@ -1244,6 +1265,14 @@ func _colpisci(f: Dictionary, b: Dictionary, ast: Array, sangue: bool, ctx: Dict
 		for e in ast:
 			if e.v != "add_wound" and e.v != "add_bleed":
 				await _fx(f, e, sub)
+
+
+## Sentiero Illuminato (Monaco in Solitario): un segnalino a ogni attacco o blocco riuscito.
+func _sentiero(f: Dictionary) -> void:
+	f.sent = int(f.sent) + 1
+	if int(f.sent) == 3:
+		f.lim = int(f.lim) + 1
+	_log("Sentiero Illuminato: %d segnalini." % int(f.sent))
 
 
 func _salvezza(o: Dictionary) -> bool:
@@ -1419,6 +1448,11 @@ func _pianifica(f: Dictionary, lines: Array, i: int, cerca_attacco: bool) -> Arr
 
 ## Carta Solo con "OPPURE": la parte alta si usa solo se permette di attaccare.
 func _decidi_or(f: Dictionary, lines: Array) -> Dictionary:
+	for l in lines:
+		if l.t == "ranged":
+			var pl := _umano(f)
+			var ok: bool = not pl.is_empty() and Hex.dist(f.pos, pl.pos) <= int(l.get("r", 1)) and _iniz_bassa(pl) < cur_init
+			return {"attacca": ok, "piano": []}
 	var m := 0
 	while m < lines.size() and lines[m].t != "move" and lines[m].t != "grid":
 		m += 1
@@ -1485,6 +1519,8 @@ func _blocco_riuscito(b: Dictionary, att: Dictionary) -> void:
 	var d: Dictionary = F[b.p]
 	var ctx: Dictionary = b.ctx
 	_svela(d)
+	if d.ai and int(d.sent) >= 0:
+		_sentiero(d)
 	if ctx.card.rank == "Gold":
 		_contratto(d, "vedere")
 	var cl: int = b.next
@@ -1511,7 +1547,9 @@ func _blocco_riuscito(b: Dictionary, att: Dictionary) -> void:
 						if l.t == "grid" and l.mode == "atk":
 							attacca = true
 			_log("Contrattacco di %s: scarta «%s» dal mazzo." % [d.name, Carte.nome(top)])
+			d.reaz = true
 			if attacca:
+				autore = d.i
 				_danno(att, 1, 0)
 	# Contrattacco: se l'iniziativa dell'attacco parato coincide, si può giocare subito
 	# una carta Attacco non speciale di iniziativa uguale o inferiore.
@@ -1953,6 +1991,14 @@ func _fx(f: Dictionary, e: Dictionary, ctx: Dictionary) -> void:
 		"armour":
 			f.armour = true
 			_log("L'Armatura Pesante di %s rimane in gioco." % f.name)
+		"sentiero":
+			if int(f.sent) < 0:
+				f.sent = 0
+				f.illum.append(int(ctx.card.id))
+				_log("Sentiero Illuminato rimane in gioco.")
+		"ai_remove":
+			f.illum.append(int(ctx.card.id))
+			_log("«%s» è rimossa dal gioco." % ctx.card.name)
 		"ai_change":
 			f.comp = (int(f.comp) + 1) % 3
 			_log("%s cambia Comportamento: [b]%s[/b]." % [f.name, Carte.COMPORTAMENTI[f.comp]])
@@ -1975,6 +2021,8 @@ func _fx(f: Dictionary, e: Dictionary, ctx: Dictionary) -> void:
 
 func _fx_bersaglio(f: Dictionary, o: Dictionary, e: Dictionary, n: int) -> void:
 	if o.cane and ["view_hand", "steal_focus", "t_poison"].has(e.v):
+		return
+	if int(o.get("sent", -1)) >= 5 and ["t_hobble", "t_poison", "t_stun", "each_stun"].has(e.v):
 		return
 	if (o.ai or o.cane) and ["t_lose_focus", "t_switch", "t_discard_type", "t_discard", "t_discard_rand", "t_shuffle_type", "t_draw", "t_give_top"].has(e.v):
 		return
@@ -2183,8 +2231,8 @@ func _contratto(f: Dictionary, k: String) -> void:
 	for x in f.contr:
 		if f.contr[x].mai:
 			tot += 1
-	if tot >= 5 and not over:
-		_log("[b]%s ha completato cinque contratti e vince la partita![/b]" % f.name)
+	if tot >= int(f.goal) and not over:
+		_log("[b]%s ha completato tutti i suoi contratti e vince la partita![/b]" % f.name)
 		over = true
 		winner = f.i
 		queue.clear()
@@ -2209,7 +2257,7 @@ func _focus(f: Dictionary, n: int) -> void:
 
 
 func _stordisci(o: Dictionary) -> void:
-	if o.dead:
+	if o.dead or int(o.get("sent", -1)) >= 5:
 		return
 	_svela(o)
 	_attrezzo(o, "stordimento")

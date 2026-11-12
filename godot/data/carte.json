@@ -18610,6 +18610,3876 @@
    "img": "solo/3035.webp",
    "en": "",
    "rank": "-"
+  },
+  "5001": {
+   "id": 5001,
+   "name": "Obbedienza (Solo)",
+   "type": "defence",
+   "init": [
+    7,
+    3
+   ],
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "0": "s",
+        "1": "s",
+        "2": "s"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_switch",
+         "to": "neutral"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_lose_focus",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ],
+     "init": 2
+    }
+   ],
+   "img": "solo/5001.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "5002": {
+   "id": 5002,
+   "name": "Colpo della Roccia (Solo)",
+   "type": "attack",
+   "init": 3,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1",
+        "1": "w1"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 2,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 3
+    }
+   ],
+   "img": "solo/5002.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "5003": {
+   "id": 5003,
+   "name": "Scambio della Montagna (Solo)",
+   "type": "attack",
+   "init": 7,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "a"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "swap"
+        }
+       ]
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 3,
+         "opt": true
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 5
+    }
+   ],
+   "img": "solo/5003.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "5004": {
+   "id": 5004,
+   "name": "Colpo Astuto (Solo)",
+   "type": "attack",
+   "init": 7,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "w1",
+        "0": "w1",
+        "1": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_discard",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 4
+    }
+   ],
+   "img": "solo/5004.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "5101": {
+   "id": 5101,
+   "name": "Intuizione Oscura (Solo)",
+   "type": "meditation",
+   "init": 7,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_shuffle_type",
+         "type": "attack"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_shuffle_type",
+         "type": "defence"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_shuffle_type",
+         "type": "meditation"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_draw",
+         "n": 3
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "img": "solo/5101.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "5102": {
+   "id": 5102,
+   "name": "Riposizionamento (Solo)",
+   "type": "meditation",
+   "init": 7,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_discard",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "img": "solo/5102.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "5103": {
+   "id": 5103,
+   "name": "Taglio Magistrale (Solo)",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "w1",
+        "0": "w2",
+        "1": "w1"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 2,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 3
+    }
+   ],
+   "img": "solo/5103.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "5104": {
+   "id": 5104,
+   "name": "Colpo Indolente (Solo)",
+   "type": "attack",
+   "init": 3,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "w1",
+        "0": "w1",
+        "1": "w1"
+       }
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_discard",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 3
+    }
+   ],
+   "img": "solo/5104.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "5190": {
+   "id": 5190,
+   "name": "Zanna Celata della Vipera (Solo, Incubo)",
+   "type": "attack",
+   "init": 7,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1",
+        "1": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_poison"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ],
+     "init": 6
+    }
+   ],
+   "img": "solo/5190.webp",
+   "en": "",
+   "rank": "-",
+   "or": true,
+   "nightmare": true
+  },
+  "5201": {
+   "id": 5201,
+   "name": "Colpo Doppio (Solo)",
+   "type": "attack",
+   "init": 4,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "w1",
+        "0": "w1",
+        "1": "w1",
+        "2": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "push",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 1
+    }
+   ],
+   "img": "solo/5201.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "5202": {
+   "id": 5202,
+   "name": "Morso del Leone (Solo)",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "w1",
+        "1": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_lose_focus",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 2
+    }
+   ],
+   "img": "solo/5202.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "5203": {
+   "id": 5203,
+   "name": "Difesa a Due Lame (Solo)",
+   "type": "defence",
+   "init": [
+    8,
+    7
+   ],
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "5": "s",
+        "0": "s",
+        "1": "s"
+       }
+      },
+      {
+       "t": "counter",
+       "v": [
+        7
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "5": "s",
+        "0": "s",
+        "1": "s"
+       }
+      },
+      {
+       "t": "counter",
+       "v": [
+        5
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ],
+     "init": [
+      5,
+      4
+     ]
+    }
+   ],
+   "img": "solo/5203.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "5204": {
+   "id": 5204,
+   "name": "Carica del Branco (Solo)",
+   "type": "attack",
+   "init": 5,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 3,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "a"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "t_stun"
+        },
+        {
+         "v": "t_stun"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 2,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 3
+    }
+   ],
+   "img": "solo/5204.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "5290": {
+   "id": 5290,
+   "name": "Furia Giusta (Solo, Incubo)",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "x",
+        "5": "w2",
+        "1": "w2",
+        "45": "w1",
+        "12": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ],
+     "init": 4
+    }
+   ],
+   "img": "solo/5290.webp",
+   "en": "",
+   "rank": "-",
+   "or": true,
+   "nightmare": true
+  },
+  "5301": {
+   "id": 5301,
+   "name": "Gigante Goffo (Solo)",
+   "type": "attack",
+   "init": 5,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1,
+          3
+         ],
+         "n": 2,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "a"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "t_stun"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1,
+          3
+         ],
+         "n": 2,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 1
+    }
+   ],
+   "img": "solo/5301.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "5302": {
+   "id": 5302,
+   "name": "Piedi da Marinaio (Solo)",
+   "type": "meditation",
+   "init": 9,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "img": "solo/5302.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "5303": {
+   "id": 5303,
+   "name": "Testata (Solo)",
+   "type": "attack",
+   "init": 4,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "a"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "t_stun"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 2
+    }
+   ],
+   "img": "solo/5303.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "5304": {
+   "id": 5304,
+   "name": "Colpo Barcollante (Solo)",
+   "type": "attack",
+   "init": 7,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "a",
+        "0": "a",
+        "1": "a"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "t_stun"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 5
+    }
+   ],
+   "img": "solo/5304.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "5390": {
+   "id": 5390,
+   "name": "Schianto di Bordata (Solo, Incubo)",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "unblockable"
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          4
+         ],
+         "n": 2,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "a",
+        "5": "a"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "t_stun"
+        },
+        {
+         "v": "t_stun"
+        }
+       ]
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ],
+     "init": 1
+    }
+   ],
+   "img": "solo/5390.webp",
+   "en": "",
+   "rank": "-",
+   "or": true,
+   "nightmare": true
+  },
+  "5401": {
+   "id": 5401,
+   "name": "Colpo della Vipera (Solo)",
+   "type": "attack",
+   "init": 5,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "pa"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "add_bleed",
+         "n": 1
+        }
+       ],
+       "o": true
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "conceal"
+        }
+       ]
+      }
+     ],
+     "init": 3
+    }
+   ],
+   "img": "solo/5401.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "5402": {
+   "id": 5402,
+   "name": "Taglio Velenoso (Solo)",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "alt",
+       "v": 9,
+       "o": true
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "p"
+       }
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "conceal"
+        }
+       ]
+      }
+     ],
+     "init": 5
+    }
+   ],
+   "img": "solo/5402.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "5403": {
+   "id": 5403,
+   "name": "Balzo nell'Ombra (Solo)",
+   "type": "defence",
+   "init": 8,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "a"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "swap"
+        }
+       ]
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "push",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "conceal"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "img": "solo/5403.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "5404": {
+   "id": 5404,
+   "name": "Arteria Recisa (Solo)",
+   "type": "attack",
+   "init": 5,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "o": true
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "b",
+        "0": "b",
+        "1": "b"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_discard",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 2,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 1
+    }
+   ],
+   "img": "solo/5404.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "5490": {
+   "id": 5490,
+   "name": "Bacio del Ragno (Solo, Incubo)",
+   "type": "attack",
+   "init": 1,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "w2",
+        "0": "w2",
+        "1": "w2"
+       }
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ],
+     "init": 1
+    }
+   ],
+   "img": "solo/5490.webp",
+   "en": "",
+   "rank": "-",
+   "or": true,
+   "nightmare": true
+  },
+  "5501": {
+   "id": 5501,
+   "name": "Fendente Falciante (Solo)",
+   "type": "attack",
+   "init": 4,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "05": "w1",
+        "01": "w1",
+        "0": "w1"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 2
+    }
+   ],
+   "img": "solo/5501.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "5502": {
+   "id": 5502,
+   "name": "Infilzata (Solo)",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "00": "w1",
+        "0": "w1"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 2,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 1
+    }
+   ],
+   "img": "solo/5502.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "5503": {
+   "id": 5503,
+   "name": "Sole Calante (Solo)",
+   "type": "meditation",
+   "init": 5,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          3
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "cancel_move"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "img": "solo/5503.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "5504": {
+   "id": 5504,
+   "name": "Stoccata in Affondo (Solo)",
+   "type": "attack",
+   "init": 5,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "00": "w1",
+        "0": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_lose_focus",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          3
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 2
+    }
+   ],
+   "img": "solo/5504.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "5590": {
+   "id": 5590,
+   "name": "Castello del Cielo (Solo, Incubo)",
+   "type": "defence",
+   "init": [
+    9,
+    2
+   ],
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "5": "s",
+        "0": "s",
+        "1": "s",
+        "4": "s",
+        "2": "s"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_rot",
+         "n": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ],
+     "init": 1
+    }
+   ],
+   "img": "solo/5590.webp",
+   "en": "",
+   "rank": "-",
+   "nightmare": true
+  },
+  "5601": {
+   "id": 5601,
+   "name": "Colpo Imponente (Solo)",
+   "type": "attack",
+   "init": 7,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "b"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_discard",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          3
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 2
+    }
+   ],
+   "img": "solo/5601.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "5602": {
+   "id": 5602,
+   "name": "Spazzata di Granchio (Solo)",
+   "type": "attack",
+   "init": 5,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "05": "w1",
+        "5": "w1",
+        "0": "w1"
+       }
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          3
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 2,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 3
+    }
+   ],
+   "img": "solo/5602.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "5603": {
+   "id": 5603,
+   "name": "Guardia Alta (Solo)",
+   "type": "defence",
+   "init": [
+    8,
+    4
+   ],
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "0": "s",
+        "1": "s"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          3
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ],
+     "init": 2
+    }
+   ],
+   "img": "solo/5603.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "5604": {
+   "id": 5604,
+   "name": "Avanzata in Duello (Solo)",
+   "type": "meditation",
+   "init": 5,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          3
+         ],
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "img": "solo/5604.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "5690": {
+   "id": 5690,
+   "name": "La Temuta Polvere Nera (Solo, Incubo)",
+   "type": "attack",
+   "init": 7,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "ranged",
+       "eff": "diff",
+       "r": 6
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_remove"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ],
+     "init": 2
+    }
+   ],
+   "img": "solo/5690.webp",
+   "en": "",
+   "rank": "-",
+   "or": true,
+   "range": 6,
+   "nightmare": true
+  },
+  "5701": {
+   "id": 5701,
+   "name": "Sentiero Illuminato",
+   "type": "meditation",
+   "init": 1,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "sentiero"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "img": "solo/5701.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "5702": {
+   "id": 5702,
+   "name": "Distruzione Satori (Solo)",
+   "type": "attack",
+   "init": 4,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "1": "w1",
+        "2": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_discard",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 2
+    }
+   ],
+   "img": "solo/5702.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "5703": {
+   "id": 5703,
+   "name": "Colpo del Palmo (Solo)",
+   "type": "attack",
+   "init": 5,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "a"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "t_stun"
+        },
+        {
+         "v": "t_hobble"
+        }
+       ]
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_lose_focus",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 2,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 3
+    }
+   ],
+   "img": "solo/5703.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "5704": {
+   "id": 5704,
+   "name": "Blocco Risoluto (Solo)",
+   "type": "defence",
+   "init": [
+    8,
+    4
+   ],
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "5": "s",
+        "0": "s",
+        "1": "s"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ],
+     "init": 3
+    }
+   ],
+   "img": "solo/5704.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "5790": {
+   "id": 5790,
+   "name": "Squarcio dell'Onda Zen (Solo, Incubo)",
+   "type": "attack",
+   "init": 8,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "x",
+        "1": "x",
+        "0": "w2"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ],
+     "init": 8
+    }
+   ],
+   "img": "solo/5790.webp",
+   "en": "",
+   "rank": "-",
+   "or": true,
+   "nightmare": true,
+   "req_sent": true
+  },
+  "5801": {
+   "id": 5801,
+   "name": "Puntura dello Scorpione (Solo)",
+   "type": "attack",
+   "init": 8,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_poison"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_discard",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 2
+    }
+   ],
+   "img": "solo/5801.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "5802": {
+   "id": 5802,
+   "name": "Spezzare le Gambe (Solo)",
+   "type": "attack",
+   "init": 7,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          3
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "w1",
+        "4": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_hobble"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 2
+    }
+   ],
+   "img": "solo/5802.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "5803": {
+   "id": 5803,
+   "name": "Guardia di Ferro (Solo)",
+   "type": "defence",
+   "init": [
+    7,
+    5
+   ],
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "5": "s",
+        "0": "s",
+        "1": "s"
+       }
+      },
+      {
+       "t": "counter",
+       "v": [
+        6
+       ]
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "push",
+         "n": 2
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_stun"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ],
+     "init": 4
+    }
+   ],
+   "img": "solo/5803.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "5804": {
+   "id": 5804,
+   "name": "Lancio di Senbon (Solo)",
+   "type": "attack",
+   "init": 4,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "ranged",
+       "eff": "b",
+       "r": 2
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 2
+    }
+   ],
+   "img": "solo/5804.webp",
+   "en": "",
+   "rank": "-",
+   "or": true,
+   "range": 2
+  },
+  "5890": {
+   "id": 5890,
+   "name": "Zanmato (Solo, Incubo)",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5
+         ],
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "1": "w2",
+        "2": "w2"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ],
+     "init": 1
+    }
+   ],
+   "img": "solo/5890.webp",
+   "en": "",
+   "rank": "-",
+   "or": true,
+   "nightmare": true,
+   "zanmato": true
+  },
+  "5901": {
+   "id": 5901,
+   "name": "Fiume in Piena (Solo)",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "w1",
+        "0": "w1",
+        "1": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_stun"
+        },
+        {
+         "v": "t_hobble"
+        }
+       ],
+       "d": true
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          3
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 2
+    }
+   ],
+   "img": "solo/5901.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "5902": {
+   "id": 5902,
+   "name": "Mente Strepitante (Solo)",
+   "type": "meditation",
+   "init": 4,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 2,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "d": true
+      }
+     ]
+    }
+   ],
+   "img": "solo/5902.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "5903": {
+   "id": 5903,
+   "name": "Colpo in Caduta (Solo)",
+   "type": "attack",
+   "init": 4,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "05": "w1",
+        "0": "w1",
+        "1": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "push",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 4
+    }
+   ],
+   "img": "solo/5903.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "5904": {
+   "id": 5904,
+   "name": "Guardia Furente (Solo)",
+   "type": "defence",
+   "init": [
+    7,
+    3
+   ],
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "5": "s",
+        "0": "s",
+        "1": "s"
+       }
+      },
+      {
+       "t": "counter",
+       "v": [
+        7,
+        6,
+        5
+       ],
+       "d": true
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ],
+     "init": 1
+    }
+   ],
+   "img": "solo/5904.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "5990": {
+   "id": 5990,
+   "name": "Abbraccio Silenzioso (Solo, Incubo)",
+   "type": "attack",
+   "init": 7,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 3,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "00": "w3",
+        "01": "w2",
+        "11": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ],
+     "init": 4
+    }
+   ],
+   "img": "solo/5990.webp",
+   "en": "",
+   "rank": "-",
+   "or": true,
+   "nightmare": true,
+   "req_d": true
   }
  },
  "characters": {
@@ -19846,7 +23716,217 @@
     "5"
    ]
   },
-  "ferite": 7
+  "ferite": 7,
+  "student": {
+   "firma": [
+    5001,
+    5002,
+    5003,
+    5004
+   ],
+   "incubo": null,
+   "raggio": 1,
+   "mazzi": [
+    "1",
+    "4",
+    "4",
+    "5"
+   ],
+   "extra": [
+    "2",
+    "4",
+    "5"
+   ]
+  },
+  "master": {
+   "firma": [
+    5101,
+    5102,
+    5103,
+    5104
+   ],
+   "incubo": 5190,
+   "raggio": 1,
+   "mazzi": [
+    "1",
+    "4",
+    "4",
+    "5"
+   ],
+   "extra": [
+    "2",
+    "4",
+    "5"
+   ]
+  },
+  "yasuke": {
+   "firma": [
+    5201,
+    5202,
+    5203,
+    5204
+   ],
+   "incubo": 5290,
+   "raggio": 1,
+   "mazzi": [
+    "1",
+    "4",
+    "4",
+    "5"
+   ],
+   "extra": [
+    "2",
+    "4",
+    "5"
+   ]
+  },
+  "wakou": {
+   "firma": [
+    5301,
+    5302,
+    5303,
+    5304
+   ],
+   "incubo": 5390,
+   "raggio": 1,
+   "mazzi": [
+    "1",
+    "3",
+    "4",
+    "5"
+   ],
+   "extra": [
+    "2",
+    "4",
+    "5"
+   ]
+  },
+  "assassin": {
+   "firma": [
+    5401,
+    5402,
+    5403,
+    5404
+   ],
+   "incubo": 5490,
+   "raggio": 1,
+   "mazzi": [
+    "1",
+    "4",
+    "4",
+    "5"
+   ],
+   "extra": [
+    "2",
+    "4",
+    "5"
+   ]
+  },
+  "ashigaru": {
+   "firma": [
+    5501,
+    5502,
+    5503,
+    5504
+   ],
+   "incubo": 5590,
+   "raggio": 2,
+   "mazzi": [
+    "1",
+    "3",
+    "3",
+    "5"
+   ],
+   "extra": [
+    "2",
+    "4",
+    "5"
+   ]
+  },
+  "sailor": {
+   "firma": [
+    5601,
+    5602,
+    5603,
+    5604
+   ],
+   "incubo": 5690,
+   "raggio": 1,
+   "mazzi": [
+    "1",
+    "4",
+    "4",
+    "5"
+   ],
+   "extra": [
+    "2",
+    "4",
+    "5"
+   ]
+  },
+  "monk": {
+   "firma": [
+    5701,
+    5702,
+    5703,
+    5704
+   ],
+   "incubo": 5790,
+   "raggio": 2,
+   "mazzi": [
+    "1",
+    "3",
+    "3",
+    "5"
+   ],
+   "extra": [
+    "2",
+    "4",
+    "5"
+   ]
+  },
+  "yojimbo": {
+   "firma": [
+    5801,
+    5802,
+    5803,
+    5804
+   ],
+   "incubo": 5890,
+   "raggio": 1,
+   "mazzi": [
+    "1",
+    "4",
+    "4",
+    "5"
+   ],
+   "extra": [
+    "2",
+    "4",
+    "5"
+   ]
+  },
+  "onna": {
+   "firma": [
+    5901,
+    5902,
+    5903,
+    5904
+   ],
+   "incubo": 5990,
+   "raggio": 2,
+   "mazzi": [
+    "1",
+    "3",
+    "3",
+    "5"
+   ],
+   "extra": [
+    "2",
+    "4",
+    "5"
+   ]
+  }
  },
  "maps": {
   "villaggio": {

@@ -3,7 +3,7 @@
 Duello tattico fra samurai su mappa esagonale (*Senjutsu: Battle for Japan*), in Godot 4.7.
 Uso personale.
 
-## Stato (versione 1.11.0)
+## Stato (versione 1.12.0)
 
 - **Regole**: regolamento della **1a edizione + errata** (quello a cui appartengono le carte
   italiane scansionate), con le carte risolte **riga per riga come sono stampate**.
@@ -28,6 +28,9 @@ Cosa manca è elencato in `REGOLAMENTO_FEDELTA.md`.
 - `firebase/database.rules.json` — regole della radice `senjutsu` da pubblicare nel progetto Firebase
   della ludoteca (senza, l'online risponde «permesso negato»).
 - `server/`, `phone/` — vecchio online «tavolo + telefoni»: **non ancora adattato** al nuovo motore.
+
+Dopo aver cambiato carte o personaggi: `python3 godot/tools/genera_carte.py` e poi
+`python3 godot/tools/filtra_export.py` (tiene nell'esportazione web solo le immagini usate).
 
 ## Verifiche
 
