@@ -60,7 +60,7 @@ libero passo per passo; «verrebbe colpito» considera il tuo attacco dalla tua 
 
 ## Non ancora fatto
 
-- Gli altri personaggi dopo Allievo e Maestro (Assassino, Ashigaru e Hachiko, Monaco, Navigatore,
+- Gli altri personaggi dopo Allievo, Maestro e Assassino ( Ashigaru e Hachiko, Monaco, Navigatore,
   Ninja, Onna-Bugeisha, Wakou, Yasuke, Yojimbo): i loro dati sono ancora nel vecchio formato.
 - Allievo: «Specchio d'Acqua», riga da 2 focus (giocare la carta presa come Sostituzione istantanea)
   non è automatizzata.
@@ -69,4 +69,4 @@ libero passo per passo; «verrebbe colpito» considera il tuo attacco dalla tua 
 - Online «tavolo + telefoni» (il duello online a due su Firebase c'è).
 - Terreno (rocce, bambù, carri, torii) e linea di vista; altre mappe; scelta dell'arma
   (ora Nodachi per il Guerriero e Naginata per il Ronin, come nei mazzi Signature).
-- Veleni oltre al Veleno Debilitante, Occultamento, partite a 3+ giocatori.
+- Veleni oltre al Veleno Debilitante, partite a 3+ giocatori.

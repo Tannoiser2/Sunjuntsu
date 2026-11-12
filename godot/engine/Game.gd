@@ -70,7 +70,7 @@ func prepara(setup: Dictionary) -> void:
 			"pos": Vector2i(99, 99), "face": 0, "kamae": "neutral", "focus": 0,
 			"wounds": 0, "bleeds": 0, "hand": hand, "deck": deck, "discard": [],
 			"hobbles": [], "armour": false, "dead": false, "play": {},
-			"instant_used": false, "no_move": false,
+			"instant_used": false, "no_move": false, "no_rot": false, "occ": false,
 			"ai": ia, "lim": int(pl.get("ferite", db.solo.ferite)) if ia else int(cd.wounds),
 			"mano": 99 if ia else int(cd.hand),
 			"comp": rng.randi_range(0, 2), "post": "off" if rng.randi_range(0, 1) == 0 else "def",
@@ -244,6 +244,9 @@ func _preparazione() -> void:
 				f.deck.erase(id)
 				f.hand.append(id)
 		_mischia(f.deck)
+		if f.cd.get("occulta", false):
+			var io2 := await _ask(f.i, "yesno", "%s: vuoi iniziare la partita Occultato?" % f.name, [{"label": "Sì, Occultato"}, {"label": "No, Rivelato"}])
+			f.occ = io2 == 0
 		while conta_mano(f) < int(f.mano) and not f.deck.is_empty():
 			f.hand.append(f.deck.pop_back())
 	_ev({"t": "state"})
@@ -260,6 +263,7 @@ func _turno() -> void:
 		f.play = {}
 		f.instant_used = false
 		f.no_move = false
+		f.no_rot = false
 	_log("[b]— Turno %d —[/b]" % turn)
 	_ev({"t": "turn"})
 	# Ferite sanguinanti: prima della pesca si scarta la cima del mazzo (una sola volta).
@@ -426,7 +430,10 @@ func _iniziativa(f: Dictionary) -> void:
 	for ln in c.segs[0].lines:
 		if ln.t != "alt":
 			continue
-		if ln.has("k"):
+		if ln.get("o", false):
+			if f.occ:
+				base = int(ln.v)
+		elif ln.has("k"):
 			if f.kamae == ln.k:
 				base = int(ln.v)
 		elif ln.has("f") and f.focus >= int(ln.f):
@@ -584,7 +591,16 @@ func _righe(f: Dictionary, lines: Array, start: int, ctx: Dictionary) -> bool:
 	return false
 
 
+func _svela(o: Dictionary) -> void:
+	if o.get("occ", false):
+		o.occ = false
+		_log("%s non è più Occultato." % o.name)
+		_ev({"t": "state"})
+
+
 func _kamae_ok(f: Dictionary, ln: Dictionary) -> bool:
+	if ln.get("o", false) and not f.get("occ", false):
+		return false
 	if not ln.has("k"):
 		return true
 	if ln.k is Array:
@@ -630,7 +646,7 @@ func _opzioni_or(f: Dictionary, ln: Dictionary, focus: int) -> Array:
 			continue
 		if g.has("f") and focus < int(g.f):
 			continue
-		if g.has("k"):
+		if g.has("k") or g.get("o", false):
 			kam.append(o)
 		else:
 			altre.append(o)
@@ -729,6 +745,15 @@ func _muovi(f: Dictionary, ln: Dictionary, ctx: Dictionary, lines: Array, i: int
 	if f.no_move:
 		_log("Il movimento di %s è cancellato." % f.name)
 		return
+	if f.no_rot and not f.ai:
+		var senza: Array = []
+		for pp in ln.parts:
+			if pp.m != "rot":
+				senza.append(pp)
+		if senza.is_empty():
+			return
+		ln = ln.duplicate()
+		ln.parts = senza
 	if f.ai:
 		if not ctx.has("piano") or ctx.piano.is_empty():
 			ctx["piano"] = _pianifica(f, lines, i, ctx.success == null)
@@ -776,7 +801,7 @@ func _puo_colpire(f: Dictionary, pos: Vector2i, face: int, lines: Array, i: int,
 					continue
 				for c in ln.cells:
 					var o = _in_cella(Hex.walk(pos, face, c))
-					if o != null and o.i != f.i:
+					if o != null and o.i != f.i and (not ln.get("retro", false) or Hex.walk(o.pos, o.face, "3") == pos):
 						return true
 				return false
 			"ifs":
@@ -852,6 +877,8 @@ func _attacco(f: Dictionary, ln: Dictionary, lines: Array, i: int, ctx: Dictiona
 		celle.append(cell)
 		var o = _in_cella(cell)
 		if o != null and o.i != f.i:
+			if ln.get("retro", false) and Hex.walk(o.pos, o.face, "3") != f.pos:
+				continue
 			bersagli.append({"o": o, "eff": ln.cells[c]})
 	_ev({"t": "attack", "p": f.i, "cells": celle})
 	await _pausa("attack")
@@ -896,6 +923,8 @@ func _attacco(f: Dictionary, ln: Dictionary, lines: Array, i: int, ctx: Dictiona
 		ctx.hit.append(b.o.i)
 		await _colpisci(f, b, ast, sangue, ctx)
 	ctx.success = not colpiti.is_empty()
+	if ctx.success:
+		_svela(f)
 	await _pausa("hit")
 	for bl in parati:
 		await _blocco_riuscito(bl, f)
@@ -922,10 +951,14 @@ func _colpisci(f: Dictionary, b: Dictionary, ast: Array, sangue: bool, ctx: Dict
 		w = 2
 	elif base == "b":
 		bl = 1
+	elif base == "p":
+		await _fx_bersaglio(f, o, {"v": "t_poison"}, 1)
 	if con_ast:
 		for e in ast:
 			if e.v == "add_wound":
 				w += int(e.n)
+			elif e.v == "add_bleed":
+				bl += int(e.get("n", 1))
 	if sangue:
 		bl += w
 		w = 0
@@ -934,13 +967,14 @@ func _colpisci(f: Dictionary, b: Dictionary, ast: Array, sangue: bool, ctx: Dict
 		var sub := ctx.duplicate()
 		sub.hit = [o.i]
 		for e in ast:
-			if e.v != "add_wound":
+			if e.v != "add_wound" and e.v != "add_bleed":
 				await _fx(f, e, sub)
 
 
 func _danno(o: Dictionary, w: int, bl: int) -> void:
 	if w + bl <= 0 or o.dead:
 		return
+	_svela(o)
 	if o.armour and w + bl >= 2:
 		if w > 0:
 			w -= 1
@@ -1155,6 +1189,7 @@ func _blocco_riuscito(b: Dictionary, att: Dictionary) -> void:
 	b.done = true
 	var d: Dictionary = F[b.p]
 	var ctx: Dictionary = b.ctx
+	_svela(d)
 	var cl: int = b.next
 	while not d.ai and cl < b.lines.size() and b.lines[cl].t == "counter":
 		var vl: Array = []
@@ -1383,6 +1418,10 @@ func _fx(f: Dictionary, e: Dictionary, ctx: Dictionary) -> void:
 				f.hand.erase(giu[ig].card)
 				await _cerca(f, e.rank, "", f.discard, false)
 				f.discard.append(giu[ig].card)
+		"conceal":
+			if not f.occ:
+				f.occ = true
+				_log("%s entra in [b]Occultamento[/b]." % f.name)
 		"all_draw":
 			for x in F:
 				if not x.ai and not x.dead:
@@ -1442,6 +1481,7 @@ func _fx_bersaglio(f: Dictionary, o: Dictionary, e: Dictionary, n: int) -> void:
 		"t_discard":
 			await _scarta(o, n)
 		"t_poison":
+			_svela(o)
 			var pp: int = maxi(0, o.deck.size() - rng.randi_range(0, mini(4, o.deck.size())))
 			o.deck.insert(pp, -2)
 			_log("%s è [b]avvelenato[/b]: il Veleno Debilitante finisce fra le prime 5 carte del suo mazzo." % o.name)
@@ -1479,6 +1519,14 @@ func _fx_bersaglio(f: Dictionary, o: Dictionary, e: Dictionary, n: int) -> void:
 				o.deck.append_array(tc)
 				_mischia(o.deck)
 				_log("%s sceglie una carta dal mazzo di %s, che la prende in mano." % [f.name, o.name])
+		"t_mill_wounds":
+			var q2: int = mini(o.wounds + o.bleeds + 1, o.deck.size())
+			for _k in q2:
+				o.discard.append(o.deck.pop_back())
+			_log("%s scarta %d carte dalla cima del mazzo." % [o.name, q2])
+		"cancel_rot":
+			o.no_rot = true
+			_log("La rotazione attiva di %s è cancellata." % o.name)
 		"pull_or_push":
 			var pi := await _ask(f.i, "choice", "%s: tiri o spingi %s?" % [f.name, o.name], [{"label": "Spingi"}, {"label": "Tira"}])
 			await _spingi(f, o, n, pi == 1)
@@ -1519,6 +1567,7 @@ func _fx_bersaglio(f: Dictionary, o: Dictionary, e: Dictionary, n: int) -> void:
 			_stordisci(o)
 		"t_hobble":
 			o.hobbles.append(0)
+			_svela(o)
 			_log("%s viene azzoppato." % o.name)
 		"t_rot":
 			var idx := await _ask(f.i, "choice", "%s: ruota %s di %d — in che verso?" % [f.name, o.name, n],
@@ -1585,6 +1634,7 @@ func _focus(f: Dictionary, n: int) -> void:
 func _stordisci(o: Dictionary) -> void:
 	if o.dead:
 		return
+	_svela(o)
 	if o.ai:
 		o.deck.insert(rng.randi_range(0, o.deck.size()), -1)
 		_log("Uno [b]stordimento[/b] viene mischiato nel mazzo di %s." % o.name)

@@ -6013,6 +6013,969 @@
    "rank": "Wood",
    "img": "altre_carte/altre_carte_32.webp"
   },
+  "218": {
+   "id": 218,
+   "name": "Carta Speciale Assassino",
+   "type": "core",
+   "init": 0,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "discard",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "draw",
+            "n": 2
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "discard",
+            "n": 1
+           },
+           {
+            "v": "focus",
+            "n": 1
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "change",
+            "n": 1
+           }
+          ]
+         }
+        ]
+       ]
+      }
+     ]
+    }
+   ],
+   "core": true,
+   "en": "Carta Speciale Assassino",
+   "rank": "-",
+   "img": "assassin/assassin_03.webp"
+  },
+  "138": {
+   "id": 138,
+   "name": "Taglio di Tanto",
+   "type": "attack",
+   "init": 5,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "discard",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "f": 1
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1"
+       }
+      }
+     ]
+    }
+   ],
+   "weapon": "Tanto",
+   "core": true,
+   "en": "Taglio di Tanto",
+   "rank": "-",
+   "img": "altre_carte/altre_carte_01.webp"
+  },
+  "220": {
+   "id": 220,
+   "name": "Puntura d'Ombra",
+   "type": "attack",
+   "init": 6,
+   "focus": 2,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "alt",
+       "v": 9,
+       "o": true
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "x"
+       },
+       "retro": true
+      }
+     ]
+    }
+   ],
+   "en": "Puntura d'Ombra",
+   "rank": "Jade",
+   "img": "assassin/assassin_05.webp"
+  },
+  "221": {
+   "id": 221,
+   "name": "Passo nell'Ombra",
+   "type": "defence",
+   "init": 7,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "alt",
+       "v": 9,
+       "o": true
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "seq": true
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "conceal"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "en": "Passo nell'Ombra",
+   "rank": "Gold",
+   "img": "assassin/assassin_06.webp"
+  },
+  "222": {
+   "id": 222,
+   "name": "Bacio del Ragno",
+   "type": "attack",
+   "init": 1,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "w2",
+        "0": "w2",
+        "1": "w2"
+       }
+      }
+     ]
+    }
+   ],
+   "en": "Bacio del Ragno",
+   "rank": "Gold",
+   "img": "assassin/assassin_07.webp"
+  },
+  "223": {
+   "id": 223,
+   "name": "Pioggia d'Acciaio",
+   "type": "attack",
+   "init": 7,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "55": "w1",
+        "05": "w1",
+        "00": "w1",
+        "01": "w1",
+        "11": "w1"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "55": "w1",
+        "05": "w1",
+        "00": "w1",
+        "01": "w1",
+        "11": "w1"
+       }
+      }
+     ],
+     "init": 4
+    }
+   ],
+   "en": "Pioggia d'Acciaio",
+   "rank": "Gold",
+   "img": "assassin/assassin_08.webp"
+  },
+  "224": {
+   "id": 224,
+   "name": "Bomba Fumogena",
+   "type": "defence",
+   "init": 7,
+   "focus": 1,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "a",
+        "1": "a",
+        "2": "a",
+        "3": "a",
+        "4": "a",
+        "5": "a"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "push",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "move",
+          "parts": [
+           {
+            "m": "step",
+            "dirs": [
+             3
+            ],
+            "n": 1,
+            "opt": false
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "move",
+          "parts": [
+           {
+            "m": "step",
+            "dirs": [
+             4,
+             3,
+             2
+            ],
+            "n": 1,
+            "opt": false
+           }
+          ],
+          "k": "determination"
+         }
+        ]
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "conceal"
+        }
+       ]
+      }
+     ],
+     "init": 6
+    }
+   ],
+   "prepared": true,
+   "en": "Bomba Fumogena",
+   "rank": "Steel",
+   "img": "assassin/assassin_09.webp"
+  },
+  "225": {
+   "id": 225,
+   "name": "Coltello nella Piaga",
+   "type": "meditation",
+   "init": "=",
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_mill_wounds"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "conceal"
+        }
+       ],
+       "f": 1
+      }
+     ]
+    }
+   ],
+   "instant": "add",
+   "when": "atk_ok",
+   "note": "La riga da 1 focus comprende anche un passo facoltativo in avanti (ventaglio), non automatizzato.",
+   "en": "Coltello nella Piaga",
+   "rank": "Steel",
+   "img": "assassin/assassin_11.webp"
+  },
+  "226": {
+   "id": 226,
+   "name": "Balzo nell'Ombra",
+   "type": "defence",
+   "init": 8,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": false
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "a"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "swap"
+        }
+       ]
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "push",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ],
+       "k": "balance"
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": false
+        }
+       ],
+       "k": "determination"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "conceal"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "en": "Balzo nell'Ombra",
+   "rank": "Steel",
+   "img": "assassin/assassin_13.webp"
+  },
+  "227": {
+   "id": 227,
+   "name": "Colpo della Vipera",
+   "type": "attack",
+   "init": 5,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "pa"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "add_bleed",
+         "n": 1
+        }
+       ],
+       "f": 1,
+       "o": true
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "en": "Colpo della Vipera",
+   "rank": "Steel",
+   "img": "assassin/assassin_15.webp"
+  },
+  "228": {
+   "id": 228,
+   "name": "Sguardo Disarmante",
+   "type": "meditation",
+   "init": "=",
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_discard_type",
+         "type": "defence",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "focus",
+         "n": 1
+        }
+       ],
+       "k": "balance"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "conceal"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "instant": "add",
+   "when": "atk_ok|block_ok",
+   "en": "Sguardo Disarmante",
+   "rank": "Wood",
+   "img": "assassin/assassin_17.webp"
+  },
+  "229": {
+   "id": 229,
+   "name": "Arteria Recisa",
+   "type": "attack",
+   "init": 5,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "move",
+          "parts": [
+           {
+            "m": "step",
+            "dirs": [
+             5,
+             1
+            ],
+            "n": 1,
+            "opt": true
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "move",
+          "parts": [
+           {
+            "m": "step",
+            "dirs": [
+             5,
+             1
+            ],
+            "n": 2,
+            "opt": true
+           }
+          ],
+          "o": true
+         }
+        ]
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "b",
+        "0": "b",
+        "1": "b"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_discard",
+         "n": 1
+        }
+       ],
+       "k": "aggression"
+      }
+     ]
+    }
+   ],
+   "en": "Arteria Recisa",
+   "rank": "Wood",
+   "img": "assassin/assassin_20.webp"
+  },
+  "230": {
+   "id": 230,
+   "name": "Taglio Velenoso",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "alt",
+       "v": 9,
+       "o": true
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "p"
+       }
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": false
+        }
+       ]
+      },
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "draw",
+            "n": 1
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "draw",
+            "n": 2
+           }
+          ],
+          "k": "balance"
+         }
+        ]
+       ]
+      }
+     ]
+    }
+   ],
+   "en": "Taglio Velenoso",
+   "rank": "Wood",
+   "img": "assassin/assassin_23.webp"
+  },
+  "108": {
+   "id": 108,
+   "name": "Distrazione",
+   "type": "defence",
+   "init": 8,
+   "focus": 1,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "a",
+        "0": "a",
+        "1": "a"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "t_rot",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "cancel_rot"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 2,
+         "opt": false
+        }
+       ]
+      }
+     ],
+     "init": 7
+    }
+   ],
+   "en": "Difesa Accennante",
+   "rank": "Steel",
+   "img": "altre_carte_2/altre_carte_2_22.webp"
+  },
+  "150": {
+   "id": 150,
+   "name": "Furia Crescente",
+   "type": "meditation",
+   "init": "=",
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "push",
+         "n": 1
+        }
+       ],
+       "k": "aggression"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "switch",
+         "to": "aggression"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "instant": "add",
+   "when": "atk_ok|block_ok",
+   "note": "Sulla carta il «Passa ad Aggressione» avviene a iniziativa 0: qui è immediato.",
+   "prepared": true,
+   "en": "Furia Crescente",
+   "rank": "Steel",
+   "img": "altre_carte/altre_carte_36.webp"
+  },
+  "154": {
+   "id": 154,
+   "name": "Taglio Sanguinante",
+   "type": "attack",
+   "init": 4,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "k": "aggression"
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "b",
+        "1": "b"
+       }
+      }
+     ]
+    }
+   ],
+   "en": "Taglio Sanguinante",
+   "rank": "Wood",
+   "img": "altre_carte/altre_carte_34.webp"
+  },
   "1001": {
    "id": 1001,
    "name": "Chiatta di Buoi (Solo)",
@@ -9648,6 +10611,97 @@
      ],
      [
       "balance",
+      "focus",
+      2
+     ]
+    ]
+   }
+  },
+  "assassin": {
+   "name": "Assassino",
+   "title": "Morte dalle ombre",
+   "advantage": 92,
+   "occulta": true,
+   "hand": 6,
+   "wounds": 4,
+   "char_img": "assassin/assassin_01.webp",
+   "kamae_img": "assassin/assassin_02.webp",
+   "portrait": "assassin.webp",
+   "model": "",
+   "deck": {
+    "220": 1,
+    "221": 1,
+    "222": 1,
+    "223": 1,
+    "224": 2,
+    "225": 2,
+    "226": 2,
+    "227": 2,
+    "228": 2,
+    "229": 3,
+    "230": 3,
+    "103": 2,
+    "108": 1,
+    "110": 2,
+    "117": 1,
+    "150": 1,
+    "154": 2
+   },
+   "core": [
+    218,
+    138
+   ],
+   "kamae": {
+    "nodes": {
+     "determination": [
+      0.27,
+      0.2
+     ],
+     "balance": [
+      0.27,
+      0.5
+     ],
+     "aggression": [
+      0.73,
+      0.5
+     ],
+     "neutral": [
+      0.27,
+      0.8
+     ],
+     "focus": [
+      0.73,
+      0.8
+     ]
+    },
+    "edges": [
+     [
+      "determination",
+      "balance",
+      2
+     ],
+     [
+      "balance",
+      "neutral",
+      2
+     ],
+     [
+      "balance",
+      "aggression",
+      2
+     ],
+     [
+      "determination",
+      "aggression",
+      1
+     ],
+     [
+      "neutral",
+      "focus",
+      2
+     ],
+     [
+      "aggression",
       "focus",
       2
      ]

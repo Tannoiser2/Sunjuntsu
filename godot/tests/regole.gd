@@ -311,6 +311,26 @@ func _initialize() -> void:
 	g._esiti_kamae(g.F[0], "neutral", "neutral", 1, 0, res)
 	ok(res.get("aggression", -1) == 1 and res.get("balance", -1) == 1 and res.get("determination", -1) == 1, "Maestro da Neutrale: Punto Focus e poi una qualsiasi delle tre Kamae")
 
+	print("Assassino")
+	nuovo("assassin", "warrior")
+	ok(g.F[0].lim == 4 and g.F[0].mano == 6, "Assassino: 4 ferite, mano 6")
+	g.F[0].focus = 2
+	await turno(220, 116)  # Puntura d'Ombra di fronte al bersaglio: requisito non soddisfatto
+	ok(not g.F[1].dead, "Puntura d'Ombra: di fronte non colpisce")
+	nuovo("assassin", "warrior")
+	g.F[0].focus = 2
+	g.F[0].occ = true
+	metti(1, Vector2i(4, -2), 2)   # il bersaglio dà le spalle
+	await turno(220, 53)
+	ok(g.F[1].dead, "Puntura d'Ombra alle spalle: esecuzione")
+	ok(registro.any(func(t): return t.contains("Assassino: iniziativa [b]9")), "Occultato: iniziativa 9")
+	ok(not g.F[0].occ, "attacco riuscito: l'Assassino si rivela")
+	nuovo("assassin", "warrior")
+	await turno(221, 53)   # Passo nell'Ombra
+	ok(g.F[0].occ, "Passo nell'Ombra: entra in Occultamento")
+	g._danno(g.F[0], 1, 0)
+	ok(not g.F[0].occ, "una ferita fa perdere l'Occultamento")
+
 	print("Tutte le carte hanno un testo")
 	for c in Carte.db().cards.values():
 		if Carte.testo(c).contains("?"):

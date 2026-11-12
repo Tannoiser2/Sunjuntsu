@@ -1,5 +1,8 @@
 # Novità
 
+## 1.5.0 — Assassino
+- Quinto personaggio: l'Assassino, con l'Occultamento. Menu ridisegnato per più combattenti.
+
 ## 1.4.0 — Maestro
 - Quarto personaggio: il Maestro (20 carte trascritte), con il Veleno Debilitante.
 

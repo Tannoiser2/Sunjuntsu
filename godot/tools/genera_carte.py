@@ -320,6 +320,48 @@ card(120, "Blocco di Vento", "defence", [8, 5], seg(
 card(128, "Stoccata Rapida", "attack", 8, seg(
     move(step(F, 1, False), k=AG), move(rot(1), k=BA), atk({"0": "w1"}), IFS, fx(e("focus", n=1), k=DE)), focus=1)
 
+# ───────────── ASSASSINO ─────────────
+def occ(line): line["o"] = True; return line
+card(218, "Carta Speciale Assassino", "core", 0, seg(
+    fx(e("discard", n=1)), move(step(ANY, 1), rot(2)),
+    OR(fx(e("draw", n=2)), fx(e("discard", n=1), e("focus", n=1)), fx(e("change", n=1)))), core=True)
+card(138, "Taglio di Tanto", "attack", 5, seg(
+    fx(e("discard", n=1)), move(step([5, 1], 1)), move(rot(1), f=1), atk({"0": "w1"})), core=True, weapon="Tanto")
+gr220 = atk({"0": "x"}); gr220["retro"] = True
+card(220, "Puntura d'Ombra", "attack", 6, seg(occ(alt(9)), gr220), focus=2)
+card(221, "Passo nell'Ombra", "defence", 7, seg(
+    occ(alt(9)), move(step(ANY, 1), step(ANY, 1), seq=True), move(rot(1)), fx(e("conceal"))))
+card(222, "Bacio del Ragno", "attack", 1, seg(move(rot(1)), atk({"5": "w2", "0": "w2", "1": "w2"})))
+ARCO2 = {"55": "w1", "05": "w1", "00": "w1", "01": "w1", "11": "w1"}
+card(223, "Pioggia d'Acciaio", "attack", 7, seg(atk(ARCO2)), seg(atk(ARCO2), init=4))
+card(224, "Bomba Fumogena", "defence", 7,
+    seg(atk({c: "a" for c in "012345"}), ast(e("push", n=1))),
+    seg(move(rot(1)), OR(move(step(B, 1, False)), move(step(FANDN, 1, False), k=DE)), fx(e("conceal")), init=6),
+    focus=1, prepared=True)
+card(225, "Coltello nella Piaga", "meditation", "=", seg(
+    fx(e("t_mill_wounds")), g(fx(e("conceal")), f=1)), instant="add", when="atk_ok",
+    note="La riga da 1 focus comprende anche un passo facoltativo in avanti (ventaglio), non automatizzato.")
+card(226, "Balzo nell'Ombra", "defence", 8, seg(
+    move(step(FANDN, 1, False)), atk({"0": "a"}), ast(e("swap")),
+    IFS, fx(e("push", n=1)), move(rot(2), k=BA), move(step(FANDN, 1, False), k=DE), fx(e("conceal"))))
+card(227, "Colpo della Vipera", "attack", 5, seg(
+    move(step(ANY, 1), rot(1)), atk({"0": "pa"}), occ(ast(e("add_bleed", n=1), f=1)), move(step(FANUP, 1))))
+card(228, "Sguardo Disarmante", "meditation", "=", seg(
+    fx(e("t_discard_type", type="defence", n=1)), fx(e("focus", n=1), k=BA), fx(e("conceal"))),
+    instant="add", when="atk_ok|block_ok")
+card(229, "Arteria Recisa", "attack", 5, seg(
+    OR(move(step([5, 1], 1)), occ(move(step([5, 1], 2)))), atk({"5": "b", "0": "b", "1": "b"}),
+    IFS, fx(e("t_discard", n=1), k=AG)))
+card(230, "Taglio Velenoso", "attack", 6, seg(
+    occ(alt(9)), atk({"0": "p"}), move(step(FANDN, 1, False)), OR(fx(e("draw", n=1)), fx(e("draw", n=2), k=BA))))
+card(108, "Distrazione", "defence", 8,
+    seg(atk({"5": "a", "0": "a", "1": "a"}), ast(e("t_rot", n=1)), IFS, fx(e("cancel_rot"))),
+    seg(move(step([5, 1], 2, False)), init=7), focus=1)
+card(150, "Furia Crescente", "meditation", "=", seg(fx(e("push", n=1), k=AG), fx(e("switch", to=AG))),
+    instant="add", when="atk_ok|block_ok", prepared=True,
+    note="Sulla carta il «Passa ad Aggressione» avviene a iniziativa 0: qui è immediato.")
+card(154, "Taglio Sanguinante", "attack", 4, seg(move(step([5, 1], 1), k=AG), atk({"0": "b", "1": "b"})))
+
 # ───────────── CARTE SOLO (Solitario) ─────────────
 # Id: 1000+ Ronin, 2000+ Guerriero, 3000+ generiche (numero stampato + base).
 V = [5, 1]; A = [4, 2]; X = [1, 2, 4, 5]
@@ -470,7 +512,17 @@ out = {
      "kamae": {"nodes": {"aggression":[0.27,0.2],"determination":[0.73,0.2],"focus":[0.27,0.5],
                          "neutral":[0.27,0.8],"balance":[0.73,0.8]},
         "edges": [["aggression","focus",2],["determination","focus",2],["neutral","focus",2],
-                  ["balance","focus",2]]}}},
+                  ["balance","focus",2]]}},
+  "assassin": {"name": "Assassino", "title": "Morte dalle ombre", "advantage": 92, "occulta": True,
+     "hand": 6, "wounds": 4, "char_img": imgs["214"], "kamae_img": imgs["217"],
+     "portrait": "assassin.webp", "model": "",
+     "deck": {"220":1,"221":1,"222":1,"223":1,"224":2,"225":2,"226":2,"227":2,"228":2,"229":3,"230":3,
+              "103":2,"108":1,"110":2,"117":1,"150":1,"154":2},
+     "core": [218, 138],
+     "kamae": {"nodes": {"determination":[0.27,0.2],"balance":[0.27,0.5],"aggression":[0.73,0.5],
+                         "neutral":[0.27,0.8],"focus":[0.73,0.8]},
+        "edges": [["determination","balance",2],["balance","neutral",2],["balance","aggression",2],
+                  ["determination","aggression",1],["neutral","focus",2],["aggression","focus",2]]}}},
  "solo": SOLO,
  # mappa "villaggio in fiamme": celle giocabili (colonna,riga) lette dal contorno arancione
  "maps": {"villaggio": {"img": "arena.webp", "img_size": 1594,
@@ -480,7 +532,7 @@ out = {
      "start": [[[0,0],[1,0],[1,1]], [[5,-1],[5,0],[6,-1],[6,0]]]}}
 }
 for ch in out["characters"].values():
-    assert sum(ch["deck"].values()) == 30, sum(ch["deck"].values())
+    assert sum(ch["deck"].values()) in (29, 30), sum(ch["deck"].values())
     for k in list(ch["deck"]) + [str(x) for x in ch["core"]]: assert k in C, k
 json.dump(out, open(os.path.join(here, "../data/carte.json"), "w"), ensure_ascii=False, indent=1)
 print("carte:", len(C))

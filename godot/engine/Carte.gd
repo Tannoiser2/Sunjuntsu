@@ -8,7 +8,8 @@ const COMPORTAMENTI := ["Sinistra", "Centro", "Destra"]
 const TIPI := {"attack": "Attacco", "defence": "Difesa", "meditation": "Meditazione", "core": "Speciale"}
 const EFFETTI_CELLA := {"w1": "1 ferita", "w2": "2 ferite", "b": "ferita sanguinante",
 	"x": "ESECUZIONE", "a": "asterisco", "w1a": "1 ferita + asterisco",
-	"ba": "sanguinante + asterisco", "s": "blocco", "sa": "blocco con asterisco"}
+	"ba": "sanguinante + asterisco", "s": "blocco", "sa": "blocco con asterisco",
+	"p": "veleno", "pa": "veleno + asterisco"}
 
 static var _db: Dictionary = {}
 
@@ -88,6 +89,8 @@ static func _parte(p: Dictionary) -> String:
 
 static func _porta(ln: Dictionary) -> String:
 	var s := ""
+	if ln.get("o", false):
+		s += "[Occultato] "
 	if ln.has("k"):
 		var ks: Array = ln.k if ln.k is Array else [ln.k]
 		var nn: Array = []
@@ -142,6 +145,10 @@ static func effetto(e: Dictionary) -> String:
 		"t_draw": return "il bersaglio pesca %d carte" % n
 		"t_give_top": return "guarda le prime %d carte del mazzo del bersaglio: ne scegli 1, che lui prende in mano" % n
 		"pull_or_push": return "tira o spingi il bersaglio di %d" % n
+		"conceal": return "entra in Occultamento"
+		"t_mill_wounds": return "il bersaglio scarta dalla cima del mazzo tante carte quante sono le sue ferite, +1"
+		"cancel_rot": return "cancella la rotazione attiva del bersaglio"
+		"add_bleed": return "+%d ferita sanguinante" % n
 		"nota": return str(e.get("txt", "")) + " (non automatizzato)"
 		"reshuffle": return "mischia nel mazzo tutte le tue carte abilità non speciali"
 		"cancel_cards": return "ogni bersaglio a distanza cancella le sue carte abilità attive"
@@ -193,6 +200,8 @@ static func riga(ln: Dictionary) -> String:
 			var coda := ""
 			if ln.has("ak"):
 				coda = " (asterisco = blocco solo in %s)" % KAMAE[ln.ak]
+			if ln.get("retro", false):
+				coda += " (requisito: devi essere alle spalle del bersaglio)"
 			return g + ("Attacco — " if ln.mode == "atk" else "Blocco — ") + "; ".join(a2) + coda
 		"ast": return g + "* = " + effetti(ln.fx)
 		"mod": return g + "le ferite di questo attacco diventano sanguinanti"

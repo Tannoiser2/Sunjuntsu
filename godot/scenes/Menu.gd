@@ -2,8 +2,8 @@ extends Control
 ## Menu principale.
 
 var scelte: Dictionary = {}
-var avversari: Dictionary = {}
-const ORDINE := ["warrior", "ronin", "student", "master"]
+var scelta_avv: OptionButton
+const ORDINE := ["warrior", "ronin", "student", "master", "assassin"]
 
 
 func _ready() -> void:
@@ -34,9 +34,11 @@ func _ready() -> void:
 	var l := Tema.etichetta("Scegli il tuo combattente", 22)
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(l)
-	var h := HBoxContainer.new()
-	h.alignment = BoxContainer.ALIGNMENT_CENTER
-	h.add_theme_constant_override("separation", 24)
+	var h := HFlowContainer.new()
+	h.alignment = FlowContainer.ALIGNMENT_CENTER
+	h.custom_minimum_size = Vector2(760, 0)
+	h.add_theme_constant_override("h_separation", 10)
+	h.add_theme_constant_override("v_separation", 8)
 	v.add_child(h)
 	var db := Carte.db()
 	for k in ORDINE:
@@ -44,7 +46,7 @@ func _ready() -> void:
 		var b := TextureButton.new()
 		b.ignore_texture_size = true
 		b.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-		b.custom_minimum_size = Vector2(158, 220)
+		b.custom_minimum_size = Vector2(118, 164)
 		b.texture_normal = load("res://assets/cards/" + cd.char_img)
 		b.pressed.connect(_scegli.bind(k))
 		var bordo := Panel.new()
@@ -60,12 +62,12 @@ func _ready() -> void:
 	var la := Tema.etichetta("Avversario", 20)
 	la.custom_minimum_size = Vector2(100, 0)
 	ha.add_child(la)
+	scelta_avv = OptionButton.new()
+	scelta_avv.custom_minimum_size = Vector2(240, 46)
 	for k in ORDINE:
-		var ba := Tema.bottone(db.characters[k].name, 120)
-		ba.toggle_mode = true
-		ba.pressed.connect(_scegli_avv.bind(k))
-		avversari[k] = ba
-		ha.add_child(ba)
+		scelta_avv.add_item(db.characters[k].name)
+	scelta_avv.item_selected.connect(func(i): _scegli_avv(ORDINE[i]))
+	ha.add_child(scelta_avv)
 	var nota := Tema.etichetta("In Solitario l'avversario può essere Guerriero o Ronin.", 16)
 	nota.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	nota.custom_minimum_size = Vector2(420, 0)
@@ -103,9 +105,7 @@ func _scegli_avv(k: String) -> void:
 	if k == Sessione.setup.get("io", "warrior"):
 		k = "ronin" if k != "ronin" else "warrior"
 	Sessione.setup["avv"] = k
-	for c in avversari:
-		avversari[c].button_pressed = c == k
-		avversari[c].disabled = c == Sessione.setup.get("io", "warrior")
+	scelta_avv.select(ORDINE.find(k))
 
 
 func _gioca(modo: String, incubo: bool) -> void:

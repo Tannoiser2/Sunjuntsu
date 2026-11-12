@@ -4,7 +4,7 @@ extends Control
 
 const COND := [["", "Sempre"], ["aggression", "Aggressione"], ["balance", "Equilibrio"],
 	["determination", "Determinazione"], ["balance|determination", "Equilibrio o Determ."],
-	["f1", "Costo 1 focus"], ["f2", "Costo 2 focus"]]
+	["f1", "Costo 1 focus"], ["f2", "Costo 2 focus"], ["o", "Occultato"], ["f1o", "1 focus + Occultato"]]
 const TIPI := [["move", "Movimento"], ["atk", "Griglia d'attacco"], ["blk", "Griglia di blocco"],
 	["fx", "Effetto"], ["ast", "Asterisco ="], ["ifs", "SE RIUSCITO:"], ["or", "— OPPURE —"],
 	["div", "Divisore: nuova iniziativa"], ["alt", "Iniziativa alternativa"],
@@ -18,9 +18,9 @@ const EFF := ["discard", "draw", "draw_exact", "focus", "lose_focus_all", "lose_
 	"each_stun", "cancel_move", "advantage", "add_wound", "armour", "broad_block",
 	"ai_change", "ai_reset", "ai_recycle", "t_discard", "search_discard", "search_top", "discard_stun",
 	"bleed_to_wound", "view_hand", "steal_focus", "swap", "t_step", "nota", "all_draw", "t_poison",
-	"t_draw", "pull_or_push"]
-const CICLO_ATK := ["", "w1", "w2", "b", "x", "a", "w1a", "ba"]
-const SIGLE := {"w1": "1", "w2": "2", "b": "S", "x": "X", "a": "*", "w1a": "1*", "ba": "S*", "s": "B"}
+	"t_draw", "pull_or_push", "conceal", "t_mill_wounds", "cancel_rot", "add_bleed"]
+const CICLO_ATK := ["", "w1", "w2", "b", "x", "a", "w1a", "ba", "p", "pa"]
+const SIGLE := {"w1": "1", "w2": "2", "b": "S", "x": "X", "a": "*", "w1a": "1*", "ba": "S*", "s": "B", "p": "V", "pa": "V*", "sa": "B*"}
 const CELLE := ["0", "1", "2", "3", "4", "5", "00", "01", "11", "12", "22", "23", "33", "34", "44", "45", "55", "50"]
 const KAM := [["aggression", "Aggressione"], ["balance", "Equilibrio"], ["determination", "Determinazione"],
 	["neutral", "Neutrale"], ["any", "qualsiasi"]]
@@ -134,7 +134,9 @@ func _carica() -> void:
 
 func _cond_di(l: Dictionary) -> String:
 	if l.has("f"):
-		return "f%d" % int(l.f)
+		return "f%d%s" % [int(l.f), "o" if l.get("o", false) else ""]
+	if l.get("o", false):
+		return "o"
 	if l.has("k"):
 		return "|".join(l.k) if l.k is Array else str(l.k)
 	return ""
@@ -186,6 +188,8 @@ func _linea_da(r: Dictionary) -> Dictionary:
 			l = {"t": "grid", "mode": r.tipo, "cells": r.get("cells", {})}
 			if r.has("ak"):
 				l["ak"] = r.ak
+			if r.get("retro", false):
+				l["retro"] = true
 		"fx", "ast":
 			l = {"t": r.tipo, "fx": r.get("fx", [])}
 		"alt":
@@ -195,6 +199,9 @@ func _linea_da(r: Dictionary) -> Dictionary:
 		_:
 			l = {"t": r.tipo}
 	var c: String = r.get("cond", "")
+	if c.ends_with("o"):
+		l["o"] = true
+		c = c.trim_suffix("o")
 	if c.begins_with("f"):
 		l["f"] = int(c.substr(1))
 	elif c.contains("|"):

@@ -976,6 +976,8 @@ func _aggiorna() -> void:
 			st.append("Azzoppato x%d" % f.hobbles.size())
 		if f.armour:
 			st.append("Armatura Pesante")
+		if f.get("occ", false):
+			st.append("Occultato")
 		if f.dead:
 			st = ["SCONFITTO"]
 		s.stato.text = " · ".join(st)
