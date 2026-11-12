@@ -1,5 +1,8 @@
 # Novità
 
+## 1.8.0 — Yojimbo
+- Ottavo personaggio: lo Yojimbo, con i contratti (cinque completati = vittoria) e gli attacchi a distanza.
+
 ## 1.7.0 — Yasuke
 - Settimo personaggio: Yasuke, con due armi e le carte da contrattacco.
 

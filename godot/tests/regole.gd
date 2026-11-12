@@ -371,6 +371,27 @@ func _initialize() -> void:
 	ok(registro.any(func(t): return t.contains("contrattacca")), "Anima Devota: contrattacco a 8")
 	ok(g.F[0].hand.has(350) or g.F[0].discard.has(362), "la carta del contrattacco: l'arma torna in mano, Sbilanciamento va negli scarti")
 
+	print("Yojimbo")
+	nuovo("yojimbo", "warrior")
+	for k in ["reazione", "sangue", "concentrazione", "furore", "attrezzi"]:
+		g.F[0].contr[k] = {"done": false, "rot": 0, "mai": false, "visti": [], "via": false}
+	metti(1, Vector2i(5, -2), 5)   # a distanza 2
+	await turno(325, 53)           # Lancio di Senbon (4) contro una carta a iniziativa 0
+	ok(g.F[1].bleeds == 1, "Lancio di Senbon: sanguinante a distanza 2 su chi ha iniziativa inferiore")
+	ok(g.F[0].contr.sangue.done, "contratto Primo Sangue completato")
+	ok(g.F[0].contr.attrezzi.rot == 1, "Attrezzi del Mestiere: primo effetto di stato inflitto")
+	nuovo("yojimbo", "warrior")
+	metti(1, Vector2i(5, -2), 5)
+	await turno(325, 62)           # contro Arco Respingente (7): iniziativa superiore
+	ok(g.F[1].bleeds == 0, "Lancio di Senbon: non colpisce chi ha iniziativa superiore")
+	nuovo("yojimbo", "warrior")
+	for k in ["reazione", "sangue", "concentrazione", "furore", "attrezzi"]:
+		g.F[0].contr[k] = {"done": true, "rot": 0, "mai": true, "visti": [], "via": false}
+	g.F[0].contr.furore.done = false
+	g.F[0].contr.furore.mai = false
+	g._contratto(g.F[0], "furore")
+	ok(g.over and g.winner == 0, "cinque contratti completati: lo Yojimbo vince")
+
 	print("Tutte le carte hanno un testo")
 	for c in Carte.db().cards.values():
 		if Carte.testo(c).contains("?"):

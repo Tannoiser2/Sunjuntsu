@@ -29,7 +29,11 @@ var queue: Array = []
 var cur_init := -1
 var blocks: Array = []
 var fase := "setup"
-var fonte: Dictionary = {}   ## carta che sta producendo l'effetto in corso
+var fonte: Dictionary = {}
+var autore := -1             ## chi sta infliggendo l'effetto in corso
+var primo_sangue := false
+const CONTRATTI := {"reazione": "Reazione", "sangue": "Primo Sangue", "concentrazione": "Concentrazione",
+	"furore": "Furore", "vedere": "Fagli Vedere", "attrezzi": "Gli Attrezzi del Mestiere"}   ## carta che sta producendo l'effetto in corso
 var ritmo: Callable = Callable()   ## pausa visiva fornita dall'interfaccia
 
 
@@ -71,7 +75,7 @@ func prepara(setup: Dictionary) -> void:
 			"pos": Vector2i(99, 99), "face": 0, "kamae": "neutral", "focus": 0,
 			"wounds": 0, "bleeds": 0, "hand": hand, "deck": deck, "discard": [],
 			"hobbles": [], "armour": false, "dead": false, "play": {},
-			"instant_used": false, "no_move": false, "no_rot": false, "occ": false, "illum": [], "passi": 0, "maxfocus": MAX_FOCUS, "turn_w": 0,
+			"instant_used": false, "no_move": false, "no_rot": false, "occ": false, "illum": [], "passi": 0, "contr": {}, "contr_nuovo": false, "reaz": false, "turn_tot": 0, "maxfocus": MAX_FOCUS, "turn_w": 0,
 			"ai": ia, "lim": int(pl.get("ferite", db.solo.ferite)) if ia else int(cd.wounds),
 			"mano": 99 if ia else int(cd.hand),
 			"comp": rng.randi_range(0, 2), "post": "off" if rng.randi_range(0, 1) == 0 else "def",
@@ -245,6 +249,14 @@ func _preparazione() -> void:
 				f.deck.erase(id)
 				f.hand.append(id)
 		_mischia(f.deck)
+		if f.cd.get("contratti", false):
+			var co: Array = []
+			for k in CONTRATTI:
+				co.append({"label": CONTRATTI[k], "k": k})
+			var ic := await _ask(f.i, "choice", "%s: quale contratto lasci fuori? (ne tieni cinque)" % f.name, co)
+			for k in CONTRATTI:
+				if k != co[ic].k:
+					f.contr[k] = {"done": false, "rot": 0, "mai": false, "visti": [], "via": false}
 		if f.cd.get("occulta", false):
 			var io2 := await _ask(f.i, "yesno", "%s: vuoi iniziare la partita Occultato?" % f.name, [{"label": "Sì, Occultato"}, {"label": "No, Rivelato"}])
 			f.occ = io2 == 0
@@ -266,6 +278,8 @@ func _turno() -> void:
 		f.no_move = false
 		f.no_rot = false
 		f.turn_w = 0
+		f.turn_tot = 0
+		f.reaz = false
 	_log("[b]— Turno %d —[/b]" % turn)
 	_ev({"t": "turn"})
 	# Ferite sanguinanti: prima della pesca si scarta la cima del mazzo (una sola volta).
@@ -274,6 +288,21 @@ func _turno() -> void:
 			f.discard.append(f.deck.pop_back())
 			_log("%s sanguina: scarta la prima carta del mazzo." % f.name)
 	fase = "pesca"
+	for f in F:
+		if contratti_fatti(f) > 0:
+			var oc: Array = [{"label": "Tieni i contratti"}]
+			for k in f.contr:
+				if f.contr[k].done and not f.contr[k].via:
+					oc.append({"label": "Scarta «%s»: pesca 1" % CONTRATTI[k], "k": k, "m": "p"})
+					oc.append({"label": "Scarta «%s»: +1 focus" % CONTRATTI[k], "k": k, "m": "f"})
+			var jc := await _ask(f.i, "choice", "%s: vuoi scartare un contratto completato?" % f.name, oc)
+			if jc > 0:
+				f.contr[oc[jc].k].via = true
+				if oc[jc].m == "p":
+					_pesca(f, 1)
+				else:
+					_focus(f, 1)
+				_log("%s scarta il contratto «%s»." % [f.name, CONTRATTI[oc[jc].k]])
 	for f in F:
 		if not f.ai:
 			_pesca(f, 1)
@@ -288,7 +317,7 @@ func _turno() -> void:
 	for f in F:
 		var id: int = f.play.id
 		if id >= 0:
-			f.focus -= int(Carte.carta(id).focus)
+			_spendi(f, int(Carte.carta(id).focus))
 		_log("%s rivela [b]%s[/b]." % [f.name, Carte.nome(id)])
 		if f.ai and id == -2:
 			_log("%s è avvelenato: salta il turno." % f.name)
@@ -433,6 +462,17 @@ func _iniziativa(f: Dictionary) -> void:
 		_log("%s: iniziativa [b]%d[/b]." % [f.name, f.play.init])
 		return
 	var base = c.init
+	if c.get("zanmato", false):
+		var nz := contratti_fatti(f)
+		for k in f.contr:
+			f.contr[k].via = true
+		_log("%s scarta tutti i suoi contratti." % f.name)
+		for _z in nz:
+			var iz := await _ask(f.i, "choice", "%s: bonus per un contratto completato" % f.name, [{"label": "+1 iniziativa"}, {"label": "+1 ferita a questo attacco"}])
+			if iz == 0:
+				base = int(base) + 1
+			else:
+				f.play["bonus_w"] = int(f.play.get("bonus_w", 0)) + 1
 	for ln in c.segs[0].lines:
 		if ln.t != "alt":
 			continue
@@ -446,7 +486,7 @@ func _iniziativa(f: Dictionary) -> void:
 			var i0 := await _ask(f.i, "yesno", "%s: paghi %d focus per l'iniziativa %d?" % [f.name, int(ln.f), int(ln.v)],
 				[{"label": "Sì"}, {"label": "No"}])
 			if i0 == 0:
-				f.focus -= int(ln.f)
+				_spendi(f, int(ln.f))
 				base = int(ln.v)
 	var v := 0
 	if base is Array:
@@ -456,7 +496,7 @@ func _iniziativa(f: Dictionary) -> void:
 			var i1 := await _ask(f.i, "yesno", "%s: giochi «Blocco Ampio» (1 focus) per allargare l'intervallo d'iniziativa?" % f.name,
 				[{"label": "Sì"}, {"label": "No"}], {"card": 83})
 			if i1 == 0:
-				f.focus -= 1
+				_spendi(f, 1)
 				f.hand.erase(83)
 				f.discard.append(83)
 				f.instant_used = true
@@ -585,6 +625,9 @@ func _fine_segmento(f: Dictionary, ctx: Dictionary) -> void:
 	if over or f.dead or ctx.abort:
 		return
 	var en: Dictionary = ctx.en
+	if f.contr_nuovo:
+		f.contr_nuovo = false
+		await _istantanea(f, "contract", ctx)
 	if en.s == ctx.card.segs.size() - 1:
 		await _istantanea(f, "after_card", ctx)
 
@@ -614,10 +657,48 @@ func _righe(f: Dictionary, lines: Array, start: int, ctx: Dictionary) -> bool:
 				if await _porta(f, ln, ctx, lines, i):
 					for e in ln.fx:
 						await _fx(f, e, ctx)
+			"ranged":
+				await _a_distanza(f, ln, ctx)
 			"or":
 				await _oppure(f, ln, ctx, lines, i)
 		i += 1
 	return false
+
+
+func _iniz_bassa(o: Dictionary) -> int:
+	var id: int = o.play.get("id", -1)
+	if id < 0:
+		return 0
+	var c := Carte.carta(id)
+	if c.init is Array and not o.ai:
+		return mini(int(o.play.get("init", 0)), _con_hobble(o, int(c.init[1])))
+	return int(o.play.get("init", 0))
+
+
+## Attacco a distanza: colpisce un bersaglio entro la Distanza con iniziativa inferiore.
+## Non usa la griglia e non si può bloccare. (Linea di vista: nessun terreno in campo.)
+func _a_distanza(f: Dictionary, ln: Dictionary, ctx: Dictionary) -> void:
+	var bers = null
+	for o in _avversari(f):
+		if Hex.dist(f.pos, o.pos) <= int(ln.get("r", 1)) and _iniz_bassa(o) < cur_init:
+			bers = o
+	_ev({"t": "attack", "p": f.i, "cells": [] if bers == null else [bers.pos]})
+	await _pausa("attack")
+	if bers == null:
+		ctx.success = false
+		_log("L'attacco a distanza di %s non ha bersagli validi." % f.name)
+		return
+	ctx.hit = [bers.i]
+	await _colpisci(f, {"o": bers, "eff": ln.eff}, [], false, ctx)
+	ctx.success = true
+	await _reazione_colpito(bers)
+	_verifica_morte(bers)
+	_svela(f)
+	await _pausa("hit")
+	if ctx.main and not over:
+		if ctx.card.rank == "Gold":
+			_contratto(f, "vedere")
+		await _istantanea(f, "atk_ok", ctx)
 
 
 func _svela(o: Dictionary) -> void:
@@ -655,14 +736,14 @@ func _porta(f: Dictionary, ln: Dictionary, ctx: Dictionary, lines: Array, i: int
 				con = true
 				break
 		if con and not senza:
-			f.focus -= costo
+			_spendi(f, costo)
 			_log("%s deve spendere %d focus (Commit To Hit)." % [f.name, costo])
 			return true
 	var idx := await _ask(f.i, "yesno", "%s: spendi %d focus per «%s»?" % [f.name, costo, Carte.riga(ln)],
 		[{"label": "Sì, spendo %d focus" % costo}, {"label": "No"}], {"line": ln})
 	if idx != 0:
 		return false
-	f.focus -= costo
+	_spendi(f, costo)
 	return true
 
 
@@ -704,7 +785,7 @@ func _oppure(f: Dictionary, ln: Dictionary, ctx: Dictionary, lines: Array, i: in
 	var idx := await _ask(f.i, "choice", "%s: scegli un'opzione" % f.name, scelte)
 	var scelta: Array = opts[idx]
 	if scelta[0].has("f"):
-		f.focus -= int(scelta[0].f)
+		_spendi(f, int(scelta[0].f))
 	var resto2: Array = _senza_porta(scelta) + lines.slice(i + 1)
 	# Le righe dell'opzione si eseguono senza ripetere le condizioni già verificate.
 	for k in scelta.size():
@@ -823,6 +904,11 @@ func _puo_colpire(f: Dictionary, pos: Vector2i, face: int, lines: Array, i: int,
 	while i < lines.size():
 		var ln: Dictionary = lines[i]
 		match ln.t:
+			"ranged":
+				for o in _avversari(f):
+					if Hex.dist(pos, o.pos) <= int(ln.get("r", 1)):
+						return true
+				return false
 			"grid":
 				if ln.mode != "atk":
 					return false
@@ -959,6 +1045,8 @@ func _attacco(f: Dictionary, ln: Dictionary, lines: Array, i: int, ctx: Dictiona
 		_verifica_morte(b.o)
 	if ctx.success:
 		_svela(f)
+		if ctx.card.rank == "Gold" and ctx.card.type == "attack":
+			_contratto(f, "vedere")
 	await _pausa("hit")
 	for bl in parati:
 		await _blocco_riuscito(bl, f)
@@ -968,6 +1056,7 @@ func _attacco(f: Dictionary, ln: Dictionary, lines: Array, i: int, ctx: Dictiona
 
 func _colpisci(f: Dictionary, b: Dictionary, ast: Array, sangue: bool, ctx: Dictionary) -> void:
 	var o: Dictionary = b.o
+	autore = f.i
 	var eff: String = b.eff
 	var con_ast := eff.ends_with("a")
 	var base := eff.trim_suffix("a")
@@ -993,6 +1082,8 @@ func _colpisci(f: Dictionary, b: Dictionary, ast: Array, sangue: bool, ctx: Dict
 				w += int(e.n)
 			elif e.v == "add_bleed":
 				bl += int(e.get("n", 1))
+	if w > 0 and ctx.main:
+		w += int(f.play.get("bonus_w", 0))
 	if sangue:
 		bl += w
 		w = 0
@@ -1033,6 +1124,15 @@ func _danno(o: Dictionary, w: int, bl: int, rinvia: bool = false) -> void:
 	o.wounds += w
 	o.bleeds += bl
 	o.turn_w += w
+	o.turn_tot += w + bl
+	if autore >= 0 and autore != o.i:
+		if not primo_sangue:
+			_contratto(F[autore], "sangue")
+		if o.turn_tot >= 2:
+			_contratto(F[autore], "furore")
+		if bl > 0:
+			_attrezzo(o, "sangue")
+	primo_sangue = true
 	var t: Array = []
 	if w > 0:
 		t.append("%d ferita/e" % w)
@@ -1235,6 +1335,8 @@ func _blocco_riuscito(b: Dictionary, att: Dictionary) -> void:
 	var d: Dictionary = F[b.p]
 	var ctx: Dictionary = b.ctx
 	_svela(d)
+	if ctx.card.rank == "Gold":
+		_contratto(d, "vedere")
 	var cl: int = b.next
 	while not d.ai and cl < b.lines.size() and b.lines[cl].t == "counter":
 		var vl: Array = []
@@ -1304,9 +1406,10 @@ func _contrattacco(d: Dictionary, vel: int) -> void:
 		return
 	var id: int = opts[idx].card
 	var c2 := Carte.carta(id)
-	d.focus -= int(c2.focus)
+	_spendi(d, int(c2.focus))
 	d.hand.erase(id)
 	_log("[b]%s contrattacca[/b] con %s." % [d.name, c2.name])
+	d.reaz = true
 	_ev({"t": "resolve", "p": d.i, "card": id, "init": cur_init})
 	await _pausa("resolve")
 	var ctx := {"card": c2, "success": null, "hit": [], "abort": false, "main": false, "en": {"s": 0}}
@@ -1373,7 +1476,7 @@ func _istantanea(f: Dictionary, quando: String, ctx: Dictionary) -> void:
 		if h < 0 or visti.has(h):
 			continue
 		var c := Carte.carta(h)
-		if c.get("instant", "") != "add" or not c.get("when", "").split("|").has(quando) or c.type == princ.type:
+		if (c.get("instant", "") != "add" and quando != "contract") or not c.get("when", "").split("|").has(quando) or c.type == princ.type:
 			continue
 		if int(c.focus) > f.focus or (not _req_ok(f, c)):
 			continue
@@ -1382,6 +1485,8 @@ func _istantanea(f: Dictionary, quando: String, ctx: Dictionary) -> void:
 	if opts.size() == 1:
 		return
 	var testo := "%s: carta risolta. Giochi un'Aggiunta istantanea?"
+	if quando == "contract":
+		testo = "%s: contratto completato! Giochi un'istantanea?"
 	if quando == "atk_ok":
 		testo = "%s: attacco riuscito! Giochi un'Aggiunta istantanea?"
 	elif quando == "block_ok":
@@ -1391,7 +1496,7 @@ func _istantanea(f: Dictionary, quando: String, ctx: Dictionary) -> void:
 		return
 	var id: int = opts[idx].card
 	var c2 := Carte.carta(id)
-	f.focus -= int(c2.focus)
+	_spendi(f, int(c2.focus))
 	f.hand.erase(id)
 	f.instant_used = true
 	_log("%s gioca l'istantanea [b]%s[/b]." % [f.name, c2.name])
@@ -1413,6 +1518,8 @@ func _bersagli(f: Dictionary, ctx: Dictionary) -> Array:
 				out.append(F[i])
 		return out
 	var raggio: int = int(ctx.card.get("range", 99))
+	if ctx.card.get("range_contr", false):
+		raggio += contratti_fatti(f)
 	for o in _avversari(f):
 		if Hex.dist(f.pos, o.pos) <= raggio:
 			out.append(o)
@@ -1423,6 +1530,7 @@ func _fx(f: Dictionary, e: Dictionary, ctx: Dictionary) -> void:
 	if over:
 		return
 	fonte = ctx.card
+	autore = f.i
 	var n := int(e.get("n", 1))
 	match e.v:
 		"discard":
@@ -1448,7 +1556,7 @@ func _fx(f: Dictionary, e: Dictionary, ctx: Dictionary) -> void:
 			f.hobbles.append(0)
 			_log("%s prende 1 azzoppamento." % f.name)
 		"search":
-			await _cerca(f, e.rank, e.get("type", ""), f.deck, true)
+			await _cerca(f, e.rank, e.get("type", ""), f.deck, true, e.get("pers", ""))
 		"search_discard":
 			await _cerca(f, e.rank, e.get("type", ""), f.discard, false)
 		"search_top":
@@ -1514,6 +1622,40 @@ func _fx(f: Dictionary, e: Dictionary, ctx: Dictionary) -> void:
 			_log("%s trasforma %d ferite di questo turno in stordimenti." % [f.name, q3])
 			for _k in q3:
 				_stordisci(f)
+		"contract_back":
+			var cb: Array = []
+			for k in f.contr:
+				if f.contr[k].via:
+					cb.append({"label": CONTRATTI[k], "k": k})
+			if cb.is_empty():
+				_log("%s non ha contratti scartati da rimettere in gioco." % f.name)
+			else:
+				var ib := await _ask(f.i, "choice", "%s: quale contratto rimetti in gioco?" % f.name, cb)
+				var kk: String = cb[ib].k
+				f.contr[kk].via = false
+				f.contr[kk].done = false
+				f.contr[kk].rot = 0
+				f.contr[kk].visti = []
+				_log("%s rimette in gioco il contratto «%s»." % [f.name, CONTRATTI[kk]])
+		"lavoro_finito":
+			var nl := contratti_fatti(f)
+			for _k in nl:
+				_focus(f, 1)
+				_pesca(f, 1)
+				var lo: Array = []
+				var lv := {}
+				for cid in f.discard:
+					if cid >= 0 and not lv.has(cid) and Carte.carta(cid).rank == "Wood":
+						lv[cid] = true
+						lo.append({"card": cid, "label": Carte.nome(cid)})
+				if not lo.is_empty():
+					var il := await _ask(f.i, "card", "%s: scegli una carta Legno dagli scarti da rimescolare nel mazzo" % f.name, lo, {"mostra": true, "dal_mazzo": true})
+					f.discard.erase(lo[il].card)
+					f.deck.append(lo[il].card)
+					_mischia(f.deck)
+			for k in f.contr:
+				f.contr[k].via = true
+			_log("%s scarta tutti i suoi contratti." % f.name)
 		"discard_hobble":
 			if not f.hobbles.is_empty():
 				f.hobbles.pop_back()
@@ -1575,13 +1717,14 @@ func _fx(f: Dictionary, e: Dictionary, ctx: Dictionary) -> void:
 
 
 func _fx_bersaglio(f: Dictionary, o: Dictionary, e: Dictionary, n: int) -> void:
-	if o.ai and ["t_lose_focus", "t_switch", "t_discard_type", "t_discard", "t_shuffle_type", "t_draw", "t_give_top"].has(e.v):
+	if o.ai and ["t_lose_focus", "t_switch", "t_discard_type", "t_discard", "t_discard_rand", "t_shuffle_type", "t_draw", "t_give_top"].has(e.v):
 		return
 	match e.v:
 		"t_discard":
 			await _scarta(o, n)
 		"t_poison":
 			_svela(o)
+			_attrezzo(o, "veleno")
 			var pp: int = maxi(0, o.deck.size() - rng.randi_range(0, mini(4, o.deck.size())))
 			o.deck.insert(pp, -2)
 			_log("%s è [b]avvelenato[/b]: il Veleno Debilitante finisce fra le prime 5 carte del suo mazzo." % o.name)
@@ -1624,6 +1767,16 @@ func _fx_bersaglio(f: Dictionary, o: Dictionary, e: Dictionary, n: int) -> void:
 			for _k in q2:
 				o.discard.append(o.deck.pop_back())
 			_log("%s scarta %d carte dalla cima del mazzo." % [o.name, q2])
+		"t_discard_rand":
+			var pr: Array = []
+			for h in o.hand:
+				if h >= 0 and not Carte.carta(h).get("core", false):
+					pr.append(h)
+			if not pr.is_empty():
+				var hr: int = pr[rng.randi_range(0, pr.size() - 1)]
+				o.hand.erase(hr)
+				o.discard.append(hr)
+				_log("%s scarta una carta a caso." % o.name)
 		"t_stun_per_step":
 			for _k in int(f.passi):
 				_stordisci(o)
@@ -1673,6 +1826,7 @@ func _fx_bersaglio(f: Dictionary, o: Dictionary, e: Dictionary, n: int) -> void:
 		"t_hobble":
 			o.hobbles.append(0)
 			_svela(o)
+			_attrezzo(o, "azzoppato")
 			_log("%s viene azzoppato." % o.name)
 		"t_rot":
 			var idx := await _ask(f.i, "choice", "%s: ruota %s di %d — in che verso?" % [f.name, o.name, n],
@@ -1727,6 +1881,56 @@ func _fx_bersaglio(f: Dictionary, o: Dictionary, e: Dictionary, n: int) -> void:
 			_log("Il movimento attivo di %s è cancellato." % o.name)
 
 
+func _spendi(f: Dictionary, n: int) -> void:
+	if n <= 0:
+		return
+	f.focus -= n
+	_ruota_contratto(f, "concentrazione")
+
+
+func contratti_fatti(f: Dictionary) -> int:
+	var n := 0
+	for k in f.contr:
+		if f.contr[k].done and not f.contr[k].via:
+			n += 1
+	return n
+
+
+func _ruota_contratto(f: Dictionary, k: String) -> void:
+	if not f.contr.has(k) or f.contr[k].done or f.contr[k].via:
+		return
+	f.contr[k].rot += 1
+	if f.contr[k].rot >= 4:
+		_contratto(f, k)
+
+
+func _contratto(f: Dictionary, k: String) -> void:
+	if not f.contr.has(k) or f.contr[k].done or f.contr[k].via:
+		return
+	f.contr[k].done = true
+	f.contr[k].mai = true
+	f.contr_nuovo = true
+	_log("[b]%s completa il contratto «%s».[/b]" % [f.name, CONTRATTI[k]])
+	var tot := 0
+	for x in f.contr:
+		if f.contr[x].mai:
+			tot += 1
+	if tot >= 5 and not over:
+		_log("[b]%s ha completato cinque contratti e vince la partita![/b]" % f.name)
+		over = true
+		winner = f.i
+		queue.clear()
+
+
+func _attrezzo(o: Dictionary, tipo: String) -> void:
+	if autore < 0 or autore == o.i:
+		return
+	var a: Dictionary = F[autore]
+	if a.contr.has("attrezzi") and not a.contr.attrezzi.visti.has(tipo):
+		a.contr.attrezzi.visti.append(tipo)
+		_ruota_contratto(a, "attrezzi")
+
+
 func _focus(f: Dictionary, n: int) -> void:
 	if f.ai:
 		return
@@ -1740,6 +1944,7 @@ func _stordisci(o: Dictionary) -> void:
 	if o.dead:
 		return
 	_svela(o)
+	_attrezzo(o, "stordimento")
 	if o.ai:
 		o.deck.insert(rng.randi_range(0, o.deck.size()), -1)
 		_log("Uno [b]stordimento[/b] viene mischiato nel mazzo di %s." % o.name)
@@ -1810,7 +2015,7 @@ func _mente_illuminata(f: Dictionary, id: int) -> void:
 	var idx := await _ask(f.i, "yesno", "%s: spendi 1 focus per mettere in gioco «%s»?" % [f.name, Carte.nome(id)], [{"label": "Sì"}, {"label": "No"}], {"card": id})
 	if idx != 0:
 		return
-	f.focus -= 1
+	_spendi(f, 1)
 	f.discard.erase(id)
 	var c := Carte.carta(id)
 	_log("%s mette in gioco [b]%s[/b]." % [f.name, c.name])
@@ -1883,7 +2088,7 @@ func _cambia_kamae(f: Dictionary, n: int) -> void:
 	_ev({"t": "kamae", "p": f.i})
 
 
-func _cerca(f: Dictionary, rango, tipo: String, pila: Array, mischia: bool) -> void:
+func _cerca(f: Dictionary, rango, tipo: String, pila: Array, mischia: bool, pers: String = "") -> void:
 	var ranghi: Array = rango if rango is Array else [rango]
 	var opts: Array = []
 	var visti := {}
@@ -1891,7 +2096,7 @@ func _cerca(f: Dictionary, rango, tipo: String, pila: Array, mischia: bool) -> v
 		if id < 0:
 			continue
 		var c := Carte.carta(id)
-		if not visti.has(id) and ranghi.has(c.rank) and (tipo == "" or c.type == tipo):
+		if not visti.has(id) and ranghi.has(c.rank) and (tipo == "" or c.type == tipo) and (pers == "" or c.get("pers", "") == pers):
 			visti[id] = true
 			opts.append({"card": id, "label": c.name})
 	var dove := "nel mazzo" if mischia else "negli scarti"
@@ -1962,6 +2167,12 @@ func _spingi(f: Dictionary, o: Dictionary, n: int, tira: bool = false) -> void:
 func _fine_turno() -> void:
 	fase = "scarto"
 	fonte = {}
+	autore = -1
+	for f in F:
+		if f.reaz:
+			_contratto(f, "reazione")
+	if over:
+		return
 	await _pausa("end")
 	for f in F:
 		var id: int = f.play.get("id", -1)

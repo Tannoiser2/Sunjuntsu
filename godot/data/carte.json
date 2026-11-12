@@ -9286,6 +9286,890 @@
    "pers": "Gen. Ability",
    "img": "altre_carte_3/altre_carte_3_06.webp"
   },
+  "316": {
+   "id": 316,
+   "name": "Carta Speciale Yojimbo",
+   "type": "core",
+   "init": 0,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "discard",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "draw",
+            "n": 2
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "contract_back"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "change",
+            "n": 1
+           }
+          ]
+         }
+        ]
+       ]
+      }
+     ]
+    }
+   ],
+   "core": true,
+   "en": "Carta Speciale Yojimbo",
+   "rank": "-",
+   "pers": "Yojimbo",
+   "img": "yojimbo/yojimbo_03.webp"
+  },
+  "317": {
+   "id": 317,
+   "name": "Affondo di Nagamaki",
+   "type": "attack",
+   "init": 4,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "discard",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1",
+        "00": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "t_hobble"
+           }
+          ],
+          "f": 1
+         }
+        ],
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "t_stun"
+           }
+          ],
+          "f": 1
+         }
+        ]
+       ]
+      }
+     ]
+    }
+   ],
+   "weapon": "Nagamaki",
+   "core": true,
+   "en": "Affondo di Nagamaki",
+   "rank": "-",
+   "pers": "Yojimbo/Weapon",
+   "img": "yojimbo/yojimbo_13.webp"
+  },
+  "319": {
+   "id": 319,
+   "name": "Zanmato",
+   "type": "attack",
+   "init": 5,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5
+         ],
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "1": "w1",
+        "2": "w1"
+       }
+      }
+     ]
+    }
+   ],
+   "zanmato": true,
+   "en": "Zanmato",
+   "rank": "Jade",
+   "pers": "Yojimbo",
+   "img": "yojimbo/yojimbo_14.webp"
+  },
+  "320": {
+   "id": 320,
+   "name": "Colpo Brutale",
+   "type": "attack",
+   "init": 5,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "k": "aggression"
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": false
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "w2",
+        "0": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "view_hand"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "change",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "en": "Colpo Brutale",
+   "rank": "Gold",
+   "pers": "Yojimbo",
+   "img": "yojimbo/yojimbo_18.webp"
+  },
+  "321": {
+   "id": 321,
+   "name": "Reputazione Spaventosa",
+   "type": "meditation",
+   "init": 5,
+   "focus": 1,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_hobble"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "advantage"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "range": 1,
+   "range_contr": true,
+   "en": "Reputazione Spaventosa",
+   "rank": "Gold",
+   "pers": "Yojimbo",
+   "img": "yojimbo/yojimbo_17.webp"
+  },
+  "322": {
+   "id": 322,
+   "name": "Il Mio Lavoro Qui è Finito",
+   "type": "meditation",
+   "init": 6,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "lavoro_finito"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "en": "Il Mio Lavoro Qui È Finito",
+   "rank": "Gold",
+   "pers": "Yojimbo",
+   "img": "yojimbo/yojimbo_16.webp"
+  },
+  "323": {
+   "id": 323,
+   "name": "Guardia di Ferro",
+   "type": "defence",
+   "init": [
+    7,
+    5
+   ],
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "5": "s",
+        "0": "s",
+        "1": "s"
+       }
+      },
+      {
+       "t": "counter",
+       "v": [
+        6
+       ]
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "focus",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "push",
+         "n": 2
+        }
+       ],
+       "k": [
+        "balance",
+        "aggression"
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "advantage"
+        }
+       ],
+       "k": "determination"
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 4
+    }
+   ],
+   "en": "Guardia di Ferro",
+   "rank": "Steel",
+   "pers": "Yojimbo",
+   "img": "yojimbo/yojimbo_25.webp"
+  },
+  "324": {
+   "id": 324,
+   "name": "Pungiglione dello Scorpione",
+   "type": "attack",
+   "init": 6,
+   "focus": 1,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "alt",
+       "v": 8,
+       "k": "aggression"
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_poison"
+        }
+       ],
+       "f": 1
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_discard",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "en": "Puntura di Scorpione",
+   "rank": "Steel",
+   "pers": "Yojimbo",
+   "img": "yojimbo/yojimbo_23.webp"
+  },
+  "325": {
+   "id": 325,
+   "name": "Lancio di Senbon",
+   "type": "attack",
+   "init": 4,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "alt",
+       "v": 6,
+       "k": "aggression"
+      },
+      {
+       "t": "ranged",
+       "eff": "b",
+       "r": 2
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "focus",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "draw",
+         "n": 2
+        }
+       ],
+       "k": "determination"
+      }
+     ]
+    }
+   ],
+   "range": 2,
+   "en": "Lancio di Senbon",
+   "rank": "Steel",
+   "pers": "Yojimbo",
+   "img": "yojimbo/yojimbo_21.webp"
+  },
+  "326": {
+   "id": 326,
+   "name": "Craniotomia",
+   "type": "attack",
+   "init": 4,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1",
+        "1": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_stun"
+        }
+       ],
+       "k": "determination"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_switch",
+         "to": "neutral"
+        }
+       ],
+       "k": "aggression"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "change",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "en": "Craniotomia",
+   "rank": "Steel",
+   "pers": "Yojimbo",
+   "img": "yojimbo/yojimbo_19.webp"
+  },
+  "327": {
+   "id": 327,
+   "name": "Aura Oscura",
+   "type": "meditation",
+   "init": 2,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 2,
+         "opt": false
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_lose_focus",
+         "n": 2
+        }
+       ],
+       "f": 1
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_discard_rand"
+        }
+       ],
+       "f": 2
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "advantage"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "range": 3,
+   "en": "Aura Oscura",
+   "rank": "Wood",
+   "pers": "Yojimbo",
+   "img": "yojimbo/yojimbo_10.webp"
+  },
+  "328": {
+   "id": 328,
+   "name": "Sicario a Pagamento",
+   "type": "meditation",
+   "init": "-",
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "search",
+            "rank": "Wood",
+            "type": "attack",
+            "pers": "Yojimbo"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "search",
+            "rank": "Steel",
+            "type": "attack",
+            "pers": "Yojimbo"
+           }
+          ],
+          "f": 1
+         }
+        ],
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "search",
+            "rank": "Gold",
+            "type": "attack",
+            "pers": "Yojimbo"
+           }
+          ],
+          "f": 2
+         }
+        ]
+       ]
+      }
+     ]
+    }
+   ],
+   "when": "contract",
+   "prepared": true,
+   "en": "Sicario a Pagamento",
+   "rank": "Wood",
+   "pers": "Yojimbo",
+   "img": "yojimbo/yojimbo_07.webp"
+  },
+  "329": {
+   "id": 329,
+   "name": "Spezzare le Gambe",
+   "type": "attack",
+   "init": 7,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          3
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "w1",
+        "4": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_hobble"
+        }
+       ],
+       "k": "balance"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "change",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "en": "Spezzare le Gambe",
+   "rank": "Wood",
+   "pers": "Yojimbo",
+   "img": "yojimbo/yojimbo_04.webp"
+  },
+  "155": {
+   "id": 155,
+   "name": "Contrattacco",
+   "type": "attack",
+   "init": 2,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1"
+       }
+      }
+     ]
+    }
+   ],
+   "en": "Contrattacco",
+   "rank": "Wood",
+   "pers": "Gen. Ability",
+   "img": "altre_carte_2/altre_carte_2_16.webp"
+  },
   "1001": {
    "id": 1001,
    "name": "Chiatta di Buoi (Solo)",
@@ -13183,6 +14067,97 @@
      [
       "neutral",
       "balance",
+      2
+     ]
+    ]
+   }
+  },
+  "yojimbo": {
+   "name": "Yojimbo",
+   "title": "Lealtà al soldo",
+   "advantage": 39,
+   "contratti": true,
+   "hand": 5,
+   "wounds": 5,
+   "char_img": "yojimbo/yojimbo_01.webp",
+   "kamae_img": "yojimbo/yojimbo_02.webp",
+   "portrait": "yojimbo.webp",
+   "model": "",
+   "deck": {
+    "319": 1,
+    "320": 1,
+    "321": 1,
+    "322": 1,
+    "323": 2,
+    "324": 2,
+    "325": 2,
+    "326": 2,
+    "327": 3,
+    "328": 3,
+    "329": 3,
+    "96": 1,
+    "98": 1,
+    "107": 1,
+    "115": 1,
+    "154": 3,
+    "155": 3
+   },
+   "core": [
+    316,
+    317
+   ],
+   "kamae": {
+    "nodes": {
+     "balance": [
+      0.27,
+      0.2
+     ],
+     "aggression": [
+      0.27,
+      0.5
+     ],
+     "focus": [
+      0.73,
+      0.5
+     ],
+     "neutral": [
+      0.27,
+      0.8
+     ],
+     "determination": [
+      0.73,
+      0.8
+     ]
+    },
+    "edges": [
+     [
+      "balance",
+      "aggression",
+      2
+     ],
+     [
+      "balance",
+      "focus",
+      1
+     ],
+     [
+      "aggression",
+      "focus",
+      2
+     ],
+     [
+      "aggression",
+      "neutral",
+      2
+     ],
+     [
+      "neutral",
+      "determination",
+      2
+     ],
+     [
+      "focus",
+      "determination",
       2
      ]
     ]

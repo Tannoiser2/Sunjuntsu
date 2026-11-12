@@ -978,6 +978,12 @@ func _aggiorna() -> void:
 			st.append("Armatura Pesante")
 		if f.get("occ", false):
 			st.append("Occultato")
+		if not f.get("contr", {}).is_empty():
+			var fatti := 0
+			for kc in f.contr:
+				if f.contr[kc].mai:
+					fatti += 1
+			st.append("Contratti %d/5 (in gioco %d)" % [fatti, g.contratti_fatti(f)])
 		if f.get("illum", []).size() > 0:
 			st.append("Illuminate %d" % f.illum.size())
 		if f.dead:

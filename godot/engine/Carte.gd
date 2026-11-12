@@ -126,7 +126,7 @@ static func effetto(e: Dictionary) -> String:
 		"self_hobble": return "prendi 1 azzoppamento"
 		"t_wound": return "il bersaglio subisce %d ferita" % n
 		"t_wound_to_bleed": return "il bersaglio sostituisce 1 ferita con 1 sanguinante"
-		"search": return "cerca nel mazzo e prendi 1 carta%s di rango %s" % [_tipo(e), _rango(e)]
+		"search": return "cerca nel mazzo e prendi 1 carta%s%s di rango %s" % [_tipo(e), " del personaggio" if e.get("pers", "") != "" else "", _rango(e)]
 		"search_discard": return "cerca negli scarti e prendi 1 carta%s di rango %s" % [_tipo(e), _rango(e)]
 		"search_top": return "guarda le prime %d carte del mazzo e prendine 1" % n
 		"discard_stun": return "scarta fino a %d stordimenti" % n
@@ -153,6 +153,9 @@ static func effetto(e: Dictionary) -> String:
 			var bn := {"wounds": "limite di ferite", "hand": "limite di mano", "focus": "limite di focus"}
 			return "rimane in gioco: +1 al tuo %s" % bn.get(e.get("bonus", ""), "")
 		"wounds_to_stun": return "sostituisci tutte le ferite ricevute in questo turno con stordimenti"
+		"contract_back": return "rimetti nella tua area di gioco un contratto scartato, a faccia in su"
+		"lavoro_finito": return "per ogni contratto completato in gioco: +1 focus, pesca 1 carta, rimescola nel mazzo 1 carta Legno dagli scarti; poi scarta tutti i contratti"
+		"t_discard_rand": return "il bersaglio scarta 1 carta a caso"
 		"discard_hobble": return "scarta 1 azzoppamento"
 		"t_stun_per_step": return "il bersaglio prende 1 stordimento per ogni casella in cui ti sei mosso"
 		"push_steps": return "spingi il bersaglio di 1, +1 per ogni casella in cui ti sei mosso (solo dopo un attacco)"
@@ -222,6 +225,7 @@ static func riga(ln: Dictionary) -> String:
 				a3.append(str(int(v)))
 			return g + "contrattacco a iniziativa " + ", ".join(a3)
 		"ifs": return "SE RIUSCITO:"
+		"ranged": return "Attacco a distanza — colpisci il bersaglio con iniziativa inferiore: " + EFFETTI_CELLA.get(ln.eff, ln.eff)
 		"unblockable": return "NON BLOCCABILE"
 		"fx": return g + effetti(ln.fx)
 		"or":
@@ -260,6 +264,10 @@ static func testo(c: Dictionary) -> String:
 		testa += ", Distanza %d" % int(c.range)
 	if c.has("req_illum"):
 		testa += ", requisito: %d carte Illuminate in gioco" % int(c.req_illum)
+	if c.get("zanmato", false):
+		testa += "; quando rivelata scarta tutti i contratti: per ogni contratto completato +1 iniziativa oppure +1 ferita"
+	if c.get("range_contr", false):
+		testa += " (+1 per ogni contratto completato)"
 	if c.get("counter_only", false):
 		testa += ", si gioca solo come contrattacco"
 	elif c.get("counter_ok", false):
