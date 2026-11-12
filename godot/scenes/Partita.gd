@@ -985,11 +985,11 @@ func _aggiorna() -> void:
 		if g.disperata(f):
 			st.append("Disperazione")
 		for x in g.F:
-			if x.cane and x.owner == i:
+			if x.i >= 2 and x.owner == i:
 				if x.dead:
 					st.append("%s sconfitto" % x.name)
 				else:
-					st.append("%s: ferite %d/%d, stordimenti %d/2, %s" % [x.name, x.wounds + x.bleeds, int(x.lim), int(x.stun_lato), Carte.KAMAE[x.kamae]])
+					st.append("%s: ferite %d/%d, stordimenti %d/%d%s" % [x.name, x.wounds + x.bleeds, int(x.lim), int(x.stun_lato), int(x.lim) if x.ai else 2, "" if x.ai else ", " + Carte.KAMAE[x.kamae]])
 					if x.play.has("id") and (i == io or g.fase != "scelta"):
 						st.append("gioca «%s»" % Carte.nome(int(x.play.id)))
 		if not f.get("contr", {}).is_empty():

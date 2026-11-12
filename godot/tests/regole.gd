@@ -448,6 +448,17 @@ func _initialize() -> void:
 	ok(tipi.size() == 3 and tipi.count("diversivo") == 1 and tipi.count("innesco") == 2, "da Occultato: 3 segnalini Trappola, 1 Diversivo e 2 Inneschi")
 	ok(not g.giocabile(g.F[1], 166), "Trappola del Tiratore Lunare richiede Occultamento")
 
+	print("Solitario in coppia")
+	g = Game.new()
+	g.deciders = [_decidi, _decidi]
+	g.prepara({"seed": 6, "players": [{"char": "warrior"}, {"char": "ashigaru", "solo": true}]})
+	ok(g.F.size() == 3 and g.F[2].ai and g.F[2].owner == 1 and g.F[2].deck.size() == 5 and g.F[1].lim == 3 and g.F[2].lim == 3,
+		"Ashigaru e Hachiko avversari: due pedine IA, 3 ferite ciascuna, Hachiko con le sue 5 carte")
+	g._danno(g.F[1], 3, 0)
+	ok(g.F[1].dead and not g.over, "sconfitto l'Ashigaru la partita continua")
+	g._danno(g.F[2], 3, 0)
+	ok(g.over and g.winner == 0, "sconfitti entrambi: vittoria")
+
 	print("Tutte le carte hanno un testo")
 	for c in Carte.db().cards.values():
 		if Carte.testo(c).contains("?"):

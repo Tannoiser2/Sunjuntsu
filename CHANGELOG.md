@@ -1,5 +1,8 @@
 # Novità
 
+## 1.13.0 — Avversari in coppia
+- In Solitario l'Ashigaru combatte insieme a Hachiko (due avversari, 3 ferite ciascuno).
+
 ## 1.12.0 — Solitario contro tutti
 - Carte Solo di Allievo, Maestro, Yasuke, Wakou, Assassino, Ashigaru, Navigatore, Monaco, Yojimbo e
   Onna-Bugeisha: ora si possono affrontare in Solitario (anche Incubo, tranne l'Allievo).

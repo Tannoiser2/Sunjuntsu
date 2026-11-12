@@ -77,7 +77,7 @@ func prepara(setup: Dictionary) -> void:
 			"wounds": 0, "bleeds": 0, "hand": hand, "deck": deck, "discard": [],
 			"hobbles": [], "armour": false, "dead": false, "play": {},
 			"instant_used": false, "no_move": false, "no_rot": false, "owner": i, "cane": false, "ferro": 0, "occ": false, "illum": [], "passi": 0, "contr": {}, "contr_nuovo": false, "reaz": false, "turn_tot": 0, "maxfocus": MAX_FOCUS, "turn_w": 0,
-			"ai": ia, "lim": int(pl.get("ferite", db.solo.ferite)) if ia else int(cd.wounds),
+			"ai": ia, "lim": int(pl.get("ferite", db.solo[pl.char].get("ferite", db.solo.ferite))) if ia else int(cd.wounds),
 			"mano": 99 if ia else int(cd.hand),
 			"comp": rng.randi_range(0, 2), "post": "off" if rng.randi_range(0, 1) == 0 else "def",
 			"raggio": int(db.solo[pl.char].raggio) if ia else 1, "stun_lato": 0, "reset": false, "sent": -1, "goal": 5})
@@ -91,6 +91,25 @@ func prepara(setup: Dictionary) -> void:
 	adv = [0, 1]
 	if int(F[1].cd.advantage) > int(F[0].cd.advantage) and not F[1].ai:
 		adv = [1, 0]
+	# Solitario: avversari che combattono in coppia (Ashigaru e Hachiko).
+	for pi in 2:
+		if not F[pi].ai or not db.solo[F[pi].char].has("compagno"):
+			continue
+		var sc: Dictionary = db.solo[F[pi].char].compagno
+		var hs: Dictionary = F[pi].duplicate(true)
+		var ds: Array = []
+		for x in sc.carte:
+			ds.append(int(x))
+		_mischia(ds)
+		hs.i = F.size()
+		hs.owner = pi
+		hs.name = sc.name
+		hs.cd = {"name": sc.name, "model": "", "portrait": "", "sprite": sc.sprite, "kamae": {"nodes": {}, "edges": []}}
+		hs.deck = ds
+		hs.discard = []
+		hs.raggio = int(sc.raggio)
+		hs.comp = rng.randi_range(0, 2)
+		F.append(hs)
 	# Compagni (Hachiko): una seconda pedina dello stesso giocatore, con il suo mazzo.
 	for pi in 2:
 		if F[pi].ai or not F[pi].cd.has("compagno"):
@@ -146,10 +165,11 @@ func _mazzo_solo(pers: String, incubo: bool) -> Array:
 
 
 func _umano(f: Dictionary) -> Dictionary:
+	var best := {}
 	for o in F:
-		if o.i != f.i and not o.dead:
-			return o
-	return {}
+		if o.owner != f.owner and not o.dead and (best.is_empty() or Hex.dist(f.pos, o.pos) < Hex.dist(f.pos, best.pos)):
+			best = o
+	return best
 
 
 func answer(idx: int) -> void:
@@ -434,6 +454,9 @@ func _turno() -> void:
 	for p in _ordine_asc():
 		if not F[p].dead:
 			await _scegli(F[p])
+	for f in F:
+		if f.i >= 2 and f.ai and not f.dead:
+			await _scegli(f)
 	if _fine():
 		return
 	fase = "rivela"
@@ -2534,7 +2557,7 @@ func _fine() -> bool:
 		if f.dead and not f.get("sepolto", false):
 			f["sepolto"] = true
 			for o in F:
-				if o.i == f.i or o.owner != f.owner or o.dead:
+				if o.i == f.i or o.owner != f.owner or o.dead or o.ai:
 					continue
 				# la carta personaggio del compagno si volta
 				adv.erase(int(o.owner))

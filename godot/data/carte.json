@@ -22480,6 +22480,360 @@
    "or": true,
    "nightmare": true,
    "req_d": true
+  },
+  "5551": {
+   "id": 5551,
+   "name": "Strisciata (Solo)",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1",
+        "1": "w1"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 2,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 3
+    }
+   ],
+   "img": "solo/5551.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "5552": {
+   "id": 5552,
+   "name": "Salta (Solo)",
+   "type": "attack",
+   "init": 7,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "a"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "push",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 6
+    }
+   ],
+   "img": "solo/5552.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "5553": {
+   "id": 5553,
+   "name": "Ululato Feroce (Solo)",
+   "type": "defence",
+   "init": 6,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_lose_focus",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 3
+    }
+   ],
+   "img": "solo/5553.webp",
+   "en": "",
+   "rank": "-",
+   "range": 2
+  },
+  "5554": {
+   "id": 5554,
+   "name": "Ringhio Minaccioso (Solo)",
+   "type": "defence",
+   "init": 7,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "cancel_move"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "img": "solo/5554.webp",
+   "en": "",
+   "rank": "-",
+   "range": 2
+  },
+  "5555": {
+   "id": 5555,
+   "name": "Morso Rapido (Solo)",
+   "type": "attack",
+   "init": 7,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 2,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 5
+    }
+   ],
+   "img": "solo/5555.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
   }
  },
  "characters": {
@@ -23841,7 +24195,20 @@
     "2",
     "4",
     "5"
-   ]
+   ],
+   "compagno": {
+    "name": "Hachiko",
+    "carte": [
+     5551,
+     5552,
+     5553,
+     5554,
+     5555
+    ],
+    "raggio": 1,
+    "sprite": "res://assets/cards/hachiko/hachiko_01.webp"
+   },
+   "ferite": 3
   },
   "sailor": {
    "firma": [

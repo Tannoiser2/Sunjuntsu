@@ -877,12 +877,20 @@ solo(5904, "Guardia Furente (Solo)", "defence", [7, 3], seg(blk("5", "0", "1"), 
 oppure(5990, "Abbraccio Silenzioso (Solo, Incubo)", 7, [move(rot(3)), atk({"00": "w3", "01": "w2", "11": "w1"}), IFS, RST], 4, [move(step(ANY, 1), rot(1)), RST], nightmare=True)
 C["5990"]["req_d"] = True
 
+oppure(5551, "Strisciata (Solo)", 6, [move(step(FANUP, 1)), atk({"0": "w1", "1": "w1"})], 3, [CHG, move(step([5, 1], 2), rot(2))])
+oppure(5552, "Salta (Solo)", 7, [move(step(FANUP, 1)), atk({"0": "a"}), ast(e("push", n=1))], 6, [move(step(ANY, 1))])
+solo(5553, "Ululato Feroce (Solo)", "defence", 6, seg(CHG, move(step(FANUP, 1)), fx(e("t_lose_focus", n=1))),
+    seg(move(step(FANUP, 1), rot(1)), init=3), range=2)
+solo(5554, "Ringhio Minaccioso (Solo)", "defence", 7, seg(CHG, move(step([5, 1], 2)), fx(e("cancel_move"))), range=2)
+oppure(5555, "Morso Rapido (Solo)", 7, [CHG, move(step(FANDN, 1)), move(rot(1)), atk({"0": "w1"})], 5, [move(step(ANY, 2), rot(1))])
+
 def _s(base, incubo, raggio, mazzi):
     return {"firma": [base + 1, base + 2, base + 3, base + 4], "incubo": incubo, "raggio": raggio, "mazzi": mazzi, "extra": ["2", "4", "5"]}
 SOLO.update({
     "student": _s(5000, None, 1, ["1", "4", "4", "5"]), "master": _s(5100, 5190, 1, ["1", "4", "4", "5"]),
     "yasuke": _s(5200, 5290, 1, ["1", "4", "4", "5"]), "wakou": _s(5300, 5390, 1, ["1", "3", "4", "5"]),
-    "assassin": _s(5400, 5490, 1, ["1", "4", "4", "5"]), "ashigaru": _s(5500, 5590, 2, ["1", "3", "3", "5"]),
+    "assassin": _s(5400, 5490, 1, ["1", "4", "4", "5"]), "ashigaru": dict(_s(5500, 5590, 2, ["1", "3", "3", "5"]), compagno={"name": "Hachiko", "carte": [5551, 5552, 5553, 5554, 5555],
+        "raggio": 1, "sprite": "res://assets/cards/hachiko/hachiko_01.webp"}, ferite=3),
     "sailor": _s(5600, 5690, 1, ["1", "4", "4", "5"]), "monk": _s(5700, 5790, 2, ["1", "3", "3", "5"]),
     "yojimbo": _s(5800, 5890, 1, ["1", "4", "4", "5"]), "onna": _s(5900, 5990, 2, ["1", "3", "3", "5"])})
 
