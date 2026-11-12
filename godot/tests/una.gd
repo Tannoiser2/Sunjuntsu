@@ -5,5 +5,5 @@ func _initialize() -> void:
 	var b1 := Bot.new(1, 12)
 	g.deciders = [b0.decidi, b1.decidi]
 	g.logged.connect(func(t): print(t))
-	g.start({"seed": 5, "players": [{"char": "warrior"}, {"char": "ronin"}]})
+	g.start({"seed": 9, "players": [{"char": "warrior"}, {"char": "ronin", "solo": true}]})
 	quit(0)

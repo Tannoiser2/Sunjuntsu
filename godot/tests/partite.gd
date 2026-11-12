@@ -18,13 +18,17 @@ func _initialize() -> void:
 		var stato := {"fine": false}
 		g.finished.connect(func(_w): stato.fine = true)
 		var chars := ["warrior", "ronin"] if s % 2 == 0 else ["ronin", "warrior"]
-		g.start({"seed": s + 1, "players": [{"char": chars[0]}, {"char": chars[1]}]})
+		var solo := OS.get_cmdline_user_args().has("solo")
+		g.start({"seed": s + 1, "players": [{"char": chars[0]}, {"char": chars[1], "solo": solo, "incubo": solo and s % 5 == 0}]})
 		if not stato.fine:
 			printerr("Partita %d NON terminata (turno %d, fase %s, pending %s)" % [s, g.turn, g.fase, g.pending])
 			quit(1)
 			return
 		var w := g.winner
-		vittorie[2 if w < 0 else (0 if g.F[w].char == "warrior" else 1)] += 1
+		if OS.get_cmdline_user_args().has("solo"):
+			vittorie[2 if w < 0 else w] += 1
+		else:
+			vittorie[2 if w < 0 else (0 if g.F[w].char == "warrior" else 1)] += 1
 		turni += g.turn
 	print("Partite: %d — Guerriero %d, Ronin %d, pari %d — turni medi %.1f" % [n, vittorie[0], vittorie[1], vittorie[2], float(turni) / n])
 	print("Decisioni: ", kinds)

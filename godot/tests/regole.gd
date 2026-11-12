@@ -78,8 +78,14 @@ func ok(cond: bool, nome: String) -> void:
 func turno(c0: int, c1: int) -> void:
 	piano[0]["carta"] = c0
 	piano[1]["carta"] = c1
-	mano(0, [c0])
-	mano(1, [c1])
+	for pc in [[0, c0], [1, c1]]:
+		var ff: Dictionary = g.F[pc[0]]
+		if ff.ai:
+			ff.deck.erase(pc[1])
+			ff.discard.erase(pc[1])
+			ff.deck.append(pc[1])
+		else:
+			mano(pc[0], [pc[1]])
 	await g._turno()
 
 
@@ -212,6 +218,49 @@ func _initialize() -> void:
 	g.F[R].deck.clear()
 	await turno(53, 23)
 	ok(g.F[R].wounds >= 1, "mazzo vuoto: pescare costa una ferita")
+
+	print("Solitario")
+	g = Game.new()
+	g.deciders = [_decidi, _decidi]
+	registro = []
+	g.logged.connect(func(t): registro.append(t))
+	g.prepara({"seed": 4, "players": [{"char": "warrior"}, {"char": "ronin", "solo": true}]})
+	piano = [{}, {}]
+	var ia: Dictionary = g.F[1]
+	ok(ia.deck.size() == 9 and ia.hand.is_empty() and ia.lim == 7, "mazzo Solo del Ronin: 4 carte firma + 5, limite ferite 7, nessuna mano")
+	ok(ia.deck.has(1001) and ia.deck.has(1004) and not ia.deck.has(1991), "le carte firma ci sono, l'Incubo no")
+	# Spazzata Feroce: il giocatore è a distanza 2 di fronte -> attacca senza muoversi
+	metti(0, Vector2i(5, -2), 5)
+	metti(1, Vector2i(3, -2), 2)
+	ia.post = "off"
+	ia.deck.erase(1004)
+	ia.deck.append(1004)
+	await turno(53, 1004)
+	ok(g.F[0].wounds == 1, "Solo: Spazzata Feroce colpisce a distanza 2")
+	# carta con OPPURE quando non può attaccare: usa la seconda parte e si avvicina
+	metti(0, Vector2i(6, -3), 5)
+	metti(1, Vector2i(1, 0), 0)
+	ia.deck.append(1003)
+	var prima_d: int = Hex.dist(g.F[0].pos, ia.pos)
+	registro.clear()
+	await turno(53, 1003)
+	ok(registro.any(func(t): return t.contains("seconda parte")), "Solo: se non può attaccare usa la parte sotto l'OPPURE")
+	ok(Hex.dist(g.F[0].pos, ia.pos) < prima_d, "Solo: si muove verso la distanza preferita")
+	# stordimento: va nel mazzo, e quando esce fa saltare il turno
+	g._stordisci(ia)
+	ok(ia.deck.has(-1), "Solo: lo stordimento viene mischiato nel mazzo")
+	ia.deck.erase(-1)
+	ia.deck.append(-1)
+	await turno(53, -1)
+	ok(ia.stun_lato == 1 and not ia.deck.has(-1), "Solo: stordimento rivelato = turno saltato, messo da parte")
+	# difesa: sceglie l'iniziativa dell'attacco del giocatore
+	metti(0, Vector2i(3, -2), 2)
+	metti(1, Vector2i(4, -2), 5)
+	ia.deck.append(1002)
+	var f0: int = g.F[1].wounds
+	await turno(64, 1002)   # Testata: iniziativa 4, dentro l'intervallo 8-3 della difesa
+	ok(registro.any(func(t): return t.contains("Ronin blocca")), "Solo: la difesa sceglie l'iniziativa dell'attacco e lo blocca")
+	ok(g.F[1].wounds == f0, "Solo: l'attacco bloccato non ferisce")
 
 	print("Tutte le carte hanno un testo")
 	for c in Carte.db().cards.values():

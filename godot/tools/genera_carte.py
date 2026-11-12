@@ -203,10 +203,108 @@ card(126, "Colpo d'Elsa", "attack", 5, seg(
 card(127, "Spinta Indietro", "attack", 4, seg(
     move(rot(1)), atk({"0": "a"}), ast(e("push", n=2))))
 
+# ───────────── CARTE SOLO (Solitario) ─────────────
+# Id: 1000+ Ronin, 2000+ Guerriero, 3000+ generiche (numero stampato + base).
+V = [5, 1]; A = [4, 2]; X = [1, 2, 4, 5]
+CHG = fx(e("ai_change")); RST = fx(e("ai_reset"))
+def solo(id, name, type, init, *segs, range=None, alt=False, nightmare=False):
+    c = {"id": id, "name": name, "type": type, "init": init, "focus": 0, "solo": True,
+         "segs": [x if "lines" in x else seg(x) for x in segs], "img": "solo/%d.webp" % id,
+         "en": "", "rank": "-"}
+    if alt: c["or"] = True
+    if range: c["range"] = range
+    if nightmare: c["nightmare"] = True
+    C[str(id)] = c
+def oppure(id, name, init, top, init2, bottom, **kw):
+    solo(id, name, "attack", init, seg(*top), seg(*bottom, init=init2), alt=True, **kw)
+
+oppure(1001, "Chiatta di Buoi (Solo)", 6,
+    [UNB, move(step(F, 1)), move(rot(1)), atk({"0": "a"}), ast(e("t_stun")), IFS, fx(e("push", n=1))],
+    4, [move(step(FANUP, 2)), move(rot(1))])
+solo(1002, "Difesa d'Acciaio (Solo)", "defence", [8, 3],
+    seg(blk("5", "0", "1"), counter(6, 5, 4), IFS, fx(e("t_rot", n=1))),
+    seg(CHG, move(step(ANY, 1), rot(1)), RST, init=2))
+oppure(1003, "Affondo Invertito di Zanna (Solo)", 8,
+    [move(step(FANDN, 1)), atk({"00": "w2"}), IFS, fx(e("push", n=1))],
+    5, [move(step(ANY, 1), rot(1))])
+oppure(1004, "Spazzata Feroce (Solo)", 6,
+    [atk({"00": "w1", "01": "w1", "1": "w1", "2": "w1"})],
+    6, [CHG, move(step(FANDN, 1), rot(1))])
+solo(1991, "Il Terrore (Solo, Incubo)", "meditation", 7, seg(
+    CHG, fx(e("cancel_cards")), fx(e("each_stun")), move(step(ANY, 2), rot(2)), RST), range=3, nightmare=True)
+
+solo(2001, "Blocco Cinereo (Solo)", "defence", [9, 5],
+    seg(blk("0", "5", "4"), counter(8), IFS, fx(e("push", n=1))),
+    seg(CHG, move(step(ANY, 1), rot(1)), RST, init=4))
+oppure(2002, "Falciata Montante (Solo)", 8,
+    [move(step(B, 1)), atk({"5": "w1", "0": "w1", "01": "w1"})],
+    5, [CHG, move(step(ANY, 1), rot(1))])
+oppure(2003, "Arco Respingente (Solo)", 7,
+    [atk({"00": "w1", "05": "w1", "01": "w1", "0": "w1", "5": "w1", "1": "w1"}),
+     IFS, fx(e("t_discard", n=1), e("push", n=1))],
+    5, [CHG, move(step(ANY, 1), rot(1))])
+solo(2004, "Concentrazione Ritrovata (Solo)", "meditation", 5, seg(CHG, move(step(ANY, 2), rot(2)), RST))
+oppure(2993, "Colpo della Fenice Fiammante (Solo, Incubo)", 6,
+    [move(step(FANUP, 1)), atk({"00": "w2", "01": "x", "1": "w1", "11": "w1"}), IFS, RST],
+    2, [move(step(FANUP, 1), rot(1)), RST], nightmare=True)
+
+for n in (3001, 3002):
+    solo(n, "Mente Aggressiva", "meditation", 2, seg(CHG, move(step(FANUP, 2)), move(rot(3)), fx(e("ai_recycle"))))
+for n in (3003, 3004, 3005):
+    solo(n, "Mente Risoluta (Solo)", "meditation", 3, seg(move(step(ANY, 2), rot(2))))
+for n in (3006, 3007):
+    solo(n, "Mente Rapida (Solo)", "meditation", 6, seg(move(step(ANY, 2)), move(step(F, 1)), move(rot(1))))
+solo(3008, "Provocazione", "meditation", 7, seg(move(step(ANY, 2)), move(rot(1)), fx(e("t_switch", to="neutral"))), range=5)
+solo(3009, "Grido di Guerra (Solo)", "meditation", 7, seg(CHG, move(step(F, 2)), move(rot(1)), fx(e("cancel_move"))), range=5)
+oppure(3010, "Colpo alle Caviglie (Solo)", 7, [move(step(FANUP, 1), rot(1)), atk({"00": "w1", "01": "w1"})],
+    2, [move(step(ANY, 1), rot(1))])
+oppure(3011, "Affondo Lungo", 4, [move(step(FANDN, 1)), move(rot(1)), atk({"0": "w1", "01": "w1"})],
+    4, [move(step(ANY, 1), rot(1))])
+for n, i in ((3012, 3), (3013, 6)):
+    oppure(n, "Affondo in Spinta (Solo)", i, [move(step(FANUP, 1)), atk({"00": "w2", "0": "w1"}), IFS, fx(e("t_stun"))],
+        3, [CHG, move(step(ANY, 1), rot(1))])
+for n, i in ((3014, 2), (3015, 6)):
+    oppure(n, "Squarcio di Rovescio", i, [move(step(ANY, 1)), move(rot(1)), atk({"0": "w1"}), IFS, fx(e("t_discard", n=1))],
+        2, [move(step(ANY, 1), rot(1))])
+oppure(3016, "Taglio Sanguinante", 7, [move(step(V, 1)), atk({"0": "b", "1": "b"})], 1, [move(step(ANY, 1), rot(1))])
+oppure(3017, "Taglio Orizzontale", 8, [CHG, move(step(X, 1)), atk({"5": "w1", "0": "w1", "1": "w1"})], 4, [move(step(ANY, 1))])
+oppure(3018, "Calcio del Cavallo (Solo)", 6, [atk({"0": "a"}), ast(e("t_stun"), e("push", n=1))], 5, [move(step(ANY, 1))])
+oppure(3019, "Colpo d'Elsa (Solo)", 5, [move(step(FANUP, 1)), move(rot(1)), atk({"0": "w1"}), IFS, fx(e("t_lose_focus", n=1))],
+    5, [move(step(FANUP, 1), rot(1))])
+oppure(3020, "Spinta Indietro (Solo)", 5, [move(rot(1)), atk({"0": "a"}), ast(e("push", n=2))], 2, [move(step(ANY, 1))])
+oppure(3021, "Squarcio Rotante", 6, [CHG, move(step(V, 2)), move(rot(1)), atk({"0": "w1", "5": "w2"})], 6, [move(step(X, 2))])
+oppure(3022, "Taglio Troncante (Solo)", 4, [move(step(V, 1), rot(1)), atk({"0": "b"})], 1, [move(step(ANY, 1), rot(1))])
+for n, i, j in ((3023, 3, 3), (3024, 5, 2), (3025, 7, 1)):
+    oppure(n, "Stoccata", i, [move(step(F, 1), rot(1)), atk({"0": "w1"})], j, [move(step(FANUP, 1), rot(1))])
+solo(3026, "Difesa Tranquilla", "defence", [6, 2], seg(move(rot(1)), blk("5", "0", "1")),
+    seg(CHG, move(step(FANDN, 1), rot(1)), RST, init=1))
+solo(3027, "Difesa Accerchiante", "defence", [7, 3], seg(blk("0", "1", "2")),
+    seg(move(step(V, 2), rot(2)), RST, init=2))
+solo(3028, "Schivata", "defence", 8, seg(CHG, move(step(ANY, 1)), move(step(ANY, 1)), move(rot(1)), RST))
+solo(3029, "Respinta (Solo)", "defence", [5, 2], seg(move(rot(1)), blk("5", "0", "1"), IFS, fx(e("push", n=1))),
+    seg(move(step(FANDN, 1)), RST, init=1))
+solo(3030, "Passo di Foresta", "defence", 7, seg(UNB, atk({"0": "a"}), ast(e("t_rot", n=2))),
+    seg(CHG, move(step(ANY, 1), rot(1)), RST, init=2))
+for n in (3031, 3032):
+    solo(n, "Blocco di Fiume", "defence", [7, 4], seg(move(rot(1)), blk("0", "1"), counter(6, 5)),
+        seg(CHG, move(step(ANY, 1), rot(1)), RST, init=3))
+solo(3033, "Difesa di Roccia", "defence", [6, 2], seg(blk("5", "0", "1", "4", "2"), counter(5, 4, 3), IFS, fx(e("t_stun"))),
+    seg(CHG, move(step(B, 1), rot(1)), RST, init=1))
+for n in (3034, 3035):
+    solo(n, "Blocco di Vento", "defence", [8, 5], seg(move(rot(1)), blk("0", "1"), counter(8, 7)),
+        seg(move(step(FANUP, 1), rot(1)), RST, init=4))
+
+SOLO = {"selezione": {"1": [3001, 3003, 3008, 3009], "2": [3002, 3004, 3005, 3006, 3007],
+                      "3": [3010, 3011, 3012, 3013], "4": list(range(3014, 3026)), "5": list(range(3026, 3036))},
+        "warrior": {"firma": [2001, 2002, 2003, 2004], "incubo": 2993, "raggio": 1, "mazzi": ["1", "3", "4", "5"], "extra": ["2", "4", "5"]},
+        "ronin": {"firma": [1001, 1002, 1003, 1004], "incubo": 1991, "raggio": 2, "mazzi": ["1", "3", "4", "5"], "extra": ["2", "4", "5"]},
+        "ferite": 7}
+
 here = os.path.dirname(os.path.abspath(__file__))
 pool = {c["id"]: c for c in json.load(open(os.path.join(here, "../data/cards/card_pool.json")))["cards"]}
 imgs = json.load(open(os.path.join(here, "../data/cards/card_images.json")))["by_id"]
 for k, c in C.items():
+    if c.get("solo"): continue
     p = pool.get(int(k), {})
     c["en"] = p.get("name", ""); c["rank"] = p.get("rank", "-")
     c["img"] = imgs.get(k, "")
@@ -236,6 +334,7 @@ out = {
                          "neutral":[0.22,0.76],"balance":[0.62,0.79]},
         "edges": [["focus","aggression",2],["neutral","aggression",1],["neutral","balance",2],
                   ["balance","determination",2]]}}},
+ "solo": SOLO,
  # mappa "villaggio in fiamme": celle giocabili (colonna,riga) lette dal contorno arancione
  "maps": {"villaggio": {"img": "arena.webp", "img_size": 1594,
      "hex_px": 108.68, "origin_px": [304.3, 682.5],

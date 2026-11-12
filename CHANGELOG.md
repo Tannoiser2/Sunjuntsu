@@ -1,5 +1,9 @@
 # Novità
 
+## 1.1.0 — Solitario
+- Modalità Solitario con le 45 carte Solo trascritte dalle scansioni (firma di Ronin e Guerriero,
+  generiche 001-035, Incubo), Comportamenti e Atteggiamenti dell'avversario.
+
 ## 1.0.0 — riscrittura
 - Carte di Guerriero e Ronin ritrascritte dalle scansioni, riga per riga.
 - Nuovo motore di regole sul regolamento della 1a edizione (quello delle carte italiane).

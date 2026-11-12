@@ -76,7 +76,9 @@ func _nuova() -> void:
 	for p in pedine:
 		p.queue_free()
 	pedine = []
-	g.prepara({"seed": randi(), "players": [{"char": mio}, {"char": suo}]})
+	var solo: bool = Sessione.setup.get("modo", "solo") == "solo"
+	g.prepara({"seed": randi(), "players": [{"char": mio},
+		{"char": suo, "solo": solo, "incubo": Sessione.setup.get("incubo", false)}]})
 	for i in 2:
 		pedine.append(_crea_pedina(i))
 	_aggiorna()
@@ -822,9 +824,10 @@ func _disegna_pips(c: Control, i: int) -> void:
 	var f: Dictionary = g.F[i]
 	var font: Font = Tema.testo
 	c.draw_string(font, Vector2(0, 17), "Ferite", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Tema.INCHIOSTRO)
-	var lim := int(f.cd.wounds)
+	var lim := int(f.lim)
+	var passo := 24 if lim <= 5 else 17
 	for k in lim:
-		var p := Vector2(66 + k * 24, 12)
+		var p := Vector2(66 + k * passo, 12)
 		if k < f.wounds:
 			c.draw_circle(p, 9, Tema.VERMIGLIO)
 		elif k < f.wounds + f.bleeds:
@@ -832,6 +835,8 @@ func _disegna_pips(c: Control, i: int) -> void:
 			c.draw_circle(p, 4, Tema.VERMIGLIO)
 		else:
 			c.draw_arc(p, 8, 0, TAU, 20, Tema.INCHIOSTRO, 1.5)
+	if f.ai:
+		return
 	c.draw_string(font, Vector2(0, 42), "Focus", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Tema.INCHIOSTRO)
 	for k in Game.MAX_FOCUS:
 		var p2 := Vector2(66 + k * 24, 37)
@@ -901,11 +906,17 @@ func _aggiorna() -> void:
 		s.pips.queue_redraw()
 		s.anello.queue_redraw()
 		s.info.text = "%s\nMano %d · Mazzo %d · Scarti %d" % [Carte.KAMAE[f.kamae], g.conta_mano(f), f.deck.size(), f.discard.size()]
+		if f.ai:
+			s.info.text = "Avvicina da: %s\nAtteggiamento: %s\nDistanza preferita %d · Mazzo %d" % [
+				Carte.COMPORTAMENTI[f.comp], "Offensivo" if f.post == "off" else "Difensivo", int(f.raggio), f.deck.size()]
+		s.kam.visible = not f.ai
 		var st: Array = []
 		if g.adv[0] == i:
 			st.append("Vantaggio")
 		if g.conta_stun(f) > 0:
 			st.append("Stordimenti %d" % g.conta_stun(f))
+		if f.ai and f.stun_lato > 0:
+			st.append("Stordimenti %d/%d" % [f.stun_lato, f.lim])
 		if f.hobbles.size() > 0:
 			st.append("Azzoppato x%d" % f.hobbles.size())
 		if f.armour:

@@ -15,7 +15,8 @@ const DIREZ := [["", "nessun passo"], ["0", "Fronte"], ["3", "Retro"], ["501", "
 const EFF := ["discard", "draw", "draw_exact", "focus", "lose_focus_all", "lose_focus_all_but", "switch",
 	"change", "push", "t_stun", "t_hobble", "t_rot", "t_lose_focus", "t_switch", "t_discard_type",
 	"self_stun", "self_hobble", "t_wound", "t_wound_to_bleed", "search", "reshuffle", "cancel_cards",
-	"each_stun", "cancel_move", "advantage", "add_wound", "armour", "broad_block"]
+	"each_stun", "cancel_move", "advantage", "add_wound", "armour", "broad_block",
+	"ai_change", "ai_reset", "ai_recycle", "t_discard"]
 const CICLO_ATK := ["", "w1", "w2", "b", "x", "a", "w1a", "ba"]
 const SIGLE := {"w1": "1", "w2": "2", "b": "S", "x": "X", "a": "*", "w1a": "1*", "ba": "S*", "s": "B"}
 const CELLE := ["0", "1", "2", "3", "4", "5", "00", "01", "11", "12", "22", "23", "33", "34", "44", "45", "55", "50"]
@@ -419,7 +420,7 @@ func _widget_effetto(r: Dictionary, k: int) -> Control:
 		var es := {"v": v, "n": 1, "to": "aggression", "type": "defence", "rank": "Wood"}
 		voci.append([v, Carte.effetto(es).replace(" 1 ", " N ").replace("+1", "+N").left(34)])
 	h.add_child(_opzione(voci, e.v, 300, func(v): e.v = v; _disegna()))
-	if ["discard", "draw", "draw_exact", "focus", "lose_focus_all_but", "change", "push", "t_rot", "t_lose_focus", "t_wound", "add_wound", "t_discard_type"].has(e.v):
+	if ["discard", "draw", "draw_exact", "focus", "lose_focus_all_but", "change", "push", "t_rot", "t_lose_focus", "t_wound", "add_wound", "t_discard_type", "t_discard"].has(e.v):
 		h.add_child(_numero(int(e.get("n", 1)), 1, 5, func(v): e.n = v; _componi()))
 	if e.v == "switch" or e.v == "t_switch":
 		h.add_child(_opzione(KAM, e.get("to", "aggression"), 160, func(v): e.to = v; _componi()))

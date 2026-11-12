@@ -32,6 +32,24 @@ testo di varie carte.
   cancellazione di carte/movimento attivi, ricerca nel mazzo.
 - **Campo**: il «villaggio in fiamme» con le sue 19 caselle vere (non un disco esagonale).
 
+## Solitario (carte Solo)
+
+- Mazzo dell'avversario: 4 carte firma + 1 carta dai mazzi di selezione 1, 3, 4, 5 + 1 carta
+  aggiuntiva (2, 4 o 5); in Incubo la carta Incubo sostituisce quella del mazzo 3.
+- L'avversario non ha mano né focus: rivela la cima del mazzo; limite ferite 7; mazzo esaurito =
+  1 ferita e rimescola; «Ricomponi il mazzo» a fine turno.
+- Stordimenti mischiati nel mazzo: se escono salta il turno; sconfitto a 7 stordimenti.
+- Carte con OPPURE: la parte alta se può attaccare, altrimenti la parte bassa alla sua iniziativa.
+  Atteggiamento Difensivo: rinuncia se verrebbe parato o resterebbe sotto il tuo attacco.
+- Difese: scelgono l'iniziativa del tuo attacco; contrattacco Solo (scarta la cima del mazzo: se è
+  un attacco subisci 1 ferita).
+- Movimento: distanza preferita (Ronin 2, Guerriero 1), fronte verso di te, lato dato dal
+  Comportamento (Sinistra, Centro, Destra); in attacco preferisce le spalle e il maggior danno.
+- Comportamento e Atteggiamento iniziali a caso, come da regolamento.
+
+Semplificazioni: il «lato» del Comportamento è valutato come preferenza e non con il percorso
+libero passo per passo; «verrebbe colpito» considera il tuo attacco dalla tua posizione attuale.
+
 ## Scelte d'interpretazione da confermare
 
 - **Blocco Ampio (083)**: l'intervallo d'iniziativa si allarga di 1 a entrambi gli estremi.
@@ -43,8 +61,8 @@ testo di varie carte.
 ## Non ancora fatto
 
 - Gli altri personaggi (i loro dati sono ancora nel vecchio formato in `godot/data/cards/`).
-- **Solo ufficiale**: carte Solo, Comportamenti e Atteggiamenti dell'IA. Ora l'avversario è un'IA
-  di base che gioca il mazzo normale.
+- Solo: avversari su pedina (Ashigaru, Boss), più avversari insieme, carte a distanza (Yumi,
+  archibugio), campagna «Path of the Ronin».
 - **Online** (tavolo + telefoni, Firebase): da adattare al nuovo motore.
 - Terreno (rocce, bambù, carri, torii) e linea di vista; altre mappe; scelta dell'arma
   (ora Nodachi per il Guerriero e Naginata per il Ronin, come nei mazzi Signature).

@@ -55,16 +55,32 @@ func _ready() -> void:
 	hb.alignment = BoxContainer.ALIGNMENT_CENTER
 	hb.add_theme_constant_override("separation", 12)
 	v.add_child(hb)
-	var b1 := Tema.bottone("Combatti contro l'IA", 260)
-	b1.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/Partita.tscn"))
+	var b1 := Tema.bottone("Solitario (carte Solo)", 250)
+	b1.pressed.connect(_gioca.bind("solo", false))
 	hb.add_child(b1)
-	var b2 := Tema.bottone("Carte ed editor", 220)
+	var b3 := Tema.bottone("Solitario Incubo", 200)
+	b3.pressed.connect(_gioca.bind("solo", true))
+	hb.add_child(b3)
+	var hb2 := HBoxContainer.new()
+	hb2.alignment = BoxContainer.ALIGNMENT_CENTER
+	hb2.add_theme_constant_override("separation", 12)
+	v.add_child(hb2)
+	var b4 := Tema.bottone("Duello (IA con mazzo normale)", 300)
+	b4.pressed.connect(_gioca.bind("duello", false))
+	hb2.add_child(b4)
+	var b2 := Tema.bottone("Carte ed editor", 200)
 	b2.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/Editor.tscn"))
-	hb.add_child(b2)
+	hb2.add_child(b2)
 	var ver := Tema.etichetta("Versione %s — regole della 1a edizione, carte italiane" % ProjectSettings.get_setting("application/config/version"), 16)
 	ver.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(ver)
 	_scegli(Sessione.setup.get("io", "warrior"))
+
+
+func _gioca(modo: String, incubo: bool) -> void:
+	Sessione.setup["modo"] = modo
+	Sessione.setup["incubo"] = incubo
+	get_tree().change_scene_to_file("res://scenes/Partita.tscn")
 
 
 func _scegli(k: String) -> void:

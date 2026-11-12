@@ -3124,6 +3124,3300 @@
    "en": "Spinta Indietro",
    "rank": "Wood",
    "img": "ronin/ronin_10.webp"
+  },
+  "1001": {
+   "id": 1001,
+   "name": "Chiatta di Buoi (Solo)",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "unblockable"
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "a"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "t_stun"
+        }
+       ]
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "push",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 4
+    }
+   ],
+   "img": "solo/1001.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "1002": {
+   "id": 1002,
+   "name": "Difesa d'Acciaio (Solo)",
+   "type": "defence",
+   "init": [
+    8,
+    3
+   ],
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "5": "s",
+        "0": "s",
+        "1": "s"
+       }
+      },
+      {
+       "t": "counter",
+       "v": [
+        6,
+        5,
+        4
+       ]
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_rot",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ],
+     "init": 2
+    }
+   ],
+   "img": "solo/1002.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "1003": {
+   "id": 1003,
+   "name": "Affondo Invertito di Zanna (Solo)",
+   "type": "attack",
+   "init": 8,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "00": "w2"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "push",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 5
+    }
+   ],
+   "img": "solo/1003.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "1004": {
+   "id": 1004,
+   "name": "Spazzata Feroce (Solo)",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "00": "w1",
+        "01": "w1",
+        "1": "w1",
+        "2": "w1"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 6
+    }
+   ],
+   "img": "solo/1004.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "1991": {
+   "id": 1991,
+   "name": "Il Terrore (Solo, Incubo)",
+   "type": "meditation",
+   "init": 7,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "cancel_cards"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "each_stun"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 2,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "img": "solo/1991.webp",
+   "en": "",
+   "rank": "-",
+   "range": 3,
+   "nightmare": true
+  },
+  "2001": {
+   "id": 2001,
+   "name": "Blocco Cinereo (Solo)",
+   "type": "defence",
+   "init": [
+    9,
+    5
+   ],
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "0": "s",
+        "5": "s",
+        "4": "s"
+       }
+      },
+      {
+       "t": "counter",
+       "v": [
+        8
+       ]
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "push",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ],
+     "init": 4
+    }
+   ],
+   "img": "solo/2001.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "2002": {
+   "id": 2002,
+   "name": "Falciata Montante (Solo)",
+   "type": "attack",
+   "init": 8,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          3
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "w1",
+        "0": "w1",
+        "01": "w1"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 5
+    }
+   ],
+   "img": "solo/2002.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "2003": {
+   "id": 2003,
+   "name": "Arco Respingente (Solo)",
+   "type": "attack",
+   "init": 7,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "00": "w1",
+        "05": "w1",
+        "01": "w1",
+        "0": "w1",
+        "5": "w1",
+        "1": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_discard",
+         "n": 1
+        },
+        {
+         "v": "push",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 5
+    }
+   ],
+   "img": "solo/2003.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "2004": {
+   "id": 2004,
+   "name": "Concentrazione Ritrovata (Solo)",
+   "type": "meditation",
+   "init": 5,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 2,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "img": "solo/2004.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "2993": {
+   "id": 2993,
+   "name": "Colpo della Fenice Fiammante (Solo, Incubo)",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "00": "w2",
+        "01": "x",
+        "1": "w1",
+        "11": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ],
+     "init": 2
+    }
+   ],
+   "img": "solo/2993.webp",
+   "en": "",
+   "rank": "-",
+   "or": true,
+   "nightmare": true
+  },
+  "3001": {
+   "id": 3001,
+   "name": "Mente Aggressiva",
+   "type": "meditation",
+   "init": 2,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 3,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_recycle"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "img": "solo/3001.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "3002": {
+   "id": 3002,
+   "name": "Mente Aggressiva",
+   "type": "meditation",
+   "init": 2,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 3,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_recycle"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "img": "solo/3002.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "3003": {
+   "id": 3003,
+   "name": "Mente Risoluta (Solo)",
+   "type": "meditation",
+   "init": 3,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 2,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "img": "solo/3003.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "3004": {
+   "id": 3004,
+   "name": "Mente Risoluta (Solo)",
+   "type": "meditation",
+   "init": 3,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 2,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "img": "solo/3004.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "3005": {
+   "id": 3005,
+   "name": "Mente Risoluta (Solo)",
+   "type": "meditation",
+   "init": 3,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 2,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "img": "solo/3005.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "3006": {
+   "id": 3006,
+   "name": "Mente Rapida (Solo)",
+   "type": "meditation",
+   "init": 6,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "img": "solo/3006.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "3007": {
+   "id": 3007,
+   "name": "Mente Rapida (Solo)",
+   "type": "meditation",
+   "init": 6,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "img": "solo/3007.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "3008": {
+   "id": 3008,
+   "name": "Provocazione",
+   "type": "meditation",
+   "init": 7,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_switch",
+         "to": "neutral"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "img": "solo/3008.webp",
+   "en": "",
+   "rank": "-",
+   "range": 5
+  },
+  "3009": {
+   "id": 3009,
+   "name": "Grido di Guerra (Solo)",
+   "type": "meditation",
+   "init": 7,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "cancel_move"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "img": "solo/3009.webp",
+   "en": "",
+   "rank": "-",
+   "range": 5
+  },
+  "3010": {
+   "id": 3010,
+   "name": "Colpo alle Caviglie (Solo)",
+   "type": "attack",
+   "init": 7,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "00": "w1",
+        "01": "w1"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 2
+    }
+   ],
+   "img": "solo/3010.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "3011": {
+   "id": 3011,
+   "name": "Affondo Lungo",
+   "type": "attack",
+   "init": 4,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1",
+        "01": "w1"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 4
+    }
+   ],
+   "img": "solo/3011.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "3012": {
+   "id": 3012,
+   "name": "Affondo in Spinta (Solo)",
+   "type": "attack",
+   "init": 3,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "00": "w2",
+        "0": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_stun"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 3
+    }
+   ],
+   "img": "solo/3012.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "3013": {
+   "id": 3013,
+   "name": "Affondo in Spinta (Solo)",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "00": "w2",
+        "0": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_stun"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 3
+    }
+   ],
+   "img": "solo/3013.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "3014": {
+   "id": 3014,
+   "name": "Squarcio di Rovescio",
+   "type": "attack",
+   "init": 2,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_discard",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 2
+    }
+   ],
+   "img": "solo/3014.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "3015": {
+   "id": 3015,
+   "name": "Squarcio di Rovescio",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_discard",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 2
+    }
+   ],
+   "img": "solo/3015.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "3016": {
+   "id": 3016,
+   "name": "Taglio Sanguinante",
+   "type": "attack",
+   "init": 7,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "b",
+        "1": "b"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 1
+    }
+   ],
+   "img": "solo/3016.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "3017": {
+   "id": 3017,
+   "name": "Taglio Orizzontale",
+   "type": "attack",
+   "init": 8,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          1,
+          2,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "w1",
+        "0": "w1",
+        "1": "w1"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 4
+    }
+   ],
+   "img": "solo/3017.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "3018": {
+   "id": 3018,
+   "name": "Calcio del Cavallo (Solo)",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "a"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "t_stun"
+        },
+        {
+         "v": "push",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 5
+    }
+   ],
+   "img": "solo/3018.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "3019": {
+   "id": 3019,
+   "name": "Colpo d'Elsa (Solo)",
+   "type": "attack",
+   "init": 5,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_lose_focus",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 5
+    }
+   ],
+   "img": "solo/3019.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "3020": {
+   "id": 3020,
+   "name": "Spinta Indietro (Solo)",
+   "type": "attack",
+   "init": 5,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "a"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "push",
+         "n": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 2
+    }
+   ],
+   "img": "solo/3020.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "3021": {
+   "id": 3021,
+   "name": "Squarcio Rotante",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1",
+        "5": "w2"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          1,
+          2,
+          4,
+          5
+         ],
+         "n": 2,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 6
+    }
+   ],
+   "img": "solo/3021.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "3022": {
+   "id": 3022,
+   "name": "Taglio Troncante (Solo)",
+   "type": "attack",
+   "init": 4,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "b"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 1
+    }
+   ],
+   "img": "solo/3022.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "3023": {
+   "id": 3023,
+   "name": "Stoccata",
+   "type": "attack",
+   "init": 3,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 3
+    }
+   ],
+   "img": "solo/3023.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "3024": {
+   "id": 3024,
+   "name": "Stoccata",
+   "type": "attack",
+   "init": 5,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 2
+    }
+   ],
+   "img": "solo/3024.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "3025": {
+   "id": 3025,
+   "name": "Stoccata",
+   "type": "attack",
+   "init": 7,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 1
+    }
+   ],
+   "img": "solo/3025.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "3026": {
+   "id": 3026,
+   "name": "Difesa Tranquilla",
+   "type": "defence",
+   "init": [
+    6,
+    2
+   ],
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "5": "s",
+        "0": "s",
+        "1": "s"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ],
+     "init": 1
+    }
+   ],
+   "img": "solo/3026.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "3027": {
+   "id": 3027,
+   "name": "Difesa Accerchiante",
+   "type": "defence",
+   "init": [
+    7,
+    3
+   ],
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "0": "s",
+        "1": "s",
+        "2": "s"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 2,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ],
+     "init": 2
+    }
+   ],
+   "img": "solo/3027.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "3028": {
+   "id": 3028,
+   "name": "Schivata",
+   "type": "defence",
+   "init": 8,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "img": "solo/3028.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "3029": {
+   "id": 3029,
+   "name": "Respinta (Solo)",
+   "type": "defence",
+   "init": [
+    5,
+    2
+   ],
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "5": "s",
+        "0": "s",
+        "1": "s"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "push",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ],
+     "init": 1
+    }
+   ],
+   "img": "solo/3029.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "3030": {
+   "id": 3030,
+   "name": "Passo di Foresta",
+   "type": "defence",
+   "init": 7,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "unblockable"
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "a"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "t_rot",
+         "n": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ],
+     "init": 2
+    }
+   ],
+   "img": "solo/3030.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "3031": {
+   "id": 3031,
+   "name": "Blocco di Fiume",
+   "type": "defence",
+   "init": [
+    7,
+    4
+   ],
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "0": "s",
+        "1": "s"
+       }
+      },
+      {
+       "t": "counter",
+       "v": [
+        6,
+        5
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ],
+     "init": 3
+    }
+   ],
+   "img": "solo/3031.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "3032": {
+   "id": 3032,
+   "name": "Blocco di Fiume",
+   "type": "defence",
+   "init": [
+    7,
+    4
+   ],
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "0": "s",
+        "1": "s"
+       }
+      },
+      {
+       "t": "counter",
+       "v": [
+        6,
+        5
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ],
+     "init": 3
+    }
+   ],
+   "img": "solo/3032.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "3033": {
+   "id": 3033,
+   "name": "Difesa di Roccia",
+   "type": "defence",
+   "init": [
+    6,
+    2
+   ],
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "5": "s",
+        "0": "s",
+        "1": "s",
+        "4": "s",
+        "2": "s"
+       }
+      },
+      {
+       "t": "counter",
+       "v": [
+        5,
+        4,
+        3
+       ]
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_stun"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          3
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ],
+     "init": 1
+    }
+   ],
+   "img": "solo/3033.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "3034": {
+   "id": 3034,
+   "name": "Blocco di Vento",
+   "type": "defence",
+   "init": [
+    8,
+    5
+   ],
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "0": "s",
+        "1": "s"
+       }
+      },
+      {
+       "t": "counter",
+       "v": [
+        8,
+        7
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ],
+     "init": 4
+    }
+   ],
+   "img": "solo/3034.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "3035": {
+   "id": 3035,
+   "name": "Blocco di Vento",
+   "type": "defence",
+   "init": [
+    8,
+    5
+   ],
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "0": "s",
+        "1": "s"
+       }
+      },
+      {
+       "t": "counter",
+       "v": [
+        8,
+        7
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          0,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ],
+     "init": 4
+    }
+   ],
+   "img": "solo/3035.webp",
+   "en": "",
+   "rank": "-"
   }
  },
  "characters": {
@@ -3303,6 +6597,98 @@
     ]
    }
   }
+ },
+ "solo": {
+  "selezione": {
+   "1": [
+    3001,
+    3003,
+    3008,
+    3009
+   ],
+   "2": [
+    3002,
+    3004,
+    3005,
+    3006,
+    3007
+   ],
+   "3": [
+    3010,
+    3011,
+    3012,
+    3013
+   ],
+   "4": [
+    3014,
+    3015,
+    3016,
+    3017,
+    3018,
+    3019,
+    3020,
+    3021,
+    3022,
+    3023,
+    3024,
+    3025
+   ],
+   "5": [
+    3026,
+    3027,
+    3028,
+    3029,
+    3030,
+    3031,
+    3032,
+    3033,
+    3034,
+    3035
+   ]
+  },
+  "warrior": {
+   "firma": [
+    2001,
+    2002,
+    2003,
+    2004
+   ],
+   "incubo": 2993,
+   "raggio": 1,
+   "mazzi": [
+    "1",
+    "3",
+    "4",
+    "5"
+   ],
+   "extra": [
+    "2",
+    "4",
+    "5"
+   ]
+  },
+  "ronin": {
+   "firma": [
+    1001,
+    1002,
+    1003,
+    1004
+   ],
+   "incubo": 1991,
+   "raggio": 2,
+   "mazzi": [
+    "1",
+    "3",
+    "4",
+    "5"
+   ],
+   "extra": [
+    "2",
+    "4",
+    "5"
+   ]
+  },
+  "ferite": 7
  },
  "maps": {
   "villaggio": {

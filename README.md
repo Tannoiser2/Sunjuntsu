@@ -3,12 +3,13 @@
 Duello tattico fra samurai su mappa esagonale (*Senjutsu: Battle for Japan*), in Godot 4.7.
 Uso personale.
 
-## Stato (versione 1.0.0)
+## Stato (versione 1.1.0)
 
 - **Regole**: regolamento della **1a edizione + errata** (quello a cui appartengono le carte
   italiane scansionate), con le carte risolte **riga per riga come sono stampate**.
 - **Personaggi giocabili**: Guerriero e Ronin con i mazzi «Signature» ufficiali da 30 carte.
-- **Modalità**: partita contro un'IA di base (gioca il mazzo come un giocatore).
+- **Modalità**: **Solitario** con le carte Solo ufficiali (anche Incubo) e duello contro un'IA di base
+  che gioca il mazzo normale.
 - **Editor carte**: scansione accanto alle righe della carta e al testo di come il gioco la applica.
 
 Cosa manca è elencato in `REGOLAMENTO_FEDELTA.md`.

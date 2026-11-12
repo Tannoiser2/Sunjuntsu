@@ -4,6 +4,7 @@ extends RefCounted
 
 const KAMAE := {"aggression": "Aggressione", "balance": "Equilibrio",
 	"determination": "Determinazione", "neutral": "Neutrale", "focus": "Punto Focus"}
+const COMPORTAMENTI := ["Sinistra", "Centro", "Destra"]
 const TIPI := {"attack": "Attacco", "defence": "Difesa", "meditation": "Meditazione", "core": "Speciale"}
 const EFFETTI_CELLA := {"w1": "1 ferita", "w2": "2 ferite", "b": "ferita sanguinante",
 	"x": "ESECUZIONE", "a": "asterisco", "w1a": "1 ferita + asterisco",
@@ -126,6 +127,10 @@ static func effetto(e: Dictionary) -> String:
 		"advantage": return "ottieni il Vantaggio"
 		"add_wound": return "+%d ferita" % n
 		"armour": return "rimane in gioco: riduci di 1 le ferite di ogni attacco subito (minimo 1); a ogni riduzione [Determinazione] ottieni 1 focus, poi prendi 1 azzoppamento"
+		"ai_change": return "cambia Comportamento IA"
+		"ai_reset": return "ricomponi il mazzo (a fine turno)"
+		"ai_recycle": return "mischia nel mazzo la prima carta Attacco degli scarti"
+		"t_discard": return "il bersaglio scarta %d carta/e" % n
 		"broad_block": return "aumenta di 1 l'intervallo d'iniziativa del tuo blocco"
 	return str(e.v)
 
@@ -196,7 +201,10 @@ static func testo(c: Dictionary) -> String:
 	for i in c.segs.size():
 		var s: Dictionary = c.segs[i]
 		if s.has("init"):
-			out.append("— a iniziativa %d —" % int(s.init))
+			if c.get("or", false):
+				out.append("— OPPURE, se non può attaccare, a iniziativa %d —" % int(s.init))
+			else:
+				out.append("— a iniziativa %d —" % int(s.init))
 		for ln in s.lines:
 			out.append("  " + riga(ln))
 	if c.has("note"):

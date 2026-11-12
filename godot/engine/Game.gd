@@ -54,23 +54,63 @@ func prepara(setup: Dictionary) -> void:
 	var i := 0
 	for pl in setup.players:
 		var cd: Dictionary = db.characters[pl.char]
+		var ia: bool = pl.get("solo", false)
 		var deck: Array = []
-		for k in cd.deck:
-			for _n in int(cd.deck[k]):
-				deck.append(int(k))
-		_mischia(deck)
 		var hand: Array = []
-		for k in cd.core:
-			hand.append(int(k))
+		if ia:
+			deck = _mazzo_solo(pl.char, pl.get("incubo", false))
+		else:
+			for k in cd.deck:
+				for _n in int(cd.deck[k]):
+					deck.append(int(k))
+			for k in cd.core:
+				hand.append(int(k))
+		_mischia(deck)
 		F.append({"i": i, "name": pl.get("name", cd.name), "char": pl.char, "cd": cd,
 			"pos": Vector2i(99, 99), "face": 0, "kamae": "neutral", "focus": 0,
 			"wounds": 0, "bleeds": 0, "hand": hand, "deck": deck, "discard": [],
 			"hobbles": [], "armour": false, "dead": false, "play": {},
-			"instant_used": false, "no_move": false})
+			"instant_used": false, "no_move": false,
+			"ai": ia, "lim": int(pl.get("ferite", db.solo.ferite)) if ia else int(cd.wounds),
+			"mano": 99 if ia else int(cd.hand),
+			"comp": rng.randi_range(0, 2), "post": "off" if rng.randi_range(0, 1) == 0 else "def",
+			"raggio": int(db.solo[pl.char].raggio) if ia else 1, "stun_lato": 0, "reset": false})
 		i += 1
 	adv = [0, 1]
-	if int(F[1].cd.advantage) > int(F[0].cd.advantage):
+	if int(F[1].cd.advantage) > int(F[0].cd.advantage) and not F[1].ai:
 		adv = [1, 0]
+
+
+## Mazzo Solo di un personaggio: carte firma + una carta da ciascun mazzo di selezione
+## indicato + una carta aggiuntiva (Regolamento, "Character AI Deck Construction").
+func _mazzo_solo(pers: String, incubo: bool) -> Array:
+	var d: Dictionary = db.solo[pers]
+	var sel: Dictionary = {}
+	for k in db.solo.selezione:
+		var a: Array = []
+		for x in db.solo.selezione[k]:
+			a.append(int(x))
+		_mischia(a)
+		sel[k] = a
+	var out: Array = []
+	for x in d.firma:
+		out.append(int(x))
+	var mazzi: Array = d.mazzi.duplicate()
+	if incubo:
+		out.append(int(d.incubo))
+		mazzi.erase("3")
+	for k in mazzi:
+		out.append(sel[k].pop_back())
+	var extra: Array = d.extra.duplicate()
+	out.append(sel[extra[rng.randi_range(0, extra.size() - 1)]].pop_back())
+	return out
+
+
+func _umano(f: Dictionary) -> Dictionary:
+	for o in F:
+		if o.i != f.i and not o.dead:
+			return o
+	return {}
 
 
 func answer(idx: int) -> void:
@@ -189,12 +229,14 @@ func _piazzamento() -> void:
 func _preparazione() -> void:
 	fase = "preparazione"
 	for f in F:
+		if f.ai:
+			continue
 		var visti := {}
 		for id in f.deck.duplicate():
 			if visti.has(id) or not Carte.carta(id).get("prepared", false):
 				continue
 			visti[id] = true
-			if conta_mano(f) >= int(f.cd.hand):
+			if conta_mano(f) >= int(f.mano):
 				break
 			var idx := await _ask(f.i, "yesno", "%s: vuoi iniziare con la carta preparata «%s» in mano?" % [f.name, Carte.nome(id)],
 				[{"label": "Sì, la preparo"}, {"label": "No"}], {"card": id})
@@ -202,7 +244,7 @@ func _preparazione() -> void:
 				f.deck.erase(id)
 				f.hand.append(id)
 		_mischia(f.deck)
-		while conta_mano(f) < int(f.cd.hand) and not f.deck.is_empty():
+		while conta_mano(f) < int(f.mano) and not f.deck.is_empty():
 			f.hand.append(f.deck.pop_back())
 	_ev({"t": "state"})
 
@@ -227,23 +269,37 @@ func _turno() -> void:
 			_log("%s sanguina: scarta la prima carta del mazzo." % f.name)
 	fase = "pesca"
 	for f in F:
-		_pesca(f, 1)
+		if not f.ai:
+			_pesca(f, 1)
 	if _fine():
 		return
 	fase = "scelta"
 	for p in _ordine_asc():
 		await _scegli(F[p])
+	if _fine():
+		return
 	fase = "rivela"
 	for f in F:
 		var id: int = f.play.id
 		if id >= 0:
 			f.focus -= int(Carte.carta(id).focus)
 		_log("%s rivela [b]%s[/b]." % [f.name, Carte.nome(id)])
+		if f.ai and id < 0:
+			f.stun_lato += 1
+			_log("%s è stordito: salta il turno (%d/%d stordimenti)." % [f.name, f.stun_lato, f.lim])
+			if f.stun_lato >= int(f.lim):
+				f.dead = true
+				_log("[b]%s è sconfitto[/b]: troppi stordimenti." % f.name)
+	if _fine():
+		_ev({"t": "reveal"})
+		return
 	_ev({"t": "reveal"})
 	await _pausa("reveal")
 	for p in _ordine_asc():
 		await _sostituzione(F[p])
-	for p in _ordine_asc():
+	var ordine := _ordine_asc()
+	ordine.sort_custom(func(a, b): return (not F[a].ai) and F[b].ai)
+	for p in ordine:
 		await _iniziativa(F[p])
 	_ev({"t": "reveal"})
 	await _pausa("init")
@@ -269,6 +325,20 @@ func giocabile(f: Dictionary, id: int) -> bool:
 
 
 func _scegli(f: Dictionary) -> void:
+	if f.ai:
+		if f.deck.is_empty():
+			_log("Il mazzo di %s è esaurito: subisce una ferita e lo rimescola." % f.name)
+			f.wounds += f.bleeds
+			f.bleeds = 0
+			_danno(f, 1, 0)
+			if f.dead:
+				return
+			f.deck = f.discard
+			f.discard = []
+			_mischia(f.deck)
+		f.play = {"id": int(f.deck.pop_back())}
+		_ev({"t": "chosen", "p": f.i})
+		return
 	var opts: Array = []
 	var visti := {}
 	for id in f.hand:
@@ -323,6 +393,18 @@ func _iniziativa(f: Dictionary) -> void:
 		f.play.init = 0
 		return
 	var c := Carte.carta(id)
+	if f.ai:
+		var vv := 0
+		if c.init is Array:
+			vv = int(c.init[0])
+			var pl := _umano(f)
+			if not pl.is_empty() and pl.play.get("id", -1) >= 0 and Carte.carta(pl.play.id).type == "attack" and pl.play.has("init"):
+				vv = clampi(int(pl.play.init) + hobble_attivi(f), int(c.init[1]), int(c.init[0]))
+		else:
+			vv = int(c.init)
+		f.play.init = _con_hobble(f, vv)
+		_log("%s: iniziativa [b]%d[/b]." % [f.name, f.play.init])
+		return
 	var base = c.init
 	for ln in c.segs[0].lines:
 		if ln.t != "alt":
@@ -379,10 +461,16 @@ func _costruisci_coda() -> void:
 		if c.get("core", false) and c.type != "core":
 			rango += 0.5
 		for s in c.segs.size():
+			if s > 0 and c.get("or", false):
+				continue
 			var ini: int = f.play.init
 			if c.segs[s].has("init"):
 				ini = _con_hobble(f, int(c.segs[s].init))
 			queue.append({"p": f.i, "s": s, "init": ini, "rank": rango})
+	_ordina_coda()
+
+
+func _ordina_coda() -> void:
 	queue.sort_custom(func(a, b):
 		if a.init != b.init:
 			return a.init > b.init
@@ -427,6 +515,14 @@ func _esegui_segmento(en: Dictionary) -> void:
 		"" if c.segs.size() == 1 else " (parte %d)" % (en.s + 1)])
 	_ev({"t": "resolve", "p": f.i, "card": c.id, "init": en.init})
 	await _pausa("resolve")
+	if f.ai and c.get("or", false) and en.s == 0:
+		var dec := _decidi_or(f, c.segs[0].lines)
+		if not dec.attacca:
+			_log("%s non può attaccare: userà la seconda parte della carta." % f.name)
+			queue.append({"p": f.i, "s": 1, "init": _con_hobble(f, int(c.segs[1].init)), "rank": en.rank})
+			_ordina_coda()
+			return
+		ctx["piano"] = dec.piano
 	var rimandato: bool = await _righe(f, c.segs[en.s].lines, 0, ctx)
 	if not rimandato:
 		await _fine_segmento(f, ctx)
@@ -613,6 +709,16 @@ func _stati(pos: Vector2i, face: int, parts: Array, me: int) -> Dictionary:
 func _muovi(f: Dictionary, ln: Dictionary, ctx: Dictionary, lines: Array, i: int) -> void:
 	if f.no_move:
 		_log("Il movimento di %s è cancellato." % f.name)
+		return
+	if f.ai:
+		if not ctx.has("piano") or ctx.piano.is_empty():
+			ctx["piano"] = _pianifica(f, lines, i, ctx.success == null)
+		var st: Array = ctx.piano.pop_front()
+		if st[0] != f.pos or st[1] != f.face:
+			f.pos = st[0]
+			f.face = st[1]
+			_ev({"t": "move", "p": f.i})
+			await _pausa("move")
 		return
 	var r := _stati(f.pos, f.face, ln.parts, f.i)
 	var stati: Array = r.ok
@@ -832,19 +938,165 @@ func _danno(o: Dictionary, w: int, bl: int) -> void:
 		t.append("%d ferita/e sanguinante/i" % bl)
 	_log("[color=#a01010]%s subisce %s.[/color]" % [o.name, " e ".join(t)])
 	_ev({"t": "damage", "p": o.i})
-	if o.wounds + o.bleeds >= int(o.cd.wounds):
+	if o.wounds + o.bleeds >= int(o.lim):
 		o.dead = true
 		_log("[b]%s è sconfitto.[/b]" % o.name)
 	_fine()
 
 
 func _trova_blocco(att: Dictionary, dif: Dictionary):
+	return _blocco_da(att.pos, dif)
+
+
+func _blocco_da(da: Vector2i, dif: Dictionary):
 	for b in blocks:
 		if b.p != dif.i or b.init != cur_init:
 			continue
-		if b.cells.has(att.pos) or Hex.percorsi_bloccati(att.pos, dif.pos, b.cells):
+		if b.cells.has(da) or Hex.percorsi_bloccati(da, dif.pos, b.cells):
 			return b
 	return null
+
+
+# ─────────────────────────── Avversario Solo ───────────────────────────
+
+## Tutte le combinazioni delle righe di movimento consecutive a partire da `i`.
+## Ritorna {"vie": [{"st": [[pos, face], ...]}], "next": indice della riga successiva}.
+func _percorsi_ia(f: Dictionary, lines: Array, i: int) -> Dictionary:
+	var fronte: Array = [{"st": [], "pos": f.pos, "face": f.face}]
+	var j := i
+	while j < lines.size() and lines[j].t == "move":
+		var nuovo: Array = []
+		var visti := {}
+		for fr in fronte:
+			for s in _stati(fr.pos, fr.face, lines[j].parts, f.i).ok:
+				if visti.has(s):
+					continue
+				visti[s] = true
+				nuovo.append({"st": fr.st + [s], "pos": s[0], "face": s[1]})
+		fronte = nuovo
+		j += 1
+	return {"vie": fronte, "next": j}
+
+
+## Voto di una posizione per muoversi (più basso = migliore): distanza preferita,
+## fronte verso il giocatore, lato indicato dal Comportamento.
+func _voto_pos(f: Dictionary, pos: Vector2i, face: int) -> float:
+	var pl := _umano(f)
+	if pl.is_empty():
+		return 0.0
+	var v := absf(Hex.dist(pos, pl.pos) - float(f.raggio)) * 10.0
+	var d: int = absi(face - Hex.verso(pos, pl.pos))
+	v += minf(d, 6 - d) * 4.0
+	v += _lato(f, pl, pos) * 1.5
+	if pos != f.pos:
+		v += 0.05
+	return v
+
+
+func _lato(f: Dictionary, pl: Dictionary, pos: Vector2i) -> float:
+	var rel: int = (Hex.verso(pl.pos, pos) - int(pl.face) + 6) % 6
+	var voluti: Array = [[4, 5], [0], [1, 2]][int(f.comp)]
+	var m := 9
+	for w in voluti:
+		var dd: int = absi(rel - int(w))
+		m = mini(m, mini(dd, 6 - dd))
+	return float(m)
+
+
+## Voto di una posizione da cui attaccare (più alto = migliore; "colpisce" falso se a vuoto).
+func _voto_att(f: Dictionary, pos: Vector2i, face: int, griglia: Dictionary) -> Dictionary:
+	var pl := _umano(f)
+	var out := {"v": -1.0, "colpisce": false, "rischio": false}
+	if pl.is_empty():
+		return out
+	var eff := ""
+	for c in griglia.cells:
+		if Hex.walk(pos, face, c) == pl.pos:
+			eff = griglia.cells[c]
+	if eff == "":
+		return out
+	var w := 1.0
+	if eff.begins_with("x"):
+		w = 5.0
+	elif eff.begins_with("w2"):
+		w = 2.0
+	var v := w * 100.0
+	if (Hex.verso(pl.pos, pos) - int(pl.face) + 6) % 6 == 3:
+		v += 60.0
+	var bloccato: bool = _blocco_da(pos, pl) != null
+	var esposto := false
+	for en in queue:
+		if en.p != pl.i:
+			continue
+		for l in Carte.carta(pl.play.id).segs[en.s].lines:
+			if l.t == "grid" and l.mode == "atk":
+				for c in l.cells:
+					if Hex.walk(pl.pos, pl.face, c) == pos:
+						esposto = true
+	if bloccato:
+		v -= 45.0
+	if esposto:
+		v -= 35.0
+	v -= _lato(f, pl, pos)
+	if pos != f.pos or face != f.face:
+		v -= 0.5
+	out.v = v
+	out.colpisce = true
+	out.rischio = bloccato or esposto
+	return out
+
+
+func _pianifica(f: Dictionary, lines: Array, i: int, cerca_attacco: bool) -> Array:
+	var r := _percorsi_ia(f, lines, i)
+	var nx: int = r.next
+	var griglia = null
+	if cerca_attacco and nx < lines.size() and lines[nx].t == "grid" and lines[nx].mode == "atk":
+		griglia = lines[nx]
+	var meglio: Array = []
+	var bv := -1e9
+	for via in r.vie:
+		var v := -_voto_pos(f, via.pos, via.face)
+		if griglia != null:
+			var a := _voto_att(f, via.pos, via.face, griglia)
+			if a.colpisce:
+				v = 1000.0 + a.v
+		if v > bv:
+			bv = v
+			meglio = via.st
+	return meglio.duplicate()
+
+
+## Carta Solo con "OPPURE": la parte alta si usa solo se permette di attaccare.
+func _decidi_or(f: Dictionary, lines: Array) -> Dictionary:
+	var m := 0
+	while m < lines.size() and lines[m].t != "move" and lines[m].t != "grid":
+		m += 1
+	var vie: Array = [{"st": [], "pos": f.pos, "face": f.face}]
+	var gi := m
+	if m < lines.size() and lines[m].t == "move" and not f.no_move:
+		var r := _percorsi_ia(f, lines, m)
+		vie = r.vie
+		gi = r.next
+	else:
+		while gi < lines.size() and lines[gi].t != "grid":
+			gi += 1
+	if gi >= lines.size() or lines[gi].t != "grid":
+		return {"attacca": false, "piano": []}
+	var meglio = null
+	var bv := -1e9
+	var rischio := false
+	for via in vie:
+		var a := _voto_att(f, via.pos, via.face, lines[gi])
+		if a.colpisce and a.v > bv:
+			bv = a.v
+			meglio = via.st
+			rischio = a.rischio
+	if meglio == null:
+		return {"attacca": false, "piano": []}
+	# Atteggiamento Difensivo: rinuncia se l'attacco verrebbe parato o se resterebbe esposto.
+	if f.post == "def" and rischio:
+		return {"attacca": false, "piano": []}
+	return {"attacca": true, "piano": meglio.duplicate()}
 
 
 func _seg_attacca(en: Dictionary) -> bool:
@@ -879,9 +1131,26 @@ func _blocco_riuscito(b: Dictionary, att: Dictionary) -> void:
 	b.done = true
 	var d: Dictionary = F[b.p]
 	var ctx: Dictionary = b.ctx
+	if d.ai and b.next < b.lines.size() and b.lines[b.next].t == "counter":
+		# Contrattacco Solo: si scarta la prima carta del mazzo; se ha un attacco, 1 ferita.
+		var vv: Array = []
+		for v in b.lines[b.next].v:
+			vv.append(int(v))
+		if vv.has(cur_init) and not d.deck.is_empty() and not att.dead:
+			var top: int = d.deck.pop_back()
+			d.discard.append(top)
+			var attacca := false
+			if top >= 0:
+				for sg in Carte.carta(top).segs:
+					for l in sg.lines:
+						if l.t == "grid" and l.mode == "atk":
+							attacca = true
+			_log("Contrattacco di %s: scarta «%s» dal mazzo." % [d.name, Carte.nome(top)])
+			if attacca:
+				_danno(att, 1, 0)
 	# Contrattacco: se l'iniziativa dell'attacco parato coincide, si può giocare subito
 	# una carta Attacco non speciale di iniziativa uguale o inferiore.
-	if b.next < b.lines.size() and b.lines[b.next].t == "counter" and _kamae_ok(d, b.lines[b.next]):
+	if not d.ai and b.next < b.lines.size() and b.lines[b.next].t == "counter" and _kamae_ok(d, b.lines[b.next]):
 		var vel: Array = []
 		for v in b.lines[b.next].v:
 			vel.append(int(v))
@@ -1051,6 +1320,20 @@ func _fx(f: Dictionary, e: Dictionary, ctx: Dictionary) -> void:
 		"armour":
 			f.armour = true
 			_log("L'Armatura Pesante di %s rimane in gioco." % f.name)
+		"ai_change":
+			f.comp = (int(f.comp) + 1) % 3
+			_log("%s cambia Comportamento: [b]%s[/b]." % [f.name, Carte.COMPORTAMENTI[f.comp]])
+		"ai_reset":
+			f.reset = true
+		"ai_recycle":
+			for k in range(f.discard.size() - 1, -1, -1):
+				var cid: int = f.discard[k]
+				if cid >= 0 and Carte.carta(cid).type == "attack":
+					f.discard.remove_at(k)
+					f.deck.append(cid)
+					_mischia(f.deck)
+					_log("%s rimescola nel mazzo «%s»." % [f.name, Carte.nome(cid)])
+					break
 		_:
 			for o in _bersagli(f, ctx):
 				await _fx_bersaglio(f, o, e, n)
@@ -1058,7 +1341,11 @@ func _fx(f: Dictionary, e: Dictionary, ctx: Dictionary) -> void:
 
 
 func _fx_bersaglio(f: Dictionary, o: Dictionary, e: Dictionary, n: int) -> void:
+	if o.ai and ["t_lose_focus", "t_switch", "t_discard_type", "t_discard"].has(e.v):
+		return
 	match e.v:
+		"t_discard":
+			await _scarta(o, n)
 		"push":
 			await _spingi(f, o, n)
 		"t_stun", "each_stun":
@@ -1113,6 +1400,8 @@ func _fx_bersaglio(f: Dictionary, o: Dictionary, e: Dictionary, n: int) -> void:
 
 
 func _focus(f: Dictionary, n: int) -> void:
+	if f.ai:
+		return
 	var prima: int = f.focus
 	f.focus = mini(MAX_FOCUS, f.focus + n)
 	if f.focus > prima:
@@ -1122,9 +1411,14 @@ func _focus(f: Dictionary, n: int) -> void:
 func _stordisci(o: Dictionary) -> void:
 	if o.dead:
 		return
+	if o.ai:
+		o.deck.insert(rng.randi_range(0, o.deck.size()), -1)
+		_log("Uno [b]stordimento[/b] viene mischiato nel mazzo di %s." % o.name)
+		_ev({"t": "damage", "p": o.i})
+		return
 	o.hand.append(-1)
 	_log("%s prende 1 [b]stordimento[/b]." % o.name)
-	if conta_stun(o) >= int(o.cd.hand):
+	if conta_stun(o) >= int(o.mano):
 		o.dead = true
 		_log("[b]%s è sconfitto[/b]: troppi stordimenti in mano." % o.name)
 	_ev({"t": "damage", "p": o.i})
@@ -1308,8 +1602,14 @@ func _fine_turno() -> void:
 			if h + 1 < 4:
 				nuovi.append(h + 1)
 		f.hobbles = nuovi
+		if f.ai and f.reset:
+			f.reset = false
+			f.deck.append_array(f.discard)
+			f.discard = []
+			_mischia(f.deck)
+			_log("%s ricompone il mazzo." % f.name)
 	for f in F:
-		while not f.dead and conta_mano(f) > int(f.cd.hand):
+		while not f.dead and conta_mano(f) > int(f.mano):
 			var opts := _scartabili(f)
 			if opts.is_empty():
 				break
