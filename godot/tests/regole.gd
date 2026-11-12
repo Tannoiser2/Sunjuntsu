@@ -429,6 +429,25 @@ func _initialize() -> void:
 	g._danno(g.F[0], 4, 0)
 	ok(g.over and g.winner == 1, "sconfitti entrambi: vince l'avversario")
 
+	print("Ninja")
+	nuovo("ninja", "warrior")
+	g.F[0].occ = false
+	metti(1, Vector2i(6, -3), 5)
+	piano[0]["hex"] = 0
+	await turno(170, 53)
+	ok(g.trappole.size() == 1, "Lancio di Piedi di Corvo: un Piede di Corvo sul campo")
+	var dove: Vector2i = g.trappole.keys()[0]
+	g.F[1].pos = dove
+	g._ev({"t": "move", "p": 1})
+	ok(g.F[1].wounds == 1 and g.F[1].hobbles.size() == 1 and g.trappole.is_empty(), "chi entra nella casella prende 1 ferita e un azzoppamento; il Piede di Corvo è rimosso")
+	nuovo("ninja", "warrior")
+	g.F[0].occ = true
+	metti(1, Vector2i(6, -3), 5)
+	await turno(170, 53)
+	var tipi: Array = g.trappole.values()
+	ok(tipi.size() == 3 and tipi.count("diversivo") == 1 and tipi.count("innesco") == 2, "da Occultato: 3 segnalini Trappola, 1 Diversivo e 2 Inneschi")
+	ok(not g.giocabile(g.F[1], 166), "Trappola del Tiratore Lunare richiede Occultamento")
+
 	print("Tutte le carte hanno un testo")
 	for c in Carte.db().cards.values():
 		if Carte.testo(c).contains("?"):

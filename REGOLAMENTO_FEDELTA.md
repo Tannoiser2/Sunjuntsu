@@ -60,7 +60,6 @@ libero passo per passo; «verrebbe colpito» considera il tuo attacco dalla tua 
 
 ## Non ancora fatto
 
-- Ninja: non ancora giocabile (mancano le regole di Piedi di Corvo e segnalini Trappola).
 - Allievo: «Specchio d'Acqua», riga da 2 focus (giocare la carta presa come Sostituzione istantanea)
   non è automatizzata.
 - Solo: avversari su pedina (Ashigaru, Boss), più avversari insieme, carte a distanza (Yumi,

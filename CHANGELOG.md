@@ -1,5 +1,8 @@
 # Novità
 
+## 1.11.0 — Ninja
+- Tredicesimo combattente: il Ninja, con Occultamento, attacchi a distanza, Piedi di Corvo e Trappole.
+
 ## 1.10.0 — Ashigaru e Hachiko
 - Dodicesimo combattente: l'Ashigaru con il cane Hachiko, seconda pedina con il suo mazzo.
 

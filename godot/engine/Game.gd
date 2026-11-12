@@ -32,6 +32,7 @@ var fase := "setup"
 var fonte: Dictionary = {}
 var autore := -1             ## chi sta infliggendo l'effetto in corso
 var primo_sangue := false
+var trappole: Dictionary = {}   ## cella -> "piede" | "innesco" | "diversivo"
 const CONTRATTI := {"reazione": "Reazione", "sangue": "Primo Sangue", "concentrazione": "Concentrazione",
 	"furore": "Furore", "vedere": "Fagli Vedere", "attrezzi": "Gli Attrezzi del Mestiere"}   ## carta che sta producendo l'effetto in corso
 var ritmo: Callable = Callable()   ## pausa visiva fornita dall'interfaccia
@@ -174,6 +175,21 @@ func _log(t: String) -> void:
 
 
 func _ev(e: Dictionary) -> void:
+	if e.t == "move" and e.has("p") and trappole.has(F[e.p].pos) and not F[e.p].dead:
+		var o: Dictionary = F[e.p]
+		var tipo: String = trappole[o.pos]
+		trappole.erase(o.pos)
+		if tipo == "diversivo":
+			_log("%s calpesta un segnalino Trappola: era un Diversivo." % o.name)
+		else:
+			_log("[b]%s calpesta %s![/b]" % [o.name, "un Piede di Corvo" if tipo == "piede" else "una Trappola (Innesco)"])
+			var prima := autore
+			autore = -1
+			_danno(o, 1, 0)
+			autore = prima
+			if not o.dead:
+				o.hobbles.append(0)
+				_log("%s viene azzoppato." % o.name)
 	event.emit(e)
 
 
@@ -467,6 +483,8 @@ func giocabile(f: Dictionary, id: int) -> bool:
 	if c.has("req_illum") and f.illum.size() < int(c.req_illum):
 		return false
 	if c.get("req_d", false) and not disperata(f):
+		return false
+	if c.get("req_o", false) and not f.occ:
 		return false
 	if int(c.focus) > f.focus:
 		return false
@@ -924,6 +942,8 @@ func _oppure(f: Dictionary, ln: Dictionary, ctx: Dictionary, lines: Array, i: in
 			return
 		if l2.t == "move":
 			await _muovi(f, l2, ctx, resto2, k)
+		elif l2.t == "grid" and l2.mode == "atk":
+			await _attacco(f, l2, resto2, k, ctx)
 		elif l2.t == "fx":
 			for e in l2.fx:
 				await _fx(f, e, ctx)
@@ -1752,6 +1772,42 @@ func _fx(f: Dictionary, e: Dictionary, ctx: Dictionary) -> void:
 			_log("%s trasforma %d ferite di questo turno in stordimenti." % [f.name, q3])
 			for _k in q3:
 				_stordisci(f)
+		"search_prep":
+			var sp: Array = []
+			var spv := {}
+			for cid in f.deck:
+				if cid >= 0 and not spv.has(cid) and Carte.carta(cid).get("prepared", false) and Carte.carta(cid).get("pers", "") == e.pers:
+					spv[cid] = true
+					sp.append({"card": cid, "label": Carte.nome(cid)})
+			if not sp.is_empty():
+				var isp := await _ask(f.i, "card", "%s: scegli la carta preparata da prendere" % f.name, sp, {"mostra": true, "dal_mazzo": true})
+				f.deck.erase(sp[isp].card)
+				f.hand.append(sp[isp].card)
+			_mischia(f.deck)
+		"caltrops":
+			var libere: Array = []
+			for cc in ["5", "0", "1"]:
+				var cl: Vector2i = Hex.walk(f.pos, f.face, cc)
+				if cells.has(cl) and _in_cella(cl) == null and not trappole.has(cl):
+					libere.append(cl)
+			if libere.is_empty():
+				_log("%s non ha caselle libere per i Piedi di Corvo." % f.name)
+			elif f.occ:
+				var div: Vector2i = libere[0]
+				if libere.size() > 1:
+					var od: Array = []
+					for cl in libere:
+						od.append({"pos": cl, "face": f.face})
+					div = od[await _ask(f.i, "hex", "%s: su quale casella metti il Diversivo? (le altre sono Inneschi)" % f.name, od)].pos
+				for cl in libere:
+					trappole[cl] = "diversivo" if (cl == div and libere.size() > 1) else "innesco"
+				_log("%s piazza %d segnalini Trappola a faccia in giù." % [f.name, libere.size()])
+			else:
+				var oc2: Array = []
+				for cl in libere:
+					oc2.append({"pos": cl, "face": f.face})
+				trappole[oc2[await _ask(f.i, "hex", "%s: dove metti il Piede di Corvo?" % f.name, oc2)].pos] = "piede"
+				_log("%s lancia un Piede di Corvo." % f.name)
 		"flip_dog":
 			var cn = _cane_di(f)
 			if cn != null:

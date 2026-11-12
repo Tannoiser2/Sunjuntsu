@@ -155,6 +155,8 @@ static func effetto(e: Dictionary) -> String:
 			var bn := {"wounds": "limite di ferite", "hand": "limite di mano", "focus": "limite di focus"}
 			return "rimane in gioco: +1 al tuo %s" % bn.get(e.get("bonus", ""), "")
 		"wounds_to_stun": return "sostituisci tutte le ferite ricevute in questo turno con stordimenti"
+		"search_prep": return "cerca nel mazzo e prendi 1 carta preparata del personaggio"
+		"caltrops": return "metti 1 Piede di Corvo su una delle 3 caselle frontali vuote; da Occultato metti invece 3 segnalini Trappola (1 Diversivo, 2 Inneschi)"
 		"flip_dog": return "volta la carta Kamae di Hachiko"
 		"heal": return "scarta 1 ferita"
 		"bleed1_to_wound": return "sostituisci 1 ferita sanguinante con 1 ferita"
@@ -279,6 +281,8 @@ static func testo(c: Dictionary) -> String:
 		testa += ", " + ("Sostituzione istantanea" if c.instant == "rep" else "Aggiunta istantanea")
 	if c.has("range"):
 		testa += ", Distanza %d" % int(c.range)
+	if c.get("req_o", false):
+		testa += ", richiede Occultamento"
 	if c.get("req_d", false):
 		testa += ", richiede Disperazione"
 	if c.has("req_illum"):

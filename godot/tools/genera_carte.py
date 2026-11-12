@@ -670,6 +670,44 @@ cane(254, "Riporta la Preda", 7, [atk({"0": "a"}), ast(e("drag"))],
 cane(256, "Strisciata", 6, [move(step(FANUP, 1)), atk({"0": "w1", "1": "w1"})],
      "In Caccia", 3, [move(step([5, 1], 1, False), rot(1, False)), move(step([5, 1], 1), rot(1))])
 
+# ───────────── NINJA ─────────────
+card(163, "Carta Speciale Ninja", "core", 0, seg(
+    fx(e("discard", n=1)), move(step(ANY, 1), rot(2)),
+    OR(fx(e("draw", n=2)), fx(e("search_prep", pers="Ninja")), fx(e("change", n=1)))), core=True)
+card(164, "Colpo di Kusarigama", "attack", 4,
+    seg(fx(e("discard", n=1)), OR(g(atk({"000": "w1", "001": "w1"}), f=1), atk({"5": "w1", "0": "w1"}))),
+    seg(move(step(ANY, 1)), init=3), core=True, weapon="Kusarigama")
+card(166, "Trappola del Tiratore Lunare", "meditation", 4, seg(
+    alt(7, f=1), ranged("w1", 99), IFS, fx(e("t_poison"), f=1)), focus=1)
+C["166"]["req_o"] = True
+card(167, "Cerbottana Fukiya", "attack", 4, seg(ranged("a", 4), IFS, fx(e("t_hobble")), fx(e("t_poison"), f=1)),
+    range=4, prepared=True)
+card(168, "Soffio di Metsubushi", "attack", 6, seg(
+    UNB, atk({"0": "a", "00": "a", "000": "a", "005": "a", "001": "a"}), ast(e("cancel_move")),
+    IFS, fx(e("t_stun"), e("t_stun"), k=BA), fx(e("t_stun"), e("t_discard_type", type="defence", n=1), k=AG),
+    fx(e("t_stun"), e("t_discard_type", type="attack", n=1), k=DE)), focus=1, prepared=True)
+card(169, "Lancio di Shuriken", "attack", 4, seg(alt(6, f=1), ranged("w1", 4)), focus=1, range=4, prepared=True)
+card(170, "Lancio di Piedi di Corvo", "meditation", 3, seg(move(step(B, 1)), fx(e("caltrops"))), prepared=True)
+card(171, "Catena e Uncino", "defence", 5, seg(
+    atk({"000": "a", "005": "a", "00": "a", "05": "a"}), ast(e("pull", n=1)),
+    IFS, fx(e("cancel_move")), fx(e("t_rot", n=2), k=BA), occ(fx(e("t_stun")))))
+card(172, "Bomba Fumogena (Ninja)", "defence", 7,
+    seg(atk({c: "a" for c in "012345"}), ast(e("push", n=1))),
+    seg(move(rot(1)), OR(move(step(B, 1, False)), move(step(FANDN, 1, False), k=DE)), fx(e("conceal")), init=6),
+    focus=1, prepared=True)
+card(173, "Flagello Sferzante", "attack", 6,
+    seg(atk({"05": "w1", "00": "w1", "01": "w1", "11": "w1", "12": "w1"})),
+    seg(atk({"55": "w1", "45": "w1", "44": "w1", "34": "w1", "33": "w1"}), init=3))
+card(174, "Ombra Evanescente", "meditation", "=", seg(move(step(FANDN, 2)), fx(e("conceal"))),
+    instant="add", when="atk_ok|block_ok", prepared=True,
+    note="Sulla carta dopo un blocco riuscito il movimento è diverso (passo diagonale 1 + rotazione 1): qui è sempre il passo indietro di 2.")
+card(175, "Squarcio di Kama", "attack", 5, seg(
+    occ(alt(7)), move(rot(2), k=BA), atk({"5": "w1", "0": "w1"}),
+    IFS, fx(e("t_wound_to_bleed"), k=AG), fx(e("switch", to="any"), f=1)))
+card(176, "Ritirata", "defence", 6, seg(
+    move(step(FANDN, 2, False)), move(rot(1), k=BA), fx(e("draw", n=1), k=DE), fx(e("focus", n=1)),
+    fx(e("conceal")), fx(e("change", n=1))))
+
 # ───────────── CARTE SOLO (Solitario) ─────────────
 # Id: 1000+ Ronin, 2000+ Guerriero, 3000+ generiche (numero stampato + base).
 V = [5, 1]; A = [4, 2]; X = [1, 2, 4, 5]
@@ -902,7 +940,17 @@ out = {
      "kamae": {"nodes": {"focus":[0.73,0.2],"determination":[0.27,0.5],"aggression":[0.73,0.5],
                          "neutral":[0.27,0.8],"balance":[0.73,0.8]},
         "edges": [["aggression","focus",1],["focus","determination",1],["determination","aggression",2],
-                  ["neutral","determination",2],["neutral","balance",2],["aggression","balance",2]]}}},
+                  ["neutral","determination",2],["neutral","balance",2],["aggression","balance",2]]}},
+  "ninja": {"name": "Ninja", "title": "Fantasma nella notte", "advantage": 95, "occulta": True,
+     "hand": 6, "wounds": 4, "char_img": imgs["2159"], "kamae_img": imgs["2162"],
+     "portrait": "ninja.webp", "model": "",
+     "deck": {"166":1,"167":1,"168":1,"169":1,"170":1,"171":2,"172":2,"173":2,"174":3,"175":3,"176":3,
+              "100":2,"103":1,"105":1,"110":2,"142":2,"147":2},
+     "core": [163, 164],
+     "kamae": {"nodes": {"focus":[0.73,0.2],"aggression":[0.27,0.5],"balance":[0.73,0.5],
+                         "neutral":[0.27,0.8],"determination":[0.73,0.8]},
+        "edges": [["focus","balance",2],["aggression","balance",2],["aggression","neutral",1],
+                  ["balance","determination",2],["neutral","determination",2]]}}},
  "solo": SOLO,
  # mappa "villaggio in fiamme": celle giocabili (colonna,riga) lette dal contorno arancione
  "maps": {"villaggio": {"img": "arena.webp", "img_size": 1594,

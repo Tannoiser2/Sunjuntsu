@@ -511,6 +511,8 @@ func _lampo(celle: Array, col: Color) -> void:
 func _ridisegna_celle() -> void:
 	for c in celle_mat:
 		var col := Color(1, 1, 1, 0)
+		if g != null and g.trappole.has(c):
+			col = Color(0.45, 0.1, 0.55, 0.5)
 		if evid.has(c):
 			col = evid[c]
 		if lampi.has(c):

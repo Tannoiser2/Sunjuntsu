@@ -14521,6 +14521,802 @@
    "pers": "",
    "img": "hachiko/hachiko_06.webp"
   },
+  "163": {
+   "id": 163,
+   "name": "Carta Speciale Ninja",
+   "type": "core",
+   "init": 0,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "discard",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "draw",
+            "n": 2
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "search_prep",
+            "pers": "Ninja"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "change",
+            "n": 1
+           }
+          ]
+         }
+        ]
+       ]
+      }
+     ]
+    }
+   ],
+   "core": true,
+   "en": "Carta Speciale Ninja",
+   "rank": "-",
+   "pers": "Ninja",
+   "img": "ninja/ninja_03.webp"
+  },
+  "164": {
+   "id": 164,
+   "name": "Colpo di Kusarigama",
+   "type": "attack",
+   "init": 4,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "discard",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "grid",
+          "mode": "atk",
+          "cells": {
+           "000": "w1",
+           "001": "w1"
+          },
+          "f": 1
+         }
+        ],
+        [
+         {
+          "t": "grid",
+          "mode": "atk",
+          "cells": {
+           "5": "w1",
+           "0": "w1"
+          }
+         }
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 3
+    }
+   ],
+   "weapon": "Kusarigama",
+   "core": true,
+   "en": "Colpo di Kusarigama",
+   "rank": "-",
+   "pers": "Ninja/Weapon",
+   "img": "ninja/ninja_05.webp"
+  },
+  "166": {
+   "id": 166,
+   "name": "Trappola del Tiratore Lunare",
+   "type": "meditation",
+   "init": 4,
+   "focus": 1,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "alt",
+       "v": 7,
+       "f": 1
+      },
+      {
+       "t": "ranged",
+       "eff": "w1",
+       "r": 99
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_poison"
+        }
+       ],
+       "f": 1
+      }
+     ]
+    }
+   ],
+   "req_o": true,
+   "en": "Trappola del Tiratore Lunare",
+   "rank": "Jade",
+   "pers": "Ninja",
+   "img": "ninja/ninja_31.webp"
+  },
+  "167": {
+   "id": 167,
+   "name": "Cerbottana Fukiya",
+   "type": "attack",
+   "init": 4,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "ranged",
+       "eff": "a",
+       "r": 4
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_hobble"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_poison"
+        }
+       ],
+       "f": 1
+      }
+     ]
+    }
+   ],
+   "range": 4,
+   "prepared": true,
+   "en": "Cerbottana Fukiya",
+   "rank": "Gold",
+   "pers": "Ninja",
+   "img": "ninja/ninja_30.webp"
+  },
+  "168": {
+   "id": 168,
+   "name": "Soffio di Metsubushi",
+   "type": "attack",
+   "init": 6,
+   "focus": 1,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "unblockable"
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "a",
+        "00": "a",
+        "000": "a",
+        "005": "a",
+        "001": "a"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "cancel_move"
+        }
+       ]
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_stun"
+        },
+        {
+         "v": "t_stun"
+        }
+       ],
+       "k": "balance"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_stun"
+        },
+        {
+         "v": "t_discard_type",
+         "type": "defence",
+         "n": 1
+        }
+       ],
+       "k": "aggression"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_stun"
+        },
+        {
+         "v": "t_discard_type",
+         "type": "attack",
+         "n": 1
+        }
+       ],
+       "k": "determination"
+      }
+     ]
+    }
+   ],
+   "prepared": true,
+   "en": "Soffio di Metsubushi",
+   "rank": "Gold",
+   "pers": "Ninja",
+   "img": "ninja/ninja_29.webp"
+  },
+  "169": {
+   "id": 169,
+   "name": "Lancio di Shuriken",
+   "type": "attack",
+   "init": 4,
+   "focus": 1,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "alt",
+       "v": 6,
+       "f": 1
+      },
+      {
+       "t": "ranged",
+       "eff": "w1",
+       "r": 4
+      }
+     ]
+    }
+   ],
+   "range": 4,
+   "prepared": true,
+   "en": "Lancio di Shuriken",
+   "rank": "Gold",
+   "pers": "Ninja",
+   "img": "ninja/ninja_28.webp"
+  },
+  "170": {
+   "id": 170,
+   "name": "Lancio di Piedi di Corvo",
+   "type": "meditation",
+   "init": 3,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          3
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "caltrops"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "prepared": true,
+   "en": "Lancio di Piedi di Corvo",
+   "rank": "Steel",
+   "pers": "Ninja",
+   "img": "ninja/ninja_12.webp"
+  },
+  "171": {
+   "id": 171,
+   "name": "Catena e Uncino",
+   "type": "defence",
+   "init": 5,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "000": "a",
+        "005": "a",
+        "00": "a",
+        "05": "a"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "pull",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "cancel_move"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_rot",
+         "n": 2
+        }
+       ],
+       "k": "balance"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_stun"
+        }
+       ],
+       "o": true
+      }
+     ]
+    }
+   ],
+   "en": "Catena e Uncino",
+   "rank": "Steel",
+   "pers": "Ninja",
+   "img": "ninja/ninja_14.webp"
+  },
+  "172": {
+   "id": 172,
+   "name": "Bomba Fumogena (Ninja)",
+   "type": "defence",
+   "init": 7,
+   "focus": 1,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "a",
+        "1": "a",
+        "2": "a",
+        "3": "a",
+        "4": "a",
+        "5": "a"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "push",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "move",
+          "parts": [
+           {
+            "m": "step",
+            "dirs": [
+             3
+            ],
+            "n": 1,
+            "opt": false
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "move",
+          "parts": [
+           {
+            "m": "step",
+            "dirs": [
+             4,
+             3,
+             2
+            ],
+            "n": 1,
+            "opt": false
+           }
+          ],
+          "k": "determination"
+         }
+        ]
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "conceal"
+        }
+       ]
+      }
+     ],
+     "init": 6
+    }
+   ],
+   "prepared": true,
+   "en": "Bomba Fumogena",
+   "rank": "Steel",
+   "pers": "Ninja",
+   "img": "ninja/ninja_16.webp"
+  },
+  "173": {
+   "id": 173,
+   "name": "Flagello Sferzante",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "05": "w1",
+        "00": "w1",
+        "01": "w1",
+        "11": "w1",
+        "12": "w1"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "55": "w1",
+        "45": "w1",
+        "44": "w1",
+        "34": "w1",
+        "33": "w1"
+       }
+      }
+     ],
+     "init": 3
+    }
+   ],
+   "en": "Flagello Sferzante",
+   "rank": "Steel",
+   "pers": "Ninja",
+   "img": "ninja/ninja_10.webp"
+  },
+  "174": {
+   "id": 174,
+   "name": "Ombra Evanescente",
+   "type": "meditation",
+   "init": "=",
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "conceal"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "instant": "add",
+   "when": "atk_ok|block_ok",
+   "note": "Sulla carta dopo un blocco riuscito il movimento è diverso (passo diagonale 1 + rotazione 1): qui è sempre il passo indietro di 2.",
+   "prepared": true,
+   "en": "Ombra Evanescente",
+   "rank": "Wood",
+   "pers": "Ninja",
+   "img": "ninja/ninja_18.webp"
+  },
+  "175": {
+   "id": 175,
+   "name": "Squarcio di Kama",
+   "type": "attack",
+   "init": 5,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "alt",
+       "v": 7,
+       "o": true
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ],
+       "k": "balance"
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "w1",
+        "0": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_wound_to_bleed"
+        }
+       ],
+       "k": "aggression"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "switch",
+         "to": "any"
+        }
+       ],
+       "f": 1
+      }
+     ]
+    }
+   ],
+   "en": "Squarcio di Kama",
+   "rank": "Wood",
+   "pers": "Ninja",
+   "img": "ninja/ninja_21.webp"
+  },
+  "176": {
+   "id": 176,
+   "name": "Ritirata",
+   "type": "defence",
+   "init": 6,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 2,
+         "opt": false
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "k": "balance"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "draw",
+         "n": 1
+        }
+       ],
+       "k": "determination"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "focus",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "conceal"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "change",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "en": "Ritirata",
+   "rank": "Wood",
+   "pers": "Ninja",
+   "img": "ninja/ninja_06.webp"
+  },
   "1001": {
    "id": 1001,
    "name": "Chiatta di Buoi (Solo)",
@@ -18868,6 +19664,92 @@
      [
       "aggression",
       "balance",
+      2
+     ]
+    ]
+   }
+  },
+  "ninja": {
+   "name": "Ninja",
+   "title": "Fantasma nella notte",
+   "advantage": 95,
+   "occulta": true,
+   "hand": 6,
+   "wounds": 4,
+   "char_img": "ninja/ninja_01.webp",
+   "kamae_img": "ninja/ninja_02.webp",
+   "portrait": "ninja.webp",
+   "model": "",
+   "deck": {
+    "166": 1,
+    "167": 1,
+    "168": 1,
+    "169": 1,
+    "170": 1,
+    "171": 2,
+    "172": 2,
+    "173": 2,
+    "174": 3,
+    "175": 3,
+    "176": 3,
+    "100": 2,
+    "103": 1,
+    "105": 1,
+    "110": 2,
+    "142": 2,
+    "147": 2
+   },
+   "core": [
+    163,
+    164
+   ],
+   "kamae": {
+    "nodes": {
+     "focus": [
+      0.73,
+      0.2
+     ],
+     "aggression": [
+      0.27,
+      0.5
+     ],
+     "balance": [
+      0.73,
+      0.5
+     ],
+     "neutral": [
+      0.27,
+      0.8
+     ],
+     "determination": [
+      0.73,
+      0.8
+     ]
+    },
+    "edges": [
+     [
+      "focus",
+      "balance",
+      2
+     ],
+     [
+      "aggression",
+      "balance",
+      2
+     ],
+     [
+      "aggression",
+      "neutral",
+      1
+     ],
+     [
+      "balance",
+      "determination",
+      2
+     ],
+     [
+      "neutral",
+      "determination",
       2
      ]
     ]
