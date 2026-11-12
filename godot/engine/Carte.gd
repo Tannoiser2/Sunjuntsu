@@ -64,6 +64,8 @@ static func nome(id: int) -> String:
 
 
 static func iniz_testo(c: Dictionary) -> String:
+	if c.init is String:
+		return c.init
 	if c.init is Array:
 		return "%d-%d" % [int(c.init[0]), int(c.init[1])]
 	return str(c.init) if c.init is String else str(int(c.init))
@@ -145,6 +147,12 @@ static func effetto(e: Dictionary) -> String:
 		"t_draw": return "il bersaglio pesca %d carte" % n
 		"t_give_top": return "guarda le prime %d carte del mazzo del bersaglio: ne scegli 1, che lui prende in mano" % n
 		"pull_or_push": return "tira o spingi il bersaglio di %d" % n
+		"illum_search": return "puoi prendere 1 stordimento per cercare nel mazzo e prendere 1 carta Illuminata"
+		"search_illum": return "cerca %s e prendi 1 carta Illuminata" % ("negli scarti" if e.get("scarti", false) else "nel mazzo")
+		"illumina":
+			var bn := {"wounds": "limite di ferite", "hand": "limite di mano", "focus": "limite di focus"}
+			return "rimane in gioco: +1 al tuo %s" % bn.get(e.get("bonus", ""), "")
+		"wounds_to_stun": return "sostituisci tutte le ferite ricevute in questo turno con stordimenti"
 		"conceal": return "entra in Occultamento"
 		"t_mill_wounds": return "il bersaglio scarta dalla cima del mazzo tante carte quante sono le sue ferite, +1"
 		"cancel_rot": return "cancella la rotazione attiva del bersaglio"
@@ -247,6 +255,10 @@ static func testo(c: Dictionary) -> String:
 		testa += ", " + ("Sostituzione istantanea" if c.instant == "rep" else "Aggiunta istantanea")
 	if c.has("range"):
 		testa += ", Distanza %d" % int(c.range)
+	if c.has("req_illum"):
+		testa += ", requisito: %d carte Illuminate in gioco" % int(c.req_illum)
+	if c.get("no_play", false):
+		testa += ", non si può giocare come carta abilità"
 	out.append(testa)
 	for i in c.segs.size():
 		var s: Dictionary = c.segs[i]

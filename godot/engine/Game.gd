@@ -29,6 +29,7 @@ var queue: Array = []
 var cur_init := -1
 var blocks: Array = []
 var fase := "setup"
+var fonte: Dictionary = {}   ## carta che sta producendo l'effetto in corso
 var ritmo: Callable = Callable()   ## pausa visiva fornita dall'interfaccia
 
 
@@ -70,7 +71,7 @@ func prepara(setup: Dictionary) -> void:
 			"pos": Vector2i(99, 99), "face": 0, "kamae": "neutral", "focus": 0,
 			"wounds": 0, "bleeds": 0, "hand": hand, "deck": deck, "discard": [],
 			"hobbles": [], "armour": false, "dead": false, "play": {},
-			"instant_used": false, "no_move": false, "no_rot": false, "occ": false,
+			"instant_used": false, "no_move": false, "no_rot": false, "occ": false, "illum": [], "maxfocus": MAX_FOCUS, "turn_w": 0,
 			"ai": ia, "lim": int(pl.get("ferite", db.solo.ferite)) if ia else int(cd.wounds),
 			"mano": 99 if ia else int(cd.hand),
 			"comp": rng.randi_range(0, 2), "post": "off" if rng.randi_range(0, 1) == 0 else "def",
@@ -264,6 +265,7 @@ func _turno() -> void:
 		f.instant_used = false
 		f.no_move = false
 		f.no_rot = false
+		f.turn_w = 0
 	_log("[b]— Turno %d —[/b]" % turn)
 	_ev({"t": "turn"})
 	# Ferite sanguinanti: prima della pesca si scarta la cima del mazzo (una sola volta).
@@ -329,7 +331,9 @@ func giocabile(f: Dictionary, id: int) -> bool:
 	if id < 0:
 		return true
 	var c := Carte.carta(id)
-	if c.init is String:
+	if c.init is String or c.get("no_play", false):
+		return false
+	if c.has("req_illum") and f.illum.size() < int(c.req_illum):
 		return false
 	if int(c.focus) > f.focus:
 		return false
@@ -852,6 +856,7 @@ func _collisione(f: Dictionary, celle: Array, ctx: Dictionary) -> void:
 
 ## Effetto di una collisione di `f` contro la cella `c` (f non si muove).
 func _urta(f: Dictionary, c: Vector2i) -> void:
+	fonte = {}
 	var o = _in_cella(c)
 	if o != null and o.i != f.i:
 		_log("[b]Collisione[/b]: %s urta %s." % [f.name, o.name])
@@ -923,6 +928,9 @@ func _attacco(f: Dictionary, ln: Dictionary, lines: Array, i: int, ctx: Dictiona
 		ctx.hit.append(b.o.i)
 		await _colpisci(f, b, ast, sangue, ctx)
 	ctx.success = not colpiti.is_empty()
+	for b in colpiti:
+		await _reazione_colpito(b.o)
+		_verifica_morte(b.o)
 	if ctx.success:
 		_svela(f)
 	await _pausa("hit")
@@ -962,7 +970,7 @@ func _colpisci(f: Dictionary, b: Dictionary, ast: Array, sangue: bool, ctx: Dict
 	if sangue:
 		bl += w
 		w = 0
-	_danno(o, w, bl)
+	_danno(o, w, bl, true)
 	if con_ast and not o.dead:
 		var sub := ctx.duplicate()
 		sub.hit = [o.i]
@@ -971,7 +979,18 @@ func _colpisci(f: Dictionary, b: Dictionary, ast: Array, sangue: bool, ctx: Dict
 				await _fx(f, e, sub)
 
 
-func _danno(o: Dictionary, w: int, bl: int) -> void:
+func _salvezza(o: Dictionary) -> bool:
+	return not o.ai and not o.instant_used and o.hand.has(263) and o.focus >= 2
+
+
+func _verifica_morte(o: Dictionary) -> void:
+	if not o.dead and o.wounds + o.bleeds >= int(o.lim):
+		o.dead = true
+		_log("[b]%s è sconfitto.[/b]" % o.name)
+	_fine()
+
+
+func _danno(o: Dictionary, w: int, bl: int, rinvia: bool = false) -> void:
 	if w + bl <= 0 or o.dead:
 		return
 	_svela(o)
@@ -987,6 +1006,7 @@ func _danno(o: Dictionary, w: int, bl: int) -> void:
 		_log("%s prende 1 azzoppamento." % o.name)
 	o.wounds += w
 	o.bleeds += bl
+	o.turn_w += w
 	var t: Array = []
 	if w > 0:
 		t.append("%d ferita/e" % w)
@@ -994,10 +1014,9 @@ func _danno(o: Dictionary, w: int, bl: int) -> void:
 		t.append("%d ferita/e sanguinante/i" % bl)
 	_log("[color=#a01010]%s subisce %s.[/color]" % [o.name, " e ".join(t)])
 	_ev({"t": "damage", "p": o.i})
-	if o.wounds + o.bleeds >= int(o.lim):
-		o.dead = true
-		_log("[b]%s è sconfitto.[/b]" % o.name)
-	_fine()
+	if rinvia and _salvezza(o):
+		return
+	_verifica_morte(o)
 
 
 func _trova_blocco(att: Dictionary, dif: Dictionary):
@@ -1289,6 +1308,28 @@ func _chiudi_blocchi() -> void:
 
 # ─────────────────────────── Carte istantanee ───────────────────────────
 
+## Istantanee «gioca se l'attacco dell'avversario è riuscito» (Corpo Illuminato).
+func _reazione_colpito(o: Dictionary) -> void:
+	if o.ai or o.instant_used:
+		return
+	for h in o.hand.duplicate():
+		if h < 0:
+			continue
+		var c := Carte.carta(h)
+		if c.get("when", "") != "hit_me" or int(c.focus) > o.focus:
+			continue
+		var idx := await _ask(o.i, "instant", "%s: sei stato colpito. Giochi «%s»?" % [o.name, c.name],
+			[{"label": "Non giocare nulla"}, {"label": "Gioca «%s»" % c.name, "card": h}])
+		if idx == 1:
+			o.focus -= int(c.focus)
+			o.hand.erase(h)
+			o.instant_used = true
+			_log("%s gioca l'istantanea [b]%s[/b]." % [o.name, c.name])
+			var sub := {"card": c, "success": true, "hit": [], "abort": false, "main": false, "en": {"s": 0}}
+			await _righe(o, c.segs[0].lines, 0, sub)
+		return
+
+
 func _istantanea(f: Dictionary, quando: String, ctx: Dictionary) -> void:
 	if f.instant_used or f.dead or f.play.get("id", -1) < 0:
 		return
@@ -1327,7 +1368,7 @@ func _istantanea(f: Dictionary, quando: String, ctx: Dictionary) -> void:
 	await _pausa("resolve")
 	var sub := {"card": c2, "success": true, "hit": ctx.hit.duplicate(), "abort": false, "main": false, "en": {"s": 0}}
 	await _righe(f, c2.segs[0].lines, 0, sub)
-	if not c2.get("stays", false):
+	if not c2.get("stays", false) and not f.illum.has(id):
 		f.discard.append(id)
 
 
@@ -1350,6 +1391,7 @@ func _bersagli(f: Dictionary, ctx: Dictionary) -> Array:
 func _fx(f: Dictionary, e: Dictionary, ctx: Dictionary) -> void:
 	if over:
 		return
+	fonte = ctx.card
 	var n := int(e.get("n", 1))
 	match e.v:
 		"discard":
@@ -1418,6 +1460,29 @@ func _fx(f: Dictionary, e: Dictionary, ctx: Dictionary) -> void:
 				f.hand.erase(giu[ig].card)
 				await _cerca(f, e.rank, "", f.discard, false)
 				f.discard.append(giu[ig].card)
+		"illum_search":
+			var ii := await _ask(f.i, "yesno", "%s: prendi 1 stordimento per cercare una carta Illuminata nel mazzo?" % f.name, [{"label": "Sì"}, {"label": "No"}])
+			if ii == 0:
+				_stordisci(f)
+				if not f.dead:
+					await _cerca_illum(f, f.deck, true)
+		"search_illum":
+			await _cerca_illum(f, f.discard if e.get("scarti", false) else f.deck, not e.get("scarti", false))
+		"illumina":
+			if not f.illum.has(int(ctx.card.id)):
+				f.illum.append(int(ctx.card.id))
+				match e.get("bonus", ""):
+					"wounds": f.lim = int(f.lim) + 1
+					"hand": f.mano = int(f.mano) + 1
+					"focus": f.maxfocus = int(f.maxfocus) + 1
+				_log("%s resta in gioco: carte Illuminate %d." % [ctx.card.name, f.illum.size()])
+		"wounds_to_stun":
+			var q3: int = mini(int(f.turn_w), f.wounds)
+			f.wounds -= q3
+			f.turn_w = 0
+			_log("%s trasforma %d ferite di questo turno in stordimenti." % [f.name, q3])
+			for _k in q3:
+				_stordisci(f)
 		"conceal":
 			if not f.occ:
 				f.occ = true
@@ -1626,7 +1691,7 @@ func _focus(f: Dictionary, n: int) -> void:
 	if f.ai:
 		return
 	var prima: int = f.focus
-	f.focus = mini(MAX_FOCUS, f.focus + n)
+	f.focus = mini(int(f.maxfocus), f.focus + n)
 	if f.focus > prima:
 		_log("%s ottiene %d focus." % [f.name, f.focus - prima])
 
@@ -1692,7 +1757,25 @@ func _scarta(f: Dictionary, n: int) -> void:
 		f.hand.erase(opts[idx].card)
 		f.discard.append(opts[idx].card)
 		_log("%s scarta una carta." % f.name)
+		await _mente_illuminata(f, int(opts[idx].card))
 		_ev({"t": "state"})
+
+
+## Mente Illuminata: scartata per un effetto non del Monaco, entra in gioco pagando 1 focus.
+func _mente_illuminata(f: Dictionary, id: int) -> void:
+	if not Carte.carta(id).get("no_play", false) or fonte.is_empty() or fonte.get("pers", "") == "Monk":
+		return
+	if f.focus < 1:
+		return
+	var idx := await _ask(f.i, "yesno", "%s: spendi 1 focus per mettere in gioco «%s»?" % [f.name, Carte.nome(id)], [{"label": "Sì"}, {"label": "No"}], {"card": id})
+	if idx != 0:
+		return
+	f.focus -= 1
+	f.discard.erase(id)
+	var c := Carte.carta(id)
+	_log("%s mette in gioco [b]%s[/b]." % [f.name, c.name])
+	var sub := {"card": c, "success": true, "hit": [], "abort": false, "main": false, "en": {"s": 0}}
+	await _righe(f, c.segs[0].lines, 0, sub)
 
 
 func _passa_a(f: Dictionary, to: String) -> void:
@@ -1783,6 +1866,24 @@ func _cerca(f: Dictionary, rango, tipo: String, pila: Array, mischia: bool) -> v
 		_mischia(pila)
 
 
+func _cerca_illum(f: Dictionary, pila: Array, mischia: bool) -> void:
+	var opts: Array = []
+	var visti := {}
+	for id in pila:
+		if id >= 0 and not visti.has(id) and Carte.carta(id).get("illum", false):
+			visti[id] = true
+			opts.append({"card": id, "label": Carte.nome(id)})
+	if opts.is_empty():
+		_log("%s cerca una carta Illuminata ma non ne trova." % f.name)
+	else:
+		var idx := await _ask(f.i, "card", "%s: scegli la carta Illuminata da prendere" % f.name, opts, {"mostra": true, "dal_mazzo": true})
+		pila.erase(opts[idx].card)
+		f.hand.append(opts[idx].card)
+		_log("%s prende una carta Illuminata." % f.name)
+	if mischia:
+		_mischia(pila)
+
+
 func _spingi(f: Dictionary, o: Dictionary, n: int, tira: bool = false) -> void:
 	for _k in n:
 		if o.dead or over:
@@ -1820,13 +1921,14 @@ func _spingi(f: Dictionary, o: Dictionary, n: int, tira: bool = false) -> void:
 
 func _fine_turno() -> void:
 	fase = "scarto"
+	fonte = {}
 	await _pausa("end")
 	for f in F:
 		var id: int = f.play.get("id", -1)
 		if id >= 0:
 			if Carte.carta(id).get("core", false):
 				f.hand.append(id)
-			else:
+			elif not f.illum.has(id):
 				f.discard.append(id)
 		f.play = {}
 		var nuovi: Array = []

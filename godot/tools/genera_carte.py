@@ -362,6 +362,51 @@ card(150, "Furia Crescente", "meditation", "=", seg(fx(e("push", n=1), k=AG), fx
     note="Sulla carta il «Passa ad Aggressione» avviene a iniziativa 0: qui è immediato.")
 card(154, "Taglio Sanguinante", "attack", 4, seg(move(step([5, 1], 1), k=AG), atk({"0": "b", "1": "b"})))
 
+# ───────────── MONACO ─────────────
+card(260, "Carta Speciale Monaco", "core", 0, seg(
+    fx(e("discard", n=1)), move(step(ANY, 1), rot(2)),
+    OR(fx(e("draw", n=2)), fx(e("discard", n=2), e("search_illum")), fx(e("change", n=1)))), core=True)
+card(133, "Stoccata di Jumonji Yari", "attack", 2, seg(
+    fx(e("discard", n=1)), move(step(FANUP, 1), f=1), atk({"05": "w1", "00": "w1", "01": "w1"})),
+    core=True, weapon="Yari")
+card(262, "Squarcio dell'Onda Zen", "attack", 6, seg(alt(8, f=2), atk({"5": "x", "0": "x", "1": "x"})),
+    focus=2, req=BA)
+card(263, "Corpo Illuminato", "meditation", "-", seg(
+    fx(e("wounds_to_stun")), fx(e("switch", to=DE)), fx(e("illum_search")), fx(e("illumina", bonus="wounds"))),
+    focus=2, when="hit_me")
+card(264, "Mente Illuminata", "meditation", "-", seg(fx(e("illum_search")), fx(e("illumina", bonus="hand"))))
+card(265, "Anima Illuminata", "meditation", 8, seg(
+    move(step([5, 1], 1)), OR(fx(e("search", rank="Jade")), fx(e("search_discard", rank="Jade"))),
+    fx(e("switch", to=BA)), fx(e("illum_search")), fx(e("illumina", bonus="focus"))), focus=2)
+card(266, "Chiarezza di Intenti", "defence", 8, seg(
+    move(step(FANDN, 1)), fx(e("search_illum", scarti=True)), fx(e("focus", n=1), k=DE), fx(e("draw", n=1), k=BA)))
+card(267, "Mente Serena", "meditation", 6, seg(
+    OR(move(step(FANUP, 2), rot(1)), move(step(FANDN, 1), rot(2), k=BA)), fx(e("focus", n=1)), fx(e("switch", to="any"))))
+card(268, "Distruzione Satori", "attack", 4, seg(
+    move(step(F, 1), rot(1), seq=True), atk({"1": "w1", "2": "w1"}), IFS, fx(e("t_discard", n=1), k=AG)))
+card(269, "Carica del Cervo", "attack", 6, seg(
+    move(rot(1)), atk({"0": "w1", "00": "w1"}), IFS, fx(e("push", n=2)), move(step(F, 2, False)), fx(e("advantage"))))
+card(270, "Cresta dell'Onda", "attack", 7,
+    seg(move(step(B, 1)), atk({"5": "w1", "0": "w1"})),
+    seg(g(atk({"0": "w1", "1": "w1", "2": "w1"}), f=1), move(step(F, 1), k=AG), init=5))
+card(271, "Colpo del Palmo", "attack", 5, seg(
+    atk({"0": "a"}), ast(e("t_stun"), e("t_hobble")), IFS, fx(e("t_lose_focus", n=1)),
+    fx(e("push", n=1), k=BA), fx(e("change", n=1))), instant="rep")
+card(272, "Blocco Risoluto", "defence", [8, 4],
+    seg(move(rot(1), k=DE), blk("5", "0", "1")),
+    seg(move(step(FANDN, 1)), fx(e("draw", n=2), k=BA), fx(e("change", n=1)), init=3))
+card(140, "Squarcio di Rovescio", "attack", 6, seg(
+    alt(2, k=DE), move(step(ANY, 1)), move(rot(1), k=BA), atk({"0": "w1"}), IFS, fx(e("t_discard", n=1))))
+card(142, "Calma Convinzione", "meditation", "=", seg(fx(e("focus", n=1), k=BA), fx(e("switch", to=BA))),
+    instant="add", when="atk_ok|block_ok", prepared=True,
+    note="Sulla carta il «Passa a Equilibrio» avviene a iniziativa 0: qui è immediato.")
+card(151, "Blocco della Tempesta", "defence", [8, 5], seg(
+    move(rot(1)), blk("5", "0"), counter(8, 7, k=DE), counter(6, 5, k=BA)))
+for _i in (263, 264, 265): C[str(_i)]["illum"] = True
+C["262"]["req_illum"] = 3
+C["264"]["no_play"] = True
+for _i in (263, 264, 265): C[str(_i)]["stays"] = True
+
 # ───────────── CARTE SOLO (Solitario) ─────────────
 # Id: 1000+ Ronin, 2000+ Guerriero, 3000+ generiche (numero stampato + base).
 V = [5, 1]; A = [4, 2]; X = [1, 2, 4, 5]
@@ -465,7 +510,7 @@ imgs = json.load(open(os.path.join(here, "../data/cards/card_images.json")))["by
 for k, c in C.items():
     if c.get("solo"): continue
     p = pool.get(int(k), {})
-    c["en"] = p.get("name", ""); c["rank"] = p.get("rank", "-")
+    c["en"] = p.get("name", ""); c["rank"] = p.get("rank", "-"); c["pers"] = p.get("char", "")
     c["img"] = imgs.get(k, "")
     assert c["img"], k
 
@@ -522,7 +567,17 @@ out = {
      "kamae": {"nodes": {"determination":[0.27,0.2],"balance":[0.27,0.5],"aggression":[0.73,0.5],
                          "neutral":[0.27,0.8],"focus":[0.73,0.8]},
         "edges": [["determination","balance",2],["balance","neutral",2],["balance","aggression",2],
-                  ["determination","aggression",1],["neutral","focus",2],["aggression","focus",2]]}}},
+                  ["determination","aggression",1],["neutral","focus",2],["aggression","focus",2]]}},
+  "monk": {"name": "Monaco", "title": "Il guerriero spirituale", "advantage": 45,
+     "hand": 5, "wounds": 5, "char_img": imgs["257"], "kamae_img": imgs["259"],
+     "portrait": "monk.webp", "model": "",
+     "deck": {"262":1,"263":1,"264":1,"265":1,"266":2,"267":2,"268":2,"269":2,"270":3,"271":3,"272":3,
+              "99":1,"140":2,"142":2,"151":2,"121":1,"124":1},
+     "core": [260, 133],
+     "kamae": {"nodes": {"balance":[0.27,0.2],"aggression":[0.73,0.2],"focus":[0.27,0.5],
+                         "determination":[0.73,0.5],"neutral":[0.27,0.8]},
+        "edges": [["balance","aggression",2],["balance","focus",2],["aggression","determination",2],
+                  ["focus","determination",2],["focus","neutral",2]]}}},
  "solo": SOLO,
  # mappa "villaggio in fiamme": celle giocabili (colonna,riga) lette dal contorno arancione
  "maps": {"villaggio": {"img": "arena.webp", "img_size": 1594,

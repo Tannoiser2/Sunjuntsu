@@ -331,6 +331,31 @@ func _initialize() -> void:
 	g._danno(g.F[0], 1, 0)
 	ok(not g.F[0].occ, "una ferita fa perdere l'Occultamento")
 
+	print("Monaco")
+	nuovo("monk", "warrior")
+	ok(not g.giocabile(g.F[0], 264) and not g.giocabile(g.F[0], 263), "Mente e Corpo Illuminati non si scelgono come carta del turno")
+	g.F[0].focus = 1
+	g.F[0].hand = [260, 133, 264]
+	piano[0]["yesno"] = [0, 1]     # sì al focus, no allo stordimento per cercare
+	await turno(133, 53)   # Yari (arma, non del Monaco): scarta Mente Illuminata
+	ok(g.F[0].illum.has(264) and g.F[0].mano == 6 and g.F[0].focus == 0, "Mente Illuminata scartata dall'arma: entra in gioco con 1 focus, mano +1")
+	nuovo("monk", "warrior")
+	g.F[0].focus = 2
+	g.F[0].wounds = 4
+	mano(0, [263])
+	g.F[1].kamae = "aggression"
+	piano[0]["instant"] = 1
+	piano[0]["yesno"] = 1
+	await turno(260, 64)   # Testata: 1 ferita che sarebbe la quinta
+	ok(not g.F[0].dead and g.F[0].wounds == 4 and g.F[0].lim == 6, "Corpo Illuminato: la ferita diventa stordimento, limite ferite 6")
+	ok(g.F[0].kamae == "determination" and g.F[0].illum.has(263), "Corpo Illuminato resta in gioco e porta in Determinazione")
+	nuovo("monk", "warrior")
+	g.F[0].kamae = "balance"
+	g.F[0].focus = 2
+	ok(not g.giocabile(g.F[0], 262), "Squarcio dell'Onda Zen: servono 3 carte Illuminate")
+	g.F[0].illum = [263, 264, 265]
+	ok(g.giocabile(g.F[0], 262), "con 3 Illuminate in gioco si può giocare")
+
 	print("Tutte le carte hanno un testo")
 	for c in Carte.db().cards.values():
 		if Carte.testo(c).contains("?"):

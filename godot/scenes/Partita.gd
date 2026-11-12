@@ -891,7 +891,7 @@ func _disegna_pips(c: Control, i: int) -> void:
 	if f.ai:
 		return
 	c.draw_string(font, Vector2(0, 42), "Focus", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Tema.INCHIOSTRO)
-	for k in Game.MAX_FOCUS:
+	for k in int(f.maxfocus):
 		var p2 := Vector2(66 + k * 24, 37)
 		var pts := PackedVector2Array([p2 + Vector2(0, -9), p2 + Vector2(9, 0), p2 + Vector2(0, 9), p2 + Vector2(-9, 0)])
 		if k < f.focus:
@@ -978,6 +978,8 @@ func _aggiorna() -> void:
 			st.append("Armatura Pesante")
 		if f.get("occ", false):
 			st.append("Occultato")
+		if f.get("illum", []).size() > 0:
+			st.append("Illuminate %d" % f.illum.size())
 		if f.dead:
 			st = ["SCONFITTO"]
 		s.stato.text = " · ".join(st)

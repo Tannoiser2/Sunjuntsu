@@ -1,5 +1,8 @@
 # Novità
 
+## 1.6.0 — Monaco
+- Sesto personaggio: il Monaco, con le carte Illuminate che restano in gioco.
+
 ## 1.5.0 — Assassino
 - Quinto personaggio: l'Assassino, con l'Occultamento. Menu ridisegnato per più combattenti.
 
