@@ -153,6 +153,8 @@ static func effetto(e: Dictionary) -> String:
 			var bn := {"wounds": "limite di ferite", "hand": "limite di mano", "focus": "limite di focus"}
 			return "rimane in gioco: +1 al tuo %s" % bn.get(e.get("bonus", ""), "")
 		"wounds_to_stun": return "sostituisci tutte le ferite ricevute in questo turno con stordimenti"
+		"reveal_take": return "rivela le prime %d carte del tuo mazzo e prendi tutte quelle del tuo personaggio" % n
+		"search_stun": return "cerca nel mazzo e prendi 1 Attacco che infligge stordimento"
 		"contract_back": return "rimetti nella tua area di gioco un contratto scartato, a faccia in su"
 		"lavoro_finito": return "per ogni contratto completato in gioco: +1 focus, pesca 1 carta, rimescola nel mazzo 1 carta Legno dagli scarti; poi scarta tutti i contratti"
 		"t_discard_rand": return "il bersaglio scarta 1 carta a caso"
@@ -225,7 +227,7 @@ static func riga(ln: Dictionary) -> String:
 				a3.append(str(int(v)))
 			return g + "contrattacco a iniziativa " + ", ".join(a3)
 		"ifs": return "SE RIUSCITO:"
-		"ranged": return "Attacco a distanza — colpisci il bersaglio con iniziativa inferiore: " + EFFETTI_CELLA.get(ln.eff, ln.eff)
+		"ranged": return "Attacco a distanza — colpisci il bersaglio con iniziativa inferiore: " + EFFETTI_CELLA.get(ln.eff, ln.eff) + ("" if ln.get("fx", []).is_empty() else ", poi " + effetti(ln.fx))
 		"unblockable": return "NON BLOCCABILE"
 		"fx": return g + effetti(ln.fx)
 		"or":

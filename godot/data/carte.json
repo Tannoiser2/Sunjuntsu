@@ -10170,6 +10170,863 @@
    "pers": "Gen. Ability",
    "img": "altre_carte_2/altre_carte_2_16.webp"
   },
+  "333": {
+   "id": 333,
+   "name": "Carta Speciale Wakou",
+   "type": "core",
+   "init": 0,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "discard",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "draw",
+            "n": 2
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "discard_stun",
+            "n": 1
+           },
+           {
+            "v": "self_hobble"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "change",
+            "n": 1
+           }
+          ]
+         }
+        ]
+       ]
+      }
+     ]
+    }
+   ],
+   "core": true,
+   "en": "Carta Speciale Wakou",
+   "rank": "-",
+   "pers": "Wakou",
+   "img": "wakou/wakou_04.webp"
+  },
+  "134": {
+   "id": 134,
+   "name": "Colpo di Kanabo",
+   "type": "attack",
+   "init": 4,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "discard",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "00": "a",
+        "05": "a"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "t_stun"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "f": 1
+      }
+     ],
+     "init": 1
+    }
+   ],
+   "weapon": "Kanabo",
+   "core": true,
+   "en": "Colpo di Kanabo",
+   "rank": "-",
+   "pers": "Weapon",
+   "img": "altre_carte/altre_carte_09.webp"
+  },
+  "334": {
+   "id": 334,
+   "name": "Schianto di Bordata",
+   "type": "attack",
+   "init": 6,
+   "focus": 2,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "unblockable"
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          4
+         ],
+         "n": 2,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "a",
+        "5": "a"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "t_stun"
+        },
+        {
+         "v": "t_stun"
+        }
+       ]
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_wound",
+         "n": 1
+        }
+       ],
+       "k": "aggression"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "push",
+         "n": 1
+        }
+       ],
+       "k": "balance"
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "note": "Le direzioni dei passi (icone a freccia doppia) sono la lettura meno certa di questa carta.",
+   "en": "Schianto di Bordata",
+   "rank": "Jade",
+   "pers": "Wakou",
+   "img": "wakou/wakou_05.webp"
+  },
+  "336": {
+   "id": 336,
+   "name": "Lancio della Brocca",
+   "type": "attack",
+   "init": 5,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "ranged",
+       "eff": "b",
+       "r": 2,
+       "fx": [
+        {
+         "v": "t_hobble"
+        },
+        {
+         "v": "t_stun",
+         "k": "aggression"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "switch",
+         "to": "neutral"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "range": 2,
+   "en": "Lancio della Brocca",
+   "rank": "Gold",
+   "pers": "Wakou",
+   "img": "wakou/wakou_06.webp"
+  },
+  "337": {
+   "id": 337,
+   "name": "Ariete Bukan",
+   "type": "attack",
+   "init": 5,
+   "focus": 1,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "unblockable"
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "a"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "t_stun"
+        }
+       ]
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "push",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "instant": "rep",
+   "note": "Direzione del primo passo (freccia obliqua): lettura incerta.",
+   "en": "Ariete Bukan",
+   "rank": "Gold",
+   "pers": "Wakou",
+   "img": "wakou/wakou_07.webp"
+  },
+  "338": {
+   "id": 338,
+   "name": "Piedi da Marinaio",
+   "type": "meditation",
+   "init": 9,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": false
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ],
+       "seq": true
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": false
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ],
+       "seq": true
+      }
+     ]
+    }
+   ],
+   "instant": "rep",
+   "en": "Piedi da Marinaio",
+   "rank": "Gold",
+   "pers": "Wakou",
+   "img": "wakou/wakou_08.webp"
+  },
+  "339": {
+   "id": 339,
+   "name": "Gesticolare da Ubriaco",
+   "type": "meditation",
+   "init": 1,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "reveal_take",
+         "n": 5,
+         "pers": "Wakou"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "change",
+         "n": 2
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "advantage"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "en": "Gesticolare da Ubriaco",
+   "rank": "Steel",
+   "pers": "Wakou",
+   "img": "wakou/wakou_09.webp"
+  },
+  "340": {
+   "id": 340,
+   "name": "Gigante Goffo",
+   "type": "attack",
+   "init": 7,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1,
+          3
+         ],
+         "n": 2,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "a"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "t_stun"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "en": "Gigante Goffo",
+   "rank": "Steel",
+   "pers": "Wakou",
+   "img": "wakou/wakou_11.webp"
+  },
+  "341": {
+   "id": 341,
+   "name": "Colpo Barcollante",
+   "type": "meditation",
+   "init": "=",
+   "focus": 1,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_stun"
+        }
+       ],
+       "k": "aggression"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "push",
+         "n": 2
+        }
+       ],
+       "k": "balance"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "advantage"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "instant": "add",
+   "when": "atk_ok",
+   "en": "Colpo Barcollante",
+   "rank": "Steel",
+   "pers": "Wakou",
+   "img": "wakou/wakou_13.webp"
+  },
+  "342": {
+   "id": 342,
+   "name": "Far Due Passi",
+   "type": "defence",
+   "init": 7,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          1,
+          2,
+          4,
+          5
+         ],
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "draw",
+         "n": 2
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "change",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "en": "Far Due Passi",
+   "rank": "Steel",
+   "pers": "Wakou",
+   "img": "wakou/wakou_15.webp"
+  },
+  "343": {
+   "id": 343,
+   "name": "Testata (Wakou)",
+   "type": "attack",
+   "init": 4,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "k": "aggression"
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_hobble"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "focus",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "en": "Testata",
+   "rank": "Wood",
+   "pers": "Wakou",
+   "img": "wakou/wakou_17.webp"
+  },
+  "344": {
+   "id": 344,
+   "name": "Calcio del Mulo",
+   "type": "attack",
+   "init": 5,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "k": "balance"
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "4": "w1",
+        "2": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_hobble"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "change",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "note": "Sulla carta le due caselle posteriori sono in alternativa (OPPURE): contro un solo avversario è equivalente.",
+   "en": "Calcio del Mulo",
+   "rank": "Wood",
+   "pers": "Wakou",
+   "img": "wakou/wakou_20.webp"
+  },
+  "345": {
+   "id": 345,
+   "name": "Stella Vagabonda",
+   "type": "meditation",
+   "init": 3,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1,
+          3
+         ],
+         "n": 2,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "search_stun"
+        }
+       ],
+       "f": 1
+      }
+     ]
+    }
+   ],
+   "en": "Stella Vagabonda",
+   "rank": "Wood",
+   "pers": "Wakou",
+   "img": "wakou/wakou_23.webp"
+  },
+  "152": {
+   "id": 152,
+   "name": "Colpo Stordente",
+   "type": "meditation",
+   "init": "=",
+   "focus": 2,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_stun"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "instant": "add",
+   "when": "atk_ok|block_ok",
+   "en": "Colpo Stordente",
+   "rank": "Steel",
+   "pers": "Gen. Ability",
+   "img": "altre_carte_3/altre_carte_3_04.webp"
+  },
   "1001": {
    "id": 1001,
    "name": "Chiatta di Buoi (Solo)",
@@ -14153,6 +15010,87 @@
      [
       "neutral",
       "determination",
+      2
+     ],
+     [
+      "focus",
+      "determination",
+      2
+     ]
+    ]
+   }
+  },
+  "wakou": {
+   "name": "Wakou",
+   "title": "Grosso pirata del mare",
+   "advantage": 8,
+   "ubriaco": true,
+   "hand": 4,
+   "wounds": 7,
+   "char_img": "wakou/wakou_01.webp",
+   "kamae_img": "wakou/wakou_02.webp",
+   "portrait": "wakou.webp",
+   "model": "",
+   "deck": {
+    "334": 1,
+    "336": 1,
+    "337": 1,
+    "338": 1,
+    "339": 2,
+    "340": 2,
+    "341": 2,
+    "342": 2,
+    "343": 3,
+    "344": 3,
+    "345": 3,
+    "86": 1,
+    "103": 1,
+    "108": 2,
+    "152": 2,
+    "125": 2,
+    "155": 2
+   },
+   "core": [
+    333,
+    134
+   ],
+   "kamae": {
+    "nodes": {
+     "balance": [
+      0.73,
+      0.2
+     ],
+     "aggression": [
+      0.27,
+      0.5
+     ],
+     "focus": [
+      0.73,
+      0.5
+     ],
+     "neutral": [
+      0.27,
+      0.8
+     ],
+     "determination": [
+      0.73,
+      0.8
+     ]
+    },
+    "edges": [
+     [
+      "balance",
+      "focus",
+      2
+     ],
+     [
+      "aggression",
+      "focus",
+      2
+     ],
+     [
+      "aggression",
+      "neutral",
       2
      ],
      [

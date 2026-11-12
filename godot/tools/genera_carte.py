@@ -498,6 +498,40 @@ card(329, "Spezzare le Gambe", "attack", 7, seg(
     move(step(B, 1)), atk({"5": "w1", "4": "w1"}), IFS, fx(e("t_hobble"), k=BA), fx(e("change", n=1))))
 card(155, "Contrattacco", "attack", 2, seg(move(step(FANUP, 1), rot(1)), atk({"0": "w1"})))
 
+# ───────────── WAKOU ─────────────
+YY = [5, 1, 3]
+card(333, "Carta Speciale Wakou", "core", 0, seg(
+    fx(e("discard", n=1)), move(step(ANY, 1), rot(2)),
+    OR(fx(e("draw", n=2)), fx(e("discard_stun", n=1), e("self_hobble")), fx(e("change", n=1)))), core=True)
+card(134, "Colpo di Kanabo", "attack", 4,
+    seg(fx(e("discard", n=1)), atk({"00": "a", "05": "a"}), ast(e("t_stun"))),
+    seg(move(step(FANDN, 1), rot(1), f=1), init=1), core=True, weapon="Kanabo")
+card(334, "Schianto di Bordata", "attack", 6, seg(
+    UNB, move(step([5, 4], 2), rot(1, False)), atk({"0": "a", "5": "a"}), ast(e("t_stun"), e("t_stun")),
+    IFS, fx(e("t_wound", n=1), k=AG), fx(e("push", n=1), k=BA), move(step([4], 1))), focus=2,
+    note="Le direzioni dei passi (icone a freccia doppia) sono la lettura meno certa di questa carta.")
+rb = ranged("b", 2); rb["fx"] = [e("t_hobble"), e("t_stun", k=AG)]
+card(336, "Lancio della Brocca", "attack", 5, seg(rb, fx(e("switch", to="neutral"))), range=2)
+card(337, "Ariete Bukan", "attack", 5, seg(
+    UNB, move(step([5, 1], 2)), atk({"0": "a"}), ast(e("t_stun")), IFS, fx(e("push", n=1)), move(step(F, 1))),
+    focus=1, instant="rep", note="Direzione del primo passo (freccia obliqua): lettura incerta.")
+card(338, "Piedi da Marinaio", "meditation", 9, seg(
+    move(step([5, 1], 1, False), rot(1, False), seq=True), move(step([5, 1], 1, False), rot(1, False), seq=True)),
+    instant="rep")
+card(339, "Gesticolare da Ubriaco", "meditation", 1, seg(
+    move(step(ANY, 1)), fx(e("reveal_take", n=5, pers="Wakou")), fx(e("change", n=2)), fx(e("advantage"))))
+card(340, "Gigante Goffo", "attack", 7, seg(move(step(YY, 2), rot(1)), atk({"0": "a"}), ast(e("t_stun"))))
+card(341, "Colpo Barcollante", "meditation", "=", seg(
+    fx(e("t_stun"), k=AG), fx(e("push", n=2), k=BA), fx(e("advantage"))), focus=1, instant="add", when="atk_ok")
+card(342, "Far Due Passi", "defence", 7, seg(move(step([1, 2, 4, 5], 2)), fx(e("draw", n=2)), fx(e("change", n=1))))
+card(343, "Testata (Wakou)", "attack", 4, seg(
+    move(step(FANDN, 1)), move(rot(1), k=AG), atk({"0": "w1"}), IFS, fx(e("t_hobble")), fx(e("focus", n=1))))
+card(344, "Calcio del Mulo", "attack", 5, seg(
+    move(rot(1), k=BA), move(step(FANDN, 1)), atk({"4": "w1", "2": "w1"}), IFS, fx(e("t_hobble")), fx(e("change", n=1))),
+    note="Sulla carta le due caselle posteriori sono in alternativa (OPPURE): contro un solo avversario è equivalente.")
+card(345, "Stella Vagabonda", "meditation", 3, seg(move(step(YY, 2), rot(1)), fx(e("search_stun"), f=1)))
+card(152, "Colpo Stordente", "meditation", "=", seg(fx(e("t_stun"))), focus=2, instant="add", when="atk_ok|block_ok")
+
 # ───────────── CARTE SOLO (Solitario) ─────────────
 # Id: 1000+ Ronin, 2000+ Guerriero, 3000+ generiche (numero stampato + base).
 V = [5, 1]; A = [4, 2]; X = [1, 2, 4, 5]
@@ -688,7 +722,17 @@ out = {
      "kamae": {"nodes": {"balance":[0.27,0.2],"aggression":[0.27,0.5],"focus":[0.73,0.5],
                          "neutral":[0.27,0.8],"determination":[0.73,0.8]},
         "edges": [["balance","aggression",2],["balance","focus",1],["aggression","focus",2],
-                  ["aggression","neutral",2],["neutral","determination",2],["focus","determination",2]]}}},
+                  ["aggression","neutral",2],["neutral","determination",2],["focus","determination",2]]}},
+  "wakou": {"name": "Wakou", "title": "Grosso pirata del mare", "advantage": 8, "ubriaco": True,
+     "hand": 4, "wounds": 7, "char_img": imgs["2330"], "kamae_img": imgs["2332"],
+     "portrait": "wakou.webp", "model": "",
+     "deck": {"334":1,"336":1,"337":1,"338":1,"339":2,"340":2,"341":2,"342":2,"343":3,"344":3,"345":3,
+              "86":1,"103":1,"108":2,"152":2,"125":2,"155":2},
+     "core": [333, 134],
+     "kamae": {"nodes": {"balance":[0.73,0.2],"aggression":[0.27,0.5],"focus":[0.73,0.5],
+                         "neutral":[0.27,0.8],"determination":[0.73,0.8]},
+        "edges": [["balance","focus",2],["aggression","focus",2],["aggression","neutral",2],
+                  ["focus","determination",2]]}}},
  "solo": SOLO,
  # mappa "villaggio in fiamme": celle giocabili (colonna,riga) lette dal contorno arancione
  "maps": {"villaggio": {"img": "arena.webp", "img_size": 1594,

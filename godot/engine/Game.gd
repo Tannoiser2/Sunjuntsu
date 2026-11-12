@@ -691,6 +691,9 @@ func _a_distanza(f: Dictionary, ln: Dictionary, ctx: Dictionary) -> void:
 	ctx.hit = [bers.i]
 	await _colpisci(f, {"o": bers, "eff": ln.eff}, [], false, ctx)
 	ctx.success = true
+	for e in ln.get("fx", []):
+		if not bers.dead and (not e.has("k") or e.k == f.kamae):
+			await _fx(f, e, ctx)
 	await _reazione_colpito(bers)
 	_verifica_morte(bers)
 	_svela(f)
@@ -827,7 +830,8 @@ func _stati(pos: Vector2i, face: int, parts: Array, me: int) -> Dictionary:
 	var segni: Array = [1, -1] if ro != null else [1]
 	var ok := {}
 	var coll := {}
-	for d in dirs:
+	var libero: bool = F.size() > me and F[me].cd.get("ubriaco", false) and sn > 1
+	for d in ([dirs[0]] if libero else dirs):
 		for sg in segni:
 			var visti := {}
 			var pila: Array = [[pos, face, 0, 0]]
@@ -841,11 +845,12 @@ func _stati(pos: Vector2i, face: int, parts: Array, me: int) -> Dictionary:
 				if s_ok and r_ok:
 					ok[[s[0], s[1]]] = true
 				if st != null and s[2] < sn:
-					var np: Vector2i = s[0] + Hex.DIRS[(s[1] + int(d)) % 6]
-					if _libera(np, me):
-						pila.append([np, s[1], s[2] + 1, s[3]])
-					elif not st.opt:
-						coll[np] = true
+					for d2 in (dirs if libero else [d]):
+						var np: Vector2i = s[0] + Hex.DIRS[(s[1] + int(d2)) % 6]
+						if _libera(np, me):
+							pila.append([np, s[1], s[2] + 1, s[3]])
+						elif not st.opt:
+							coll[np] = true
 				if ro != null and s[3] < rn:
 					pila.append([s[0], (s[1] + sg + 6) % 6, s[2], s[3] + 1])
 	return {"ok": ok.keys(), "coll": coll.keys()}
@@ -1622,6 +1627,31 @@ func _fx(f: Dictionary, e: Dictionary, ctx: Dictionary) -> void:
 			_log("%s trasforma %d ferite di questo turno in stordimenti." % [f.name, q3])
 			for _k in q3:
 				_stordisci(f)
+		"reveal_take":
+			var presi := 0
+			var resto: Array = []
+			for _k in mini(n, f.deck.size()):
+				var cid: int = f.deck.pop_back()
+				if cid >= 0 and Carte.carta(cid).get("pers", "") == e.pers:
+					f.hand.append(cid)
+					presi += 1
+				else:
+					resto.append(cid)
+			f.deck.append_array(resto)
+			_mischia(f.deck)
+			_log("%s rivela le prime %d carte del mazzo e ne prende %d." % [f.name, n, presi])
+		"search_stun":
+			var so2: Array = []
+			var sv2 := {}
+			for cid in f.deck:
+				if cid >= 0 and not sv2.has(cid) and Carte.carta(cid).type == "attack" and JSON.stringify(Carte.carta(cid).segs).contains("t_stun"):
+					sv2[cid] = true
+					so2.append({"card": cid, "label": Carte.nome(cid)})
+			if not so2.is_empty():
+				var is2 := await _ask(f.i, "card", "%s: scegli un Attacco che infligge stordimento" % f.name, so2, {"mostra": true, "dal_mazzo": true})
+				f.deck.erase(so2[is2].card)
+				f.hand.append(so2[is2].card)
+			_mischia(f.deck)
 		"contract_back":
 			var cb: Array = []
 			for k in f.contr:

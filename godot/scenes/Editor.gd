@@ -10,7 +10,7 @@ const TIPI := [["move", "Movimento"], ["atk", "Griglia d'attacco"], ["blk", "Gri
 	["div", "Divisore: nuova iniziativa"], ["alt", "Iniziativa alternativa"],
 	["counter", "Contrattacco"], ["mod", "Ferite sanguinanti"], ["unblockable", "NON BLOCCABILE"], ["ranged", "Attacco a distanza"]]
 const DIREZ := [["", "nessun passo"], ["0", "Fronte"], ["3", "Retro"], ["501", "Ventaglio avanti"],
-	["432", "Ventaglio indietro"], ["51", "Diagonali avanti"], ["42", "Diagonali indietro"],
+	["432", "Ventaglio indietro"], ["51", "Diagonali avanti"], ["42", "Diagonali indietro"], ["513", "A ipsilon"], ["1245", "Quattro diagonali"], ["54", "Lato sinistro"],
 	["01", "Fronte o Fronte-Dx"], ["012345", "Qualsiasi direzione"]]
 const EFF := ["discard", "draw", "draw_exact", "focus", "lose_focus_all", "lose_focus_all_but", "switch",
 	"change", "push", "t_stun", "t_hobble", "t_rot", "t_lose_focus", "t_switch", "t_discard_type",
@@ -194,6 +194,8 @@ func _linea_da(r: Dictionary) -> Dictionary:
 			l = {"t": r.tipo, "fx": r.get("fx", [])}
 		"ranged":
 			l = {"t": "ranged", "eff": r.get("eff", "w1"), "r": r.get("r", 1)}
+			if r.has("fx"):
+				l["fx"] = r.fx
 		"alt":
 			l = {"t": "alt", "v": int(r.get("v", 1))}
 		"counter":
