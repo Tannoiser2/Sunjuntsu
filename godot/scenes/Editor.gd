@@ -196,6 +196,8 @@ func _linea_da(r: Dictionary) -> Dictionary:
 				l["ad"] = true
 		"fx", "ast":
 			l = {"t": r.tipo, "fx": r.get("fx", [])}
+		"rng":
+			l = {"t": "rng", "v": int(r.get("v", 1))}
 		"ranged":
 			l = {"t": "ranged", "eff": r.get("eff", "w1"), "r": r.get("r", 1)}
 			if r.has("fx"):

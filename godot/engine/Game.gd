@@ -664,6 +664,9 @@ func _righe(f: Dictionary, lines: Array, start: int, ctx: Dictionary) -> bool:
 						await _fx(f, e, ctx)
 			"ranged":
 				await _a_distanza(f, ln, ctx)
+			"rng":
+				if await _porta(f, ln, ctx, lines, i):
+					ctx["rng"] = int(ln.v)
 			"or":
 				await _oppure(f, ln, ctx, lines, i)
 		i += 1
@@ -685,7 +688,7 @@ func _iniz_bassa(o: Dictionary) -> int:
 func _a_distanza(f: Dictionary, ln: Dictionary, ctx: Dictionary) -> void:
 	var bers = null
 	for o in _avversari(f):
-		if Hex.dist(f.pos, o.pos) <= int(ln.get("r", 1)) and _iniz_bassa(o) < cur_init:
+		if Hex.dist(f.pos, o.pos) <= int(ctx.get("rng", ln.get("r", 1))) and _iniz_bassa(o) < cur_init:
 			bers = o
 	_ev({"t": "attack", "p": f.i, "cells": [] if bers == null else [bers.pos]})
 	await _pausa("attack")
@@ -694,7 +697,10 @@ func _a_distanza(f: Dictionary, ln: Dictionary, ctx: Dictionary) -> void:
 		_log("L'attacco a distanza di %s non ha bersagli validi." % f.name)
 		return
 	ctx.hit = [bers.i]
-	await _colpisci(f, {"o": bers, "eff": ln.eff}, [], false, ctx)
+	var eff_d: String = ln.eff
+	if eff_d == "diff":
+		eff_d = "w%d" % maxi(1, cur_init - _iniz_bassa(bers))
+	await _colpisci(f, {"o": bers, "eff": eff_d}, [], false, ctx)
 	ctx.success = true
 	for e in ln.get("fx", []):
 		if not bers.dead and (not e.has("k") or e.k == f.kamae):
@@ -1573,7 +1579,7 @@ func _fx(f: Dictionary, e: Dictionary, ctx: Dictionary) -> void:
 		"search":
 			await _cerca(f, e.rank, e.get("type", ""), f.deck, true, e.get("pers", ""))
 		"search_discard":
-			await _cerca(f, e.rank, e.get("type", ""), f.discard, false)
+			await _cerca(f, e.rank, e.get("type", ""), f.discard, false, e.get("pers", ""))
 		"search_top":
 			var cima: Array = []
 			for _k in mini(n, f.deck.size()):

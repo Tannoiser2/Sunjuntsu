@@ -392,6 +392,26 @@ func _initialize() -> void:
 	g._contratto(g.F[0], "furore")
 	ok(g.over and g.winner == 0, "cinque contratti completati: lo Yojimbo vince")
 
+	print("Wakou, Onna-Bugeisha, Navigatore")
+	nuovo("wakou", "warrior")
+	ok(g.F[0].lim == 7 and g.F[0].mano == 4, "Wakou: 7 ferite, mano 4")
+	var dritto: int = g._stati(Vector2i(2, -1), 2, [{"m": "step", "dirs": [5, 1], "n": 2, "opt": true}], 1).ok.size()
+	var storto: int = g._stati(Vector2i(2, -1), 2, [{"m": "step", "dirs": [5, 1], "n": 2, "opt": true}], 0).ok.size()
+	ok(storto > dritto, "Ubriaco: può cambiare direzione fra un passo e l'altro")
+	nuovo("onna", "warrior")
+	ok(not g.giocabile(g.F[0], 296) and not g.disperata(g.F[0]), "Onna: Abbraccio Silenzioso richiede Disperazione")
+	g.F[0].wounds = 3
+	g.F[0].focus = 2
+	ok(g.disperata(g.F[0]) and g.giocabile(g.F[0], 296), "Disperazione a 2 ferite dalla sconfitta")
+	nuovo("sailor", "warrior")
+	ok(not g.giocabile(g.F[0], 281), "Lancio di Pugnale richiede la Kamae a Distanza")
+	g.F[0].kamae = "ranged"
+	g.F[0].focus = 1
+	metti(1, Vector2i(5, -2), 5)
+	piano[0]["yesno"] = 1
+	await turno(279, 53)   # Polvere Nera a iniziativa 4 contro iniziativa 0
+	ok(g.F[1].wounds == 4, "La Temuta Polvere Nera: ferite pari alla differenza di iniziativa (4)")
+
 	print("Tutte le carte hanno un testo")
 	for c in Carte.db().cards.values():
 		if Carte.testo(c).contains("?"):

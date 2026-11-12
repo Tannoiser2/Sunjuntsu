@@ -3,12 +3,12 @@ extends RefCounted
 ## Accesso ai dati delle carte e descrizioni in italiano (riga per riga).
 
 const KAMAE := {"aggression": "Aggressione", "balance": "Equilibrio",
-	"determination": "Determinazione", "neutral": "Neutrale", "focus": "Punto Focus"}
+	"determination": "Determinazione", "neutral": "Neutrale", "focus": "Punto Focus", "ranged": "Kamae a Distanza"}
 const COMPORTAMENTI := ["Sinistra", "Centro", "Destra"]
 const TIPI := {"attack": "Attacco", "defence": "Difesa", "meditation": "Meditazione", "core": "Speciale"}
 const EFFETTI_CELLA := {"w1": "1 ferita", "w2": "2 ferite", "w3": "3 ferite", "b": "ferita sanguinante",
 	"x": "ESECUZIONE", "a": "asterisco", "w1a": "1 ferita + asterisco",
-	"ba": "sanguinante + asterisco", "s": "blocco", "sa": "blocco con asterisco",
+	"ba": "sanguinante + asterisco", "s": "blocco", "sa": "blocco con asterisco", "diff": "ferite pari alla differenza di iniziativa",
 	"p": "veleno", "pa": "veleno + asterisco"}
 
 static var _db: Dictionary = {}
@@ -129,7 +129,7 @@ static func effetto(e: Dictionary) -> String:
 		"t_wound": return "il bersaglio subisce %d ferita" % n
 		"t_wound_to_bleed": return "il bersaglio sostituisce 1 ferita con 1 sanguinante"
 		"search": return "cerca nel mazzo e prendi 1 carta%s%s di rango %s" % [_tipo(e), " del personaggio" if e.get("pers", "") != "" else "", _rango(e)]
-		"search_discard": return "cerca negli scarti e prendi 1 carta%s di rango %s" % [_tipo(e), _rango(e)]
+		"search_discard": return "cerca negli scarti e prendi 1 carta%s%s di rango %s" % [_tipo(e), " del personaggio" if e.get("pers", "") != "" else "", _rango(e)]
 		"search_top": return "guarda le prime %d carte del mazzo e prendine 1" % n
 		"discard_stun": return "scarta fino a %d stordimenti" % n
 		"bleed_to_wound": return "sostituisci tutte le ferite sanguinanti con ferite"
@@ -233,6 +233,7 @@ static func riga(ln: Dictionary) -> String:
 				a3.append(str(int(v)))
 			return g + "contrattacco a iniziativa " + ", ".join(a3)
 		"ifs": return "SE RIUSCITO:"
+		"rng": return g + "la Distanza diventa %d" % int(ln.v)
 		"ranged": return "Attacco a distanza — colpisci il bersaglio con iniziativa inferiore: " + EFFETTI_CELLA.get(ln.eff, ln.eff) + ("" if ln.get("fx", []).is_empty() else ", poi " + effetti(ln.fx))
 		"unblockable": return "NON BLOCCABILE"
 		"fx": return g + effetti(ln.fx)

@@ -12024,6 +12024,1099 @@
    "pers": "Gen. Ability",
    "img": "altre_carte_2/altre_carte_2_34.webp"
   },
+  "276": {
+   "id": 276,
+   "name": "Carta Speciale Navigatore",
+   "type": "core",
+   "init": 0,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "discard",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "draw",
+            "n": 2
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "discard",
+            "n": 2
+           },
+           {
+            "v": "switch",
+            "to": "ranged"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "change",
+            "n": 1
+           }
+          ]
+         }
+        ]
+       ]
+      }
+     ]
+    }
+   ],
+   "core": true,
+   "en": "Carta Speciale Navigatore",
+   "rank": "-",
+   "pers": "Sailor",
+   "img": "sailor/sailor_03.webp"
+  },
+  "277": {
+   "id": 277,
+   "name": "Granchio",
+   "type": "attack",
+   "init": 4,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "discard",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1",
+        "1": "w1"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          3
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "f": 1
+      }
+     ],
+     "init": 1
+    }
+   ],
+   "weapon": "Granchio",
+   "core": true,
+   "en": "Granchio",
+   "rank": "-",
+   "pers": "Sailor/Weapon",
+   "img": "sailor/sailor_05.webp"
+  },
+  "278": {
+   "id": 278,
+   "name": "Calcio della Pistola",
+   "type": "attack",
+   "init": 4,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "discard",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "a",
+        "5": "a"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "t_hobble"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          3
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "f": 1
+      }
+     ],
+     "init": 1
+    }
+   ],
+   "weapon": "Pistola",
+   "core": true,
+   "en": "Calcio della Pistola",
+   "rank": "-",
+   "pers": "Sailor/Weapon",
+   "img": "sailor/sailor_06.webp"
+  },
+  "279": {
+   "id": 279,
+   "name": "La Temuta Polvere Nera",
+   "type": "attack",
+   "init": 4,
+   "focus": 1,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "alt",
+       "v": 5,
+       "f": 1
+      },
+      {
+       "t": "alt",
+       "v": 6,
+       "f": 2
+      },
+      {
+       "t": "ranged",
+       "eff": "diff",
+       "r": 6
+      }
+     ]
+    }
+   ],
+   "req": "ranged",
+   "range": 6,
+   "en": "La Temuta Polvere Nera",
+   "rank": "Jade",
+   "pers": "Sailor",
+   "img": "sailor/sailor_07.webp"
+  },
+  "281": {
+   "id": 281,
+   "name": "Lancio di Pugnale",
+   "type": "attack",
+   "init": 5,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "rng",
+       "v": 5,
+       "f": 1
+      },
+      {
+       "t": "ranged",
+       "eff": "w1",
+       "r": 3
+      }
+     ]
+    }
+   ],
+   "req": "ranged",
+   "range": 3,
+   "en": "Lancio di Pugnale",
+   "rank": "Gold",
+   "pers": "Sailor",
+   "img": "sailor/sailor_08.webp"
+  },
+  "282": {
+   "id": 282,
+   "name": "Squarcio Profondo",
+   "type": "attack",
+   "init": 4,
+   "focus": 1,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w2",
+        "1": "w2"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "draw",
+         "n": 2
+        }
+       ],
+       "k": "balance"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_hobble"
+        }
+       ],
+       "k": "aggression"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "change",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "en": "Squarcio Profondo",
+   "rank": "Gold",
+   "pers": "Sailor",
+   "img": "sailor/sailor_09.webp"
+  },
+  "283": {
+   "id": 283,
+   "name": "Guardia Alta",
+   "type": "defence",
+   "init": [
+    8,
+    4
+   ],
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "move",
+          "parts": [
+           {
+            "m": "rot",
+            "n": 1,
+            "opt": true
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "move",
+          "parts": [
+           {
+            "m": "rot",
+            "n": 2,
+            "opt": true
+           }
+          ],
+          "f": 1
+         }
+        ]
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "0": "s",
+        "1": "s"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          3
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 2
+    }
+   ],
+   "en": "Guardia Alta",
+   "rank": "Gold",
+   "pers": "Sailor",
+   "img": "sailor/sailor_11.webp"
+  },
+  "284": {
+   "id": 284,
+   "name": "Reazione dello Sciocco",
+   "type": "meditation",
+   "init": "=",
+   "focus": 2,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "counter_now",
+         "v2": [
+          8,
+          7,
+          6,
+          5
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "instant": "add",
+   "when": "block_ok",
+   "en": "Reazione dello Sciocco",
+   "rank": "Steel",
+   "pers": "Sailor",
+   "img": "sailor/sailor_10.webp"
+  },
+  "285": {
+   "id": 285,
+   "name": "Affondo di Punta",
+   "type": "attack",
+   "init": 5,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 1,
+         "opt": false
+        }
+       ],
+       "k": "aggression"
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "00": "w1",
+        "0": "w2"
+       },
+       "k": "aggression"
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "k": "determination"
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "00": "w1",
+        "0": "w2"
+       },
+       "k": "determination"
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          3
+         ],
+         "n": 1,
+         "opt": false
+        }
+       ],
+       "k": "determination"
+      }
+     ],
+     "init": 4
+    }
+   ],
+   "en": "Affondo di Punta",
+   "rank": "Steel",
+   "pers": "Sailor",
+   "img": "sailor/sailor_12.webp"
+  },
+  "286": {
+   "id": 286,
+   "name": "Recupero",
+   "type": "meditation",
+   "init": 3,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          3
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "search_discard",
+         "rank": "Wood",
+         "pers": "Sailor"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "search_discard",
+         "rank": "Steel",
+         "pers": "Sailor"
+        }
+       ],
+       "f": 1
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "switch",
+         "to": "any"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "en": "Recupero",
+   "rank": "Steel",
+   "pers": "Sailor",
+   "img": "sailor/sailor_14.webp"
+  },
+  "287": {
+   "id": 287,
+   "name": "Colpo Imponente",
+   "type": "attack",
+   "init": 7,
+   "focus": 1,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "seq": true
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1"
+       }
+      },
+      {
+       "t": "mod",
+       "fx": "bleed",
+       "f": 1
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_discard",
+         "n": 1
+        }
+       ],
+       "k": "aggression"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_lose_focus",
+         "n": 1
+        }
+       ],
+       "k": "balance"
+      }
+     ]
+    }
+   ],
+   "en": "Colpo Imponente",
+   "rank": "Steel",
+   "pers": "Sailor",
+   "img": "sailor/sailor_13.webp"
+  },
+  "288": {
+   "id": 288,
+   "name": "Spazzata di Granchio",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 1,
+         "opt": false
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "k": "aggression"
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "05": "w1",
+        "5": "w1",
+        "0": "w1"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          3
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 5
+    }
+   ],
+   "en": "Spazzata di Granchio",
+   "rank": "Wood",
+   "pers": "Sailor",
+   "img": "sailor/sailor_15.webp"
+  },
+  "289": {
+   "id": 289,
+   "name": "Avanzata in Duello",
+   "type": "meditation",
+   "init": 5,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          3
+         ],
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "draw",
+         "n": 2
+        }
+       ],
+       "k": "determination"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "advantage"
+        }
+       ],
+       "k": "balance"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "change",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "en": "Avanzata in Duello",
+   "rank": "Wood",
+   "pers": "Sailor",
+   "img": "sailor/sailor_16.webp"
+  },
+  "290": {
+   "id": 290,
+   "name": "Guardia del Bue",
+   "type": "defence",
+   "init": [
+    7,
+    5
+   ],
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "k": [
+        "balance",
+        "determination"
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "0": "s"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "focus",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          3
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 4
+    }
+   ],
+   "en": "Guardia del Bue",
+   "rank": "Wood",
+   "pers": "Sailor",
+   "img": "sailor/sailor_17.webp"
+  },
+  "141": {
+   "id": 141,
+   "name": "Parata Tranquilla",
+   "type": "defence",
+   "init": [
+    5,
+    2
+   ],
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "0": "s",
+        "1": "s"
+       }
+      },
+      {
+       "t": "counter",
+       "v": [
+        5,
+        4
+       ]
+      },
+      {
+       "t": "counter",
+       "v": [
+        3,
+        2
+       ],
+       "k": "determination"
+      }
+     ]
+    }
+   ],
+   "en": "Parata Tranquilla",
+   "rank": "Steel",
+   "pers": "Gen. Ability",
+   "img": "altre_carte_3/altre_carte_3_09.webp"
+  },
+  "146": {
+   "id": 146,
+   "name": "Guardia Concentrata",
+   "type": "defence",
+   "init": [
+    7,
+    4
+   ],
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "0": "s",
+        "1": "s"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 1
+    }
+   ],
+   "note": "La riga da 2 focus (intervallo d'iniziativa 8-3) non è automatizzata.",
+   "en": "Guardia Concentrata",
+   "rank": "Steel",
+   "pers": "Gen. Ability",
+   "img": "altre_carte_3/altre_carte_3_05.webp"
+  },
+  "157": {
+   "id": 157,
+   "name": "Colpo Esperto",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "move",
+          "parts": [
+           {
+            "m": "step",
+            "dirs": [
+             5,
+             1
+            ],
+            "n": 1,
+            "opt": false
+           },
+           {
+            "m": "rot",
+            "n": 1,
+            "opt": false
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "move",
+          "parts": [
+           {
+            "m": "step",
+            "dirs": [
+             5,
+             1
+            ],
+            "n": 1,
+            "opt": true
+           },
+           {
+            "m": "rot",
+            "n": 1,
+            "opt": true
+           }
+          ],
+          "f": 1
+         }
+        ]
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1"
+       }
+      }
+     ]
+    }
+   ],
+   "en": "Colpo Esperto",
+   "rank": "Wood",
+   "pers": "Gen. Ability",
+   "img": "altre_carte_3/altre_carte_3_01.webp"
+  },
   "1001": {
    "id": 1001,
    "name": "Chiatta di Buoi (Solo)",
@@ -16178,6 +17271,95 @@
      [
       "determination",
       "neutral",
+      2
+     ]
+    ]
+   }
+  },
+  "sailor": {
+   "name": "Navigatore",
+   "title": "Avventuriero dall'Occidente",
+   "advantage": 6,
+   "hand": 5,
+   "wounds": 5,
+   "char_img": "sailor/sailor_01.webp",
+   "kamae_img": "sailor/sailor_02.webp",
+   "portrait": "sailor.webp",
+   "model": "",
+   "deck": {
+    "279": 1,
+    "281": 1,
+    "282": 1,
+    "283": 1,
+    "284": 2,
+    "285": 2,
+    "286": 2,
+    "287": 2,
+    "288": 3,
+    "289": 3,
+    "290": 3,
+    "100": 1,
+    "111": 1,
+    "141": 2,
+    "146": 2,
+    "157": 3
+   },
+   "core": [
+    276,
+    277,
+    278
+   ],
+   "kamae": {
+    "nodes": {
+     "ranged": [
+      0.27,
+      0.2
+     ],
+     "aggression": [
+      0.73,
+      0.2
+     ],
+     "focus": [
+      0.27,
+      0.5
+     ],
+     "balance": [
+      0.73,
+      0.5
+     ],
+     "neutral": [
+      0.27,
+      0.8
+     ],
+     "determination": [
+      0.73,
+      0.8
+     ]
+    },
+    "edges": [
+     [
+      "ranged",
+      "aggression",
+      2
+     ],
+     [
+      "aggression",
+      "balance",
+      2
+     ],
+     [
+      "focus",
+      "balance",
+      2
+     ],
+     [
+      "balance",
+      "determination",
+      2
+     ],
+     [
+      "neutral",
+      "determination",
       2
      ]
     ]

@@ -1,5 +1,8 @@
 # Novità
 
+## 1.9.0 — Wakou, Onna-Bugeisha, Navigatore
+- Tre personaggi nuovi: Wakou (Ubriaco), Onna-Bugeisha (Disperazione), Navigatore (Kamae a Distanza).
+
 ## 1.8.0 — Yojimbo
 - Ottavo personaggio: lo Yojimbo, con i contratti (cinque completati = vittoria) e gli attacchi a distanza.
 

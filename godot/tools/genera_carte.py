@@ -575,6 +575,50 @@ card(306, "Fiume in Piena", "attack", 6, seg(
 card(143, "Calcio Incrociato", "attack", 7, seg(
     alt(4, k=DE), move(step(F, 1)), move(rot(1), k=AG), atk({"0": "w1"}), IFS, fx(e("t_hobble"))), focus=1)
 
+# ───────────── NAVIGATORE ─────────────
+RG = "ranged"; FB = [0, 3]
+def rng(v, f): return {"t": "rng", "v": v, "f": f}
+card(276, "Carta Speciale Navigatore", "core", 0, seg(
+    fx(e("discard", n=1)), move(step(ANY, 1), rot(2)),
+    OR(fx(e("draw", n=2)), fx(e("discard", n=2), e("switch", to=RG)), fx(e("change", n=1)))), core=True)
+card(277, "Granchio", "attack", 4,
+    seg(fx(e("discard", n=1)), move(step(F, 1)), atk({"0": "w1", "1": "w1"})),
+    seg(move(step(B, 1), f=1), init=1), core=True, weapon="Granchio")
+card(278, "Calcio della Pistola", "attack", 4,
+    seg(fx(e("discard", n=1)), move(step(F, 1)), atk({"0": "a", "5": "a"}), ast(e("t_hobble"))),
+    seg(move(step(B, 1), rot(1), f=1), init=1), core=True, weapon="Pistola")
+card(279, "La Temuta Polvere Nera", "attack", 4, seg(alt(5, f=1), alt(6, f=2), ranged("diff", 6)),
+    focus=1, req=RG, range=6)
+card(281, "Lancio di Pugnale", "attack", 5, seg(rng(5, 1), ranged("w1", 3)), req=RG, range=3)
+card(282, "Squarcio Profondo", "attack", 4, seg(
+    move(rot(1)), atk({"0": "w2", "1": "w2"}), IFS, fx(e("draw", n=2), k=BA), fx(e("t_hobble"), k=AG), fx(e("change", n=1))), focus=1)
+card(283, "Guardia Alta", "defence", [8, 4],
+    seg(OR(move(rot(1)), move(rot(2), f=1)), blk("0", "1")), seg(move(step(FB, 1)), init=2))
+card(284, "Reazione dello Sciocco", "meditation", "=", seg(fx(e("counter_now", v2=[8, 7, 6, 5]))),
+    focus=2, instant="add", when="block_ok")
+card(285, "Affondo di Punta", "attack", 5,
+    seg(move(step(F, 1, False), k=AG), g(atk({"00": "w1", "0": "w2"}), k=AG)),
+    seg(move(rot(1), k=DE), g(atk({"00": "w1", "0": "w2"}), k=DE), move(step(B, 1, False), k=DE), init=4))
+card(286, "Recupero", "meditation", 3, seg(
+    move(step(FB, 1)), fx(e("search_discard", rank="Wood", pers="Sailor")),
+    fx(e("search_discard", rank="Steel", pers="Sailor"), f=1), fx(e("switch", to="any"))))
+card(287, "Colpo Imponente", "attack", 7, seg(
+    move(step([5, 1], 1), rot(1), seq=True), atk({"0": "w1"}), g({"t": "mod", "fx": "bleed"}, f=1),
+    IFS, fx(e("t_discard", n=1), k=AG), fx(e("t_lose_focus", n=1), k=BA)), focus=1)
+card(288, "Spazzata di Granchio", "attack", 6,
+    seg(move(step(F, 1, False)), move(step(F, 1), k=AG), atk({"05": "w1", "5": "w1", "0": "w1"})),
+    seg(move(step(B, 1)), init=5))
+card(289, "Avanzata in Duello", "meditation", 5, seg(
+    move(rot(1)), move(step(FB, 2)), fx(e("draw", n=2), k=DE), fx(e("advantage"), k=BA), fx(e("change", n=1))))
+card(290, "Guardia del Bue", "defence", [7, 5],
+    seg(move(rot(1), k=[BA, DE]), blk("0"), IFS, fx(e("focus", n=1))), seg(move(step(FB, 1)), init=4))
+card(141, "Parata Tranquilla", "defence", [5, 2], seg(move(rot(1)), blk("0", "1"), counter(5, 4), counter(3, 2, k=DE)))
+card(146, "Guardia Concentrata", "defence", [7, 4],
+    seg(move(rot(1)), blk("0", "1")), seg(move(step(FANDN, 1), rot(1)), init=1),
+    note="La riga da 2 focus (intervallo d'iniziativa 8-3) non è automatizzata.")
+card(157, "Colpo Esperto", "attack", 6, seg(
+    OR(move(step([5, 1], 1, False), rot(1, False)), move(step([5, 1], 1), rot(1), f=1)), atk({"0": "w1"})))
+
 # ───────────── CARTE SOLO (Solitario) ─────────────
 # Id: 1000+ Ronin, 2000+ Guerriero, 3000+ generiche (numero stampato + base).
 V = [5, 1]; A = [4, 2]; X = [1, 2, 4, 5]
@@ -785,7 +829,17 @@ out = {
      "kamae": {"nodes": {"focus":[0.27,0.2],"aggression":[0.73,0.2],"determination":[0.27,0.5],
                          "balance":[0.73,0.5],"neutral":[0.27,0.8]},
         "edges": [["focus","aggression",1],["determination","focus",1],["aggression","balance",2],
-                  ["determination","balance",2],["determination","neutral",2]]}}},
+                  ["determination","balance",2],["determination","neutral",2]]}},
+  "sailor": {"name": "Navigatore", "title": "Avventuriero dall'Occidente", "advantage": 6,
+     "hand": 5, "wounds": 5, "char_img": imgs["2273"], "kamae_img": imgs["2275"],
+     "portrait": "sailor.webp", "model": "",
+     "deck": {"279":1,"281":1,"282":1,"283":1,"284":2,"285":2,"286":2,"287":2,"288":3,"289":3,"290":3,
+              "100":1,"111":1,"141":2,"146":2,"157":3},
+     "core": [276, 277, 278],
+     "kamae": {"nodes": {"ranged":[0.27,0.2],"aggression":[0.73,0.2],"focus":[0.27,0.5],
+                         "balance":[0.73,0.5],"neutral":[0.27,0.8],"determination":[0.73,0.8]},
+        "edges": [["ranged","aggression",2],["aggression","balance",2],["focus","balance",2],
+                  ["balance","determination",2],["neutral","determination",2]]}}},
  "solo": SOLO,
  # mappa "villaggio in fiamme": celle giocabili (colonna,riga) lette dal contorno arancione
  "maps": {"villaggio": {"img": "arena.webp", "img_size": 1594,
