@@ -262,6 +262,31 @@ func _initialize() -> void:
 	ok(registro.any(func(t): return t.contains("Ronin blocca")), "Solo: la difesa sceglie l'iniziativa dell'attacco e lo blocca")
 	ok(g.F[1].wounds == f0, "Solo: l'attacco bloccato non ferisce")
 
+	print("Allievo")
+	nuovo("student", "warrior")
+	ok(not g.giocabile(g.F[0], 45), "Obbedienza non è giocabile da Neutrale")
+	g.F[0].kamae = "determination"
+	ok(g.giocabile(g.F[0], 45) and g.giocabile(g.F[0], 46), "Obbedienza e Colpo della Roccia giocabili in Determinazione")
+	g.F[0].kamae = "balance"
+	var p0: Vector2i = g.F[0].pos
+	var p1: Vector2i = g.F[1].pos
+	await turno(49, 116)   # Scambio della Montagna (7) contro Mente Rapida (6)
+	ok(g.F[0].pos == p1 and g.F[1].pos == p0, "Scambio della Montagna: i due si scambiano di posto")
+	ok(g.F[0].focus == 1, "Scambio riuscito: +1 focus")
+	nuovo("student", "warrior")
+	g.F[1].focus = 2
+	g.F[0].kamae = "determination"
+	piano[0]["vel"] = 4
+	await turno(45, 64)    # Obbedienza a 4 contro Testata (4)
+	ok(g.F[0].wounds == 0 and g.F[0].focus == 1 and g.F[1].focus == 1, "Obbedienza: blocca e ruba 1 focus")
+	ok(g.adv[0] == 0, "Obbedienza: l'Allievo prende il Vantaggio")
+	nuovo("student", "warrior")
+	metti(1, Vector2i(4, -2), 5)
+	g.F[0].focus = 1
+	piano[0]["yesno"] = 0
+	await turno(48, 53)    # Cascata Fendente: seconda griglia a iniziativa 4 pagando 1 focus
+	ok(g.F[1].wounds == 2 and g.F[0].focus == 0, "Cascata Fendente: secondo colpo a iniziativa 4 con 1 focus")
+
 	print("Tutte le carte hanno un testo")
 	for c in Carte.db().cards.values():
 		if Carte.testo(c).contains("?"):

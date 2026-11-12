@@ -311,6 +311,14 @@ func _turno() -> void:
 	await _fine_turno()
 
 
+func _req_ok(f: Dictionary, c: Dictionary) -> bool:
+	if not c.has("req"):
+		return true
+	if c.req is Array:
+		return c.req.has(f.kamae)
+	return c.req == f.kamae
+
+
 func giocabile(f: Dictionary, id: int) -> bool:
 	if id < 0:
 		return true
@@ -319,7 +327,7 @@ func giocabile(f: Dictionary, id: int) -> bool:
 		return false
 	if int(c.focus) > f.focus:
 		return false
-	if c.has("req") and c.req != f.kamae:
+	if not _req_ok(f, c):
 		return false
 	return true
 
@@ -368,7 +376,7 @@ func _sostituzione(f: Dictionary) -> void:
 			continue
 		if int(c.focus) > f.focus + int(cur.focus):
 			continue
-		if c.has("req") and c.req != f.kamae:
+		if not _req_ok(f, c):
 			continue
 		visti[h] = true
 		opts.append({"label": "Sostituisci con «%s»" % c.name, "card": h})
@@ -551,7 +559,9 @@ func _righe(f: Dictionary, lines: Array, start: int, ctx: Dictionary) -> bool:
 				if await _porta(f, ln, ctx, lines, i):
 					await _muovi(f, ln, ctx, lines, i)
 			"grid":
-				if ln.mode == "atk":
+				if (ln.has("k") or ln.has("f")) and not await _porta(f, ln, ctx, lines, i):
+					pass
+				elif ln.mode == "atk":
 					await _attacco(f, ln, lines, i, ctx)
 				elif _blocco(f, ln, lines, i, ctx):
 					return true
@@ -752,6 +762,9 @@ func _puo_colpire(f: Dictionary, pos: Vector2i, face: int, lines: Array, i: int,
 			"grid":
 				if ln.mode != "atk":
 					return false
+				if not _kamae_ok(f, ln) or focus < int(ln.get("f", 0)):
+					i += 1
+					continue
 				for c in ln.cells:
 					var o = _in_cella(Hex.walk(pos, face, c))
 					if o != null and o.i != f.i:
@@ -819,7 +832,7 @@ func _urta(f: Dictionary, c: Vector2i) -> void:
 # ─────────────────────────── Attacchi e blocchi ───────────────────────────
 
 func _attacco(f: Dictionary, ln: Dictionary, lines: Array, i: int, ctx: Dictionary) -> void:
-	var imbloccabile := false
+	var imbloccabile: bool = ctx.card.type != "attack"   # i blocchi fermano solo le carte Attacco
 	for l in lines:
 		if l.t == "unblockable":
 			imbloccabile = true
@@ -1112,6 +1125,8 @@ func _seg_attacca(en: Dictionary) -> bool:
 func _blocco(f: Dictionary, ln: Dictionary, lines: Array, i: int, ctx: Dictionary) -> bool:
 	var cs: Array = []
 	for c in ln.cells:
+		if ln.cells[c] == "sa" and ln.get("ak", "") != f.kamae:
+			continue
 		cs.append(Hex.walk(f.pos, f.face, c))
 	var b := {"p": f.i, "init": cur_init, "cells": cs, "ok": false, "done": false,
 		"lines": lines, "next": i + 1, "ctx": ctx}
@@ -1160,6 +1175,9 @@ func _blocco_riuscito(b: Dictionary, att: Dictionary) -> void:
 		return
 	ctx.success = true
 	ctx.hit = [att.i]
+	await _istantanea(d, "block_ok", ctx)
+	if over or d.dead:
+		return
 	await _righe(d, b.lines, b.next, ctx)
 	await _fine_segmento(d, ctx)
 
@@ -1175,7 +1193,7 @@ func _contrattacco(d: Dictionary, vel: int) -> void:
 			continue
 		if int(c.init) > vel or int(c.focus) > d.focus:
 			continue
-		if c.has("req") and c.req != d.kamae:
+		if not _req_ok(d, c):
 			continue
 		visti[h] = true
 		opts.append({"label": "Contrattacca con «%s»" % c.name, "card": h})
@@ -1232,13 +1250,17 @@ func _istantanea(f: Dictionary, quando: String, ctx: Dictionary) -> void:
 		var c := Carte.carta(h)
 		if c.get("instant", "") != "add" or c.get("when", "") != quando or c.type == princ.type:
 			continue
-		if int(c.focus) > f.focus or (c.has("req") and c.req != f.kamae):
+		if int(c.focus) > f.focus or (not _req_ok(f, c)):
 			continue
 		visti[h] = true
 		opts.append({"label": "Gioca «%s»" % c.name, "card": h})
 	if opts.size() == 1:
 		return
-	var testo := "%s: attacco riuscito! Giochi un'Aggiunta istantanea?" if quando == "atk_ok" else "%s: carta risolta. Giochi un'Aggiunta istantanea?"
+	var testo := "%s: carta risolta. Giochi un'Aggiunta istantanea?"
+	if quando == "atk_ok":
+		testo = "%s: attacco riuscito! Giochi un'Aggiunta istantanea?"
+	elif quando == "block_ok":
+		testo = "%s: blocco riuscito! Giochi un'Aggiunta istantanea?"
 	var idx := await _ask(f.i, "instant", testo % f.name, opts)
 	if idx == 0:
 		return
@@ -1300,7 +1322,37 @@ func _fx(f: Dictionary, e: Dictionary, ctx: Dictionary) -> void:
 			f.hobbles.append(0)
 			_log("%s prende 1 azzoppamento." % f.name)
 		"search":
-			await _cerca(f, e.rank, e.type)
+			await _cerca(f, e.rank, e.get("type", ""), f.deck, true)
+		"search_discard":
+			await _cerca(f, e.rank, e.get("type", ""), f.discard, false)
+		"search_top":
+			var cima: Array = []
+			for _k in mini(n, f.deck.size()):
+				cima.append(f.deck.pop_back())
+			if not cima.is_empty():
+				var oo: Array = []
+				for cid in cima:
+					oo.append({"card": cid, "label": Carte.nome(cid)})
+				var ix := await _ask(f.i, "card", "%s: scegli una delle prime carte del mazzo" % f.name, oo, {"mostra": true, "dal_mazzo": true})
+				f.hand.append(oo[ix].card)
+				cima.erase(oo[ix].card)
+				f.deck.append_array(cima)
+				_mischia(f.deck)
+				_log("%s guarda le prime carte del mazzo e ne prende una." % f.name)
+		"discard_stun":
+			var tolti := 0
+			while tolti < n and f.hand.has(-1):
+				f.hand.erase(-1)
+				tolti += 1
+			if tolti > 0:
+				_log("%s scarta %d stordimento/i." % [f.name, tolti])
+		"bleed_to_wound":
+			if f.bleeds > 0:
+				f.wounds += f.bleeds
+				f.bleeds = 0
+				_log("%s fascia le ferite: non sanguina più." % f.name)
+		"nota":
+			_log("(%s: «%s» va applicato a mano.)" % [f.name, e.get("txt", "")])
 		"reshuffle":
 			var tieni: Array = []
 			for h in f.hand:
@@ -1346,6 +1398,37 @@ func _fx_bersaglio(f: Dictionary, o: Dictionary, e: Dictionary, n: int) -> void:
 	match e.v:
 		"t_discard":
 			await _scarta(o, n)
+		"view_hand":
+			var viste: Array = o.hand.duplicate()
+			if o.ai:
+				viste = o.deck.slice(maxi(0, o.deck.size() - 2))
+			_log("%s guarda la mano di %s." % [f.name, o.name])
+			_ev({"t": "view", "p": f.i, "cards": viste})
+		"steal_focus":
+			if not o.ai:
+				var q: int = mini(n, o.focus)
+				o.focus -= q
+				_focus(f, q)
+				_log("%s ruba %d focus a %s." % [f.name, q, o.name])
+		"swap":
+			var tmp: Vector2i = f.pos
+			f.pos = o.pos
+			o.pos = tmp
+			_log("%s e %s si scambiano di posto." % [f.name, o.name])
+			_ev({"t": "move", "p": f.i})
+			_ev({"t": "move", "p": o.i})
+			await _pausa("move")
+		"t_step":
+			for _k in n:
+				var dst: Vector2i = o.pos + Hex.DIRS[(int(o.face) + int(e.get("dir", 0))) % 6]
+				if _libera(dst, o.i):
+					o.pos = dst
+					_log("%s viene spostato." % o.name)
+					_ev({"t": "move", "p": o.i})
+					await _pausa("move")
+				else:
+					await _urta(o, dst)
+					break
 		"push":
 			await _spingi(f, o, n)
 		"t_stun", "each_stun":
@@ -1363,8 +1446,15 @@ func _fx_bersaglio(f: Dictionary, o: Dictionary, e: Dictionary, n: int) -> void:
 			o.focus = maxi(0, o.focus - n)
 			_log("%s scarta %d focus." % [o.name, n])
 		"t_switch":
-			o.kamae = e.to
-			_log("%s passa a %s." % [o.name, Carte.KAMAE[e.to]])
+			var dove: String = e.to
+			if dove == "any":
+				var ko: Array = []
+				for k in ["aggression", "balance", "determination"]:
+					ko.append({"label": Carte.KAMAE[k], "to": k, "focus": 0})
+				dove = ko[await _ask(f.i, "choice", "%s: in quale Kamae fai passare %s?" % [f.name, o.name], ko)].to
+			o.kamae = dove
+			_log("%s passa a %s." % [o.name, Carte.KAMAE[dove]])
+			_ev({"t": "kamae", "p": o.i})
 		"t_discard_type":
 			for _k in n:
 				var opts: Array = []
@@ -1536,22 +1626,27 @@ func _cambia_kamae(f: Dictionary, n: int) -> void:
 	_ev({"t": "kamae", "p": f.i})
 
 
-func _cerca(f: Dictionary, rango: String, tipo: String) -> void:
+func _cerca(f: Dictionary, rango, tipo: String, pila: Array, mischia: bool) -> void:
+	var ranghi: Array = rango if rango is Array else [rango]
 	var opts: Array = []
 	var visti := {}
-	for id in f.deck:
+	for id in pila:
+		if id < 0:
+			continue
 		var c := Carte.carta(id)
-		if not visti.has(id) and c.rank == rango and c.type == tipo:
+		if not visti.has(id) and ranghi.has(c.rank) and (tipo == "" or c.type == tipo):
 			visti[id] = true
 			opts.append({"card": id, "label": c.name})
+	var dove := "nel mazzo" if mischia else "negli scarti"
 	if opts.is_empty():
-		_log("%s cerca nel mazzo ma non trova nulla." % f.name)
+		_log("%s cerca %s ma non trova nulla." % [f.name, dove])
 	else:
-		var idx := await _ask(f.i, "card", "%s: scegli la carta da prendere dal mazzo" % f.name, opts, {"mostra": true, "dal_mazzo": true})
-		f.deck.erase(opts[idx].card)
+		var idx := await _ask(f.i, "card", "%s: scegli la carta da prendere" % f.name, opts, {"mostra": true, "dal_mazzo": true})
+		pila.erase(opts[idx].card)
 		f.hand.append(opts[idx].card)
-		_log("%s cerca nel mazzo e prende una carta." % f.name)
-	_mischia(f.deck)
+		_log("%s cerca %s e prende una carta." % [f.name, dove])
+	if mischia:
+		_mischia(pila)
 
 
 func _spingi(f: Dictionary, o: Dictionary, n: int) -> void:

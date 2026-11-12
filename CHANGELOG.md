@@ -1,5 +1,8 @@
 # Novità
 
+## 1.3.0 — Allievo
+- Terzo personaggio: l'Allievo (24 carte trascritte), scelta dell'avversario nel menu.
+
 ## 1.2.0 — Duello online
 - Duello a due su Firebase: stanza con codice, mani nascoste, rientro in partita.
 

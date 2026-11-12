@@ -8,7 +8,7 @@ const COMPORTAMENTI := ["Sinistra", "Centro", "Destra"]
 const TIPI := {"attack": "Attacco", "defence": "Difesa", "meditation": "Meditazione", "core": "Speciale"}
 const EFFETTI_CELLA := {"w1": "1 ferita", "w2": "2 ferite", "b": "ferita sanguinante",
 	"x": "ESECUZIONE", "a": "asterisco", "w1a": "1 ferita + asterisco",
-	"ba": "sanguinante + asterisco", "s": "blocco"}
+	"ba": "sanguinante + asterisco", "s": "blocco", "sa": "blocco con asterisco"}
 
 static var _db: Dictionary = {}
 
@@ -113,13 +113,22 @@ static func effetto(e: Dictionary) -> String:
 		"t_hobble": return "il bersaglio viene azzoppato"
 		"t_rot": return "ruota il bersaglio di %d" % n
 		"t_lose_focus": return "il bersaglio scarta %d focus" % n
-		"t_switch": return "il bersaglio passa a " + KAMAE[e.to]
+		"t_switch": return "il bersaglio passa a " + ("una Kamae a tua scelta" if e.to == "any" else KAMAE[e.to])
 		"t_discard_type": return "il bersaglio scarta %d carta %s" % [n, TIPI[e.type]]
 		"self_stun": return "prendi 1 stordimento"
 		"self_hobble": return "prendi 1 azzoppamento"
 		"t_wound": return "il bersaglio subisce %d ferita" % n
 		"t_wound_to_bleed": return "il bersaglio sostituisce 1 ferita con 1 sanguinante"
-		"search": return "cerca e prendi 1 carta %s di rango %s" % [TIPI[e.type], e.rank]
+		"search": return "cerca nel mazzo e prendi 1 carta%s di rango %s" % [_tipo(e), _rango(e)]
+		"search_discard": return "cerca negli scarti e prendi 1 carta%s di rango %s" % [_tipo(e), _rango(e)]
+		"search_top": return "guarda le prime %d carte del mazzo e prendine 1" % n
+		"discard_stun": return "scarta fino a %d stordimenti" % n
+		"bleed_to_wound": return "sostituisci tutte le ferite sanguinanti con ferite"
+		"view_hand": return "guarda la mano del bersaglio"
+		"steal_focus": return "ruba %d focus al bersaglio" % n
+		"swap": return "scambia posizione con il bersaglio"
+		"t_step": return "sposta il bersaglio di %d nella sua direzione %s" % [n, Hex.NOMI_DIR[int(e.get("dir", 0))]]
+		"nota": return str(e.get("txt", "")) + " (non automatizzato)"
 		"reshuffle": return "mischia nel mazzo tutte le tue carte abilità non speciali"
 		"cancel_cards": return "ogni bersaglio a distanza cancella le sue carte abilità attive"
 		"each_stun": return "ogni bersaglio a distanza prende 1 stordimento"
@@ -133,6 +142,18 @@ static func effetto(e: Dictionary) -> String:
 		"t_discard": return "il bersaglio scarta %d carta/e" % n
 		"broad_block": return "aumenta di 1 l'intervallo d'iniziativa del tuo blocco"
 	return str(e.v)
+
+
+static func _tipo(e: Dictionary) -> String:
+	return "" if e.get("type", "") == "" else " " + TIPI[e.type]
+
+
+static func _rango(e: Dictionary) -> String:
+	var nomi := {"Wood": "Legno", "Steel": "Acciaio", "Gold": "Oro", "Jade": "Giada"}
+	var a: Array = []
+	for r in (e.rank if e.rank is Array else [e.rank]):
+		a.append(nomi.get(r, r))
+	return " o ".join(a)
 
 
 static func effetti(fx: Array) -> String:
@@ -155,7 +176,10 @@ static func riga(ln: Dictionary) -> String:
 			var a2: Array = []
 			for c in ln.cells:
 				a2.append("%s: %s" % [cella_nome(c), EFFETTI_CELLA.get(ln.cells[c], ln.cells[c])])
-			return ("Attacco — " if ln.mode == "atk" else "Blocco — ") + "; ".join(a2)
+			var coda := ""
+			if ln.has("ak"):
+				coda = " (asterisco = blocco solo in %s)" % KAMAE[ln.ak]
+			return g + ("Attacco — " if ln.mode == "atk" else "Blocco — ") + "; ".join(a2) + coda
 		"ast": return g + "* = " + effetti(ln.fx)
 		"mod": return g + "le ferite di questo attacco diventano sanguinanti"
 		"counter":
@@ -192,7 +216,10 @@ static func testo(c: Dictionary) -> String:
 	if int(c.focus) > 0:
 		testa += ", costo %d focus" % int(c.focus)
 	if c.has("req"):
-		testa += ", richiede " + KAMAE[c.req]
+		var rq: Array = []
+		for k in (c.req if c.req is Array else [c.req]):
+			rq.append(KAMAE[k])
+		testa += ", richiede " + " o ".join(rq)
 	if c.has("instant"):
 		testa += ", " + ("Sostituzione istantanea" if c.instant == "rep" else "Aggiunta istantanea")
 	if c.has("range"):

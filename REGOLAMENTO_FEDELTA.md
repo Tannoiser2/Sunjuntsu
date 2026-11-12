@@ -60,7 +60,10 @@ libero passo per passo; «verrebbe colpito» considera il tuo attacco dalla tua 
 
 ## Non ancora fatto
 
-- Gli altri personaggi (i loro dati sono ancora nel vecchio formato in `godot/data/cards/`).
+- Gli altri personaggi dopo l'Allievo (Maestro, Assassino, Ashigaru e Hachiko, Monaco, Navigatore,
+  Ninja, Onna-Bugeisha, Wakou, Yasuke, Yojimbo): i loro dati sono ancora nel vecchio formato.
+- Allievo: «Specchio d'Acqua», riga da 2 focus (giocare la carta presa come Sostituzione istantanea)
+  non è automatizzata.
 - Solo: avversari su pedina (Ashigaru, Boss), più avversari insieme, carte a distanza (Yumi,
   archibugio), campagna «Path of the Ronin».
 - Online «tavolo + telefoni» (il duello online a due su Firebase c'è).

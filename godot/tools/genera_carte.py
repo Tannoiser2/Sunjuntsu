@@ -19,7 +19,7 @@ def move(*parts, k=None, f=None, seq=False):
     if seq: l["seq"] = True
     return g(l, k, f)
 def alt(v, k=None, f=None): return g({"t": "alt", "v": v}, k, f)
-def atk(cells): return {"t": "grid", "mode": "atk", "cells": cells}
+def atk(cells): return {"t": "grid", "mode": "atk", "cells": dict(cells)}
 def blk(*cells): return {"t": "grid", "mode": "blk", "cells": {c: "s" for c in cells}}
 def fx(*effects, k=None, f=None): return g({"t": "fx", "fx": list(effects)}, k, f)
 def ast(*effects, k=None, f=None): return g({"t": "ast", "fx": list(effects)}, k, f)
@@ -203,6 +203,72 @@ card(126, "Colpo d'Elsa", "attack", 5, seg(
 card(127, "Spinta Indietro", "attack", 4, seg(
     move(rot(1)), atk({"0": "a"}), ast(e("push", n=2))))
 
+# ───────────── ALLIEVO ─────────────
+card(38, "Carta Speciale Allievo", "core", 0, seg(
+    fx(e("discard", n=1)), move(step(ANY, 1), rot(2)),
+    OR(fx(e("draw", n=2)), fx(e("search", rank="Wood")), fx(e("change", n=1)))), core=True)
+card(70, "Fendente di Katana", "attack", 4,
+    seg(fx(e("discard", n=1)), move(rot(2), f=1), atk({"0": "w1"})),
+    seg(move(step(ANY, 1), rot(1)), init=2), core=True, weapon="Katana")
+card(40, "Coda Fulminea", "attack", 9, seg(
+    move(step([5, 1], 1, False)), move(step([5, 1], 1), rot(1)),
+    atk({"5": "w1", "0": "w1", "1": "w1"}), fx(e("switch", to=AG))), focus=2, req=BA)
+card(42, "Specchio d'Acqua", "meditation", 8, seg(
+    fx(e("search_discard", rank="Wood")), fx(e("search_discard", rank="Steel"), f=1),
+    fx(e("nota", txt="gioca la carta presa come Sostituzione istantanea"), f=2)))
+card(43, "Tigre Appostata", "meditation", "=", seg(
+    fx(e("t_rot", n=1)), fx(e("t_step", n=1, dir=0)), fx(e("t_discard", n=1)), fx(e("switch", to="any"))),
+    focus=1, instant="add", when="block_ok")
+card(44, "Colpo Astuto", "attack", 5,
+    seg(alt(7, k=AG), atk({"5": "w1", "0": "w1", "1": "w1"}), IFS, fx(e("t_discard", n=1), k=DE)),
+    seg(fx(e("view_hand")), move(step(ANY, 1), rot(1)), init=3), prepared=True)
+card(45, "Obbedienza", "defence", [7, 3], seg(
+    blk("0", "1", "2"), IFS, fx(e("t_switch", to="any")), fx(e("steal_focus", n=1)),
+    fx(e("change", n=1)), fx(e("advantage"))), req=[BA, DE], prepared=True)
+card(46, "Colpo della Roccia", "attack", 3, seg(
+    OR(move(rot(1)), move(step([5, 1], 1), rot(1), f=1)), atk({"0": "w1", "1": "w1"})), req=DE)
+card(47, "Squarcio Rotante", "attack", 6, seg(
+    move(rot(1), f=1), atk({"0": "w1", "1": "w1"}), IFS, fx(e("t_rot", n=1), k=AG)), instant="rep")
+card(48, "Cascata Fendente", "attack", 7,
+    seg(atk({"5": "w1", "0": "w1"})),
+    seg(OR(move(step(F, 1)), move(rot(1))), g(atk({"5": "w1", "0": "w1"}), f=1), init=4))
+card(49, "Scambio della Montagna", "defence", 7,
+    seg(g(atk({"0": "a"}), k=[BA, DE]), ast(e("swap")), IFS, fx(e("focus", n=1))),
+    seg(move(step([4, 2], 1), rot(2)), init=5))
+card(50, "Mente Placida", "meditation", 3, seg(
+    move(step(ANY, 1), rot(1)), fx(e("change", n=1)), fx(e("search_top", n=3), k=DE), move(rot(2), k=BA)))
+card(84, "Calma Composta", "meditation", "=", seg(
+    fx(e("draw", n=2)), fx(e("focus", n=1)), fx(e("switch", to="any"))), instant="add", when="after_card")
+card(90, "Passo Evasivo", "defence", [9, 6], seg(
+    OR(move(step(FANDN, 1, False), f=1), move(step(FANDN, 1, False), k=DE)), fx(e("switch", to="neutral"))),
+    instant="rep")
+gr99 = blk("1", "2"); gr99["cells"]["0"] = "sa"; gr99["ak"] = BA
+card(99, "Difesa Accerchiante", "defence", [7, 3],
+    seg(gr99),
+    seg(move(step([5, 1], 1, False), rot(1, False)), move(step([5, 1], 1), rot(1), f=1), fx(e("draw", n=1), k=DE), init=2))
+card(100, "Squarcio Diagonale", "attack", 5, seg(
+    alt(7, k=BA), move(step(B, 1)), move(rot(1), k=DE),
+    atk({"0": "a", "1": "w2", "2": "w2"}), ast(e("add_wound", n=1), k=AG)))
+card(105, "Taglio Orizzontale", "attack", 6, seg(
+    alt(8, k=BA), OR(move(step([5, 1], 1, False)), move(step([1, 2, 4, 5], 1, False), k=AG)),
+    atk({"5": "w1", "0": "w1", "1": "w1"}), fx(e("switch", to=BA))))
+card(115, "Blocco Rapido", "defence", [8, 6], seg(
+    blk("0"), IFS, fx(e("push", n=1)), fx(e("focus", n=1), k=DE), move(step(ANY, 1), k=BA), fx(e("switch", to=AG))),
+    instant="rep")
+card(117, "Mente Addestrata", "meditation", 2, seg(
+    OR(move(step(FANUP, 2), rot(1), seq=True), move(step(FANUP, 2), rot(3), seq=True, k=BA)),
+    OR(fx(e("change", n=2)), fx(e("search", rank=["Wood", "Steel"]))),
+    fx(e("view_hand"), k=DE)))
+card(121, "Difesa Tranquilla", "defence", [6, 2],
+    seg(move(rot(1), k=BA), blk("5", "0", "1"), IFS, fx(e("focus", n=1), k=DE)),
+    seg(move(step(FANDN, 1), rot(1), seq=True), fx(e("change", n=1)), init=1), prepared=True)
+card(122, "Meditazione Profonda", "meditation", 1, seg(
+    move(step(ANY, 1), rot(2), seq=True), fx(e("focus", n=1), k=DE),
+    OR(fx(e("draw", n=2)), fx(e("view_hand"))), fx(e("switch", to=DE))))
+card(124, "Fasciature da Campo", "defence", 1, seg(
+    move(step(ANY, 1), rot(1)), OR(fx(e("discard_stun", n=2)), fx(e("bleed_to_wound"))),
+    fx(e("draw", n=1), k=BA), fx(e("draw", n=2), k=DE)), prepared=True)
+
 # ───────────── CARTE SOLO (Solitario) ─────────────
 # Id: 1000+ Ronin, 2000+ Guerriero, 3000+ generiche (numero stampato + base).
 V = [5, 1]; A = [4, 2]; X = [1, 2, 4, 5]
@@ -333,7 +399,17 @@ out = {
      "kamae": {"nodes": {"focus":[0.22,0.17],"aggression":[0.22,0.45],"determination":[0.62,0.48],
                          "neutral":[0.22,0.76],"balance":[0.62,0.79]},
         "edges": [["focus","aggression",2],["neutral","aggression",1],["neutral","balance",2],
-                  ["balance","determination",2]]}}},
+                  ["balance","determination",2]]}},
+  "student": {"name": "Allievo", "title": "Impavido come una tigre", "advantage": 62,
+     "hand": 5, "wounds": 5, "char_img": imgs["36"], "kamae_img": imgs["37"],
+     "portrait": "student.webp", "model": "",
+     "deck": {"40":1,"42":1,"43":1,"44":2,"45":2,"46":2,"47":2,"48":3,"49":2,"50":2,"84":1,"90":1,
+              "99":2,"100":1,"105":2,"115":1,"117":1,"121":1,"122":1,"124":1},
+     "core": [38, 70],
+     "kamae": {"nodes": {"aggression":[0.66,0.2],"balance":[0.27,0.47],"focus":[0.66,0.47],
+                         "neutral":[0.27,0.78],"determination":[0.66,0.78]},
+        "edges": [["aggression","focus",2],["balance","focus",2],["balance","neutral",1],
+                  ["neutral","determination",2],["determination","focus",1]]}}},
  "solo": SOLO,
  # mappa "villaggio in fiamme": celle giocabili (colonna,riga) lette dal contorno arancione
  "maps": {"villaggio": {"img": "arena.webp", "img_size": 1594,

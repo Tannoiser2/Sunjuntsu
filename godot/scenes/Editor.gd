@@ -16,7 +16,8 @@ const EFF := ["discard", "draw", "draw_exact", "focus", "lose_focus_all", "lose_
 	"change", "push", "t_stun", "t_hobble", "t_rot", "t_lose_focus", "t_switch", "t_discard_type",
 	"self_stun", "self_hobble", "t_wound", "t_wound_to_bleed", "search", "reshuffle", "cancel_cards",
 	"each_stun", "cancel_move", "advantage", "add_wound", "armour", "broad_block",
-	"ai_change", "ai_reset", "ai_recycle", "t_discard"]
+	"ai_change", "ai_reset", "ai_recycle", "t_discard", "search_discard", "search_top", "discard_stun",
+	"bleed_to_wound", "view_hand", "steal_focus", "swap", "t_step", "nota"]
 const CICLO_ATK := ["", "w1", "w2", "b", "x", "a", "w1a", "ba"]
 const SIGLE := {"w1": "1", "w2": "2", "b": "S", "x": "X", "a": "*", "w1a": "1*", "ba": "S*", "s": "B"}
 const CELLE := ["0", "1", "2", "3", "4", "5", "00", "01", "11", "12", "22", "23", "33", "34", "44", "45", "55", "50"]
@@ -160,8 +161,11 @@ func _apri(id: int) -> void:
 				for oi in l.opts.size():
 					if oi > 0:
 						righe.append({"tipo": "or", "cond": ""})
-					for l2 in l.opts[oi]:
-						righe.append(_riga_da(l2))
+					for li in l.opts[oi].size():
+						var rr := _riga_da(l.opts[oi][li])
+						if li > 0:
+							rr["lega"] = true
+						righe.append(rr)
 			elif l.t == "move" and l.parts.size() == 1 and not pend.is_empty() and false:
 				pass
 			else:
@@ -179,6 +183,8 @@ func _linea_da(r: Dictionary) -> Dictionary:
 			l = {"t": "move", "parts": r.get("parts", [])}
 		"atk", "blk":
 			l = {"t": "grid", "mode": r.tipo, "cells": r.get("cells", {})}
+			if r.has("ak"):
+				l["ak"] = r.ak
 		"fx", "ast":
 			l = {"t": r.tipo, "fx": r.get("fx", [])}
 		"alt":
@@ -204,10 +210,13 @@ func _componi() -> void:
 		var linee: Array = segs[-1].lines
 		if r.tipo == "div":
 			segs.append({"lines": [], "init": int(r.get("v", 1))})
+			aggancia = false
 		elif r.tipo == "or":
 			if not linee.is_empty():
 				var ult: Dictionary = linee.pop_back()
-				if ult.t != "or":
+				if ult.t == "_g":
+					ult = {"t": "or", "opts": [ult.ls]}
+				elif ult.t != "or":
 					ult = {"t": "or", "opts": [[ult]]}
 				linee.append(ult)
 				aggancia = true
@@ -216,10 +225,22 @@ func _componi() -> void:
 			if aggancia:
 				linee[-1].opts.append([l])
 				aggancia = false
+			elif r.get("lega", false) and not linee.is_empty() and linee[-1].t == "or":
+				linee[-1].opts[-1].append(l)
+			elif r.get("lega", false) and not linee.is_empty() and linee[-1].t == "_g":
+				linee[-1].ls.append(l)
+			elif r.get("lega", false) and not linee.is_empty():
+				linee.append({"t": "_g", "ls": [linee.pop_back(), l]})
 			else:
 				linee.append(l)
-	if segs[0].lines.is_empty() and segs.size() > 1 and false:
-		segs.remove_at(0)
+	for sg in segs:
+		var piatte: Array = []
+		for l in sg.lines:
+			if l.t == "_g":
+				piatte.append_array(l.ls)
+			else:
+				piatte.append(l)
+		sg.lines = piatte
 	cur.segs = segs
 	testo.text = Carte.testo(cur)
 
@@ -278,7 +299,7 @@ func _testa() -> void:
 	box_testa.add_child(_campo("Costo focus", _numero(int(cur.focus), 0, 3, func(v): cur.focus = v; _componi())))
 	box_testa.add_child(_campo("Tipo", _opzione([["attack", "Attacco"], ["defence", "Difesa"], ["meditation", "Meditazione"], ["core", "Speciale"]],
 		cur.type, 150, func(v): cur.type = v; _componi())))
-	box_testa.add_child(_campo("Richiede", _opzione([["", "nessuna Kamae"]] + KAM.slice(0, 3), cur.get("req", ""), 170,
+	box_testa.add_child(_campo("Richiede", _opzione([["", "nessuna Kamae"]] + KAM.slice(0, 3), "|".join(cur.req) if cur.get("req", "") is Array else cur.get("req", ""), 170,
 		func(v):
 			if v == "":
 				cur.erase("req")
@@ -379,6 +400,15 @@ func _widget_riga(i: int) -> Control:
 				r.v = a3
 				_componi())
 			f.add_child(_campo("alle iniziative", le))
+	if ["move", "fx"].has(r.tipo):
+		var bl := Tema.bottone("", 150)
+		bl.toggle_mode = true
+		bl.button_pressed = r.get("lega", false)
+		bl.text = "unita alla riga sopra" if r.get("lega", false) else "riga a sé"
+		bl.toggled.connect(func(x: bool):
+			r["lega"] = x
+			_disegna())
+		f.add_child(bl)
 	for d in [["Su", -1], ["Giù", 1]]:
 		var b := Tema.bottone(d[0], 56)
 		b.pressed.connect(_sposta.bind(i, d[1]))
@@ -426,14 +456,24 @@ func _widget_effetto(r: Dictionary, k: int) -> Control:
 		h.add_child(_opzione(KAM, e.get("to", "aggression"), 160, func(v): e.to = v; _componi()))
 		if not e.has("to"):
 			e.to = "aggression"
-	if e.v == "search" or e.v == "t_discard_type":
-		if not e.has("type"):
-			e.type = "defence"
-		h.add_child(_opzione([["attack", "Attacco"], ["defence", "Difesa"], ["meditation", "Meditazione"]], e.type, 140, func(v): e.type = v; _componi()))
-	if e.v == "search":
+	if e.v == "t_discard_type" and not e.has("type"):
+		e.type = "defence"
+	if ["search", "search_discard", "t_discard_type"].has(e.v):
+		h.add_child(_opzione([["", "qualsiasi tipo"], ["attack", "Attacco"], ["defence", "Difesa"], ["meditation", "Meditazione"]], e.get("type", ""), 150,
+			func(v):
+				if v == "":
+					e.erase("type")
+				else:
+					e.type = v
+				_componi()))
+	if e.v == "search" or e.v == "search_discard":
 		if not e.has("rank"):
 			e.rank = "Wood"
-		h.add_child(_opzione([["Wood", "Legno"], ["Steel", "Acciaio"], ["Gold", "Oro"], ["Jade", "Giada"]], e.rank, 110, func(v): e.rank = v; _componi()))
+		var rk: String = "|".join(e.rank) if e.rank is Array else str(e.rank)
+		h.add_child(_opzione([["Wood", "Legno"], ["Steel", "Acciaio"], ["Gold", "Oro"], ["Jade", "Giada"], ["Wood|Steel", "Legno o Acciaio"]], rk, 150,
+			func(v: String):
+				e.rank = Array(v.split("|")) if v.contains("|") else v
+				_componi()))
 	if r.fx.size() > 1:
 		var bx := Tema.bottone("x", 40)
 		bx.pressed.connect(func(): r.fx.remove_at(k); _disegna())

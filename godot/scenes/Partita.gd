@@ -66,7 +66,9 @@ func _ready() -> void:
 func _nuova() -> void:
 	g = Game.new()
 	var mio: String = Sessione.setup.get("io", "warrior")
-	var suo: String = "ronin" if mio == "warrior" else "warrior"
+	var suo: String = Sessione.setup.get("avv", "ronin")
+	if suo == mio:
+		suo = "ronin" if mio != "ronin" else "warrior"
 	io = 0
 	bot = Bot.new(1, randi())
 	var online: bool = Sessione.setup.get("modo", "solo") == "online"
@@ -140,6 +142,12 @@ func _su_evento(e: Dictionary) -> void:
 			_scuoti(e.p)
 		"resolve":
 			lbl_banner.text = "Iniziativa %d — %s: %s" % [int(e.init), g.F[e.p].name, Carte.nome(int(e.card))]
+		"view":
+			if e.p == io:
+				var nomi: Array = []
+				for c in e.cards:
+					nomi.append(Carte.nome(int(c)))
+				cronaca.append_text("[color=#27456b]Carte viste: %s.[/color]\n" % ", ".join(nomi))
 		"turn":
 			lbl_banner.text = ""
 	_aggiorna()
@@ -405,7 +413,18 @@ func _crea_pedina(i: int) -> Node3D:
 	tri.material_override = tm
 	tri.position.y = 0.06
 	n.add_child(tri)
-	var ps: PackedScene = load("res://assets/miniatures/" + f.cd.model)
+	var ps: PackedScene = null
+	if f.cd.model != "":
+		ps = load("res://assets/miniatures/" + f.cd.model)
+	else:
+		# nessuna miniatura 3D: sagoma in piedi con il ritratto
+		var sag := Sprite3D.new()
+		sag.texture = _tex("res://assets/portraits/" + f.cd.portrait)
+		sag.pixel_size = 1.5 / float(sag.texture.get_height())
+		sag.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
+		sag.shaded = false
+		sag.position.y = 0.87
+		n.add_child(sag)
 	if ps != null:
 		var mod: Node3D = ps.instantiate()
 		var holder := Node3D.new()

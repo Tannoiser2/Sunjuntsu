@@ -3125,6 +3125,1592 @@
    "rank": "Wood",
    "img": "ronin/ronin_10.webp"
   },
+  "38": {
+   "id": 38,
+   "name": "Carta Speciale Allievo",
+   "type": "core",
+   "init": 0,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "discard",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "draw",
+            "n": 2
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "search",
+            "rank": "Wood"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "change",
+            "n": 1
+           }
+          ]
+         }
+        ]
+       ]
+      }
+     ]
+    }
+   ],
+   "core": true,
+   "en": "Carta Speciale Allievo",
+   "rank": "-",
+   "img": "student/student_02.webp"
+  },
+  "70": {
+   "id": 70,
+   "name": "Fendente di Katana",
+   "type": "attack",
+   "init": 4,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "discard",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ],
+       "f": 1
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 2
+    }
+   ],
+   "weapon": "Katana",
+   "core": true,
+   "en": "Fendente di Katana",
+   "rank": "-",
+   "img": "altre_carte/altre_carte_04.webp"
+  },
+  "40": {
+   "id": 40,
+   "name": "Coda Fulminea",
+   "type": "attack",
+   "init": 9,
+   "focus": 2,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": false
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "w1",
+        "0": "w1",
+        "1": "w1"
+       }
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "switch",
+         "to": "aggression"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "req": "balance",
+   "en": "Coda Fulminea",
+   "rank": "Jade",
+   "img": "student/student_22.webp"
+  },
+  "42": {
+   "id": 42,
+   "name": "Specchio d'Acqua",
+   "type": "meditation",
+   "init": 8,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "search_discard",
+         "rank": "Wood"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "search_discard",
+         "rank": "Steel"
+        }
+       ],
+       "f": 1
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "nota",
+         "txt": "gioca la carta presa come Sostituzione istantanea"
+        }
+       ],
+       "f": 2
+      }
+     ]
+    }
+   ],
+   "en": "Specchio D'acqua",
+   "rank": "Gold",
+   "img": "student/student_23.webp"
+  },
+  "43": {
+   "id": 43,
+   "name": "Tigre Appostata",
+   "type": "meditation",
+   "init": "=",
+   "focus": 1,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_rot",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_step",
+         "n": 1,
+         "dir": 0
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_discard",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "switch",
+         "to": "any"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "instant": "add",
+   "when": "block_ok",
+   "en": "Tigre Appostata",
+   "rank": "Gold",
+   "img": "student/student_24.webp"
+  },
+  "44": {
+   "id": 44,
+   "name": "Colpo Astuto",
+   "type": "attack",
+   "init": 5,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "alt",
+       "v": 7,
+       "k": "aggression"
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "w1",
+        "0": "w1",
+        "1": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_discard",
+         "n": 1
+        }
+       ],
+       "k": "determination"
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "view_hand"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 3
+    }
+   ],
+   "prepared": true,
+   "en": "Colpo Astuto",
+   "rank": "Steel",
+   "img": "student/student_09.webp"
+  },
+  "45": {
+   "id": 45,
+   "name": "Obbedienza",
+   "type": "defence",
+   "init": [
+    7,
+    3
+   ],
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "0": "s",
+        "1": "s",
+        "2": "s"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_switch",
+         "to": "any"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "steal_focus",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "change",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "advantage"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "req": [
+    "balance",
+    "determination"
+   ],
+   "prepared": true,
+   "en": "Obbedienza",
+   "rank": "Steel",
+   "img": "student/student_10.webp"
+  },
+  "46": {
+   "id": 46,
+   "name": "Colpo della Roccia",
+   "type": "attack",
+   "init": 3,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "move",
+          "parts": [
+           {
+            "m": "rot",
+            "n": 1,
+            "opt": true
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "move",
+          "parts": [
+           {
+            "m": "step",
+            "dirs": [
+             5,
+             1
+            ],
+            "n": 1,
+            "opt": true
+           },
+           {
+            "m": "rot",
+            "n": 1,
+            "opt": true
+           }
+          ],
+          "f": 1
+         }
+        ]
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1",
+        "1": "w1"
+       }
+      }
+     ]
+    }
+   ],
+   "req": "determination",
+   "en": "Colpo della Roccia",
+   "rank": "Steel",
+   "img": "student/student_12.webp"
+  },
+  "47": {
+   "id": 47,
+   "name": "Squarcio Rotante",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "f": 1
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "w1",
+        "1": "w1"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_rot",
+         "n": 1
+        }
+       ],
+       "k": "aggression"
+      }
+     ]
+    }
+   ],
+   "instant": "rep",
+   "en": "Squarcio Rotante",
+   "rank": "Steel",
+   "img": "student/student_14.webp"
+  },
+  "48": {
+   "id": 48,
+   "name": "Cascata Fendente",
+   "type": "attack",
+   "init": 7,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "w1",
+        "0": "w1"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "move",
+          "parts": [
+           {
+            "m": "step",
+            "dirs": [
+             0
+            ],
+            "n": 1,
+            "opt": true
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "move",
+          "parts": [
+           {
+            "m": "rot",
+            "n": 1,
+            "opt": true
+           }
+          ]
+         }
+        ]
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "w1",
+        "0": "w1"
+       },
+       "f": 1
+      }
+     ],
+     "init": 4
+    }
+   ],
+   "en": "Cascata Fendente",
+   "rank": "Wood",
+   "img": "student/student_16.webp"
+  },
+  "49": {
+   "id": 49,
+   "name": "Scambio della Montagna",
+   "type": "defence",
+   "init": 7,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "a"
+       },
+       "k": [
+        "balance",
+        "determination"
+       ]
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "swap"
+        }
+       ]
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "focus",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          2
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 5
+    }
+   ],
+   "en": "Scambio della Montagna",
+   "rank": "Wood",
+   "img": "student/student_03.webp"
+  },
+  "50": {
+   "id": 50,
+   "name": "Mente Placida",
+   "type": "meditation",
+   "init": 3,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "change",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "search_top",
+         "n": 3
+        }
+       ],
+       "k": "determination"
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ],
+       "k": "balance"
+      }
+     ]
+    }
+   ],
+   "en": "Mente Placida",
+   "rank": "Wood",
+   "img": "student/student_05.webp"
+  },
+  "84": {
+   "id": 84,
+   "name": "Calma Composta",
+   "type": "meditation",
+   "init": "=",
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "draw",
+         "n": 2
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "focus",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "switch",
+         "to": "any"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "instant": "add",
+   "when": "after_card",
+   "en": "Calma Composta",
+   "rank": "Gold",
+   "img": "altre_carte_2/altre_carte_2_12.webp"
+  },
+  "90": {
+   "id": 90,
+   "name": "Passo Evasivo",
+   "type": "defence",
+   "init": [
+    9,
+    6
+   ],
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "move",
+          "parts": [
+           {
+            "m": "step",
+            "dirs": [
+             4,
+             3,
+             2
+            ],
+            "n": 1,
+            "opt": false
+           }
+          ],
+          "f": 1
+         }
+        ],
+        [
+         {
+          "t": "move",
+          "parts": [
+           {
+            "m": "step",
+            "dirs": [
+             4,
+             3,
+             2
+            ],
+            "n": 1,
+            "opt": false
+           }
+          ],
+          "k": "determination"
+         }
+        ]
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "switch",
+         "to": "neutral"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "instant": "rep",
+   "en": "Passo Evasivo",
+   "rank": "Gold",
+   "img": "altre_carte_2/altre_carte_2_11.webp"
+  },
+  "99": {
+   "id": 99,
+   "name": "Difesa Accerchiante",
+   "type": "defence",
+   "init": [
+    7,
+    3
+   ],
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "1": "s",
+        "2": "s",
+        "0": "sa"
+       },
+       "ak": "balance"
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": false
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": false
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          5,
+          1
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "f": 1
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "draw",
+         "n": 1
+        }
+       ],
+       "k": "determination"
+      }
+     ],
+     "init": 2
+    }
+   ],
+   "en": "Difesa Accerchiante",
+   "rank": "Steel",
+   "img": "altre_carte_3/altre_carte_3_12.webp"
+  },
+  "100": {
+   "id": 100,
+   "name": "Squarcio Diagonale",
+   "type": "attack",
+   "init": 5,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "alt",
+       "v": 7,
+       "k": "balance"
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          3
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "k": "determination"
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "a",
+        "1": "w2",
+        "2": "w2"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "add_wound",
+         "n": 1
+        }
+       ],
+       "k": "aggression"
+      }
+     ]
+    }
+   ],
+   "en": "Squarcio Diagonale",
+   "rank": "Steel",
+   "img": "altre_carte_3/altre_carte_3_13.webp"
+  },
+  "105": {
+   "id": 105,
+   "name": "Taglio Orizzontale",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "alt",
+       "v": 8,
+       "k": "balance"
+      },
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "move",
+          "parts": [
+           {
+            "m": "step",
+            "dirs": [
+             5,
+             1
+            ],
+            "n": 1,
+            "opt": false
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "move",
+          "parts": [
+           {
+            "m": "step",
+            "dirs": [
+             1,
+             2,
+             4,
+             5
+            ],
+            "n": 1,
+            "opt": false
+           }
+          ],
+          "k": "aggression"
+         }
+        ]
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "w1",
+        "0": "w1",
+        "1": "w1"
+       }
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "switch",
+         "to": "balance"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "en": "Taglio Orizzontale",
+   "rank": "Steel",
+   "img": "altre_carte_2/altre_carte_2_20.webp"
+  },
+  "115": {
+   "id": 115,
+   "name": "Blocco Rapido",
+   "type": "defence",
+   "init": [
+    8,
+    6
+   ],
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "0": "s"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "push",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "focus",
+         "n": 1
+        }
+       ],
+       "k": "determination"
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "k": "balance"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "switch",
+         "to": "aggression"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "instant": "rep",
+   "en": "Blocco Rapido",
+   "rank": "Steel",
+   "img": "altre_carte_2/altre_carte_2_27.webp"
+  },
+  "117": {
+   "id": 117,
+   "name": "Mente Addestrata",
+   "type": "meditation",
+   "init": 2,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "move",
+          "parts": [
+           {
+            "m": "step",
+            "dirs": [
+             5,
+             0,
+             1
+            ],
+            "n": 2,
+            "opt": true
+           },
+           {
+            "m": "rot",
+            "n": 1,
+            "opt": true
+           }
+          ],
+          "seq": true
+         }
+        ],
+        [
+         {
+          "t": "move",
+          "parts": [
+           {
+            "m": "step",
+            "dirs": [
+             5,
+             0,
+             1
+            ],
+            "n": 2,
+            "opt": true
+           },
+           {
+            "m": "rot",
+            "n": 3,
+            "opt": true
+           }
+          ],
+          "seq": true,
+          "k": "balance"
+         }
+        ]
+       ]
+      },
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "change",
+            "n": 2
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "search",
+            "rank": [
+             "Wood",
+             "Steel"
+            ]
+           }
+          ]
+         }
+        ]
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "view_hand"
+        }
+       ],
+       "k": "determination"
+      }
+     ]
+    }
+   ],
+   "en": "Mente Addestrata",
+   "rank": "Steel",
+   "img": "altre_carte_2/altre_carte_2_29.webp"
+  },
+  "121": {
+   "id": 121,
+   "name": "Difesa Tranquilla",
+   "type": "defence",
+   "init": [
+    6,
+    2
+   ],
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "k": "balance"
+      },
+      {
+       "t": "grid",
+       "mode": "blk",
+       "cells": {
+        "5": "s",
+        "0": "s",
+        "1": "s"
+       }
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "focus",
+         "n": 1
+        }
+       ],
+       "k": "determination"
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ],
+       "seq": true
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "change",
+         "n": 1
+        }
+       ]
+      }
+     ],
+     "init": 1
+    }
+   ],
+   "prepared": true,
+   "en": "Difesa Tranquilla",
+   "rank": "Wood",
+   "img": "altre_carte_3/altre_carte_3_02.webp"
+  },
+  "122": {
+   "id": 122,
+   "name": "Meditazione Profonda",
+   "type": "meditation",
+   "init": 1,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ],
+       "seq": true
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "focus",
+         "n": 1
+        }
+       ],
+       "k": "determination"
+      },
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "draw",
+            "n": 2
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "view_hand"
+           }
+          ]
+         }
+        ]
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "switch",
+         "to": "determination"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "en": "Meditazione Profonda",
+   "rank": "Wood",
+   "img": "altre_carte_2/altre_carte_2_17.webp"
+  },
+  "124": {
+   "id": 124,
+   "name": "Fasciature da Campo",
+   "type": "defence",
+   "init": 1,
+   "focus": 0,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "or",
+       "opts": [
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "discard_stun",
+            "n": 2
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "t": "fx",
+          "fx": [
+           {
+            "v": "bleed_to_wound"
+           }
+          ]
+         }
+        ]
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "draw",
+         "n": 1
+        }
+       ],
+       "k": "balance"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "draw",
+         "n": 2
+        }
+       ],
+       "k": "determination"
+      }
+     ]
+    }
+   ],
+   "prepared": true,
+   "en": "Fasciature da Campo",
+   "rank": "Wood",
+   "img": "altre_carte/altre_carte_31.webp"
+  },
   "1001": {
    "id": 1001,
    "name": "Chiatta di Buoi (Solo)",
@@ -6593,6 +8179,94 @@
       "balance",
       "determination",
       2
+     ]
+    ]
+   }
+  },
+  "student": {
+   "name": "Allievo",
+   "title": "Impavido come una tigre",
+   "advantage": 62,
+   "hand": 5,
+   "wounds": 5,
+   "char_img": "student/student_19.webp",
+   "kamae_img": "student/student_20.webp",
+   "portrait": "student.webp",
+   "model": "",
+   "deck": {
+    "40": 1,
+    "42": 1,
+    "43": 1,
+    "44": 2,
+    "45": 2,
+    "46": 2,
+    "47": 2,
+    "48": 3,
+    "49": 2,
+    "50": 2,
+    "84": 1,
+    "90": 1,
+    "99": 2,
+    "100": 1,
+    "105": 2,
+    "115": 1,
+    "117": 1,
+    "121": 1,
+    "122": 1,
+    "124": 1
+   },
+   "core": [
+    38,
+    70
+   ],
+   "kamae": {
+    "nodes": {
+     "aggression": [
+      0.66,
+      0.2
+     ],
+     "balance": [
+      0.27,
+      0.47
+     ],
+     "focus": [
+      0.66,
+      0.47
+     ],
+     "neutral": [
+      0.27,
+      0.78
+     ],
+     "determination": [
+      0.66,
+      0.78
+     ]
+    },
+    "edges": [
+     [
+      "aggression",
+      "focus",
+      2
+     ],
+     [
+      "balance",
+      "focus",
+      2
+     ],
+     [
+      "balance",
+      "neutral",
+      1
+     ],
+     [
+      "neutral",
+      "determination",
+      2
+     ],
+     [
+      "determination",
+      "focus",
+      1
      ]
     ]
    }

@@ -9,6 +9,7 @@ func _initialize() -> void:
 	var vittorie := [0, 0, 0]
 	var turni := 0
 	var kinds := {}
+	var per_pers := {}
 	for s in n:
 		var g := Game.new()
 		var b0 := Bot.new(0, s * 2 + 1)
@@ -17,7 +18,10 @@ func _initialize() -> void:
 			func(gg, r): kinds[r.kind] = kinds.get(r.kind, 0) + 1; return b1.decidi(gg, r)]
 		var stato := {"fine": false}
 		g.finished.connect(func(_w): stato.fine = true)
-		var chars := ["warrior", "ronin"] if s % 2 == 0 else ["ronin", "warrior"]
+		var tutti := ["warrior", "ronin", "student"]
+		var chars := [tutti[s % 3], tutti[(s + 1 + (s / 3) % 2) % 3]]
+		if OS.get_cmdline_user_args().has("solo"):
+			chars[1] = "ronin" if chars[0] != "ronin" and s % 2 == 0 else ("warrior" if chars[0] != "warrior" else "ronin")
 		var solo := OS.get_cmdline_user_args().has("solo")
 		g.start({"seed": s + 1, "players": [{"char": chars[0]}, {"char": chars[1], "solo": solo, "incubo": solo and s % 5 == 0}]})
 		if not stato.fine:
@@ -28,8 +32,9 @@ func _initialize() -> void:
 		if OS.get_cmdline_user_args().has("solo"):
 			vittorie[2 if w < 0 else w] += 1
 		else:
-			vittorie[2 if w < 0 else (0 if g.F[w].char == "warrior" else 1)] += 1
+			per_pers[g.F[w].char] = per_pers.get(g.F[w].char, 0) + 1
 		turni += g.turn
 	print("Partite: %d — Guerriero %d, Ronin %d, pari %d — turni medi %.1f" % [n, vittorie[0], vittorie[1], vittorie[2], float(turni) / n])
+	print("Vittorie per personaggio: ", per_pers)
 	print("Decisioni: ", kinds)
 	quit(0)

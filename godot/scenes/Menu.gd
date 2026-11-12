@@ -2,6 +2,8 @@ extends Control
 ## Menu principale.
 
 var scelte: Dictionary = {}
+var avversari: Dictionary = {}
+const ORDINE := ["warrior", "ronin", "student"]
 
 
 func _ready() -> void:
@@ -37,12 +39,12 @@ func _ready() -> void:
 	h.add_theme_constant_override("separation", 24)
 	v.add_child(h)
 	var db := Carte.db()
-	for k in ["warrior", "ronin"]:
+	for k in ORDINE:
 		var cd: Dictionary = db.characters[k]
 		var b := TextureButton.new()
 		b.ignore_texture_size = true
 		b.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-		b.custom_minimum_size = Vector2(215, 300)
+		b.custom_minimum_size = Vector2(172, 240)
 		b.texture_normal = load("res://assets/cards/" + cd.char_img)
 		b.pressed.connect(_scegli.bind(k))
 		var bordo := Panel.new()
@@ -51,6 +53,23 @@ func _ready() -> void:
 		b.add_child(bordo)
 		scelte[k] = bordo
 		h.add_child(b)
+	var ha := HBoxContainer.new()
+	ha.alignment = BoxContainer.ALIGNMENT_CENTER
+	ha.add_theme_constant_override("separation", 10)
+	v.add_child(ha)
+	var la := Tema.etichetta("Avversario", 20)
+	la.custom_minimum_size = Vector2(100, 0)
+	ha.add_child(la)
+	for k in ORDINE:
+		var ba := Tema.bottone(db.characters[k].name, 130)
+		ba.toggle_mode = true
+		ba.pressed.connect(_scegli_avv.bind(k))
+		avversari[k] = ba
+		ha.add_child(ba)
+	var nota := Tema.etichetta("In Solitario l'avversario può essere Guerriero o Ronin.", 16)
+	nota.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	nota.custom_minimum_size = Vector2(420, 0)
+	v.add_child(nota)
 	var hb := HBoxContainer.new()
 	hb.alignment = BoxContainer.ALIGNMENT_CENTER
 	hb.add_theme_constant_override("separation", 12)
@@ -80,7 +99,18 @@ func _ready() -> void:
 	_scegli(Sessione.setup.get("io", "warrior"))
 
 
+func _scegli_avv(k: String) -> void:
+	if k == Sessione.setup.get("io", "warrior"):
+		k = "ronin" if k != "ronin" else "warrior"
+	Sessione.setup["avv"] = k
+	for c in avversari:
+		avversari[c].button_pressed = c == k
+		avversari[c].disabled = c == Sessione.setup.get("io", "warrior")
+
+
 func _gioca(modo: String, incubo: bool) -> void:
+	if modo == "solo" and not Carte.db().solo.has(Sessione.setup.avv):
+		Sessione.setup["avv"] = "ronin" if Sessione.setup.io != "ronin" else "warrior"
 	Sessione.setup["modo"] = modo
 	Sessione.setup["incubo"] = incubo
 	get_tree().change_scene_to_file("res://scenes/Partita.tscn")
@@ -91,3 +121,4 @@ func _scegli(k: String) -> void:
 	for c in scelte:
 		var sb := Tema.riquadro(Color(0, 0, 0, 0), Tema.ORO if c == k else Color(0, 0, 0, 0), 6, 10)
 		scelte[c].add_theme_stylebox_override("panel", sb)
+	_scegli_avv(Sessione.setup.get("avv", "ronin"))

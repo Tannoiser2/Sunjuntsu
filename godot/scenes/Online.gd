@@ -39,7 +39,8 @@ func _ready() -> void:
 	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(t)
 	var pers: String = Carte.db().characters[Sessione.setup.get("io", "warrior")].name
-	var l := Tema.etichetta("Chi crea la stanza gioca con %s, l'ospite con l'altro combattente." % pers, 19)
+	var pers2: String = Carte.db().characters[Sessione.setup.get("avv", "ronin")].name
+	var l := Tema.etichetta("Chi crea la stanza gioca con %s, l'ospite con %s (si scelgono nel menu)." % [pers, pers2], 19)
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	l.custom_minimum_size = Vector2(500, 0)
 	v.add_child(l)
@@ -150,7 +151,7 @@ func _attendi() -> void:
 func _inizia() -> void:
 	b_inizia.disabled = true
 	var mio: String = Sessione.setup.get("io", "warrior")
-	var partita := {"seed": randi() % 1000000 + 1, "pers": [mio, "ronin" if mio == "warrior" else "warrior"]}
+	var partita := {"seed": randi() % 1000000 + 1, "pers": [mio, Sessione.setup.get("avv", "ronin")]}
 	if not await rete.start_room(codice, partita):
 		stato.text = "Non riesco ad avviare. " + rete.last_error
 		b_inizia.disabled = false
