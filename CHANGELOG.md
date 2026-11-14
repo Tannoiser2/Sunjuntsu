@@ -1,5 +1,8 @@
 # Novità
 
+## 1.14.0 — Ninja in Solitario
+- Carte Solo del Ninja (4 firma + Incubo): ora tutti e tredici i personaggi si possono affrontare in Solitario.
+
 ## 1.13.0 — Avversari in coppia
 - In Solitario l'Ashigaru combatte insieme a Hachiko (due avversari, 3 ferite ciascuno).
 

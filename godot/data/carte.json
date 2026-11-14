@@ -22834,6 +22834,394 @@
    "en": "",
    "rank": "-",
    "or": true
+  },
+  "6001": {
+   "id": 6001,
+   "name": "Bomba Fumogena (Solo)",
+   "type": "defence",
+   "init": 7,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "a",
+        "1": "a",
+        "2": "a",
+        "3": "a",
+        "4": "a",
+        "5": "a"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "push",
+         "n": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          4,
+          3,
+          2
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "conceal"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ],
+     "init": 6
+    }
+   ],
+   "img": "solo/6001.webp",
+   "en": "",
+   "rank": "-"
+  },
+  "6002": {
+   "id": 6002,
+   "name": "Squarcio di Kama (Solo)",
+   "type": "attack",
+   "init": 5,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "alt",
+       "v": 7,
+       "o": true
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "rot",
+         "n": 2,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "5": "w1",
+        "0": "w1"
+       }
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "conceal"
+        }
+       ]
+      }
+     ],
+     "init": 4
+    }
+   ],
+   "img": "solo/6002.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "6003": {
+   "id": 6003,
+   "name": "Lancio di Shuriken (Solo)",
+   "type": "attack",
+   "init": 6,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "ranged",
+       "eff": "w1",
+       "r": 4
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 2,
+         "opt": true
+        },
+        {
+         "m": "rot",
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 4
+    }
+   ],
+   "img": "solo/6003.webp",
+   "en": "",
+   "rank": "-",
+   "or": true,
+   "range": 4
+  },
+  "6004": {
+   "id": 6004,
+   "name": "Soffio di Metsubushi (Solo)",
+   "type": "attack",
+   "init": 4,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "unblockable"
+      },
+      {
+       "t": "grid",
+       "mode": "atk",
+       "cells": {
+        "0": "a",
+        "00": "a",
+        "000": "a",
+        "005": "a",
+        "001": "a"
+       }
+      },
+      {
+       "t": "ast",
+       "fx": [
+        {
+         "v": "cancel_move"
+        }
+       ]
+      },
+      {
+       "t": "ifs"
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "t_hobble"
+        },
+        {
+         "v": "t_hobble"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      }
+     ],
+     "init": 1
+    }
+   ],
+   "img": "solo/6004.webp",
+   "en": "",
+   "rank": "-",
+   "or": true
+  },
+  "6090": {
+   "id": 6090,
+   "name": "Trappola del Tiratore Lunare (Solo, Incubo)",
+   "type": "attack",
+   "init": 7,
+   "focus": 0,
+   "solo": true,
+   "segs": [
+    {
+     "lines": [
+      {
+       "t": "ranged",
+       "eff": "w1",
+       "r": 99,
+       "fx": [
+        {
+         "v": "t_poison"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "lines": [
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_change"
+        }
+       ]
+      },
+      {
+       "t": "move",
+       "parts": [
+        {
+         "m": "step",
+         "dirs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+         ],
+         "n": 1,
+         "opt": true
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "conceal"
+        }
+       ]
+      },
+      {
+       "t": "fx",
+       "fx": [
+        {
+         "v": "ai_reset"
+        }
+       ]
+      }
+     ],
+     "init": 4
+    }
+   ],
+   "img": "solo/6090.webp",
+   "en": "",
+   "rank": "-",
+   "or": true,
+   "nightmare": true,
+   "req_o": true
   }
  },
  "characters": {
@@ -24244,6 +24632,27 @@
     "1",
     "3",
     "3",
+    "5"
+   ],
+   "extra": [
+    "2",
+    "4",
+    "5"
+   ]
+  },
+  "ninja": {
+   "firma": [
+    6001,
+    6002,
+    6003,
+    6004
+   ],
+   "incubo": 6090,
+   "raggio": 2,
+   "mazzi": [
+    "1",
+    "4",
+    "4",
     "5"
    ],
    "extra": [

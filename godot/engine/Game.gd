@@ -780,7 +780,7 @@ func _esegui_segmento(en: Dictionary) -> void:
 	await _pausa("resolve")
 	if f.ai and c.get("or", false) and en.s == 0:
 		var dec := _decidi_or(f, c.segs[0].lines)
-		if (c.get("req_sent", false) and int(f.sent) < 0) or (c.get("req_d", false) and not disperata(f)):
+		if (c.get("req_sent", false) and int(f.sent) < 0) or (c.get("req_d", false) and not disperata(f)) or (c.get("req_o", false) and not f.occ):
 			dec = {"attacca": false, "piano": []}
 		if not dec.attacca:
 			_log("%s non può attaccare: userà la seconda parte della carta." % f.name)

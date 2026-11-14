@@ -81,10 +81,6 @@ func _ready() -> void:
 		var bt := Tema.bottone(d[0], 320)
 		bt.pressed.connect(d[1])
 		dx.add_child(bt)
-	var nota := Tema.etichetta("In Solitario il Ninja non è disponibile come avversario; l'Ashigaru combatte insieme a Hachiko.", 15)
-	nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	nota.custom_minimum_size = Vector2(320, 0)
-	dx.add_child(nota)
 	var ver := Tema.etichetta("Versione %s" % ProjectSettings.get_setting("application/config/version"), 15)
 	ver.custom_minimum_size = Vector2(320, 0)
 	dx.add_child(ver)

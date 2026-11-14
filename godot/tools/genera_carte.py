@@ -884,6 +884,16 @@ solo(5553, "Ululato Feroce (Solo)", "defence", 6, seg(CHG, move(step(FANUP, 1)),
 solo(5554, "Ringhio Minaccioso (Solo)", "defence", 7, seg(CHG, move(step([5, 1], 2)), fx(e("cancel_move"))), range=2)
 oppure(5555, "Morso Rapido (Solo)", 7, [CHG, move(step(FANDN, 1)), move(rot(1)), atk({"0": "w1"})], 5, [move(step(ANY, 2), rot(1))])
 
+solo(6001, "Bomba Fumogena (Solo)", "defence", 7, seg(atk({c: "a" for c in "012345"}), ast(e("push", n=1))),
+    seg(move(rot(1)), move(step(FANDN, 1)), fx(e("conceal")), RST, init=6))
+oppure(6002, "Squarcio di Kama (Solo)", 5, [occ(alt(7)), move(rot(2)), atk({"5": "w1", "0": "w1"})], 4, [move(step(ANY, 1)), fx(e("conceal"))])
+oppure(6003, "Lancio di Shuriken (Solo)", 6, [move(step(ANY, 1)), ranged("w1", 4)], 4, [move(step(ANY, 2), rot(1))], range=4)
+oppure(6004, "Soffio di Metsubushi (Solo)", 4, [UNB, atk({"0": "a", "00": "a", "000": "a", "005": "a", "001": "a"}), ast(e("cancel_move")),
+    IFS, fx(e("t_hobble"), e("t_hobble"))], 1, [CHG, move(step(ANY, 1))])
+_rn = ranged("w1", 99); _rn["fx"] = [e("t_poison")]
+oppure(6090, "Trappola del Tiratore Lunare (Solo, Incubo)", 7, [_rn], 4, [CHG, move(step(ANY, 1)), fx(e("conceal")), RST], nightmare=True)
+C["6090"]["req_o"] = True
+
 def _s(base, incubo, raggio, mazzi):
     return {"firma": [base + 1, base + 2, base + 3, base + 4], "incubo": incubo, "raggio": raggio, "mazzi": mazzi, "extra": ["2", "4", "5"]}
 SOLO.update({
@@ -892,6 +902,7 @@ SOLO.update({
     "assassin": _s(5400, 5490, 1, ["1", "4", "4", "5"]), "ashigaru": dict(_s(5500, 5590, 2, ["1", "3", "3", "5"]), compagno={"name": "Hachiko", "carte": [5551, 5552, 5553, 5554, 5555],
         "raggio": 1, "sprite": "res://assets/cards/hachiko/hachiko_01.webp"}, ferite=3),
     "sailor": _s(5600, 5690, 1, ["1", "4", "4", "5"]), "monk": _s(5700, 5790, 2, ["1", "3", "3", "5"]),
+    "ninja": _s(6000, 6090, 2, ["1", "4", "4", "5"]),
     "yojimbo": _s(5800, 5890, 1, ["1", "4", "4", "5"]), "onna": _s(5900, 5990, 2, ["1", "3", "3", "5"])})
 
 here = os.path.dirname(os.path.abspath(__file__))
