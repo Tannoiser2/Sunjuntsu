@@ -23410,7 +23410,7 @@
    "char_img": "student/student_19.webp",
    "kamae_img": "student/student_20.webp",
    "portrait": "student.webp",
-   "model": "",
+   "model": "student.glb",
    "deck": {
     "40": 1,
     "42": 1,
@@ -23498,7 +23498,7 @@
    "char_img": "master/master_01.webp",
    "kamae_img": "master/master_02.webp",
    "portrait": "master.webp",
-   "model": "",
+   "model": "master.glb",
    "deck": {
     "10": 1,
     "12": 1,
@@ -23580,7 +23580,7 @@
    "char_img": "assassin/assassin_01.webp",
    "kamae_img": "assassin/assassin_02.webp",
    "portrait": "assassin.webp",
-   "model": "",
+   "model": "assassin.glb",
    "deck": {
     "220": 1,
     "221": 1,
@@ -23670,7 +23670,7 @@
    "char_img": "monk/monk_01.webp",
    "kamae_img": "monk/monk_02.webp",
    "portrait": "monk.webp",
-   "model": "",
+   "model": "monk.glb",
    "deck": {
     "262": 1,
     "263": 1,
@@ -23755,7 +23755,7 @@
    "char_img": "yasuke/yasuke_01.webp",
    "kamae_img": "yasuke/yasuke_02.webp",
    "portrait": "yasuke.webp",
-   "model": "",
+   "model": "yasuke.glb",
    "deck": {
     "352": 1,
     "353": 1,
@@ -23841,7 +23841,7 @@
    "char_img": "yojimbo/yojimbo_01.webp",
    "kamae_img": "yojimbo/yojimbo_02.webp",
    "portrait": "yojimbo.webp",
-   "model": "",
+   "model": "yojimbo.glb",
    "deck": {
     "319": 1,
     "320": 1,
@@ -23932,7 +23932,7 @@
    "char_img": "wakou/wakou_01.webp",
    "kamae_img": "wakou/wakou_02.webp",
    "portrait": "wakou.webp",
-   "model": "",
+   "model": "wakou.glb",
    "deck": {
     "334": 1,
     "336": 1,
@@ -24013,7 +24013,7 @@
    "char_img": "onna_bugeisha/onna_bugeisha_01.webp",
    "kamae_img": "onna_bugeisha/onna_bugeisha_02.webp",
    "portrait": "onna_bugeisha.webp",
-   "model": "",
+   "model": "onna.glb",
    "deck": {
     "296": 1,
     "297": 1,
@@ -24097,7 +24097,7 @@
    "char_img": "sailor/sailor_01.webp",
    "kamae_img": "sailor/sailor_02.webp",
    "portrait": "sailor.webp",
-   "model": "",
+   "model": "sailor.glb",
    "deck": {
     "279": 1,
     "281": 1,
@@ -24186,11 +24186,12 @@
    "char_img": "ashigaru/ashigaru_01.webp",
    "kamae_img": "ashigaru/ashigaru_02.webp",
    "portrait": "ashigaru.webp",
-   "model": "",
+   "model": "ashigaru.glb",
    "compagno": {
     "name": "Hachiko",
     "wounds": 2,
     "sprite": "res://assets/cards/hachiko/hachiko_01.webp",
+    "model": "hachiko.glb",
     "deck": {
      "249": 1,
      "250": 1,
@@ -24291,7 +24292,7 @@
    "char_img": "ninja/ninja_01.webp",
    "kamae_img": "ninja/ninja_02.webp",
    "portrait": "ninja.webp",
-   "model": "",
+   "model": "assassin.glb",
    "deck": {
     "166": 1,
     "167": 1,
@@ -24594,7 +24595,8 @@
      5555
     ],
     "raggio": 1,
-    "sprite": "res://assets/cards/hachiko/hachiko_01.webp"
+    "sprite": "res://assets/cards/hachiko/hachiko_01.webp",
+    "model": "hachiko.glb"
    },
    "ferite": 3
   },

@@ -387,36 +387,54 @@ func _aggiorna_cam() -> void:
 func _crea_pedina(i: int) -> Node3D:
 	var f: Dictionary = g.F[i]
 	var n := Node3D.new()
-	var base := MeshInstance3D.new()
-	var cil := CylinderMesh.new()
-	cil.top_radius = 0.6
-	cil.bottom_radius = 0.64
-	cil.height = 0.1
-	base.mesh = cil
-	var bm := StandardMaterial3D.new()
-	bm.albedo_color = Tema.GIOCATORI[int(f.owner)]
-	base.material_override = bm
-	base.position.y = 0.05
-	n.add_child(base)
-	# triangolo del fronte (verso +Z locale)
-	var st := SurfaceTool.new()
-	st.begin(Mesh.PRIMITIVE_TRIANGLES)
-	for v in [Vector3(-0.22, 0, 0.6), Vector3(0.22, 0, 0.6), Vector3(0, 0, 0.98)]:
-		st.set_normal(Vector3.UP)
-		st.add_vertex(v)
-	var tri := MeshInstance3D.new()
-	tri.mesh = st.commit()
-	var tm := StandardMaterial3D.new()
-	tm.albedo_color = Tema.ORO
-	tm.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	tm.cull_mode = BaseMaterial3D.CULL_DISABLED
-	tri.material_override = tm
-	tri.position.y = 0.06
-	n.add_child(tri)
 	var ps: PackedScene = null
-	if f.cd.model != "":
+	if f.cd.get("model", "") != "":
 		ps = load("res://assets/miniatures/" + f.cd.model)
+	if ps != null:
+		# miniatura con base esagonale e freccia: sotto, un bordo esagonale del colore del giocatore
+		var bordo := MeshInstance3D.new()
+		bordo.mesh = _prisma_esagono(0.97, 0.05)
+		var bm := StandardMaterial3D.new()
+		bm.albedo_color = Tema.GIOCATORI[int(f.owner)]
+		bm.cull_mode = BaseMaterial3D.CULL_DISABLED
+		bordo.material_override = bm
+		n.add_child(bordo)
+		var holder := Node3D.new()
+		holder.name = "Modello"
+		var mod: Node3D = ps.instantiate()
+		# il modello ha la base di raggio 1 centrata nell'origine, fronte verso +Z
+		mod.scale = Vector3.ONE * 0.88
+		mod.position.y = 0.05
+		_colori_vertice(mod)
+		holder.add_child(mod)
+		n.add_child(holder)
 	else:
+		var base := MeshInstance3D.new()
+		var cil := CylinderMesh.new()
+		cil.top_radius = 0.6
+		cil.bottom_radius = 0.64
+		cil.height = 0.1
+		base.mesh = cil
+		var bm2 := StandardMaterial3D.new()
+		bm2.albedo_color = Tema.GIOCATORI[int(f.owner)]
+		base.material_override = bm2
+		base.position.y = 0.05
+		n.add_child(base)
+		# triangolo del fronte (verso +Z locale)
+		var st := SurfaceTool.new()
+		st.begin(Mesh.PRIMITIVE_TRIANGLES)
+		for v in [Vector3(-0.22, 0, 0.6), Vector3(0.22, 0, 0.6), Vector3(0, 0, 0.98)]:
+			st.set_normal(Vector3.UP)
+			st.add_vertex(v)
+		var tri := MeshInstance3D.new()
+		tri.mesh = st.commit()
+		var tm := StandardMaterial3D.new()
+		tm.albedo_color = Tema.ORO
+		tm.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		tm.cull_mode = BaseMaterial3D.CULL_DISABLED
+		tri.material_override = tm
+		tri.position.y = 0.06
+		n.add_child(tri)
 		# nessuna miniatura 3D: sagoma in piedi con il ritratto
 		var sag := Sprite3D.new()
 		sag.texture = _tex(f.cd.get("sprite", "res://assets/portraits/" + f.cd.portrait))
@@ -425,21 +443,55 @@ func _crea_pedina(i: int) -> Node3D:
 		sag.shaded = false
 		sag.position.y = 0.87
 		n.add_child(sag)
-	if ps != null:
-		var mod: Node3D = ps.instantiate()
-		var holder := Node3D.new()
-		holder.name = "Modello"
-		holder.add_child(mod)
-		n.add_child(holder)
-		var bb := _aabb(mod, Transform3D.IDENTITY)
-		if bb.size.y > 0.0001:
-			var s: float = 1.55 / bb.size.y
-			mod.scale = Vector3.ONE * s
-			var c := bb.get_center() * s
-			mod.position = Vector3(-c.x, 0.1 - bb.position.y * s, -c.z)
 	mondo.add_child(n)
 	n.visible = false
 	return n
+
+
+## Le miniature dipinte con i colori dei vertici (senza texture) li usano come colore base.
+func _colori_vertice(nodo: Node) -> void:
+	if nodo is MeshInstance3D and (nodo as MeshInstance3D).mesh is ArrayMesh:
+		var mi := nodo as MeshInstance3D
+		var am := mi.mesh as ArrayMesh
+		for k in am.get_surface_count():
+			var mat := am.surface_get_material(k) as StandardMaterial3D
+			if mat == null or mat.albedo_texture != null:
+				continue
+			if am.surface_get_format(k) & Mesh.ARRAY_FORMAT_COLOR and mat.albedo_color.is_equal_approx(Color.WHITE):
+				var m2 := mat.duplicate() as StandardMaterial3D
+				m2.vertex_color_use_as_albedo = true
+				mi.set_surface_override_material(k, m2)
+	for ch in nodo.get_children():
+		_colori_vertice(ch)
+
+
+## Prisma esagonale con i lati piatti verso ±Z (come le caselle).
+func _prisma_esagono(r: float, h: float) -> ArrayMesh:
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var p: Array = []
+	for k in 6:
+		var a := deg_to_rad(60.0 * k)
+		p.append(Vector3(r * cos(a), 0, r * sin(a)))
+	for k in 6:
+		var a: Vector3 = p[k]
+		var b: Vector3 = p[(k + 1) % 6]
+		# coperchio
+		st.set_normal(Vector3.UP)
+		st.add_vertex(Vector3(0, h, 0))
+		st.add_vertex(b + Vector3(0, h, 0))
+		st.add_vertex(a + Vector3(0, h, 0))
+		# lato
+		var nn := ((a + b) * 0.5).normalized()
+		st.set_normal(nn)
+		st.add_vertex(a)
+		st.add_vertex(a + Vector3(0, h, 0))
+		st.add_vertex(b + Vector3(0, h, 0))
+		st.set_normal(nn)
+		st.add_vertex(a)
+		st.add_vertex(b + Vector3(0, h, 0))
+		st.add_vertex(b)
+	return st.commit()
 
 
 func _aabb(n: Node, t: Transform3D) -> AABB:

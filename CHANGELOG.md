@@ -1,5 +1,11 @@
 # Novità
 
+## 1.15.0 — Miniature 3D per tutti
+- Ogni personaggio (e Hachiko) ha la sua miniatura 3D al posto della sagoma: base esagonale regolare
+  allineata alle caselle, freccia dorata sul lato frontale e bordo del colore del giocatore.
+- Modelli alleggeriti (circa 45.000 facce, texture 1024) per la versione web.
+- Il Ninja usa per ora la stessa miniatura dell'Assassino (i due file forniti erano identici).
+
 ## 1.14.0 — Ninja in Solitario
 - Carte Solo del Ninja (4 firma + Incubo): ora tutti e tredici i personaggi si possono affrontare in Solitario.
 

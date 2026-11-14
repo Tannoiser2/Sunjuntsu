@@ -104,7 +104,7 @@ func prepara(setup: Dictionary) -> void:
 		hs.i = F.size()
 		hs.owner = pi
 		hs.name = sc.name
-		hs.cd = {"name": sc.name, "model": "", "portrait": "", "sprite": sc.sprite, "kamae": {"nodes": {}, "edges": []}}
+		hs.cd = {"name": sc.name, "model": sc.get("model", ""), "portrait": "", "sprite": sc.sprite, "kamae": {"nodes": {}, "edges": []}}
 		hs.deck = ds
 		hs.discard = []
 		hs.raggio = int(sc.raggio)
@@ -125,7 +125,7 @@ func prepara(setup: Dictionary) -> void:
 		h.owner = pi
 		h.cane = true
 		h.name = cc.name
-		h.cd = {"name": cc.name, "model": "", "portrait": "", "sprite": cc.sprite, "kamae": {"nodes": {}, "edges": []}}
+		h.cd = {"name": cc.name, "model": cc.get("model", ""), "portrait": "", "sprite": cc.sprite, "kamae": {"nodes": {}, "edges": []}}
 		h.hand = []
 		h.deck = dk
 		h.discard = []
