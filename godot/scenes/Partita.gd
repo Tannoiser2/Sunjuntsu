@@ -20,6 +20,7 @@ var pitch := 1.02
 var dist := 13.0
 var celle_mat: Dictionary = {}
 var pedine: Array = []
+var terreni_3d: Array = []
 var evid: Dictionary = {}      ## cella -> colore (opzioni)
 var lampi: Dictionary = {}     ## cella -> colore (attacchi/blocchi)
 var opz_celle: Dictionary = {} ## cella -> Array di [orientamento, indice opzione]
@@ -82,11 +83,16 @@ func _nuova() -> void:
 	for p in pedine:
 		p.queue_free()
 	pedine = []
+	for t in terreni_3d:
+		t.queue_free()
+	terreni_3d = []
 	var solo: bool = Sessione.setup.get("modo", "solo") == "solo"
 	if online:
 		var pt: Dictionary = Sessione.setup.partita
 		io = int(Sessione.setup.posto)
-		g.prepara({"seed": int(pt.seed), "players": [{"char": pt.pers[0]}, {"char": pt.pers[1]}]})
+		var mz: Array = pt.get("mazzi", [{}, {}])
+		g.prepara({"seed": int(pt.seed), "terreno": pt.get("terreno", "nessuno"),
+			"players": [{"char": pt.pers[0], "mazzo": mz[0]}, {"char": pt.pers[1], "mazzo": mz[1]}]})
 		sincro = Sincro.new()
 		sincro.rete = Sessione.rete
 		sincro.codice = Sessione.setup.codice
@@ -101,7 +107,8 @@ func _nuova() -> void:
 			lbl_richiesta.text = t
 			_aggiorna())
 	else:
-		g.prepara({"seed": randi(), "players": [{"char": mio},
+		g.prepara({"seed": randi(), "terreno": Sessione.setup.get("terreno", "nessuno"),
+			"players": [{"char": mio, "mazzo": Mazzi.in_uso(mio)},
 			{"char": suo, "solo": solo, "incubo": Sessione.setup.get("incubo", false)}]})
 	for i in g.F.size():
 		pedine.append(_crea_pedina(i))
@@ -134,6 +141,8 @@ func _su_evento(e: Dictionary) -> void:
 	match e.t:
 		"move":
 			_muovi_pedina(e.p, true)
+		"terreno":
+			_crea_terreno(e.c)
 		"attack":
 			_lampo(e.cells, Color(0.85, 0.1, 0.05, 0.6))
 		"block":
@@ -476,6 +485,22 @@ func _colori_vertice(nodo: Node) -> void:
 				mi.set_surface_override_material(k, m2)
 	for ch in nodo.get_children():
 		_colori_vertice(ch)
+
+
+## Pezzo di terreno (modello con la sua base esagonale) sulla casella c.
+func _crea_terreno(c: Vector2i) -> void:
+	var t: Dictionary = Game.TERRENI[g.terreno[c]]
+	var ps: PackedScene = load("res://assets/terreno/" + t.model)
+	var n := Node3D.new()
+	if ps != null:
+		var m: Node3D = ps.instantiate()
+		m.scale = Vector3.ONE * 0.98
+		m.rotation_degrees.y = float(t.rot)
+		n.add_child(m)
+	var p := Hex.centro(c)
+	n.position = Vector3(p.x, 0.0, p.y)
+	mondo.add_child(n)
+	terreni_3d.append(n)
 
 
 ## Prisma esagonale con i lati piatti verso ±Z (come le caselle).
@@ -1028,7 +1053,7 @@ func _tocco_carta_mano(id: int) -> void:
 func _aggiorna() -> void:
 	if g == null or g.F.is_empty():
 		return
-	var fasi := {"setup": "Preparazione", "piazzamento": "Schieramento", "preparazione": "Preparazione",
+	var fasi := {"setup": "Preparazione", "piazzamento": "Schieramento", "terreno": "Terreno", "preparazione": "Preparazione",
 		"pesca": "Pesca", "scelta": "Scelta della carta", "rivela": "Rivelazione",
 		"risolvi": "Risoluzione", "scarto": "Scarto", "fine": "Fine"}
 	lbl_turno.text = ("Turno %d — " % g.turn if g.turn > 0 else "") + fasi.get(g.fase, "")

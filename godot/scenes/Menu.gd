@@ -3,6 +3,9 @@ extends Control
 
 var scelte: Dictionary = {}
 var scelta_avv: OptionButton
+var scelta_mazzo: OptionButton
+var scelta_terreno: OptionButton
+const TERRENI := [["nessuno", "Terreno: nessuno"], ["casuale", "Terreno: a caso"], ["a_turno", "Terreno: piazzato a turno"]]
 const ORDINE := ["warrior", "ronin", "student", "master", "assassin", "monk", "yasuke", "yojimbo",
 	"wakou", "onna", "sailor", "ashigaru", "ninja"]
 
@@ -74,13 +77,38 @@ func _ready() -> void:
 		scelta_avv.add_item(db.characters[k].name)
 	scelta_avv.item_selected.connect(func(i): _scegli_avv(ORDINE[i]))
 	dx.add_child(scelta_avv)
+	scelta_mazzo = OptionButton.new()
+	scelta_mazzo.custom_minimum_size = Vector2(320, 46)
+	scelta_mazzo.add_item("Mazzo base")
+	scelta_mazzo.add_item("Mazzo personale")
+	scelta_mazzo.item_selected.connect(_usa_mazzo)
+	dx.add_child(scelta_mazzo)
+	scelta_terreno = OptionButton.new()
+	scelta_terreno.custom_minimum_size = Vector2(320, 46)
+	for tv in TERRENI:
+		scelta_terreno.add_item(tv[1])
+	var tsel := 0
+	for i in TERRENI.size():
+		if TERRENI[i][0] == Sessione.setup.get("terreno", "nessuno"):
+			tsel = i
+	scelta_terreno.select(tsel)
+	scelta_terreno.item_selected.connect(func(i): Sessione.setup["terreno"] = TERRENI[i][0])
+	dx.add_child(scelta_terreno)
 	for d in [["Solitario (carte Solo)", _gioca.bind("solo", false)], ["Solitario Incubo", _gioca.bind("solo", true)],
 			["Duello contro l'IA", _gioca.bind("duello", false)],
-			["Duello online", func(): get_tree().change_scene_to_file("res://scenes/Online.tscn")],
-			["Carte ed editor", func(): get_tree().change_scene_to_file("res://scenes/Editor.tscn")]]:
+			["Duello online", func(): get_tree().change_scene_to_file("res://scenes/Online.tscn")]]:
 		var bt := Tema.bottone(d[0], 320)
 		bt.pressed.connect(d[1])
 		dx.add_child(bt)
+	var hb := HBoxContainer.new()
+	hb.add_theme_constant_override("separation", 8)
+	dx.add_child(hb)
+	var b_carte := Tema.bottone("Carte", 156)
+	b_carte.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/Editor.tscn"))
+	hb.add_child(b_carte)
+	var b_mazzi := Tema.bottone("Editor mazzi", 156)
+	b_mazzi.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/EditorMazzi.tscn"))
+	hb.add_child(b_mazzi)
 	var ver := Tema.etichetta("Versione %s" % ProjectSettings.get_setting("application/config/version"), 15)
 	ver.custom_minimum_size = Vector2(320, 0)
 	dx.add_child(ver)
@@ -113,3 +141,22 @@ func _scegli(k: String) -> void:
 		var sb := Tema.riquadro(Color(0, 0, 0, 0), Tema.ORO if c == k else Color(0, 0, 0, 0), 5, 8)
 		scelte[c].add_theme_stylebox_override("panel", sb)
 	_scegli_avv(Sessione.setup.get("avv", "ronin"))
+	_aggiorna_mazzo()
+
+
+func _aggiorna_mazzo() -> void:
+	if scelta_mazzo == null:
+		return
+	var k: String = Sessione.setup.get("io", "warrior")
+	var m: Dictionary = Mazzi.carica().get(k, {})
+	var valido: bool = not m.is_empty() and Mazzi.errori(k, m).is_empty()
+	scelta_mazzo.set_item_disabled(1, not valido)
+	scelta_mazzo.select(1 if valido and m.get("attivo", false) else 0)
+
+
+func _usa_mazzo(i: int) -> void:
+	var k: String = Sessione.setup.get("io", "warrior")
+	var tutti := Mazzi.carica()
+	if tutti.has(k):
+		tutti[k]["attivo"] = i == 1
+		Mazzi.salva(tutti)

@@ -119,7 +119,13 @@ func _entra() -> void:
 	codice = cod.text.strip_edges().to_upper()
 	stato.text = "Entro nella stanza %s…" % codice
 	rete._save({"name": nome.text})
-	posto = await rete.join_room(codice, nome.text, 2)
+	# mando i miei mazzi personalizzati attivi: il padrone di casa userà quello del personaggio che mi assegna
+	var miei := {}
+	for k in Carte.db().characters:
+		var m := Mazzi.in_uso(k)
+		if not m.is_empty():
+			miei[k] = m
+	posto = await rete.join_room(codice, nome.text, 2, {"mazzi": JSON.stringify(miei)} if not miei.is_empty() else {})
 	if posto < 0:
 		stato.text = ("La stanza è piena." if posto == -1 else "Stanza non trovata. ") + rete.last_error
 		_blocca(false)
@@ -151,7 +157,17 @@ func _attendi() -> void:
 func _inizia() -> void:
 	b_inizia.disabled = true
 	var mio: String = Sessione.setup.get("io", "warrior")
-	var partita := {"seed": randi() % 1000000 + 1, "pers": [mio, Sessione.setup.get("avv", "ronin")]}
+	var suo: String = Sessione.setup.get("avv", "ronin")
+	# mazzi personalizzati: il mio dalle mie impostazioni, quello dell'ospite da ciò che ha inviato entrando
+	var mazzo_suo: Dictionary = {}
+	var st: Dictionary = await rete.room(codice)
+	var posti: Dictionary = Rete._as_dict(st.get("seats", {}))
+	if posti.has("1") and posti["1"] is Dictionary and posti["1"].has("mazzi"):
+		var tutti = JSON.parse_string(str(posti["1"].mazzi))
+		if tutti is Dictionary and tutti.has(suo) and tutti[suo] is Dictionary:
+			mazzo_suo = tutti[suo]
+	var partita := {"seed": randi() % 1000000 + 1, "pers": [mio, suo], "mazzi": [Mazzi.in_uso(mio), mazzo_suo],
+		"terreno": Sessione.setup.get("terreno", "nessuno")}
 	if not await rete.start_room(codice, partita):
 		stato.text = "Non riesco ad avviare. " + rete.last_error
 		b_inizia.disabled = false

@@ -231,7 +231,7 @@ func create_room(player: String, cfg: Dictionary) -> String:
 
 ## Entra in una stanza: occupa il primo posto libero. Restituisce il posto, -1 se è piena,
 ## -2 se la stanza non esiste o la partita è già partita (e non si aveva un posto).
-func join_room(code: String, player: String, max_posti: int = 8) -> int:
+func join_room(code: String, player: String, max_posti: int = 8, extra: Dictionary = {}) -> int:
 	last_error = ""
 	if not await sign_in():
 		return -2
@@ -256,7 +256,9 @@ func join_room(code: String, player: String, max_posti: int = 8) -> int:
 	for k in range(1, max_posti):
 		if not seats.has(str(k)):
 			await db_put(ROOT + "/%s/members/%s" % [code, uid], true)
-			var w := await db_put(ROOT + "/%s/seats/%d" % [code, k], {"uid": uid, "name": player})
+			var seat := {"uid": uid, "name": player}
+			seat.merge(extra)
+			var w := await db_put(ROOT + "/%s/seats/%d" % [code, k], seat)
 			return k if w["code"] == 200 else -1
 	return -1
 

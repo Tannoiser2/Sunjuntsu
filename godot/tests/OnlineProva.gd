@@ -6,9 +6,16 @@ func _ready() -> void:
 	var b := await _giocatore("user://prova_b.cfg")
 	var codice: String = await a.create_room("Anna", {"pers": "warrior"})
 	assert(codice != "", "stanza non creata: " + a.last_error)
-	var posto: int = await b.join_room(codice, "Bruno", 2)
+	var mr: Dictionary = Mazzi.base("ronin")
+	mr.deck.erase(mr.deck.keys()[0])
+	mr.deck[str(Mazzi.disponibili("ronin")[-1])] = 1
+	mr.armi = [Mazzi.armi("ronin")[0]]
+	var mazzo_ronin := Mazzi.per_partita("ronin", mr)
+	var posto: int = await b.join_room(codice, "Bruno", 2, {"mazzi": JSON.stringify({"ronin": mazzo_ronin})})
+	var st0: Dictionary = await a.room(codice)
+	var arrivato = JSON.parse_string(str(Rete._as_dict(st0.seats)["1"].mazzi)).ronin
 	print("stanza ", codice, " posto ospite ", posto)
-	var partita := {"seed": 77, "pers": ["warrior", "ronin"]}
+	var partita := {"seed": 77, "pers": ["warrior", "ronin"], "mazzi": [{}, arrivato], "terreno": "casuale"}
 	assert(await a.start_room(codice, partita))
 	var stanza: Dictionary = await b.room(codice)
 	var letta: Dictionary = JSON.parse_string(stanza.game)
@@ -47,7 +54,9 @@ func _giocatore(file: String) -> Rete:
 
 func _tavolo(r: Rete, codice: String, posto: int, partita: Dictionary, seme: int) -> Game:
 	var g := Game.new()
-	g.prepara({"seed": int(partita.seed), "players": [{"char": partita.pers[0]}, {"char": partita.pers[1]}]})
+	g.prepara({"seed": int(partita.seed), "terreno": partita.get("terreno", "nessuno"),
+		"players": [{"char": partita.pers[0], "mazzo": partita.mazzi[0]}, {"char": partita.pers[1], "mazzo": partita.mazzi[1]}]})
+	print("posto ", posto, ": mano ", g.F[1].hand, " mazzo ", g.F[1].deck.size())
 	var s := Sincro.new()
 	s.rete = r
 	s.codice = codice

@@ -31,6 +31,15 @@ testo di varie carte.
 - **Vantaggio**, spinte (con scelta in caso di parità e collisioni), rotazione del bersaglio,
   cancellazione di carte/movimento attivi, ricerca nel mazzo.
 - **Campo**: tavoliere del «villaggio in fiamme» con tutte le 37 caselle (7 colonne da 4, 5, 6, 7, 6, 5, 4).
+- **Costruzione del mazzo** (editor dei mazzi): 30 o 40 carte più carta speciale e arma; Legno 3 copie,
+  Acciaio 2, Oro 1 (max 8 Oro), Giada 1; carte base per tutti, firma solo del proprio personaggio.
+  Le «Scuole Ristrette» del gioco competitivo non sono applicate. Armi senza carta nel gioco (Bo, Kama,
+  Sai, Tonfa, Shikomizue) non si possono scegliere.
+- **Terreno**: piazzamento a turno a più di 2 caselle dagli altri pezzi; non si attraversa (collisione
+  = si torna indietro e si prende 1 stordimento); blocco a ogni iniziativa che non conta come «blocco
+  riuscito»; linea di vista dagli angoli frontali agli angoli del bersaglio. Ciliegio e Torii seguono il
+  regolamento (stordimento); Campane e Carro non sono nel regolamento e usano la regola delle Rocce. Il
+  Torii occupa una sola casella (non si passa sotto).
 - **Schieramento**: chi è più in basso sul tracciato del Vantaggio si piazza su una casella libera
   qualsiasi; gli altri a più di 3 caselle dagli avversari già piazzati (se impossibile, il più lontano possibile).
 

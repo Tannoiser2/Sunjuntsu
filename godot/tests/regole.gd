@@ -100,6 +100,23 @@ func _initialize() -> void:
 	ok(not Hex.percorsi_bloccati(Vector2i(0, 0), Vector2i(1, -2), [Vector2i(0, -1)]), "due percorsi: uno solo bloccato non basta")
 	ok(not Hex.percorsi_bloccati(Vector2i(0, 0), Vector2i(0, -1), []), "adiacenti: nessun percorso da bloccare")
 
+	print("Terreno")
+	nuovo()
+	var dav := Hex.walk(Vector2i(3, -2), 2, "0")
+	var lontano := Hex.walk(Vector2i(3, -2), 2, "00")
+	ok(g.in_vista(Vector2i(3, -2), 2, lontano), "senza terreno la linea di vista è libera")
+	g.terreno[dav] = "carro"
+	ok(not g._libera(dav, 0), "non si entra nel terreno")
+	ok(not g.in_vista(Vector2i(3, -2), 2, lontano), "il terreno in mezzo blocca la linea di vista")
+	ok(Hex.percorsi_bloccati(Vector2i(3, -2), lontano, g.terreno.keys()), "il terreno blocca un attacco a distanza 2 dietro di sé")
+	var st0 := g.conta_stun(g.F[0])
+	await g._urta(g.F[0], dav)
+	ok(g.conta_stun(g.F[0]) == st0 + 1, "urtare il terreno stordisce")
+	g.terreno.clear()
+	ok(g.celle_terreno().size() == 35, "terreno: tutte le caselle libere sono valide (tranne quelle dei combattenti)")
+	g.terreno[Hex.da_offset(3, 0)] = "torii"
+	ok(g.celle_terreno().all(func(c): return Hex.dist(c, Hex.da_offset(3, 0)) > 2), "terreno a più di 2 caselle dagli altri pezzi")
+
 	print("Attacco semplice e ordine d'iniziativa")
 	nuovo()
 	ok(not g.giocabile(g.F[W], 119), "senza focus il Fendente Selvaggio non è giocabile")

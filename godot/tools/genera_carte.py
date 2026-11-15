@@ -963,6 +963,16 @@ INFO = {
            "Controlla il campo: semina Piedi di Corvo e Trappole dove l'avversario deve passare, colpisci da lontano con la kusarigama e resta nell'ombra. Non lasciarti chiudere in uno scontro diretto."),
 }
 
+# armi possibili (dalla carta personaggio) e quante se ne scelgono
+ARMI = {"warrior": ["Kanabo", "Naginata", "Nodachi", "Yari"], "ronin": ["Kanabo", "Naginata", "Nodachi", "Yari"],
+        "student": ["Katana", "Tanto", "Shikomizue", "Wakizashi"], "master": ["Katana", "Tachi", "Shikomizue", "Wakizashi"],
+        "assassin": ["Kama", "Sai", "Tanto", "Tonfa"], "monk": ["Bo", "Kanabo", "Naginata", "Yari"],
+        "yasuke": ["Katana", "Tachi", "Tanto", "Shikomizue", "Wakizashi"],
+        "yojimbo": ["Katana", "Nagamaki", "Shikomizue", "Tanto", "Wakizashi"], "wakou": ["Bo", "Kanabo", "Naginata", "Yari"],
+        "onna": ["Bo", "Kanabo", "Naginata", "Nodachi", "Yari"], "sailor": ["Granchio", "Pistola"],
+        "ashigaru": ["Bo", "Kanabo", "Naginata", "Yari"], "ninja": ["Kama", "Kusarigama", "Sai", "Tanto", "Tonfa"]}
+N_ARMI = {"yasuke": 2, "sailor": 2}
+
 out = {
  "note": "Trascrizione dalle scansioni della 1a edizione italiana. Regole: Rulebook V1 + errata.",
  "cards": C,
@@ -1110,6 +1120,8 @@ out = {
 }
 for k, ch in out["characters"].items():
     ch["abilita"], ch["strategia"] = INFO[k]
+    ch["armi"] = ARMI[k]
+    ch["n_armi"] = N_ARMI.get(k, 1)
 for ch in out["characters"].values():
     assert sum(ch["deck"].values()) in (29, 30, 31), sum(ch["deck"].values())
     for k in list(ch["deck"]) + [str(x) for x in ch["core"]]: assert k in C, k

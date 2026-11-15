@@ -15,6 +15,8 @@ func _ready() -> void:
 			Sessione.setup = {"io": "warrior", "avv": a.substr(5), "modo": "solo"}
 		if a.begins_with("io="):
 			Sessione.setup = {"io": a.substr(3), "avv": "warrior", "modo": "duello"}
+		if a.begins_with("terreno="):
+			Sessione.setup["terreno"] = a.substr(8)
 	DirAccess.make_dir_recursive_absolute(cart)
 	p = load("res://scenes/Partita.tscn").instantiate()
 	add_child(p)

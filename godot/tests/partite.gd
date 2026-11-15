@@ -27,7 +27,8 @@ func _initialize() -> void:
 			if chars[1] == chars[0]:
 				chars[1] = "ronin" if chars[0] != "ronin" else "warrior"
 		var solo := OS.get_cmdline_user_args().has("solo")
-		g.start({"seed": s + 1, "players": [{"char": chars[0]}, {"char": chars[1], "solo": solo, "incubo": solo and s % 5 == 0}]})
+		var ter: String = "casuale" if OS.get_cmdline_user_args().has("terreno") else "nessuno"
+		g.start({"seed": s + 1, "terreno": ter, "players": [{"char": chars[0]}, {"char": chars[1], "solo": solo, "incubo": solo and s % 5 == 0}]})
 		if not stato.fine:
 			printerr("Partita %d NON terminata (turno %d, fase %s, pending %s)" % [s, g.turn, g.fase, g.pending])
 			quit(1)

@@ -32,6 +32,8 @@ var fase := "setup"
 var fonte: Dictionary = {}
 var autore := -1             ## chi sta infliggendo l'effetto in corso
 var primo_sangue := false
+var terreno: Dictionary = {}   ## cella -> tipo di terreno (ostacolo)
+var tipo_terreno := "nessuno"
 var trappole: Dictionary = {}   ## cella -> "piede" | "innesco" | "diversivo"
 const CONTRATTI := {"reazione": "Reazione", "sangue": "Primo Sangue", "concentrazione": "Concentrazione",
 	"furore": "Furore", "vedere": "Fagli Vedere", "attrezzi": "Gli Attrezzi del Mestiere"}   ## carta che sta producendo l'effetto in corso
@@ -55,6 +57,7 @@ func prepara(setup: Dictionary) -> void:
 	db = Carte.db()
 	rng.seed = int(setup.get("seed", 1))
 	mappa = db.maps[setup.get("map", "villaggio")]
+	tipo_terreno = str(setup.get("terreno", "nessuno"))
 	for c in mappa.cells:
 		cells[Hex.da_offset(int(c[0]), int(c[1]))] = true
 	var i := 0
@@ -66,11 +69,15 @@ func prepara(setup: Dictionary) -> void:
 		if ia:
 			deck = _mazzo_solo(pl.char, pl.get("incubo", false))
 		else:
-			for k in cd.deck:
-				for _n in int(cd.deck[k]):
+			# mazzo personalizzato (editor dei mazzi) oppure mazzo base del personaggio
+			var mz: Dictionary = pl.get("mazzo", {}) if pl.get("mazzo", {}) is Dictionary else {}
+			var dk: Dictionary = mz.get("deck", cd.deck)
+			for k in dk:
+				for _n in int(dk[k]):
 					deck.append(int(k))
-			for k in cd.core:
+			for k in mz.get("core", cd.core):
 				hand.append(int(k))
+		deck.sort()
 		_mischia(deck)
 		F.append({"i": i, "name": pl.get("name", cd.name), "char": pl.char, "cd": cd,
 			"pos": Vector2i(99, 99), "face": 0, "kamae": "neutral", "focus": 0,
@@ -308,10 +315,96 @@ func _in_cella(c: Vector2i):
 
 
 func _libera(c: Vector2i, me: int) -> bool:
-	if not cells.has(c):
+	if not cells.has(c) or terreno.has(c):
 		return false
 	var o = _in_cella(c)
 	return o == null or o.i == me
+
+
+const TERRENI := {
+	"ciliegio": {"nome": "il Ciliegio", "titolo": "Ciliegio", "model": "ciliegio.glb", "rot": 0.0},
+	"torii": {"nome": "il Torii", "titolo": "Torii", "model": "torii.glb", "rot": 0.0},
+	"campane": {"nome": "le Campane", "titolo": "Campane", "model": "campane.glb", "rot": 0.0},
+	"carro": {"nome": "il Carro", "titolo": "Carro", "model": "carro.glb", "rot": 30.0}}
+const ORDINE_TERRENI := ["ciliegio", "torii", "campane", "carro"]
+
+
+## Caselle dove si può mettere un pezzo di terreno: libere e a più di 2 caselle dagli altri.
+func celle_terreno() -> Array:
+	var out: Array = []
+	for c in cells:
+		if terreno.has(c) or _in_cella(c) != null:
+			continue
+		var ok := true
+		for t in terreno:
+			if Hex.dist(c, t) <= 2:
+				ok = false
+		if ok:
+			out.append(c)
+	out.sort_custom(func(a, b): return a.x < b.x or (a.x == b.x and a.y < b.y))
+	return out
+
+
+## Terreno prima della partita: niente, a caso, oppure piazzato a turno dai giocatori.
+func _terreni() -> void:
+	if tipo_terreno == "nessuno":
+		return
+	fase = "terreno"
+	var chi: int = rng.randi_range(0, 1)
+	for t in ORDINE_TERRENI:
+		var libere := celle_terreno()
+		if libere.is_empty():
+			break
+		var c: Vector2i
+		if tipo_terreno == "casuale" or F[chi].ai:
+			c = libere[rng.randi_range(0, libere.size() - 1)]
+		else:
+			var opts: Array = []
+			for l in libere:
+				opts.append({"pos": l, "face": 0})
+			c = opts[await _ask(chi, "hex", "%s: dove metti %s? (a più di 2 caselle dagli altri pezzi di terreno)" % [F[chi].name, TERRENI[t].nome], opts)].pos
+			chi = 1 - chi
+		terreno[c] = t
+		_log("Terreno: %s." % TERRENI[t].titolo)
+		_ev({"t": "terreno", "c": c})
+
+
+## Linea di vista (attacchi a distanza): da uno dei due angoli frontali della propria casella a un
+## angolo qualsiasi della casella bersaglio, senza attraversare né toccare caselle con terreno.
+func in_vista(da: Vector2i, face: int, a: Vector2i) -> bool:
+	if terreno.is_empty():
+		return true
+	var c0 := Hex.centro(da)
+	var c1 := Hex.centro(a)
+	for k in [4 + face, 5 + face]:
+		var ang := deg_to_rad(60.0 * (k % 6))
+		var p0 := c0 + Vector2(cos(ang), sin(ang))
+		for j in 6:
+			var ang2 := deg_to_rad(60.0 * j)
+			var p1 := c1 + Vector2(cos(ang2), sin(ang2))
+			var libera := true
+			for t in terreno:
+				if _segmento_tocca(p0, p1, Hex.centro(t)):
+					libera = false
+					break
+			if libera:
+				return true
+	return false
+
+
+func _segmento_tocca(p0: Vector2, p1: Vector2, cen: Vector2) -> bool:
+	var ap := sqrt(3.0) / 2.0 + 0.001
+	for n in 41:
+		var q := p0.lerp(p1, n / 40.0) - cen
+		var dentro := true
+		for k in 6:
+			var a := deg_to_rad(30.0 + 60.0 * k)
+			if q.x * cos(a) + q.y * sin(a) > ap:
+				dentro = false
+				break
+		if dentro:
+			return true
+	return false
 
 
 func _ordine_asc() -> Array:
@@ -343,6 +436,7 @@ func hobble_attivi(f: Dictionary) -> int:
 # ─────────────────────────── Preparazione ───────────────────────────
 
 func _piazzamento() -> void:
+	await _terreni()
 	fase = "piazzamento"
 	var lista: Array = []
 	for pp in _ordine_asc():
@@ -356,7 +450,7 @@ func _piazzamento() -> void:
 		var celle: Array = []
 		var meglio := -1
 		for cell in cells:
-			if _in_cella(cell) != null or trappole.has(cell):
+			if _in_cella(cell) != null or trappole.has(cell) or terreno.has(cell):
 				continue
 			var dmin := 99
 			for x in F:
@@ -870,7 +964,7 @@ func _iniz_bassa(o: Dictionary) -> int:
 func _a_distanza(f: Dictionary, ln: Dictionary, ctx: Dictionary) -> void:
 	var bers = null
 	for o in _avversari(f):
-		if Hex.dist(f.pos, o.pos) <= int(ctx.get("rng", ln.get("r", 1))) and _iniz_bassa(o) < cur_init:
+		if Hex.dist(f.pos, o.pos) <= int(ctx.get("rng", ln.get("r", 1))) and _iniz_bassa(o) < cur_init and in_vista(f.pos, f.face, o.pos):
 			bers = o
 	_ev({"t": "attack", "p": f.i, "cells": [] if bers == null else [bers.pos]})
 	await _pausa("attack")
@@ -1113,7 +1207,7 @@ func _puo_colpire(f: Dictionary, pos: Vector2i, face: int, lines: Array, i: int,
 		match ln.t:
 			"ranged":
 				for o in _avversari(f):
-					if Hex.dist(pos, o.pos) <= int(ln.get("r", 1)):
+					if Hex.dist(pos, o.pos) <= int(ln.get("r", 1)) and in_vista(pos, face, o.pos):
 						return true
 				return false
 			"grid":
@@ -1177,6 +1271,10 @@ func _collisione(f: Dictionary, celle: Array, ctx: Dictionary) -> void:
 func _urta(f: Dictionary, c: Vector2i) -> void:
 	fonte = {}
 	var o = _in_cella(c)
+	if terreno.has(c):
+		_log("[b]Collisione[/b]: %s urta %s." % [f.name, TERRENI[terreno[c]].nome])
+		_stordisci(f)
+		return
 	if o != null and o.i != f.i:
 		_log("[b]Collisione[/b]: %s urta %s." % [f.name, o.name])
 		await _scarta(f, 1)
@@ -1235,6 +1333,11 @@ func _attacco(f: Dictionary, ln: Dictionary, lines: Array, i: int, ctx: Dictiona
 	var parati: Array = []
 	for b in veri:
 		var bl = null if imbloccabile else _trova_blocco(f, b.o)
+		if bl == null and not imbloccabile and not terreno.is_empty() and Hex.percorsi_bloccati(f.pos, b.o.pos, terreno.keys()):
+			# il terreno aggiunge un blocco a ogni iniziativa (non conta come «blocco riuscito» del difensore)
+			_log("Il terreno protegge %s dall'attacco di %s." % [b.o.name, f.name])
+			_ev({"t": "blocked", "p": b.o.i})
+			continue
 		if bl != null:
 			bl.ok = true
 			parati.append(bl)
@@ -1864,7 +1967,7 @@ func _fx(f: Dictionary, e: Dictionary, ctx: Dictionary) -> void:
 			var libere: Array = []
 			for cc in ["5", "0", "1"]:
 				var cl: Vector2i = Hex.walk(f.pos, f.face, cc)
-				if cells.has(cl) and _in_cella(cl) == null and not trappole.has(cl):
+				if cells.has(cl) and _in_cella(cl) == null and not trappole.has(cl) and not terreno.has(cl):
 					libere.append(cl)
 			if libere.is_empty():
 				_log("%s non ha caselle libere per i Piedi di Corvo." % f.name)

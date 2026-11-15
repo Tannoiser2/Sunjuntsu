@@ -1,5 +1,16 @@
 # Novità
 
+## 1.17.0 — Editor dei mazzi e terreno
+- Editor dei mazzi (dal menu, «Editor mazzi»): carte firma del personaggio più tutte le carte base,
+  con le regole di costruzione della 1a edizione: 30 carte (o 40 da torneo), Legno fino a 3 copie,
+  Acciaio 2, Oro 1 (al massimo 8 in tutto), una sola Giada; scelta dell'arma (due per Yasuke).
+  Il mazzo si salva sul dispositivo; nel menu si sceglie «Mazzo base» o «Mazzo personale».
+  Online ognuno gioca con il proprio mazzo personale, se l'ha attivato.
+- Terreno: Ciliegio, Torii, Campane e Carro (modelli 3D). Nel menu: nessuno, a caso o piazzato a turno
+  (a più di 2 caselle dagli altri pezzi). Il terreno non si attraversa, chi ci viene spinto contro è
+  stordito, blocca gli attacchi a ogni iniziativa e la linea di vista degli attacchi a distanza.
+- Nuova miniatura dell'Onna-Bugeisha.
+
 ## 1.16.0 — Tavoliere completo e nuova interfaccia
 - Tavoliere completo di 37 caselle (7 colonne da 4, 5, 6, 7, 6, 5, 4): ora ci si muove anche negli angoli.
   Tolto dalla mappa il vecchio contorno arancione.
