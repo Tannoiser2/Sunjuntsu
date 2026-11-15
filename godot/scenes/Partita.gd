@@ -135,6 +135,8 @@ func _nuova() -> void:
 		tel.g = g
 		tel.richieste.clear()
 		g.event.connect(func(_e): tel.pubblica())
+		if not tel.anteprima.is_connected(_anteprima_telefono):
+			tel.anteprima.connect(_anteprima_telefono)
 		box_mano.visible = false
 		tel.pubblica()
 	_aggiorna()
@@ -356,6 +358,19 @@ func _mostra_richiesta() -> void:
 						b4.pressed.connect(_apri_anteprima.bind(int(o.card), -1))
 						box_bottoni.add_child(b4)
 	_aggiorna()
+
+
+## Il telefono prova una casella o una rotazione: la miniatura sullo schermo la mostra.
+func _anteprima_telefono(r: Dictionary, idx: int) -> void:
+	if req.is_empty() or req.get("kind", "") != r.kind or req.opts.size() != r.opts.size():
+		return
+	var o: Dictionary = r.opts[idx]
+	_posa_pedina(int(r.get("f", r.p)), o.pos, int(o.face), true)
+	evid.clear()
+	for c in opz_celle:
+		evid[c] = Color(0.95, 0.75, 0.1, 0.5)
+	evid[o.pos] = Color(0.2, 0.8, 0.3, 0.6)
+	_ridisegna_celle()
 
 
 func _seleziona_cella(c: Vector2i) -> void:

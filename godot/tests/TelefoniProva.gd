@@ -15,6 +15,7 @@ func _ready() -> void:
 	await RenderingServer.frame_post_draw
 	get_viewport().get_texture().get_image().save_png(cart + "/tv_qr.png")
 	print("CODICE ", p.tel.codice)
+	p.tel.anteprima.connect(func(r, i): print("ANTEPRIMA ", r.kind, " ", i))
 	var t := 0.0
 	var fatta := false
 	while t < 400.0:

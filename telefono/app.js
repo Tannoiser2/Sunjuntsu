@@ -30,6 +30,7 @@ let rich = null;             // richiesta aperta per me
 let risposte = {};           // id -> true (già inviate)
 let selCella = null, selK = 0;
 let celleOpz = {};           // "q,r" -> [[face, indice], ...]
+let nAnteprima = 0;          // anteprime inviate per la richiesta aperta
 
 const $ = (id) => document.getElementById(id);
 
@@ -136,9 +137,12 @@ function aggiorna() {
   disegnaTesta();
   const r = stato.rq ? stato.rq[String(posto)] : null;
   const nuova = r && !risposte[r.id] ? r : null;
-  if (!nuova || !rich || nuova.id !== rich.id) { selCella = null; selK = 0; }
+  const stessa = nuova && rich && nuova.id === rich.id;
+  if (!stessa) { selCella = null; selK = 0; nAnteprima = 0; }
+  const scelta = stessa && selCella && celleOpz[selCella] ? celleOpz[selCella][selK][1] : null;
   rich = nuova;
   disegnaRichiesta();
+  if (scelta !== null) riprendiScelta(scelta);
   disegnaMano();
   disegnaMappa();
 }
@@ -269,10 +273,16 @@ function disegnaMappa() {
     if (selCella === k) col = "#3c9a4a";
     esagono(c, q, r, col);
   });
-  (st.fig || []).forEach(([q, r, f, o, n]) => figura(c, q, r, f, COLORI[o] || "#888", n));
+  const mossa = rich ? (rich.f !== undefined ? rich.f : posto - 1) : -1;
+  let mia = null;
+  (st.fig || []).forEach((x) => {
+    const [q, r, f, o, n, i] = x;
+    if (selCella && i === mossa) { mia = x; return; }
+    figura(c, q, r, f, COLORI[o] || "#888", n);
+  });
   if (selCella && celleOpz[selCella]) {
     const [q, r] = selCella.split(",").map(Number);
-    figura(c, q, r, celleOpz[selCella][selK][0], "#3c9a4a", "?");
+    figura(c, q, r, celleOpz[selCella][selK][0], mia ? COLORI[mia[3]] : COLORI[posto - 1], mia ? mia[4] : "?", true);
   }
 }
 function esagono(c, q, r, col) {
@@ -285,16 +295,17 @@ function esagono(c, q, r, col) {
   }
   c.closePath(); c.fillStyle = col; c.fill();
 }
-function figura(c, q, r, f, col, n) {
+function figura(c, q, r, f, col, n, prova) {
   const [x, y] = centro(q, r);
   c.beginPath(); c.arc(x, y, vista.s * 0.55, 0, Math.PI * 2); c.fillStyle = col; c.fill();
+  if (prova) { c.lineWidth = 3; c.strokeStyle = "#ffffff"; c.stroke(); }
   // freccia del fronte: direzione f (0 = su, poi in senso orario)
   const a = -Math.PI / 2 + f * Math.PI / 3;
   c.beginPath();
   c.moveTo(x + Math.cos(a) * vista.s * 0.95, y + Math.sin(a) * vista.s * 0.95);
   c.lineTo(x + Math.cos(a + 0.5) * vista.s * 0.5, y + Math.sin(a + 0.5) * vista.s * 0.5);
   c.lineTo(x + Math.cos(a - 0.5) * vista.s * 0.5, y + Math.sin(a - 0.5) * vista.s * 0.5);
-  c.closePath(); c.fillStyle = "#c9a227"; c.fill();
+  c.closePath(); c.fillStyle = prova ? "#ffffff" : "#c9a227"; c.fill();
   c.fillStyle = "#fff"; c.font = "bold " + Math.round(vista.s * 0.6) + "px sans-serif";
   c.textAlign = "center"; c.textBaseline = "middle"; c.fillText(n, x, y + 1);
 }
@@ -313,20 +324,38 @@ $("mappa").addEventListener("click", (e) => {
   if (rich.k === "hex") { rispondi(celleOpz[k][0][1]); return; }
   selCella = k;
   // orientamenti in ordine di rotazione rispetto a quello attuale della pedina
-  const mia = (stato.st.fig || []).find((x) => x[3] === posto - 1);
-  const voglio = rich.k === "place" ? 3 : (mia ? mia[2] : 0);
-  const rel = (f) => ((f - voglio + 9) % 6) - 3;
-  celleOpz[k].sort((a, b) => rel(a[0]) - rel(b[0]));
+  const rel = ordina(k);
   selK = 0; let meglio = 99;
   celleOpz[k].forEach((o, i) => { const d = Math.abs(rel(o[0])); if (d < meglio) { meglio = d; selK = i; } });
   mostraRuota();
 });
-function mostraRuota() {
+// dopo un aggiornamento dello stato ritrovo la casella e l'orientamento che stavo provando
+function riprendiScelta(idx) {
+  for (const k in celleOpz) {
+    const j = celleOpz[k].findIndex((o) => o[1] === idx);
+    if (j >= 0) { ordina(k); selCella = k; selK = celleOpz[k].findIndex((o) => o[1] === idx); mostraRuota(false); return; }
+  }
+}
+function ordina(k) {
+  const mossa = rich.f !== undefined ? rich.f : posto - 1;
+  const mia = (stato.st.fig || []).find((x) => x[5] === mossa);
+  const voglio = rich.k === "place" ? 3 : (mia ? mia[2] : 0);
+  const rel = (f) => ((f - voglio + 9) % 6) - 3;
+  celleOpz[k].sort((a, b) => rel(a[0]) - rel(b[0]));
+  return rel;
+}
+function inviaAnteprima() {
+  if (!rich || !selCella) return;
+  nAnteprima += 1;
+  db("PUT", ROOT + "/" + codice + "/log/v" + rich.id + "x" + nAnteprima, { d: JSON.stringify({ s: posto, v: celleOpz[selCella][selK][1] }) }).catch(() => {});
+}
+function mostraRuota(invia = true) {
   const l = celleOpz[selCella];
   $("ruota").classList.remove("nascosto");
   $("b-sx").disabled = selK === 0 || l.length < 2;
   $("b-dx").disabled = selK === l.length - 1 || l.length < 2;
   disegnaMappa();
+  if (invia) inviaAnteprima();
 }
 $("b-sx").onclick = () => { selK = Math.max(0, selK - 1); mostraRuota(); };
 $("b-dx").onclick = () => { selK = Math.min(celleOpz[selCella].length - 1, selK + 1); mostraRuota(); };

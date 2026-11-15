@@ -6,6 +6,7 @@ extends Node
 ## Nessuna modifica alle regole del database: "game" lo scrive solo il tavolo, "log" i membri.
 
 signal giocatori_cambiati(posti: Dictionary)
+signal anteprima(r: Dictionary, idx: int)   ## il telefono sta provando una casella/rotazione
 
 const PAGINA := "https://tannoiser2.github.io/Sunjuntsu/telefono/"
 const LIMITE := 3900
@@ -67,8 +68,19 @@ func chiedi(r: Dictionary) -> int:
 	prossimo_id += 1
 	richieste[posto] = _compatta(r, id)
 	await pubblica()
+	var viste := 0
 	while richieste.has(posto) and int(richieste[posto].id) == id:
-		await get_tree().create_timer(0.7).timeout
+		await get_tree().create_timer(0.6).timeout
+		# anteprime dal telefono (log/v<id>x<n>): la miniatura sullo schermo segue le prove
+		if r.kind in ["move", "place"]:
+			while true:
+				var ra := await rete.db_get(Rete.ROOT + "/%s/log/v%dx%d" % [codice, id, viste + 1])
+				if ra["code"] != 200 or not (ra["data"] is Dictionary) or not ra["data"].has("d"):
+					break
+				viste += 1
+				var pv = JSON.parse_string(str(ra["data"]["d"]))
+				if pv is Dictionary and pv.has("v") and richieste.has(posto) and int(richieste[posto].id) == id:
+					anteprima.emit(r, clampi(int(pv.v), 0, r.opts.size() - 1))
 		var d = await rete.get_decision(codice, id)
 		if d is Dictionary and d.has("i") and richieste.has(posto) and int(richieste[posto].id) == id:
 			richieste.erase(posto)
@@ -136,7 +148,7 @@ func _stato() -> Dictionary:
 	var fig: Array = []
 	for f in g.F:
 		if f.pos.x < 50 and not f.dead:
-			fig.append([f.pos.x, f.pos.y, int(f.face), int(f.owner), f.name.left(2)])
+			fig.append([f.pos.x, f.pos.y, int(f.face), int(f.owner), f.name.left(2), int(f.i)])
 	var ter: Array = []
 	for c in g.terreno:
 		ter.append([c.x, c.y])

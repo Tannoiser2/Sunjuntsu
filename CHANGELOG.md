@@ -1,5 +1,10 @@
 # Novità
 
+## 1.18.1 — Rotazione dal telefono
+- Sul telefono «Ruota a sinistra/destra» gira davvero la pedina: sulla mappina la pedina si sposta
+  nella casella provata (bordo bianco) e la miniatura sullo schermo la segue mentre si prova.
+- Aggiunte le regole Firebase della radice senjutsu (necessarie per online e smartphone).
+
 ## 1.18.0 — Partita con gli smartphone
 - Nuova modalità «Gioca con gli smartphone»: lo schermo (TV o computer) mostra il tavoliere e ogni
   giocatore entra dal telefono inquadrando un QR code. Sul telefono ci sono la mano di carte, lo stato

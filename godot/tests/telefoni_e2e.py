@@ -53,6 +53,11 @@ with sync_playwright() as pw:
                 if k not in fatte:
                     fatte.add(k)
                     pg.screenshot(path="%s/tel%d_%s.png" % (OUT, i + 1, k))
+                if k in ("move", "place"):
+                    # provo una casella e una rotazione, come farebbe un giocatore
+                    pg.evaluate("(() => { const ks = Object.keys(celleOpz); selCella = ks[ks.length - 1]; ordina(selCella); selK = 0; mostraRuota(); if (celleOpz[selCella].length > 1) { selK = 1; mostraRuota(); } })()")
+                    time.sleep(2.0)
+                    pg.screenshot(path="%s/tel%d_prova_%s.png" % (OUT, i + 1, k))
                 n = pg.evaluate("rich.o.length")
                 pg.evaluate("rispondi(%d)" % random.randrange(n))
                 risposte += 1
@@ -64,4 +69,4 @@ with sync_playwright() as pw:
 tv.terminate()
 tv.wait(timeout=30)
 mock.terminate()
-print("".join(l for l in righe if re.search(r"FINE|SCRIPT ERROR|ERROR|schermata|CODICE|TURNO", l))[:3000])
+print("".join(l for l in righe if re.search(r"FINE|SCRIPT ERROR|ERROR|schermata|CODICE|TURNO|ANTEPRIMA", l))[:3000])
