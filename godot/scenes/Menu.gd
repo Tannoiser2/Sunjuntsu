@@ -30,7 +30,7 @@ func _ready() -> void:
 	var sx := VBoxContainer.new()
 	sx.add_theme_constant_override("separation", 8)
 	h0.add_child(sx)
-	var l := Tema.etichetta("Scegli il tuo combattente", 22, Tema.INCHIOSTRO, true)
+	var l := Tema.etichetta("Scegli il tuo combattente (toccalo per la sua scheda)", 20, Tema.INCHIOSTRO, true)
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	sx.add_child(l)
 	var gr := GridContainer.new()
@@ -46,7 +46,7 @@ func _ready() -> void:
 		b.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 		b.custom_minimum_size = Vector2(156, 217)
 		b.texture_normal = load("res://assets/cards/" + cd.char_img)
-		b.pressed.connect(_scegli.bind(k))
+		b.pressed.connect(_tocca.bind(k))
 		var bordo := Panel.new()
 		bordo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		bordo.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -100,6 +100,11 @@ func _gioca(modo: String, incubo: bool) -> void:
 	Sessione.setup["modo"] = modo
 	Sessione.setup["incubo"] = incubo
 	get_tree().change_scene_to_file("res://scenes/Partita.tscn")
+
+
+func _tocca(k: String) -> void:
+	_scegli(k)
+	SchedaPersonaggio.apri(self, k)
 
 
 func _scegli(k: String) -> void:

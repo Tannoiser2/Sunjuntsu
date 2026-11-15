@@ -236,16 +236,18 @@ func _seleziona_cella(c: Vector2i) -> void:
 	if req.kind == "hex":
 		_rispondi(lista[0][1])
 		return
-	lista.sort_custom(func(a, b): return a[0] < b[0])
-	sel_cella = c
-	sel_k = 0
 	var voglio: int = g.F[int(req.get("f", io))].face
 	if req.kind == "place":
 		voglio = Hex.verso(c, Hex.da_offset(3, 0))
+	# orientamenti in ordine di rotazione (antiorario -> orario) rispetto a quello attuale:
+	# "Ruota a destra" gira di un lato in senso orario, senza mai fare il giro completo
+	var rel := func(fc: int) -> int: return ((fc - voglio + 9) % 6) - 3
+	lista.sort_custom(func(a, b): return rel.call(int(a[0])) < rel.call(int(b[0])))
+	sel_cella = c
+	sel_k = 0
 	var meglio := 99
 	for k in lista.size():
-		var d: int = absi(int(lista[k][0]) - voglio)
-		d = mini(d, 6 - d)
+		var d: int = absi(rel.call(int(lista[k][0])))
 		if d < meglio:
 			meglio = d
 			sel_k = k
@@ -259,9 +261,11 @@ func _anteprima_mossa() -> void:
 	if lista.size() > 1:
 		var bs := Tema.bottone("Ruota a sinistra", 170)
 		bs.pressed.connect(_ruota_sel.bind(-1))
+		bs.disabled = sel_k == 0
 		box_bottoni.add_child(bs)
 		var bd := Tema.bottone("Ruota a destra", 170)
 		bd.pressed.connect(_ruota_sel.bind(1))
+		bd.disabled = sel_k == lista.size() - 1
 		box_bottoni.add_child(bd)
 	var bc := Tema.bottone("Conferma", 150)
 	bc.pressed.connect(func(): _rispondi(opz_celle[sel_cella][sel_k][1]))
@@ -275,7 +279,7 @@ func _anteprima_mossa() -> void:
 
 func _ruota_sel(v: int) -> void:
 	var n: int = opz_celle[sel_cella].size()
-	sel_k = (sel_k + v + n) % n
+	sel_k = clampi(sel_k + v, 0, n - 1)
 	_anteprima_mossa()
 
 
@@ -351,11 +355,20 @@ func _mondo() -> void:
 func _inquadra() -> void:
 	var vs: Vector2 = get_viewport().get_visible_rect().size
 	var libero: float = maxf(0.3, (vs.x - 640.0) / vs.x)
-	var mezza: float = tan(deg_to_rad(cam.fov * 0.5)) * vs.x / vs.y
+	var tf: float = tan(deg_to_rad(cam.fov * 0.5))
+	var mezza: float = tf * vs.x / vs.y
 	yaw = 0.0
 	pitch = 1.12
-	dist = clampf(12.2 / (libero * 2.0 * mezza), 8.0, 30.0)
-	perno.position = Vector3(4.5, 0, 0.45 + dist * 0.105)
+	# tavoliere di 37 caselle: circa 11 x 12,2 unità, centrato sulla casella centrale
+	var sopra := 120.0
+	var sotto := CARTA_MANO.y + 14.0
+	var alto: float = maxf(0.35, (vs.y - sopra - sotto) / vs.y)
+	var d_larg: float = 11.4 / (libero * 2.0 * mezza)
+	var d_alt: float = 12.6 * sin(pitch) / (alto * 2.0 * tf)
+	dist = clampf(maxf(d_larg, d_alt), 8.0, 30.0)
+	var unita_px: float = 2.0 * dist * tf / vs.y
+	var c := Hex.centro(Hex.da_offset(3, 0))
+	perno.position = Vector3(c.x, 0, c.y + (sotto - sopra) * 0.5 * unita_px / sin(pitch))
 	_aggiorna_cam()
 
 
@@ -378,7 +391,7 @@ func _aggiorna_cam() -> void:
 	pitch = clampf(pitch, 0.45, 1.5)
 	dist = clampf(dist, 5.0, 32.0)
 	perno.position.x = clampf(perno.position.x, -1.0, 10.0)
-	perno.position.z = clampf(perno.position.z, -5.0, 5.0)
+	perno.position.z = clampf(perno.position.z, -6.0, 7.0)
 	var o := Vector3(sin(yaw) * cos(pitch), sin(pitch), cos(yaw) * cos(pitch)) * dist
 	cam.position = o
 	cam.look_at(perno.global_position, Vector3.UP)
@@ -713,64 +726,59 @@ func _hud() -> void:
 	cl.add_child(hud)
 	for i in 2:
 		schede.append(_scheda(i))
-	# intestazione al centro
+	# riquadro in alto: turno e fase, poi cosa devi fare e i pulsanti
+	pan_richiesta = PanelContainer.new()
+	pan_richiesta.add_theme_stylebox_override("panel", Tema.riquadro(Color(Tema.INCHIOSTRO, 0.92), Tema.ORO, 2, 10, 14, 8))
+	pan_richiesta.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
+	pan_richiesta.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	pan_richiesta.offset_top = 8
+	hud.add_child(pan_richiesta)
 	var testa := VBoxContainer.new()
-	testa.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
-	testa.offset_left = -230
-	testa.offset_right = 230
-	testa.offset_top = 8
-	testa.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	hud.add_child(testa)
-	lbl_turno = Tema.etichetta("", 26, Tema.CARTA, true)
+	testa.add_theme_constant_override("separation", 4)
+	pan_richiesta.add_child(testa)
+	lbl_turno = Tema.etichetta("", 24, Tema.CARTA, true)
 	lbl_turno.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	lbl_turno.add_theme_color_override("font_outline_color", Tema.INCHIOSTRO)
-	lbl_turno.add_theme_constant_override("outline_size", 8)
+	lbl_turno.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	lbl_turno.custom_minimum_size = Vector2(300, 0)
 	testa.add_child(lbl_turno)
-	lbl_banner = Tema.etichetta("", 21, Tema.ORO)
+	lbl_banner = Tema.etichetta("", 17, Tema.ORO)
 	lbl_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	lbl_banner.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	lbl_banner.custom_minimum_size = Vector2(460, 0)
-	lbl_banner.add_theme_color_override("font_outline_color", Tema.INCHIOSTRO)
-	lbl_banner.add_theme_constant_override("outline_size", 8)
+	lbl_banner.custom_minimum_size = Vector2(300, 0)
 	testa.add_child(lbl_banner)
-	var bmenu := Tema.bottone("Menu", 90)
-	bmenu.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	bmenu.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/Menu.tscn"))
-	testa.add_child(bmenu)
-	# fascia in basso: richiesta + mano
-	var basso := VBoxContainer.new()
-	basso.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
-	basso.offset_left = 10
-	basso.offset_right = -10
-	basso.offset_bottom = -6
-	basso.grow_vertical = Control.GROW_DIRECTION_BEGIN
-	basso.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	basso.add_theme_constant_override("separation", 6)
-	hud.add_child(basso)
-	pan_richiesta = PanelContainer.new()
-	basso.add_child(pan_richiesta)
-	var hb := HBoxContainer.new()
-	hb.add_theme_constant_override("separation", 14)
-	pan_richiesta.add_child(hb)
-	lbl_richiesta = Tema.etichetta("", 21)
+	lbl_richiesta = Tema.etichetta("", 19, Tema.CARTA)
+	lbl_richiesta.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	lbl_richiesta.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	lbl_richiesta.custom_minimum_size = Vector2(380, 34)
-	lbl_richiesta.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	lbl_richiesta.size_flags_stretch_ratio = 1.0
-	hb.add_child(lbl_richiesta)
+	lbl_richiesta.custom_minimum_size = Vector2(300, 0)
+	testa.add_child(lbl_richiesta)
 	box_bottoni = HFlowContainer.new()
-	box_bottoni.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	box_bottoni.size_flags_stretch_ratio = 1.3
-	box_bottoni.custom_minimum_size = Vector2(380, 0)
-	box_bottoni.alignment = FlowContainer.ALIGNMENT_END
+	box_bottoni.custom_minimum_size = Vector2(300, 0)
+	box_bottoni.alignment = FlowContainer.ALIGNMENT_CENTER
 	box_bottoni.add_theme_constant_override("h_separation", 8)
 	box_bottoni.add_theme_constant_override("v_separation", 6)
-	hb.add_child(box_bottoni)
+	testa.add_child(box_bottoni)
+	# pulsante Menu nell'angolo in basso a destra
+	var bmenu := Tema.bottone("Menu", 90)
+	bmenu.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
+	bmenu.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	bmenu.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	bmenu.offset_right = -10
+	bmenu.offset_bottom = -10
+	bmenu.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/Menu.tscn"))
+	hud.add_child(bmenu)
+	# in basso solo la mano
 	box_mano = HBoxContainer.new()
+	box_mano.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+	box_mano.offset_left = 110
+	box_mano.offset_right = -110
+	box_mano.offset_bottom = -6
+	box_mano.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	box_mano.alignment = BoxContainer.ALIGNMENT_CENTER
 	box_mano.custom_minimum_size = Vector2(0, CARTA_MANO.y)
 	box_mano.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	basso.add_child(box_mano)
+	hud.add_child(box_mano)
+	get_viewport().size_changed.connect(_adatta_hud)
+	_adatta_hud()
 	# anteprima carta + testo interpretato
 	anteprima = PanelContainer.new()
 	anteprima.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
@@ -833,6 +841,18 @@ func _hud() -> void:
 	fh.add_child(b2)
 
 
+## Il riquadro in alto sta tra le due schede dei combattenti.
+func _adatta_hud() -> void:
+	var w: float = get_viewport().get_visible_rect().size.x
+	var larg: float = clampf(w - 2.0 * 326.0, 340.0, 720.0)
+	pan_richiesta.offset_left = -larg / 2.0
+	pan_richiesta.offset_right = larg / 2.0
+	for c in [lbl_turno, lbl_banner, lbl_richiesta, box_bottoni]:
+		c.custom_minimum_size.x = larg - 28.0
+	if g != null and not g.F.is_empty():
+		_aggiorna_mano()
+
+
 func _scheda(i: int) -> Dictionary:
 	var col := VBoxContainer.new()
 	col.custom_minimum_size = Vector2(300, 0)
@@ -850,6 +870,11 @@ func _scheda(i: int) -> Dictionary:
 	hud.add_child(col)
 	var pan := PanelContainer.new()
 	pan.add_theme_stylebox_override("panel", Tema.riquadro(Tema.CARTA, Tema.GIOCATORI[i], 4, 8, 10, 8))
+	pan.mouse_filter = Control.MOUSE_FILTER_STOP
+	pan.tooltip_text = "Tocca per la scheda del combattente"
+	pan.gui_input.connect(func(e):
+		if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT and g != null and g.F.size() > i:
+			SchedaPersonaggio.apri(hud, g.F[i].char))
 	col.add_child(pan)
 	var h := HBoxContainer.new()
 	h.add_theme_constant_override("separation", 10)
@@ -1069,7 +1094,9 @@ func _aggiorna() -> void:
 		if j < pedine.size() and pedine[j].visible == false and g.F[j].pos.x < 50:
 			_muovi_pedina(j, false)
 	_aggiorna_mano()
-	pan_richiesta.visible = lbl_richiesta.text != "" or box_bottoni.get_child_count() > 0
+	lbl_banner.visible = lbl_banner.text != ""
+	lbl_richiesta.visible = lbl_richiesta.text != ""
+	box_bottoni.visible = box_bottoni.get_child_count() > 0
 
 
 func _aggiorna_mano() -> void:
@@ -1081,12 +1108,20 @@ func _aggiorna_mano() -> void:
 			scelte[int(o.card)] = true
 	var mano: Array = f.hand.duplicate()
 	mano.sort()
-	box_mano.add_theme_constant_override("separation", 6 if mano.size() <= 8 else -30)
+	var spazio: float = get_viewport().get_visible_rect().size.x - 220.0
+	var dim := CARTA_MANO
+	var sep := 6.0
+	if mano.size() > 0 and mano.size() * (dim.x + sep) - sep > spazio:
+		dim = CARTA_MANO * maxf(0.62, (spazio + sep) / (mano.size() * (CARTA_MANO.x + sep)))
+		if mano.size() * (dim.x + sep) - sep > spazio:
+			sep = (spazio - mano.size() * dim.x) / maxf(1.0, mano.size() - 1.0)
+	box_mano.add_theme_constant_override("separation", int(sep))
+	box_mano.custom_minimum_size = Vector2(0, dim.y)
 	for id in mano:
 		var b := TextureButton.new()
 		b.ignore_texture_size = true
 		b.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-		b.custom_minimum_size = CARTA_MANO
+		b.custom_minimum_size = dim
 		b.texture_normal = _tex_carta(id)
 		b.pressed.connect(_tocco_carta_mano.bind(id))
 		if not scelte.is_empty():

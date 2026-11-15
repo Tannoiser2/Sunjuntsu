@@ -1,5 +1,16 @@
 # Novità
 
+## 1.16.0 — Tavoliere completo e nuova interfaccia
+- Tavoliere completo di 37 caselle (7 colonne da 4, 5, 6, 7, 6, 5, 4): ora ci si muove anche negli angoli.
+  Tolto dalla mappa il vecchio contorno arancione.
+- Schieramento come da regolamento: il primo sceglie una casella libera qualsiasi, il secondo a più di 3 caselle.
+- Rotazione: «Ruota a sinistra/destra» gira di un lato per volta nel verso giusto e si ferma al massimo
+  consentito dalla carta (prima l'elenco faceva il giro e sembrava ruotare di più lati).
+- Cambio di Kamae: le scelte che passano dal Punto Focus lo dicono chiaramente.
+- Interfaccia: riquadro in alto con turno, fase, cosa fare e pulsanti; in basso solo le carte; Menu nell'angolo.
+- Scheda del combattente (abilità, regole speciali, come giocarlo): si apre toccando il personaggio nel menu
+  o la sua scheda in partita.
+
 ## 1.15.1 — Miniatura del Ninja
 - Il Ninja ha la sua miniatura (prima usava quella dell'Assassino).
 

@@ -77,6 +77,10 @@ func _mossa(g: Game, f: Dictionary, nem, req: Dictionary) -> int:
 		v += minf(diff, 6 - diff) * 2.0 + rng.randf() * 0.5
 		if req.kind == "place":
 			v = minf(diff, 6 - diff) * 2.0 + rng.randf()
+			if nem != null and nem.pos.x < 50:
+				v += absf(Hex.dist(p, nem.pos) - 4.0) * 3.0
+			else:
+				v += absf(Hex.dist(p, centro) - 2.0) * 3.0
 		if v < bv:
 			bv = v
 			best = i

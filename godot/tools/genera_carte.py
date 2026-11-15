@@ -915,6 +915,54 @@ for k, c in C.items():
     c["img"] = imgs.get(c.pop("img_da", k), "")
     assert c["img"], k
 
+INFO = {
+ "warrior": (["Nessuna regola speciale: è il combattente di base, ideale per imparare il gioco.",
+              "Arma: Nodachi, una spada lunga che colpisce davanti a sé."],
+             "Solido e lineare. Cerca lo scontro frontale con gli attacchi d'Acciaio e d'Oro, tieni una difesa in mano per i turni in cui l'avversario è più veloce e passa dal Punto Focus della Kamae per accumulare focus da spendere nei colpi più forti."),
+ "ronin": (["Nessuna regola speciale.",
+            "Arma: Naginata, con portata di 2 caselle e spazzate laterali."],
+           "Combatte meglio a una casella di distanza: la naginata colpisce dove l'avversario non arriva. Usa i passi indietro e le rotazioni per restare alla tua distanza e spingi l'avversario verso il bordo, dove le collisioni lo stordiscono."),
+ "student": (["Nessuna regola speciale.",
+              "Arma: Katana."],
+             "Veloce e aggressivo: molte carte hanno iniziativa alta. Prendi l'iniziativa, colpisci per primo e sfrutta i cambi di Kamae per sbloccare le righe colorate delle carte."),
+ "master": (["Nessuna regola speciale.",
+             "Arma: Tachi. Ha il Veleno Debilitante: un avversario avvelenato perde carte."],
+            "Paziente e preciso. Avvelena l'avversario e lascialo logorare, rispondi ai suoi attacchi con difese e contrattacchi e colpisci quando ha meno carte in mano."),
+ "assassin": (["Occultamento: può iniziare la partita Occultato o Rivelato. Da Occultato usa le righe e le iniziative speciali delle carte; quando colpisce o viene ferito torna Rivelato.",
+               "Mano di 6 carte ma solo 4 ferite.",
+               "Arma: Tanto."],
+              "Fragile ma imprevedibile. Resta Occultato il più a lungo possibile, colpisci alle spalle o di lato e poi rientra nell'ombra con le carte che ti Occultano di nuovo. Evita gli scambi frontali: con 4 ferite non puoi permetterteli."),
+ "monk": (["Illuminazione: alcune carte, una volta giocate, restano Illuminate davanti a te e danno il loro effetto per il resto della partita; altre carte chiedono un certo numero di carte Illuminate.",
+           "Arma: Jumonji Yari, lancia a croce con buona portata."],
+          "Parti piano: nei primi turni metti in gioco le carte da Illuminare, poi sfrutta i loro bonus permanenti. Più carte Illuminate hai, più forte diventi."),
+ "yasuke": (["Due armi: Katana e Taglio Mancino, quindi più attacchi base.",
+             "Ha molte carte da contrattacco."],
+            "Guardia del corpo: aspetta l'attacco, bloccalo e rispondi subito con un contrattacco. Tieni sempre una difesa in mano e punisci l'avversario quando si scopre."),
+ "yojimbo": (["Sicario a contratto: a inizio partita scegli cinque contratti su sei. Ogni contratto si completa facendo una certa azione (primo sangue, colpi d'oro, reazioni...).",
+              "Con cinque contratti completati vince subito. Un contratto completato si può anche scartare per pescare 1 carta o ottenere 1 focus, e alcune carte danno bonus per ogni contratto completato.",
+              "Arma: Nagamaki. Ha anche attacchi a distanza."],
+             "Hai due strade per vincere: sconfiggere l'avversario o completare i contratti. Gioca le carte che completano i contratti più facili e decidi presto se tenerli per la vittoria o spenderli come bonus."),
+ "wakou": (["Ubriaco: quando un movimento ha 2 o più passi, ogni passo può andare in una direzione diversa tra quelle indicate.",
+            "Solo 4 carte in mano ma 7 ferite: è il più resistente.",
+            "Arma: Kanabo, mazza chiodata che fa molto danno."],
+           "Un muro che avanza. Incassa i colpi grazie alle 7 ferite, avvicinati con i passi barcollanti che confondono l'avversario e colpisci duro con il kanabo. Con poche carte in mano, non sprecarle in difese inutili."),
+ "onna": (["Disperazione: quando le restano 2 ferite o meno prima della sconfitta entra in Disperazione e si attivano le righe e le iniziative speciali delle carte.",
+           "Arma: Naginata."],
+          "Più è ferita, più è pericolosa. All'inizio combatti con prudenza; quando entri in Disperazione le carte diventano molto più forti: approfittane per chiudere la partita prima di cadere."),
+ "sailor": (["Kamae a Distanza: ha una posizione Kamae in più, la Kamae a Distanza, necessaria per gli attacchi a distanza come la pistola.",
+             "Armi: Granchio (sciabola) e Pistola.",
+             "Il Punto Focus della sua Kamae si raggiunge solo dall'Equilibrio. Guadagna focus anche con Guardia del Bue (blocco riuscito) e con Blocco di Fiume in Equilibrio."],
+            "Tieni l'avversario a distanza e colpiscilo con la pistola quando sei in Kamae a Distanza; usa il Granchio se ti viene addosso. Per avere focus porta la Kamae in Equilibrio (Avanzata in Duello, Squarcio Profondo, Recupero) e da lì entra nel Punto Focus."),
+ "ashigaru": (["Combatte insieme al cane Hachiko, una seconda pedina con il suo mazzo e 2 ferite.",
+               "Solo 4 ferite. Se Hachiko viene sconfitto l'Ashigaru volta la sua carta personaggio.",
+               "Arma: Yari, lancia per impalare a distanza."],
+              "Usa Hachiko per circondare l'avversario: mentre il cane lo distrae o lo azzoppa, l'Ashigaru colpisce con la lancia dalla distanza. Proteggi il cane, perché la sua perdita ti indebolisce."),
+ "ninja": (["Occultamento: può iniziare Occultato o Rivelato; da Occultato usa le righe speciali delle carte e torna Rivelato quando colpisce o viene ferito.",
+            "Mano di 6 carte ma solo 4 ferite. Lancia Piedi di Corvo e Trappole sul campo.",
+            "Arma: Kusarigama, falcetto con catena."],
+           "Controlla il campo: semina Piedi di Corvo e Trappole dove l'avversario deve passare, colpisci da lontano con la kusarigama e resta nell'ombra. Non lasciarti chiudere in uno scontro diretto."),
+}
+
 out = {
  "note": "Trascrizione dalle scansioni della 1a edizione italiana. Regole: Rulebook V1 + errata.",
  "cards": C,
@@ -1052,13 +1100,16 @@ out = {
         "edges": [["focus","balance",2],["aggression","balance",2],["aggression","neutral",1],
                   ["balance","determination",2],["neutral","determination",2]]}}},
  "solo": SOLO,
- # mappa "villaggio in fiamme": celle giocabili (colonna,riga) lette dal contorno arancione
+ # mappa "villaggio in fiamme"
  "maps": {"villaggio": {"img": "arena.webp", "img_size": 1594,
      "hex_px": 108.68, "origin_px": [304.3, 682.5],
-     "cells": [[0,0],[1,0],[1,1],[2,-1],[2,0],[2,1],[2,2],[3,-2],[3,-1],[3,0],[3,1],
-               [4,-1],[4,0],[4,1],[4,2],[5,-1],[5,0],[6,-1],[6,0]],
+     # tavoliere completo: 7 colonne di 4,5,6,7,6,5,4 esagoni (raggio 3 attorno alla colonna 3, riga 0)
+     "cells": [[c, r] for c in range(7) for r in range(-4, 5)
+               if max(abs(c - 3), abs((r - (c - (c & 1)) // 2) + 1), abs((c - 3) + (r - (c - (c & 1)) // 2) + 1)) <= 3],
      "start": [[[0,0],[1,0],[1,1]], [[5,-1],[5,0],[6,-1],[6,0]]]}}
 }
+for k, ch in out["characters"].items():
+    ch["abilita"], ch["strategia"] = INFO[k]
 for ch in out["characters"].values():
     assert sum(ch["deck"].values()) in (29, 30, 31), sum(ch["deck"].values())
     for k in list(ch["deck"]) + [str(x) for x in ch["core"]]: assert k in C, k

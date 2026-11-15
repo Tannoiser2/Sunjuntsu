@@ -9,6 +9,11 @@ func _ready() -> void:
 	await RenderingServer.frame_post_draw
 	get_viewport().get_texture().get_image().save_png(cart + "/menu.png")
 	print("schermata menu")
+	var mn: Control = get_child(0)
+	mn._tocca("sailor")
+	await get_tree().create_timer(0.3).timeout
+	await RenderingServer.frame_post_draw
+	get_viewport().get_texture().get_image().save_png(cart + "/scheda.png")
 	get_child(0).queue_free()
 	Sessione.setup = {"io": "student", "avv": "ronin", "modo": "duello"}
 	var pt: Node = load("res://scenes/Partita.tscn").instantiate()

@@ -351,11 +351,26 @@ func _piazzamento() -> void:
 				lista.append(x.i)
 	for p in lista:
 		var f: Dictionary = F[p]
-		var opts: Array = []
-		for c in mappa.start[int(f.owner)]:
-			var cell := Hex.da_offset(int(c[0]), int(c[1]))
-			if _in_cella(cell) != null:
+		# Regolamento: il primo si piazza su una casella libera qualsiasi; i seguenti a più di 3
+		# caselle dai combattenti avversari già piazzati (se impossibile, il più lontano possibile).
+		var celle: Array = []
+		var meglio := -1
+		for cell in cells:
+			if _in_cella(cell) != null or trappole.has(cell):
 				continue
+			var dmin := 99
+			for x in F:
+				if x.owner != f.owner and x.pos.x < 50:
+					dmin = mini(dmin, Hex.dist(cell, x.pos))
+			var dv: int = mini(dmin, 4)
+			if dv > meglio:
+				meglio = dv
+				celle = []
+			if dv == meglio:
+				celle.append(cell)
+		celle.sort_custom(func(a, b): return a.x < b.x or (a.x == b.x and a.y < b.y))
+		var opts: Array = []
+		for cell in celle:
 			for d in 6:
 				opts.append({"pos": cell, "face": d})
 		var idx := await _ask(p, "place", "%s: scegli casella e orientamento di partenza" % f.name, opts)
@@ -2421,6 +2436,7 @@ func _cambia_kamae(f: Dictionary, n: int) -> void:
 		var foc: int = res[k]
 		var lab: String = ("Resta in %s" if k == f.kamae else "Vai a %s") % Carte.KAMAE[k]
 		if foc > 0:
+			lab = ("Passa dal Punto Focus e torna in %s" if k == f.kamae else "Vai a %s passando dal Punto Focus") % Carte.KAMAE[k]
 			lab += " (+%d focus)" % foc
 		opts.append({"label": lab, "to": k, "focus": foc})
 	var idx := await _ask(f.i, "kamae", "%s: cambia Kamae fino a %d ramo/i" % [f.name, n], opts)

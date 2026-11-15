@@ -30,7 +30,9 @@ testo di varie carte.
   una sola istantanea per turno, mai sulle carte speciali o dello stesso tipo.
 - **Vantaggio**, spinte (con scelta in caso di parità e collisioni), rotazione del bersaglio,
   cancellazione di carte/movimento attivi, ricerca nel mazzo.
-- **Campo**: il «villaggio in fiamme» con le sue 19 caselle vere (non un disco esagonale).
+- **Campo**: tavoliere del «villaggio in fiamme» con tutte le 37 caselle (7 colonne da 4, 5, 6, 7, 6, 5, 4).
+- **Schieramento**: chi è più in basso sul tracciato del Vantaggio si piazza su una casella libera
+  qualsiasi; gli altri a più di 3 caselle dagli avversari già piazzati (se impossibile, il più lontano possibile).
 
 ## Solitario (carte Solo)
 
