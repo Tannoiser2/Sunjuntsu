@@ -35,7 +35,9 @@ var primo_sangue := false
 var terreno: Dictionary = {}   ## cella -> tipo di terreno (ostacolo)
 var tipo_terreno := "nessuno"
 var pezzi_terreno: Array = []   ## [{"t": tipo, "c": cella centrale, "d": direzione (Torii)}]
-var trappole: Dictionary = {}   ## cella -> "piede" | "innesco" | "diversivo"
+var trappole: Dictionary = {}
+var scenario: Dictionary = {}     ## campagna: dati dello scenario in corso
+var pezzi_iniziali: Array = []   ## cella -> "piede" | "innesco" | "diversivo"
 const CONTRATTI := {"reazione": "Reazione", "sangue": "Primo Sangue", "concentrazione": "Concentrazione",
 	"furore": "Furore", "vedere": "Fagli Vedere", "attrezzi": "Gli Attrezzi del Mestiere"}   ## carta che sta producendo l'effetto in corso
 var ritmo: Callable = Callable()   ## pausa visiva fornita dall'interfaccia
@@ -59,16 +61,23 @@ func prepara(setup: Dictionary) -> void:
 	rng.seed = int(setup.get("seed", 1))
 	mappa = db.maps[setup.get("map", "villaggio")]
 	tipo_terreno = str(setup.get("terreno", "nessuno"))
+	scenario = setup.get("scenario", {})
+	pezzi_iniziali = setup.get("pezzi", [])
 	for c in mappa.cells:
 		cells[Hex.da_offset(int(c[0]), int(c[1]))] = true
 	var i := 0
 	for pl in setup.players:
-		var cd: Dictionary = db.characters[pl.char]
+		var cd: Dictionary = db.characters[pl.char] if db.characters.has(pl.char) else db.nemici[pl.char]
 		var ia: bool = pl.get("solo", false)
+		var protetta: bool = pl.get("protetta", false)
 		var deck: Array = []
 		var hand: Array = []
 		if ia:
 			deck = _mazzo_solo(pl.char, pl.get("incubo", false))
+			for x in pl.get("extra_deck", []):
+				deck.append_array(_mazzo_solo(x, false))
+		elif protetta:
+			pass
 		else:
 			# mazzo personalizzato (editor dei mazzi) oppure mazzo base del personaggio
 			var mz: Dictionary = pl.get("mazzo", {}) if pl.get("mazzo", {}) is Dictionary else {}
@@ -85,10 +94,19 @@ func prepara(setup: Dictionary) -> void:
 			"wounds": 0, "bleeds": 0, "hand": hand, "deck": deck, "discard": [],
 			"hobbles": [], "armour": false, "dead": false, "play": {},
 			"instant_used": false, "no_move": false, "no_rot": false, "owner": i, "cane": false, "ferro": 0, "occ": false, "illum": [], "passi": 0, "contr": {}, "contr_nuovo": false, "reaz": false, "turn_tot": 0, "maxfocus": MAX_FOCUS, "turn_w": 0,
-			"ai": ia, "lim": int(pl.get("ferite", db.solo[pl.char].get("ferite", db.solo.ferite))) if ia else int(cd.wounds),
-			"mano": 99 if ia else int(cd.hand),
-			"comp": rng.randi_range(0, 2), "post": "off" if rng.randi_range(0, 1) == 0 else "def",
+			"ai": ia, "lim": int(pl.get("ferite", db.solo[pl.char].get("ferite", db.solo.ferite))) if ia else int(pl.get("ferite", cd.wounds)),
+			"mano": 99 if ia else (0 if protetta else int(cd.hand)), "protetta": protetta,
+			"comp": int(pl.get("comp", rng.randi_range(0, 2))), "post": str(pl.get("post", "off" if rng.randi_range(0, 1) == 0 else "def")),
 			"raggio": int(db.solo[pl.char].raggio) if ia else 1, "stun_lato": 0, "reset": false, "sent": -1, "goal": 5})
+		if pl.has("owner"):
+			F[-1].owner = int(pl.owner)
+		if pl.has("pos"):
+			F[-1]["pre_pos"] = Vector2i(int(pl.pos[0]), int(pl.pos[1]))
+			F[-1]["pre_face"] = int(pl.get("face", 0))
+		if pl.has("kamae"):
+			F[-1].kamae = str(pl.kamae)
+		if pl.has("focus"):
+			F[-1].focus = int(pl.focus)
 		if ia and cd.get("occulta", false):
 			F[-1].occ = true
 		if ia and cd.get("contratti", false):
@@ -168,15 +186,23 @@ func _mazzo_solo(pers: String, incubo: bool) -> Array:
 	for k in mazzi:
 		out.append(sel[k].pop_back())
 	var extra: Array = d.extra.duplicate()
-	out.append(sel[extra[rng.randi_range(0, extra.size() - 1)]].pop_back())
+	for _n in int(d.get("n_extra", 1)):
+		var x = sel[extra[rng.randi_range(0, extra.size() - 1)]].pop_back()
+		if x != null:
+			out.append(x)
 	return out
 
 
 func _umano(f: Dictionary) -> Dictionary:
+	# l'IA punta il combattente avversario più vicino; le pedine da proteggere solo se non c'è altro
 	var best := {}
-	for o in F:
-		if o.owner != f.owner and not o.dead and (best.is_empty() or Hex.dist(f.pos, o.pos) < Hex.dist(f.pos, best.pos)):
-			best = o
+	for giro in 2:
+		for o in F:
+			if o.owner != f.owner and not o.dead and o.get("protetta", false) == (giro == 1) and o.pos.x < 50 \
+					and (best.is_empty() or Hex.dist(f.pos, o.pos) < Hex.dist(f.pos, best.pos)):
+				best = o
+		if not best.is_empty():
+			break
 	return best
 
 
@@ -402,6 +428,8 @@ func metti_terreno(t: String, c: Vector2i, d: int) -> void:
 
 ## Terreno prima della partita: niente, a caso, oppure piazzato a turno dai giocatori.
 func _terreni() -> void:
+	for pz in pezzi_iniziali:
+		metti_terreno(str(pz[0]), Vector2i(int(pz[1]), int(pz[2])), int(pz[3]) if pz.size() > 3 else 0)
 	if tipo_terreno == "nessuno":
 		return
 	fase = "terreno"
@@ -527,6 +555,11 @@ func hobble_attivi(f: Dictionary) -> int:
 func _piazzamento() -> void:
 	await _terreni()
 	fase = "piazzamento"
+	for f in F:
+		if f.has("pre_pos"):
+			f.pos = f.pre_pos
+			f.face = f.pre_face
+			_ev({"t": "move", "p": f.i})
 	var lista: Array = []
 	for pp in _ordine_asc():
 		for x in F:
@@ -534,6 +567,8 @@ func _piazzamento() -> void:
 				lista.append(x.i)
 	for p in lista:
 		var f: Dictionary = F[p]
+		if f.has("pre_pos"):
+			continue
 		# Regolamento: il primo si piazza su una casella libera qualsiasi; i seguenti a più di 3
 		# caselle dai combattenti avversari già piazzati (se impossibile, il più lontano possibile).
 		var celle: Array = []
@@ -565,7 +600,7 @@ func _piazzamento() -> void:
 func _preparazione() -> void:
 	fase = "preparazione"
 	for f in F:
-		if f.ai:
+		if f.ai or f.protetta:
 			continue
 		if f.cane:
 			var ik := await _ask(f.i, "choice", "%s: con quale Kamae comincia?" % f.name, [{"label": "Aggressione"}, {"label": "Determinazione"}])
@@ -644,7 +679,7 @@ func _turno() -> void:
 					_focus(f, 1)
 				_log("%s scarta il contratto «%s»." % [f.name, CONTRATTI[oc[jc].k]])
 	for f in F:
-		if not f.ai and not f.cane and not f.dead:
+		if not f.ai and not f.cane and not f.dead and not f.protetta:
 			_pesca(f, 1)
 	if _fine():
 		return
@@ -1054,7 +1089,8 @@ func _a_distanza(f: Dictionary, ln: Dictionary, ctx: Dictionary) -> void:
 	var bers = null
 	for o in _avversari(f):
 		if Hex.dist(f.pos, o.pos) <= int(ctx.get("rng", ln.get("r", 1))) and _iniz_bassa(o) < cur_init and in_vista(f.pos, f.face, o.pos):
-			bers = o
+			if bers == null or bers.get("protetta", false):
+				bers = o
 	_ev({"t": "attack", "p": f.i, "cells": [] if bers == null else [bers.pos]})
 	await _pausa("attack")
 	if bers == null:
@@ -2249,6 +2285,9 @@ func _fx(f: Dictionary, e: Dictionary, ctx: Dictionary) -> void:
 			_log("%s cambia Comportamento: [b]%s[/b]." % [f.name, Carte.COMPORTAMENTI[f.comp]])
 		"ai_reset":
 			f.reset = true
+		"ai_raggio":
+			f.raggio = int(e.get("n", 1))
+			_log("%s ora preferisce combattere a distanza %d." % [f.name, f.raggio])
 		"ai_recycle":
 			for k in range(f.discard.size() - 1, -1, -1):
 				var cid: int = f.discard[k]
@@ -2768,6 +2807,8 @@ func _fine_turno() -> void:
 			f.discard = []
 			_mischia(f.deck)
 			_log("%s ricompone il mazzo." % f.name)
+	if scenario.get("speciali", []).has("nobildonna"):
+		await _sposta_protette()
 	for f in F:
 		while not f.dead and conta_mano(f) > int(f.mano):
 			var opts := _scartabili(f)
@@ -2779,14 +2820,40 @@ func _fine_turno() -> void:
 	_ev({"t": "state"})
 
 
+## Campagna: a fine turno la nobildonna si può spostare di 1 casella, restando entro 2 dal Ronin.
+func _sposta_protette() -> void:
+	for f in F:
+		if not f.protetta or f.dead or F[f.owner].dead:
+			continue
+		var opts: Array = [{"pos": f.pos, "face": f.face, "label": "Resta dov'è"}]
+		for d in 6:
+			var c: Vector2i = f.pos + Hex.DIRS[d]
+			if _libera(c, f.i) and Hex.dist(c, F[f.owner].pos) <= 2:
+				opts.append({"pos": c, "face": f.face})
+		if opts.size() <= 1:
+			continue
+		var idx := await _ask(f.i, "hex", "%s: puoi spostarla di 1 casella (entro 2 dal %s), oppure tocca la sua casella per lasciarla lì" % [f.name, F[f.owner].name], opts)
+		if opts[idx].pos != f.pos:
+			f.pos = opts[idx].pos
+			_ev({"t": "move", "p": f.i})
+			_log("%s si sposta." % f.name)
+
+
 func _fine() -> bool:
 	if over:
 		return true
 	for f in F:
+		if f.dead and f.protetta:
+			over = true
+			winner = 1 - int(f.owner)
+			_log("[b]%s è caduta: lo scenario è perso.[/b]" % f.name)
+			queue.clear()
+			return true
+	for f in F:
 		if f.dead and not f.get("sepolto", false):
 			f["sepolto"] = true
 			for o in F:
-				if o.i == f.i or o.owner != f.owner or o.dead or o.ai:
+				if o.i == f.i or o.owner != f.owner or o.dead or o.ai or o.protetta or f.protetta:
 					continue
 				# la carta personaggio del compagno si volta
 				adv.erase(int(o.owner))
@@ -2800,7 +2867,7 @@ func _fine() -> bool:
 					_log("%s resta solo: limite di mano %d, pesca 1 carta e prende il Vantaggio." % [o.name, o.mano])
 	var vivi := {}
 	for f in F:
-		if not f.dead:
+		if not f.dead and not f.protetta:
 			vivi[int(f.owner)] = true
 	if vivi.size() <= 1:
 		over = true

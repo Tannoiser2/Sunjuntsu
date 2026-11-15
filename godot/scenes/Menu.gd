@@ -104,7 +104,8 @@ func _ready() -> void:
 	for d in [["Solitario (carte Solo)", _gioca.bind("solo", false)], ["Solitario Incubo", _gioca.bind("solo", true)],
 			["Duello contro l'IA", _gioca.bind("duello", false)],
 			["Duello online", func(): get_tree().change_scene_to_file("res://scenes/Online.tscn")],
-			["Gioca con gli smartphone", _smartphone]]:
+			["Gioca con gli smartphone", _smartphone],
+			["Campagna: la Via del Ronin", func(): get_tree().change_scene_to_file("res://scenes/CampagnaMenu.tscn")]]:
 		var bt := Tema.bottone(d[0], 320)
 		bt.pressed.connect(d[1])
 		dx.add_child(bt)

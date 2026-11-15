@@ -15,6 +15,8 @@ func _ready() -> void:
 			Sessione.setup = {"io": "warrior", "avv": a.substr(5), "modo": "solo"}
 		if a.begins_with("io="):
 			Sessione.setup = {"io": a.substr(3), "avv": "warrior", "modo": "duello"}
+		if a.begins_with("campagna="):
+			Sessione.setup = {"io": "ronin", "modo": "campagna", "scenario": a.substr(9), "mappa": Campagna.scenario(a.substr(9)).mappa}
 		if a.begins_with("terreno="):
 			Sessione.setup["terreno"] = a.substr(8)
 	DirAccess.make_dir_recursive_absolute(cart)

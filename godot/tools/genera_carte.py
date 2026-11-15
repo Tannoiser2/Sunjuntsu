@@ -799,8 +799,17 @@ for n in (3034, 3035):
     solo(n, "Blocco di Vento", "defence", [8, 5], seg(move(rot(1)), blk("0", "1"), counter(8, 7)),
         seg(move(step(FANUP, 1), rot(1)), RST, init=4))
 
+# ───────────── CARTE SOLO 036-041 (arco e archibugio) ─────────────
+for n, i in ((3036, 5), (3037, 6), (3038, 7)):
+    oppure(n, "Tiro di Yumi", i, [ranged("w1", 5)], i, [move(step(ANY, 1), rot(1))], range=5)
+for n, i in ((3039, 5), (3040, 7)):
+    oppure(n, "Randellata", i, [move(step(FANUP, 1), rot(1)), atk({"0": "a"}), ast(e("t_stun"), e("t_hobble"))],
+        2, [move(step(ANY, 1), rot(1))])
+oppure(3041, "Fuoco", 6, [ranged("w2", 6), fx(e("ai_raggio", n=1)), fx(e("ai_remove"))], 6, [move(step(ANY, 1), rot(1))], range=6)
+
 SOLO = {"selezione": {"1": [3001, 3003, 3008, 3009], "2": [3002, 3004, 3005, 3006, 3007],
-                      "3": [3010, 3011, 3012, 3013], "4": list(range(3014, 3026)), "5": list(range(3026, 3036))},
+                      "3": [3010, 3011, 3012, 3013], "4": list(range(3014, 3026)), "5": list(range(3026, 3036)),
+                      "6": [3036, 3037, 3038], "7": [3039, 3040, 3041]},
         "warrior": {"firma": [2001, 2002, 2003, 2004], "incubo": 2993, "raggio": 1, "mazzi": ["1", "3", "4", "5"], "extra": ["2", "4", "5"]},
         "ronin": {"firma": [1001, 1002, 1003, 1004], "incubo": 1991, "raggio": 2, "mazzi": ["1", "3", "4", "5"], "extra": ["2", "4", "5"]},
         "ferite": 7}
@@ -973,6 +982,64 @@ ARMI = {"warrior": ["Kanabo", "Naginata", "Nodachi", "Yari"], "ronin": ["Kanabo"
         "ashigaru": ["Bo", "Kanabo", "Naginata", "Yari"], "ninja": ["Kama", "Kusarigama", "Sai", "Tanto", "Tonfa"]}
 N_ARMI = {"yasuke": 2, "sailor": 2}
 
+# ───────────── AVVERSARI DELLA CAMPAGNA (Path of the Ronin) ─────────────
+# Mazzi dalla tabella "solo_AI_tables": I meditazioni boss, II meditazioni ashigaru, III attacchi a portata,
+# IV attacchi da mischia, V difese, VI arco, VII archibugio.
+SOLO.update({
+ "katana": {"firma": [], "incubo": None, "raggio": 1, "mazzi": ["2", "4", "4", "5"], "extra": ["4", "5"]},
+ "yari": {"firma": [], "incubo": None, "raggio": 2, "mazzi": ["2", "3", "3", "5"], "extra": ["3", "5"]},
+ "yumi": {"firma": [], "incubo": None, "raggio": 5, "mazzi": ["2", "5", "6"], "extra": ["2", "5", "6"], "n_extra": 2},
+ "archibugio": {"firma": [], "incubo": None, "raggio": 6, "mazzi": ["2", "5", "7", "7", "7"], "extra": ["2", "5"]},
+ "boss": {"firma": [], "incubo": None, "raggio": 1, "mazzi": ["1", "1", "4", "4", "5"], "extra": ["4", "5"]},
+})
+NEMICI = {
+ "katana": ("Ashigaru con katana", "ashigaru.glb", "ashigaru.webp"),
+ "yari": ("Ashigaru con yari", "ashigaru.glb", "ashigaru.webp"),
+ "yumi": ("Ashigaru con arco", "ashigaru.glb", "ashigaru.webp"),
+ "archibugio": ("Archibugiere", "ashigaru.glb", "ashigaru.webp"),
+ "boss": ("Samurai", "yojimbo.glb", "warrior.webp"),
+ "nobildonna": ("Nobildonna", "onna.glb", "onna_bugeisha.webp"),
+}
+NOMI_NEMICI = {"Jiro": "katana", "Taro": "katana", "Saburo": "katana", "Sanada": "yari", "Kiejiro": "yari",
+               "Kaito": "yumi", "Nagahide": "archibugio", "Mochikane": "boss", "Kurosawa": "boss"}
+SINISTRA, FRONTE, DESTRA = 0, 1, 2
+def nem(nome, pos, face, ferite, post, comp, tipo=None):
+    return {"nome": nome, "tipo": tipo or NOMI_NEMICI[nome], "pos": pos, "face": face, "ferite": ferite,
+            "post": post, "comp": comp}
+MAZZO_RONIN_CAMPAGNA = {"29": 2, "31": 2, "32": 1, "99": 1, "100": 1, "101": 1, "102": 1, "105": 1, "106": 1,
+    "107": 1, "111": 1, "112": 1, "113": 1, "117": 1, "119": 1, "120": 1, "33": 1, "34": 2, "121": 1, "123": 2,
+    "124": 2, "125": 1, "126": 1, "127": 1, "128": 1}
+# posizioni in coordinate assiali sul tavoliere (casella centrale = (3, -1))
+CAMPAGNA = {
+ "mazzo": MAZZO_RONIN_CAMPAGNA, "core": [23, 71],
+ "scenari": [
+  {"id": "onore", "titolo": "Onore senza padrone", "mappa": "neve",
+   "intro": "Sei un ronin errante, deciso a vendicare il tuo signore caduto: disonorato e senza padrone, segui ancora il codice del Bushido. Incontri una nobildonna in pericolo e decidi di salvarne l'onore, punendo questi spregevoli banditi ashigaru.",
+   "obiettivo": "Sconfiggi entrambi gli avversari, Jiro e Sanada. La nobildonna deve sopravvivere (limite di ferite 2).",
+   "regole": ["A fine turno, dopo aver risolto tutte le carte, puoi spostare la nobildonna di 1 casella: deve restare entro 2 caselle dal Ronin.",
+              "Gli avversari attaccano il Ronin prima della nobildonna, a meno che lei sia l'unico bersaglio."],
+   "ronin": {"pos": [4, 0], "face": 5, "kamae": "neutral", "focus": 1},
+   "nemici": [nem("Jiro", [2, -2], 3, 3, "off", SINISTRA), nem("Sanada", [5, -4], 3, 2, "def", DESTRA)],
+   "alleati": [{"nome": "Nobildonna", "tipo": "nobildonna", "pos": [5, 0], "face": 5, "ferite": 2}],
+   "pezzi": [["masso", 4, -3], ["masso", 1, 0], ["masso", 2, 1]],
+   "speciali": ["nobildonna"]},
+  {"id": "furia", "titolo": "Rabbia ardente", "pronto": False,
+   "intro": "Cerchi il Maestro, l'assassino del tuo signore. Attirato in una taverna, i suoi uomini ti tendono un agguato con il fuoco e l'acciaio.",
+   "obiettivo": "Sconfiggi tutti gli avversari.", "regole": [], "nemici": []},
+  {"id": "occhio", "titolo": "L'occhio nascosto", "pronto": False,
+   "intro": "Tra le rovine del villaggio in fiamme, la nobildonna che hai aiutato si rivela: è la Guerriera, che cerca vendetta per i tuoi errori di giovane samurai.",
+   "obiettivo": "Sconfiggi la Guerriera.", "regole": [], "nemici": []},
+  {"id": "porte", "titolo": "Porte gelate", "pronto": False,
+   "intro": "Arrivi alla fortezza del Maestro: la luna pallida illumina la via della giustizia. Attraversa il ponte prima che arrivino altre guardie.",
+   "obiettivo": "Sconfiggi tutti gli avversari o raggiungi l'altro capo del ponte.", "regole": [], "nemici": []},
+  {"id": "dojo", "titolo": "Duello nel dojo", "pronto": False,
+   "intro": "Il nuovo apprendista del Maestro, abile e letale, sguaina la spada: combatterà fino alla morte per proteggere il suo maestro.",
+   "obiettivo": "Sconfiggi l'Allievo.", "regole": [], "nemici": []},
+  {"id": "ghiaccio", "titolo": "Sangue sul ghiaccio sottile", "pronto": False,
+   "intro": "Ogni passo ti ha portato fin qui. Il Maestro, ora un daimyo crudele, ti aspetta sulle rive ghiacciate: pagherà con la vita per l'assassinio del tuo signore, o sarai tu a pagare.",
+   "obiettivo": "Sconfiggi il Maestro.", "regole": [], "nemici": []},
+ ]}
+
 out = {
  "note": "Trascrizione dalle scansioni della 1a edizione italiana. Regole: Rulebook V1 + errata.",
  "cards": C,
@@ -1110,18 +1177,30 @@ out = {
         "edges": [["focus","balance",2],["aggression","balance",2],["aggression","neutral",1],
                   ["balance","determination",2],["neutral","determination",2]]}}},
  "solo": SOLO,
+ "campagna": CAMPAGNA,
  # mappa "villaggio in fiamme"
  "maps": {"villaggio": {"img": "arena.webp", "img_size": 1594,
      "hex_px": 108.68, "origin_px": [304.3, 682.5],
      # tavoliere completo: 7 colonne di 4,5,6,7,6,5,4 esagoni (raggio 3 attorno alla colonna 3, riga 0)
      "cells": [[c, r] for c in range(7) for r in range(-4, 5)
                if max(abs(c - 3), abs((r - (c - (c & 1)) // 2) + 1), abs((c - 3) + (r - (c - (c & 1)) // 2) + 1)) <= 3],
-     "start": [[[0,0],[1,0],[1,1]], [[5,-1],[5,0],[6,-1],[6,0]]]}}
+     "start": [[[0,0],[1,0],[1,1]], [[5,-1],[5,0],[6,-1],[6,0]]]},
+     "neve": {"img": "neve.webp", "img_w": 1600, "img_h": 1600, "hex_px": 111.5, "origin_px": [298.25, 703.4],
+              "cells": [[c, r] for c in range(7) for r in range(-4, 5)
+                        if max(abs(c - 3), abs((r - (c - (c & 1)) // 2) + 1), abs((c - 3) + (r - (c - (c & 1)) // 2) + 1)) <= 3],
+              "start": [[], []]}}
 }
 for k, ch in out["characters"].items():
     ch["abilita"], ch["strategia"] = INFO[k]
     ch["armi"] = ARMI[k]
     ch["n_armi"] = N_ARMI.get(k, 1)
+base_nem = out["characters"]["ronin"]
+out["nemici"] = {}
+for k, (nome, model, ritr) in NEMICI.items():
+    d = {x: base_nem[x] for x in ("char_img", "kamae_img", "kamae", "title")}
+    d.update({"name": nome, "model": model, "portrait": ritr, "advantage": 0, "hand": 0, "wounds": 3, "deck": {}, "core": [],
+              "abilita": [], "strategia": ""})
+    out["nemici"][k] = d
 for ch in out["characters"].values():
     assert sum(ch["deck"].values()) in (29, 30, 31), sum(ch["deck"].values())
     for k in list(ch["deck"]) + [str(x) for x in ch["core"]]: assert k in C, k

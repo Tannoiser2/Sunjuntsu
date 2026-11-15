@@ -49,6 +49,7 @@ var ant_txt: RichTextLabel
 var ant_azione: Button
 var ant_idx := -1
 var fine_pan: PanelContainer
+var b_menu: Button
 var b_rivincita: Button
 var tex_cache: Dictionary = {}
 
@@ -125,6 +126,8 @@ func _nuova() -> void:
 		sincro.attesa.connect(func(t):
 			lbl_richiesta.text = t
 			_aggiorna())
+	elif Sessione.setup.get("modo", "") == "campagna":
+		g.prepara(Campagna.setup_partita(Sessione.setup.scenario, Campagna.carica()))
 	else:
 		g.prepara({"seed": randi(), "terreno": Sessione.setup.get("terreno", "nessuno"),
 			"players": [{"char": mio, "mazzo": Mazzi.in_uso(mio)},
@@ -432,6 +435,12 @@ func _mostra_fine() -> void:
 	if g.winner >= 0:
 		t = "Hai vinto!" if g.winner == io else "%s ti ha sconfitto" % g.F[g.winner].name
 	fine_pan.get_node("V/Titolo").text = t
+	if Sessione.setup.get("modo", "") == "campagna":
+		fine_pan.get_node("V/Titolo").text = "Scenario vinto!" if g.winner == 0 else "Scenario perso"
+		b_rivincita.text = "Riprova" if g.winner != 0 else "Rigioca"
+		if g.winner == 0:
+			Sessione.setup["vinto"] = Sessione.setup.scenario
+		b_menu.text = "Campagna"
 	if sincro != null:
 		b_rivincita.visible = false
 		Sessione.rete.remember_room("")
@@ -457,17 +466,19 @@ func _mondo() -> void:
 	sole.rotation_degrees = Vector3(-55, 35, 0)
 	sole.light_energy = 1.2
 	mondo.add_child(sole)
-	var m: Dictionary = Carte.db().maps.villaggio
+	var m: Dictionary = Carte.db().maps[Sessione.setup.get("mappa", "villaggio") if Sessione.setup.get("modo", "") == "campagna" else "villaggio"]
 	var k: float = 1.0 / float(m.hex_px)
+	var iw: float = float(m.get("img_w", 1594))
+	var ih: float = float(m.get("img_h", 1600))
 	var pm := PlaneMesh.new()
-	pm.size = Vector2(1594.0 * k, 1600.0 * k)
+	pm.size = Vector2(iw * k, ih * k)
 	var mi := MeshInstance3D.new()
 	mi.mesh = pm
 	var mat := StandardMaterial3D.new()
 	mat.albedo_texture = load("res://assets/maps/" + m.img)
 	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	mi.material_override = mat
-	mi.position = Vector3((797.0 - float(m.origin_px[0])) * k, -0.02, (800.0 - float(m.origin_px[1])) * k)
+	mi.position = Vector3((iw / 2.0 - float(m.origin_px[0])) * k, -0.02, (ih / 2.0 - float(m.origin_px[1])) * k)
 	mondo.add_child(mi)
 	var esag := _mesh_esagono(0.93)
 	for c in m.cells:
@@ -1081,8 +1092,10 @@ func _hud() -> void:
 	b_rivincita = b1
 	b1.pressed.connect(_nuova)
 	fh.add_child(b1)
-	var b2 := Tema.bottone("Menu", 130)
-	b2.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/Menu.tscn"))
+	var b2 := Tema.bottone("Menu", 150)
+	b_menu = b2
+	b2.pressed.connect(func():
+		get_tree().change_scene_to_file("res://scenes/CampagnaMenu.tscn" if Sessione.setup.get("modo", "") == "campagna" else "res://scenes/Menu.tscn"))
 	fh.add_child(b2)
 
 

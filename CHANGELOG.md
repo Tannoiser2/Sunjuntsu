@@ -1,5 +1,14 @@
 # Novità
 
+## 1.19.0 — Campagna «La Via del Ronin» (prima tappa)
+- Nuova voce di menu «Campagna: la Via del Ronin»: scenari in ordine con racconto, obiettivo, regole e
+  avversari; progressi e mazzo del Ronin salvati sul dispositivo.
+- Scenario 1 «Onore senza padrone» giocabile: tavoliere innevato, rocce, Jiro (ashigaru con katana) e
+  Sanada (ashigaru con yari), la nobildonna da proteggere che sposti a fine turno.
+- Più avversari Solo nella stessa partita, con mazzo, atteggiamento e lato d'avvicinamento propri.
+- Nuovi tipi di avversario: ashigaru con katana, yari, arco, archibugiere e samurai; carte Solo 036-041
+  (Tiro di Yumi, Randellata, Fuoco).
+
 ## 1.18.2 — Carte grandi sul telefono
 - Sul telefono la mano è un carosello: una carta grande alla volta, si scorre a destra e a sinistra,
   con il pulsante «Gioca questa carta» sotto. Quando devi scegliere, le carte vanno subito sotto la
