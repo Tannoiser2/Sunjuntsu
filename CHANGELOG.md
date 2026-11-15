@@ -1,5 +1,10 @@
 # Novità
 
+## 1.18.2 — Carte grandi sul telefono
+- Sul telefono la mano è un carosello: una carta grande alla volta, si scorre a destra e a sinistra,
+  con il pulsante «Gioca questa carta» sotto. Quando devi scegliere, le carte vanno subito sotto la
+  richiesta (prima quelle giocabili) e la mappa scende sotto.
+
 ## 1.18.1 — Rotazione dal telefono
 - Sul telefono «Ruota a sinistra/destra» gira davvero la pedina: sulla mappina la pedina si sposta
   nella casella provata (bordo bianco) e la miniatura sullo schermo la segue mentre si prova.

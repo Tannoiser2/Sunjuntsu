@@ -25,12 +25,21 @@ button.primario { background: #b3261e; }
 canvas#mappa { width: 100%; display: block; background: #2a2420; border-radius: 10px; touch-action: manipulation; }
 #ruota { display: flex; flex-wrap: wrap; }
 #ruota button { flex: 1; }
-#mano { display: flex; flex-wrap: wrap; gap: 6px; }
-#mano .carta { width: calc(33.3% - 4px); position: relative; }
-#mano .carta img { width: 100%; border-radius: 6px; display: block; }
+/* mano: carosello da scorrere a destra e sinistra, una carta grande alla volta */
+#gioco { display: flex; flex-direction: column; }
+#gioco.scegli-carta #tit-mano, #gioco.scegli-carta #mano, #gioco.scegli-carta #puntini { order: -1; }
+#gioco.scegli-carta #testa { order: -3; }
+#gioco.scegli-carta #richiesta { order: -2; }
+#mano { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 4px 11% 10px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+#mano::-webkit-scrollbar { display: none; }
+#mano .carta { flex: 0 0 78%; max-width: 420px; scroll-snap-align: center; position: relative; }
+#mano .carta img { width: 100%; border-radius: 10px; display: block; }
+#mano .carta button { width: 100%; margin: 8px 0 0; }
+#tit-mano small { color: #efe6d3; font-weight: normal; font-size: 14px; margin-left: 8px; }
+#puntini { text-align: center; color: #c9a227; font-size: 14px; min-height: 1em; }
 #mano .carta.scelta img { outline: 4px solid #c9a227; }
 #mano .carta.spenta img { filter: grayscale(0.7) brightness(0.55); }
 #zoom { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; z-index: 9; }
 #zoom img { max-width: 100%; max-height: 72vh; border-radius: 10px; }
 #zoom-bottoni { display: flex; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
-@media (min-width: 700px) { #mano .carta { width: calc(20% - 5px); } }
+@media (min-width: 700px) { #mano .carta { flex-basis: 40%; } }

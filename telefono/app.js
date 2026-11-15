@@ -161,7 +161,7 @@ function disegnaRichiesta() {
   let t = rich.t;
   if (rich.k === "card") {
     const inMano = io() && rich.o.every((id) => io().h.includes(id));
-    if (inMano) t += " — tocca una carta della tua mano.";
+    if (inMano) t += " — scorri le carte e premi «" + (rich.s ? "Scarta" : "Gioca") + " questa carta».";
     else rich.o.forEach((id, i) => {
       const im = document.createElement("img");
       im.src = imgCarta(id); im.alt = cartaInfo(id).name;
@@ -198,23 +198,49 @@ function disegnaRichiesta() {
 }
 
 function disegnaMano() {
-  const m = $("mano"); m.innerHTML = "";
+  const m = $("mano");
+  const prima = m.scrollLeft;
+  m.innerHTML = "";
   const me = io();
-  if (!me) return;
-  const scegli = rich && rich.k === "card";
-  const ids = me.h.slice().sort((a, b) => a - b);
+  const scegli = !!(rich && rich.k === "card" && me && rich.o.some((id) => me.h.includes(id)));
+  $("gioco").classList.toggle("scegli-carta", scegli);
+  if (!me) { $("puntini").textContent = ""; return; }
+  // durante la scelta prima le carte giocabili, poi le altre
+  let ids = me.h.slice().sort((a, b) => a - b);
+  if (scegli) ids.sort((a, b) => (rich.o.includes(a) ? 0 : 1) - (rich.o.includes(b) ? 0 : 1));
   ids.forEach((id) => {
     const d = document.createElement("div");
     d.className = "carta";
     const idx = scegli ? rich.o.indexOf(id) : -1;
     if (scegli) d.classList.add(idx >= 0 ? "scelta" : "spenta");
     const im = document.createElement("img");
-    im.src = imgCarta(id); im.alt = cartaInfo(id).name; im.loading = "lazy";
+    im.src = imgCarta(id); im.alt = cartaInfo(id).name;
+    im.onclick = () => zoom(id, idx >= 0 ? [[rich.s ? "Scarta questa" : "Gioca questa", () => rispondi(idx)]] : []);
     d.appendChild(im);
-    d.onclick = () => zoom(id, idx >= 0 ? [[rich.s ? "Scarta questa" : "Gioca questa", () => rispondi(idx)]] : []);
+    if (idx >= 0) {
+      const b = document.createElement("button");
+      b.className = "primario";
+      b.textContent = rich.s ? "Scarta questa carta" : "Gioca questa carta";
+      b.onclick = () => rispondi(idx);
+      d.appendChild(b);
+    }
     m.appendChild(d);
   });
+  m.scrollLeft = scegli && !manoMostrata ? 0 : prima;
+  manoMostrata = scegli;
+  puntini();
 }
+
+// indicatore della carta visibile: 3 / 7
+function puntini() {
+  const m = $("mano"), c = m.children;
+  if (!c.length) { $("puntini").textContent = ""; return; }
+  const w = c[0].getBoundingClientRect().width + 12;
+  const i = Math.min(c.length - 1, Math.max(0, Math.round(m.scrollLeft / w)));
+  $("puntini").textContent = (i + 1) + " / " + c.length;
+}
+$("mano").addEventListener("scroll", puntini, { passive: true });
+let manoMostrata = false;
 
 function zoom(id, azioni) {
   $("zoom-img").src = imgCarta(id);
