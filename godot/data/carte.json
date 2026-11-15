@@ -24292,7 +24292,7 @@
    "char_img": "ninja/ninja_01.webp",
    "kamae_img": "ninja/ninja_02.webp",
    "portrait": "ninja.webp",
-   "model": "assassin.glb",
+   "model": "ninja.glb",
    "deck": {
     "166": 1,
     "167": 1,

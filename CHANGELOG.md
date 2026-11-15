@@ -1,5 +1,8 @@
 # Novità
 
+## 1.15.1 — Miniatura del Ninja
+- Il Ninja ha la sua miniatura (prima usava quella dell'Assassino).
+
 ## 1.15.0 — Miniature 3D per tutti
 - Ogni personaggio (e Hachiko) ha la sua miniatura 3D al posto della sagoma: base esagonale regolare
   allineata alle caselle, freccia dorata sul lato frontale e bordo del colore del giocatore.

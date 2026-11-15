@@ -1043,7 +1043,7 @@ out = {
                   ["neutral","determination",2],["neutral","balance",2],["aggression","balance",2]]}},
   "ninja": {"name": "Ninja", "title": "Fantasma nella notte", "advantage": 95, "occulta": True,
      "hand": 6, "wounds": 4, "char_img": imgs["2159"], "kamae_img": imgs["2162"],
-     "portrait": "ninja.webp", "model": "assassin.glb",
+     "portrait": "ninja.webp", "model": "ninja.glb",
      "deck": {"166":1,"167":1,"168":1,"169":1,"170":1,"171":2,"172":2,"173":2,"174":3,"175":3,"176":3,
               "100":2,"103":1,"105":1,"110":2,"142":2,"147":2},
      "core": [163, 164],
