@@ -94,9 +94,17 @@ func _ready() -> void:
 	scelta_terreno.select(tsel)
 	scelta_terreno.item_selected.connect(func(i): Sessione.setup["terreno"] = TERRENI[i][0])
 	dx.add_child(scelta_terreno)
+	var scelta_cam := OptionButton.new()
+	scelta_cam.custom_minimum_size = Vector2(320, 46)
+	scelta_cam.add_item("Telecamera: fissa")
+	scelta_cam.add_item("Telecamera: segue l'azione")
+	scelta_cam.select(1 if Sessione.setup.get("segui", false) else 0)
+	scelta_cam.item_selected.connect(func(i): Sessione.setup["segui"] = i == 1)
+	dx.add_child(scelta_cam)
 	for d in [["Solitario (carte Solo)", _gioca.bind("solo", false)], ["Solitario Incubo", _gioca.bind("solo", true)],
 			["Duello contro l'IA", _gioca.bind("duello", false)],
-			["Duello online", func(): get_tree().change_scene_to_file("res://scenes/Online.tscn")]]:
+			["Duello online", func(): get_tree().change_scene_to_file("res://scenes/Online.tscn")],
+			["Gioca con gli smartphone", _smartphone]]:
 		var bt := Tema.bottone(d[0], 320)
 		bt.pressed.connect(d[1])
 		dx.add_child(bt)
@@ -113,6 +121,42 @@ func _ready() -> void:
 	ver.custom_minimum_size = Vector2(320, 0)
 	dx.add_child(ver)
 	_scegli(Sessione.setup.get("io", "warrior"))
+
+
+func _smartphone() -> void:
+	var velo := ColorRect.new()
+	velo.color = Color(0, 0, 0, 0.55)
+	velo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(velo)
+	var cc := CenterContainer.new()
+	cc.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	velo.add_child(cc)
+	var pan := PanelContainer.new()
+	cc.add_child(pan)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 10)
+	pan.add_child(v)
+	var t := Tema.etichetta("Gioca con gli smartphone", 26, Tema.VERMIGLIO, true)
+	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	v.add_child(t)
+	var l := Tema.etichetta("Lo schermo mostra il tavoliere; ogni giocatore ha le sue carte e fa le sue scelte sul telefono, inquadrando un QR code.", 18)
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	l.custom_minimum_size = Vector2(440, 0)
+	v.add_child(l)
+	for d in [["Un giocatore contro l'avversario Solo", true], ["Due giocatori, un telefono ciascuno", false]]:
+		var b := Tema.bottone(d[0], 440)
+		b.pressed.connect(func():
+			Sessione.setup["modo"] = "telefoni"
+			Sessione.setup["tel_solo"] = d[1]
+			Sessione.setup["incubo"] = false
+			if d[1] and not Carte.db().solo.has(Sessione.setup.avv):
+				Sessione.setup["avv"] = "ronin" if Sessione.setup.io != "ronin" else "warrior"
+			get_tree().change_scene_to_file("res://scenes/Partita.tscn"))
+		v.add_child(b)
+	var ch := Tema.bottone("Annulla", 140)
+	ch.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	ch.pressed.connect(velo.queue_free)
+	v.add_child(ch)
 
 
 func _scegli_avv(k: String) -> void:

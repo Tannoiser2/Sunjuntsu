@@ -13,6 +13,7 @@ carte di un turno scrivibili una volta sola dal titolare del posto o dall'host.
 """
 import gzip
 import json
+import os
 import sys
 import threading
 import time
@@ -178,6 +179,22 @@ class H(BaseHTTPRequestHandler):
         self._send(405, {"error": "method"})
 
     def do_GET(self):
+        # pagina del telefono per le prove (cartella in TELEFONO_DIR)
+        u = urlparse(self.path)
+        if u.path.startswith("/telefono/") and os.environ.get("TELEFONO_DIR"):
+            rel = u.path[len("/telefono/"):] or "index.html"
+            f = os.path.join(os.environ["TELEFONO_DIR"], rel)
+            if os.path.isfile(f):
+                tipo = {"html": "text/html", "js": "application/javascript", "css": "text/css", "json": "application/json",
+                        "webp": "image/webp"}.get(f.rsplit(".", 1)[-1], "application/octet-stream")
+                data = open(f, "rb").read()
+                self.send_response(200)
+                self.send_header("Content-Type", tipo)
+                self.send_header("Content-Length", str(len(data)))
+                self.end_headers()
+                self.wfile.write(data)
+                return
+            return self._send(404, {"error": "not found"})
         self._db("GET")
 
     def do_PUT(self):

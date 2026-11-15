@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1c1815">
+<title>Senjutsu — il tuo telefono</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<section id="entra" class="schermo">
+  <h1>Senjutsu</h1>
+  <p class="sotto">Il tuo telefono è la tua mano di carte</p>
+  <label>Codice stanza<input id="codice" maxlength="4" autocapitalize="characters" autocomplete="off"></label>
+  <label>Il tuo nome<input id="nome" maxlength="20" autocomplete="nickname"></label>
+  <button id="b-entra">Entra</button>
+  <p id="msg-entra" class="msg"></p>
+</section>
+
+<section id="gioco" class="schermo nascosto">
+  <header id="testa">
+    <div id="chi"></div>
+    <div id="stato"></div>
+  </header>
+  <div id="richiesta">
+    <p id="testo"></p>
+    <div id="opzioni"></div>
+  </div>
+  <canvas id="mappa"></canvas>
+  <div id="ruota" class="nascosto">
+    <button id="b-sx">Ruota a sinistra</button>
+    <button id="b-dx">Ruota a destra</button>
+    <button id="b-ok">Conferma</button>
+  </div>
+  <h2 id="tit-mano">La tua mano</h2>
+  <div id="mano"></div>
+</section>
+
+<div id="zoom" class="nascosto">
+  <img id="zoom-img" alt="">
+  <div id="zoom-bottoni"></div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>

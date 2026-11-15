@@ -8,6 +8,9 @@ const CARTA_TAV := Vector2(128, 178)
 var g: Game
 var bot: Bot
 var sincro: Sincro = null
+var tel: Telefoni = null       ## partita con gli smartphone
+var tel_pan: PanelContainer = null
+var n_richiesta := 0
 var io := 0
 var req: Dictionary = {}
 
@@ -35,6 +38,7 @@ var schede: Array = []
 var lbl_turno: Label
 var lbl_banner: Label
 var cronaca: RichTextLabel
+var pan_cronaca: PanelContainer
 var lbl_richiesta: Label
 var box_bottoni: HFlowContainer
 var box_mano: HBoxContainer
@@ -56,6 +60,9 @@ var mouse_sx := false
 var mouse_dx := false
 var mouse_mosso := false
 var cam_toccata := false
+var vista_base: Array = []
+var segui_n := 0
+var tw_cam: Tween
 
 
 func _ready() -> void:
@@ -93,7 +100,12 @@ func _nuova() -> void:
 	for c in trappole_3d:
 		trappole_3d[c].queue_free()
 	trappole_3d = {}
-	var solo: bool = Sessione.setup.get("modo", "solo") == "solo"
+	var con_tel: bool = Sessione.setup.get("modo", "solo") == "telefoni"
+	var solo: bool = Sessione.setup.get("modo", "solo") == "solo" or (con_tel and Sessione.setup.get("tel_solo", false))
+	if con_tel and tel == null:
+		await _prepara_telefoni(mio, suo, solo)
+		if tel == null:
+			return
 	if online:
 		var pt: Dictionary = Sessione.setup.partita
 		io = int(Sessione.setup.posto)
@@ -119,8 +131,89 @@ func _nuova() -> void:
 			{"char": suo, "solo": solo, "incubo": Sessione.setup.get("incubo", false)}]})
 	for i in g.F.size():
 		pedine.append(_crea_pedina(i))
+	if tel != null:
+		tel.g = g
+		tel.richieste.clear()
+		g.event.connect(func(_e): tel.pubblica())
+		box_mano.visible = false
+		tel.pubblica()
 	_aggiorna()
 	_partita()
+
+
+## Crea la stanza, mostra i QR code e aspetta che i telefoni entrino.
+func _prepara_telefoni(mio: String, suo: String, solo: bool) -> void:
+	tel = Telefoni.new()
+	add_child(tel)
+	tel.posti_necessari = 1 if solo else 2
+	tel_pan = PanelContainer.new()
+	tel_pan.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	tel_pan.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	tel_pan.grow_vertical = Control.GROW_DIRECTION_BOTH
+	hud.add_child(tel_pan)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 10)
+	tel_pan.add_child(v)
+	var tit := Tema.etichetta("Partita con gli smartphone", 28, Tema.VERMIGLIO, true)
+	tit.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	v.add_child(tit)
+	var st := Tema.etichetta("Creo la stanza…", 19)
+	st.custom_minimum_size = Vector2(560, 0)
+	st.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	st.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	v.add_child(st)
+	var celle: Array = []
+	if true:
+		for c in Carte.db().maps.villaggio.cells:
+			var a := Hex.da_offset(int(c[0]), int(c[1]))
+			celle.append([a.x, a.y])
+	var ok := await tel.crea({"t": "tel", "np": tel.posti_necessari, "pers": [mio, suo], "celle": celle})
+	if not ok:
+		st.text = "Non riesco a creare la stanza. " + tel.rete.last_error
+		var bm := Tema.bottone("Menu", 120)
+		bm.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		bm.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/Menu.tscn"))
+		v.add_child(bm)
+		tel = null
+		return
+	st.text = "Inquadrate il QR code con la fotocamera del telefono (oppure aprite %s e scrivete il codice %s)." % [Telefoni.PAGINA.replace("https://", ""), tel.codice]
+	var h := HBoxContainer.new()
+	h.alignment = BoxContainer.ALIGNMENT_CENTER
+	h.add_theme_constant_override("separation", 30)
+	v.add_child(h)
+	var etich: Array = []
+	var pers := [mio, suo]
+	for i in tel.posti_necessari:
+		var col := VBoxContainer.new()
+		col.add_theme_constant_override("separation", 6)
+		h.add_child(col)
+		var l := Tema.etichetta("Giocatore %d: %s" % [i + 1, Carte.db().characters[pers[i]].name], 20, Tema.GIOCATORI[i], true)
+		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		col.add_child(l)
+		var qr := TextureRect.new()
+		qr.texture = ImageTexture.create_from_image(QR.immagine(tel.indirizzo(i + 1), 6))
+		qr.custom_minimum_size = Vector2(240, 240)
+		qr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		qr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		col.add_child(qr)
+		var stato := Tema.etichetta("In attesa…", 18)
+		stato.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		stato.custom_minimum_size = Vector2(240, 0)
+		col.add_child(stato)
+		etich.append(stato)
+	var cod := Tema.etichetta("Codice stanza: %s" % tel.codice, 24, Tema.INCHIOSTRO, true)
+	cod.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	v.add_child(cod)
+	var bm2 := Tema.bottone("Annulla", 130)
+	bm2.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	bm2.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/Menu.tscn"))
+	v.add_child(bm2)
+	tel.giocatori_cambiati.connect(func(posti):
+		for i in etich.size():
+			etich[i].text = ("Collegato: %s" % posti[str(i + 1)]) if posti.has(str(i + 1)) else "In attesa…")
+	await tel.attendi_giocatori()
+	tel_pan.queue_free()
+	tel_pan = null
 
 
 func _partita() -> void:
@@ -148,6 +241,7 @@ func _su_evento(e: Dictionary) -> void:
 	match e.t:
 		"move":
 			_muovi_pedina(e.p, true)
+			_segui([g.F[e.p].pos])
 		"terreno":
 			_crea_terreno(e.c, int(e.get("d", 0)), str(e.get("tipo", "")))
 		"terreno_via":
@@ -158,6 +252,7 @@ func _su_evento(e: Dictionary) -> void:
 			terreni_nodi.erase(e.c)
 		"attack":
 			_lampo(e.cells, Color(0.85, 0.1, 0.05, 0.6))
+			_segui(e.cells + [g.F[e.p].pos])
 		"block":
 			_lampo(e.cells, Color(0.15, 0.4, 0.9, 0.55))
 		"damage":
@@ -176,6 +271,16 @@ func _su_evento(e: Dictionary) -> void:
 
 
 func _su_richiesta(r: Dictionary) -> void:
+	if tel != null and not g.F[r.p].ai:
+		req = r
+		n_richiesta += 1
+		var mio_n := n_richiesta
+		_mostra_richiesta()
+		lbl_richiesta.text = "%s sceglie sul telefono…\n%s" % [g.F[r.p].name, r.text]
+		var idx := await tel.chiedi(r)
+		if idx >= 0 and mio_n == n_richiesta and not req.is_empty():
+			_rispondi(idx)
+		return
 	if r.p != io:
 		lbl_richiesta.text = "%s sta decidendo…" % g.F[r.p].name
 		await get_tree().create_timer(0.5).timeout
@@ -188,6 +293,8 @@ func _su_richiesta(r: Dictionary) -> void:
 func _rispondi(idx: int) -> void:
 	if req.is_empty():
 		return
+	if tel != null:
+		tel.annulla(int(req.p))
 	req = {}
 	evid.clear()
 	opz_celle.clear()
@@ -391,7 +498,32 @@ func _inquadra() -> void:
 	var unita_px: float = 2.0 * dist * tf / vs.y
 	var c := Hex.centro(Hex.da_offset(3, 0))
 	perno.position = Vector3(c.x, 0, c.y + (sotto - sopra) * 0.5 * unita_px / sin(pitch))
+	vista_base = [perno.position, dist]
 	_aggiorna_cam()
+
+
+## Telecamera che segue l'azione (opzione del menu): si avvicina dove succede qualcosa e poi torna.
+func _segui(celle: Array) -> void:
+	if not Sessione.setup.get("segui", false) or cam_toccata or celle.is_empty() or vista_base.is_empty():
+		return
+	var m := Vector2.ZERO
+	for c in celle:
+		m += Hex.centro(c)
+	m /= celle.size()
+	segui_n += 1
+	var mio := segui_n
+	_vola(Vector3(m.x, 0, m.y + 0.8), maxf(8.5, float(vista_base[1]) * 0.75))
+	await get_tree().create_timer(2.6).timeout
+	if mio == segui_n and not cam_toccata:
+		_vola(vista_base[0], vista_base[1])
+
+
+func _vola(dove: Vector3, d: float) -> void:
+	if tw_cam != null and tw_cam.is_valid():
+		tw_cam.kill()
+	tw_cam = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT).set_parallel(true)
+	tw_cam.tween_property(perno, "position", dove, 0.7)
+	tw_cam.tween_method(func(x): dist = x; _aggiorna_cam(), dist, d, 0.7)
 
 
 func _mesh_esagono(r: float) -> ArrayMesh:
@@ -854,6 +986,16 @@ func _hud() -> void:
 	bmenu.offset_bottom = -10
 	bmenu.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/Menu.tscn"))
 	hud.add_child(bmenu)
+	var bcr := Tema.bottone("Cronaca", 90)
+	bcr.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
+	bcr.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	bcr.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	bcr.offset_right = -10
+	bcr.offset_bottom = -62
+	bcr.pressed.connect(func():
+		pan_cronaca.visible = not pan_cronaca.visible
+		Sessione.setup["cronaca"] = pan_cronaca.visible)
+	hud.add_child(bcr)
 	# in basso solo la mano
 	box_mano = HBoxContainer.new()
 	box_mano.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
@@ -937,6 +1079,14 @@ func _adatta_hud() -> void:
 	pan_richiesta.offset_right = larg / 2.0
 	for c in [lbl_turno, lbl_banner, lbl_richiesta, box_bottoni]:
 		c.custom_minimum_size.x = larg - 28.0
+	# carte Kamae e giocata il più grandi possibile sopra la fascia della mano
+	var h: float = get_viewport().get_visible_rect().size.y
+	var alt: float = clampf((h - 190.0 - 150.0) / 2.0, 150.0, 320.0)
+	var dim := Vector2(alt * 0.72, alt)
+	for sc in schede:
+		for b in [sc.kam, sc.giocata]:
+			b.custom_minimum_size = dim
+			b.size_flags_horizontal = Control.SIZE_SHRINK_END if sc == schede[1] else Control.SIZE_SHRINK_BEGIN
 	if g != null and not g.F.is_empty():
 		_aggiorna_mano()
 
@@ -990,8 +1140,8 @@ func _scheda(i: int) -> Dictionary:
 	stato.custom_minimum_size = Vector2(190, 0)
 	stato.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	v.add_child(stato)
-	# carta giocata + albero Kamae
-	var riga := HBoxContainer.new()
+	# albero Kamae sopra, carta giocata sotto (dimensioni in _adatta_hud)
+	var riga := VBoxContainer.new()
 	riga.add_theme_constant_override("separation", 8)
 	riga.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	col.add_child(riga)
@@ -1021,6 +1171,7 @@ func _scheda(i: int) -> Dictionary:
 	anello.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	anello.draw.connect(_disegna_anello.bind(anello, i))
 	kam.add_child(anello)
+	riga.move_child(kam, 0)
 	var d := {"col": col, "rit": rit, "nome": nome, "pips": pips, "info": info, "stato": stato,
 		"giocata": giocata, "dorso": dorso, "dl": dl, "kam": kam, "anello": anello}
 	giocata.pressed.connect(func():
@@ -1028,13 +1179,20 @@ func _scheda(i: int) -> Dictionary:
 		if id != -99 and (i == io or g.fase != "scelta"):
 			_apri_anteprima(id, -1))
 	if i == 1:
-		var pc := PanelContainer.new()
-		col.add_child(pc)
+		# cronaca: si apre e si chiude col pulsante sopra «Menu»
+		pan_cronaca = PanelContainer.new()
+		pan_cronaca.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
+		pan_cronaca.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+		pan_cronaca.grow_vertical = Control.GROW_DIRECTION_BEGIN
+		pan_cronaca.offset_right = -10
+		pan_cronaca.offset_bottom = -116
+		pan_cronaca.visible = Sessione.setup.get("cronaca", false)
+		hud.add_child(pan_cronaca)
 		cronaca = RichTextLabel.new()
 		cronaca.bbcode_enabled = true
 		cronaca.scroll_following = true
-		cronaca.custom_minimum_size = Vector2(280, 190)
-		pc.add_child(cronaca)
+		cronaca.custom_minimum_size = Vector2(300, 280)
+		pan_cronaca.add_child(cronaca)
 	return d
 
 

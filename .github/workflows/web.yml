@@ -56,6 +56,15 @@ jobs:
           godot --headless --path godot --export-release "Web" ../build/index.html
           test -f build/index.html
 
+      - name: Pagina del telefono (partita con gli smartphone)
+        run: |
+          set -euxo pipefail
+          mkdir -p build/telefono/carte
+          cp telefono/* build/telefono/
+          cp godot/data/carte.json build/telefono/
+          (cd godot/assets/cards && find . -name "*.webp" -exec cp --parents {} ../../../build/telefono/carte/ \;)
+          test -f build/telefono/carte/status/stordimento.webp
+
       - name: Cache-busting (rinomina i file con lo SHA del commit)
         run: |
           # I browser tengono in cache index.pck/index.wasm anche per giorni:

@@ -1,5 +1,14 @@
 # Novità
 
+## 1.18.0 — Partita con gli smartphone
+- Nuova modalità «Gioca con gli smartphone»: lo schermo (TV o computer) mostra il tavoliere e ogni
+  giocatore entra dal telefono inquadrando un QR code. Sul telefono ci sono la mano di carte, lo stato
+  e tutte le scelte richieste dal gioco, con una piccola mappa per i movimenti. Un giocatore contro
+  l'avversario Solo, oppure due giocatori. Passa da Firebase come il duello online (stesse regole).
+- Opzione «Telecamera: segue l'azione»: la vista si avvicina a movimenti e attacchi e poi torna.
+- Schede in partita: carta Kamae più grande in alto e carta giocata sotto; la cronaca si apre col
+  pulsante «Cronaca» in basso a destra.
+
 ## 1.17.0 — Editor dei mazzi e terreno
 - Editor dei mazzi (dal menu, «Editor mazzi»): carte firma del personaggio più tutte le carte base,
   con le regole di costruzione della 1a edizione: 30 carte (o 40 da torneo), Legno fino a 3 copie,

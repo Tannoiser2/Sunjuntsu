@@ -3,7 +3,7 @@
 Duello tattico fra samurai su mappa esagonale (*Senjutsu: Battle for Japan*), in Godot 4.7.
 Uso personale.
 
-## Stato (versione 1.17.0)
+## Stato (versione 1.18.0)
 
 - **Regole**: regolamento della **1a edizione + errata** (quello a cui appartengono le carte
   italiane scansionate), con le carte risolte **riga per riga come sono stampate**.
@@ -11,6 +11,7 @@ Uso personale.
   30 carte, ognuno con la sua miniatura 3D (base esagonale con freccia del fronte).
 - **Modalità**: **Solitario** con le carte Solo ufficiali (anche Incubo) e duello contro un'IA di base
   che gioca il mazzo normale.
+- **Partita con gli smartphone**: tavoliere sullo schermo, carte e scelte sul telefono (QR code, pagina `telefono/`).
 - **Duello online** a due su Firebase (stanza con codice di 4 lettere, si può rientrare).
 - **Editor carte**: scansione accanto alle righe della carta e al testo di come il gioco la applica.
 
