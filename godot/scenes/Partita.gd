@@ -127,7 +127,10 @@ func _nuova() -> void:
 			lbl_richiesta.text = t
 			_aggiorna())
 	elif Sessione.setup.get("modo", "") == "campagna":
-		g.prepara(Campagna.setup_partita(Sessione.setup.scenario, Campagna.carica()))
+		var cs := Campagna.setup_partita(Sessione.setup.scenario, Campagna.carica(), Sessione.setup.get("strada", ""))
+		Sessione.setup["mazzo_dopo"] = cs.mazzo_dopo
+		g.prepara(cs)
+		_segni_scenario()
 	else:
 		g.prepara({"seed": randi(), "terreno": Sessione.setup.get("terreno", "nessuno"),
 			"players": [{"char": mio, "mazzo": Mazzi.in_uso(mio)},
@@ -249,6 +252,14 @@ func _su_evento(e: Dictionary) -> void:
 			_segui([g.F[e.p].pos])
 		"terreno":
 			_crea_terreno(e.c, int(e.get("d", 0)), str(e.get("tipo", "")))
+		"ghiaccio":
+			var nd: Node3D = segni_ghiaccio.get(e.c)
+			if nd != null:
+				var mt: StandardMaterial3D = nd.get_meta("mat")
+				var spezzato: bool = g.ghiaccio.get(e.c, "") == "spezzato"
+				mt.albedo_color = Color(0.05, 0.08, 0.14) if spezzato else Color(0.85, 0.93, 1.0, 0.5)
+				var lb: Label3D = nd.get_meta("lb")
+				lb.text = "ROTTO" if spezzato else ""
 		"terreno_via":
 			for nd in terreni_nodi.get(e.c, []):
 				var tw := create_tween()
@@ -385,7 +396,7 @@ func _seleziona_cella(c: Vector2i) -> void:
 		return
 	var voglio: int = g.F[int(req.get("f", io))].face
 	if req.kind == "place":
-		voglio = Hex.verso(c, Hex.da_offset(3, 0))
+		voglio = Hex.verso(c, Hex.da_offset(3, 0) if Sessione.setup.get("modo", "") != "campagna" else celle_campo[celle_campo.size() / 2])
 	# orientamenti in ordine di rotazione (antiorario -> orario) rispetto a quello attuale:
 	# "Ruota a destra" gira di un lato in senso orario, senza mai fare il giro completo
 	var rel := func(fc: int) -> int: return ((fc - voglio + 9) % 6) - 3
@@ -450,6 +461,10 @@ func _mostra_fine() -> void:
 
 # ─────────────────────────── Mondo 3D ───────────────────────────
 
+var celle_campo: Array = []
+var segni_ghiaccio := {}
+
+
 func _mondo() -> void:
 	mondo = Node3D.new()
 	add_child(mondo)
@@ -467,22 +482,27 @@ func _mondo() -> void:
 	sole.light_energy = 1.2
 	mondo.add_child(sole)
 	var m: Dictionary = Carte.db().maps[Sessione.setup.get("mappa", "villaggio") if Sessione.setup.get("modo", "") == "campagna" else "villaggio"]
-	var k: float = 1.0 / float(m.hex_px)
-	var iw: float = float(m.get("img_w", 1594))
-	var ih: float = float(m.get("img_h", 1600))
-	var pm := PlaneMesh.new()
-	pm.size = Vector2(iw * k, ih * k)
-	var mi := MeshInstance3D.new()
-	mi.mesh = pm
-	var mat := StandardMaterial3D.new()
-	mat.albedo_texture = load("res://assets/maps/" + m.img)
-	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	mi.material_override = mat
-	mi.position = Vector3((iw / 2.0 - float(m.origin_px[0])) * k, -0.02, (ih / 2.0 - float(m.origin_px[1])) * k)
-	mondo.add_child(mi)
+	var strati := Carte.strati_mappa(m)
+	for si in strati.size():
+		var sm: Dictionary = strati[si]
+		var k: float = 1.0 / float(sm.hex_px)
+		var iw: float = float(sm.img_w)
+		var ih: float = float(sm.img_h)
+		var pm := PlaneMesh.new()
+		pm.size = Vector2(iw * k, ih * k)
+		var mi := MeshInstance3D.new()
+		mi.mesh = pm
+		var mat := StandardMaterial3D.new()
+		mat.albedo_texture = load("res://assets/maps/" + sm.img)
+		mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+		mi.material_override = mat
+		# il primo strato sta sopra gli altri
+		mi.position = Vector3((iw / 2.0 - float(sm.origin_px[0])) * k, -0.02 - 0.006 * si, (ih / 2.0 - float(sm.origin_px[1])) * k)
+		mondo.add_child(mi)
+	celle_campo = Carte.celle_mappa(m)
 	var esag := _mesh_esagono(0.93)
-	for c in m.cells:
-		var cell := Hex.da_offset(int(c[0]), int(c[1]))
+	for cell in celle_campo:
 		var ci := MeshInstance3D.new()
 		ci.mesh = esag
 		var cm := StandardMaterial3D.new()
@@ -514,15 +534,19 @@ func _inquadra() -> void:
 	var mezza: float = tf * vs.x / vs.y
 	yaw = 0.0
 	pitch = 1.12
-	# tavoliere di 37 caselle: circa 11 x 12,2 unità, centrato sulla casella centrale
+	# riquadro che contiene tutte le caselle del campo
+	var r := Rect2(Hex.centro(celle_campo[0]), Vector2.ZERO)
+	for x in celle_campo:
+		r = r.expand(Hex.centro(x))
+	r = r.grow(1.1)
 	var sopra := 120.0
 	var sotto := CARTA_MANO.y + 14.0
 	var alto: float = maxf(0.35, (vs.y - sopra - sotto) / vs.y)
-	var d_larg: float = 11.4 / (libero * 2.0 * mezza)
-	var d_alt: float = 12.6 * sin(pitch) / (alto * 2.0 * tf)
-	dist = clampf(maxf(d_larg, d_alt), 8.0, 30.0)
+	var d_larg: float = (r.size.x + 0.4) / (libero * 2.0 * mezza)
+	var d_alt: float = (r.size.y + 1.0) * sin(pitch) / (alto * 2.0 * tf)
+	dist = clampf(maxf(d_larg, d_alt), 8.0, 40.0)
 	var unita_px: float = 2.0 * dist * tf / vs.y
-	var c := Hex.centro(Hex.da_offset(3, 0))
+	var c := r.get_center()
 	perno.position = Vector3(c.x, 0, c.y + (sotto - sopra) * 0.5 * unita_px / sin(pitch))
 	vista_base = [perno.position, dist]
 	_aggiorna_cam()
@@ -659,6 +683,45 @@ func _colori_vertice(nodo: Node) -> void:
 
 
 ## Pezzo di terreno (modello con la sua base esagonale) sulla casella c.
+## Campagna: segnalini del ghiaccio fragile e casella del traguardo.
+func _segni_scenario() -> void:
+	for c in g.ghiaccio:
+		var n := MeshInstance3D.new()
+		n.mesh = _prisma_esagono(0.7, 0.05)
+		var mt := StandardMaterial3D.new()
+		mt.albedo_color = Color(0.55, 0.75, 0.95)
+		mt.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		n.material_override = mt
+		var p := Hex.centro(c)
+		n.position = Vector3(p.x, 0.0, p.y)
+		var lb := Label3D.new()
+		lb.text = "?"
+		lb.font_size = 120
+		lb.outline_size = 0
+		lb.double_sided = false
+		lb.modulate = Color(0.1, 0.15, 0.3)
+		lb.rotation_degrees.x = -90
+		lb.position = Vector3(0, 0.07, 0)
+		n.add_child(lb)
+		n.set_meta("mat", mt)
+		n.set_meta("lb", lb)
+		mondo.add_child(n)
+		segni_ghiaccio[c] = n
+	if g.scenario.has("traguardo"):
+		var tg := Vector2i(int(g.scenario.traguardo[0]), int(g.scenario.traguardo[1]))
+		var n2 := MeshInstance3D.new()
+		n2.mesh = _mesh_esagono(0.93)
+		var m2 := StandardMaterial3D.new()
+		m2.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		m2.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		m2.cull_mode = BaseMaterial3D.CULL_DISABLED
+		m2.albedo_color = Color(1.0, 0.8, 0.2, 0.45)
+		n2.material_override = m2
+		var p2 := Hex.centro(tg)
+		n2.position = Vector3(p2.x, 0.015, p2.y)
+		mondo.add_child(n2)
+
+
 func _crea_terreno(c: Vector2i, d: int, tipo: String) -> void:
 	if tipo == "":
 		tipo = g.terreno.get(c, "masso")

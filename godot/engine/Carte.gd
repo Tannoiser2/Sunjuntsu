@@ -51,6 +51,21 @@ static func _espandi(lines: Array) -> Array:
 	return out
 
 
+## Caselle di una mappa in coordinate assiali (le mappe della campagna le hanno già assiali).
+static func celle_mappa(m: Dictionary) -> Array:
+	var out: Array = []
+	for c in m.cells:
+		out.append(Vector2i(int(c[0]), int(c[1])) if m.get("assiali", false) else Hex.da_offset(int(c[0]), int(c[1])))
+	return out
+
+
+## Strati d'immagine di una mappa (uno solo per le mappe normali).
+static func strati_mappa(m: Dictionary) -> Array:
+	if m.has("strati"):
+		return m.strati
+	return [{"img": m.img, "img_w": m.get("img_w", 1594), "img_h": m.get("img_h", 1600), "hex_px": m.hex_px, "origin_px": m.origin_px}]
+
+
 static func carta(id: int) -> Dictionary:
 	return db().cards[str(id)]
 

@@ -1,5 +1,21 @@
 # Novità
 
+## 1.20.0 — Campagna completa e racconto a fumetto
+- Tutti e sei gli scenari della Via del Ronin sono giocabili: Rabbia ardente (taverna in fiamme su due
+  tavolieri), L'occhio nascosto (duello con la Guerriera), Porte gelate (il ponte verso la fortezza),
+  Duello nel dojo (l'Allievo) e Sangue sul ghiaccio sottile (il Maestro e il ghiaccio fragile).
+- Via rossa o via blu: nei duelli con due preparazioni scegli tu la strada; nel dojo la decide la
+  scelta fatta alle Porte gelate.
+- Regole degli scenari: ferite nella taverna e avversari che cercano di uscire, samurai e guardie che
+  entrano in azione solo al momento giusto, primo turno saltato, Il Terrore come prima carta,
+  Armatura Pesante già in gioco, carte preparate, traguardo in fondo al ponte, ghiaccio fragile con
+  una casella rotta nascosta.
+- Dopo il duello scegli come cambia il mazzo del Ronin (fasciare la Guerriera, decapitare i nemici,
+  risparmiare l'Allievo...); le carte aggiunte in preparazione restano nel mazzo.
+- Racconto: prima di ogni scenario si sfogliano le tavole a fumetto del libro (tocca o scorri per
+  cambiare pagina), anche dal pulsante «Racconto»; dopo l'ultimo duello c'è la tavola finale.
+- Mappe con più tavolieri accostati e inquadratura che si adatta alla forma del campo.
+
 ## 1.19.0 — Campagna «La Via del Ronin» (prima tappa)
 - Nuova voce di menu «Campagna: la Via del Ronin»: scenari in ordine con racconto, obiettivo, regole e
   avversari; progressi e mazzo del Ronin salvati sul dispositivo.

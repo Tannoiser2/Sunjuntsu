@@ -37,6 +37,9 @@ var tipo_terreno := "nessuno"
 var pezzi_terreno: Array = []   ## [{"t": tipo, "c": cella centrale, "d": direzione (Torii)}]
 var trappole: Dictionary = {}
 var scenario: Dictionary = {}     ## campagna: dati dello scenario in corso
+var zona: Dictionary = {}         ## campagna: caselle della taverna in fiamme
+var ghiaccio: Dictionary = {}     ## campagna: caselle di ghiaccio fragile -> "coperto" / "rotto" / "sano"
+var dormienti: Dictionary = {}    ## campagna: avversari che non giocano finché la condizione non scatta
 var pezzi_iniziali: Array = []   ## cella -> "piede" | "innesco" | "diversivo"
 const CONTRATTI := {"reazione": "Reazione", "sangue": "Primo Sangue", "concentrazione": "Concentrazione",
 	"furore": "Furore", "vedere": "Fagli Vedere", "attrezzi": "Gli Attrezzi del Mestiere"}   ## carta che sta producendo l'effetto in corso
@@ -63,8 +66,20 @@ func prepara(setup: Dictionary) -> void:
 	tipo_terreno = str(setup.get("terreno", "nessuno"))
 	scenario = setup.get("scenario", {})
 	pezzi_iniziali = setup.get("pezzi", [])
-	for c in mappa.cells:
-		cells[Hex.da_offset(int(c[0]), int(c[1]))] = true
+	for c in Carte.celle_mappa(mappa):
+		cells[c] = true
+	zona = {}
+	for c in scenario.get("zona", []):
+		zona[Vector2i(int(c[0]), int(c[1]))] = true
+	ghiaccio = {}
+	var gh: Array = scenario.get("ghiaccio", [])
+	var rotto := rng.randi_range(0, maxi(0, gh.size() - 1))
+	for k in gh.size():
+		ghiaccio[Vector2i(int(gh[k][0]), int(gh[k][1]))] = "rotto" if k == rotto else "coperto"
+	dormienti = {}
+	if scenario.has("dormienti"):
+		for nm in scenario.dormienti.nomi:
+			dormienti[str(nm)] = str(scenario.dormienti.cond)
 	var i := 0
 	for pl in setup.players:
 		var cd: Dictionary = db.characters[pl.char] if db.characters.has(pl.char) else db.nemici[pl.char]
@@ -107,6 +122,15 @@ func prepara(setup: Dictionary) -> void:
 			F[-1].kamae = str(pl.kamae)
 		if pl.has("focus"):
 			F[-1].focus = int(pl.focus)
+		if pl.get("armatura", false) and F[-1].deck.has(25):
+			F[-1].deck.erase(25)
+			F[-1].armour = true
+		if pl.has("prima_carta"):
+			var pc := int(pl.prima_carta)
+			if F[-1].deck.has(pc):
+				F[-1].deck.erase(pc)
+			F[-1].hand.append(pc)
+			F[-1]["prima_carta"] = pc
 		if ia and cd.get("occulta", false):
 			F[-1].occ = true
 		if ia and cd.get("contratti", false):
@@ -559,6 +583,16 @@ func _piazzamento() -> void:
 		if f.has("pre_pos"):
 			f.pos = f.pre_pos
 			f.face = f.pre_face
+	for f in F:
+		if f.has("pre_pos"):
+			if int(f.face) < 0:
+				# guarda verso il combattente avversario più vicino
+				var bd := 99
+				for o in F:
+					if o.owner != f.owner and o.has("pre_pos") and Hex.dist(o.pos, f.pos) < bd:
+						bd = Hex.dist(o.pos, f.pos)
+						f.face = Hex.verso(f.pos, o.pos)
+				f.face = maxi(0, int(f.face))
 			_ev({"t": "move", "p": f.i})
 	var lista: Array = []
 	for pp in _ordine_asc():
@@ -597,6 +631,12 @@ func _piazzamento() -> void:
 		_ev({"t": "move", "p": p})
 
 
+func _preparata(id: int) -> bool:
+	if Carte.carta(id).get("prepared", false) or scenario.get("preparate", []).has(id):
+		return true
+	return scenario.get("preparate_ronin", false) and str(Carte.carta(id).get("pers", "")) == "Ronin" and not Carte.carta(id).get("core", false)
+
+
 func _preparazione() -> void:
 	fase = "preparazione"
 	for f in F:
@@ -608,7 +648,7 @@ func _preparazione() -> void:
 			continue
 		var visti := {}
 		for id in f.deck.duplicate():
-			if visti.has(id) or not Carte.carta(id).get("prepared", false):
+			if visti.has(id) or not _preparata(id):
 				continue
 			visti[id] = true
 			if conta_mano(f) >= int(f.mano):
@@ -679,10 +719,11 @@ func _turno() -> void:
 					_focus(f, 1)
 				_log("%s scarta il contratto «%s»." % [f.name, CONTRATTI[oc[jc].k]])
 	for f in F:
-		if not f.ai and not f.cane and not f.dead and not f.protetta:
+		if not f.ai and not f.cane and not f.dead and not f.protetta and not _fermo(f):
 			_pesca(f, 1)
 	if _fine():
 		return
+	_sveglia()
 	fase = "scelta"
 	for p in _ordine_asc():
 		if not F[p].dead:
@@ -758,7 +799,38 @@ func giocabile(f: Dictionary, id: int) -> bool:
 	return true
 
 
+func _fermo(f: Dictionary) -> bool:
+	var fe: String = scenario.get("fermo", "")
+	if turn == 1 and ((fe == "ia" and f.ai) or (fe == "ronin" and not f.ai and f.owner == 0 and not f.protetta)):
+		return true
+	return f.ai and dormienti.has(f.name)
+
+
+## Campagna: sveglia gli avversari dormienti quando la condizione dello scenario si avvera.
+func _sveglia() -> void:
+	if dormienti.is_empty():
+		return
+	var ronin: Dictionary = F[0]
+	for nm in dormienti.keys():
+		var c: String = dormienti[nm]
+		var su := false
+		if c == "fuori_zona":
+			su = not zona.has(ronin.pos)
+		elif c == "vicino":
+			for o in F:
+				if o.ai and not o.dead and Hex.dist(o.pos, ronin.pos) == 1:
+					su = true
+				if o.ai and (o.wounds > 0 or o.bleeds > 0):
+					su = true
+		if su:
+			dormienti.erase(nm)
+			_log("[b]%s entra in azione![/b]" % nm)
+
+
 func _scegli(f: Dictionary) -> void:
+	if _fermo(f):
+		_log("%s non gioca carte in questo turno." % f.name)
+		return
 	if f.ai:
 		if f.deck.is_empty():
 			_log("Il mazzo di %s è esaurito: subisce una ferita e lo rimescola." % f.name)
@@ -785,8 +857,13 @@ func _scegli(f: Dictionary) -> void:
 	for id in f.hand:
 		if visti.has(id) or not giocabile(f, id):
 			continue
+		if f.has("prima_carta") and f.hand.has(int(f.prima_carta)) and id != int(f.prima_carta):
+			continue
 		visti[id] = true
 		opts.append({"card": id, "label": Carte.nome(id)})
+	if opts.is_empty():
+		_log("%s non ha carte giocabili." % f.name)
+		return
 	var idx := await _ask(f.i, "card", "%s: scegli la carta da giocare coperta" % f.name, opts, {"mostra": true})
 	var id2: int = opts[idx].card
 	f.hand.erase(id2)
@@ -1646,6 +1723,17 @@ func _voto_pos(f: Dictionary, pos: Vector2i, face: int) -> float:
 	if pl.is_empty():
 		return 0.0
 	var v := absf(Hex.dist(pos, pl.pos) - float(f.raggio)) * 10.0
+	if not zona.is_empty() and zona.has(f.pos):
+		# taverna in fiamme: prima di tutto uscire
+		v = 0.0
+		if zona.has(pos):
+			var dz := 9
+			for c in cells:
+				if not zona.has(c):
+					dz = mini(dz, Hex.dist(pos, c))
+			v += 100.0 + dz * 30.0
+	if ghiaccio.get(pos, "") in ["coperto", "rotto"]:
+		v += 400.0
 	var d: int = absi(face - Hex.verso(pos, pl.pos))
 	v += minf(d, 6 - d) * 4.0
 	v += _lato(f, pl, pos) * 1.5
@@ -1698,6 +1786,8 @@ func _voto_att(f: Dictionary, pos: Vector2i, face: int, griglia: Dictionary) -> 
 		v -= 45.0
 	if esposto:
 		v -= 35.0
+	if ghiaccio.get(pos, "") in ["coperto", "rotto"]:
+		v -= 2000.0
 	v -= _lato(f, pl, pos)
 	if pos != f.pos or face != f.face:
 		v -= 0.5
@@ -2809,6 +2899,14 @@ func _fine_turno() -> void:
 			_log("%s ricompone il mazzo." % f.name)
 	if scenario.get("speciali", []).has("nobildonna"):
 		await _sposta_protette()
+	if not zona.is_empty():
+		for f in F:
+			if not f.dead and zona.has(f.pos):
+				_log("%s è dentro la taverna in fiamme: subisce 1 ferita." % f.name)
+				_danno(f, 1, 0)
+		if _fine():
+			return
+	_sveglia()
 	for f in F:
 		while not f.dead and conta_mano(f) > int(f.mano):
 			var opts := _scartabili(f)
@@ -2842,6 +2940,26 @@ func _sposta_protette() -> void:
 func _fine() -> bool:
 	if over:
 		return true
+	for f in F:
+		if f.dead or not (ghiaccio.get(f.pos, "") in ["coperto", "rotto"]):
+			continue
+		if ghiaccio[f.pos] == "rotto":
+			ghiaccio[f.pos] = "spezzato"
+			f.dead = true
+			_log("[b]Il ghiaccio si spezza sotto %s![/b]" % f.name)
+		else:
+			ghiaccio[f.pos] = "sano"
+			_log("%s scopre che il ghiaccio regge." % f.name)
+		_ev({"t": "ghiaccio", "c": f.pos})
+	if scenario.has("traguardo"):
+		var tg := Vector2i(int(scenario.traguardo[0]), int(scenario.traguardo[1]))
+		for f in F:
+			if not f.dead and not f.ai and f.owner == 0 and not f.protetta and f.pos == tg:
+				over = true
+				winner = 0
+				_log("[b]%s raggiunge l'altro capo del ponte![/b]" % f.name)
+				queue.clear()
+				return true
 	for f in F:
 		if f.dead and f.protetta:
 			over = true

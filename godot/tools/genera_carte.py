@@ -982,6 +982,36 @@ ARMI = {"warrior": ["Kanabo", "Naginata", "Nodachi", "Yari"], "ronin": ["Kanabo"
         "ashigaru": ["Bo", "Kanabo", "Naginata", "Yari"], "ninja": ["Kama", "Kusarigama", "Sai", "Tanto", "Tonfa"]}
 N_ARMI = {"yasuke": 2, "sailor": 2}
 
+# ───────────── MAPPE DELLA CAMPAGNA (coordinate assiali; più strati d'immagine) ─────────────
+def strato(img, w, h, px, origine, off=(0, 0)):
+    # origine = pixel della casella locale (0,0); off = coordinate assiali globali della casella locale (0,0)
+    q, r = off
+    ox = origine[0] - 1.5 * px * q
+    oy = origine[1] - 3 ** 0.5 * px * (r + q / 2)
+    return {"img": img, "img_w": w, "img_h": h, "hex_px": px, "origin_px": [ox, oy]}
+def colonne(d):
+    return [[q, r] for q, rr in d.items() for r in rr]
+def sposta(celle, off):
+    return [[q + off[0], r + off[1]] for q, r in celle]
+TAVERNA = colonne({0: range(1, 7), 1: range(1, 6), 2: range(0, 6), 3: range(0, 5), 4: [1, 2]})
+VILL2 = sposta(colonne({-1: range(2, 7), 0: range(1, 7), 1: range(1, 7), 2: range(1, 6), 3: range(0, 4)}), (6, -3))
+MAPPE_CAMP = {
+ "taverna": {"assiali": True, "cells": TAVERNA + [[4, 0], [4, 3]] + VILL2,
+             "strati": [strato("taverna.webp", 1138, 1489, 117.5, (303, 33)),
+                        strato("villaggio2.webp", 1188, 1779, 117.0, (315, 180), (6, -3))]},
+ "villaggio3": {"assiali": True, "cells": [[1, 2], [2, 1], [2, 2], [2, 3], [2, 4], [3, 0], [3, 1], [3, 2], [3, 3], [4, -1], [4, 0],
+              [4, 1], [4, 2], [4, 3], [5, -1], [5, 0], [5, 1], [5, 2], [6, -2], [6, -1], [6, 0], [6, 1], [7, -2], [7, -1], [7, 0]],
+              "strati": [strato("villaggio3.webp", 1450, 1405, 111.25, (90, 135))]},
+ "ponte": {"assiali": True, "cells": [[1, 0], [1, 1], [1, 2], [1, 3], [2, -1], [2, 0], [2, 1], [2, 2], [2, 3], [3, -1], [3, 0], [3, 1],
+              [3, 2], [3, 3], [4, -1], [4, 0], [4, 1], [4, 2], [4, 3], [5, -2], [5, -1], [5, 0], [5, 1], [5, 2], [6, -2], [6, -1], [6, 0],
+              [6, 1]] + colonne({3: range(4, 11), 4: range(4, 10)}),
+           "strati": [strato("ponte.webp", 1398, 2265, 102.0, (150, 84))]},
+ "dojo": {"assiali": True, "cells": colonne({1: range(1, 5), 2: range(0, 5), 3: range(0, 4), 4: range(-1, 4), 5: [0, 1]}),
+          "strati": [strato("dojo.webp", 1138, 1489, 118.0, (126, 132))]},
+ "lago": {"assiali": True, "cells": [[1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [1, 6], [1, 7], [1, 8], [1, 9], [1, 10], [2, 0], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [2, 7], [2, 8], [2, 9], [3, -1], [3, 0], [3, 1], [3, 2], [3, 3], [3, 4], [3, 5], [3, 6], [3, 7], [3, 8], [3, 9], [4, -1], [4, 0], [4, 1], [4, 2], [4, 3], [4, 4], [4, 5], [4, 6], [4, 7], [4, 8], [5, -2], [5, -1], [5, 0], [5, 1], [5, 2], [5, 3], [5, 4], [5, 5], [5, 6], [5, 7], [5, 8], [6, -2], [6, -1], [6, 0], [6, 1], [6, 2], [6, 3], [6, 4], [6, 5], [6, 6], [6, 7], [7, -3], [7, -2], [7, -1], [7, 0], [7, 1], [7, 2], [7, 3], [7, 4], [7, 5], [7, 6], [7, 7], [8, -3], [8, -2], [8, -1], [8, 0], [8, 1], [8, 2], [8, 3], [8, 4], [8, 5], [8, 6], [10, -4], [10, -3], [10, -2], [10, -1], [10, 0], [10, 1], [10, 2], [10, 3], [10, 4], [10, 5], [10, 6], [11, -4], [11, -3], [11, -2], [11, -1], [11, 0], [11, 1], [11, 2], [11, 3], [11, 4], [11, 5], [12, -5], [12, -4], [12, -3], [12, -2], [12, -1], [12, 0], [12, 1], [12, 2], [12, 3], [12, 4], [12, 5], [13, -5], [13, -4], [13, -3], [13, -2], [13, -1], [13, 0], [13, 1], [13, 2], [13, 3], [13, 4], [14, -6], [14, -5], [14, -4], [14, -3], [14, -2], [14, -1], [14, 0], [14, 1], [14, 2], [14, 3], [14, 4], [15, -6], [15, -5], [15, -4], [15, -3], [15, -2], [15, -1], [15, 0], [15, 1], [15, 2], [15, 3]],
+          "strati": [strato("lago.webp", 2808, 2400, 114.0, (64, 40))]},
+}
+
 # ───────────── AVVERSARI DELLA CAMPAGNA (Path of the Ronin) ─────────────
 # Mazzi dalla tabella "solo_AI_tables": I meditazioni boss, II meditazioni ashigaru, III attacchi a portata,
 # IV attacchi da mischia, V difese, VI arco, VII archibugio.
@@ -1013,7 +1043,7 @@ MAZZO_RONIN_CAMPAGNA = {"29": 2, "31": 2, "32": 1, "99": 1, "100": 1, "101": 1, 
 CAMPAGNA = {
  "mazzo": MAZZO_RONIN_CAMPAGNA, "core": [23, 71],
  "scenari": [
-  {"id": "onore", "titolo": "Onore senza padrone", "mappa": "neve",
+  {"id": "onore", "titolo": "Onore senza padrone", "mappa": "neve", "fumetto": ["p04", "p05", "p06"],
    "intro": "Sei un ronin errante, deciso a vendicare il tuo signore caduto: disonorato e senza padrone, segui ancora il codice del Bushido. Incontri una nobildonna in pericolo e decidi di salvarne l'onore, punendo questi spregevoli banditi ashigaru.",
    "obiettivo": "Sconfiggi entrambi gli avversari, Jiro e Sanada. La nobildonna deve sopravvivere (limite di ferite 2).",
    "regole": ["A fine turno, dopo aver risolto tutte le carte, puoi spostare la nobildonna di 1 casella: deve restare entro 2 caselle dal Ronin.",
@@ -1023,21 +1053,86 @@ CAMPAGNA = {
    "alleati": [{"nome": "Nobildonna", "tipo": "nobildonna", "pos": [5, 0], "face": 5, "ferite": 2}],
    "pezzi": [["masso", 4, -3], ["masso", 1, 0], ["masso", 2, 1]],
    "speciali": ["nobildonna"]},
-  {"id": "furia", "titolo": "Rabbia ardente", "pronto": False,
+  {"id": "furia", "titolo": "Rabbia ardente", "mappa": "taverna", "fumetto": ["p08", "p09"],
    "intro": "Cerchi il Maestro, l'assassino del tuo signore. Attirato in una taverna, i suoi uomini ti tendono un agguato con il fuoco e l'acciaio.",
-   "obiettivo": "Sconfiggi tutti gli avversari.", "regole": [], "nemici": []},
-  {"id": "occhio", "titolo": "L'occhio nascosto", "pronto": False,
-   "intro": "Tra le rovine del villaggio in fiamme, la nobildonna che hai aiutato si rivela: è la Guerriera, che cerca vendetta per i tuoi errori di giovane samurai.",
-   "obiettivo": "Sconfiggi la Guerriera.", "regole": [], "nemici": []},
-  {"id": "porte", "titolo": "Porte gelate", "pronto": False,
-   "intro": "Arrivi alla fortezza del Maestro: la luna pallida illumina la via della giustizia. Attraversa il ponte prima che arrivino altre guardie.",
-   "obiettivo": "Sconfiggi tutti gli avversari o raggiungi l'altro capo del ponte.", "regole": [], "nemici": []},
-  {"id": "dojo", "titolo": "Duello nel dojo", "pronto": False,
-   "intro": "Il nuovo apprendista del Maestro, abile e letale, sguaina la spada: combatterà fino alla morte per proteggere il suo maestro.",
-   "obiettivo": "Sconfiggi l'Allievo.", "regole": [], "nemici": []},
-  {"id": "ghiaccio", "titolo": "Sangue sul ghiaccio sottile", "pronto": False,
-   "intro": "Ogni passo ti ha portato fin qui. Il Maestro, ora un daimyo crudele, ti aspetta sulle rive ghiacciate: pagherà con la vita per l'assassinio del tuo signore, o sarai tu a pagare.",
-   "obiettivo": "Sconfiggi il Maestro.", "regole": [], "nemici": []},
+   "obiettivo": "Sconfiggi tutti gli avversari.",
+   "regole": ["Gli avversari cercano prima di tutto di uscire dalla taverna e finché sono dentro ignorano la posizione rispetto al Ronin.",
+              "A fine turno, dopo aver risolto tutte le carte, chi è dentro la taverna subisce 1 ferita.",
+              "Il samurai fuori dalla taverna (Mochikane o Kurosawa) comincia a giocare carte solo quando il Ronin esce dalla taverna."],
+   "zona": TAVERNA,
+   "speciali": ["taverna"],
+   "strade": {
+    "rosso": {"testo": "Spingi i carri in fiamme dentro la taverna, intrappolando i banditi. Aggiungi 1 Carica del Toro (026) al mazzo (preparata). Parti in Aggressione con 1 focus.",
+       "aggiungi": {"26": 1}, "preparate": [26],
+       "ronin": {"pos": [0, 5], "face": 1, "kamae": "aggression", "focus": 1},
+       "nemici": [nem("Saburo", [4, 1], -1, 3, "off", SINISTRA), nem("Jiro", [4, 2], -1, 3, "off", DESTRA),
+                  nem("Mochikane", [7, 0], -1, 3, "off", FRONTE)],
+       "pezzi": [["fiamme", 3, 0, 2], ["fiamme", 3, 4, 1]], "dormienti": {"cond": "fuori_zona", "nomi": ["Mochikane"]}},
+    "blu": {"testo": "Dai fuoco al villaggio per creare un diversivo prima di fare irruzione. Aggiungi 1 Armatura Pesante (025): comincia in gioco. Tutte le carte del Ronin sono preparate. Parti in Determinazione con 2 focus.",
+       "aggiungi": {"25": 1}, "armatura": True, "preparate_ronin": True,
+       "ronin": {"pos": [1, 2], "face": 2, "kamae": "determination", "focus": 2},
+       "nemici": [nem("Taro", [6, 2], -1, 3, "off", SINISTRA), nem("Kiejiro", [5, 1], -1, 3, "off", DESTRA),
+                  nem("Kurosawa", [9, -3], -1, 3, "off", FRONTE)],
+       "pezzi": [["fiamme", 6, -1, 2], ["fiamme", 6, 3, 2]], "dormienti": {"cond": "fuori_zona", "nomi": ["Kurosawa"]}}}},
+  {"id": "occhio", "titolo": "L'occhio nascosto", "mappa": "villaggio3", "fumetto": ["p12", "p13", "p14"],
+   "intro": "Tra le rovine del villaggio in fiamme, la nobildonna che hai aiutato si rivela: è la Guerriera. Sfregiata dai tuoi errori di giovane samurai, cerca vendetta con la sua armatura e la sua possente nodachi.",
+   "obiettivo": "Sconfiggi la Guerriera (limite di ferite 7). Usa le carte Solo della Guerriera più quelle dell'ashigaru con yari.",
+   "regole": [],
+   "strade": {
+    "rosso": {"testo": "Corri verso la Guerriera e toglile lo slancio. Aggiungi 2 Chiatta di Buoi (035), preparate. Parti in Aggressione con 1 focus. Nel primo turno la Guerriera non gioca la sua carta.",
+       "aggiungi": {"35": 2}, "preparate": [35], "fermo": "ia",
+       "ronin": {"pos": [7, -2], "face": 4, "kamae": "aggression", "focus": 1},
+       "nemici": [nem("Guerriera", [2, 3], -1, 7, "off", FRONTE, "warrior") | {"extra": ["yari"]}]},
+    "blu": {"testo": "Medita la tua strategia e aspetta l'attacco furioso della Guerriera. Aggiungi 1 Affondo Invertito di Zanna (027). Parti in Kamae Neutrale con 1 focus. Nel primo turno il Ronin non gioca carte e non pesca.",
+       "aggiungi": {"27": 1}, "fermo": "ronin",
+       "ronin": {"pos": [7, -1], "face": 4, "kamae": "neutral", "focus": 1},
+       "nemici": [nem("Guerriera", [2, 2], -1, 7, "off", FRONTE, "warrior") | {"extra": ["yari"]}]}},
+   "dopo": [{"testo": "Fascia le ferite della Guerriera: togli 2 Fasciature da Campo (124) e 1 Volontà di Ferro (106), poi aggiungi una seconda copia di una carta d'Acciaio che hai in copia unica.",
+             "rimuovi": {"124": 2, "106": 1}, "copia_acciaio": True},
+            {"testo": "Lasciala ai lupi e a un destino crudele: aggiungi 2 Falciata Montante (060).", "aggiungi": {"60": 2}}]},
+  {"id": "porte", "titolo": "Porte gelate", "mappa": "ponte", "fumetto": ["p16", "p17"],
+   "intro": "Arrivi alla fortezza del Maestro: la luna pallida illumina la via della giustizia. Attraversa in fretta il ponte prima che arrivino altre guardie.",
+   "obiettivo": "Sconfiggi tutti gli avversari oppure raggiungi la casella all'altro capo del ponte (quella segnata in fondo).",
+   "regole": [], "traguardo": [3, 10], "pezzi": [["masso", 2, 2]],
+   "strade": {
+    "rosso": {"testo": "Carica le porte della fortezza urlando di rabbia. Carica del Toro (026) e Chiatta di Buoi (035) sono preparate (se non le hai, ne aggiungi una copia). Parti in Aggressione con 1 focus.",
+       "aggiungi_se_manca": [26, 35], "preparate": [26, 35],
+       "ronin": {"pos": [3, -1], "face": 3, "kamae": "aggression", "focus": 1},
+       "nemici": [nem("Saburo", [5, 1], -1, 3, "off", SINISTRA), nem("Taro", [4, 4], -1, 3, "off", DESTRA),
+                  nem("Kaito", [3, 6], -1, 2, "off", FRONTE)]},
+    "blu": {"testo": "Sfrutta la furtività e coglie le guardie di sorpresa. Parti in Determinazione con 1 focus. Taro, Jiro e Nagahide non pescano carte finché il Ronin non entra in una casella adiacente a un avversario o ne attacca uno.",
+       "ronin": {"pos": [6, -2], "face": 4, "kamae": "determination", "focus": 1},
+       "nemici": [nem("Taro", [5, 2], -1, 3, "def", SINISTRA), nem("Jiro", [4, 6], -1, 3, "def", DESTRA),
+                  nem("Nagahide", [3, 4], -1, 2, "off", FRONTE)],
+       "dormienti": {"cond": "vicino", "nomi": ["Taro", "Jiro", "Nagahide"]}}},
+   "dopo": [{"testo": "Decapita i nemici caduti e porta le loro teste nella fortezza: aggiungi Il Terrore (028) e Colpo in Affondo (086). Nel prossimo scenario segui la via ROSSA.",
+             "aggiungi": {"28": 1, "86": 1}, "strada": "rosso"},
+            {"testo": "Entra di nascosto nel mastio per cogliere il Maestro alla sprovvista: togli Carica del Toro (026) se ce l'hai. Nel prossimo scenario segui la via BLU.",
+             "rimuovi": {"26": 1}, "strada": "blu"}]},
+  {"id": "dojo", "titolo": "Duello nel dojo", "mappa": "dojo", "fumetto": ["p20", "p21"], "strada_da": "porte",
+   "intro": "Il nuovo apprendista del Maestro, abile e letale, sguaina la spada: combatterà fino alla morte per proteggere il Maestro e il suo onore.",
+   "obiettivo": "Sconfiggi l'Allievo (limite di ferite 10). Usa le carte Solo dell'Allievo più quelle dell'ashigaru con katana.",
+   "regole": [],
+   "strade": {
+    "rosso": {"testo": "Entri nel dojo con un ruggito! Il Terrore (028) parte in mano e va giocata come prima carta. Parti in Aggressione con 2 focus.",
+       "prima_carta": 28,
+       "ronin": {"pos": [5, 1], "face": 5, "kamae": "aggression", "focus": 2},
+       "nemici": [nem("Allievo", [1, 1], -1, 10, "def", FRONTE, "student") | {"extra": ["katana"]},
+                  nem("Taro", [3, 1], -1, 3, "off", SINISTRA)]},
+    "blu": {"testo": "Scivoli in silenzio nel dojo ed elimini la guardia prima di voltarti verso l'Allievo inorridito. Tutte le carte del Ronin sono preparate. Parti in Equilibrio con 2 focus.",
+       "preparate_ronin": True,
+       "ronin": {"pos": [5, 0], "face": 5, "kamae": "balance", "focus": 2},
+       "nemici": [nem("Allievo", [1, 3], -1, 10, "off", FRONTE, "student") | {"extra": ["katana"]}]}},
+   "dopo": [{"testo": "Il Ronin impara una tecnica preziosa sconfiggendo l'Allievo: aggiungi 2 Cascata Fendente (048).", "aggiungi": {"48": 2}},
+            {"testo": "Concedi la grazia all'Allievo: è stato un duello d'onore. Aggiungi 1 Specchio d'Acqua (042).", "aggiungi": {"42": 1}}]},
+  {"id": "ghiaccio", "titolo": "Sangue sul ghiaccio sottile", "mappa": "lago", "fumetto": ["p24", "p25"], "finale": "fine",
+   "intro": "Ogni passo ti ha portato più vicino a questo duello. Il Maestro, ora un daimyo vile, astuto e crudele, ti aspetta sulle rive ghiacciate: pagherà con la vita l'assassinio del tuo signore, o sarai tu a pagare.",
+   "obiettivo": "Sconfiggi il Maestro (limite di ferite 12). Usa le carte Solo del Maestro più quelle di un samurai.",
+   "regole": ["Le tre caselle con il punto di domanda sono ghiaccio fragile: chi ci entra lo scopre. Una sola è rotta: chi entra lì è sconfitto all'istante.",
+              "Il Maestro sa del ghiaccio fragile ed evita quelle caselle se può."],
+   "ronin": {"pos": [7, -2], "face": 3, "kamae": "aggression", "focus": 0},
+   "nemici": [nem("Maestro", [10, 1], -1, 12, "def", FRONTE, "master") | {"extra": ["boss"]}],
+   "pezzi": [["masso", 5, 0]], "ghiaccio": [[9, -2], [12, -2], [8, 3]], "speciali": ["ghiaccio"]},
  ]}
 
 out = {
@@ -1188,7 +1283,7 @@ out = {
      "neve": {"img": "neve.webp", "img_w": 1600, "img_h": 1600, "hex_px": 111.5, "origin_px": [298.25, 703.4],
               "cells": [[c, r] for c in range(7) for r in range(-4, 5)
                         if max(abs(c - 3), abs((r - (c - (c & 1)) // 2) + 1), abs((c - 3) + (r - (c - (c & 1)) // 2) + 1)) <= 3],
-              "start": [[], []]}}
+              "start": [[], []]}, **MAPPE_CAMP}
 }
 for k, ch in out["characters"].items():
     ch["abilita"], ch["strategia"] = INFO[k]
