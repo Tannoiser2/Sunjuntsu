@@ -9,6 +9,8 @@
 - Terreno: Ciliegio, Torii, Campane e Carro (modelli 3D). Nel menu: nessuno, a caso o piazzato a turno
   (a più di 2 caselle dagli altri pezzi). Il terreno non si attraversa, chi ci viene spinto contro è
   stordito, blocca gli attacchi a ogni iniziativa e la linea di vista degli attacchi a distanza.
+- Il Torii è su tre caselle in fila: colonne sulle due esterne, passaggio libero in mezzo (si sceglie
+  la casella centrale e l'orientamento).
 - Nuova miniatura dell'Onna-Bugeisha.
 
 ## 1.16.0 — Tavoliere completo e nuova interfaccia

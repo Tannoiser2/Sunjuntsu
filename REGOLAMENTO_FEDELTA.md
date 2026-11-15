@@ -39,7 +39,7 @@ testo di varie carte.
   = si torna indietro e si prende 1 stordimento); blocco a ogni iniziativa che non conta come «blocco
   riuscito»; linea di vista dagli angoli frontali agli angoli del bersaglio. Ciliegio e Torii seguono il
   regolamento (stordimento); Campane e Carro non sono nel regolamento e usano la regola delle Rocce. Il
-  Torii occupa una sola casella (non si passa sotto).
+  Torii occupa tre caselle in fila: le due colonne sono terreno, la casella in mezzo si attraversa.
 - **Schieramento**: chi è più in basso sul tracciato del Vantaggio si piazza su una casella libera
   qualsiasi; gli altri a più di 3 caselle dagli avversari già piazzati (se impossibile, il più lontano possibile).
 

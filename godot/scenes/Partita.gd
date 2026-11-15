@@ -142,7 +142,7 @@ func _su_evento(e: Dictionary) -> void:
 		"move":
 			_muovi_pedina(e.p, true)
 		"terreno":
-			_crea_terreno(e.c)
+			_crea_terreno(e.c, int(e.get("d", 0)), str(e.get("tipo", "")))
 		"attack":
 			_lampo(e.cells, Color(0.85, 0.1, 0.05, 0.6))
 		"block":
@@ -488,8 +488,10 @@ func _colori_vertice(nodo: Node) -> void:
 
 
 ## Pezzo di terreno (modello con la sua base esagonale) sulla casella c.
-func _crea_terreno(c: Vector2i) -> void:
-	var t: Dictionary = Game.TERRENI[g.terreno[c]]
+func _crea_terreno(c: Vector2i, d: int, tipo: String) -> void:
+	if tipo == "":
+		tipo = g.terreno.get(c, "campane")
+	var t: Dictionary = Game.TERRENI[tipo]
 	var ps: PackedScene = load("res://assets/terreno/" + t.model)
 	var n := Node3D.new()
 	if ps != null:
@@ -499,6 +501,21 @@ func _crea_terreno(c: Vector2i) -> void:
 		n.add_child(m)
 	var p := Hex.centro(c)
 	n.position = Vector3(p.x, 0.0, p.y)
+	if tipo == "torii":
+		# il modello ha le colonne lungo x: lo giro verso le due caselle delle colonne
+		var v := Hex.centro(c + Hex.DIRS[d]) - p
+		n.rotation.y = atan2(-v.y, v.x)
+		var mat := StandardMaterial3D.new()
+		mat.albedo_color = Color(0.22, 0.2, 0.18)
+		mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+		for x in g.celle_pezzo("torii", c, d):
+			var lastra := MeshInstance3D.new()
+			lastra.mesh = _prisma_esagono(0.92, 0.04)
+			lastra.material_override = mat
+			var q := Hex.centro(x)
+			lastra.position = Vector3(q.x, 0.0, q.y)
+			mondo.add_child(lastra)
+			terreni_3d.append(lastra)
 	mondo.add_child(n)
 	terreni_3d.append(n)
 

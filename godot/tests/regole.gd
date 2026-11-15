@@ -114,6 +114,10 @@ func _initialize() -> void:
 	ok(g.conta_stun(g.F[0]) == st0 + 1, "urtare il terreno stordisce")
 	g.terreno.clear()
 	ok(g.celle_terreno().size() == 35, "terreno: tutte le caselle libere sono valide (tranne quelle dei combattenti)")
+	g.metti_terreno("torii", Hex.da_offset(3, 0), 0)
+	ok(g.terreno.size() == 2 and not g.terreno.has(Hex.da_offset(3, 0)), "Torii: due colonne, il passaggio centrale resta libero")
+	ok(g._libera(Hex.da_offset(3, 0), 0), "sotto il Torii si passa")
+	g.terreno.clear()
 	g.terreno[Hex.da_offset(3, 0)] = "torii"
 	ok(g.celle_terreno().all(func(c): return Hex.dist(c, Hex.da_offset(3, 0)) > 2), "terreno a più di 2 caselle dagli altri pezzi")
 

@@ -34,6 +34,7 @@ var autore := -1             ## chi sta infliggendo l'effetto in corso
 var primo_sangue := false
 var terreno: Dictionary = {}   ## cella -> tipo di terreno (ostacolo)
 var tipo_terreno := "nessuno"
+var pezzi_terreno: Array = []   ## [{"t": tipo, "c": cella centrale, "d": direzione (Torii)}]
 var trappole: Dictionary = {}   ## cella -> "piede" | "innesco" | "diversivo"
 const CONTRATTI := {"reazione": "Reazione", "sangue": "Primo Sangue", "concentrazione": "Concentrazione",
 	"furore": "Furore", "vedere": "Fagli Vedere", "attrezzi": "Gli Attrezzi del Mestiere"}   ## carta che sta producendo l'effetto in corso
@@ -323,26 +324,58 @@ func _libera(c: Vector2i, me: int) -> bool:
 
 const TERRENI := {
 	"ciliegio": {"nome": "il Ciliegio", "titolo": "Ciliegio", "model": "ciliegio.glb", "rot": 0.0},
-	"torii": {"nome": "il Torii", "titolo": "Torii", "model": "torii.glb", "rot": 0.0},
+	"torii": {"nome": "il Torii", "titolo": "Torii", "model": "torii.glb", "rot": 0.0, "scala": 1.0},
 	"campane": {"nome": "le Campane", "titolo": "Campane", "model": "campane.glb", "rot": 0.0},
 	"carro": {"nome": "il Carro", "titolo": "Carro", "model": "carro.glb", "rot": 30.0}}
 const ORDINE_TERRENI := ["ciliegio", "torii", "campane", "carro"]
 
 
-## Caselle dove si può mettere un pezzo di terreno: libere e a più di 2 caselle dagli altri.
+## Caselle occupate da un pezzo: il Torii ha le due colonne ai lati della casella centrale
+## (che resta libera e si attraversa senza penalità); gli altri pezzi una casella sola.
+func celle_pezzo(t: String, c: Vector2i, d: int) -> Array:
+	if t == "torii":
+		return [c + Hex.DIRS[d], c + Hex.DIRS[d + 3]]
+	return [c]
+
+
+## Posizioni valide per un pezzo: caselle libere, a più di 2 caselle dal terreno già piazzato.
+## Ritorna [[centro, direzione], ...]; per il Torii direzione 0..2, per gli altri 0.
+func posti_terreno(t: String) -> Array:
+	var out: Array = []
+	var chiavi: Array = cells.keys()
+	chiavi.sort_custom(func(a, b): return a.x < b.x or (a.x == b.x and a.y < b.y))
+	for c in chiavi:
+		for d in (range(3) if t == "torii" else [0]):
+			var tutte: Array = celle_pezzo(t, c, d) + ([c] if t == "torii" else [])
+			var ok := true
+			for x in tutte:
+				if not cells.has(x) or terreno.has(x) or _in_cella(x) != null:
+					ok = false
+					break
+				for z in terreno:
+					if Hex.dist(x, z) <= 2:
+						ok = false
+				if not ok:
+					break
+			if ok:
+				out.append([c, d])
+	return out
+
+
+## Caselle libere per un pezzo da una casella (usato dai test).
 func celle_terreno() -> Array:
 	var out: Array = []
-	for c in cells:
-		if terreno.has(c) or _in_cella(c) != null:
-			continue
-		var ok := true
-		for t in terreno:
-			if Hex.dist(c, t) <= 2:
-				ok = false
-		if ok:
-			out.append(c)
-	out.sort_custom(func(a, b): return a.x < b.x or (a.x == b.x and a.y < b.y))
+	for p in posti_terreno("campane"):
+		out.append(p[0])
 	return out
+
+
+func metti_terreno(t: String, c: Vector2i, d: int) -> void:
+	for x in celle_pezzo(t, c, d):
+		terreno[x] = t
+	pezzi_terreno.append({"t": t, "c": c, "d": d})
+	_log("Terreno: %s." % TERRENI[t].titolo)
+	_ev({"t": "terreno", "c": c, "d": d, "tipo": t})
 
 
 ## Terreno prima della partita: niente, a caso, oppure piazzato a turno dai giocatori.
@@ -352,21 +385,36 @@ func _terreni() -> void:
 	fase = "terreno"
 	var chi: int = rng.randi_range(0, 1)
 	for t in ORDINE_TERRENI:
-		var libere := celle_terreno()
-		if libere.is_empty():
-			break
-		var c: Vector2i
+		var posti := posti_terreno(t)
+		if posti.is_empty():
+			continue
+		var scelto: Array
 		if tipo_terreno == "casuale" or F[chi].ai:
-			c = libere[rng.randi_range(0, libere.size() - 1)]
+			scelto = posti[rng.randi_range(0, posti.size() - 1)]
 		else:
 			var opts: Array = []
-			for l in libere:
-				opts.append({"pos": l, "face": 0})
-			c = opts[await _ask(chi, "hex", "%s: dove metti %s? (a più di 2 caselle dagli altri pezzi di terreno)" % [F[chi].name, TERRENI[t].nome], opts)].pos
+			var viste := {}
+			for p in posti:
+				if not viste.has(p[0]):
+					viste[p[0]] = true
+					opts.append({"pos": p[0], "face": 0})
+			var testo := "%s: dove metti %s? (a più di 2 caselle dagli altri pezzi di terreno)" % [F[chi].name, TERRENI[t].nome]
+			if t == "torii":
+				testo = "%s: tocca la casella di passaggio del Torii (le colonne vanno ai due lati)" % F[chi].name
+			var c: Vector2i = opts[await _ask(chi, "hex", testo, opts)].pos
+			scelto = [c, 0]
+			if t == "torii":
+				var dirs: Array = []
+				for p in posti:
+					if p[0] == c:
+						dirs.append(p[1])
+				var nomi := ["Colonne sopra e sotto", "Colonne in diagonale (alto a destra)", "Colonne in diagonale (alto a sinistra)"]
+				var od: Array = []
+				for d in dirs:
+					od.append({"label": nomi[d], "d": d})
+				scelto = [c, od[await _ask(chi, "choice", "%s: come orienti il Torii?" % F[chi].name, od)].d] if od.size() > 1 else [c, dirs[0]]
 			chi = 1 - chi
-		terreno[c] = t
-		_log("Terreno: %s." % TERRENI[t].titolo)
-		_ev({"t": "terreno", "c": c})
+		metti_terreno(t, scelto[0], scelto[1])
 
 
 ## Linea di vista (attacchi a distanza): da uno dei due angoli frontali della propria casella a un
