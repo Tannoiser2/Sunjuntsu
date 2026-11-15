@@ -6,9 +6,13 @@
   Acciaio 2, Oro 1 (al massimo 8 in tutto), una sola Giada; scelta dell'arma (due per Yasuke).
   Il mazzo si salva sul dispositivo; nel menu si sceglie «Mazzo base» o «Mazzo personale».
   Online ognuno gioca con il proprio mazzo personale, se l'ha attivato.
-- Terreno: Ciliegio, Torii, Campane e Carro (modelli 3D). Nel menu: nessuno, a caso o piazzato a turno
-  (a più di 2 caselle dagli altri pezzi). Il terreno non si attraversa, chi ci viene spinto contro è
-  stordito, blocca gli attacchi a ogni iniziativa e la linea di vista degli attacchi a distanza.
+- Terreno con modelli 3D: Masso, Bambù, Carro in fiamme (due caselle), Tempio, Ciliegio, Torii, Campane
+  e Carro. Nel menu: nessuno, a caso o piazzato a turno (4 pezzi, ognuno a più di 2 caselle dagli altri;
+  a turno ciascuno sceglie il pezzo e dove metterlo). Il terreno non si attraversa e blocca gli attacchi
+  a ogni iniziativa e la linea di vista. Chi ci viene spinto contro: stordimento; Bambù anche
+  azzoppamento (e si spezza, come quando un attacco con ferite colpisce la sua casella); Carro in fiamme
+  anche 1 ferita. A fine turno chi è accanto al Tempio ottiene 1 focus.
+- Le trappole del Ninja sono segnalini a shuriken sul tavoliere.
 - Il Torii è su tre caselle in fila: colonne sulle due esterne, passaggio libero in mezzo (si sceglie
   la casella centrale e l'orientamento).
 - Nuova miniatura dell'Onna-Bugeisha.

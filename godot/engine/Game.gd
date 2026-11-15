@@ -322,12 +322,19 @@ func _libera(c: Vector2i, me: int) -> bool:
 	return o == null or o.i == me
 
 
+## Terreno (Regolamento 1a ed., pag. 23-24). "urto": effetti per chi è costretto a entrarci.
+## Campane e Carro non sono nel regolamento: usano la regola delle Rocce.
 const TERRENI := {
-	"ciliegio": {"nome": "il Ciliegio", "titolo": "Ciliegio", "model": "ciliegio.glb", "rot": 0.0},
-	"torii": {"nome": "il Torii", "titolo": "Torii", "model": "torii.glb", "rot": 0.0, "scala": 1.0},
-	"campane": {"nome": "le Campane", "titolo": "Campane", "model": "campane.glb", "rot": 0.0},
-	"carro": {"nome": "il Carro", "titolo": "Carro", "model": "carro.glb", "rot": 30.0}}
-const ORDINE_TERRENI := ["ciliegio", "torii", "campane", "carro"]
+	"masso": {"nome": "il Masso", "titolo": "Masso", "model": "masso.glb", "rot": 0.0, "urto": ["stun"]},
+	"bambu": {"nome": "il Bambù", "titolo": "Bambù", "model": "bambu.glb", "rot": 0.0, "urto": ["stun", "hobble"]},
+	"fiamme": {"nome": "il Carro in fiamme", "titolo": "Carro in fiamme", "model": "fiamme.glb", "rot": 0.0, "urto": ["stun", "wound"]},
+	"tempio": {"nome": "il Tempio", "titolo": "Tempio", "model": "tempio.glb", "rot": 0.0, "urto": ["stun"]},
+	"ciliegio": {"nome": "il Ciliegio", "titolo": "Ciliegio", "model": "ciliegio.glb", "rot": 0.0, "urto": ["stun"]},
+	"torii": {"nome": "il Torii", "titolo": "Torii", "model": "torii.glb", "rot": 0.0, "urto": ["stun"]},
+	"campane": {"nome": "le Campane", "titolo": "Campane", "model": "campane.glb", "rot": 0.0, "urto": ["stun"]},
+	"carro": {"nome": "il Carro", "titolo": "Carro", "model": "carro.glb", "rot": 30.0, "urto": ["stun"]}}
+const PEZZI_PARTITA := 4
+const ORDINE_TERRENI := ["masso", "bambu", "fiamme", "tempio", "ciliegio", "torii", "campane", "carro"]
 
 
 ## Caselle occupate da un pezzo: il Torii ha le due colonne ai lati della casella centrale
@@ -335,6 +342,8 @@ const ORDINE_TERRENI := ["ciliegio", "torii", "campane", "carro"]
 func celle_pezzo(t: String, c: Vector2i, d: int) -> Array:
 	if t == "torii":
 		return [c + Hex.DIRS[d], c + Hex.DIRS[d + 3]]
+	if t == "fiamme":
+		return [c, c + Hex.DIRS[d]]
 	return [c]
 
 
@@ -345,7 +354,7 @@ func posti_terreno(t: String) -> Array:
 	var chiavi: Array = cells.keys()
 	chiavi.sort_custom(func(a, b): return a.x < b.x or (a.x == b.x and a.y < b.y))
 	for c in chiavi:
-		for d in (range(3) if t == "torii" else [0]):
+		for d in (range(3) if t == "torii" else (range(6) if t == "fiamme" else [0])):
 			var tutte: Array = celle_pezzo(t, c, d) + ([c] if t == "torii" else [])
 			var ok := true
 			for x in tutte:
@@ -370,6 +379,19 @@ func celle_terreno() -> Array:
 	return out
 
 
+## Toglie il pezzo che occupa la cella c (il Bambù si spezza).
+func togli_terreno(c: Vector2i) -> void:
+	for i in pezzi_terreno.size():
+		var pz: Dictionary = pezzi_terreno[i]
+		if celle_pezzo(pz.t, pz.c, pz.d).has(c):
+			for x in celle_pezzo(pz.t, pz.c, pz.d):
+				terreno.erase(x)
+			pezzi_terreno.remove_at(i)
+			_log("%s viene distrutto." % TERRENI[pz.t].titolo)
+			_ev({"t": "terreno_via", "c": pz.c})
+			return
+
+
 func metti_terreno(t: String, c: Vector2i, d: int) -> void:
 	for x in celle_pezzo(t, c, d):
 		terreno[x] = t
@@ -384,12 +406,24 @@ func _terreni() -> void:
 		return
 	fase = "terreno"
 	var chi: int = rng.randi_range(0, 1)
-	for t in ORDINE_TERRENI:
+	var restanti: Array = ORDINE_TERRENI.duplicate()
+	for _n in PEZZI_PARTITA:
+		var possibili: Array = restanti.filter(func(x): return not posti_terreno(x).is_empty())
+		if possibili.is_empty():
+			break
+		var umano: bool = tipo_terreno != "casuale" and not F[chi].ai
+		var t: String
+		if umano:
+			var ot: Array = []
+			for x in possibili:
+				ot.append({"label": TERRENI[x].titolo, "t": x})
+			t = ot[await _ask(chi, "choice", "%s: quale pezzo di terreno metti?" % F[chi].name, ot)].t
+		else:
+			t = possibili[rng.randi_range(0, possibili.size() - 1)]
+		restanti.erase(t)
 		var posti := posti_terreno(t)
-		if posti.is_empty():
-			continue
 		var scelto: Array
-		if tipo_terreno == "casuale" or F[chi].ai:
+		if not umano:
 			scelto = posti[rng.randi_range(0, posti.size() - 1)]
 		else:
 			var opts: Array = []
@@ -401,18 +435,25 @@ func _terreni() -> void:
 			var testo := "%s: dove metti %s? (a più di 2 caselle dagli altri pezzi di terreno)" % [F[chi].name, TERRENI[t].nome]
 			if t == "torii":
 				testo = "%s: tocca la casella di passaggio del Torii (le colonne vanno ai due lati)" % F[chi].name
+			elif t == "fiamme":
+				testo = "%s: tocca una delle due caselle del Carro in fiamme" % F[chi].name
 			var c: Vector2i = opts[await _ask(chi, "hex", testo, opts)].pos
-			scelto = [c, 0]
-			if t == "torii":
-				var dirs: Array = []
-				for p in posti:
-					if p[0] == c:
-						dirs.append(p[1])
-				var nomi := ["Colonne sopra e sotto", "Colonne in diagonale (alto a destra)", "Colonne in diagonale (alto a sinistra)"]
+			var dirs: Array = []
+			for p in posti:
+				if p[0] == c:
+					dirs.append(p[1])
+			scelto = [c, dirs[0]]
+			if dirs.size() > 1:
 				var od: Array = []
 				for d in dirs:
-					od.append({"label": nomi[d], "d": d})
-				scelto = [c, od[await _ask(chi, "choice", "%s: come orienti il Torii?" % F[chi].name, od)].d] if od.size() > 1 else [c, dirs[0]]
+					var lab: String
+					if t == "torii":
+						lab = ["Colonne sopra e sotto", "Colonne in diagonale (alto a destra)", "Colonne in diagonale (alto a sinistra)"][d]
+					else:
+						lab = "Seconda casella: " + ["sopra", "in alto a destra", "in basso a destra", "sotto", "in basso a sinistra", "in alto a sinistra"][d]
+					od.append({"label": lab, "d": d})
+				scelto = [c, od[await _ask(chi, "choice", "%s: come orienti %s?" % [F[chi].name, TERRENI[t].nome], od)].d]
+		if tipo_terreno != "casuale":
 			chi = 1 - chi
 		metti_terreno(t, scelto[0], scelto[1])
 
@@ -1320,8 +1361,19 @@ func _urta(f: Dictionary, c: Vector2i) -> void:
 	fonte = {}
 	var o = _in_cella(c)
 	if terreno.has(c):
-		_log("[b]Collisione[/b]: %s urta %s." % [f.name, TERRENI[terreno[c]].nome])
-		_stordisci(f)
+		var tt: String = terreno[c]
+		_log("[b]Collisione[/b]: %s urta %s." % [f.name, TERRENI[tt].nome])
+		for e in TERRENI[tt].urto:
+			match e:
+				"stun":
+					_stordisci(f)
+				"hobble":
+					f.hobbles.append(0)
+					_log("%s viene azzoppato." % f.name)
+				"wound":
+					_danno(f, 1, 0)
+		if tt == "bambu":
+			togli_terreno(c)
 		return
 	if o != null and o.i != f.i:
 		_log("[b]Collisione[/b]: %s urta %s." % [f.name, o.name])
@@ -1352,6 +1404,10 @@ func _attacco(f: Dictionary, ln: Dictionary, lines: Array, i: int, ctx: Dictiona
 			bersagli.append({"o": o, "eff": ln.cells[c]})
 	_ev({"t": "attack", "p": f.i, "cells": celle})
 	await _pausa("attack")
+	for c in ln.cells:
+		var cl := Hex.walk(f.pos, f.face, c)
+		if terreno.get(cl, "") == "bambu" and str(ln.cells[c]).begins_with("w"):
+			togli_terreno(cl)
 	# Righe che modificano l'attacco (asterisco, ferite sanguinanti): si pagano ora.
 	var ast: Array = []
 	var sangue := false
@@ -2686,6 +2742,12 @@ func _fine_turno() -> void:
 	if over:
 		return
 	await _pausa("end")
+	for pz in pezzi_terreno:
+		if pz.t == "tempio":
+			for f in F:
+				if not f.dead and not f.ai and Hex.dist(f.pos, pz.c) == 1:
+					_log("%s è accanto al Tempio." % f.name)
+					_focus(f, 1)
 	for f in F:
 		var id: int = f.play.get("id", -1)
 		if id >= 0:

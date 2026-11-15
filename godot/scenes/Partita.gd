@@ -21,6 +21,8 @@ var dist := 13.0
 var celle_mat: Dictionary = {}
 var pedine: Array = []
 var terreni_3d: Array = []
+var terreni_nodi: Dictionary = {}   ## cella del pezzo -> nodi 3D
+var trappole_3d: Dictionary = {}    ## cella -> segnalino (shuriken)
 var evid: Dictionary = {}      ## cella -> colore (opzioni)
 var lampi: Dictionary = {}     ## cella -> colore (attacchi/blocchi)
 var opz_celle: Dictionary = {} ## cella -> Array di [orientamento, indice opzione]
@@ -84,8 +86,13 @@ func _nuova() -> void:
 		p.queue_free()
 	pedine = []
 	for t in terreni_3d:
-		t.queue_free()
+		if is_instance_valid(t):
+			t.queue_free()
 	terreni_3d = []
+	terreni_nodi = {}
+	for c in trappole_3d:
+		trappole_3d[c].queue_free()
+	trappole_3d = {}
 	var solo: bool = Sessione.setup.get("modo", "solo") == "solo"
 	if online:
 		var pt: Dictionary = Sessione.setup.partita
@@ -143,6 +150,12 @@ func _su_evento(e: Dictionary) -> void:
 			_muovi_pedina(e.p, true)
 		"terreno":
 			_crea_terreno(e.c, int(e.get("d", 0)), str(e.get("tipo", "")))
+		"terreno_via":
+			for nd in terreni_nodi.get(e.c, []):
+				var tw := create_tween()
+				tw.tween_property(nd, "scale", Vector3(1, 0.05, 1), 0.5)
+				tw.tween_callback(nd.queue_free)
+			terreni_nodi.erase(e.c)
 		"attack":
 			_lampo(e.cells, Color(0.85, 0.1, 0.05, 0.6))
 		"block":
@@ -490,10 +503,11 @@ func _colori_vertice(nodo: Node) -> void:
 ## Pezzo di terreno (modello con la sua base esagonale) sulla casella c.
 func _crea_terreno(c: Vector2i, d: int, tipo: String) -> void:
 	if tipo == "":
-		tipo = g.terreno.get(c, "campane")
+		tipo = g.terreno.get(c, "masso")
 	var t: Dictionary = Game.TERRENI[tipo]
 	var ps: PackedScene = load("res://assets/terreno/" + t.model)
 	var n := Node3D.new()
+	var nodi: Array = [n]
 	if ps != null:
 		var m: Node3D = ps.instantiate()
 		m.scale = Vector3.ONE * 0.98
@@ -501,6 +515,13 @@ func _crea_terreno(c: Vector2i, d: int, tipo: String) -> void:
 		n.add_child(m)
 	var p := Hex.centro(c)
 	n.position = Vector3(p.x, 0.0, p.y)
+	if tipo == "fiamme":
+		# modello su due esagoni lungo la diagonale a 30 gradi, origine a metà fra le due caselle
+		var q := Hex.centro(c + Hex.DIRS[d])
+		var v := q - p
+		n.position = Vector3((p.x + q.x) / 2.0, 0.0, (p.y + q.y) / 2.0)
+		n.rotation.y = atan2(-v.y, v.x) - deg_to_rad(30.0)
+		n.get_child(0).scale = Vector3.ONE
 	if tipo == "torii":
 		# il modello ha le colonne lungo x: lo giro verso le due caselle delle colonne
 		var v := Hex.centro(c + Hex.DIRS[d]) - p
@@ -512,12 +533,36 @@ func _crea_terreno(c: Vector2i, d: int, tipo: String) -> void:
 			var lastra := MeshInstance3D.new()
 			lastra.mesh = _prisma_esagono(0.92, 0.04)
 			lastra.material_override = mat
-			var q := Hex.centro(x)
-			lastra.position = Vector3(q.x, 0.0, q.y)
+			var q2 := Hex.centro(x)
+			lastra.position = Vector3(q2.x, 0.0, q2.y)
 			mondo.add_child(lastra)
 			terreni_3d.append(lastra)
+			nodi.append(lastra)
 	mondo.add_child(n)
 	terreni_3d.append(n)
+	terreni_nodi[c] = nodi
+
+
+## Segnalini delle trappole del Ninja (Piedi di Corvo e Trappole): uno shuriken sulla casella.
+func _aggiorna_trappole() -> void:
+	if g == null:
+		return
+	for c in trappole_3d.keys():
+		if not g.trappole.has(c):
+			trappole_3d[c].queue_free()
+			trappole_3d.erase(c)
+	for c in g.trappole:
+		if trappole_3d.has(c):
+			continue
+		var ps: PackedScene = load("res://assets/terreno/shuriken.glb")
+		if ps == null:
+			continue
+		var m: Node3D = ps.instantiate()
+		m.scale = Vector3.ONE * 0.9
+		var p := Hex.centro(c)
+		m.position = Vector3(p.x, 0.0, p.y)
+		mondo.add_child(m)
+		trappole_3d[c] = m
 
 
 ## Prisma esagonale con i lati piatti verso ±Z (come le caselle).
@@ -616,6 +661,7 @@ func _lampo(celle: Array, col: Color) -> void:
 
 
 func _ridisegna_celle() -> void:
+	_aggiorna_trappole()
 	for c in celle_mat:
 		var col := Color(1, 1, 1, 0)
 		if g != null and g.trappole.has(c):
@@ -1136,6 +1182,7 @@ func _aggiorna() -> void:
 		if j < pedine.size() and pedine[j].visible == false and g.F[j].pos.x < 50:
 			_muovi_pedina(j, false)
 	_aggiorna_mano()
+	_aggiorna_trappole()
 	lbl_banner.visible = lbl_banner.text != ""
 	lbl_richiesta.visible = lbl_richiesta.text != ""
 	box_bottoni.visible = box_bottoni.get_child_count() > 0

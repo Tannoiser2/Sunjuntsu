@@ -118,6 +118,19 @@ func _initialize() -> void:
 	ok(g.terreno.size() == 2 and not g.terreno.has(Hex.da_offset(3, 0)), "Torii: due colonne, il passaggio centrale resta libero")
 	ok(g._libera(Hex.da_offset(3, 0), 0), "sotto il Torii si passa")
 	g.terreno.clear()
+	g.pezzi_terreno.clear()
+	g.metti_terreno("fiamme", dav, 0)
+	var w0: int = g.F[0].wounds
+	await g._urta(g.F[0], dav)
+	ok(g.F[0].wounds == w0 + 1, "Carro in fiamme: chi ci finisce contro prende una ferita")
+	ok(g.terreno.size() == 2, "Carro in fiamme su due caselle")
+	g.terreno.clear()
+	g.pezzi_terreno.clear()
+	g.metti_terreno("bambu", dav, 0)
+	await g._urta(g.F[0], dav)
+	ok(not g.terreno.has(dav) and g.F[0].hobbles.size() > 0, "Bambù: azzoppa e si spezza")
+	g.terreno.clear()
+	g.pezzi_terreno.clear()
 	g.terreno[Hex.da_offset(3, 0)] = "torii"
 	ok(g.celle_terreno().all(func(c): return Hex.dist(c, Hex.da_offset(3, 0)) > 2), "terreno a più di 2 caselle dagli altri pezzi")
 
